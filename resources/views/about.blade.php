@@ -1,27 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - MaxMed</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <style>
-        .about-hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-                url('https://images.unsplash.com/photo-1581093588401-fbb62a02f120?ixlib=rb-1.2.1');
-            background-size: cover;
-            background-position: center;
-        }
-    </style>
-</head>
-
-<body class="bg-gray-50">
-    <x-navigation />
-
+@section('content')
     <!-- Hero Section -->
-    <div class="about-hero h-[400px] flex items-center justify-center text-white mt-[70px]">
+    <div class="about-hero h-[400px] flex items-center justify-center text-white" style="background-image: url('{{ asset('Images/maxmed building.png') }}'); background-size: cover; background-position: center;">
         <div class="text-center">
             <h2 class="text-4xl md:text-6xl font-bold mb-4">About MaxMed</h2>
             <p class="text-xl">Leading the Future of Medical Laboratory Equipment</p>
@@ -34,7 +15,7 @@
             <div>
                 <h3 class="text-3xl font-bold mb-6">Our Story</h3>
                 <p class="text-gray-600 mb-4">
-                    Founded in 2015, MaxMed has been at the forefront of medical laboratory innovation in the UAE.
+                    Founded in 2010, MaxMed has been at the forefront of medical laboratory innovation in the UAE.
                     What started as a small distribution company has grown into one of the region's leading providers
                     of cutting-edge laboratory equipment.
                 </p>
@@ -126,10 +107,5 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12">
-        <!-- ... existing footer code ... -->
-    </footer>
-</body>
-
-</html>
+    @include('layouts.footer')
+@endsection

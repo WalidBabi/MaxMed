@@ -1,17 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us - MaxMed</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-</head>
-<body class="bg-gray-50">
-    <x-navigation />
+@extends('layouts.app')
+
+@section('content')
 
     <!-- Hero Section -->
-    <div class="bg-blue-600 text-white py-20 mt-[70px]">
+    <div class="bg-blue-600 text-white py-20">
         <div class="max-w-7xl mx-auto px-4">
             <h1 class="text-4xl md:text-5xl font-bold mb-4">Contact Us</h1>
             <p class="text-xl">Get in touch with our team for any inquiries or support</p>
@@ -112,9 +104,5 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12">
-        <!-- You can copy the footer content from welcome.blade.php -->
-    </footer>
-</body>
-</html> 
+    @include('layouts.footer')
+@endsection
