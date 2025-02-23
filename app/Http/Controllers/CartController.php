@@ -12,7 +12,10 @@ class CartController extends Controller
      */
     public function viewCart(Request $request)
     {
-        $cart = session()->get('cart', []);
+        if (!session()->has('cart')) {
+            session(['cart' => []]);
+        }
+        $cart = session('cart', []);
         return view('cart', compact('cart'));
     }
 
