@@ -11,12 +11,12 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Auth::user()->orders()->latest()->paginate(10);
+        $orders = auth()->user()->orders()->latest()->paginate(10);
         
         // Add debugging
-        Log::info('User ID: ' . Auth::id());
+        Log::info('User ID: ' . auth()->id());
         Log::info('Orders count: ' . $orders->count());
-        
+
         return view('orders.index', compact('orders'));
     }
 
@@ -25,10 +25,10 @@ class OrderController extends Controller
         if (auth()->user()->cannot('view', $order)) {
             abort(403);
         }
-        
+
         // Add this line for debugging
-        \Log::info('Showing order: ' . $order->id);
-        
+        Log::info('Showing order: ' . $order->id);
+
         return view('orders.show', compact('order'));
     }
-} 
+}

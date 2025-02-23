@@ -4,7 +4,7 @@
 <div class="container py-5">
     <div class="row mb-4">
         <div class="col-12">
-            <h1 class="display-4 text-[#171e60] border-bottom pb-3">Your Shopping Cart</h1>
+            <h1 class="display-4 text-[#171e60] border-bottom pb-3">Your Cart</h1>
         </div>
     </div>
 
