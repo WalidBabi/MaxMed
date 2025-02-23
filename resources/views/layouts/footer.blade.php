@@ -4,7 +4,7 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             <!-- Company Overview -->
             <div>
-                <img src="{{ asset('/Images/Logofooter.jpg') }}" alt="MaxMed Logo" >
+                <img src="{{ asset('/Images/logofooter.jpg') }}" alt="MaxMed Logo" >
                 <p class="text-gray-400 mb-4 mt-2">Empowering medical laboratories with cutting-edge equipment since 2010.</p>
                 <div class="flex space-x-4">
                     <a href="https://www.linkedin.com/company/maxmed-me/about/?viewAsMember=true" class="text-gray-400 hover:text-white">
