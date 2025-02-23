@@ -213,8 +213,61 @@
         </div>
     </div>
 
+    <!-- Key Suppliers Section -->
+    <div class="max-w-7xl mx-auto px-4 py-12">
+        <h3 class="text-3xl font-bold text-center mb-8">Key Suppliers</h3>
+        <div x-data="{ activeSupplier: 0 }" 
+             x-init="setInterval(() => { activeSupplier = activeSupplier === 1 ? 0 : activeSupplier + 1 }, 3000)"
+             class="relative h-[100px] overflow-hidden">
+            
+            <!-- Supplier logos - Group 1 -->
+            <div class="absolute inset-0 grid grid-cols-4 gap-8 transition-opacity duration-500"
+                 x-show="activeSupplier === 0">
+                <div class="flex items-center justify-center">
+                    <img src="{{ asset('/Images/supplier1.png') }}" alt="Supplier 1" class="h-16 object-contain">
+                </div>
+                <div class="flex items-center justify-center">
+                    <img src="{{ asset('/Images/supplier2.png') }}" alt="Supplier 2" class="h-16 object-contain">
+                </div>
+                <div class="flex items-center justify-center">
+                    <img src="{{ asset('/Images/supplier3.png') }}" alt="Supplier 3" class="h-16 object-contain">
+                </div>
+                <div class="flex items-center justify-center">
+                    <img src="{{ asset('/Images/supplier4.png') }}" alt="Supplier 4" class="h-16 object-contain">
+                </div>
+            </div>
 
-    
-   @include('layouts.footer')
+            <!-- Supplier logos - Group 2 -->
+            <div class="absolute inset-0 grid grid-cols-4 gap-8 transition-opacity duration-500"
+                 x-show="activeSupplier === 1">
+                <div class="flex items-center justify-center">
+                    <img src="{{ asset('/Images/supplier5.png') }}" alt="Supplier 5" class="h-16 object-contain">
+                </div>
+                <div class="flex items-center justify-center">
+                    <img src="{{ asset('/Images/supplier1.png') }}" alt="Supplier 1" class="h-16 object-contain">
+                </div>
+                <div class="flex items-center justify-center">
+                    <img src="{{ asset('/Images/supplier2.png') }}" alt="Supplier 2" class="h-16 object-contain">
+                </div>
+                <div class="flex items-center justify-center">
+                    <img src="{{ asset('/Images/supplier3.png') }}" alt="Supplier 3" class="h-16 object-contain">
+                </div>
+            </div>
+
+            <!-- Navigation dots -->
+            <div class="absolute bottom-0 left-0 right-0 flex justify-center space-x-2">
+                <button @click="activeSupplier = 0" 
+                        class="h-2 transition-all duration-300"
+                        :class="activeSupplier === 0 ? 'w-6 bg-[#171e60]' : 'w-2 bg-gray-300 hover:bg-[#171e60]'">
+                </button>
+                <button @click="activeSupplier = 1" 
+                        class="h-2 transition-all duration-300"
+                        :class="activeSupplier === 1 ? 'w-6 bg-[#171e60]' : 'w-2 bg-gray-300 hover:bg-[#171e60]'">
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @include('layouts.footer')
 @endsection
 
