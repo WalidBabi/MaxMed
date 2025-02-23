@@ -77,10 +77,10 @@
         </div>
 
         <div class="d-flex justify-content-end mt-4">
-            <form action="" method="POST">
+            <form action="{{ route('stripe.checkout') }}" method="POST" id="checkout-form">
                 @csrf
                 <button type="submit" class="btn bg-[#171e60] hover:bg-[#0a5694] text-white btn-lg px-5 shadow-sm">
-                    <i class="fas fa-shopping-cart me-2"></i>Proceed to Checkout
+                    <i class="fas fa-credit-card me-2"></i>Pay with Stripe
                 </button>
             </form>
         </div>

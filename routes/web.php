@@ -6,6 +6,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\StripeController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -35,8 +37,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/add/{product}', [CartController::class, 'addToCart'])->name('cart.add');
     Route::post('/cart/remove/{product}', [CartController::class, 'removeFromCart'])->name('cart.remove');
 
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
 
-
+Route::post('/stripe/checkout', [StripeController::class, 'checkout'])->name('stripe.checkout');
+Route::get('/stripe/success', [StripeController::class, 'success'])->name('stripe.success');
 
 require __DIR__ . '/auth.php';

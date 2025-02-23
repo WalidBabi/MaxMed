@@ -6,5 +6,31 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    protected $fillable = ['customer_name', 'customer_email', 'items', 'total'];
+    protected $fillable = [
+        'user_id',
+        'order_number',
+        'total_amount',
+        'status',
+        'shipping_address',
+        'shipping_city',
+        'shipping_state',
+        'shipping_zipcode',
+        'shipping_phone',
+        'notes'
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+    public function transaction()
+    {
+        return $this->hasOne(Transaction::class);
+    }
 } 
