@@ -2,14 +2,60 @@
 
 @section('content')
     <!-- Hero Section -->
-    <div class="hero-section h-[300px] flex items-center justify-center text-white">
-        <div class="text-center">
-            <h2 class="text-4xl md:text-6xl font-bold mb-4 text-white">Laboratory Solutions</h2>
-            <p class="text-xl mb-8 text-white">Providing cutting-edge medical Laboratory equipment for modern laboratories</p>
-            <a href="{{ route('products.index') }}" 
-                class="bg-[#171e60] hover:bg-[#0a5694] text-white px-8 py-3 rounded-full font-semibold transition-colors duration-300">
-                Explore Products
-            </a>
+    <div x-data="{ activeSlide: 0 }" 
+         x-init="setInterval(() => { activeSlide = activeSlide === 2 ? 0 : activeSlide + 1 }, 5000)"
+         class="relative h-[300px]">
+        <!-- Background Images -->
+        <div class="absolute inset-0 transition-opacity duration-500" 
+             x-show="activeSlide === 0"
+             style="background: linear-gradient(rgba(23, 30, 96, 0.6), rgba(23, 30, 96, 0.6)), url('/Images/banner.png'); background-size: cover; background-position: center;">
+        </div>
+        <div class="absolute inset-0 transition-opacity duration-500"
+             x-show="activeSlide === 1" 
+             style="background: linear-gradient(rgba(23, 30, 96, 0.6), rgba(23, 30, 96, 0.6)), url('/Images/banner2.jpeg'); background-size: cover; background-position: center;">
+        </div>
+        <div class="absolute inset-0 transition-opacity duration-500"
+             x-show="activeSlide === 2"
+             style="background: linear-gradient(rgba(23, 30, 96, 0.6), rgba(23, 30, 96, 0.6)), url('/Images/banner3.jpg'); background-size: cover; background-position: center;">
+        </div>
+
+        <!-- Content -->
+        <div class="relative h-full flex items-center justify-center text-white">
+            <div class="text-center">
+                <h2 class="text-4xl md:text-6xl font-bold mb-4 text-white">Laboratory Solutions</h2>
+                <p class="text-xl mb-8 text-white">Providing cutting-edge medical Laboratory equipment for modern laboratories</p>
+                <a href="{{ route('products.index') }}" 
+                    class="bg-[#171e60] hover:bg-[#0a5694] text-white px-8 py-3 rounded-full font-semibold transition-colors duration-300">
+                    Explore Products
+                </a>
+            </div>
+        </div>
+
+        <!-- Navigation Arrows -->
+        <button @click="activeSlide = activeSlide === 0 ? 2 : activeSlide - 1" 
+                class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <button @click="activeSlide = activeSlide === 2 ? 0 : activeSlide + 1"
+                class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+        </button>
+        <!-- Brand Border -->
+        <div class="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-b from-transparent to-white">
+            <svg class="w-full h-full relative" preserveAspectRatio="none" viewBox="0 0 100 10" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="url(#gradient)" stroke-width="2"/>
+                <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color: #171e60"/>
+                        <stop offset="50%" style="stop-color: #0a5694"/>
+                        <stop offset="100%" style="stop-color: #171e60"/>
+                    </linearGradient>
+                </defs>
+            </svg>
         </div>
     </div>
 
