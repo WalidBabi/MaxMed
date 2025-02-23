@@ -32,7 +32,7 @@
         }, 5000);
     </script>
 
-    @if($cart)
+    @if(session()->has('cart') && count(session('cart')) > 0)
         <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
             <div class="table-responsive">
                 <table class="table table-hover mb-0">
