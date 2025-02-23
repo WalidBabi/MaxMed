@@ -9,7 +9,7 @@
                 <h2 class="mb-4 border-bottom pb-2">Categories</h2>
                 <div class="list-group list-group-flush" x-data>
                     <a href="{{ route('products.index') }}"
-                        class="list-group-item list-group-item-action d-flex align-items-center {{ !request('category') ? 'active' : '' }}"
+                        class="list-group-item list-group-item-action d-flex align-items-center {{ !request('category') ? 'bg-[#171e60] text-white' : '' }}"
                         @click.prevent="window.location.href = $el.href">
                         <i class="fas fa-th-large me-2"></i>
                         All Products
@@ -31,11 +31,13 @@
             <div class="row g-4">
                 @foreach($products as $product)
                 <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm hover-shadow transition">
-                        <div class="position-relative">
-                            <img src="{{ asset($product->image_url) }}" class="card-img-top" alt="{{ $product->name }}" style="height: 200px; object-fit: cover;">
+                    <div class="card h-100 border-0 shadow-sm hover:shadow transition">
+                        <div class="position-relative" style="height: 300px;">
+                            <a href="{{ asset($product->image_url) }}" target="_blank">
+                                <img src="{{ asset($product->image_url) }}" class="img-fluid transition" alt="{{ $product->name }}" style="height: 70%; object-fit: cover; transform: scale(1);" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                            </a>
                             @if($product->category)
-                            <span class="position-absolute top-0 end-0 bg-primary text-white m-2 px-2 py-1 rounded-pill small">
+                            <span class="position-absolute bottom-0 end-0 bg-[#171e60] text-white m-2 px-2 py-1 rounded-pill small">
                                 {{ $product->category->name }}
                             </span>
                             @endif
@@ -49,7 +51,8 @@
                             <span class="badge bg-danger mb-3 w-25">Out of Stock</span>
                             @endif
                             <div class="mt-auto d-grid gap-2 ">
-                                <a href="{{ route('product.show', $product) }}" class="btn btn-outline-primary">
+                                <a href="{{ route('product.show', $product) }}" 
+                                    class="btn border-[#171e60] text-[#171e60] hover:bg-[#171e60] hover:text-white">
                                     <i class="fas fa-eye me-1"></i> View Details
                                 </a>
                                 <form action="{{ route('cart.add', $product->id) }}" method="POST" class="d-flex gap-2 position-relative" x-data="{ showMessage: false }">
@@ -74,11 +77,13 @@
                                             +
                                         </button>
                                     </div>
-                                    <button type="submit" class="btn btn-primary flex-grow-1" {{ !$product->inStock() ? 'disabled' : '' }}>
+                                    <button type="submit" 
+                                        class="btn bg-[#171e60] text-white hover:bg-[#0a5694]" 
+                                        {{ !$product->inStock() ? 'disabled' : '' }}>
                                         <i class="fas fa-shopping-cart me-1"></i> Add to Cart
                                     </button>
                                     <div x-show="showMessage" x-transition
-                                        class="position-absolute top-100 start-50 translate-middle-x mt-2 bg-danger text-white px-3 py-1 rounded small">
+                                        class="position-absolute top-100 start-50 translate-middle-x mt-2 bg-danger text-white px-3 py-1 rounded small z-10">
                                         No more items in stock!
                                     </div>
                                 </form>

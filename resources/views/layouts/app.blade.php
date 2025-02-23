@@ -27,7 +27,7 @@
         <!-- Add custom styles -->
         <style>
             .hero-section {
-                background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)),
+                background: linear-gradient(rgba(23, 30, 96, 0.6), rgba(23, 30, 96, 0.6)),
                             url('/Images/banner.png');
                 background-size: cover;
                 background-position: center;
@@ -36,6 +36,35 @@
             /* Carousel fade animation */
             .carousel-item {
                 transition: opacity 0.6s ease-in-out;
+            }
+
+            /* Update primary colors */
+            :root {
+                --brand-main: #171e60;
+                --brand-auxiliary: #0a5694;
+                --brand-white: #ffffff;
+            }
+
+            .bg-primary {
+                background-color: var(--brand-main) !important;
+            }
+
+            .text-primary {
+                color: var(--brand-main) !important;
+            }
+
+            .btn-primary {
+                background-color: var(--brand-main) !important;
+                border-color: var(--brand-main) !important;
+            }
+
+            .btn-primary:hover {
+                background-color: var(--brand-auxiliary) !important;
+                border-color: var(--brand-auxiliary) !important;
+            }
+
+            .border-primary {
+                border-color: var(--brand-main) !important;
             }
         </style>
 

@@ -4,9 +4,10 @@
     <!-- Hero Section -->
     <div class="hero-section h-[300px] flex items-center justify-center text-white">
         <div class="text-center">
-            <h2 class="text-4xl md:text-6xl font-bold mb-4" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);">Laboratory Solutions</h2>
-            <p class="text-xl mb-8" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);">Providing cutting-edge medical Laboratory equipment for modern laboratories</p>
-            <a href="{{ route('products.index') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full font-semibold">
+            <h2 class="text-4xl md:text-6xl font-bold mb-4 text-white">Laboratory Solutions</h2>
+            <p class="text-xl mb-8 text-white">Providing cutting-edge medical Laboratory equipment for modern laboratories</p>
+            <a href="{{ route('products.index') }}" 
+                class="bg-[#171e60] hover:bg-[#0a5694] text-white px-8 py-3 rounded-full font-semibold transition-colors duration-300">
                 Explore Products
             </a>
         </div>
@@ -68,7 +69,7 @@
                      x-transition:leave-start="opacity-100"
                      x-transition:leave-end="opacity-0">
                     <div class="flex h-full">
-                        <div class="w-1/2 bg-blue-600 p-12 flex items-center hover:scale-105 transform transition duration-500">
+                        <div class="w-1/2 bg-[#171e60] p-12 flex items-center hover:scale-105 transform transition duration-500">
                             <div class="text-white">
                                 <h4 class="text-3xl font-bold mb-4">Innovation First</h4>
                                 <p class="text-xl">Leading the industry with cutting-edge medical laboratory solutions that define the future of diagnostics.</p>
@@ -97,7 +98,7 @@
                                  alt="Quality" 
                                  class="w-full h-full object-cover hover:scale-105 transform transition duration-500">
                         </div>
-                        <div class="w-1/2 bg-green-600 p-12 flex items-center hover:scale-105 transform transition duration-500">
+                        <div class="w-1/2 bg-[#0a5694] p-12 flex items-center hover:scale-105 transform transition duration-500">
                             <div class="text-white">
                                 <h4 class="text-3xl font-bold mb-4">Quality Assured</h4>
                                 <p class="text-xl">Every piece of equipment undergoes rigorous testing to ensure reliable performance and accurate results.</p>
@@ -116,7 +117,7 @@
                      x-transition:leave-start="opacity-100"
                      x-transition:leave-end="opacity-0">
                     <div class="flex h-full">
-                        <div class="w-1/2 bg-purple-600 p-12 flex items-center hover:scale-105 transform transition duration-500">
+                        <div class="w-1/2 bg-[#171e60] p-12 flex items-center hover:scale-105 transform transition duration-500">
                             <div class="text-white">
                                 <h4 class="text-3xl font-bold mb-4">Expert Support</h4>
                                 <p class="text-xl">Our team of specialists provides comprehensive training and ongoing technical support.</p>
@@ -134,17 +135,17 @@
                 <div class="absolute bottom-5 left-0 right-0 flex justify-center space-x-2 z-10">
                     <button @click="activeSlide = 0" 
                             class="h-3 transition-all duration-300"
-                            :class="activeSlide === 0 ? 'w-8 bg-blue-600' : 'w-3 bg-gray-400 hover:bg-blue-400'">
+                            :class="activeSlide === 0 ? 'w-8 bg-[#171e60]' : 'w-3 bg-gray-400 hover:bg-[#171e60]'">
                         <span class="sr-only">Slide 1</span>
                     </button>
                     <button @click="activeSlide = 1" 
                             class="h-3 transition-all duration-300"
-                            :class="activeSlide === 1 ? 'w-8 bg-blue-600' : 'w-3 bg-gray-400 hover:bg-blue-400'">
+                            :class="activeSlide === 1 ? 'w-8 bg-[#171e60]' : 'w-3 bg-gray-400 hover:bg-[#171e60]'">
                         <span class="sr-only">Slide 2</span>
                     </button>
                     <button @click="activeSlide = 2" 
                             class="h-3 transition-all duration-300"
-                            :class="activeSlide === 2 ? 'w-8 bg-blue-600' : 'w-3 bg-gray-400 hover:bg-blue-400'">
+                            :class="activeSlide === 2 ? 'w-8 bg-[#171e60]' : 'w-3 bg-gray-400 hover:bg-[#171e60]'">
                         <span class="sr-only">Slide 3</span>
                     </button>
                 </div>

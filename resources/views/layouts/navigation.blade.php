@@ -13,17 +13,21 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')">
+                    <x-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')"
+                        class="hover:text-[#0a5694]">
                         {{ __('Home') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products')">
+                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products')"
+                        class="hover:text-[#0a5694]">
                         {{ __('Products') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('about')" :active="request()->routeIs('about')">
+                    <x-nav-link :href="route('about')" :active="request()->routeIs('about')"
+                        class="hover:text-[#0a5694]">
                         {{ __('About Us') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
+                    <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')"
+                        class="hover:text-[#0a5694]">
                         {{ __('Contact Us') }}
                     </x-nav-link>
                 </div>
@@ -84,7 +88,10 @@
                     </x-dropdown>
                 @else
                     <a href="{{ route('login') }}" class="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-lg transition-colors duration-300">Sign In</a>
-                    <a href="{{ route('register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-300">Sign Up</a>
+                    <a href="{{ route('register') }}" 
+                        class="bg-[#171e60] text-white px-4 py-2 rounded-lg hover:bg-[#0a5694] transition-colors duration-300">
+                        Sign Up
+                    </a>
                 @endauth
             </div>
 
