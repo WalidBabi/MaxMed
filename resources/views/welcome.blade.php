@@ -65,7 +65,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Product Card 1 -->
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                   <img src="{{ asset('images/Glass.jpg') }}"
+                   <img src="{{ asset('/Images/Glass.jpg') }}"
                      alt="Microscope" class="w-full h-48 object-cover">
                 <div class="p-6">
                     <h4 class="font-bold text-xl mb-2">Laboratory Glass</h4>
@@ -76,7 +76,7 @@
 
             <!-- Product Card 2 -->
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <img src="{{ asset('images/centrifuges.jpg') }}"
+                <img src="{{ asset('/Images/centrifuges.jpg') }}"
                      alt="Centrifuge" class="w-full h-48 object-cover">
                 <div class="p-6">
                     <h4 class="font-bold text-xl mb-2">Centrifuges</h4>
@@ -87,7 +87,7 @@
 
             <!-- Product Card 3 -->
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                  <img src="{{ asset('images/microscopes.jpg') }}"
+                  <img src="{{ asset('/Images/microscopes.jpg') }}"
                      alt="Analyzer" class="w-full h-48 object-cover">
                 <div class="p-6">
                     <h4 class="font-bold text-xl mb-2">Microscopes</h4>
@@ -122,7 +122,7 @@
                             </div>
                         </div>
                         <div class="w-1/2">
-                             <img src="{{ asset('images/Innovation.jpg') }}"
+                             <img src="{{ asset('/Images/Innovation.jpg') }}"
                                  alt="Innovation" 
                                  class="w-full h-full object-cover hover:scale-105 transform transition duration-500">
                         </div>
@@ -140,7 +140,7 @@
                      x-transition:leave-end="opacity-0">
                     <div class="flex h-full">
                         <div class="w-1/2">
-                            <img src="{{ asset('images/bacteria.jpg') }}" 
+                            <img src="{{ asset('/Images/bacteria.jpg') }}" 
                                  alt="Quality" 
                                  class="w-full h-full object-cover hover:scale-105 transform transition duration-500">
                         </div>
@@ -170,7 +170,7 @@
                             </div>
                         </div>
                         <div class="w-1/2">
-                            <img src="{{ asset('images/Expert.jpg') }}"
+                            <img src="{{ asset('/Images/Expert.jpg') }}"
                                  alt="Support" 
                                  class="w-full h-full object-cover hover:scale-105 transform transition duration-500">
                         </div>
