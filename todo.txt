@@ -1,0 +1,6 @@
+#do a crone job to clean up expired reservations
+php artisan reservations:cleanup 
+
+email when payment is successful and order is placed
+cancel orders
+policies

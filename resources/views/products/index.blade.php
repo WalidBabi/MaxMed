@@ -1,7 +1,140 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    .lab-alert {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 
+            0 8px 32px 0 rgba(31, 38, 135, 0.37),
+            inset 0 0 80px rgba(255, 255, 255, 0.3);
+    }
+
+    .lab-alert::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.3) 0%,
+            rgba(255, 255, 255, 0.1) 100%
+        );
+        border-radius: 8px 8px 0 0;
+        pointer-events: none;
+    }
+
+    .lab-alert.error {
+        background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(255, 255, 255, 0.9));
+    }
+
+    .lab-alert.success {
+        background: linear-gradient(135deg, rgba(25, 135, 84, 0.1), rgba(255, 255, 255, 0.9));
+    }
+
+    .microscope-lens {
+        position: relative;
+        overflow: hidden;
+        border-radius: 50%;
+    }
+
+    .microscope-lens::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+            circle at center,
+            rgba(255, 255, 255, 0.8) 0%,
+            rgba(255, 255, 255, 0.1) 50%,
+            transparent 100%
+        );
+        pointer-events: none;
+    }
+</style>
+
 <div class="container-fluid mb-3">
+    @if(session('error'))
+        <div class="alert border-0 rounded-3 shadow-lg mb-4 position-relative" role="alert"
+             x-data="{ show: true }" 
+             x-show="show" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 transform -translate-y-2"
+             x-transition:enter-end="opacity-100 transform translate-y-0"
+             x-transition:leave="transition ease-in duration-300"
+             x-transition:leave-start="opacity-100 transform translate-y-0"
+             x-transition:leave-end="opacity-0 transform -translate-y-2">
+            <div class="lab-alert error d-flex align-items-center p-3 rounded-3" 
+                 style="border-left: 4px solid #dc3545;">
+                <div class="microscope-lens d-flex align-items-center justify-content-center bg-danger bg-opacity-25 rounded-circle p-2 me-3">
+                    <i class="fas fa-flask-vial fs-5 text-danger"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-microscope me-2"></i>
+                        <strong class="me-2">Lab Alert:</strong>
+                        {{ session('error') }}
+                    </div>
+                </div>
+                <div class="ms-auto d-flex align-items-center">
+                    <small class="text-danger me-2">
+                        <i class="fas fa-atom fa-spin"></i>
+                    </small>
+                    <button type="button" class="btn-close" @click="show = false" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if(session('success'))
+        <div class="alert border-0 rounded-3 shadow-lg mb-4 position-relative" role="alert"
+             x-data="{ show: true }" 
+             x-show="show" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 transform -translate-y-2"
+             x-transition:enter-end="opacity-100 transform translate-y-0"
+             x-transition:leave="transition ease-in duration-300"
+             x-transition:leave-start="opacity-100 transform translate-y-0"
+             x-transition:leave-end="opacity-0 transform -translate-y-2">
+            <div class="lab-alert success d-flex align-items-center p-3 rounded-3"
+                 style="border-left: 4px solid #198754;">
+                <div class="microscope-lens d-flex align-items-center justify-content-center bg-success bg-opacity-25 rounded-circle p-2 me-3">
+                    <i class="fas fa-vial-circle-check fs-5 text-success"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-flask me-2"></i>
+                        <strong class="me-2">Lab Success:</strong>
+                        {{ session('success') }}
+                    </div>
+                </div>
+                <div class="ms-auto d-flex align-items-center">
+                    <small class="text-success me-2">
+                        <i class="fas fa-atom fa-spin"></i>
+                    </small>
+                    <button type="button" class="btn-close" @click="show = false" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                document.querySelectorAll('.alert').forEach(function(alert) {
+                    if (alert.__x) {
+                        alert.__x.$data.show = false;
+                    }
+                });
+            }, 5000);
+        });
+    </script>
+
     <div class="row">
         <!-- Sidebar -->
         <div class="col-md-3 p-4">
@@ -55,36 +188,63 @@
                                     class="btn border-[#171e60] text-[#171e60] hover:bg-[#171e60] hover:text-white">
                                     <i class="fas fa-eye me-1"></i> View Details
                                 </a>
-                                <form action="{{ route('cart.add', $product->id) }}" method="POST" class="d-flex gap-2 position-relative" x-data="{ showMessage: false }">
+                                <form x-data="{ 
+                                    showMessage: false, 
+                                    messageText: '',
+                                    quantity: 0,
+                                    async checkAvailability() {
+                                        const response = await fetch(`/check-availability/${this.$el.getAttribute('data-product-id')}/${this.quantity}`);
+                                        const data = await response.json();
+                                        return data.available;
+                                    },
+                                    async redirectToAuth() {
+                                        @auth
+                                            const available = await this.checkAvailability();
+                                            if (!available) {
+                                                this.messageText = 'Requested quantity exceeds available stock!';
+                                                this.showMessage = true;
+                                                setTimeout(() => this.showMessage = false, 3000);
+                                                return;
+                                            }
+                                            this.$el.submit();
+                                        @else
+                                            window.location.href = '{{ route('register') }}';
+                                        @endauth
+                                    }
+                                }" 
+                                data-product-id="{{ $product->id }}"
+                                action="{{ route('cart.add', $product->id) }}" 
+                                method="POST" 
+                                class="d-flex gap-2 position-relative"
+                                @submit.prevent="redirectToAuth()">
                                     @csrf
                                     <div class="input-group" style="width: 120px;">
                                         <button type="button" class="btn btn-outline-secondary"
-                                            @click="let input = $refs.qtyInput; if (input.value > 1) input.stepDown()">
+                                            @click="if (quantity > 0) quantity--">
                                             -
                                         </button>
                                         <input type="number"
                                             name="quantity"
-                                            value="0"
+                                            x-model="quantity"
                                             min="0"
                                             max="{{ $product->inventory->quantity }}"
                                             class="form-control text-center"
                                             style="width: 50px;"
-                                            x-ref="qtyInput"
                                             readonly
                                             {{ !$product->inStock() ? 'disabled' : '' }}>
                                         <button type="button" class="btn btn-outline-secondary"
-                                            @click="let input = $refs.qtyInput; if(input.value < input.max) {input.stepUp()} else { showMessage = true; setTimeout(() => showMessage = false, 3000); }">
+                                            @click="if(quantity < {{ $product->inventory->quantity }}) {quantity++} else { messageText = 'No more items in stock!'; showMessage = true; setTimeout(() => showMessage = false, 3000); }">
                                             +
                                         </button>
                                     </div>
                                     <button type="submit" 
                                         class="btn bg-[#171e60] text-white hover:bg-[#0a5694]" 
-                                        {{ !$product->inStock() ? 'disabled' : '' }}>
+                                        :disabled="!{{ $product->inStock() }} || quantity == 0">
                                         <i class="fas fa-shopping-cart me-1"></i> Add to Cart
                                     </button>
                                     <div x-show="showMessage" x-transition
-                                        class="position-absolute top-100 start-50 translate-middle-x mt-2 bg-danger text-white px-3 py-1 rounded small z-10">
-                                        No more items in stock!
+                                        class="position-absolute top-100 start-50 translate-middle-x mt-2 bg-danger text-white px-3 py-1 rounded small z-10"
+                                        x-text="messageText">
                                     </div>
                                 </form>
 

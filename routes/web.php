@@ -8,6 +8,7 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\StockController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,6 +22,7 @@ Route::get('/about', function () {
 // Product Routes
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/product/{product}', [ProductController::class, 'show'])->name('product.show');
+Route::get('/check-availability/{product}/{quantity}', [ProductController::class, 'checkAvailability'])->name('check.availability');
 
 Route::get('/contact', function () {
     return view('contact');
@@ -34,7 +36,7 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     // Cart Routes
     Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
-    Route::post('/cart/add/{product}', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/remove/{product}', [CartController::class, 'removeFromCart'])->name('cart.remove');
 
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');

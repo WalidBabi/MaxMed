@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Http\JsonResponse;
 
 class ProductController extends Controller
 {
@@ -37,6 +38,14 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         return view('products.show', compact('product'));
+    }
+    
+    public function checkAvailability(Product $product, int $quantity): JsonResponse
+    {
+        // dd($product, $quantity);
+        return response()->json([
+            'available' => $product->inventory->quantity >= $quantity
+        ]);
     }
 
     // You can add more methods like create, store, edit, update, destroy as needed

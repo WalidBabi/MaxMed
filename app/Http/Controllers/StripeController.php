@@ -8,6 +8,9 @@ use Stripe\Checkout\Session;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Transaction;
+use App\Models\ProductReservation;
+use App\Mail\OrderPlaced;
+use Illuminate\Support\Facades\Mail;
 
 class StripeController extends Controller
 {
@@ -71,17 +74,40 @@ class StripeController extends Controller
     {
         try {
             $order = Order::findOrFail($request->order_id);
+            
+            // Confirm reservations and update inventory
+            foreach ($order->items as $item) {
+                // Update reservation status
+                ProductReservation::where([
+                    'product_id' => $item->product_id,
+                    'session_id' => session()->getId(),
+                    'status' => 'pending'
+                ])->update(['status' => 'confirmed']);
+
+                // Decrease inventory
+                $inventory = $item->product->inventory;
+                $inventory->quantity -= $item->quantity;
+                $inventory->save();
+            }
+
             $order->status = 'processing';
             $order->save();
 
             // Save transaction
             Transaction::create([
                 'order_id' => $order->id,
-                'transaction_id' => $request->session_id,
+                'user_id' => auth()->id(),
+                'transaction_id' => $request->session_id,     
                 'payment_method' => 'stripe',
                 'amount' => $order->total_amount,
                 'status' => 'completed'
             ]);
+
+            // Send email notifications
+            $recipients = ['walid.babi.du@gmail.com', 'mohanad.babi@gmail.com'];
+            foreach ($recipients as $email) {
+                Mail::to($email)->send(new OrderPlaced($order));
+            }
 
             session()->forget('cart');
             
