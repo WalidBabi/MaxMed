@@ -216,7 +216,8 @@
                                 action="{{ route('cart.add', $product->id) }}" 
                                 method="POST" 
                                 class="d-flex gap-2 position-relative"
-                                @submit.prevent="redirectToAuth()">
+                                @submit.prevent="redirectToAuth()"
+                                x-show="{{ $product->inStock() }}">
                                     @csrf
                                     <div class="input-group" style="width: 120px;">
                                         <button type="button" class="btn btn-outline-secondary"
@@ -230,8 +231,7 @@
                                             max="{{ $product->inventory->quantity }}"
                                             class="form-control text-center"
                                             style="width: 50px;"
-                                            readonly
-                                            {{ !$product->inStock() ? 'disabled' : '' }}>
+                                            readonly>
                                         <button type="button" class="btn btn-outline-secondary"
                                             @click="if(quantity < {{ $product->inventory->quantity }}) {quantity++} else { messageText = 'No more items in stock!'; showMessage = true; setTimeout(() => showMessage = false, 3000); }">
                                             +
@@ -239,7 +239,7 @@
                                     </div>
                                     <button type="submit" 
                                         class="btn bg-[#171e60] text-white hover:bg-[#0a5694]" 
-                                        :disabled="!{{ $product->inStock() }} || quantity == 0">
+                                        :disabled="quantity == 0">
                                         <i class="fas fa-shopping-cart me-1"></i> Add to Cart
                                     </button>
                                     <div x-show="showMessage" x-transition
