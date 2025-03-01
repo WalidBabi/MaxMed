@@ -32,9 +32,8 @@ services:
         restart: unless-stopped
         environment:
             MYSQL_DATABASE: ${DB_DATABASE}
-            MYSQL_ROOT_PASSWORD: '%MaxMed123&'
-            MYSQL_PASSWORD: '%MaxMed123&'
-            MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+            MYSQL_ROOT_PASSWORD: ''
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
         volumes:
             - dbdata:/var/lib/mysql
         ports:
@@ -50,12 +49,13 @@ services:
             PMA_PORT: 3306
             PMA_ARBITRARY: 1
             PMA_USER: 'root'
-            PMA_PASSWORD: '%MaxMed123&'
+            PMA_PASSWORD: ''
         restart: unless-stopped
         ports:
             - "8080:80"
         networks:
             - laravel-network
+
 
 networks:
     laravel-network:
