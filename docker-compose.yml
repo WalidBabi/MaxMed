@@ -49,11 +49,14 @@ services:
       PMA_HOST: db
       PMA_PORT: 3306
       PMA_ARBITRARY: 1
+      PMA_USER: 'root'
+      PMA_PASSWORD: '%MaxMed123&'
     restart: unless-stopped
     ports:
       - "8080:80"
     networks:
       - laravel-network
+
 
 networks:
   laravel-network:
