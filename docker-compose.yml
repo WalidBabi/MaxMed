@@ -1,67 +1,66 @@
 version: '3.8'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: laravel-app
-    container_name: laravel-app
-    restart: unless-stopped
-    working_dir: /var/www
-    volumes:
-      - ./:/var/www
-    networks:
-      - laravel-network
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: laravel-app
+        container_name: laravel-app
+        restart: unless-stopped
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
+        networks:
+            - laravel-network
 
-  nginx:
-    image: nginx:alpine
-    container_name: laravel-nginx
-    restart: unless-stopped
-    ports:
-      - "8000:80"
-    volumes:
-      - ./:/var/www
-      - ./docker/nginx/conf.d:/etc/nginx/conf.d
-    networks:
-      - laravel-network
+    nginx:
+        image: nginx:alpine
+        container_name: laravel-nginx
+        restart: unless-stopped
+        ports:
+            - "8000:80"
+        volumes:
+            - ./:/var/www
+            - ./docker/nginx/conf.d:/etc/nginx/conf.d
+        networks:
+            - laravel-network
 
-  db:
-    image: mysql:8.0
-    container_name: laravel-db
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-""}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-""}
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-    volumes:
-      - dbdata:/var/lib/mysql
-    ports:
-      - "3306:3306"
-    networks:
-      - laravel-network
+    db:
+        image: mysql:8.0
+        container_name: laravel-db
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: '%MaxMed123&'
+            MYSQL_PASSWORD: '%MaxMed123&'
+            MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+        volumes:
+            - dbdata:/var/lib/mysql
+        ports:
+            - "3306:3306"
+        networks:
+            - laravel-network
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: laravel-phpmyadmin
-    environment:
-      PMA_HOST: db
-      PMA_PORT: 3306
-      PMA_ARBITRARY: 1
-      PMA_USER: 'root'
-      PMA_PASSWORD: '%MaxMed123&'
-    restart: unless-stopped
-    ports:
-      - "8080:80"
-    networks:
-      - laravel-network
-
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: laravel-phpmyadmin
+        environment:
+            PMA_HOST: db
+            PMA_PORT: 3306
+            PMA_ARBITRARY: 1
+            PMA_USER: 'root'
+            PMA_PASSWORD: '%MaxMed123&'
+        restart: unless-stopped
+        ports:
+            - "8080:80"
+        networks:
+            - laravel-network
 
 networks:
-  laravel-network:
-    driver: bridge
+    laravel-network:
+        driver: bridge
 
 volumes:
-  dbdata:
-    driver: local
+    dbdata:
+        driver: local
