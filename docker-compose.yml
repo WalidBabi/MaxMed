@@ -34,7 +34,6 @@ services:
             MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-""}
             MYSQL_PASSWORD: ${DB_PASSWORD:-""}
             MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-            MYSQL_USER: ${DB_USERNAME}
         volumes:
             - dbdata:/var/lib/mysql
         ports:
