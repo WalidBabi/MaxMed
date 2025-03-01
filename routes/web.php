@@ -9,6 +9,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\NewsController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -39,11 +40,46 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/remove/{product}', [CartController::class, 'removeFromCart'])->name('cart.remove');
 
+    // Partners Routes
+    Route::get('/partners', function () {
+        return view('partners.index');
+    })->name('partners.index');
+
+    // News Routes
+    Route::get('/news', function () {
+        return view('news.index');
+    })->name('news.index');
+
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
 
 Route::post('/stripe/checkout', [StripeController::class, 'checkout'])->name('stripe.checkout');
 Route::get('/stripe/success', [StripeController::class, 'success'])->name('stripe.success');
+
+// Admin Routes
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['web', 'auth'])  // Explicitly include 'web' middleware
+    ->group(function () {
+        Route::get('/dashboard', function () {
+            return view('admin.dashboard');
+        })->name('dashboard');
+        
+        // News Management
+        Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);
+        
+        // Product Management
+        Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
+
+        // Order Management
+        Route::get('/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
+        Route::put('/orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.status.update');
+    });
+
+// Update the News Routes
+Route::get('/news', [NewsController::class, 'index'])->name('news.index');
+Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
 
 require __DIR__ . '/auth.php';

@@ -106,6 +106,18 @@
                     loader.style.display = 'none';
                 }
             });
+
+            window.onpageshow = function(event) {
+                if (event.persisted) {
+                    window.location.reload();
+                }
+            };
+            
+            // Disable back button
+            window.history.pushState(null, null, window.location.href);
+            window.onpopstate = function () {
+                window.history.pushState(null, null, window.location.href);
+            };
         </script>
     </body>
 </html>

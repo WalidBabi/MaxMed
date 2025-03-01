@@ -68,7 +68,7 @@
                     </h3>
                     <p class="text-gray-600">
                         MaxMed Medical Equipment Trading LLC<br>
-                        Dubai Science Park<br>
+                        Dubai Al Barsha<br>
                         Dubai, United Arab Emirates
                     </p>
                 </div>
@@ -82,14 +82,14 @@
                         Contact Details
                     </h3>
                     <div class="space-y-3">
-                        <p class="text-gray-600">Phone: +971 52 634 4688</p>
+                  
                         <p class="text-gray-600">Email: sales@maxmedme.com</p>
-                        <p class="text-gray-600">Working Hours: Sun-Thu 9:00 AM - 6:00 PM</p>
+      
                     </div>
                 </div>
 
                 <!-- Map -->
-                <div class="bg-white p-6 rounded-lg shadow-lg">
+                <!-- <div class="bg-white p-6 rounded-lg shadow-lg">
                     <h3 class="text-xl font-bold mb-4">Location Map</h3>
                     <div class="aspect-w-16 aspect-h-9">
                         <iframe 
@@ -100,7 +100,7 @@
                             loading="lazy">
                         </iframe>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

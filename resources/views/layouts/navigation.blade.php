@@ -31,6 +31,18 @@
                         {{ __('Contact Us') }}
                     </x-nav-link>
 
+                    <x-nav-link :href="route('partners.index')" :active="request()->routeIs('partners')"
+                        class="hover:text-[#0a5694]">
+                        {{ __('Partners') }}
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('news.index')" :active="request()->routeIs('news')"
+                        class="hover:text-[#0a5694]">
+                        {{ __('News') }}
+                    </x-nav-link>
+
+
+
                 </div>
             </div>
 
@@ -78,7 +90,15 @@
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            
+                            @auth
+                            @if(Auth::user()->is_admin)
+                            <x-dropdown-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')"
+                                class="hover:text-[#0a5694]">
+                                {{ __('Admin Dashboard') }}
+                            </x-dropdown-link>
+                            @endif
+                            @endauth
+
                             <x-dropdown-link :href="route('orders.index')" :active="request()->routeIs('orders.index')"
                                 class="hover:text-[#0a5694]">
                                 {{ __('My Orders') }}
@@ -90,7 +110,7 @@
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
 
-                      
+
                         </form>
                     </x-slot>
                 </x-dropdown>
@@ -129,6 +149,12 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
                 {{ __('Contact Us') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('partners.index')" :active="request()->routeIs('partners')">
+                {{ __('Partners') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('news.index')" :active="request()->routeIs('news')">
+                {{ __('News') }}
             </x-responsive-nav-link>
             <!-- Responsive Cart Link -->
             <x-responsive-nav-link href="#">
