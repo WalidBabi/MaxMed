@@ -13,7 +13,9 @@ services:
             - ./:/var/www
         networks:
             - laravel-network
-
+        ports:
+            - "8000:8000"
+            
     nginx:
         image: nginx:alpine
         container_name: laravel-nginx
