@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'About MaxMed UAE - Leading Laboratory Equipment Supplier in Dubai')
+
 @section('content')
     <!-- Hero Section -->
     <div class="about-hero h-[400px] flex items-center justify-center text-white" style="background-image: url('{{ asset('Images/maxmed building.png') }}'); background-size: cover; background-position: center;">

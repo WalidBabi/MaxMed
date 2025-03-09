@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Contact MaxMed UAE - Medical Laboratory Equipment Supplier Dubai')
+
 @section('content')
 
     <!-- Hero Section -->

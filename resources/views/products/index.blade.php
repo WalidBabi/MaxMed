@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Medical Laboratory Equipment & Supplies | MaxMed UAE')
+
 @section('content')
 <style>
     .lab-alert {

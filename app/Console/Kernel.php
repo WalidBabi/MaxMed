@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('reservations:cleanup')->everyMinute();
+        $schedule->command('sitemap:generate')->daily();
     }
 
     /**
