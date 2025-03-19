@@ -17,7 +17,7 @@
             <div>
                 <h3 class="text-3xl font-bold mb-6">Our Story</h3>
                 <p class="text-gray-600 mb-4">
-                    Founded in 2010, MaxMed has been at the forefront of medical laboratory innovation in the UAE.
+                    Founded in 2024, MaxMed has been at the forefront of medical laboratory innovation in the UAE.
                     What started as a small distribution company has grown into one of the region's leading providers
                     of cutting-edge laboratory equipment.
                 </p>
@@ -71,40 +71,6 @@
                     <h4 class="text-xl font-bold mb-4">Customer Support</h4>
                     <p class="text-gray-600">Dedicated to providing exceptional service and support to our clients at every step.</p>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Team Section -->
-    <div class="max-w-7xl mx-auto px-4 py-16">
-        <h3 class="text-3xl font-bold text-center mb-12">Our Leadership Team</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="text-center">
-                <div class="mb-4">
-                    <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1"
-                        alt="CEO"
-                        class="w-48 h-48 rounded-full mx-auto object-cover">
-                </div>
-                <h4 class="text-xl font-bold text-[#171e60]">Dr. Ahmed Hassan</h4>
-                <p class="text-gray-600">Chief Executive Officer</p>
-            </div>
-            <div class="text-center">
-                <div class="mb-4">
-                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1"
-                        alt="COO"
-                        class="w-48 h-48 rounded-full mx-auto object-cover">
-                </div>
-                <h4 class="text-xl font-bold">Sarah Thompson</h4>
-                <p class="text-gray-600">Chief Operations Officer</p>
-            </div>
-            <div class="text-center">
-                <div class="mb-4">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1"
-                        alt="CTO"
-                        class="w-48 h-48 rounded-full mx-auto object-cover">
-                </div>
-                <h4 class="text-xl font-bold">Dr. Michael Chen</h4>
-                <p class="text-gray-600">Chief Technical Officer</p>
             </div>
         </div>
     </div>

@@ -10,6 +10,7 @@ use App\Http\Controllers\StripeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\NewsController;
+use Illuminate\Support\Facades\Mail;
 
 Route::get('/', function () {
     return view('welcome');
@@ -81,5 +82,16 @@ Route::prefix('admin')
 // Update the News Routes
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
+
+Route::get('/test-email', function() {
+    $order = App\Models\Order::first(); // Get the first order or specify an ID
+    
+    try {
+        Mail::to('walid.babi.du@gmail.com')->send(new App\Mail\OrderPlaced($order));
+        return "Test email sent successfully!";
+    } catch (\Exception $e) {
+        return "Error sending email: " . $e->getMessage();
+    }
+});
 
 require __DIR__ . '/auth.php';

@@ -22,7 +22,7 @@
         <!-- Content -->
         <div class="relative h-full flex items-center justify-center text-white">
             <div class="text-center">
-                <h2 class="text-4xl md:text-6xl font-bold mb-4 text-white">Laboratory Solutions</h2>
+                <h2 class="text-4xl md:text-6xl font-bold mb-4 text-white">Lab And Medical Solutions</h2>
                 <p class="text-xl mb-8 text-white">Providing cutting-edge medical Laboratory equipment for modern laboratories</p>
                 <a href="{{ route('products.index') }}" 
                     class="bg-[#171e60] hover:bg-[#0a5694] text-white px-8 py-3 rounded-full font-semibold transition-colors duration-300">

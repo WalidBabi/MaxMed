@@ -69,7 +69,7 @@
                         Office Location
                     </h3>
                     <p class="text-gray-600">
-                        MaxMed Medical Equipment Trading LLC<br>
+                        MAXMED SCIENTIFIC & LABORATORY EQUIPMENT TRADING CO. L.L.C<br>
                         Dubai Al Barsha<br>
                         Dubai, United Arab Emirates
                     </p>
@@ -86,7 +86,7 @@
                     <div class="space-y-3">
                   
                         <p class="text-gray-600">Email: sales@maxmedme.com</p>
-      
+                        <p class="text-gray-600">Phone: +971 55 460 2500</p>
                     </div>
                 </div>
 

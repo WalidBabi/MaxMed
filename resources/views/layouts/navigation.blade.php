@@ -17,14 +17,15 @@
                         class="hover:text-[#0a5694]">
                         {{ __('Home') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products')"
-                        class="hover:text-[#0a5694]">
-                        {{ __('Products') }}
-                    </x-nav-link>
                     <x-nav-link :href="route('about')" :active="request()->routeIs('about')"
                         class="hover:text-[#0a5694]">
                         {{ __('About Us') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products')"
+                        class="hover:text-[#0a5694]">
+                        {{ __('Products') }}
+                    </x-nav-link>
+                  
 
                     <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')"
                         class="hover:text-[#0a5694]">
