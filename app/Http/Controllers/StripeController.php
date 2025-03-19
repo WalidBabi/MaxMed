@@ -103,10 +103,12 @@ class StripeController extends Controller
                 'status' => 'completed'
             ]);
 
-            // Send email notifications
+            // Send email notifications with explicit sender
             $recipients = ['walid.babi.du@gmail.com', 'mohanad.babi@gmail.com'];
             foreach ($recipients as $email) {
-                Mail::to($email)->send(new OrderPlaced($order));
+                Mail::to($email)
+                    ->from('cs@maxmedme.com', 'MaxMedMe Customer Service')
+                    ->send(new OrderPlaced($order));
             }
 
             session()->forget('cart');

@@ -87,7 +87,18 @@ Route::get('/test-email', function() {
     $order = App\Models\Order::first(); // Get the first order or specify an ID
     
     try {
-        Mail::to('walid.babi.du@gmail.com')->send(new App\Mail\OrderPlaced($order));
+        Mail::to('walid.babi.du@gmail.com')
+            ->from('cs@maxmedme.com', 'MaxMedMe Customer Service')
+            ->send(new App\Mail\OrderPlaced($order));
+        
+        // Also test the order notification emails
+        $recipients = ['walid.babi.du@gmail.com', 'mohanad.babi@gmail.com'];
+        foreach ($recipients as $email) {
+            Mail::to($email)
+                ->from('cs@maxmedme.com', 'MaxMedMe Customer Service')
+                ->send(new App\Mail\OrderPlaced($order));
+        }
+        
         return "Test email sent successfully!";
     } catch (\Exception $e) {
         return "Error sending email: " . $e->getMessage();
