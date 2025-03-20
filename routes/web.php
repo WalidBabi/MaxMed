@@ -85,11 +85,32 @@ Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
 
 Route::get('/test-mail', function () {
-    $order = Order::first(); // Get a test order
-    
-    Mail::to('cs@maxmedme.com')->send(new App\Mail\OrderPlaced($order));
-    
-    return 'Test email sent!';
-});
+    try {
+        // Create a test order if none exists
+        $order = Order::first();
+        
+        if (!$order) {
+            $order = Order::create([
+                'user_id' => 1, // Make sure this user exists
+                'order_number' => 'TEST-' . uniqid(),
+                'total_amount' => 99.99,
+                'status' => 'pending',
+                'shipping_address' => 'Test Address',
+                'shipping_city' => 'Test City',
+                'shipping_state' => 'Test State',
+                'shipping_zipcode' => '12345',
+                'shipping_phone' => '1234567890',
+            ]);
+        }
+
+        Mail::to('cs@maxmedme.com')->send(new App\Mail\OrderPlaced($order));
+        
+        return 'Test email sent! Check logs for details.';
+    } catch (\Exception $e) {
+        // Log the error and return a more helpful message
+        \Log::error('Mail test failed: ' . $e->getMessage());
+        return 'Error: ' . $e->getMessage();
+    }
+})->name('test.mail');
 
 require __DIR__ . '/auth.php';
