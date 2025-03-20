@@ -11,6 +11,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\NewsController;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Order;
 
 Route::get('/', function () {
     return view('welcome');
@@ -83,26 +84,12 @@ Route::prefix('admin')
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
 
-Route::get('/test-email', function() {
-    $order = App\Models\Order::first(); // Get the first order or specify an ID
+Route::get('/test-mail', function () {
+    $order = Order::first(); // Get a test order
     
-    try {
-        Mail::to('walid.babi.du@gmail.com')
-            ->from('cs@maxmedme.com', 'MaxMedMe Customer Service')
-            ->send(new App\Mail\OrderPlaced($order));
-        
-        // Also test the order notification emails
-        $recipients = ['walid.babi.du@gmail.com', 'mohanad.babi@gmail.com'];
-        foreach ($recipients as $email) {
-            Mail::to($email)
-                ->from('cs@maxmedme.com', 'MaxMedMe Customer Service')
-                ->send(new App\Mail\OrderPlaced($order));
-        }
-        
-        return "Test email sent successfully!";
-    } catch (\Exception $e) {
-        return "Error sending email: " . $e->getMessage();
-    }
+    Mail::to('cs@maxmedme.com')->send(new App\Mail\OrderPlaced($order));
+    
+    return 'Test email sent!';
 });
 
 require __DIR__ . '/auth.php';
