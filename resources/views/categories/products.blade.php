@@ -119,21 +119,12 @@
                                     @if($product->inventory->quantity > 0)
                                         <div class="d-flex align-items-center mb-2">
                                             <span class="badge bg-success me-3">In Stock</span>
-                                            <div class="quantity-controls">
-                                                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="this.nextElementSibling.stepDown()">-</button>
-                                                <input type="number" name="quantity" value="1" min="1" max="{{ $product->inventory->quantity }}" class="form-control mx-2">
-                                                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="this.previousElementSibling.stepUp()">+</button>
-                                            </div>
                                         </div>
-                                        <form action="{{ route('cart.add', $product) }}" method="POST" class="mt-auto">
-                                            @csrf
-                                            <div class="button-group">
-                                                <button type="submit" class="btn btn-primary">Add to Cart</button>
-                                                <a href="{{ route('quotation.form', $product) }}" class="btn btn-secondary">
-                                                    Request Quotation
-                                                </a>
-                                            </div>
-                                        </form>
+                                        <div class="button-group">
+                                            <a href="{{ route('quotation.form', $product) }}" class="btn btn-secondary">
+                                                Request Quotation
+                                            </a>
+                                        </div>
                                     @else
                                         <span class="badge bg-danger">Out of Stock</span>
                                         <div class="button-group">

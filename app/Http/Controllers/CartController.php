@@ -31,7 +31,8 @@ class CartController extends Controller
      */
     public function add(Request $request, Product $product)
     {
-        $requestedQuantity = $request->input('quantity');
+        $requestedQuantity = $request->input('quantity', 1); // Default to 1 if not provided
+        \Log::info('Requested Quantity:', ['quantity' => $requestedQuantity]); // Log the requested quantity
         
         // Get current cart quantity for this product
         $currentCartQuantity = $this->getTotalQuantityInCart($product->id);
