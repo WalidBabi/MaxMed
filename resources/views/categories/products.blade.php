@@ -114,7 +114,9 @@
                             <img src="{{ $product->image_url }}" class="card-img-top" alt="{{ $product->name }}">
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">{{ $product->name }}</h5>
-                                <p class="card-text">${{ number_format($product->price, 2) }}</p>
+                                <p class="card-text">
+                                    ${{ number_format($product->price, 2) }} / AED {{ number_format($product->price_aed, 2) }}
+                                </p>
                                 <div class="card-footer">
                                     @if($product->inventory->quantity > 0)
                                         <div class="d-flex align-items-center mb-2">

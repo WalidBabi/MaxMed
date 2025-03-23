@@ -70,6 +70,18 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label for="price_aed" class="form-label">Price (AED)</label>
+                                    <input type="number" step="0.01" name="price_aed" id="price_aed" 
+                                           value="{{ old('price_aed', $product->price_aed) }}"
+                                           class="form-control">
+                                    @error('price_aed')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label for="inventory_quantity" class="form-label">Number of Stock</label>
                                     
                                     <input type="number" name="inventory_quantity" id="inventory_quantity" 

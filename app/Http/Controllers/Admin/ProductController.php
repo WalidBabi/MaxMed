@@ -34,7 +34,8 @@ class ProductController extends Controller
             'name' => 'required|max:255',
             'description' => 'required',
             'price' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0', // Changed 'stock' to 'quantity'
+            'price_aed' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
@@ -67,6 +68,7 @@ class ProductController extends Controller
             'name' => 'required|max:255',
             'description' => 'required',
             'price' => 'required|numeric|min:0',
+            'price_aed' => 'required|numeric|min:0',
             'inventory_quantity' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
@@ -88,6 +90,7 @@ class ProductController extends Controller
                 'name' => $request->name,
                 'description' => $request->description,
                 'price' => $request->price,
+                'price_aed' => $request->price_aed,
                 'category_id' => $request->category_id,
                 'image_url' => $validated['image_url'] ?? $product->image_url,
             ]);

@@ -22,17 +22,20 @@
                         <p class="card-text">
                             <span class="badge bg-info">{{ $product->category->name }}</span>
                         </p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span class="h5 mb-0">${{ number_format($product->price, 2) }}</span>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <span class="h5 mb-0">${{ number_format($product->price, 2) }}</span>
+                                <span class="h5 mb-0 ms-2">AED {{ number_format($product->price_aed, 2) }}</span>
+                            </div>
                             <span class="badge bg-{{ $product->inventory->quantity > 0 ? 'success' : 'danger' }}">
-                                Number of Stock {{ $product->inventory->quantity }}
+                                Stock: {{ $product->inventory->quantity }}
                             </span>
                         </div>
                     </div>
                     <div class="card-footer bg-transparent">
                         <div class="d-flex justify-content-between">
                             <a href="{{ route('admin.products.edit', $product) }}" 
-                               class="btn btn-sm btn-primary">
+                               class="btn btn-sm btn-outline-primary">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
                             <form action="{{ route('admin.products.destroy', $product) }}" 
@@ -41,7 +44,7 @@
                                   onsubmit="return confirm('Are you sure you want to delete this product?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
                                     <i class="fas fa-trash"></i> Delete
                                 </button>
                             </form>
