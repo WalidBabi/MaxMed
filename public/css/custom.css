@@ -1,0 +1,18 @@
+.custom-card {
+    width: 100%; /* Ensures the card takes full width of the column */
+    height: 300px; /* Set a fixed height for the card */
+    display: flex;
+    flex-direction: column;
+}
+
+.custom-card img {
+    height: 150px; /* Set a fixed height for the image */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+}
+
+.custom-card .card-body {
+    flex-grow: 1; /* Ensures the card body takes the remaining space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centers the content vertically */
+} 

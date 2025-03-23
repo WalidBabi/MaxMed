@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
+use App\Models\Category;
 
 class ProductController extends Controller
 {
@@ -26,7 +27,10 @@ class ProductController extends Controller
         // Instead of getting all products, we paginate or limit the results
         $products = $query->paginate(16);
         
-        return view('products.index', compact('products'));
+        // Fetch only top-level categories (categories without a parent)
+        $categories = Category::whereNull('parent_id')->get();
+        
+        return view('products.index', compact('products', 'categories'));
     }
 
     /**

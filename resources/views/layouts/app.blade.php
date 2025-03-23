@@ -71,12 +71,16 @@
         <!-- Include Bootstrap CSS or any other stylesheets -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+        <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+
         @stack('head')
     </head>
     <body class="font-sans antialiased bg-gray-50 relative">
 
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             @include('layouts.navigation')
+
+      
 
             <!-- Page Heading -->
             @isset($header)
@@ -91,7 +95,8 @@
             <main>
                 @yield('content')
             </main>
-        </div>
+
+     
 
         @stack('scripts')
 

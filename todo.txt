@@ -1,5 +1,15 @@
 1- #do a crone job to clean up expired reservations
 php artisan reservations:cleanup 
-2- email when payment is successful and order is placed
+2- email when payment is successful and order is placed to cs@maxmedme.com
+
+
+AED and dollars products
+
+
+SEO
+
+setup mail in .env
+quotation for trial order design logo
+MaxTest logo
 
 

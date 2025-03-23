@@ -19,16 +19,12 @@
             <div class="ml-5">
                 <h5 class="text-xl font-bold mb-4">Products</h5>
                 <ul class="space-y-2">
-                    <li><a href="{{ route('products.index') }}" class="text-gray-400 hover:text-white transition-colors duration-300">All Products</a></li>
-                    <li><a href="{{ route('products.index', ['category' => 'rapid-tests']) }}" class="text-gray-400 hover:text-white transition-colors duration-300">MaxTest© Rapid Tests IVD</a></li>
-                    <li><a href="{{ route('products.index', ['category' => 'plasticware']) }}" class="text-gray-400 hover:text-white transition-colors duration-300">MaxWare© Plasticware</a></li>
-                    <li><a href="{{ route('products.index', ['category' => 'analytical-chemistry']) }}" class="text-gray-400 hover:text-white transition-colors duration-300">Analytical Chemistry</a></li>
-                    <li><a href="{{ route('products.index', ['category' => 'microbiology']) }}" class="text-gray-400 hover:text-white transition-colors duration-300">Microbiology</a></li>
-                    <li><a href="{{ route('products.index', ['category' => 'molecular-biology']) }}" class="text-gray-400 hover:text-white transition-colors duration-300">Molecular Biology</a></li>
-                    <li><a href="{{ route('products.index', ['category' => 'consumables']) }}" class="text-gray-400 hover:text-white transition-colors duration-300">Medical Consumables</a></li>
+                   
+                    @foreach(\App\Models\Category::all() as $category)
+                        <li><a href="{{ route('products.index', ['category' => $category->slug]) }}" class="text-gray-400 hover:text-white transition-colors duration-300">{{ $category->name }}</a></li>
+                    @endforeach
                 </ul>
             </div>
-
 
             <!-- Connect -->
             <div class="ml-5">

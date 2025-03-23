@@ -22,7 +22,9 @@ class ProductController extends Controller
 
     public function create()
     {
-        $categories = Category::all();
+        // Fetch categories that do not have subcategories
+        $categories = Category::doesntHave('subcategories')->get();
+
         return view('admin.products.create', compact('categories'));
     }
 

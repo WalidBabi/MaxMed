@@ -11,7 +11,11 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\NewsController;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use App\Models\Order;
+use App\Http\Controllers\QuotationController;
+use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\CategoryController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,10 +26,7 @@ Route::get('/about', function () {
     return view('about');
 })->name('about');
 
-// Product Routes
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/product/{product}', [ProductController::class, 'show'])->name('product.show');
-Route::get('/check-availability/{product}/{quantity}', [ProductController::class, 'checkAvailability'])->name('check.availability');
+
 
 Route::get('/contact', function () {
     return view('contact');
@@ -59,26 +60,11 @@ Route::middleware('auth')->group(function () {
 Route::post('/stripe/checkout', [StripeController::class, 'checkout'])->name('stripe.checkout');
 Route::get('/stripe/success', [StripeController::class, 'success'])->name('stripe.success');
 
-// Admin Routes
-Route::prefix('admin')
-    ->name('admin.')
-    ->middleware(['web', 'auth'])  // Explicitly include 'web' middleware
-    ->group(function () {
-        Route::get('/dashboard', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
-        
-        // News Management
-        Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);
-        
-        // Product Management
-        Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
 
-        // Order Management
-        Route::get('/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
-        Route::get('/orders/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
-        Route::put('/orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.status.update');
-    });
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/product/{product}', [ProductController::class, 'showProduct'])->name('product.show');
+
+
 
 // Update the News Routes
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
@@ -112,5 +98,48 @@ Route::get('/test-mail', function () {
         return 'Error: ' . $e->getMessage();
     }
 })->name('test.mail');
+// Product Routes
+
+
+Route::get('/check-availability/{product}/{quantity}', [ProductController::class, 'checkAvailability'])->name('check.availability');
+
+Route::get('/quotation/request/{product}', [QuotationController::class, 'request'])->name('quotation.request');
+Route::post('/quotation/store', [QuotationController::class, 'store'])->name('quotation.store');
+Route::get('/quotation/confirmation/{quotation}', [QuotationController::class, 'confirmation'])->name('quotation.confirmation');
+Route::get('/quotation/{product}', [QuotationController::class, 'form'])->name('quotation.form');
+// Admin Routes
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['web', 'auth'])  // Explicitly include 'web' middleware
+    ->group(function () {
+        Route::get('/dashboard', function () {
+            return view('admin.dashboard');
+        })->name('dashboard');
+        
+        // News Management
+        Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);
+        
+        // Product Management
+        Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
+
+        // Order Management
+        Route::get('/orders', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('orders.show');
+        Route::put('/orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('orders.status.update');
+
+        // Category Management
+        Route::get('/categories', [App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('categories.index');
+        Route::get('/categories/create', [App\Http\Controllers\Admin\CategoryController::class, 'create'])->name('categories.create');
+        Route::post('/categories', [App\Http\Controllers\Admin\CategoryController::class, 'store'])->name('categories.store');
+        Route::delete('/categories/{category}', [App\Http\Controllers\Admin\CategoryController::class, 'destroy'])->name('categories.destroy');
+    });
+
+Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
+Route::get('/categories/{category}/{subcategory}', [CategoryController::class, 'showSubcategory'])->name('categories.subcategory.show');
+Route::get('/products/{product}', [ProductController::class, 'show'])->name('product.show');
+
+// Add this route for the categories index
+Route::get('/admin/categories', [App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('admin.categories.index');
 
 require __DIR__ . '/auth.php';

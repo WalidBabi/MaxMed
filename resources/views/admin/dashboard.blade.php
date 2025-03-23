@@ -28,8 +28,6 @@
             </div>
         </div>
 
-
-
         <div class="col-md-3 mb-4">
             <div class="card bg-info text-white h-100" onclick="window.location='{{ route('admin.news.index') }}'" style="cursor: pointer;">
                 <div class="card-body">
@@ -39,6 +37,14 @@
             </div>
         </div>
 
+        <div class="col-md-3 mb-4">
+            <div class="card bg-success text-white h-100" onclick="window.location='{{ route('admin.categories.index') }}'" style="cursor: pointer;">
+                <div class="card-body">
+                    <h5 class="card-title">Categories</h5>
+                    <p class="card-text display-4">{{ \App\Models\Category::count() }}</p>
+                </div>
+            </div>
+        </div>
 
     </div>
 
@@ -95,7 +101,6 @@
                             <thead>
                                 <tr>
                                     <th>Product</th>
-
                                     <th>Price</th>
                                     <th>Stock</th>
                                 </tr>
@@ -106,7 +111,6 @@
                                     })->take(5)->get() as $product)
                                     <tr>
                                         <td>{{ $product->name }}</td>
-
                                         <td>${{ number_format($product->price, 2) }}</td>
                                         <td>
                                             <span class="badge bg-{{ $product->inventory->quantity < 5 ? 'danger' : 'warning' }}">

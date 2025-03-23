@@ -53,6 +53,13 @@
                         Orders
                     </a>
                 </li>
+
+                <li>
+                    <a href="{{ route('admin.categories.index') }}" class="nav-link text-white {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                        <i class="fas fa-th-large me-2"></i>
+                        Categories
+                    </a>
+                </li>
             </ul>
             <hr>
             <div class="dropdown">

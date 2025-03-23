@@ -52,7 +52,7 @@ class CartController extends Controller
                 'status' => 'pending'
             ],
             [
-                'quantity' => $totalRequestedQuantity, // Use total quantity including existing cart
+                'quantity' => $totalRequestedQuantity,
                 'user_id' => auth()->id(),
                 'expires_at' => now()->addMinutes(1)
             ]
