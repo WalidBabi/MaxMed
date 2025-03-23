@@ -4,7 +4,13 @@
 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
     <div class="mb-6">
         <h2 class="text-3xl font-semibold text-gray-800">Search Results for "{{ $query }}"</h2>
-        <p class="text-gray-600 mt-2">Found {{ $products->total() }} {{ Str::plural('result', $products->total()) }}</p>
+        @if(isset($error))
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-4" role="alert">
+                <p>{{ $error }}</p>
+            </div>
+        @else
+            <p class="text-gray-600 mt-2">Found {{ $products->total() }} {{ Str::plural('result', $products->total()) }}</p>
+        @endif
     </div>
 
     @if($products->count() > 0)
