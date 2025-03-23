@@ -125,11 +125,6 @@
             };
         </script>
 
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('cart.view') }}">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="badge bg-danger">{{ session('cart') ? count(session('cart')) : 0 }}</span>
-            </a>
-        </li>
+   
     </body>
 </html>
