@@ -1,6 +1,6 @@
 <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-24">
             <div class="flex">
                 <!-- Logo -->
@@ -12,17 +12,17 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-10 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')"
-                        class="hover:text-[#0a5694]">
+                        class="hover:text-[#0a5694] whitespace-nowrap">
                         {{ __('Home') }}
                     </x-nav-link>
                     <x-nav-link :href="route('about')" :active="request()->routeIs('about')"
-                        class="hover:text-[#0a5694]">
+                        class="hover:text-[#0a5694] whitespace-nowrap">
                         {{ __('About Us') }}
                     </x-nav-link>
                     <x-nav-link :href="route('products.index')" :active="request()->routeIs('products')"
-                        class="hover:text-[#0a5694]">
+                        class="hover:text-[#0a5694] whitespace-nowrap">
                         {{ __('Products') }}
                     </x-nav-link>
 
@@ -31,16 +31,16 @@
                 
 
                     <x-nav-link :href="route('partners.index')" :active="request()->routeIs('partners')"
-                        class="hover:text-[#0a5694]">
+                        class="hover:text-[#0a5694] whitespace-nowrap">
                         {{ __('Partners') }}
                     </x-nav-link>
 
                     <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')"
-                        class="hover:text-[#0a5694]">
+                        class="hover:text-[#0a5694] whitespace-nowrap">
                         {{ __('Contact Us') }}
                     </x-nav-link>
                     <x-nav-link :href="route('news.index')" :active="request()->routeIs('news')"
-                        class="hover:text-[#0a5694]">
+                        class="hover:text-[#0a5694] whitespace-nowrap">
                         {{ __('News') }}
                     </x-nav-link>
                     <!-- Search Bar -->
@@ -130,9 +130,9 @@
                     </x-slot>
                 </x-dropdown>
                 @else
-                <a href="{{ route('login') }}" class="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-lg transition-colors duration-300">Sign In</a>
+                <a href="{{ route('login') }}" class="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-lg transition-colors duration-300 whitespace-nowrap">Sign In</a>
                 <a href="{{ route('register') }}"
-                    class="bg-[#171e60] text-white px-4 py-2 rounded-lg hover:bg-[#0a5694] transition-colors duration-300">
+                    class="bg-[#171e60] text-white px-4 py-2 rounded-lg hover:bg-[#0a5694] transition-colors duration-300 whitespace-nowrap">
                     Sign Up
                 </a>
                 @endauth
