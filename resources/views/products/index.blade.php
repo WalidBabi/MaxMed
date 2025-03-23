@@ -4,6 +4,7 @@
 
 @section('content')
 <style>
+    /* Enhanced Lab Alert Styling */
     .lab-alert {
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
@@ -11,6 +12,8 @@
         box-shadow: 
             0 8px 32px 0 rgba(31, 38, 135, 0.37),
             inset 0 0 80px rgba(255, 255, 255, 0.3);
+        position: relative;
+        transition: all 0.3s ease;
     }
 
     .lab-alert::before {
@@ -41,6 +44,12 @@
         position: relative;
         overflow: hidden;
         border-radius: 50%;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .lab-alert:hover .microscope-lens {
+        transform: scale(1.1) rotate(5deg);
     }
 
     .microscope-lens::after {
@@ -58,32 +67,197 @@
         );
         pointer-events: none;
     }
+    
+    /* Enhanced Page Layout */
+    .page-header {
+        margin-bottom: 1.5rem;
+        position: relative;
+        border-left: 4px solid #17a2b8;
+        padding-left: 15px;
+    }
+    
+    .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 0.5rem;
+        transition: color 0.3s;
+    }
+    
+    .page-description {
+        color: #666;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        max-width: 800px;
+        line-height: 1.6;
+    }
 
+    /* Enhanced Category Card Styling */
+    .category-container {
+        margin-top: 15px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 28px;
+    }
+    
+    .category-card-wrapper {
+        height: 100%;
+        transition: transform 0.3s;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    
+    .category-card {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.35s;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        border: none !important;
+        background-color: #fff;
+        position: relative;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .category-card img {
+        height: 180px;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    
+    .category-card:hover img {
+        transform: scale(1.08);
+    }
+    
+    .category-card .card-body {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 22px;
+        position: relative;
+    }
+    
+    .category-card .card-title {
+        text-align: center;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 0;
+        position: relative;
+        transition: color 0.3s;
+    }
+    
+    .category-card:hover .card-title {
+        color: #17a2b8;
+    }
+    
+    .category-card .card-title:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #17a2b8;
+        transition: width 0.3s;
+    }
+    
+    .category-card:hover .card-title:after {
+        width: 50%;
+    }
+    
+    /* Lab theme badge for categories */
+    .lab-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(23, 162, 184, 0.9);
+        color: white;
+        border-radius: 20px;
+        padding: 5px 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        z-index: 10;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px);
+        transition: all 0.3s;
+    }
+    
+    .category-card:hover .lab-badge {
+        background: rgba(40, 167, 69, 0.9);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Enhanced Category List */
     .subcategory-list {
         display: none;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        transform: translateY(100%);
+        transition: transform 0.35s ease;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        z-index: 20;
     }
 
     .category-item:hover .subcategory-list {
         display: block;
+        transform: translateY(0);
     }
-
-    .category-card {
-        width: 100%;
-        height: 250px;
-        display: flex;
-        flex-direction: column;
+    
+    /* Responsive improvements */
+    @media (max-width: 992px) {
+        .category-container {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
     }
-
-    .category-card img {
-        height: 150px;
-        object-fit: cover;
+    
+    @media (max-width: 768px) {
+        .page-title {
+            font-size: 1.7rem;
+        }
+        .category-container {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .category-card .card-title {
+            font-size: 1.1rem;
+        }
     }
-
-    .category-card .card-body {
-        flex-grow: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    
+    @media (max-width: 576px) {
+        .category-container {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+        }
+        .category-card img {
+            height: 140px;
+        }
+        .category-card .card-body {
+            padding: 15px 10px;
+        }
+        .lab-badge {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            top: 10px;
+            right: 10px;
+        }
     }
 </style>
 
@@ -152,30 +326,26 @@
         </div>
     @endif
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                document.querySelectorAll('.alert').forEach(function(alert) {
-                    if (alert.__x) {
-                        alert.__x.$data.show = false;
-                    }
-                });
-            }, 5000);
-        });
-    </script>
-
     <div class="row">
         <div class="col-md-3">
             @include('layouts.sidebar')
         </div>
         <div class="col-md-9">
-            <div class="row">
+            <div class="page-header mb-4">
+                <h1 class="page-title">Laboratory Equipment & Supplies</h1>
+                <p class="page-description">Explore our comprehensive range of high-quality laboratory equipment and medical supplies for your facility.</p>
+            </div>
+            
+            <div class="category-container">
                 @foreach($categories as $category)
-                <div class="col-md-4 mb-4">
+                <div class="category-card-wrapper">
                     <a href="{{ route('categories.show', $category) }}" class="text-decoration-none">
-                        <div class="card category-card h-100 border-0 shadow-sm">
-                            <img src="{{ $category->image_url }}" class="card-img-top" alt="{{ $category->name }}">
-                            <div class="card-body d-flex flex-column">
+                        <div class="category-card">
+                            <span class="lab-badge"><i class="fas fa-vial me-1"></i>Category</span>
+                            <div class="overflow-hidden">
+                                <img src="{{ $category->image_url }}" class="card-img-top" alt="{{ $category->name }}">
+                            </div>
+                            <div class="card-body">
                                 <h5 class="card-title">{{ $category->name }}</h5>
                             </div>
                         </div>
@@ -186,5 +356,32 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Alert auto-dismiss
+        setTimeout(function() {
+            document.querySelectorAll('.alert').forEach(function(alert) {
+                if (alert.__x) {
+                    alert.__x.$data.show = false;
+                }
+            });
+        }, 5000);
+        
+        // Add smooth fade-in effect to category cards
+        const categoryCards = document.querySelectorAll('.category-card-wrapper');
+        categoryCards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.4s ease, transform 0.5s ease';
+            
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100 + (index * 50));
+        });
+    });
+</script>
+
 @include('layouts.footer')
 @endsection
