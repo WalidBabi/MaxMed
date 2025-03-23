@@ -11,11 +11,18 @@ use App\Models\Transaction;
 use App\Models\ProductReservation;
 use App\Mail\OrderPlaced;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class StripeController extends Controller
 {
     public function checkout(Request $request)
     {
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'You need to be logged in to proceed.');
+        }
+
+        \Log::info('User ID: ' . auth()->id());
+
         Stripe::setApiKey(config('services.stripe.secret'));
 
         // Create order first
@@ -73,6 +80,8 @@ class StripeController extends Controller
     public function success(Request $request)
     {
         try {
+            \Log::info('Stripe success callback received', ['order_id' => $request->order_id, 'session_id' => $request->session_id]);
+            
             $order = Order::findOrFail($request->order_id);
             
             // Confirm reservations and update inventory
@@ -80,9 +89,14 @@ class StripeController extends Controller
                 // Update reservation status
                 ProductReservation::where([
                     'product_id' => $item->product_id,
-                    'session_id' => session()->getId(),
                     'status' => 'pending'
-                ])->update(['status' => 'confirmed']);
+                ])
+                ->where(function($query) use ($order) {
+                    $query->where('user_id', $order->user_id);
+                })
+                ->update([
+                    'status' => 'confirmed'
+                ]);
 
                 // Decrease inventory
                 $inventory = $item->product->inventory;
@@ -96,24 +110,34 @@ class StripeController extends Controller
             // Save transaction
             Transaction::create([
                 'order_id' => $order->id,
-                'user_id' => auth()->id(),
+                'user_id' => $order->user_id,
                 'transaction_id' => $request->session_id,     
                 'payment_method' => 'stripe',
                 'amount' => $order->total_amount,
                 'status' => 'completed'
             ]);
 
-            // Send email notification to customer service
-            Mail::to('cs@maxmedme.com')
-                ->send(new OrderPlaced($order));
+            // Try to send email notification, but don't fail if it doesn't work
+            try {
+                Mail::to('cs@maxmedme.com')
+                    ->send(new OrderPlaced($order));
+            } catch (\Exception $mailException) {
+                Log::warning('Failed to send order confirmation email: ' . $mailException->getMessage());
+                // Continue processing - don't let email failure affect the order process
+            }
 
-            session()->forget('cart');
+            // Clear the cart session if user is still the same
+            if (auth()->id() && auth()->id() == $order->user_id) {
+                session()->forget('cart');
+            }
             
-            return redirect()->route('orders.show', $order->id)
+            // Redirect to My Orders page
+            return redirect()->route('orders.index')
                 ->with('success', 'Order placed successfully!');
         } catch (\Exception $e) {
+            Log::error('Payment success error: ' . $e->getMessage());
             return redirect()->route('cart.view')
-                ->with('error', 'Something went wrong with the payment.');
+                ->with('error', 'Something went wrong with the payment: ' . $e->getMessage());
         }
     }
 

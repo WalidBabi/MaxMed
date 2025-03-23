@@ -24,6 +24,22 @@ class ProductController extends Controller
             });
         }
         
+        // Handle sorting
+        if ($sortOption = $request->input('sort')) {
+            switch ($sortOption) {
+                case 'price_asc':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case 'price_desc':
+                    $query->orderBy('price', 'desc');
+                    break;
+                case 'newest':
+                    $query->orderBy('created_at', 'desc');
+                    break;
+                // Add more sort options if needed
+            }
+        }
+        
         // Instead of getting all products, we paginate or limit the results
         $products = $query->paginate(16);
         
@@ -41,6 +57,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        // Pass the single product to the view
         return view('products.show', compact('product'));
     }
     
@@ -50,6 +67,15 @@ class ProductController extends Controller
         return response()->json([
             'available' => $product->inventory->quantity >= $quantity
         ]);
+    }
+
+    public function showProducts()
+    {
+        // Retrieve all products or apply any specific logic
+        $products = Product::all(); // or use a query to filter/sort products
+
+        // Pass the products to the view
+        return view('products.show', compact('products'));
     }
 
     // You can add more methods like create, store, edit, update, destroy as needed

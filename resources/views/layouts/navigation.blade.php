@@ -25,23 +25,37 @@
                         class="hover:text-[#0a5694]">
                         {{ __('Products') }}
                     </x-nav-link>
-                  
 
-                    <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')"
-                        class="hover:text-[#0a5694]">
-                        {{ __('Contact Us') }}
-                    </x-nav-link>
+
+
+                
 
                     <x-nav-link :href="route('partners.index')" :active="request()->routeIs('partners')"
                         class="hover:text-[#0a5694]">
                         {{ __('Partners') }}
                     </x-nav-link>
 
+                    <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')"
+                        class="hover:text-[#0a5694]">
+                        {{ __('Contact Us') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('news.index')" :active="request()->routeIs('news')"
                         class="hover:text-[#0a5694]">
                         {{ __('News') }}
                     </x-nav-link>
-
+                    <!-- Search Bar -->
+                    <div class="relative flex items-center">
+                        <form action="{{ route('search') }}" method="GET" class="flex">
+                            <input type="text" name="query" placeholder="Search products..."
+                                class="border-gray-300 rounded-l-md shadow-sm focus:border-[#0a5694] focus:ring focus:ring-[#0a5694] focus:ring-opacity-50 text-sm"
+                                value="{{ request('query') }}">
+                            <button type="submit" class="bg-[#171e60] hover:bg-[#0a5694] text-white px-3 py-2 rounded-r-md transition-colors duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
 
 
                 </div>
@@ -139,6 +153,20 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
+            <!-- Responsive Search Bar -->
+            <div class="px-4 py-2">
+                <form action="{{ route('search') }}" method="GET" class="flex">
+                    <input type="text" name="query" placeholder="Search products..."
+                        class="w-full border-gray-300 rounded-l-md shadow-sm focus:border-[#0a5694] focus:ring focus:ring-[#0a5694] focus:ring-opacity-50 text-sm"
+                        value="{{ request('query') }}">
+                    <button type="submit" class="bg-[#171e60] hover:bg-[#0a5694] text-white px-3 py-2 rounded-r-md transition-colors duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+
             <x-responsive-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')">
                 {{ __('Home') }}
             </x-responsive-nav-link>

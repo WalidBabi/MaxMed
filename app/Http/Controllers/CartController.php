@@ -41,8 +41,12 @@ class CartController extends Controller
         // Check available quantity (considering existing reservations)
         $availableQuantity = $this->getAvailableQuantity($product);
         
+        if ($availableQuantity <= 0) {
+            return redirect()->back()->with('error', 'This product is no longer available in stock.');
+        }
+
         if ($totalRequestedQuantity > $availableQuantity) {
-            return redirect()->back()->with('error', 'Requested quantity exceeds available stock!');
+            return redirect()->back()->with('error', 'The requested quantity exceeds the available stock.');
         }
 
         // Update or create reservation
