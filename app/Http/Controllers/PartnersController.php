@@ -9,6 +9,7 @@ class PartnersController extends Controller
     public function index()
     {
         // Logic to retrieve and display partners
-        return view('partners.index');
+        return view('partners.index'); 
+        
     }
 } 
