@@ -18,6 +18,7 @@ class SearchController extends Controller
         }
 
         try {
+            
             // Safely prepare the search term
             $searchTerm = '%' . trim($query) . '%';
             
