@@ -115,4 +115,37 @@ class CartController extends Controller
 
         return $product->inventory->quantity - $otherReservations;
     }
+
+    /**
+     * Update the quantity of an item in the cart
+     *
+     * @param  Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request, $id)
+    {
+        $cart = session()->get('cart', []);
+        
+        if(isset($cart[$id])) {
+            // Increase quantity
+            if($request->has('increase')) {
+                $cart[$id]['quantity']++;
+            }
+            
+            // Decrease quantity, remove if it would be 0
+            if($request->has('decrease')) {
+                if($cart[$id]['quantity'] > 1) {
+                    $cart[$id]['quantity']--;
+                } else {
+                    unset($cart[$id]);
+                }
+            }
+            
+            session()->put('cart', $cart);
+            return redirect()->back()->with('success', 'Cart updated successfully!');
+        }
+        
+        return redirect()->back()->with('error', 'Product not found in cart!');
+    }
 } 

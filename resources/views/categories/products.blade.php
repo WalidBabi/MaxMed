@@ -24,32 +24,42 @@
             max-width: 800px;
             line-height: 1.6;
         }
+        
+        /* Enhanced Breadcrumb */
         .breadcrumb {
             background-color: transparent;
-            padding: 0.5rem 0;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
+            padding: 0.75rem 0;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            border-bottom: 1px solid #f0f0f0;
         }
         .breadcrumb-item a {
             color: #6c757d;
             text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .breadcrumb-item a:hover {
+            color: #28a745;
         }
         .breadcrumb-item.active {
             color: #333;
-            font-weight: 500;
+            font-weight: 600;
         }
         
         /* Enhanced Filters Row */
         .filters-row {
             background-color: #f8f9fa;
-            padding: 18px;
+            padding: 20px;
             border-radius: 10px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
             border-left: 4px solid #17a2b8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
-        /* Redesigned Counter without the circle */
+        /* Redesigned Counter with animation */
         .product-counter {
             display: flex;
             align-items: center;
@@ -58,80 +68,104 @@
         .counter-text {
             display: flex;
             align-items: baseline;
-            gap: 8px;
+            gap: 10px;
         }
         .counter-number {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: #28a745;
             line-height: 1.2;
+            animation: countPulse 2s ease-in-out;
+        }
+        @keyframes countPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
         .counter-label {
-            color: #666;
-            font-size: 1.1rem;
+            color: #555;
+            font-size: 1.15rem;
+            font-weight: 500;
         }
         
         /* Enhanced Empty State */
         .empty-state {
-            background-color: #f8f9fa;
+            background-color: #f9f9f9;
             border-radius: 15px;
-            padding: 50px 30px;
+            padding: 60px 30px;
             text-align: center;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-            border: 1px dashed #dee2e6;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
+            border: 1px dashed #e0e0e0;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .empty-state-icon {
-            font-size: 4rem;
+            font-size: 4.5rem;
             color: #6c757d;
             margin-bottom: 25px;
-            opacity: 0.7;
+            opacity: 0.8;
         }
         .empty-state-message {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 600;
             color: #495057;
             margin-bottom: 20px;
         }
-        
-        /* Product Grid Layout Improvement */
-        .products-grid {
-            margin-top: 10px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
+        .empty-state-description {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
         }
         
-        /* Product Card Styling */
+        /* Improved Product Grid Layout */
+        .products-grid {
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 28px;
+        }
+        
+        /* Enhanced Product Card Styling */
+        .product-card-wrapper {
+            height: 100%;
+            transition: transform 0.3s;
+        }
         .product-card {
             height: 100%;
             border-radius: 12px;
             overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: all 0.35s;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             border: none !important;
             background-color: #fff;
+            position: relative;
         }
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-7px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
         }
         .product-card img {
-            height: 220px;
+            height: 240px;
             object-fit: cover;
-            transition: transform 0.5s;
+            transition: transform 0.5s ease;
         }
         .product-card:hover img {
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
         .card-body {
             flex: 1 1 auto;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            padding: 18px;
+            padding: 22px;
             justify-content: space-between;
         }
         .card-title {
@@ -139,56 +173,108 @@
             overflow: hidden;
             text-overflow: ellipsis;
             font-weight: bold;
-            font-size: 1.15em;
-            margin-bottom: 8px;
+            font-size: 1.2em;
+            margin-bottom: 10px;
         }
         .card-title a {
             text-decoration: none;
             color: #222;
             transition: color 0.2s;
+            position: relative;
         }
         .card-title a:hover {
             color: #28a745;
         }
+        .card-title a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #28a745;
+            transition: width 0.3s;
+        }
+        .card-title a:hover:after {
+            width: 100%;
+        }
         .card-text {
-            color: #555;
-            margin-bottom: 12px;
-            font-size: 1.1em;
+            color: #444;
+            margin-bottom: 15px;
+            font-size: 1.15em;
         }
         .price-aed {
             font-size: 0.9em;
             color: #777;
+            margin-top: 3px;
+            display: block;
         }
+        
+        /* Badge improvements */
         .badge {
             font-size: 0.85em;
-            padding: 6px 10px;
+            padding: 6px 12px;
             border-radius: 20px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
         }
         .badge.bg-success {
             background-color: #28a745 !important;
+            box-shadow: 0 2px 5px rgba(40, 167, 69, 0.3);
         }
         .badge.bg-danger {
             background-color: #dc3545 !important;
+            box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
         }
+        
+        /* Enhanced buttons */
         .btn {
-            border-radius: 6px;
+            border-radius: 8px;
             margin-top: 5px;
-            font-weight: 500;
-            padding: 10px 20px;
+            font-weight: 600;
+            padding: 12px 20px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.6px;
             font-size: 0.85em;
-            transition: all 0.3s;
+            transition: all 0.35s;
         }
         .btn-primary {
             background-color: #28a745;
             border-color: #28a745;
             color: #fff;
+            position: relative;
+            overflow: hidden;
         }
         .btn-primary:hover {
             background-color: #218838;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(33, 136, 56, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(33, 136, 56, 0.4);
+        }
+        .btn-primary:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        .btn-primary:hover:after {
+            animation: ripple 1s ease-out;
+        }
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
         }
         .btn-secondary {
             background-color: #17a2b8;
@@ -197,35 +283,50 @@
         }
         .btn-secondary:hover {
             background-color: #138496;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(19, 132, 150, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(19, 132, 150, 0.4);
         }
+        
+        /* Card footer enhancements */
         .card-footer {
             background-color: transparent;
-            padding: 0;
+            padding: 5px 0 0;
             border-top: none;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
         }
+        
+        /* Enhanced quantity controls */
         .quantity-controls {
             display: flex;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             width: 100%;
+            position: relative;
         }
         .quantity-controls label {
             margin-bottom: 0;
-            font-weight: 500;
-            color: #555;
+            font-weight: 600;
+            color: #444;
+            margin-right: 10px;
         }
         .quantity-controls input {
             width: 70px;
             text-align: center;
-            border-radius: 4px;
+            border-radius: 6px;
             border: 1px solid #dee2e6;
-            padding: 5px;
+            padding: 8px 5px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
+        .quantity-controls input:focus {
+            border-color: #28a745;
+            box-shadow: inset 0 1px 3px rgba(40, 167, 69, 0.2);
+            outline: none;
+        }
+        
+        /* Button group improvements */
         .button-group {
             display: flex;
             gap: 15px;
@@ -234,13 +335,56 @@
             flex-wrap: wrap;
         }
         
+        /* Pagination styling enhancement */
+        .pagination-container {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+        }
+        .pagination-container .pagination {
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            border-radius: 30px;
+            overflow: hidden;
+        }
+        .pagination-container .page-link {
+            border: none;
+            color: #555;
+            font-weight: 500;
+            padding: 12px 18px;
+            transition: all 0.2s;
+        }
+        .pagination-container .page-link:hover {
+            background-color: #f4f4f4;
+            color: #28a745;
+        }
+        .pagination-container .page-item.active .page-link {
+            background-color: #28a745;
+            color: white;
+        }
+        
         /* Additional responsive improvements */
+        @media (max-width: 992px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+        }
+        
         @media (max-width: 768px) {
             .category-title {
-                font-size: 1.6rem;
+                font-size: 1.7rem;
             }
             .counter-number {
-                font-size: 1.3rem;
+                font-size: 1.5rem;
+            }
+            .filters-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 15px;
             }
             .button-group {
                 flex-direction: column;
@@ -248,13 +392,29 @@
             }
             .btn {
                 width: 100%;
+                padding: 10px 15px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            .category-header {
+                padding-left: 10px;
+            }
+            .empty-state {
+                padding: 40px 20px;
+            }
+            .empty-state-message {
+                font-size: 1.5rem;
             }
         }
     </style>
     
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('welcome') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('welcome') }}"><i class="fas fa-home me-1"></i>Home</a></li>
             <li class="breadcrumb-item"><a href="{{ route('categories.index') }}">Categories</a></li>
             <li class="breadcrumb-item active">{{ isset($category) ? $category->name : 'Products' }}</li>
         </ol>
@@ -271,15 +431,16 @@
             </div>
             
             <div class="filters-row">
-                <div class="row align-items-center">
-                    <div class="col-md-12">
-                        <div class="product-counter">
-                            <div class="counter-text">
-                                <span class="counter-number">{{ $products->count() }}</span>
-                                <span class="counter-label">{{ Str::plural('product', $products->count()) }} found</span>
-                            </div>
-                        </div>
+                <div class="product-counter">
+                    <div class="counter-text">
+                        <span class="counter-number">{{ $products->count() }}</span>
+                        <span class="counter-label">{{ Str::plural('product', $products->count()) }} found</span>
                     </div>
+                </div>
+                
+                <!-- Placeholder for future filter options -->
+                <div class="filter-options">
+                    <!-- Future filter options would go here -->
                 </div>
             </div>
             
@@ -312,13 +473,13 @@
                                 <div class="card-footer">
                                     @if($product->inventory->quantity > 0)
                                         <div class="d-flex align-items-center mb-2">
-                                            <span class="badge bg-success me-3">In Stock</span>
+                                            <span class="badge bg-success me-3"><i class="fas fa-check me-1"></i>In Stock</span>
                                             <small class="text-muted">{{ $product->inventory->quantity }} available</small>
                                         </div>
                                         <form action="{{ route('cart.add', $product) }}" method="POST" class="w-100">
                                             @csrf
                                             <div class="quantity-controls">
-                                                <label for="quantity-{{ $product->id }}" class="me-2">Quantity:</label>
+                                                <label for="quantity-{{ $product->id }}">Quantity:</label>
                                                 <input type="number" name="quantity" id="quantity-{{ $product->id }}" 
                                                     value="1" min="1" max="{{ $product->inventory->quantity }}" 
                                                     class="form-control">
@@ -334,7 +495,7 @@
                                         </form>
                                     @else
                                         <div class="d-flex align-items-center mb-3">
-                                            <span class="badge bg-danger me-2">Out of Stock</span>
+                                            <span class="badge bg-danger me-2"><i class="fas fa-times me-1"></i>Out of Stock</span>
                                         </div>
                                         <div class="button-group">
                                             <a href="{{ route('quotation.form', $product) }}" class="btn btn-secondary w-100">
@@ -374,6 +535,19 @@
                     this.value = max;
                 }
             });
+        });
+        
+        // Add smooth fade-in effect to product cards
+        const productCards = document.querySelectorAll('.product-card-wrapper');
+        productCards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.4s ease, transform 0.5s ease';
+            
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100 + (index * 50));
         });
     });
 </script>
