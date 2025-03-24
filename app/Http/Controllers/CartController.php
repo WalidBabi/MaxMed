@@ -31,57 +31,70 @@ class CartController extends Controller
     /**
      * Add a product to the cart.
      */
-    public function add(Request $request, Product $product)
+    public function add(Request $request, $productId)
     {
-        // If it's a GET request, default to quantity=1
-        $requestedQuantity = $request->isMethod('get') ? 1 : $request->input('quantity', 1);
-        \Log::info('Requested Quantity:', ['quantity' => $requestedQuantity]);
-        
-        // Get current cart quantity for this product
-        $currentCartQuantity = $this->getTotalQuantityInCart($product->id);
-        $totalRequestedQuantity = $currentCartQuantity + $requestedQuantity;
-        
-        // Check available quantity (considering existing reservations)
-        $availableQuantity = $this->getAvailableQuantity($product);
-        
-        if ($availableQuantity <= 0) {
-            return redirect()->back()->with('error', 'This product is no longer available in stock.');
-        }
-
-        if ($totalRequestedQuantity > $availableQuantity) {
-            return redirect()->back()->with('error', 'The requested quantity exceeds the available stock.');
-        }
-
-        // Update or create reservation
-        ProductReservation::updateOrCreate(
-            [
-                'session_id' => session()->getId(),
+        try {
+            // Find the product manually instead of relying on route model binding
+            $product = Product::findOrFail($productId);
+            
+            // If it's a GET request, default to quantity=1
+            $requestedQuantity = $request->isMethod('get') ? 1 : $request->input('quantity', 1);
+            
+            \Log::info('Add to Cart Request:', [
                 'product_id' => $product->id,
-                'status' => 'pending'
-            ],
-            [
-                'quantity' => $totalRequestedQuantity,
-                'user_id' => Auth::check() ? Auth::id() : null,
-                'expires_at' => now()->addMinutes(1)
-            ]
-        );
-
-        $cart = session()->get('cart', []);
-
-        // Update cart
-        if (isset($cart[$product->id])) {
-            $cart[$product->id]['quantity'] = $totalRequestedQuantity;
-        } else {
-            $cart[$product->id] = [
-                'name' => $product->name,
                 'quantity' => $requestedQuantity,
-                'price' => $product->price,
-                'photo' => $product->image_url
-            ];
-        }
+                'session_id' => session()->getId()
+            ]);
+            
+            // Get current cart quantity for this product
+            $currentCartQuantity = $this->getTotalQuantityInCart($product->id);
+            $totalRequestedQuantity = $currentCartQuantity + $requestedQuantity;
+            
+            // Check available quantity (considering existing reservations)
+            $availableQuantity = $this->getAvailableQuantity($product);
+            
+            if ($availableQuantity <= 0) {
+                return redirect()->back()->with('error', 'This product is no longer available in stock.');
+            }
 
-        session()->put('cart', $cart);
-        return redirect()->back()->with('success', 'Product added to cart successfully!');
+            if ($totalRequestedQuantity > $availableQuantity) {
+                return redirect()->back()->with('error', 'The requested quantity exceeds the available stock.');
+            }
+
+            // Update or create reservation
+            ProductReservation::updateOrCreate(
+                [
+                    'session_id' => session()->getId(),
+                    'product_id' => $product->id,
+                    'status' => 'pending'
+                ],
+                [
+                    'quantity' => $totalRequestedQuantity,
+                    'user_id' => Auth::check() ? Auth::id() : null,
+                    'expires_at' => now()->addMinutes(1)
+                ]
+            );
+
+            $cart = session()->get('cart', []);
+
+            // Update cart
+            if (isset($cart[$product->id])) {
+                $cart[$product->id]['quantity'] = $totalRequestedQuantity;
+            } else {
+                $cart[$product->id] = [
+                    'name' => $product->name,
+                    'quantity' => $requestedQuantity,
+                    'price' => $product->price,
+                    'photo' => $product->image_url
+                ];
+            }
+
+            session()->put('cart', $cart);
+            return redirect()->back()->with('success', 'Product added to cart successfully!');
+        } catch (\Exception $e) {
+            \Log::error('Cart Add Error:', ['message' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Product not found or unavailable.');
+        }
     }
 
     /**

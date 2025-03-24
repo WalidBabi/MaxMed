@@ -132,22 +132,29 @@
     }
 </style>
 
+<script src="{{ asset('js/product.js') }}"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Quantity buttons
         const quantityInput = document.getElementById('quantity');
-        const decreaseBtn = document.getElementById('decrease-qty');
-        const increaseBtn = document.getElementById('increase-qty');
+        const formQuantityInput = document.getElementById('form-quantity');
         
-        if (decreaseBtn && increaseBtn && quantityInput) {
-            decreaseBtn.addEventListener('click', function() {
-                if (quantityInput.value > 1) {
-                    quantityInput.value = parseInt(quantityInput.value) - 1;
-                }
+        if (quantityInput && formQuantityInput) {
+            // Initial sync
+            formQuantityInput.value = quantityInput.value;
+            
+            // Update when quantity changes
+            quantityInput.addEventListener('change', function() {
+                formQuantityInput.value = this.value;
             });
             
-            increaseBtn.addEventListener('click', function() {
-                quantityInput.value = parseInt(quantityInput.value) + 1;
+            // Handle increase/decrease buttons
+            document.getElementById('increase-qty')?.addEventListener('click', function() {
+                formQuantityInput.value = quantityInput.value;
+            });
+            
+            document.getElementById('decrease-qty')?.addEventListener('click', function() {
+                formQuantityInput.value = quantityInput.value;
             });
         }
         
