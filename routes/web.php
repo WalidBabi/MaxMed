@@ -57,7 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('quotation')->name('quotation.')->group(function () {
         Route::get('/request/{product}', [QuotationController::class, 'request'])->name('request');
         Route::post('/store', [QuotationController::class, 'store'])->name('store');
-        Route::get('/confirmation/{quotation}', [QuotationController::class, 'confirmation'])->name('confirmation');
+        Route::get('/confirmation/{product}', [QuotationController::class, 'confirmation'])->name('confirmation');
         Route::get('/{product}', [QuotationController::class, 'form'])->name('form');
     });
 

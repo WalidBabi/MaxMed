@@ -6,14 +6,16 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');  // Make sure this line exists
-            $table->foreign('user_id')->references('id')->on('users');  // Add foreign key constraint
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id')->index('orders_user_id_foreign');
             $table->string('order_number')->unique();
-            $table->decimal('total_amount', 10, 2);
+            $table->decimal('total_amount', 10);
             $table->enum('status', ['pending', 'processing', 'shipped', 'delivered', 'cancelled'])->default('pending');
             $table->string('shipping_address');
             $table->string('shipping_city');
@@ -25,7 +27,10 @@ return new class extends Migration
         });
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
         Schema::dropIfExists('orders');
     }
