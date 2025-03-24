@@ -13,5 +13,12 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'check-availability/*'
+        ,
+        'stripe/checkout',
+        'stripe/success',
+        'quotation/*'
+
+
+
     ];
 } 
