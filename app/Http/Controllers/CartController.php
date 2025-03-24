@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\ProductReservation;
+use Illuminate\Support\Facades\Log;
 
 class CartController extends Controller
 {
@@ -59,7 +60,7 @@ class CartController extends Controller
             ],
             [
                 'quantity' => $totalRequestedQuantity,
-                'user_id' => auth()->id(),
+                'user_id' => auth()->check() ? auth()->id() : null,
                 'expires_at' => now()->addMinutes(1)
             ]
         );
