@@ -29,15 +29,15 @@ Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
 Route::get('/check-availability/{product}/{quantity}', [ProductController::class, 'checkAvailability'])->name('check.availability');
 
+// Cart Routes
+Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
+Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/remove/{product}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', fn() => view('welcome'))->middleware('verified')->name('dashboard');
-
-    // Cart Routes
-    Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
-    Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
-    Route::post('/cart/remove/{product}', [CartController::class, 'removeFromCart'])->name('cart.remove');
-    Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 
     // Orders Routes
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
