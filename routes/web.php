@@ -34,24 +34,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', fn() => view('welcome'))->middleware('verified')->name('dashboard');
 
     // Cart Routes
-    Route::prefix('cart')->name('cart.')->group(function () {
-        Route::get('/', [CartController::class, 'viewCart'])->name('view');
-        Route::match(['get', 'post'], '/add/{product}', [CartController::class, 'add'])->name('add');
-        Route::post('/remove/{product}', [CartController::class, 'removeFromCart'])->name('remove');
-        Route::post('/update/{id}', [CartController::class, 'update'])->name('update');
-    });
+    Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
+    Route::match(['get', 'post'], '/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/remove/{product}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 
     // Orders Routes
-    Route::prefix('orders')->name('orders.')->group(function () {
-        Route::get('/', [OrderController::class, 'index'])->name('index');
-        Route::get('/{order}', [OrderController::class, 'show'])->name('show');
-    });
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 
     // Stripe Routes
-    Route::prefix('stripe')->name('stripe.')->group(function () {
-        Route::post('/checkout', [StripeController::class, 'checkout'])->name('checkout');
-        Route::get('/success', [StripeController::class, 'success'])->name('success');
-    });
+    Route::post('/stripe/checkout', [StripeController::class, 'checkout'])->name('stripe.checkout');
+    Route::get('/stripe/success', [StripeController::class, 'success'])->name('stripe.success');
 
     // Quotation Routes
     Route::prefix('quotation')->name('quotation.')->group(function () {
