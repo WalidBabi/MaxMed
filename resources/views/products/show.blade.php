@@ -62,7 +62,11 @@
                         </div>
                         
                         <div class="d-grid gap-2">
-                            <a href="{{ route('cart.add', $product) }}" class="btn btn-primary btn-lg">Add to Cart</a>
+                            <form action="{{ route('cart.add', $product) }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="quantity" id="form-quantity" value="1">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">Add to Cart</button>
+                            </form>
                             <a href="{{ route('quotation.form', $product) }}" class="btn btn-outline-secondary">Request Quotation</a>
                         </div>
                     @else

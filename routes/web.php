@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
 
     // Cart Routes
     Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
-    Route::match(['get', 'post'], '/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/remove/{product}', [CartController::class, 'removeFromCart'])->name('cart.remove');
     Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 
