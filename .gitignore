@@ -1,3 +1,5 @@
+bootstrap/cache/events.php
+bootstrap/cache/routes-v7.php
 /.phpunit.cache
 /node_modules
 /public/build
