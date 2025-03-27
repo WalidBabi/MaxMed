@@ -25,3 +25,4 @@ yarn-error.log
 /.zed
 maxmed_credentials.csv
 bootstrap/cache/config.php
+git_access_token
