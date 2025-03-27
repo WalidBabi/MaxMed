@@ -36,6 +36,7 @@
                             @enderror
                         </div>
 
+                        
                         <div class="form-group mb-3">
                             <label for="image">Image</label>
                             @if($category->image_url)
