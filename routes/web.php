@@ -73,12 +73,7 @@ Route::middleware('auth')->group(function () {
         });
 
         // Category Management
-        Route::prefix('categories')->name('categories.')->group(function () {
-            Route::get('/', [App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('index');
-            Route::get('/create', [App\Http\Controllers\Admin\CategoryController::class, 'create'])->name('create');
-            Route::post('/', [App\Http\Controllers\Admin\CategoryController::class, 'store'])->name('store');
-            Route::delete('/{category}', [App\Http\Controllers\Admin\CategoryController::class, 'destroy'])->name('destroy');
-        });
+        Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
     });
 });
 

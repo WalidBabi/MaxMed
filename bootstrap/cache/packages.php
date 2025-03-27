@@ -1,4 +1,15 @@
 <?php return array (
+  'aws/aws-sdk-php-laravel' => 
+  array (
+    'aliases' => 
+    array (
+      'AWS' => 'Aws\\Laravel\\AwsFacade',
+    ),
+    'providers' => 
+    array (
+      0 => 'Aws\\Laravel\\AwsServiceProvider',
+    ),
+  ),
   'kitloong/laravel-migrations-generator' => 
   array (
     'providers' => 

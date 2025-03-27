@@ -2,10 +2,18 @@
 php artisan reservations:cleanup 
 2- email when payment is successful and order is placed to cs@maxmedme.com
 
+# On your production server
+sudo chmod -R 755 storage/
+sudo chmod -R 777 storage/logs/
+sudo chmod -R 777 storage/framework/sessions/
 
 SEO
-setup mail in .env
-MaxTest logo
 
-contact us navigation before news
-search
+Aboda :
+MaxTest logo
+about us logo header
+
+MaxWareC instruments
+Max AI 
+
+catalog
