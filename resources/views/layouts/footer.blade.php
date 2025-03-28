@@ -110,7 +110,7 @@
                 <div class="mt-4 md:mt-0 flex space-x-4 text-sm text-gray-400">
                     <a href="#" class="hover:text-white transition-colors duration-300">Privacy Policy</a>
                     <a href="#" class="hover:text-white transition-colors duration-300">Terms of Service</a>
-                    <span>Designed by Walid</span>
+                    <span>Designed by Max AI</span>
                 </div>
             </div>
         </div>
