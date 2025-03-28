@@ -332,8 +332,8 @@
         </div>
         <div class="col-md-9">
             <div class="page-header mb-4">
-                <h1 class="page-title">Laboratory Equipment & Supplies</h1>
-                <p class="page-description">Explore our comprehensive range of high-quality laboratory equipment and medical supplies for your facility.</p>
+                <h1 class="page-title">MaxMed Products and Services</h1>
+                <p class="page-description">Explore our comprehensive range of high-quality laboratory equipment, medical supplies, services, and innovative solutions tailored for your facility's needs.</p>
             </div>
             
             <div class="category-container">
