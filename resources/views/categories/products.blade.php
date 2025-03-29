@@ -488,6 +488,9 @@
                                                 <button type="submit" class="btn btn-primary w-100">
                                                     <i class="fas fa-shopping-cart me-2"></i> Add to Cart
                                                 </button>
+                                                <a href="{{ route('product.show', $product) }}" class="btn btn-secondary w-100 mb-2">
+                                                    <i class="fas fa-eye me-2"></i> View Details
+                                                </a>
                                                 <a href="{{ route('quotation.form', $product) }}" class="btn btn-secondary w-100">
                                                     <i class="fas fa-file-invoice me-2"></i> Request Quote
                                                 </a>
