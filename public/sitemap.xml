@@ -1,54 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
     <url>
-        <loc>http://localhost</loc>
+        <loc>https://maxmedme.com</loc>
     
             </url>
     <url>
-        <loc>http://localhost/medical-laboratory-equipment</loc>
+        <loc>https://maxmedme.com/about</loc>
     
             </url>
     <url>
-        <loc>http://localhost/about-maxmed-uae</loc>
+        <loc>https://maxmedme.com/contact</loc>
     
             </url>
     <url>
-        <loc>http://localhost/contact-laboratory-equipment-supplier</loc>
+        <loc>https://maxmedme.com/products</loc>
     
             </url>
     <url>
-        <loc>http://localhost/product/24</loc>
-        <lastmod>2025-03-01T09:26:18+00:00</lastmod>
+        <loc>https://maxmedme.com/partners</loc>
+    
+            </url>
+    <url>
+        <loc>https://maxmedme.com/news</loc>
+    
+            </url>
+    <url>
+        <loc>https://maxmedme.com/categories/</loc>
+        <lastmod>2025-03-23T20:39:03+00:00</lastmod>
 
             </url>
     <url>
-        <loc>http://localhost/product/25</loc>
-        <lastmod>2025-03-01T09:27:04+00:00</lastmod>
+        <loc>https://maxmedme.com/product/32</loc>
+        <lastmod>2025-03-20T21:53:02+00:00</lastmod>
 
             </url>
     <url>
-        <loc>http://localhost/product/26</loc>
-        <lastmod>2025-03-01T09:28:01+00:00</lastmod>
+        <loc>https://maxmedme.com/product/31</loc>
+        <lastmod>2025-03-20T21:50:10+00:00</lastmod>
 
             </url>
     <url>
-        <loc>http://localhost/product/27</loc>
-        <lastmod>2025-03-01T09:28:35+00:00</lastmod>
+        <loc>https://maxmedme.com/product/30</loc>
+        <lastmod>2025-03-24T20:54:29+00:00</lastmod>
 
             </url>
     <url>
-        <loc>http://localhost/product/28</loc>
-        <lastmod>2025-03-01T09:29:05+00:00</lastmod>
+        <loc>https://maxmedme.com/product/33</loc>
+        <lastmod>2025-03-20T21:56:16+00:00</lastmod>
 
             </url>
     <url>
-        <loc>http://localhost/product/23</loc>
-        <lastmod>2025-03-01T09:25:42+00:00</lastmod>
+        <loc>https://maxmedme.com/product/34</loc>
+        <lastmod>2025-03-20T21:58:03+00:00</lastmod>
 
             </url>
     <url>
-        <loc>http://localhost/product/22</loc>
-        <lastmod>2025-03-01T09:24:48+00:00</lastmod>
+        <loc>https://maxmedme.com/product/35</loc>
+        <lastmod>2025-03-24T20:53:06+00:00</lastmod>
 
             </url>
 </urlset>
