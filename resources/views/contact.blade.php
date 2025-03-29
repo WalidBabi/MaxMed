@@ -406,18 +406,22 @@
             }" x-init="initForm()">
                 <div class="contact-card p-8">
                     <h2 class="contact-form-title">Send us a Message</h2>
-                    <form @submit.prevent="submitted = true; formActive = false">
+                    <form action="{{ route('contact.submit') }}" method="POST" x-data="{ submitting: false }" @submit.prevent="
+                        submitting = true;
+                        $event.target.submit();
+                    ">
+                        @csrf
                         <div class="form-group" style="transition: all 0.4s ease;">
                             <label class="form-label" for="name">Name</label>
-                            <input type="text" id="name" class="form-control" required>
+                            <input type="text" id="name" name="name" class="form-control" required>
                         </div>
                         <div class="form-group" style="transition: all 0.4s ease;">
                             <label class="form-label" for="email">Email</label>
-                            <input type="email" id="email" class="form-control" required>
+                            <input type="email" id="email" name="email" class="form-control" required>
                         </div>
                         <div class="form-group" style="transition: all 0.4s ease;">
                             <label class="form-label" for="subject">Subject</label>
-                            <select id="subject" class="form-select" required>
+                            <select id="subject" name="subject" class="form-select" required>
                                 <option value="">Select a subject</option>
                                 <option value="sales">Sales Inquiry</option>
                                 <option value="support">Technical Support</option>
@@ -427,25 +431,29 @@
                         </div>
                         <div class="form-group" style="transition: all 0.4s ease;">
                             <label class="form-label" for="message">Message</label>
-                            <textarea id="message" class="form-control textarea-control" required></textarea>
+                            <textarea id="message" name="message" class="form-control textarea-control" required></textarea>
                         </div>
+                        
+                        <!-- Hidden field for recipient email -->
+                        <input type="hidden" name="recipient" value="cs@maxmedme.com">
+                        
                         <button type="submit" class="submit-btn" style="transition: all 0.4s ease;"
-                                x-bind:disabled="submitted">
-                            Send Message
+                                x-bind:disabled="submitting">
+                            <span x-show="!submitting">Send Message</span>
+                            <span x-show="submitting">Sending...</span>
                         </button>
 
                         <!-- Success Message -->
-                        <div class="success-message" x-show="submitted" 
-                             x-transition:enter="transition ease-out duration-300"
-                             x-transition:enter-start="opacity-0 transform translate-y-4"
-                             x-transition:enter-end="opacity-100 transform translate-y-0">
+                        @if(session('success'))
+                        <div class="success-message">
                             <span class="success-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                 </svg>
                             </span>
-                            Thank you for your message! We'll get back to you soon.
+                            {{ session('success') }}
                         </div>
+                        @endif
                     </form>
                 </div>
             </div>
@@ -494,7 +502,7 @@
                         </h3>
                         <div class="space-y-3">
                             <p class="info-text">
-                                Email: <a href="mailto:sales@maxmedme.com" class="info-link">sales@maxmedme.com</a>
+                                Email: <a href="mailto:cs@maxmedme.com" class="info-link">cs@maxmedme.com</a>
                             </p>
                             <p class="info-text">
                                 Phone: <a href="tel:+97155460250" class="info-link">+971 55 460 2500</a>

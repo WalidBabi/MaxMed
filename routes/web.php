@@ -19,6 +19,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PartnersController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\QRCodeController;
+use App\Http\Controllers\ContactController;
 
 // Public Routes
 Route::get('/', fn() => view('welcome'))->name('welcome');
@@ -123,5 +124,7 @@ Route::get('/search', [SearchController::class, 'search'])->name('search');
 // QR Code Route
 Route::get('/qr-code', [QRCodeController::class, 'generate'])->name('qr.code');
 
+// Contact Form Route
+Route::post('/contact/submit', [ContactController::class, 'submit'])->name('contact.submit');
 
 require __DIR__ . '/auth.php';
