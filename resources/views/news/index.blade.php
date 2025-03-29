@@ -161,38 +161,6 @@
     </div>
 @endif
 
-<!-- Newsletter Subscription -->
-<div class="bg-gray-50 py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div class="px-6 py-12 sm:px-12 lg:flex lg:items-center lg:py-16">
-                <div class="lg:w-0 lg:flex-1">
-                    <h2 class="text-3xl font-extrabold tracking-tight text-gray-900">
-                        Subscribe to our newsletter
-                    </h2>
-                    <p class="mt-4 max-w-3xl text-lg text-gray-500">
-                        Get the latest news and updates from MaxMed delivered directly to your inbox.
-                    </p>
-                </div>
-                <div class="mt-8 lg:mt-0 lg:ml-8">
-                    <form class="sm:flex">
-                        <label for="email-address" class="sr-only">Email address</label>
-                        <input id="email-address" name="email" type="email" autocomplete="email" required class="w-full px-5 py-3 border border-gray-300 shadow-sm placeholder-gray-400 focus:ring-1 focus:ring-[#0a5694] focus:border-[#0a5694] rounded-md" placeholder="Enter your email">
-                        <button type="submit" class="mt-3 w-full flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#171e60] hover:bg-[#0a5694] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0a5694] sm:mt-0 sm:ml-3 sm:w-auto sm:flex-shrink-0">
-                            Subscribe
-                        </button>
-                    </form>
-                    <p class="mt-3 text-sm text-gray-500">
-                        We care about your data. Read our
-                        <a href="#" class="font-medium text-[#0a5694] underline">
-                            Privacy Policy
-                        </a>.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 @include('layouts.footer')
 @endsection
