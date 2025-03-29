@@ -5,6 +5,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-5JRSRT4MLZ"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-5JRSRT4MLZ');
+        </script>
+
         @include('layouts.meta')
         <title>@yield('title', 'MaxMed UAE - Medical & Laboratory Equipment Supplier')</title>
 
@@ -67,12 +77,58 @@
             .border-primary {
                 border-color: var(--brand-main) !important;
             }
+
+            /* Lazy Loading Styles */
+            .lazy-image {
+                opacity: 0;
+                transition: opacity 0.3s ease-in;
+            }
+            
+            .lazy-image.loaded {
+                opacity: 1;
+            }
         </style>
 
         <!-- Include Bootstrap CSS or any other stylesheets -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
         <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+
+        <!-- Image Loading Optimization -->
+        <link rel="preload" as="image" href="{{ asset('Images/banner.png') }}">
+
+        <!-- Image Loading Script -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var lazyImages = [].slice.call(document.querySelectorAll("img.lazy-image"));
+
+                if ("IntersectionObserver" in window) {
+                    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+                        entries.forEach(function(entry) {
+                            if (entry.isIntersecting) {
+                                let lazyImage = entry.target;
+                                lazyImage.src = lazyImage.dataset.src;
+                                if(lazyImage.dataset.srcset) {
+                                    lazyImage.srcset = lazyImage.dataset.srcset;
+                                }
+                                lazyImage.classList.add("loaded");
+                                lazyImageObserver.unobserve(lazyImage);
+                            }
+                        });
+                    });
+
+                    lazyImages.forEach(function(lazyImage) {
+                        lazyImageObserver.observe(lazyImage);
+                    });
+                }
+            });
+        </script>
+        
+        <!-- Browser Caching Headers -->
+        @php
+            header('Cache-Control: public, max-age=31536000');
+            header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 31536000));
+        @endphp
 
         @stack('head')
     </head>
