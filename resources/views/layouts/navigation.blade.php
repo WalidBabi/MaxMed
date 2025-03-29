@@ -41,7 +41,7 @@
     </div>
 
     <!-- Main Navigation - Improved -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
         <style>
             /* Cart notification animations */
             @keyframes fadeIn {
@@ -259,7 +259,7 @@
                 </div>
 
                 <!-- Navigation Links - Improved spacing -->
-                <div class="hidden sm:flex sm:space-x-3 sm:ml-12">
+                <div class="hidden sm:flex sm:space-x-6 sm:ml-16">
                     <div class="nav-item">
                         <x-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')"
                             class="nav-link {{ request()->routeIs('welcome') ? 'active' : '' }}">
@@ -333,7 +333,7 @@
                 </div>
             </div>
 
-            <div class="flex items-center space-x-5">
+            <div class="flex items-center space-x-8">
                 <!-- Search Bar (Desktop) - Refined -->
                 <div class="hidden sm:block search-container">
                     <form action="{{ route('search') }}" method="GET">
