@@ -1,0 +1,64 @@
+@extends('layouts.app')
+
+@section('title', 'Laboratory Equipment & Scientific Instruments | MaxMed UAE')
+
+@section('meta_description', 'Premium laboratory equipment, scientific instruments, and research tools from MaxMed UAE. Discover high-quality lab technology for your medical or research facility in Dubai.')
+
+@section('content')
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-3">
+            @include('layouts.sidebar')
+        </div>
+        <div class="col-md-9">
+            <div class="page-header mb-4">
+                <h1 class="page-title">Laboratory Equipment & Scientific Instruments</h1>
+                <div class="breadcrumbs mb-3">
+                    <a href="{{ route('home') }}">Home</a> &gt;
+                    <a href="{{ route('categories.index') }}">Categories</a> &gt;
+                    <span>Laboratory Equipment</span>
+                </div>
+                
+                <div class="category-description mb-4">
+                    <p>Explore MaxMed UAE's comprehensive collection of premium laboratory equipment, designed to meet the exacting standards of medical and research facilities throughout Dubai and the UAE. Our laboratory equipment range includes:</p>
+                    
+                    <ul class="mt-3 lab-equipment-list">
+                        <li><strong>Analytical Instruments</strong> - Precision tools for accurate analysis and measurement</li>
+                        <li><strong>Clinical Laboratory Equipment</strong> - Essential tools for medical diagnostics</li>
+                        <li><strong>Research Laboratory Equipment</strong> - Advanced instruments for scientific research</li>
+                        <li><strong>Laboratory Glassware</strong> - High-quality glassware for various lab applications</li>
+                        <li><strong>Laboratory Consumables</strong> - Essential supplies for daily lab operations</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Products listing -->
+            <div class="products-container">
+                <!-- Display lab equipment products here -->
+            </div>
+            
+            <!-- FAQ Section -->
+            <div class="faq-section mt-5">
+                <h2>Laboratory Equipment FAQs</h2>
+                
+                <div class="accordion" id="labEquipmentFAQ">
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                What types of laboratory equipment does MaxMed UAE offer?
+                            </button>
+                        </h3>
+                        <div id="faq1" class="accordion-collapse collapse show">
+                            <div class="accordion-body">
+                                MaxMed UAE offers a comprehensive range of laboratory equipment including analytical instruments, clinical diagnostic tools, research equipment, laboratory glassware, and consumables. Our products are sourced from leading manufacturers and meet international quality standards.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Add more FAQ items -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection 

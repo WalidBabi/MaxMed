@@ -5,7 +5,7 @@
     "name": "MaxMed UAE",
     "url": "https://maxmedme.com",
     "logo": "{{ asset('Images/MaxTest-logo.png') }}",
-    "description": "Leading supplier of medical and laboratory equipment in Dubai, UAE",
+    "description": "Leading supplier of laboratory equipment and medical supplies in Dubai, UAE. We provide high-quality scientific instruments, diagnostic tools, and lab technology for healthcare and research facilities.",
     "address": {
         "@type": "PostalAddress",
         "addressCountry": "UAE",
@@ -30,6 +30,24 @@
         "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
         "opens": "09:00",
         "closes": "18:00"
-    }
+    },
+    "makesOffer": [
+        {
+            "@type": "Offer",
+            "itemOffered": {
+                "@type": "Product",
+                "name": "Laboratory Equipment",
+                "description": "High-quality laboratory equipment for medical and research facilities"
+            }
+        },
+        {
+            "@type": "Offer",
+            "itemOffered": {
+                "@type": "Product",
+                "name": "Scientific Instruments",
+                "description": "Precision scientific instruments for laboratory analysis and research"
+            }
+        }
+    ]
 }
 </script> 

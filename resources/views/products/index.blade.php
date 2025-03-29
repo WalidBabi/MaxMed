@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Medical Laboratory Equipment & Supplies | MaxMed UAE')
+@section('title', 'Laboratory Equipment & Scientific Instruments | MaxMed UAE')
+
+@section('meta_description', 'Explore MaxMed UAE\'s premium laboratory equipment, scientific instruments, and medical supplies. High-quality lab technology for hospitals, research facilities, and medical centers in Dubai.')
+
+@section('meta_keywords', 'laboratory equipment Dubai, lab instruments UAE, scientific equipment, diagnostic tools, research lab supplies, laboratory technology')
 
 @section('content')
 <style>
@@ -332,8 +336,8 @@
         </div>
         <div class="col-md-9">
             <div class="page-header mb-4">
-                <h1 class="page-title">MaxMed Products and Services</h1>
-                <p class="page-description">Explore our comprehensive range of high-quality laboratory equipment, medical supplies, services, and innovative solutions tailored for your facility's needs.</p>
+                <h1 class="page-title">Laboratory Equipment & Scientific Instruments</h1>
+                <p class="page-description">Explore our comprehensive range of high-quality laboratory equipment, scientific instruments, diagnostic tools, and innovative research solutions tailored for your facility's needs. MaxMed UAE offers the latest in lab technology for healthcare and research professionals.</p>
             </div>
             
             <div class="category-container">
