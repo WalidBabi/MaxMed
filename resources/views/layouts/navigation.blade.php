@@ -221,9 +221,7 @@
             .mobile-nav-link {
                 display: block;
                 padding: 0.75rem 1rem;
-                color: #4B5563;
-                font-weight: 500;
-                border-left: 3px solid transparent;
+                font-size: 1.1rem;
                 transition: all 0.3s ease;
             }
             
@@ -235,9 +233,12 @@
             
             .mobile-nav-link.active {
                 background-color: rgba(10, 86, 148, 0.1);
-                color: #0a5694;
-                border-left-color: #0a5694;
-                font-weight: 600;
+                border-left: 4px solid #0a5694;
+            }
+            
+            .mobile-menu-container {
+                max-height: 80vh;
+                overflow-y: auto;
             }
         </style>
         <div class="flex justify-between h-20">

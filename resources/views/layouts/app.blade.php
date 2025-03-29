@@ -93,6 +93,23 @@
             .lazy-image.loaded {
                 opacity: 1;
             }
+
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+            
+            /* Improve touch targets for mobile */
+            button, a, input[type="submit"], input[type="button"] {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            /* Prevent horizontal overflow */
+            body {
+                overflow-x: hidden;
+                width: 100%;
+            }
         </style>
 
         <!-- Include Bootstrap CSS or any other stylesheets -->
@@ -135,6 +152,9 @@
             header('Cache-Control: public, max-age=31536000');
             header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 31536000));
         @endphp
+
+        <!-- Add Mobile CSS -->
+        <link rel="stylesheet" href="{{ asset('css/mobile.css') }}">
 
         @stack('head')
     </head>

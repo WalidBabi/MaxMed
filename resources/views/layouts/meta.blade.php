@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, shrink-to-fit=no, viewport-fit=cover">
 <meta name="description" content="@yield('meta_description', 'MaxMed UAE - Leading supplier of laboratory equipment and medical supplies in Dubai. High-quality lab instruments, diagnostic equipment, and innovative solutions for healthcare and research facilities.')">
 <meta name="keywords" content="@yield('meta_keywords', 'laboratory equipment, lab instruments, medical equipment, Dubai, UAE, scientific equipment, diagnostic tools, research lab supplies, laboratory technology')">
 <meta name="author" content="MaxMed UAE">

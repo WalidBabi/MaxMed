@@ -1,0 +1,24 @@
+/* Mobile-specific overrides */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    h1, h2, h3 {
+        word-break: break-word;
+    }
+    
+    .card {
+        margin-bottom: 20px;
+    }
+    
+    /* Fix for iOS input zoom */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    select,
+    textarea {
+        font-size: 16px;
+    }
+} 

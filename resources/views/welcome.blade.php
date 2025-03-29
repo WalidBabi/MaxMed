@@ -365,6 +365,19 @@
         .feature-title {
             font-size: 1.5rem;
         }
+        
+        .feature-content {
+            padding: 1.5rem;
+        }
+        
+        .feature-desc {
+            font-size: 1rem;
+        }
+        
+        .feature-dot {
+            height: 4px;
+            width: 25px;
+        }
     }
 </style>
 

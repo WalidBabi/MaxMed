@@ -354,6 +354,20 @@
         .form-group, .info-card {
             margin-bottom: 1.25rem;
         }
+        
+        /* Add these new styles */
+        input, select, textarea {
+            font-size: 16px !important; /* Prevents zoom on iOS */
+            padding: 12px !important;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        
+        .action-button, button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+        }
     }
 </style>
 
