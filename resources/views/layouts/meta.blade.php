@@ -20,4 +20,15 @@
 <meta name="twitter:image" content="@yield('og_image', asset('Images/banner2.jpeg'))">
 
 <!-- Canonical URL -->
-<link rel="canonical" href="{{ url()->current() }}" /> 
+<link rel="canonical" href="{{ url()->current() }}" />
+
+<!-- Mobile Optimization -->
+<meta name="theme-color" content="#171e60">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="{{ asset('manifest.json') }}">
+
+<!-- Preconnect to External Resources -->
+<link rel="preconnect" href="https://fonts.bunny.net">
+<link rel="preconnect" href="https://cdn.tailwindcss.com"> 
