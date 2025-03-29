@@ -243,56 +243,5 @@
     </div>
 </div>
 
-<!-- Become a Partner -->
-<div class="bg-white py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-gradient-to-r from-[#171e60] to-[#0a5694] rounded-2xl shadow-xl overflow-hidden">
-            <div class="px-6 py-12 sm:px-12 lg:flex lg:items-center lg:py-16">
-                <div class="lg:w-0 lg:flex-1">
-                    <h2 class="text-3xl font-extrabold tracking-tight text-white">
-                        Ready to become a MaxMed partner?
-                    </h2>
-                    <p class="mt-4 max-w-3xl text-lg text-blue-100">
-                        We're always looking for innovative companies to collaborate with in providing exceptional healthcare solutions. Join our ecosystem of healthcare pioneers.
-                    </p>
-                    
-                    <div class="mt-8 flex space-x-4">
-                        <a href="{{ route('contact') }}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-[#171e60] bg-white hover:bg-gray-50 shadow-md">
-                            Contact Us
-                        </a>
-                        <a href="#" class="inline-flex items-center px-6 py-3 border border-white text-base font-medium rounded-md text-white hover:bg-blue-800 hover:bg-opacity-30">
-                            Learn More
-                        </a>
-                    </div>
-                </div>
-                <div class="mt-8 lg:mt-0 lg:ml-8">
-                    <div class="bg-white p-5 rounded-lg shadow-lg">
-                        <h3 class="text-lg font-bold text-gray-900 mb-3">Partner Application Process</h3>
-                        <ul class="space-y-3">
-                            <li class="flex">
-                                <svg class="h-5 w-5 text-[#0a5694] mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                </svg>
-                                <span class="ml-2 text-gray-700">Submit an inquiry</span>
-                            </li>
-                            <li class="flex">
-                                <svg class="h-5 w-5 text-[#0a5694] mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                </svg>
-                                <span class="ml-2 text-gray-700">Initial consultation</span>
-                            </li>
-                            <li class="flex">
-                                <svg class="h-5 w-5 text-[#0a5694] mt-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                </svg>
-                                <span class="ml-2 text-gray-700">Partnership agreement</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
 
