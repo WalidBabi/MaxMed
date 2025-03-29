@@ -263,11 +263,45 @@
                             {{ __('About Us') }}
                         </x-nav-link>
                     </div>
-                    <div class="nav-item">
+                    <div class="nav-item group relative">
                         <x-nav-link :href="route('products.index')" :active="request()->routeIs('products')"
-                            class="nav-link {{ request()->routeIs('products') ? 'active' : '' }}">
+                            class="nav-link {{ request()->routeIs('products') ? 'active' : '' }} flex items-center">
                             {{ __('Products') }}
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
                         </x-nav-link>
+                        <div class="absolute left-0 mt-0 w-48 bg-white shadow-lg rounded-b-lg py-2 z-50 hidden group-hover:block transition-all duration-300 ease-in-out">
+                            @foreach(\App\Models\Category::whereNull('parent_id')->take(8)->get() as $category)
+                                @php
+                                    $hasChildren = \App\Models\Category::where('parent_id', $category->id)->exists();
+                                @endphp
+                                <div class="relative group/subcategory">
+                                    <a href="{{ route('categories.show', $category) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#0a5694] flex justify-between items-center">
+                                        {{ $category->name }}
+                                        @if($hasChildren)
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        @endif
+                                    </a>
+                                    @if($hasChildren)
+                                        <div class="absolute left-full top-0 w-48 bg-white shadow-lg rounded-lg py-2 z-50 hidden group-hover/subcategory:block">
+                                            @foreach(\App\Models\Category::where('parent_id', $category->id)->get() as $subcategory)
+                                                <a href="{{ route('categories.show', $subcategory) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#0a5694]">
+                                                    {{ $subcategory->name }}
+                                                </a>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                            <div class="border-t border-gray-100 mt-2 pt-2">
+                                <a href="{{ route('products.index') }}" class="block px-4 py-2 text-sm text-[#0a5694] font-medium hover:bg-gray-100">
+                                    View All Categories →
+                                </a>
+                            </div>
+                        </div>
                     </div>
                     <div class="nav-item">
                         <x-nav-link :href="route('partners.index')" :active="request()->routeIs('partners')"
