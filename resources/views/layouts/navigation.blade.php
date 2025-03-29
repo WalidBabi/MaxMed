@@ -1,33 +1,37 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100 dark:border-gray-700 shadow-lg sticky top-0 z-50">
-    <!-- Top Bar with Contact Info -->
-    <div class="bg-gradient-to-r from-[#171e60] to-[#0a5694] text-white py-1.5 px-4 text-sm hidden sm:block">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <a href="mailto:sales@maxmedme.com" class="flex items-center hover:text-blue-200 transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
+    <!-- Top Bar with Contact Info - Redesigned -->
+    <div class="bg-gradient-to-r from-[#0a3369] to-[#0a5694] text-white py-2.5 px-4 text-sm hidden sm:block">
+        <div class="container mx-auto flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-6">
+                <a href="mailto:sales@maxmedme.com" class="flex items-center hover:text-blue-200 transition duration-300 group">
+                    <div class="bg-white/10 rounded-full p-1.5 mr-2 group-hover:bg-white/20 transition duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
                     sales@maxmedme.com
                 </a>
-                <a href="tel:+97155460250" class="flex items-center hover:text-blue-200 transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
+                <a href="tel:+97155460250" class="flex items-center hover:text-blue-200 transition duration-300 group">
+                    <div class="bg-white/10 rounded-full p-1.5 mr-2 group-hover:bg-white/20 transition duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                    </div>
                     +971 55 460 2500
                 </a>
             </div>
-            <div class="flex space-x-3">
-                <a href="https://www.linkedin.com/company/maxmed-me/about/?viewAsMember=true" class="hover:text-blue-300 transition">
+            <div class="flex space-x-4">
+                <a href="https://www.linkedin.com/company/maxmed-me/about/?viewAsMember=true" class="transition duration-300 bg-white/10 hover:bg-white/20 rounded-full p-1.5 flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
                     </svg>
                 </a>
-                <a href="#" class="hover:text-blue-300 transition">
+                <a href="#" class="transition duration-300 bg-white/10 hover:bg-white/20 rounded-full p-1.5 flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
                     </svg>
                 </a>
-                <a href="#" class="hover:text-blue-300 transition">
+                <a href="#" class="transition duration-300 bg-white/10 hover:bg-white/20 rounded-full p-1.5 flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
                     </svg>
@@ -36,8 +40,8 @@
         </div>
     </div>
 
-    <!-- Main Navigation -->
-    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Main Navigation - Improved -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <style>
             /* Cart notification animations */
             @keyframes fadeIn {
@@ -59,18 +63,19 @@
                 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             }
             
-            /* Navigation styling */
+            /* Navigation styling - Updated */
             .nav-item {
                 position: relative;
-                margin: 0 0.5rem;
+                margin: 0 0.75rem;
             }
             
             .nav-link {
                 color: #4B5563;
                 font-weight: 500;
-                padding: 1.5rem 0.5rem;
+                padding: 1.75rem 0.75rem;
                 transition: all 0.3s ease;
                 position: relative;
+                letter-spacing: 0.01em;
             }
             
             .nav-link:hover {
@@ -85,7 +90,7 @@
                 width: 0;
                 height: 3px;
                 background: linear-gradient(to right, #0a5694, #171e60);
-                transition: width 0.3s ease;
+                transition: width 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
                 border-top-left-radius: 3px;
                 border-top-right-radius: 3px;
             }
@@ -101,16 +106,17 @@
             
             .nav-link.active::after {
                 width: 100%;
+                height: 4px;
             }
             
-            /* Cart Icon Styling */
+            /* Cart Icon Styling - Enhanced */
             .cart-icon-container {
                 position: relative;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                width: 40px;
-                height: 40px;
+                width: 42px;
+                height: 42px;
                 border-radius: 50%;
                 background-color: rgba(10, 86, 148, 0.1);
                 transition: all 0.3s ease;
@@ -126,12 +132,14 @@
                 color: #0a5694;
             }
             
-            /* User menu styling */
+            /* User menu styling - Improved */
             .user-menu-button {
                 background-color: rgba(10, 86, 148, 0.1);
                 border: 1px solid rgba(10, 86, 148, 0.2) !important;
                 transition: all 0.3s ease;
                 color: #4B5563 !important;
+                padding: 0.5rem 1rem !important;
+                border-radius: 0.5rem !important;
             }
             
             .user-menu-button:hover {
@@ -169,15 +177,15 @@
                 left: 100%;
             }
             
-            /* Search styling */
+            /* Search styling - Enhanced */
             .search-container {
                 position: relative;
-                max-width: 250px;
+                max-width: 280px;
             }
             
             .search-input {
                 width: 100%;
-                padding: 0.5rem 2.5rem 0.5rem 1rem;
+                padding: 0.625rem 2.5rem 0.625rem 1.25rem;
                 border: 1px solid #E5E7EB;
                 border-radius: 9999px;
                 font-size: 0.875rem;
@@ -212,7 +220,7 @@
                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             }
             
-            /* Mobile menu */
+            /* Mobile menu - Enhanced */
             .mobile-menu-container {
                 background-color: white;
                 border-top: 1px solid #E5E7EB;
@@ -220,7 +228,7 @@
             
             .mobile-nav-link {
                 display: block;
-                padding: 0.75rem 1rem;
+                padding: 0.875rem 1.25rem;
                 font-size: 1.1rem;
                 transition: all 0.3s ease;
             }
@@ -241,17 +249,17 @@
                 overflow-y: auto;
             }
         </style>
-        <div class="flex justify-between h-20">
+        <div class="flex justify-between h-22">
             <div class="flex items-center">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('welcome') }}">
-                        <img src="{{ asset('Images/logo.png') }}" alt="MaxMed Logo" class="block h-[40px] w-auto">
+                <!-- Logo - Enhanced spacing -->
+                <div class="shrink-0 flex items-center py-4">
+                    <a href="{{ route('welcome') }}" class="transition hover:opacity-90">
+                        <img src="{{ asset('Images/logo.png') }}" alt="MaxMed Logo" class="block h-[46px] w-auto">
                     </a>
                 </div>
 
-                <!-- Navigation Links -->
-                <div class="hidden sm:flex sm:space-x-2 sm:ml-10">
+                <!-- Navigation Links - Improved spacing -->
+                <div class="hidden sm:flex sm:space-x-3 sm:ml-12">
                     <div class="nav-item">
                         <x-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')"
                             class="nav-link {{ request()->routeIs('welcome') ? 'active' : '' }}">
@@ -268,7 +276,7 @@
                         <x-nav-link :href="route('products.index')" :active="request()->routeIs('products')"
                             class="nav-link {{ request()->routeIs('products') ? 'active' : '' }} flex items-center">
                             {{ __('Products') }}
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </x-nav-link>
@@ -325,8 +333,8 @@
                 </div>
             </div>
 
-            <div class="flex items-center space-x-4">
-                <!-- Search Bar (Desktop) -->
+            <div class="flex items-center space-x-5">
+                <!-- Search Bar (Desktop) - Refined -->
                 <div class="hidden sm:block search-container">
                     <form action="{{ route('search') }}" method="GET">
                         <input type="text" name="query" placeholder="Search products..." 
@@ -340,7 +348,7 @@
                     </form>
                 </div>
                 
-                <!-- Cart Icon -->
+                <!-- Cart Icon - Enhanced animation -->
                 <a href="{{ route('cart.view') }}" class="transition-colors duration-300">
                     <div class="cart-icon-container relative">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -350,18 +358,18 @@
                         $cartQuantity = 0;
                         if (session('cart')) {
                         foreach (session('cart') as $item) {
-                        $cartQuantity += intval($item['quantity']); // Convert to integer to ensure proper addition
+                        $cartQuantity += intval($item['quantity']);
                         }
                         }
                         @endphp
                         @if($cartQuantity > 0)
-                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
                             {{ $cartQuantity }}
                         </span>
                         @endif
                         
                         <!-- Cart Notification Popup -->
-                        <div id="cartNotification" class="hidden absolute right-0 top-12 bg-white rounded-lg shadow-lg w-64 z-50 border border-green-500 p-3 text-sm">
+                        <div id="cartNotification" class="hidden absolute right-0 top-12 bg-white rounded-lg shadow-lg w-64 z-50 border-l-4 border-green-500 p-3 text-sm">
                             <div class="flex items-center">
                                 <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -413,18 +421,18 @@
                     </x-slot>
                 </x-dropdown>
                 @else
-                <div class="hidden sm:flex space-x-2">
-                    <a href="{{ route('login') }}" class="text-gray-600 hover:text-[#0a5694] px-4 py-2 rounded-lg transition-colors duration-300 whitespace-nowrap border border-gray-200 hover:border-[#0a5694] bg-white hover:bg-gray-50">Sign In</a>
+                <div class="hidden sm:flex space-x-3">
+                    <a href="{{ route('login') }}" class="text-gray-600 hover:text-[#0a5694] px-4 py-2.5 rounded-lg transition-colors duration-300 whitespace-nowrap border border-gray-200 hover:border-[#0a5694] bg-white hover:bg-gray-50 shadow-sm hover:shadow">Sign In</a>
                     <a href="{{ route('register') }}"
-                        class="action-button text-white px-4 py-2 rounded-lg whitespace-nowrap">
+                        class="action-button text-white px-4 py-2.5 rounded-lg whitespace-nowrap shadow-sm hover:shadow">
                         Sign Up
                     </a>
                 </div>
                 @endauth
 
-                <!-- Hamburger -->
+                <!-- Hamburger - Refined touch target -->
                 <div class="flex items-center sm:hidden">
-                    <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-[#0a5694] hover:bg-gray-100 focus:outline-none transition duration-150 ease-in-out">
+                    <button @click="open = ! open" class="inline-flex items-center justify-center p-2.5 rounded-md text-gray-500 hover:text-[#0a5694] hover:bg-gray-100 focus:outline-none transition duration-150 ease-in-out">
                         <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                             <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                             <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -435,9 +443,9 @@
         </div>
     </div>
 
-    <!-- Responsive Navigation Menu -->
+    <!-- Responsive Navigation Menu - Slightly redesigned -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden mobile-menu-container">
-        <div class="pt-2 pb-3 space-y-1">
+        <div class="pt-3 pb-4 space-y-1.5">
             <!-- Responsive Search Bar -->
             <div class="px-4 py-2">
                 <form action="{{ route('search') }}" method="GET" class="flex">
@@ -480,7 +488,7 @@
             <x-responsive-nav-link :href="route('cart.view')"
                                    class="mobile-nav-link">
                 <div class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-[#0a5694]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                     {{ __('Cart') }}
