@@ -18,6 +18,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PartnersController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\QRCodeController;
 
 // Public Routes
 Route::get('/', fn() => view('welcome'))->name('welcome');
@@ -118,5 +119,9 @@ Route::get('/showproducts', [ProductController::class, 'showProducts'])->name('s
 
 // Search Route
 Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+// QR Code Route
+Route::get('/qr-code', [QRCodeController::class, 'generate'])->name('qr.code');
+
 
 require __DIR__ . '/auth.php';
