@@ -202,7 +202,7 @@
             .search-button {
                 position: absolute;
                 right: 0.5rem;
-                top: 50%;
+                top: 37%;
                 transform: translateY(-50%);
                 background: linear-gradient(to right, #0a5694, #171e60);
                 color: white;
