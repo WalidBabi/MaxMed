@@ -24,13 +24,19 @@
         "email": "cs@maxmedme.com",
         "availableLanguage": ["English", "Arabic"]
     },
-    "areaServed": ["Dubai", "Abu Dhabi", "Sharjah", "UAE"],
+    "areaServed": ["Dubai", "Abu Dhabi", "Sharjah", "Ajman", "UAE", "GCC"],
     "openingHoursSpecification": {
         "@type": "OpeningHoursSpecification",
         "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
         "opens": "09:00",
         "closes": "18:00"
     },
+    "sameAs": [
+        "https://www.facebook.com/maxmeduae",
+        "https://www.linkedin.com/company/maxmeduae",
+        "https://www.instagram.com/maxmeduae"
+    ],
+    "keywords": "laboratory equipment Dubai, medical supplies UAE, scientific instruments, lab technology, diagnostic equipment, research lab supplies, hospital equipment, medical laboratory setup",
     "makesOffer": [
         {
             "@type": "Offer",
@@ -46,6 +52,22 @@
                 "@type": "Product",
                 "name": "Scientific Instruments",
                 "description": "Precision scientific instruments for laboratory analysis and research"
+            }
+        },
+        {
+            "@type": "Offer",
+            "itemOffered": {
+                "@type": "Product",
+                "name": "Medical Supplies",
+                "description": "Essential medical supplies for hospitals and healthcare facilities"
+            }
+        },
+        {
+            "@type": "Offer",
+            "itemOffered": {
+                "@type": "Product",
+                "name": "Diagnostic Equipment",
+                "description": "Advanced diagnostic tools and equipment for medical testing"
             }
         }
     ]

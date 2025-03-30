@@ -17,8 +17,10 @@
     </url>
     <url>
         <loc>https://maxmedme.com/contact</loc>
-    
-            </url>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+        <lastmod>2025-03-20T00:00:00+00:00</lastmod>
+    </url>
     <url>
         <loc>https://maxmedme.com/products</loc>
         <changefreq>weekly</changefreq>
@@ -27,47 +29,52 @@
     </url>
     <url>
         <loc>https://maxmedme.com/partners</loc>
-    
-            </url>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+        <lastmod>2025-03-20T00:00:00+00:00</lastmod>
+    </url>
     <url>
         <loc>https://maxmedme.com/news</loc>
-    
-            </url>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+        <lastmod>2025-03-23T00:00:00+00:00</lastmod>
+    </url>
     <url>
         <loc>https://maxmedme.com/categories/</loc>
         <lastmod>2025-03-23T20:39:03+00:00</lastmod>
-
-            </url>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
     <url>
         <loc>https://maxmedme.com/product/32</loc>
         <lastmod>2025-03-20T21:53:02+00:00</lastmod>
-
-            </url>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
     <url>
         <loc>https://maxmedme.com/product/31</loc>
         <lastmod>2025-03-20T21:50:10+00:00</lastmod>
-
-            </url>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
     <url>
         <loc>https://maxmedme.com/product/30</loc>
         <lastmod>2025-03-24T20:54:29+00:00</lastmod>
-
-            </url>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
     <url>
         <loc>https://maxmedme.com/product/33</loc>
         <lastmod>2025-03-20T21:56:16+00:00</lastmod>
-
-            </url>
+    </url>
     <url>
         <loc>https://maxmedme.com/product/34</loc>
         <lastmod>2025-03-20T21:58:03+00:00</lastmod>
-
-            </url>
+    </url>
     <url>
         <loc>https://maxmedme.com/product/35</loc>
         <lastmod>2025-03-24T20:53:06+00:00</lastmod>
-
-            </url>
+    </url>
     <url>
         <loc>https://maxmedme.com/categories/lab-equipment</loc>
         <changefreq>weekly</changefreq>
