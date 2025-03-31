@@ -371,7 +371,10 @@
     }
 </style>
 
-<!-- Add this in the <head> section or before the closing </body> tag -->
+<!-- Replace this line -->
+<script src="https://www.google.com/recaptcha/enterprise.js?render=6LdGqgUrAAAAABXWuO31KMz3LYHY_BNSKYVLg3RC"></script>
+
+<!-- With this -->
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 <!-- Hero Section -->
@@ -409,7 +412,7 @@
             }" x-init="initForm()">
                 <div class="contact-card p-8">
                     <h2 class="contact-form-title">Send us a Message</h2>
-                    <form action="{{ route('contact.submit') }}" method="POST" x-data="{ submitting: false }" @submit.prevent="
+                    <form id="contactForm" action="{{ route('contact.submit') }}" method="POST" x-data="{ submitting: false }" @submit.prevent="
                         submitting = true;
                         $event.target.submit();
                     ">
@@ -447,15 +450,12 @@
                             <textarea id="message" name="message" class="form-control textarea-control" required></textarea>
                         </div>
                         
-                        <!-- Hidden field for recipient email -->
-                        <input type="hidden" name="recipient" value="cs@maxmedme.com">
-                        
-                        <!-- Add reCAPTCHA before the submit button -->
+                        <!-- Replace your hidden field with the visible reCAPTCHA -->
                         <div class="form-group" style="transition: all 0.4s ease;">
                             <div class="g-recaptcha" data-sitekey="{{ config('recaptcha.site_key') }}"></div>
                         </div>
                         
-                        <!-- Add honeypot field - hidden from humans but visible to bots -->
+                        <!-- Honeypot field (unchanged) -->
                         <div class="form-group" style="display: none !important;">
                             <label class="form-label" for="website">Website</label>
                             <input type="text" id="website" name="website" class="form-control">
@@ -555,35 +555,6 @@
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // This script is only used if Alpine.js is not loading properly
-        setTimeout(function() {
-            document.querySelectorAll('.form-group').forEach((group, index) => {
-                setTimeout(() => {
-                    group.style.opacity = '1';
-                    group.style.transform = 'translateY(0)';
-                }, 100 + (index * 100));
-            });
-            
-            setTimeout(() => {
-                const submitBtn = document.querySelector('.submit-btn');
-                if (submitBtn) {
-                    submitBtn.style.opacity = '1';
-                    submitBtn.style.transform = 'translateY(0)';
-                }
-            }, 500);
-            
-            document.querySelectorAll('.info-card').forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateX(0)';
-                }, 100 + (index * 150));
-            });
-        }, 100);
-    });
-</script>
 
 @include('layouts.footer')
 @endsection
