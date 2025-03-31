@@ -452,7 +452,7 @@
                         
                         <!-- Add reCAPTCHA before the submit button -->
                         <div class="form-group" style="transition: all 0.4s ease;">
-                            <div class="g-recaptcha" data-sitekey="6LdXXXXXXXXXXXXXXXXXXXXX"></div>
+                            <div class="g-recaptcha" data-sitekey="{{ config('recaptcha.site_key') }}"></div>
                         </div>
                         
                         <!-- Add honeypot field - hidden from humans but visible to bots -->

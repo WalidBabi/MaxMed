@@ -14,7 +14,7 @@ class ContactController extends Controller
     public function submit(Request $request)
     {
         // Verify reCAPTCHA
-        $recaptchaSecretKey = env('RECAPTCHA_SECRET_KEY');
+        $recaptchaSecretKey = config('recaptcha.secret_key');
         $recaptchaResponse = $request->input('g-recaptcha-response');
         
         $recaptchaValid = false;
