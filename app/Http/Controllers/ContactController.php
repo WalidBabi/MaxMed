@@ -89,10 +89,32 @@ class ContactController extends Controller
             }
         }
         
-        // Send email
-        Mail::to($request->recipient)
-            ->send(new ContactFormMail($validated));
+        // Add this temporary code to test email sending
+        try {
+            Mail::raw('Test message from your contact form', function($message) {
+                $message->to('your-test-email@example.com')
+                        ->subject('Test Email');
+            });
             
-        return redirect()->back()->with('success', 'Thank you for your message! We\'ll get back to you soon.');
+            // If we get here, email was sent successfully
+            // Continue with normal form processing...
+        } catch (\Exception $e) {
+            \Log::error('Mail test failed: ' . $e->getMessage());
+            return back()->with('error', 'Email test failed: ' . $e->getMessage());
+        }
+        
+        // Send email
+        try {
+            Mail::to($request->recipient)
+                ->queue(new ContactFormMail($validated));
+            
+            return redirect()->back()->with('success', 'Thank you for your message! We\'ll get back to you soon.');
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Mail sending failed: ' . $e->getMessage());
+            
+            // Return with error message
+            return back()->with('error', 'Unable to send email. Please try again later or contact us directly at cs@maxmedme.com.');
+        }
     }
 } 
