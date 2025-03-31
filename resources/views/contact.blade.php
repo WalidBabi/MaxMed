@@ -371,6 +371,9 @@
     }
 </style>
 
+<!-- Add this in the <head> section or before the closing </body> tag -->
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 <!-- Hero Section -->
 <div class="contact-hero">
     <div class="max-w-7xl mx-auto px-4">
@@ -411,6 +414,16 @@
                         $event.target.submit();
                     ">
                         @csrf
+                        @if(session('error'))
+                        <div class="error-message" style="background-color: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <span class="error-icon" style="margin-right: 0.75rem;">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                            </span>
+                            {{ session('error') }}
+                        </div>
+                        @endif
                         <div class="form-group" style="transition: all 0.4s ease;">
                             <label class="form-label" for="name">Name</label>
                             <input type="text" id="name" name="name" class="form-control" required>
@@ -436,6 +449,17 @@
                         
                         <!-- Hidden field for recipient email -->
                         <input type="hidden" name="recipient" value="cs@maxmedme.com">
+                        
+                        <!-- Add reCAPTCHA before the submit button -->
+                        <div class="form-group" style="transition: all 0.4s ease;">
+                            <div class="g-recaptcha" data-sitekey="6LdXXXXXXXXXXXXXXXXXXXXX"></div>
+                        </div>
+                        
+                        <!-- Add honeypot field - hidden from humans but visible to bots -->
+                        <div class="form-group" style="display: none !important;">
+                            <label class="form-label" for="website">Website</label>
+                            <input type="text" id="website" name="website" class="form-control">
+                        </div>
                         
                         <button type="submit" class="submit-btn" style="transition: all 0.4s ease;"
                                 x-bind:disabled="submitting">
