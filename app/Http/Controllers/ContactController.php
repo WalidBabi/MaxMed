@@ -73,7 +73,7 @@ class ContactController extends Controller
         // Send email
         try {
             // Send directly instead of queuing for troubleshooting
-            Mail::to($request->recipient)
+            Mail::to(env('MAIL_FROM_ADDRESS', 'cs@maxmedme.com'))
                 ->send(new ContactFormMail($validated));
             
             return redirect()->back()->with('success', 'Thank you for your message! We\'ll get back to you soon.');
