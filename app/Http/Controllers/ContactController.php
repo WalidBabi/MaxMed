@@ -72,17 +72,22 @@ class ContactController extends Controller
         
         // Send email
         try {
+            // Log email attempt
+            Log::info('Attempting to send email to: ' . env('MAIL_FROM_ADDRESS', 'cs@maxmedme.com'));
+            
             // Send directly instead of queuing for troubleshooting
-            Mail::to(env('MAIL_FROM_ADDRESS', 'cs@maxmedme.com'))
+            Mail::to('cs@maxmedme.com')
                 ->send(new ContactFormMail($validated));
             
+            Log::info('Email sent successfully');
             return redirect()->back()->with('success', 'Thank you for your message! We\'ll get back to you soon.');
         } catch (\Exception $e) {
-            // Log the error
+            // Log the error with full exception details
             Log::error('Mail sending failed: ' . $e->getMessage());
+            Log::error('Exception trace: ' . $e->getTraceAsString());
             
             // Return with error message
-            return back()->with('error', 'Unable to send email: ' . $e->getMessage());
+            return back()->with('error', 'Unable to send email. Our team has been notified.');
         }
     }
 } 
