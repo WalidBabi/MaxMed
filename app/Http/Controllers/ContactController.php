@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use App\Mail\ContactFormMail;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
@@ -34,26 +35,6 @@ class ContactController extends Controller
         
         if (!$recaptchaValid) {
             return back()->with('error', 'Please complete the reCAPTCHA verification.');
-        }
-        
-        // Check with Akismet API (you'll need an API key)
-        $client = new Client();
-        $response = $client->post('https://rest.akismet.com/1.1/comment-check', [
-            'form_params' => [
-                'api_key' => env('AKISMET_API_KEY', 'YOUR_AKISMET_API_KEY'),
-                'blog' => url('/'),
-                'user_ip' => $request->ip(),
-                'user_agent' => $request->header('User-Agent'),
-                'comment_type' => 'contact-form',
-                'comment_author' => $request->name,
-                'comment_author_email' => $request->email,
-                'comment_content' => $request->message
-            ]
-        ]);
-        
-        if ($response->getBody()->getContents() === 'true') {
-            // This is spam
-            return back()->with('error', 'Your submission was flagged as potential spam.');
         }
         
         // Rate limit: 3 submissions per hour per IP
@@ -89,32 +70,19 @@ class ContactController extends Controller
             }
         }
         
-        // Add this temporary code to test email sending
-        try {
-            Mail::raw('Test message from your contact form', function($message) {
-                $message->to('your-test-email@example.com')
-                        ->subject('Test Email');
-            });
-            
-            // If we get here, email was sent successfully
-            // Continue with normal form processing...
-        } catch (\Exception $e) {
-            \Log::error('Mail test failed: ' . $e->getMessage());
-            return back()->with('error', 'Email test failed: ' . $e->getMessage());
-        }
-        
         // Send email
         try {
+            // Send directly instead of queuing for troubleshooting
             Mail::to($request->recipient)
-                ->queue(new ContactFormMail($validated));
+                ->send(new ContactFormMail($validated));
             
             return redirect()->back()->with('success', 'Thank you for your message! We\'ll get back to you soon.');
         } catch (\Exception $e) {
             // Log the error
-            \Log::error('Mail sending failed: ' . $e->getMessage());
+            Log::error('Mail sending failed: ' . $e->getMessage());
             
             // Return with error message
-            return back()->with('error', 'Unable to send email. Please try again later or contact us directly at cs@maxmedme.com.');
+            return back()->with('error', 'Unable to send email: ' . $e->getMessage());
         }
     }
 } 
