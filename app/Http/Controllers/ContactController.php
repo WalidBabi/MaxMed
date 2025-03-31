@@ -18,6 +18,9 @@ class ContactController extends Controller
         $recaptchaSecretKey = env('RECAPTCHA_SECRET_KEY');
         $recaptchaResponse = $request->input('g-recaptcha-response');
         
+        // Log reCAPTCHA information
+        Log::info('reCAPTCHA check - Response: ' . ($recaptchaResponse ? 'Present' : 'Missing'));
+        
         $recaptchaValid = false;
         if ($recaptchaResponse) {
             $client = new Client();
@@ -31,10 +34,14 @@ class ContactController extends Controller
             
             $body = json_decode($response->getBody(), true);
             $recaptchaValid = $body['success'] ?? false;
+            
+            // Log the full response for debugging
+            Log::info('reCAPTCHA API response: ' . json_encode($body));
         }
         
         if (!$recaptchaValid) {
-            return back()->with('error', 'Please complete the reCAPTCHA verification.');
+            Log::warning('reCAPTCHA validation failed for IP: ' . $request->ip());
+            return back()->with('error', 'Please complete the reCAPTCHA verification.')->withInput();
         }
         
         // Rate limit: 3 submissions per hour per IP
