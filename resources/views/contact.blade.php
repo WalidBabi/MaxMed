@@ -452,7 +452,7 @@
                         
                         <!-- Replace your hidden field with the visible reCAPTCHA -->
                         <div class="form-group" style="transition: all 0.4s ease;">
-                            <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                            <div class="g-recaptcha" data-sitekey="6LdzqwUrAAAAAPPwKvLe2KIQt68VH09DLTEiY25B"></div>
                         </div>
                         
                         <!-- Honeypot field (unchanged) -->
