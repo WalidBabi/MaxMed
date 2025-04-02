@@ -467,27 +467,27 @@
                                     <a href="{{ route('product.show', $product) }}">{{ $product->name }}</a>
                                 </h5>
                                 <p class="card-text">
-                                    <strong>${{ number_format($product->price, 2) }}</strong>
-                                    <span class="price-aed d-block">AED {{ number_format($product->price_aed, 2) }}</span>
+                                    <!-- <strong>${{ number_format($product->price, 2) }}</strong> -->
+                                    <!-- <span class="price-aed d-block">AED {{ number_format($product->price_aed, 2) }}</span> -->
                                 </p>
                                 <div class="card-footer">
                                     @if($product->inventory->quantity > 0)
                                         <div class="d-flex align-items-center mb-2">
-                                            <span class="badge bg-success me-3"><i class="fas fa-check me-1"></i>In Stock</span>
-                                            <small class="text-muted">{{ $product->inventory->quantity }} available</small>
+                                            <!-- <span class="badge bg-success me-3"><i class="fas fa-check me-1"></i>In Stock</span>
+                                            <small class="text-muted">{{ $product->inventory->quantity }} available</small> -->
                                         </div>
                                         <form action="{{ route('cart.add', $product) }}" method="POST" class="w-100">
                                             @csrf
-                                            <div class="quantity-controls">
+                                            <!-- <div class="quantity-controls">
                                                 <label for="quantity-{{ $product->id }}">Quantity:</label>
                                                 <input type="number" name="quantity" id="quantity-{{ $product->id }}" 
                                                     value="1" min="1" max="{{ $product->inventory->quantity }}" 
                                                     class="form-control">
-                                            </div>
+                                            </div> -->
                                             <div class="button-group">
-                                                <button type="submit" class="btn btn-primary w-100">
+                                                <!-- <button type="submit" class="btn btn-primary w-100">
                                                     <i class="fas fa-shopping-cart me-2"></i> Add to Cart
-                                                </button>
+                                                </button> -->
                                                 <a href="{{ route('product.show', $product) }}" class="btn btn-secondary w-100 mb-2">
                                                     <i class="fas fa-eye me-2"></i> View Details
                                                 </a>

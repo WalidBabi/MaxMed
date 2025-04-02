@@ -21,3 +21,8 @@ MaxMed Products and Services
 google ads
 design business card sales specialist QR code
 customer database
+
+DLAB 
+add products 
+remove stock and prices
+email dlab for product images

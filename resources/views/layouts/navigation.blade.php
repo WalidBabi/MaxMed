@@ -1,584 +1,203 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 dark:border-gray-700 shadow-lg sticky top-0 z-50">
-    <!-- Top Bar with Contact Info - Redesigned -->
-    <div class="bg-gradient-to-r from-[#0a3369] to-[#0a5694] text-white py-2.5 px-4 text-sm hidden sm:block">
-        <div class="container mx-auto flex flex-wrap justify-between items-center">
-            <div class="flex items-center space-x-6">
-                <a href="mailto:sales@maxmedme.com" class="flex items-center hover:text-blue-200 transition duration-300 group">
-                    <div class="bg-white/10 rounded-full p-1.5 mr-2 group-hover:bg-white/20 transition duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                    </div>
-                    sales@maxmedme.com
-                </a>
-                <a href="tel:+97155460250" class="flex items-center hover:text-blue-200 transition duration-300 group">
-                    <div class="bg-white/10 rounded-full p-1.5 mr-2 group-hover:bg-white/20 transition duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                    </div>
-                    +971 55 460 2500
-                </a>
-            </div>
-            <div class="flex space-x-4">
-                <a href="https://www.linkedin.com/company/maxmed-me/about/?viewAsMember=true" class="transition duration-300 bg-white/10 hover:bg-white/20 rounded-full p-1.5 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                    </svg>
-                </a>
-                <a href="#" class="transition duration-300 bg-white/10 hover:bg-white/20 rounded-full p-1.5 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
-                    </svg>
-                </a>
-                <a href="https://wa.me/971554602500" class="transition duration-300 bg-white/10 hover:bg-white/20 rounded-full p-1.5 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-                    </svg>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Navigation - Improved -->
-    <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
-        <style>
-            /* Cart notification animations */
-            @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(-10px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            
-            @keyframes fadeOut {
-                from { opacity: 1; transform: translateY(0); }
-                to { opacity: 0; transform: translateY(-10px); }
-            }
-            
-            .animate__animated { animation-duration: 0.5s; }
-            .animate__fadeIn { animation-name: fadeIn; }
-            .animate__fadeOut { animation-name: fadeOut; }
-            
-            #cartNotification {
-                transition: all 0.3s ease;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            }
-            
-            /* Navigation styling - Updated */
-            .nav-item {
-                position: relative;
-                margin: 0 0.75rem;
-            }
-            
-            .nav-link {
-                color: #4B5563;
-                font-weight: 500;
-                padding: 1.75rem 0.75rem;
-                transition: all 0.3s ease;
-                position: relative;
-                letter-spacing: 0.01em;
-            }
-            
-            .nav-link:hover {
-                color: #0a5694;
-            }
-            
-            .nav-link::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 0;
-                height: 3px;
-                background: linear-gradient(to right, #0a5694, #171e60);
-                transition: width 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-                border-top-left-radius: 3px;
-                border-top-right-radius: 3px;
-            }
-            
-            .nav-link:hover::after {
-                width: 100%;
-            }
-            
-            .nav-link.active {
-                color: #0a5694;
-                font-weight: 600;
-            }
-            
-            .nav-link.active::after {
-                width: 100%;
-                height: 4px;
-            }
-            
-            /* Cart Icon Styling - Enhanced */
-            .cart-icon-container {
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 42px;
-                height: 42px;
-                border-radius: 50%;
-                background-color: rgba(10, 86, 148, 0.1);
-                transition: all 0.3s ease;
-            }
-            
-            .cart-icon-container:hover {
-                transform: translateY(-3px);
-                background-color: rgba(10, 86, 148, 0.2);
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            }
-            
-            .cart-icon-container svg {
-                color: #0a5694;
-            }
-            
-            /* User menu styling - Improved */
-            .user-menu-button {
-                background-color: rgba(10, 86, 148, 0.1);
-                border: 1px solid rgba(10, 86, 148, 0.2) !important;
-                transition: all 0.3s ease;
-                color: #4B5563 !important;
-                padding: 0.5rem 1rem !important;
-                border-radius: 0.5rem !important;
-            }
-            
-            .user-menu-button:hover {
-                background-color: rgba(10, 86, 148, 0.2);
-                transform: translateY(-2px);
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            }
-            
-            /* Styled action buttons */
-            .action-button {
-                background: linear-gradient(to right, #0a5694, #171e60);
-                transition: all 0.3s ease;
-                position: relative;
-                overflow: hidden;
-            }
-            
-            .action-button:hover {
-                background: linear-gradient(to right, #0c62a6, #1d2575);
-                transform: translateY(-2px);
-                box-shadow: 0 5px 15px rgba(10, 86, 148, 0.3);
-            }
-            
-            .action-button::after {
-                content: '';
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                top: 0;
-                left: -100%;
-                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-                transition: all 0.6s ease;
-            }
-            
-            .action-button:hover::after {
-                left: 100%;
-            }
-            
-            /* Search styling - Enhanced */
-            .search-container {
-                position: relative;
-                max-width: 280px;
-            }
-            
-            .search-input {
-                width: 100%;
-                padding: 0.625rem 2.5rem 0.625rem 1.25rem;
-                border: 1px solid #E5E7EB;
-                border-radius: 9999px;
-                font-size: 0.875rem;
-                transition: all 0.3s ease;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-            }
-            
-            .search-input:focus {
-                outline: none;
-                border-color: #0a5694;
-                box-shadow: 0 0 0 3px rgba(10, 86, 148, 0.1);
-            }
-            
-            .search-button {
-                position: absolute;
-                right: 0.5rem;
-                top: 37%;
-                transform: translateY(-50%);
-                background: linear-gradient(to right, #0a5694, #171e60);
-                color: white;
-                width: 1.75rem;
-                height: 1.75rem;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                transition: all 0.3s ease;
-            }
-            
-            .search-button:hover {
-                transform: translateY(-50%) scale(1.05);
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            }
-            
-            /* Mobile menu - Enhanced */
-            .mobile-menu-container {
-                background-color: white;
-                border-top: 1px solid #E5E7EB;
-            }
-            
-            .mobile-nav-link {
-                display: block;
-                padding: 0.875rem 1.25rem;
-                font-size: 1.1rem;
-                transition: all 0.3s ease;
-            }
-            
-            .mobile-nav-link:hover {
-                background-color: rgba(10, 86, 148, 0.05);
-                color: #0a5694;
-                border-left-color: #0a5694;
-            }
-            
-            .mobile-nav-link.active {
-                background-color: rgba(10, 86, 148, 0.1);
-                border-left: 4px solid #0a5694;
-            }
-            
-            .mobile-menu-container {
-                max-height: 80vh;
-                overflow-y: auto;
-            }
-        </style>
-        <div class="flex justify-between h-22">
-            <div class="flex items-center">
-                <!-- Logo - Enhanced spacing -->
-                <div class="shrink-0 flex items-center py-4">
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 dark:border-gray-700 shadow-sm">
+    <!-- Single Bar with Logo, Links, Search and Navigation -->
+    <div class="bg-white py-2">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Top section with Logo and Links -->
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center flex-shrink-0">
                     <a href="{{ route('welcome') }}" class="transition hover:opacity-90">
-                        <img src="{{ asset('Images/logo.png') }}" alt="MaxMed Logo" class="block h-[46px] w-auto">
+                        <img src="{{ asset('Images/logo.png') }}" alt="MaxMed Logo" class="block h-[60px] w-auto">
                     </a>
                 </div>
 
-                <!-- Navigation Links - Improved spacing -->
-                <div class="hidden sm:flex sm:space-x-6 sm:ml-16">
-                    <div class="nav-item">
-                        <x-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')"
-                            class="nav-link {{ request()->routeIs('welcome') ? 'active' : '' }}">
-                            {{ __('Home') }}
-                        </x-nav-link>
-                    </div>
-                    <div class="nav-item">
-                        <x-nav-link :href="route('about')" :active="request()->routeIs('about')"
-                            class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}">
-                            {{ __('About Us') }}
-                        </x-nav-link>
-                    </div>
-                    <div class="nav-item group relative">
-                        <x-nav-link :href="route('products.index')" :active="request()->routeIs('products')"
-                            class="nav-link {{ request()->routeIs('products') ? 'active' : '' }} flex items-center">
-                            {{ __('Products') }}
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </x-nav-link>
-                        <div class="absolute left-0 mt-0 w-48 bg-white shadow-lg rounded-b-lg py-2 z-50 hidden group-hover:block transition-all duration-300 ease-in-out">
-                            @foreach(\App\Models\Category::whereNull('parent_id')->take(8)->get() as $category)
-                                @php
-                                    $hasChildren = \App\Models\Category::where('parent_id', $category->id)->exists();
-                                @endphp
-                                <div class="relative group/subcategory">
-                                    <a href="{{ route('categories.show', $category) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#0a5694] flex justify-between items-center">
-                                        {{ $category->name }}
-                                        @if($hasChildren)
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                            </svg>
-                                        @endif
-                                    </a>
-                                    @if($hasChildren)
-                                        <div class="absolute left-full top-0 w-48 bg-white shadow-lg rounded-lg py-2 z-50 hidden group-hover/subcategory:block">
-                                            @foreach(\App\Models\Category::where('parent_id', $category->id)->get() as $subcategory)
-                                                <a href="{{ route('categories.show', $subcategory) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#0a5694]">
-                                                    {{ $subcategory->name }}
-                                                </a>
-                                            @endforeach
-                                        </div>
-                                    @endif
-                                </div>
-                            @endforeach
-                            <div class="border-t border-gray-100 mt-2 pt-2">
-                                <a href="{{ route('products.index') }}" class="block px-4 py-2 text-sm text-[#0a5694] font-medium hover:bg-gray-100">
-                                    View All Categories →
-                                </a>
+                <!-- Top Navigation Links and Search Bar Container -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <!-- Top Navigation Links -->
+                    <div class="flex items-center space-x-6 text-sm">
+                        <a href="{{ route('welcome') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Home</a>
+                        <a href="{{ route('about') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">About Us</a>
+                        <a href="{{ route('contact') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Contact</a>
+
+                        @auth
+                        <div class="relative inline-block" x-data="{ open: false }" @click.away="open = false">
+                            <button @click="open = !open" class="text-gray-500 hover:text-gray-700 flex items-center font-normal">
+                                <span>{{ Auth::user()->name }}</span>
+                                <svg class="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <div x-show="open"
+                                x-transition:enter="transition ease-out duration-100"
+                                x-transition:enter-start="transform opacity-0 scale-95"
+                                x-transition:enter-end="transform opacity-100 scale-100"
+                                x-transition:leave="transition ease-in duration-75"
+                                x-transition:leave-start="transform opacity-100 scale-100"
+                                x-transition:leave-end="transform opacity-0 scale-95"
+                                class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                                @if(Auth::user()->is_admin)
+                                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admin Dashboard</a>
+                                @endif
+                                <a href="{{ route('orders.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Orders</a>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Log Out</button>
+                                </form>
                             </div>
                         </div>
-                    </div>
-                    <div class="nav-item">
-                        <x-nav-link :href="route('partners.index')" :active="request()->routeIs('partners')"
-                            class="nav-link {{ request()->routeIs('partners') ? 'active' : '' }}">
-                            {{ __('Partners') }}
-                        </x-nav-link>
-                    </div>
-                    <div class="nav-item">
-                        <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')"
-                            class="nav-link {{ request()->routeIs('contact') ? 'active' : '' }}">
-                            {{ __('Contact Us') }}
-                        </x-nav-link>
-                    </div>
-                    <div class="nav-item">
-                        <x-nav-link :href="route('news.index')" :active="request()->routeIs('news')"
-                            class="nav-link {{ request()->routeIs('news') ? 'active' : '' }}">
-                            {{ __('News') }}
-                        </x-nav-link>
+                        @else
+                        <a href="{{ route('register') }}" class="flex items-center text-[#00a9e0] hover:text-[#0089b7] font-normal h-full">Register</a>
+                        <a href="{{ route('login') }}" class="flex items-center text-[#00a9e0] hover:text-[#0089b7] font-normal h-full">Login</a>
+                        @endauth
+
+                        <!-- Cart Icon -->
+                        <a href="{{ route('cart.view') }}" class="flex items-center text-gray-600 hover:text-gray-900 ">
+                            <div class="relative">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                @php
+                                $cartQuantity = 0;
+                                if (session('cart')) {
+                                foreach (session('cart') as $item) {
+                                $cartQuantity += intval($item['quantity']);
+                                }
+                                }
+                                @endphp
+                                @if($cartQuantity > 0)
+                                <span class="absolute -top-2 -right-2 bg-[#00a9e0] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                    {{ $cartQuantity }}
+                                </span>
+                                @endif
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <div class="flex items-center space-x-8">
-                <!-- Search Bar (Desktop) - Refined -->
-                <div class="hidden sm:block search-container">
-                    <form action="{{ route('search') }}" method="GET">
-                        <input type="text" name="query" placeholder="Search products..." 
-                               class="search-input"
-                               value="{{ request('query') }}">
-                        <button type="submit" class="search-button">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <!-- Search and Main Navigation -->
+            <div class="hidden md:flex justify-end items-center space-x-4">
+                <!-- Search Bar -->
+                <div class="w-[400px]"> <!-- Fixed width for search bar -->
+                    <form action="{{ route('search') }}" method="GET" class="relative flex items-center">
+                        <input type="text" name="query" placeholder="Search product names, codes or CAS numbers"
+                            class="w-full py-2 pl-4 pr-12 bg-gray-100 border-none rounded-full focus:outline-none text-sm"
+                            value="{{ request('query') }}">
+                        <button type="submit" class="absolute right-0 bg-[#00a9e0] text-white p-2 rounded-full mr-1 hover:bg-[#0089b7] focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </button>
                     </form>
                 </div>
-                
-                <!-- Cart Icon - Enhanced animation -->
-                <a href="{{ route('cart.view') }}" class="transition-colors duration-300">
-                    <div class="cart-icon-container relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        @php
-                        $cartQuantity = 0;
-                        if (session('cart')) {
-                        foreach (session('cart') as $item) {
-                        $cartQuantity += intval($item['quantity']);
-                        }
-                        }
-                        @endphp
-                        @if($cartQuantity > 0)
-                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
-                            {{ $cartQuantity }}
-                        </span>
-                        @endif
-                        
-                        <!-- Cart Notification Popup -->
-                        <div id="cartNotification" class="hidden absolute right-0 top-12 bg-white rounded-lg shadow-lg w-64 z-50 border-l-4 border-green-500 p-3 text-sm">
-                            <div class="flex items-center">
-                                <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                </svg>
-                                <span id="cartNotificationMessage" class="text-gray-700">Product added to cart!</span>
-                            </div>
-                        </div>
-                    </div>
-                </a>
+                <!-- Main Navigation Categories -->
+                <div class="flex space-x-10 font-medium text-sm uppercase items-center">
+
+                    <a href="{{ route('products.index') }}" class="text-[#333] hover:text-[#00a9e0] py-2 font-bold">PRODUCTS</a>
+                    <a href="{{ route('news.index') }}" class="text-[#333] hover:text-[#00a9e0] py-2 font-bold">NEWS</a>
+                    <a href="{{ route('partners.index') }}" class="text-[#333] hover:text-[#00a9e0] py-2 font-bold">PARTNERS</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu button -->
+        <div class="md:hidden flex items-center justify-between px-4 py-2 border-t border-gray-100">
+            <a href="{{ route('cart.view') }}" class="flex items-center text-gray-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                @if($cartQuantity > 0)
+                <span class="ml-1 bg-[#00a9e0] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                    {{ $cartQuantity }}
+                </span>
+                @endif
+            </a>
+            <button @click="open = !open" class="text-gray-500 hover:text-gray-600 focus:outline-none">
+                <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                    <path :class="{'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    <path :class="{'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div :class="{'block': open, 'hidden': !open}" class="hidden md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-100">
+                <!-- Mobile Search - Updated to match SLS style -->
+                <div class="px-4 py-2">
+                    <form action="{{ route('search') }}" method="GET" class="relative">
+                        <input type="text" name="query" placeholder="Search product names, codes or CAS number"
+                            class="w-full py-2 pl-4 pr-12 bg-gray-200 border-none rounded-full focus:outline-none text-sm"
+                            value="{{ request('query') }}">
+                        <button type="submit" class="absolute right-1 top-1/2 transform -translate-y-1/2 bg-[#00a9e0] text-white p-2 rounded-full hover:bg-[#0089b7] focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+
+                <a href="{{ route('welcome') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Home</a>
+                <a href="{{ route('about') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">About Us</a>
+                <a href="{{ route('products.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Products</a>
+                <a href="{{ route('partners.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Partners</a>
+                <a href="{{ route('contact') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Contact Us</a>
+                <a href="{{ route('news.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">News</a>
 
                 @auth
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="user-menu-button inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md bg-transparent focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            @auth
-                            @if(Auth::user()->is_admin)
-                            <x-dropdown-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')"
-                                class="hover:text-[#0a5694]">
-                                {{ __('Admin Dashboard') }}
-                            </x-dropdown-link>
-                            @endif
-                            @endauth
-
-                            <x-dropdown-link :href="route('orders.index')" :active="request()->routeIs('orders.index')"
-                                class="hover:text-[#0a5694]">
-                                {{ __('My Orders') }}
-                            </x-dropdown-link>
-
-                            <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                                    this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
-                @else
-                <div class="hidden sm:flex space-x-3">
-                    <a href="{{ route('login') }}" class="text-gray-600 hover:text-[#0a5694] px-4 py-2.5 rounded-lg transition-colors duration-300 whitespace-nowrap border border-gray-200 hover:border-[#0a5694] bg-white hover:bg-gray-50 shadow-sm hover:shadow">Sign In</a>
-                    <a href="{{ route('register') }}"
-                        class="action-button text-white px-4 py-2.5 rounded-lg whitespace-nowrap shadow-sm hover:shadow">
-                        Sign Up
-                    </a>
-                </div>
-                @endauth
-
-                <!-- Hamburger - Refined touch target -->
-                <div class="flex items-center sm:hidden">
-                    <button @click="open = ! open" class="inline-flex items-center justify-center p-2.5 rounded-md text-gray-500 hover:text-[#0a5694] hover:bg-gray-100 focus:outline-none transition duration-150 ease-in-out">
-                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                            <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                            <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Responsive Navigation Menu - Slightly redesigned -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden mobile-menu-container">
-        <div class="pt-3 pb-4 space-y-1.5">
-            <!-- Responsive Search Bar -->
-            <div class="px-4 py-2">
-                <form action="{{ route('search') }}" method="GET" class="flex">
-                    <input type="text" name="query" placeholder="Search products..."
-                        class="w-full border-gray-300 rounded-l-md shadow-sm focus:border-[#0a5694] focus:ring focus:ring-[#0a5694] focus:ring-opacity-50 text-sm"
-                        value="{{ request('query') }}">
-                    <button type="submit" class="action-button text-white px-3 py-2 rounded-r-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                    </button>
-                </form>
-            </div>
-
-            <x-responsive-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')" 
-                                   class="mobile-nav-link {{ request()->routeIs('welcome') ? 'active' : '' }}">
-                {{ __('Home') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('about')" :active="request()->routeIs('about')"
-                                   class="mobile-nav-link {{ request()->routeIs('about') ? 'active' : '' }}">
-                {{ __('About Us') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products')"
-                                   class="mobile-nav-link {{ request()->routeIs('products') ? 'active' : '' }}">
-                {{ __('Products') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('contact')" :active="request()->routeIs('contact')"
-                                   class="mobile-nav-link {{ request()->routeIs('contact') ? 'active' : '' }}">
-                {{ __('Contact Us') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('partners.index')" :active="request()->routeIs('partners')"
-                                   class="mobile-nav-link {{ request()->routeIs('partners') ? 'active' : '' }}">
-                {{ __('Partners') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('news.index')" :active="request()->routeIs('news')"
-                                   class="mobile-nav-link {{ request()->routeIs('news') ? 'active' : '' }}">
-                {{ __('News') }}
-            </x-responsive-nav-link>
-            <!-- Responsive Cart Link -->
-            <x-responsive-nav-link :href="route('cart.view')"
-                                   class="mobile-nav-link">
-                <div class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-[#0a5694]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    {{ __('Cart') }}
-                    @if($cartQuantity > 0)
-                    <span class="ml-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                        {{ $cartQuantity }}
-                    </span>
-                    @endif
-                </div>
-            </x-responsive-nav-link>
-        </div>
-
-        @auth
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <!-- Authentication -->
+                @if(Auth::user()->is_admin)
+                <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Admin Dashboard</a>
+                @endif
+                <a href="{{ route('orders.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">My Orders</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    
-                    @if(Auth::user()->is_admin)
-                    <x-responsive-nav-link :href="route('admin.dashboard')" 
-                                          class="mobile-nav-link">
-                        {{ __('Admin Dashboard') }}
-                    </x-responsive-nav-link>
-                    @endif
-                    
-                    <x-responsive-nav-link :href="route('orders.index')"
-                                          class="mobile-nav-link">
-                        {{ __('My Orders') }}
-                    </x-responsive-nav-link>
-
-                    <x-responsive-nav-link :href="route('logout')"
-                        onclick="event.preventDefault();
-                                            this.closest('form').submit();" 
-                                          class="mobile-nav-link">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
+                    <button type="submit" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Log Out</button>
                 </form>
+                @else
+                <a href="{{ route('login') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Login</a>
+                <a href="{{ route('register') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Register</a>
+                @endauth
             </div>
         </div>
-        @else
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="space-y-1">
-                <x-responsive-nav-link :href="route('login')" 
-                                      class="mobile-nav-link">
-                    {{ __('Sign In') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('register')"
-                                      class="mobile-nav-link">
-                    {{ __('Sign Up') }}
-                </x-responsive-nav-link>
-            </div>
-        </div>
-        @endauth
-    </div>
 </nav>
 
+<!-- Cart Notification Popup -->
+<div id="cartNotification" class="hidden fixed top-20 right-4 bg-white rounded-lg shadow-lg w-64 z-50 border-l-4 border-green-500 p-3 text-xs">
+    <div class="flex items-center">
+        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <span id="cartNotificationMessage" class="text-gray-700">Product added to cart!</span>
+    </div>
+</div>
+
+<script>
+    // Function to show cart notification (defined globally)
+    function showCartNotification(message) {
+        const notification = document.getElementById('cartNotification');
+        if (!notification) return; // Guard clause
+        const messageElement = document.getElementById('cartNotificationMessage');
+        if (!messageElement) return; // Guard clause
+
+        // Set message
+        messageElement.textContent = message;
+
+        // Show notification
+        notification.classList.remove('hidden');
+        // Removed animation classes for simplicity and potential conflicts
+
+        // Hide after 3 seconds
+        setTimeout(function() {
+            notification.classList.add('hidden');
+        }, 3000);
+    }
+</script>
+
+{{-- Conditionally add script to call the notification function on DOMContentLoaded --}}
+@if(session('success') && str_contains(session('success'), 'cart'))
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Check for success message in session
-        @if(session('success') && str_contains(session('success'), 'cart'))
-            showCartNotification("{{ session('success') }}");
-        @endif
-        
-        // Function to show cart notification
-        function showCartNotification(message) {
-            const notification = document.getElementById('cartNotification');
-            const messageElement = document.getElementById('cartNotificationMessage');
-            
-            // Set message
-            messageElement.textContent = message;
-            
-            // Show notification
-            notification.classList.remove('hidden');
-            notification.classList.add('animate__animated', 'animate__fadeIn');
-            
-            // Hide after 3 seconds
-            setTimeout(function() {
-                notification.classList.add('animate__fadeOut');
-                setTimeout(function() {
-                    notification.classList.add('hidden');
-                    notification.classList.remove('animate__animated', 'animate__fadeIn', 'animate__fadeOut');
-                }, 500);
-            }, 3000);
-        }
+        showCartNotification("{{ addslashes(session('success')) }}");
     });
 </script>
+@endif

@@ -5,7 +5,7 @@
     /* Enhanced Hero Section */
     .hero-section {
         position: relative;
-        height: 500px;
+        height: 300px;
         overflow: hidden;
     }
     
@@ -124,11 +124,12 @@
     
     .brand-border {
         position: absolute;
-        bottom: 0;
+        bottom: -1px;
         left: 0;
         right: 0;
-        height: 10px;
+        height: 70px;
         z-index: 30;
+        overflow: hidden;
     }
     
     /* Features Section */
@@ -331,12 +332,21 @@
             flex-direction: column;
         }
         
-        .feature-slide .w-1/2 {
+        .feature-slide .w-1\/2 {
             width: 100%;
         }
         
         .feature-img {
             height: 200px;
+        }
+        
+        .category-container {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .category-card .card-title {
+            font-size: 1.1rem;
         }
     }
     
@@ -488,6 +498,162 @@
         0% { transform: rotate(0deg) translateY(2px); }
         100% { transform: rotate(360deg) translateY(-2px); }
     }
+
+    /* Category Card Styling */
+    .category-container {
+        margin-top: 15px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 28px;
+    }
+    
+    .category-card-wrapper {
+        height: 100%;
+        transition: transform 0.3s;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    
+    .category-card {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.35s;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        border: none !important;
+        background-color: #fff;
+        position: relative;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .category-card img {
+        height: 180px;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    
+    .category-card:hover img {
+        transform: scale(1.08);
+    }
+    
+    .category-card .card-body {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 22px;
+        position: relative;
+    }
+    
+    .category-card .card-title {
+        text-align: center;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 0;
+        position: relative;
+        transition: color 0.3s;
+    }
+    
+    .category-card:hover .card-title {
+        color: #17a2b8;
+    }
+    
+    .category-card .card-title:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #17a2b8;
+        transition: width 0.3s;
+    }
+    
+    .category-card:hover .card-title:after {
+        width: 50%;
+    }
+    
+    /* Lab theme badge for categories */
+    .lab-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(23, 162, 184, 0.9);
+        color: white;
+        border-radius: 20px;
+        padding: 5px 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        z-index: 10;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(5px);
+        transition: all 0.3s;
+    }
+    
+    .category-card:hover .lab-badge {
+        background: rgba(40, 167, 69, 0.9);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Responsive category styles */
+    @media (max-width: 992px) {
+        .category-container {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .category-container {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .category-card .card-title {
+            font-size: 1.1rem;
+        }
+        
+        .feature-slide .w-1/2 {
+            width: 100%;
+        }
+        
+        .feature-img {
+            height: 200px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+        
+        .category-container {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+        }
+        .category-card img {
+            height: 140px;
+        }
+        .category-card .card-body {
+            padding: 15px 10px;
+        }
+        .lab-badge {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            top: 10px;
+            right: 10px;
+        }
+    }
 </style>
 
 <!-- Hero Section -->
@@ -510,7 +676,7 @@
         x-transition:leave="transition ease-in duration-800"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        style="background: linear-gradient(rgba(0, 60, 80, 0.7), rgba(0, 80, 100, 0.6)), url('/Images/banner.png'); background-size: cover; background-position: center;">
+        style="background: linear-gradient(rgba(0, 60, 80,0), rgba(0, 80, 100, 0.6)), url('/Images/banner.png'); background-size: cover; background-position: center;">
     </div>
     <div class="hero-slide"
         x-show="activeSlide === 1"
@@ -520,7 +686,7 @@
         x-transition:leave="transition ease-in duration-800"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        style="background: linear-gradient(rgba(20, 80, 90, 0.7), rgba(0, 100, 110, 0.6)), url('/Images/banner2.jpeg'); background-size: cover; background-position: center;">
+        style="background: linear-gradient(rgba(20, 80, 90,0), rgba(0, 100, 110, 0.6)), url('/Images/banner2.jpeg'); background-size: cover; background-position: center;">
     </div>
     <div class="hero-slide"
         x-show="activeSlide === 2"
@@ -530,7 +696,7 @@
         x-transition:leave="transition ease-in duration-800"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        style="background: linear-gradient(rgba(10, 70, 80, 0.7), rgba(0, 90, 90, 0.6)), url('/Images/banner3.jpg'); background-size: cover; background-position: center;">
+        style="background: linear-gradient(rgba(10, 70, 80,0), rgba(0, 90, 90, 0.6)), url('/Images/banner3.jpg'); background-size: cover; background-position: center;">
     </div>
 
     <!-- Content -->
@@ -559,21 +725,120 @@
     </button>
     
     <!-- Brand Border -->
-    <div class="brand-border">
-        <svg class="w-full h-10 relative" preserveAspectRatio="none" viewBox="0 0 100 10" xmlns="http://www.w3.org/2000/svg">
-            <path d="M 0 5 Q 25 0, 50 5 T 100 5" fill="none" stroke="url(#gradient)" stroke-width="2" />
-            <defs>
-                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style="stop-color: #171e60" />
-                    <stop offset="50%" style="stop-color: #0a5694" />
-                    <stop offset="100%" style="stop-color: #171e60" />
-                </linearGradient>
-            </defs>
+    <!-- <div class="brand-border">
+        <svg class="w-full h-10 relative" preserveAspectRatio="none" viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="white"></path>
+            <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="white"></path>
+            <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="white"></path>
         </svg>
+    </div> -->
+</div>
+
+<!-- Categories Section -->
+<div class="py-16 max-w-7xl mx-auto px-4">
+    <h3 class="section-title">Explore Our Categories</h3>
+    
+    <div class="category-container" x-data x-init="
+        setTimeout(() => {
+            document.querySelectorAll('.category-card-wrapper').forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 + (index * 50));
+            });
+        }, 300);
+    ">
+        @foreach($categories->where('parent_id', null) as $category)
+        <div class="category-card-wrapper" style="opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.5s ease;">
+            <a href="{{ route('categories.show', $category) }}" class="text-decoration-none">
+                <div class="category-card">
+                    <div class="overflow-hidden">
+                        <img src="{{ $category->image_url }}" class="card-img-top" alt="{{ $category->name }}">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $category->name }}</h5>
+                    </div>
+                </div>
+            </a>
+        </div>
+        @endforeach
     </div>
 </div>
 
-<!-- Features Section -->
+<!-- FEATURED PROMOTIONS -->
+<div class="py-16 max-w-7xl mx-auto px-4">
+    <h3 class="section-title">Featured Promotions</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+        @forelse($featuredProducts as $product)
+            <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2" 
+                 x-data="{ showDetails: false }"
+                 @mouseenter="showDetails = true" 
+                 @mouseleave="showDetails = false">
+                
+                <div class="relative h-48 overflow-hidden">
+                    <!-- Product image -->
+                    <img src="{{ $product->image_url ?? asset('/Images/placeholder.jpg') }}" 
+                         alt="{{ $product->name }}"
+                         class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                    
+                    
+                    
+                    <!-- "New" badge if added in the last 14 days -->
+                    @if($product->created_at >= \Carbon\Carbon::now()->subDays(14))
+                        <div class="absolute top-3 left-3 bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-full transform -rotate-3 shadow-md">
+                            NEW
+                        </div>
+                    @endif
+                    
+                    <!-- Overlay with details on hover -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#171e60] to-transparent opacity-0 transition-opacity duration-300"
+                         :class="{ 'opacity-90': showDetails }">
+                        <div class="absolute bottom-4 left-4 right-4 text-white transform translate-y-4 transition-transform duration-300"
+                             :class="{ 'translate-y-0': showDetails }">
+                            <p class="text-sm font-medium">{{ Str::limit($product->description ?? '', 100) }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="p-4">
+                    <h4 class="text-lg font-semibold text-gray-900 mb-1">{{ Str::limit($product->name, 40) }}</h4>
+                    
+                    <div class="flex items-end justify-between mt-2">
+                        <div>
+                           
+                                <span class="text-[#171e60] font-bold">{{ number_format($product->price, 2) }} AED</span>
+                    
+                        </div>
+                        
+                        <a href="{{ route('product.show', $product) }}" 
+                           class="inline-flex items-center justify-center bg-[#0a5694] hover:bg-[#171e60] text-white text-sm font-medium py-2 px-3 rounded-md transition-colors duration-300">
+                            View Details
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        @empty
+            <div class="col-span-4 text-center py-10">
+                <div class="text-gray-500 mb-4">
+                    <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <h4 class="text-xl font-medium text-gray-800">No featured products available</h4>
+                <p class="text-gray-600 mt-2">Check back soon for new promotions and featured items!</p>
+                <a href="{{ route('products.index') }}" class="mt-4 inline-block bg-[#171e60] text-white px-6 py-2 rounded-md hover:bg-[#0a5694] transition-colors">
+                    Browse All Products
+                </a>
+            </div>
+        @endforelse
+    </div>
+</div>
+
+<!-- why choose maxmed Section -->
 <div class="features-section py-16">
     <div class="max-w-7xl mx-auto px-4" x-data="{ activeSlide: 0, autoplay: null }" x-init="autoplay = setInterval(() => { activeSlide = activeSlide === 2 ? 0 : activeSlide + 1 }, 5000)">
         <h3 class="section-title">Why Choose MaxMed?</h3>
