@@ -839,14 +839,14 @@
 </div>
 
 <!-- why choose maxmed Section -->
-<div class="features-section py-16">
+<div class="features-section py-8 md:py-16">
     <div class="max-w-7xl mx-auto px-4" x-data="{ activeSlide: 0, autoplay: null }" x-init="autoplay = setInterval(() => { activeSlide = activeSlide === 2 ? 0 : activeSlide + 1 }, 5000)">
-        <h3 class="section-title">Why Choose MaxMed?</h3>
+        <h3 class="section-title text-center">Why Choose MaxMed?</h3>
 
         <!-- Carousel container -->
-        <div class="feature-slide shadow-lg">
+        <div class="feature-slide relative overflow-hidden rounded-lg shadow-lg">
             <!-- Slide 1 -->
-            <div class="absolute inset-0 w-full h-full"
+            <div class="absolute inset-0 w-full h-full transition-opacity duration-700"
                 x-show="activeSlide === 0"
                 x-transition:enter="transition ease-out duration-500"
                 x-transition:enter-start="opacity-0"
@@ -854,23 +854,23 @@
                 x-transition:leave="transition ease-in duration-500"
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0">
-                <div class="flex h-full">
-                    <div class="w-1/2 bg-[#171e60]">
+                <div class="flex flex-col md:flex-row h-full">
+                    <div class="md:w-1/2 bg-gradient-to-r from-[#171e60] to-[#0a5694] p-6">
                         <div class="feature-content">
-                            <h4 class="feature-title">Innovation First</h4>
-                            <p class="feature-desc">Leading the industry with cutting-edge medical laboratory solutions that define the future of diagnostics.</p>
+                            <h4 class="feature-title text-xl font-bold text-white">Innovation First</h4>
+                            <p class="feature-desc text-white">Leading the industry with cutting-edge medical laboratory solutions that define the future of diagnostics.</p>
                         </div>
                     </div>
-                    <div class="w-1/2 overflow-hidden">
+                    <div class="md:w-1/2 overflow-hidden">
                         <img src="{{ asset('/Images/Innovation.jpg') }}"
                             alt="Innovation"
-                            class="feature-img">
+                            class="feature-img w-full h-auto rounded-lg shadow-md">
                     </div>
                 </div>
             </div>
 
             <!-- Slide 2 -->
-            <div class="absolute inset-0 w-full h-full"
+            <div class="absolute inset-0 w-full h-full transition-opacity duration-700"
                 x-show="activeSlide === 1"
                 x-transition:enter="transition ease-out duration-500"
                 x-transition:enter-start="opacity-0"
@@ -878,23 +878,23 @@
                 x-transition:leave="transition ease-in duration-500"
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0">
-                <div class="flex h-full">
-                    <div class="w-1/2 overflow-hidden">
+                <div class="flex flex-col md:flex-row h-full">
+                    <div class="md:w-1/2 overflow-hidden">
                         <img src="{{ asset('/Images/bacteria.jpg') }}"
                             alt="Quality"
-                            class="feature-img">
+                            class="feature-img w-full h-auto rounded-lg shadow-md">
                     </div>
-                    <div class="w-1/2 bg-[#0a5694]">
+                    <div class="md:w-1/2 bg-gradient-to-l from-[#0a5694] to-[#171e60] p-6">
                         <div class="feature-content">
-                            <h4 class="feature-title">Quality Assured</h4>
-                            <p class="feature-desc">Every piece of equipment undergoes rigorous testing to ensure reliable performance and accurate results.</p>
+                            <h4 class="feature-title text-xl font-bold text-white">Quality Assured</h4>
+                            <p class="feature-desc text-white">Every piece of equipment undergoes rigorous testing to ensure reliable performance and accurate results.</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Slide 3 -->
-            <div class="absolute inset-0 w-full h-full"
+            <div class="absolute inset-0 w-full h-full transition-opacity duration-700"
                 x-show="activeSlide === 2"
                 x-transition:enter="transition ease-out duration-500"
                 x-transition:enter-start="opacity-0"
@@ -902,53 +902,41 @@
                 x-transition:leave="transition ease-in duration-500"
                 x-transition:leave-start="opacity-100"
                 x-transition:leave-end="opacity-0">
-                <div class="flex h-full">
-                    <div class="w-1/2 bg-[#171e60]">
+                <div class="flex flex-col md:flex-row h-full">
+                    <div class="md:w-1/2 bg-gradient-to-r from-[#171e60] to-[#0a5694] p-6">
                         <div class="feature-content">
-                            <h4 class="feature-title">Expert Support</h4>
-                            <p class="feature-desc">Our team of specialists provides comprehensive training and ongoing technical support.</p>
+                            <h4 class="feature-title text-xl font-bold text-white">Expert Support</h4>
+                            <p class="feature-desc text-white">Our team of specialists provides comprehensive training and ongoing technical support.</p>
                         </div>
                     </div>
-                    <div class="w-1/2 overflow-hidden">
+                    <div class="md:w-1/2 overflow-hidden">
                         <img src="{{ asset('/Images/Expert.jpg') }}"
                             alt="Support"
-                            class="feature-img">
+                            class="feature-img w-full h-auto rounded-lg shadow-md">
                     </div>
                 </div>
             </div>
 
             <!-- Navigation dots -->
-            <div class="absolute bottom-5 left-0 right-0 feature-nav-dots z-10">
+            <div class="absolute bottom-5 left-0 right-0 feature-nav-dots z-10 flex justify-center space-x-3">
                 <button @click="activeSlide = 0"
-                    class="feature-dot"
-                    :class="activeSlide === 0 ? 'w-8 bg-[#171e60]' : 'w-3 bg-gray-400 hover:bg-[#171e60]'">
+                    class="h-3 rounded-full transition-all duration-300 transform hover:scale-110"
+                    :class="activeSlide === 0 ? 'w-8 bg-[#171e60]' : 'w-3 bg-white/70 hover:bg-[#171e60]/70'">
                     <span class="sr-only">Slide 1</span>
                 </button>
                 <button @click="activeSlide = 1"
-                    class="feature-dot"
-                    :class="activeSlide === 1 ? 'w-8 bg-[#171e60]' : 'w-3 bg-gray-400 hover:bg-[#171e60]'">
+                    class="h-3 rounded-full transition-all duration-300 transform hover:scale-110"
+                    :class="activeSlide === 1 ? 'w-8 bg-[#171e60]' : 'w-3 bg-white/70 hover:bg-[#171e60]/70'">
                     <span class="sr-only">Slide 2</span>
                 </button>
                 <button @click="activeSlide = 2"
-                    class="feature-dot"
-                    :class="activeSlide === 2 ? 'w-8 bg-[#171e60]' : 'w-3 bg-gray-400 hover:bg-[#171e60]'">
+                    class="h-3 rounded-full transition-all duration-300 transform hover:scale-110"
+                    :class="activeSlide === 2 ? 'w-8 bg-[#171e60]' : 'w-3 bg-white/70 hover:bg-[#171e60]/70'">
                     <span class="sr-only">Slide 3</span>
                 </button>
             </div>
 
-            <!-- Arrow buttons -->
-            <button @click="activeSlide = activeSlide === 0 ? 2 : activeSlide - 1"
-                class="nav-arrow left">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-            </button>
-            <button @click="activeSlide = activeSlide === 2 ? 0 : activeSlide + 1"
-                class="nav-arrow right">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-            </button>
+          
         </div>
     </div>
 </div>
@@ -1008,17 +996,8 @@
             </div>
         </div>
 
-        <!-- Navigation dots -->
-        <div class="supplier-nav-dots">
-            <button @click="activeSupplier = 0"
-                class="supplier-dot"
-                :class="activeSupplier === 0 ? 'w-6 bg-[#171e60]' : 'w-2 bg-gray-300 hover:bg-[#171e60]'">
-            </button>
-            <button @click="activeSupplier = 1"
-                class="supplier-dot"
-                :class="activeSupplier === 1 ? 'w-6 bg-[#171e60]' : 'w-2 bg-gray-300 hover:bg-[#171e60]'">
-            </button>
-        </div>
+       
+        
     </div>
 </div>
 

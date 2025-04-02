@@ -83,9 +83,9 @@
                         <input type="text" name="query" placeholder="Search product names, codes or CAS numbers"
                             class="w-full py-2 pl-4 pr-12 bg-gray-100 border-none rounded-full focus:outline-none text-sm"
                             value="{{ request('query') }}">
-                        <button type="submit" class="absolute right-0 bg-[#00a9e0] text-white p-2 rounded-full mr-1 hover:bg-[#0089b7] focus:outline-none">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        <button type="submit" class="absolute right-0 bg-gradient-to-r from-[#171e60] to-[#0a5694] text-white p-2.5 rounded-lg mr-1 hover:from-[#0a5694] hover:to-[#171e60] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#171e60] focus:ring-opacity-50 shadow-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </button>
                     </form>
