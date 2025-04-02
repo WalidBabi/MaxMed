@@ -20,9 +20,10 @@ use App\Http\Controllers\PartnersController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\HomeController;
 
 // Public Routes
-Route::get('/', fn() => view('welcome'))->name('welcome');
+Route::get('/', [HomeController::class, 'index'])->name('welcome');
 Route::get('/about', fn() => view('about'))->name('about');
 Route::get('/contact', fn() => view('contact'))->name('contact');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');

@@ -20,7 +20,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ $product->name }}</h5>
                         <p class="card-text">
-                            <span class="badge bg-info">{{ $product->category->name }}</span>
+                          
                         </p>
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <div>
