@@ -736,7 +736,7 @@
 
 <!-- Categories Section -->
 <div class="py-16 max-w-7xl mx-auto px-4">
-    <h3 class="section-title">Explore Our Categories</h3>
+
     
     <div class="category-container" x-data x-init="
         setTimeout(() => {
@@ -805,11 +805,11 @@
                     <h4 class="text-lg font-semibold text-gray-900 mb-1">{{ Str::limit($product->name, 40) }}</h4>
                     
                     <div class="flex items-end justify-between mt-2">
-                        <div>
+                        <!-- <div>
                            
                                 <span class="text-[#171e60] font-bold">{{ number_format($product->price, 2) }} AED</span>
                     
-                        </div>
+                        </div> -->
                         
                         <a href="{{ route('product.show', $product) }}" 
                            class="inline-flex items-center justify-center bg-[#0a5694] hover:bg-[#171e60] text-white text-sm font-medium py-2 px-3 rounded-md transition-colors duration-300">

@@ -2,7 +2,7 @@
 
 @section('title', 'Laboratory Equipment & Scientific Instruments | MaxMed UAE')
 
-@section('meta_description', 'Explore MaxMed UAE\'s premium laboratory equipment, scientific instruments, and medical supplies. High-quality lab technology for hospitals, research facilities, and medical centers in Dubai.')
+@section('meta_description', 'Browse MaxMed UAE\'s laboratory equipment categories. Find premium scientific instruments and medical supplies for hospitals, research facilities, and medical centers in Dubai.')
 
 @section('meta_keywords', 'laboratory equipment Dubai, lab instruments UAE, scientific equipment, diagnostic tools, research lab supplies, laboratory technology')
 
@@ -265,7 +265,7 @@
     }
 </style>
 
-<div class="container-fluid mb-3 mt-3">
+<div class="container-fluid mb-5 mt-3">
     @if(session('error'))
         <div class="alert border-0 rounded-3 shadow-lg mb-4 position-relative" role="alert"
              x-data="{ show: true }" 
@@ -340,12 +340,12 @@
                 <p class="page-description">Explore our comprehensive range of high-quality laboratory equipment, scientific instruments, diagnostic tools, and innovative research solutions tailored for your facility's needs. MaxMed UAE offers the latest in lab technology for healthcare and research professionals.</p>
             </div>
             
-            <div class="category-container">
+            <div class="category-container mt-3">
                 @foreach($categories as $category)
                 <div class="category-card-wrapper">
                     <a href="{{ route('categories.show', $category) }}" class="text-decoration-none">
                         <div class="category-card">
-                            <span class="lab-badge"><i class="fas fa-vial me-1"></i>Category</span>
+                       
                             <div class="overflow-hidden">
                                 <img src="{{ $category->image_url }}" class="card-img-top" alt="{{ $category->name }}">
                             </div>
