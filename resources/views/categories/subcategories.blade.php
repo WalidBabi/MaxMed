@@ -346,7 +346,7 @@
                 <div class="subcategory-card-wrapper">
                     <a href="{{ route('categories.subcategory.show', [$category, $subcategory]) }}" class="text-decoration-none">
                         <div class="subcategory-card">
-                            <span class="lab-badge"><i class="fas fa-vial me-1"></i>Subcategory</span>
+                           
                             <div class="overflow-hidden">
                                 @if(isset($subcategory->image_url))
                                 <img src="{{ $subcategory->image_url }}" class="card-img-top" alt="{{ $subcategory->name }}">
