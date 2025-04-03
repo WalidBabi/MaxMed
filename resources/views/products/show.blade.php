@@ -312,9 +312,9 @@
         }
 
         .btn-quotation {
-            background-color: #f8f9fa;
-            border-color: #28a745;
-            color: #28a745;
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+            color:rgb(255, 255, 255);
             padding: 12px 25px;
             font-weight: 600;
             text-transform: uppercase;
@@ -325,7 +325,7 @@
         }
 
         .btn-quotation:hover {
-            background-color: #e9ecef;
+            background-color:rgb(255, 255, 255);
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
@@ -485,7 +485,18 @@
                                 </span>
                                 @endif -->
                             </div>
-
+                            <div class="d-grid action-buttons mb-3">
+                                <!-- <form action="{{ route('cart.add', $product) }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="quantity" id="form-quantity" value="1">
+                                        <button type="submit" class="btn btn-add-to-cart w-100">
+                                            <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                                        </button>
+                                    </form> -->
+                                <a href="{{ route('quotation.form', $product) }}" class="btn btn-quotation w-100">
+                                    <i class="fas fa-file-invoice me-2"></i> Request Quotation
+                                </a>
+                            </div>
                             <div class="product-description">
                                 <h5 class="fw-bold">Description</h5>
                                 @php
@@ -565,18 +576,7 @@
                                     </div>
                                 </div>
                             </div> -->
-                            <div class="d-grid action-buttons">
-                                <!-- <form action="{{ route('cart.add', $product) }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="quantity" id="form-quantity" value="1">
-                                        <button type="submit" class="btn btn-add-to-cart w-100">
-                                            <i class="fas fa-shopping-cart me-2"></i> Add to Cart
-                                        </button>
-                                    </form> -->
-                                <a href="{{ route('quotation.form', $product) }}" class="btn btn-quotation w-100">
-                                    <i class="fas fa-file-invoice me-2"></i> Request Quotation
-                                </a>
-                            </div>
+                           
                        
                         </div>
                     </div>
