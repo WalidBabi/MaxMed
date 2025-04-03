@@ -12,7 +12,7 @@
             </a>
             
             <div class="space-y-1">
-                @foreach(\App\Models\Category::whereNull('parent_id')->with('subcategories')->get() as $category)
+                @foreach(\App\Models\Category::whereNull('parent_id')->with(['subcategories.subcategories'])->get() as $category)
                 <div class="category-item mb-1" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
                     <a href="{{ route('categories.show', $category) }}"
                         class="flex items-center h-10 px-3 rounded-lg transition-colors {{ request('category') === $category->name ? 'bg-[#0a5694] text-white' : 'hover:bg-[#2a3387] group' }}"
@@ -32,11 +32,35 @@
                          x-transition:leave-start="opacity-100 transform translate-y-0"
                          x-transition:leave-end="opacity-0 transform -translate-y-2">
                         @foreach($category->subcategories as $subcategory)
-                        <a href="{{ route('categories.show', $subcategory) }}"
-                            class="flex items-center h-8 px-3 rounded-lg transition-colors {{ request('category') === $subcategory->name ? 'bg-[#0a5694] text-white' : 'text-gray-300 hover:bg-[#2a3387] hover:text-white group' }}"
-                            @click.prevent="window.location.href = $el.href">
-                            <span class="text-xs font-medium">{{ $subcategory->name }}</span>
-                        </a>
+                        <div class="subcategory-item" x-data="{ subOpen: false }" @mouseenter="subOpen = true" @mouseleave="subOpen = false">
+                            <a href="{{ route('categories.subcategory.show', [$category, $subcategory]) }}"
+                                class="flex items-center h-8 px-3 rounded-lg transition-colors {{ request('subcategory') === $subcategory->name ? 'bg-[#0a5694] text-white' : 'text-gray-300 hover:bg-[#2a3387] hover:text-white group' }}"
+                                @click.prevent="window.location.href = $el.href">
+                                <span class="text-xs font-medium">{{ $subcategory->name }}</span>
+                                @if($subcategory->subcategories->isNotEmpty())
+                                <span class="ml-auto transform transition-transform duration-200 text-xs" :class="{ 'rotate-180': subOpen }">▼</span>
+                                @endif
+                            </a>
+                            
+                            @if($subcategory->subcategories->isNotEmpty())
+                            <div class="pl-3 ml-2 border-l border-[#2a3387] mt-1 space-y-1"
+                                x-show="subOpen"
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                x-transition:enter-end="opacity-100 transform translate-y-0"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="opacity-100 transform translate-y-0"
+                                x-transition:leave-end="opacity-0 transform -translate-y-2">
+                                @foreach($subcategory->subcategories as $subsubcategory)
+                                <a href="{{ route('categories.subsubcategory.show', [$category, $subcategory, $subsubcategory]) }}"
+                                    class="flex items-center h-7 px-3 rounded-lg transition-colors {{ request('subsubcategory') === $subsubcategory->name ? 'bg-[#0a5694] text-white' : 'text-gray-400 hover:bg-[#2a3387] hover:text-white group' }}"
+                                    @click.prevent="window.location.href = $el.href">
+                                    <span class="text-xs font-medium">{{ $subsubcategory->name }}</span>
+                                </a>
+                                @endforeach
+                            </div>
+                            @endif
+                        </div>
                         @endforeach
                     </div>
                     @endif
