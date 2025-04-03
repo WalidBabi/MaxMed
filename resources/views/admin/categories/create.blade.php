@@ -40,9 +40,9 @@
                     <label for="parent_id">Parent Category</label>
                     <small class="form-text text-muted">Select a parent category to nest this category under it. Leave empty for a top-level category.</small>
                     <select class="form-control" id="parent_id" name="parent_id">
-                        <option value="">None</option>
-                        @foreach($categories as $parentCategory)
-                            <option value="{{ $parentCategory->id }}">{{ $parentCategory->name }}</option>
+                        <option value="">None (Top Level)</option>
+                        @foreach($categoriesForDropdown as $id => $name)
+                            <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </select>
                 </div>

@@ -17,8 +17,28 @@ class CategoryController extends Controller
 
     public function create()
     {
-        $categories = Category::whereNull('parent_id')->get(); // Fetch only top-level categories
-        return view('admin.categories.create', compact('categories'));
+        // Get top-level categories
+        $topCategories = Category::whereNull('parent_id')->get();
+        
+        // Get second-level categories
+        $secondLevelCategories = Category::whereIn('parent_id', $topCategories->pluck('id'))->get();
+        
+        // Organize categories for dropdown
+        $categoriesForDropdown = [];
+        
+        // Add top level categories
+        foreach ($topCategories as $topCategory) {
+            $categoriesForDropdown[$topCategory->id] = $topCategory->name;
+        }
+        
+        // Add second level categories (subcategories)
+        foreach ($secondLevelCategories as $subCategory) {
+            // Find parent name
+            $parentName = $topCategories->where('id', $subCategory->parent_id)->first()->name;
+            $categoriesForDropdown[$subCategory->id] = $parentName . ' › ' . $subCategory->name;
+        }
+        
+        return view('admin.categories.create', compact('categoriesForDropdown'));
     }
 
     public function store(Request $request)
@@ -46,10 +66,39 @@ class CategoryController extends Controller
 
     public function edit(Category $category)
     {
-        $categories = Category::whereNull('parent_id')
+        // Get top-level categories excluding the current category and its children
+        $topCategories = Category::whereNull('parent_id')
             ->where('id', '!=', $category->id)
-            ->get(); // Fetch top-level categories except current one
-        return view('admin.categories.edit', compact('category', 'categories'));
+            ->get();
+            
+        // Get second-level categories excluding the current category
+        $secondLevelCategories = Category::whereIn('parent_id', $topCategories->pluck('id'))
+            ->where('id', '!=', $category->id)
+            ->get();
+            
+        // Don't allow creating circular dependencies
+        $childrenIds = $this->getAllChildrenIds($category);
+        
+        // Organize categories for dropdown
+        $categoriesForDropdown = [];
+        
+        // Add top level categories
+        foreach ($topCategories as $topCategory) {
+            if (!in_array($topCategory->id, $childrenIds)) {
+                $categoriesForDropdown[$topCategory->id] = $topCategory->name;
+            }
+        }
+        
+        // Add second level categories (subcategories)
+        foreach ($secondLevelCategories as $subCategory) {
+            if (!in_array($subCategory->id, $childrenIds)) {
+                // Find parent name
+                $parentName = $topCategories->where('id', $subCategory->parent_id)->first()->name;
+                $categoriesForDropdown[$subCategory->id] = $parentName . ' › ' . $subCategory->name;
+            }
+        }
+        
+        return view('admin.categories.edit', compact('category', 'categoriesForDropdown'));
     }
 
     public function update(Request $request, Category $category)
@@ -96,5 +145,20 @@ class CategoryController extends Controller
         $category->delete();
 
         return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
+    }
+
+    /**
+     * Get all children IDs recursively to prevent circular dependencies
+     */
+    private function getAllChildrenIds(Category $category)
+    {
+        $ids = [];
+        
+        foreach ($category->subcategories as $child) {
+            $ids[] = $child->id;
+            $ids = array_merge($ids, $this->getAllChildrenIds($child));
+        }
+        
+        return $ids;
     }
 } 

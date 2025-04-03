@@ -322,47 +322,39 @@
             </div>
         </div>
     @endif
-
     <div class="row">
         <div class="col-md-3">
             @include('layouts.sidebar')
         </div>
         <div class="col-md-9">
             <div class="page-header mb-4">
-                <h1 class="page-title">{{ $category->name }}</h1>
-                <p class="page-description">Browse subcategories of {{ $category->name }}. Explore our range of high-quality laboratory equipment and scientific instruments.</p>
+                <h1 class="page-title">{{ $subcategory->name }}</h1>
+                <p class="page-description">Browse subcategories of {{ $subcategory->name }}. Explore our range of high-quality laboratory equipment and scientific instruments.</p>
                 
                 <nav aria-label="breadcrumb" class="custom-breadcrumb">
                     <ol class="breadcrumb">
-                        
                         <li class="breadcrumb-item"><a href="{{ route('categories.index') }}">Categories</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ $category->name }}</li>
+                        <li class="breadcrumb-item"><a href="{{ route('categories.show', $category) }}">{{ $category->name }}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ $subcategory->name }}</li>
                     </ol>
                 </nav>
             </div>
             
             <div class="subcategory-container">
-                @foreach($category->subcategories as $subcategory)
+                @foreach($subcategory->subcategories as $subsubcategory)
                 <div class="subcategory-card-wrapper">
-                    <a href="{{ $subcategory->hasSubcategories() ? route('categories.subcategory.show', [$category, $subcategory]) : route('categories.subcategory.show', [$category, $subcategory]) }}" class="text-decoration-none">
+                    <a href="{{ route('categories.subsubcategory.show', [$category, $subcategory, $subsubcategory]) }}" class="text-decoration-none">
                         <div class="subcategory-card">
-                           
                             <div class="overflow-hidden">
-                                @if(isset($subcategory->image_url))
-                                <img src="{{ $subcategory->image_url }}" class="card-img-top" alt="{{ $subcategory->name }}">
+                                @if(isset($subsubcategory->image_url))
+                                <img src="{{ $subsubcategory->image_url }}" class="card-img-top" alt="{{ $subsubcategory->name }}">
                                 @else
-                                <img src="{{ asset('images/default-subcategory.jpg') }}" class="card-img-top" alt="{{ $subcategory->name }}">
+                                <img src="{{ asset('images/default-subcategory.jpg') }}" class="card-img-top" alt="{{ $subsubcategory->name }}">
                                 @endif
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title">{{ $subcategory->name }}</h5>
-                                <p class="text-center mt-2 mb-0 text-muted small">
-                                    @if($subcategory->hasSubcategories())
-                                    View Subcategories
-                                    @else
-                                    View Products
-                                    @endif
-                                </p>
+                                <h5 class="card-title">{{ $subsubcategory->name }}</h5>
+                                <p class="text-center mt-2 mb-0 text-muted small">View Products</p>
                             </div>
                         </div>
                     </a>

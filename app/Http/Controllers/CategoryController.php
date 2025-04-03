@@ -26,7 +26,17 @@ class CategoryController extends Controller
 
     public function showSubcategory(Category $category, Category $subcategory)
     {
+        if ($subcategory->subcategories->isNotEmpty()) {
+            return view('categories.subsubcategories', compact('category', 'subcategory'));
+        }
+        
         $products = $subcategory->products;
         return view('categories.products', compact('subcategory', 'products'));
+    }
+
+    public function showSubSubcategory(Category $category, Category $subcategory, Category $subsubcategory)
+    {
+        $products = $subsubcategory->products;
+        return view('categories.products', compact('subsubcategory', 'products'));
     }
 } 

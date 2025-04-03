@@ -9,20 +9,15 @@ sudo chmod -R 777 storage/framework/sessions/
 
 SEO
 
-Aboda :
-MaxTest logo
 about us logo header
 
 Max AI 
 
-catalog
+company profile
 
-MaxMed Products and Services
 google ads
 design business card sales specialist QR code
 customer database
 
 DLAB 
 add products 
-remove stock and prices
-email dlab for product images

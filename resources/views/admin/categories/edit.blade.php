@@ -24,10 +24,10 @@
                         <div class="form-group mb-3">
                             <label for="parent_id">Parent Category (Optional)</label>
                             <select class="form-control @error('parent_id') is-invalid @enderror" id="parent_id" name="parent_id">
-                                <option value="">None</option>
-                                @foreach($categories as $parentCategory)
-                                    <option value="{{ $parentCategory->id }}" {{ old('parent_id', $category->parent_id) == $parentCategory->id ? 'selected' : '' }}>
-                                        {{ $parentCategory->name }}
+                                <option value="">None (Top Level)</option>
+                                @foreach($categoriesForDropdown as $id => $name)
+                                    <option value="{{ $id }}" {{ old('parent_id', $category->parent_id) == $id ? 'selected' : '' }}>
+                                        {{ $name }}
                                     </option>
                                 @endforeach
                             </select>

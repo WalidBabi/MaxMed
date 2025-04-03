@@ -109,6 +109,7 @@ Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/', [CategoryController::class, 'index'])->name('index');
     Route::get('/{category}', [CategoryController::class, 'show'])->name('show');
     Route::get('/{category}/{subcategory}', [CategoryController::class, 'showSubcategory'])->name('subcategory.show');
+    Route::get('/{category}/{subcategory}/{subsubcategory}', [CategoryController::class, 'showSubSubcategory'])->name('subsubcategory.show');
 });
 
 // Partners Routes
