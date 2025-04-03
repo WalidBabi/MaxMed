@@ -459,7 +459,7 @@
                                 <p>{{ $product->description }}</p>
                             </div>
 
-                            @if($product->inventory && $product->inventory->quantity > 0)
+                         
                             <!-- <div class="quantity-controls">
                                 <div class="counter-text">
                                     <span class="counter-number" id="counter-display">1</span>
@@ -494,16 +494,7 @@
                                     <i class="fas fa-file-invoice me-2"></i> Request Quotation
                                 </a>
                             </div>
-                            @else
-                            <div class="d-grid action-buttons">
-                                <button class="btn btn-secondary w-100" disabled>
-                                    <i class="fas fa-ban me-2"></i> Out of Stock
-                                </button>
-                                <a href="{{ route('quotation.form', $product) }}" class="btn btn-quotation w-100">
-                                    <i class="fas fa-file-invoice me-2"></i> Request Quotation
-                                </a>
-                            </div>
-                            @endif
+                       
                         </div>
                     </div>
                 </div>
