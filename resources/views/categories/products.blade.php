@@ -471,7 +471,7 @@
                                     <!-- <span class="price-aed d-block">AED {{ number_format($product->price_aed, 2) }}</span> -->
                                 </p>
                                 <div class="card-footer">
-                                    @if($product->inventory->quantity > 0)
+                         
                                         <div class="d-flex align-items-center mb-2">
                                             <!-- <span class="badge bg-success me-3"><i class="fas fa-check me-1"></i>In Stock</span>
                                             <small class="text-muted">{{ $product->inventory->quantity }} available</small> -->
@@ -496,16 +496,7 @@
                                                 </a>
                                             </div>
                                         </form>
-                                    @else
-                                        <div class="d-flex align-items-center mb-3">
-                                            <span class="badge bg-danger me-2"><i class="fas fa-times me-1"></i>Out of Stock</span>
-                                        </div>
-                                        <div class="button-group">
-                                            <a href="{{ route('quotation.form', $product) }}" class="btn btn-secondary w-100">
-                                                <i class="fas fa-file-invoice me-2"></i> Request Quote
-                                            </a>
-                                        </div>
-                                    @endif
+                                  
                                 </div>
                             </div>
                         </div>
