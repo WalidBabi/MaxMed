@@ -460,7 +460,7 @@
                     <div class="product-card-wrapper">
                         <div class="card h-100 product-card">
                             <a href="{{ route('product.show', $product) }}" class="overflow-hidden">
-                                <img src="{{ $product->image_url }}" class="card-img-top" alt="{{ $product->name }}">
+                                <img src="{{ $product->image_url }}" class="card-img-top" alt="{{ $product->name }}" style="width: 100%; height: auto;">
                             </a>
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">
