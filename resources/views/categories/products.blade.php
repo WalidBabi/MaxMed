@@ -169,9 +169,9 @@
             justify-content: space-between;
         }
         .card-title {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            white-space: normal; /* Changed from nowrap to normal */
+            overflow: hidden; /* Added to hide overflow */
+            text-overflow: ellipsis; /* Added to show ellipsis */
             font-weight: bold;
             font-size: 1.2em;
             margin-bottom: 10px;
