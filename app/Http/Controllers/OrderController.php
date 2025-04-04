@@ -11,24 +11,38 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = auth()->user()->orders()->latest()->paginate(10);
-        
-        // Add debugging
-        Log::info('User ID: ' . auth()->id());
-        Log::info('Orders count: ' . $orders->count());
+        try {
+            if (!auth()->user()->hasVerifiedEmail()) {
+                return redirect()->route('verification.notice');
+            }
+            
+            $orders = auth()->user()->orders()->latest()->paginate(10);
+            
+            // Add debugging
+            Log::info('User ID: ' . auth()->id());
+            Log::info('Orders count: ' . $orders->count());
 
-        return view('orders.index', compact('orders'));
+            return view('orders.index', compact('orders'));
+        } catch (\Exception $e) {
+            Log::error('Error accessing orders: ' . $e->getMessage());
+            return redirect()->route('dashboard')->with('error', 'There was an error accessing your orders. Please try again later.');
+        }
     }
 
     public function show(Order $order)
     {
-        if (auth()->user()->cannot('view', $order)) {
-            abort(403);
+        try {
+            if (auth()->user()->cannot('view', $order)) {
+                abort(403);
+            }
+
+            // Add this line for debugging
+            Log::info('Showing order: ' . $order->id);
+
+            return view('orders.show', compact('order'));
+        } catch (\Exception $e) {
+            Log::error('Error viewing order: ' . $e->getMessage());
+            return redirect()->route('orders.index')->with('error', 'There was an error viewing this order. Please try again later.');
         }
-
-        // Add this line for debugging
-        Log::info('Showing order: ' . $order->id);
-
-        return view('orders.show', compact('order'));
     }
 }

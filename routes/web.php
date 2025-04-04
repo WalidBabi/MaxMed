@@ -42,10 +42,6 @@ Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 
-    // Orders Routes
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-
     // Stripe Routes
     Route::post('/stripe/checkout', [StripeController::class, 'checkout'])->name('stripe.checkout');
     Route::get('/stripe/success', [StripeController::class, 'success'])->name('stripe.success');
@@ -103,6 +99,10 @@ Route::get('/test-mail', function () {
         return 'Error: ' . $e->getMessage();
     }
 })->name('test.mail');
+
+// Orders Routes
+Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 
 // Categories Routes
 Route::prefix('categories')->name('categories.')->group(function () {
