@@ -28,4 +28,10 @@
             </button>
         </form>
     </div>
+    
+    <div class="mt-4 text-center">
+        <a href="{{ route('dashboard') }}" class="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+            Skip verification and continue to dashboard
+        </a>
+    </div>
 </x-guest-layout>
