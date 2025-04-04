@@ -40,7 +40,7 @@ Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.
 
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [HomeController::class, 'index'])->middleware('verified')->name('dashboard');
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 
     // Orders Routes
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
