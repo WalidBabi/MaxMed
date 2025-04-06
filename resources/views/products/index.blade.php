@@ -100,7 +100,7 @@
     .category-container {
         margin-top: 15px;
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 28px;
     }
     
@@ -228,7 +228,7 @@
     /* Responsive improvements */
     @media (max-width: 992px) {
         .category-container {
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
         }
     }
