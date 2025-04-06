@@ -1,24 +1,43 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100 dark:border-gray-700 shadow-sm">
     <!-- Single Bar with Logo, Links, Search and Navigation -->
     <div class="bg-white py-2">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-12">
             <!-- Top section with Logo and Links -->
             <div class="flex justify-between items-center">
-                <!-- Logo -->
-                <div class="flex items-center flex-shrink-0">
+                <!-- Logo - Now positioned between top and main navigation -->
+                <div class="flex justify-center py-1">
                     <a href="{{ route('welcome') }}" class="transition hover:opacity-90">
-                        <img src="{{ asset('Images/logo.png') }}" alt="MaxMed Logo" class="block h-[60px] w-auto">
+                        <img src="{{ asset('Images/logo.png') }}" alt="MaxMed Logo" class="block h-[60px] w-auto mr-5">
                     </a>
                 </div>
-
-                <!-- Top Navigation Links and Search Bar Container -->
+                
+                <!-- Search Bar - Now in the middle -->
+                <div class="hidden md:block mx-4 w-1/3">
+                    <form action="{{ route('search') }}" method="GET" class="flex items-center mb-0">
+                        <input type="text" name="query" placeholder="Search product names or codes"
+                            class="w-full py-2 pl-4 bg-gray-100 border-none rounded-l-full focus:outline-none text-sm"
+                            value="{{ request('query') }}">
+                        <button type="submit" class=" bg-gradient-to-r from-[#171e60] to-[#0a5694] text-white p-2.5 rounded-lg hover:from-[#0a5694] hover:to-[#171e60] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#171e60] focus:ring-opacity-50 shadow-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+                
                 <div class="hidden md:flex items-center space-x-6">
-                    <!-- Top Navigation Links -->
+               
                     <div class="flex items-center space-x-6 text-sm">
-                        <a href="{{ route('welcome') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Home</a>
-                        <a href="{{ route('about') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">About Us</a>
-                        <a href="{{ route('contact') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Contact</a>
+                
 
+                        <a href="{{ route('welcome') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Home</a>
+                        <a href="{{ route('about') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">About</a>
+                        <a href="{{ route('contact') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Contact</a>
+                        <a href="{{ route('products.index') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Products</a>
+                        <a href="{{ route('partners.index') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">partners</a>
+                        <a href="{{ route('news.index') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">News</a>
+
+                       
                         @auth
                         <div class="relative inline-block" x-data="{ open: false }" @click.away="open = false">
                             <button @click="open = !open" class="text-gray-500 hover:text-gray-700 flex items-center font-normal">
@@ -50,6 +69,9 @@
                         <a href="{{ route('login') }}" class="flex items-center text-[#00a9e0] hover:text-[#0089b7] font-normal h-full">Login</a>
                         @endauth
 
+                        <!-- Main Navigation Categories -->
+
+
                         <!-- Cart Icon -->
                         <a href="{{ route('cart.view') }}" class="flex items-center text-gray-600 hover:text-gray-900 ">
                             <div class="relative">
@@ -75,29 +97,6 @@
                 </div>
             </div>
 
-            <!-- Search and Main Navigation -->
-            <div class="hidden md:flex justify-end items-center space-x-4">
-                <!-- Search Bar -->
-                <div class="w-[400px]"> <!-- Fixed width for search bar -->
-                    <form action="{{ route('search') }}" method="GET" class="relative flex items-center">
-                        <input type="text" name="query" placeholder="Search product names, codes or CAS numbers"
-                            class="w-full py-2 pl-4 pr-12 bg-gray-100 border-none rounded-full focus:outline-none text-sm"
-                            value="{{ request('query') }}">
-                        <button type="submit" class="absolute right-0 bg-gradient-to-r from-[#171e60] to-[#0a5694] text-white p-2.5 rounded-lg mr-1 hover:from-[#0a5694] hover:to-[#171e60] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#171e60] focus:ring-opacity-50 shadow-md">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </button>
-                    </form>
-                </div>
-                <!-- Main Navigation Categories -->
-                <div class="flex space-x-10 font-medium text-sm uppercase items-center">
-
-                    <a href="{{ route('products.index') }}" class="text-[#333] hover:text-[#00a9e0] py-2 font-bold">PRODUCTS</a>
-                    <a href="{{ route('news.index') }}" class="text-[#333] hover:text-[#00a9e0] py-2 font-bold">NEWS</a>
-                    <a href="{{ route('partners.index') }}" class="text-[#333] hover:text-[#00a9e0] py-2 font-bold">PARTNERS</a>
-                </div>
-            </div>
         </div>
 
         <!-- Mobile menu button -->

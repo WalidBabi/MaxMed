@@ -11,7 +11,7 @@
     </div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div class="text-center">
-            <h1 class="text-4xl font-extrabold tracking-tight text-[#171e60] sm:text-5xl md:text-6xl">
+            <h1 class="text-4xl  tracking-tight text-[#171e60] sm:text-5xl md:text-6xl">
                 News & Updates
             </h1>
             <p class="mt-6 max-w-2xl mx-auto text-xl text-[#0a5694]">
@@ -41,7 +41,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <h2 class="text-base font-semibold text-[#0a5694] uppercase tracking-wide">Latest Update</h2>
-                <p class="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">Featured News</p>
+                <p class="mt-2 text-3xl  text-gray-900 sm:text-4xl">Featured News</p>
             </div>
             
             <div class="mt-12">
@@ -76,7 +76,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-base font-semibold text-[#0a5694] uppercase tracking-wide">Recent</h2>
-                <p class="mt-2 text-3xl font-extrabold text-gray-900">Latest Articles</p>
+                <p class="mt-2 text-3xl  text-gray-900">Latest Articles</p>
             </div>
 
             <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">

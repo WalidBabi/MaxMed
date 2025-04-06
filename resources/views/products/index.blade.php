@@ -81,7 +81,7 @@
     }
     
     .page-title {
-        font-size: 2rem;
+        font-size: 1.25rem;
         font-weight: 700;
         color: #333;
         margin-bottom: 0.5rem;
@@ -91,7 +91,7 @@
     .page-description {
         color: #666;
         margin-bottom: 1rem;
-        font-size: 1.1rem;
+        font-size: 1rem;
         max-width: 800px;
         line-height: 1.6;
     }
@@ -112,7 +112,7 @@
     }
     
     .category-card {
-        width: 100%;
+        width: 80%;
         height: 100%;
         display: flex;
         flex-direction: column;
@@ -152,7 +152,7 @@
     
     .category-card .card-title {
         text-align: center;
-        font-size: 1.3rem;
+        font-size: 0.875rem;
         font-weight: 600;
         color: #222;
         margin-bottom: 0;

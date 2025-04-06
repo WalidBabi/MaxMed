@@ -37,8 +37,8 @@
     }
     
     .hero-title {
-        font-size: 3.5rem;
-        font-weight: 800;
+        font-size: 3rem;
+
         margin-bottom: 1.5rem;
         text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         opacity: 0;
@@ -47,7 +47,7 @@
     }
     
     .hero-subtitle {
-        font-size: 1.4rem;
+        font-size: 1rem;
         text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         opacity: 0;
         transform: translateY(20px);
@@ -67,7 +67,7 @@
     }
     
     .section-title {
-        font-size: 2.5rem;
+        font-size: 1.25rem;
         font-weight: 700;
         margin-bottom: 1.5rem;
         position: relative;
@@ -87,7 +87,7 @@
     
     .section-text {
         color: #555;
-        font-size: 1.1rem;
+        font-size: 0.875rem;
         line-height: 1.8;
         margin-bottom: 1.5rem;
         opacity: 0;
@@ -128,7 +128,7 @@
     }
     
     .values-title {
-        font-size: 2.5rem;
+        font-size: 1.25rem;
         font-weight: 700;
         text-align: center;
         margin-bottom: 3rem;
@@ -205,7 +205,7 @@
     }
     
     .value-title {
-        font-size: 1.5rem;
+        font-size: 1rem;
         font-weight: 700;
         margin-bottom: 1rem;
         color: #333;
@@ -213,7 +213,7 @@
     
     .value-desc {
         color: #666;
-        font-size: 1.05rem;
+        font-size: 0.875rem;
         line-height: 1.7;
     }
     
@@ -303,7 +303,7 @@
 <!-- Hero Section -->
 <div class="about-hero" style="background-image: url('{{ asset('Images/maxmed building.png') }}');">
     <div class="hero-content">
-        <h2 class="hero-title">About MaxMed</h2>
+        <h1 class="hero-title">About MaxMed</h2>
         <p class="hero-subtitle">Leading the Future of Medical Laboratory Equipment</p>
     </div>
 </div>

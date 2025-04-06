@@ -39,7 +39,7 @@
      
      .hero-title {
          font-size: 3rem;
-         font-weight: 800;
+ 
          margin-bottom: 1rem;
          opacity: 0;
          transform: translateY(20px);
@@ -49,7 +49,7 @@
      }
      
      .hero-subtitle {
-         font-size: 1.25rem;
+         font-size: 1rem;
          opacity: 0;
          transform: translateY(20px);
          animation: fadeUp 0.8s ease forwards 0.4s;
@@ -78,7 +78,7 @@
      }
      
      .contact-form-title {
-         font-size: 1.75rem;
+         font-size: 1.25rem;
          font-weight: 700;
          margin-bottom: 1.5rem;
          position: relative;
@@ -107,7 +107,7 @@
          display: block;
          margin-bottom: 0.75rem;
          font-weight: 500;
-         font-size: 1rem;
+         font-size: 0.875rem;
          color: #333;
      }
      
@@ -255,6 +255,7 @@
      .info-text {
          color: #555;
          line-height: 1.7;
+         font-size: 0.875rem;
      }
      
      .info-link {
