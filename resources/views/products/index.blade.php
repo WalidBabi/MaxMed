@@ -106,13 +106,14 @@
     
     .category-card-wrapper {
         height: 100%;
+
         transition: transform 0.3s;
         opacity: 0;
         transform: translateY(20px);
     }
     
     .category-card {
-        width: 80%;
+        width: 100%;
         height: 100%;
         display: flex;
         flex-direction: column;
