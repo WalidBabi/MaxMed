@@ -100,7 +100,7 @@
     .category-container {
         margin-top: 15px;
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 28px;
     }
     
@@ -248,7 +248,7 @@
     
     @media (max-width: 576px) {
         .category-container {
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 12px;
         }
         .category-card img {
