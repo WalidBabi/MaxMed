@@ -7,7 +7,7 @@
                 <!-- Logo - Now positioned between top and main navigation -->
                 <div class="flex justify-center py-1">
                     <a href="{{ route('welcome') }}" class="transition hover:opacity-90">
-                        <img src="{{ asset('Images/logo.png') }}" alt="MaxMed Logo" class="block h-[60px] w-auto mr-5">
+                        <img src="{{ asset('Images/logo.png') }}" alt="MaxMed Logo" class="block h-[60px] w-[236px] mr-5">
                     </a>
                 </div>
                 
