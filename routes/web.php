@@ -32,11 +32,16 @@ Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
 Route::get('/check-availability/{product}/{quantity}', [ProductController::class, 'checkAvailability'])->name('check.availability');
 
-// Cart Routes
+// Cart Routes - Keep publicly accessible for SEO
 Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
 Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/remove/{product}', [CartController::class, 'removeFromCart'])->name('cart.remove');
 Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+
+// Quotation routes for viewing - Move outside auth for SEO
+Route::prefix('quotation')->name('quotation.')->group(function () {
+    Route::get('/{product}', [QuotationController::class, 'form'])->name('form');
+});
 
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
@@ -46,12 +51,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/stripe/checkout', [StripeController::class, 'checkout'])->name('stripe.checkout');
     Route::get('/stripe/success', [StripeController::class, 'success'])->name('stripe.success');
 
-    // Quotation Routes
+    // Quotation Routes that need authentication
     Route::prefix('quotation')->name('quotation.')->group(function () {
         Route::get('/request/{product}', [QuotationController::class, 'request'])->name('request');
         Route::post('/store', [QuotationController::class, 'store'])->name('store');
         Route::get('/confirmation/{product}', [QuotationController::class, 'confirmation'])->name('confirmation');
-        Route::get('/{product}', [QuotationController::class, 'form'])->name('form');
     });
 
     // Admin Routes

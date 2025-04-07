@@ -2,9 +2,8 @@ User-agent: *
 Disallow: /admin/
 Disallow: /login
 Disallow: /register
-Disallow: /cart
+Allow: /cart
 Allow: /quotation/
-
 Allow: /
 
 # Allow CSS, JS, and Images

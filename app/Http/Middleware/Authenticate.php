@@ -3,31 +3,36 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-class AdminMiddleware
+class Authenticate extends Middleware
 {
     /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
+     * @param  string[]  ...$guards
      * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle($request, Closure $next, ...$guards)
     {
-        // Allow search engines to crawl without authentication
+        // Allow search engines to crawl authenticated pages
         $userAgent = $request->header('User-Agent');
         if ($this->isSearchEngine($userAgent)) {
             return $next($request);
         }
         
-        if (Auth::check() && Auth::user()->is_admin) {
-            return $next($request);
-        }
-        
-        return redirect()->route('welcome')->with('error', 'You do not have permission to access this area.');
+        return parent::handle($request, $next, ...$guards);
+    }
+    
+    /**
+     * Get the path the user should be redirected to when they are not authenticated.
+     */
+    protected function redirectTo(Request $request): ?string
+    {
+        return $request->expectsJson() ? null : route('login');
     }
     
     /**
