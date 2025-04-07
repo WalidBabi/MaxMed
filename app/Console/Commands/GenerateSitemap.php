@@ -45,12 +45,35 @@ class GenerateSitemap extends Command
             ->setPriority(0.8)
             ->setChangeFrequency('daily'));
 
-        // Add categories
+        // Add categories - only include valid categories with content
         Category::all()->each(function (Category $category) use ($sitemap, $baseUrl) {
-            $sitemap->add(Url::create($baseUrl . "/categories/{$category->slug}")
-                ->setPriority(0.8)
-                ->setChangeFrequency('weekly')
-                ->setLastModificationDate($category->updated_at));
+            // Only add categories that have products or subcategories
+            if ($category->products->count() > 0 || $category->subcategories->count() > 0) {
+                $sitemap->add(Url::create($baseUrl . "/categories/{$category->id}")
+                    ->setPriority(0.8)
+                    ->setChangeFrequency('weekly')
+                    ->setLastModificationDate($category->updated_at));
+                
+                // Add subcategories that have content
+                foreach ($category->subcategories as $subcategory) {
+                    if ($subcategory->products->count() > 0 || $subcategory->subcategories->count() > 0) {
+                        $sitemap->add(Url::create($baseUrl . "/categories/{$category->id}/{$subcategory->id}")
+                            ->setPriority(0.7)
+                            ->setChangeFrequency('weekly')
+                            ->setLastModificationDate($subcategory->updated_at));
+                        
+                        // Add subsubcategories that have products
+                        foreach ($subcategory->subcategories as $subsubcategory) {
+                            if ($subsubcategory->products->count() > 0) {
+                                $sitemap->add(Url::create($baseUrl . "/categories/{$category->id}/{$subcategory->id}/{$subsubcategory->id}")
+                                    ->setPriority(0.6)
+                                    ->setChangeFrequency('weekly')
+                                    ->setLastModificationDate($subsubcategory->updated_at));
+                            }
+                        }
+                    }
+                }
+            }
         });
 
         // Add products

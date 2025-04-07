@@ -2,6 +2,17 @@ User-agent: *
 Disallow: /admin/
 Disallow: /login
 Disallow: /register
+
+# Prevent soft 404s by disallowing categories mentioned in Search Console
+Disallow: /categories/43/46
+Disallow: /categories/50
+Disallow: /categories/49
+Disallow: /categories/43/45
+Disallow: /categories/46
+Disallow: /categories/44 
+Disallow: /categories/40
+Disallow: /categories/45
+
 Allow: /cart
 Allow: /quotation/
 Allow: /

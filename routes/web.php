@@ -111,9 +111,16 @@ Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.sh
 // Categories Routes
 Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/', [CategoryController::class, 'index'])->name('index');
-    Route::get('/{category}', [CategoryController::class, 'show'])->name('show');
-    Route::get('/{category}/{subcategory}', [CategoryController::class, 'showSubcategory'])->name('subcategory.show');
-    Route::get('/{category}/{subcategory}/{subsubcategory}', [CategoryController::class, 'showSubSubcategory'])->name('subsubcategory.show');
+    
+    // Add middleware to check if category exists
+    Route::get('/{category}', [CategoryController::class, 'show'])->name('show')
+        ->where('category', '[0-9]+'); // Ensure only numeric IDs are accepted
+    
+    Route::get('/{category}/{subcategory}', [CategoryController::class, 'showSubcategory'])->name('subcategory.show')
+        ->where(['category' => '[0-9]+', 'subcategory' => '[0-9]+']); // Validate both IDs
+    
+    Route::get('/{category}/{subcategory}/{subsubcategory}', [CategoryController::class, 'showSubSubcategory'])->name('subsubcategory.show')
+        ->where(['category' => '[0-9]+', 'subcategory' => '[0-9]+', 'subsubcategory' => '[0-9]+']); // Validate all IDs
 });
 
 // Partners Routes
