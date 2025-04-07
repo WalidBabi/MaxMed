@@ -3,6 +3,8 @@ Disallow: /admin/
 Disallow: /login
 Disallow: /register
 Disallow: /cart
+Allow: /quotation/
+
 Allow: /
 
 # Allow CSS, JS, and Images
