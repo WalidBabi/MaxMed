@@ -785,8 +785,10 @@
     </div>
 </div>
 
+<!-- Start of Selection -->
+<!-- Start of Selection -->
 <!-- FEATURED PROMOTIONS -->
-<div class="py-16 max-w-7xl mx-auto px-4">
+<div class="py-20 max-w-7xl mx-auto px-4">
     <h3 class="section-title">Featured Products</h3>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
@@ -796,13 +798,11 @@
             @mouseenter="showDetails = true"
             @mouseleave="showDetails = false">
 
-            <div class="relative h-48 overflow-hidden">
+            <div class="relative h-80 w-full overflow-hidden">
                 <!-- Product image -->
                 <img src="{{ $product->image_url ?? asset('/Images/placeholder.jpg') }}"
                     alt="{{ $product->name }}"
                     class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
-
-
 
                 <!-- "New" badge if added in the last 14 days -->
                 @if($product->created_at >= \Carbon\Carbon::now()->subDays(14))
@@ -810,6 +810,7 @@
                     NEW
                 </div>
                 @endif
+<!-- End of Selection -->
 
                 <!-- Overlay with details on hover -->
                 <div class="absolute inset-0 bg-gradient-to-t from-[#171e60] to-transparent opacity-0 transition-opacity duration-300"
@@ -822,7 +823,7 @@
             </div>
 
             <div class="p-4">
-                <h4 class="text-base font-medium text-gray-900 mb-1">{{ Str::limit($product->name, 40) }}</h4>
+                <h4 class="text-base font-medium text-gray-900 mb-1">{{ $product->name }}</h4>
 
                 <div class="flex items-end justify-between mt-2">
                     <!-- <div>
