@@ -732,13 +732,13 @@
 
     <!-- Navigation Arrows -->
     <button @click="activeSlide = activeSlide === 0 ? 2 : activeSlide - 1"
-        class="nav-arrow left">
+        class="nav-arrow left" aria-label="Previous slide">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
     </button>
     <button @click="activeSlide = activeSlide === 2 ? 0 : activeSlide + 1"
-        class="nav-arrow right">
+        class="nav-arrow right" aria-label="Next slide">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
@@ -806,7 +806,7 @@
 
                 <!-- "New" badge if added in the last 14 days -->
                 @if($product->created_at >= \Carbon\Carbon::now()->subDays(14))
-                <div class="absolute top-3 left-3 bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-full transform -rotate-3 shadow-md">
+                <div class="absolute top-3 left-3 bg-green-800 text-white text-xs font-bold px-3 py-1.5 rounded-full transform -rotate-3 shadow-md">
                     NEW
                 </div>
                 @endif

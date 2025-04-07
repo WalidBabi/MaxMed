@@ -348,10 +348,10 @@
                         <div class="category-card">
                        
                             <div class="overflow-hidden">
-                                <img src="{{ $category->image_url }}" class="card-img-top" alt="{{ $category->name }}">
+                                <img src="{{ $category->image_url }}" class="card-img-top" alt="Image of {{ $category->name }} category">
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title">{{ $category->name }}</h5>
+                                <h3 class="card-title">{{ $category->name }}</h3>
                             </div>
                         </div>
                     </a>
