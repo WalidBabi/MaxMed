@@ -39,11 +39,6 @@ class CategoryController extends Controller
                 ->with('warning', 'The requested subcategory does not exist in this category.');
         }
 
-        // Check if subcategory has content
-        if (!$subcategory->subcategories->count() && !$subcategory->products->count()) {
-            return Redirect::route('categories.show', $category)
-                ->with('warning', 'The requested subcategory has no content.');
-        }
         
         if ($subcategory->subcategories->isNotEmpty()) {
             return view('categories.subsubcategories', compact('category', 'subcategory'));
