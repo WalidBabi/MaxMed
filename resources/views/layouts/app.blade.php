@@ -5,126 +5,74 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-5JRSRT4MLZ"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'G-5JRSRT4MLZ');
-        </script>
-
         @include('layouts.meta')
         <title>@yield('title', 'MaxMed UAE - Medical & Laboratory Equipment Supplier')</title>
 
-        <!-- Fonts -->
+        <!-- Preconnect to external domains -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-
+        <link rel="preconnect" href="https://www.googletagmanager.com">
+        <link rel="preconnect" href="https://cdn.jsdelivr.net">
+        
         <!-- Favicon -->
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
-        <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('android-chrome-192x192.png') }}">
-        <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('android-chrome-512x512.png') }}">
-        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
-        <link rel="manifest" href="{{ asset('site.webmanifest') }}">
-        <meta name="theme-color" content="#171e60">
 
-        <!-- Add Tailwind CSS CDN for quick styling -->
-        <script src="https://cdn.tailwindcss.com"></script>
-        
-        <!-- Add Alpine.js -->
-        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
-        <!-- Add custom styles -->
+        <!-- Critical CSS inline -->
         <style>
-            .hero-section {
-                background: linear-gradient(rgba(23, 30, 96, 0.6), rgba(23, 30, 96, 0.6)),
-                            url('/Images/banner.png');
-                background-size: cover;
-                background-position: center;
-            }
-
-            /* Carousel fade animation */
-            .carousel-item {
-                transition: opacity 0.6s ease-in-out;
-            }
-
-            /* Update primary colors */
+            /* Critical path CSS only */
             :root {
                 --brand-main: #171e60;
                 --brand-auxiliary: #0a5694;
                 --brand-white: #ffffff;
             }
-
-            .bg-primary {
-                background-color: var(--brand-main) !important;
-            }
-
-            .text-primary {
-                color: var(--brand-main) !important;
-            }
-
-            .btn-primary {
-                background-color: var(--brand-main) !important;
-                border-color: var(--brand-main) !important;
-            }
-
-            .btn-primary:hover {
-                background-color: var(--brand-auxiliary) !important;
-                border-color: var(--brand-auxiliary) !important;
-            }
-
-            .border-primary {
-                border-color: var(--brand-main) !important;
-            }
-
-            /* Lazy Loading Styles */
-            .lazy-image {
-                opacity: 0;
-                transition: opacity 0.3s ease-in;
+            
+            body {
+                margin: 0;
+                font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+                overflow-x: hidden;
+                width: 100%;
             }
             
-            .lazy-image.loaded {
-                opacity: 1;
-            }
-
             img {
                 max-width: 100%;
                 height: auto;
             }
             
-            /* Improve touch targets for mobile */
-            button, a, input[type="submit"], input[type="button"] {
-                min-height: 44px;
-                min-width: 44px;
-            }
+            .bg-primary { background-color: var(--brand-main) !important; }
+            .text-primary { color: var(--brand-main) !important; }
             
-            /* Prevent horizontal overflow */
-            body {
-                overflow-x: hidden;
-                width: 100%;
+            /* Lazy loading */
+            .lazy-image {
+                opacity: 0;
+                transition: opacity 0.3s ease-in;
             }
+            .lazy-image.loaded { opacity: 1; }
         </style>
 
-        <!-- Include Bootstrap CSS or any other stylesheets -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Preload LCP image -->
+        <link rel="preload" as="image" fetchpriority="high" href="{{ asset('Images/optimized/banner-optimized.webp') }}" type="image/webp">
 
-        <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+        <!-- Deferred CSS -->
+        <link rel="stylesheet" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" media="print" onload="this.media='all'">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+        <link href="{{ asset('css/custom.css') }}" rel="stylesheet" media="print" onload="this.media='all'">
+        <link rel="stylesheet" href="{{ asset('css/mobile.css') }}" media="print" onload="this.media='all'">
+        
+        <!-- Fallbacks for browsers without JS -->
+        <noscript>
+            <link rel="stylesheet" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap">
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+            <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+            <link rel="stylesheet" href="{{ asset('css/mobile.css') }}">
+        </noscript>
 
-        <!-- Image Loading Optimization -->
-        <link rel="preload" as="image" href="{{ asset('Images/banner.png') }}">
+        <!-- Vite assets with defer for JS -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         <!-- Image Loading Script -->
         <script>
+            // Inline critical JS for image loading
             document.addEventListener("DOMContentLoaded", function() {
                 var lazyImages = [].slice.call(document.querySelectorAll("img.lazy-image"));
-
                 if ("IntersectionObserver" in window) {
                     let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
                         entries.forEach(function(entry) {
@@ -139,27 +87,27 @@
                             }
                         });
                     });
-
                     lazyImages.forEach(function(lazyImage) {
                         lazyImageObserver.observe(lazyImage);
                     });
                 }
             });
         </script>
-        
-        <!-- Browser Caching Headers -->
-        @php
-            header('Cache-Control: public, max-age=31536000');
-            header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 31536000));
-        @endphp
-
-        <!-- Add Mobile CSS -->
-        <link rel="stylesheet" href="{{ asset('css/mobile.css') }}">
 
         @stack('head')
+        
+        <!-- Defer non-critical JS -->
+        <script defer src="https://www.googletagmanager.com/gtag/js?id=G-5JRSRT4MLZ"></script>
+        <script>
+            window.addEventListener('load', function() {
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-5JRSRT4MLZ');
+            });
+        </script>
     </head>
     <body class="font-sans antialiased bg-gray-50 relative">
-
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             @include('layouts.navigation')
 
@@ -203,9 +151,10 @@
 
         @stack('scripts')
 
-        <!-- Include Bootstrap JS or any other scripts -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+        <!-- Defer non-essential JS -->
+        <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        
         <script>
             // Wait until the entire page is loaded, then hide the loader.
             window.addEventListener('load', function(){
@@ -214,18 +163,6 @@
                     loader.style.display = 'none';
                 }
             });
-
-            window.onpageshow = function(event) {
-                if (event.persisted) {
-                    window.location.reload();
-                }
-            };
-            
-            // Disable back button
-            window.history.pushState(null, null, window.location.href);
-            window.onpopstate = function () {
-                window.history.pushState(null, null, window.location.href);
-            };
         </script>
 
         <!-- WhatsApp Floating Widget -->
