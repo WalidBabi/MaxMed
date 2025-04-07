@@ -17,11 +17,9 @@ if (!fs.existsSync(destDir)) {
 // Common image sizes - adjust based on your needs
 const sizes = {
     banner: { width: 1920, height: null }, // Full width banners
-    hero: { width: 1200, height: null },  // Hero images (smaller than banner)
     product: { width: 600, height: null },  // Product images
     thumbnail: { width: 300, height: null }, // Thumbnails
-    logo: { width: 200, height: null },      // Logos
-    icon: { width: 100, height: null }       // Small icons
+    logo: { width: 200, height: null }      // Logos
 };
 
 // Process images
@@ -50,61 +48,27 @@ async function optimizeImages() {
             
             if (file.includes('banner') || file.includes('Header')) {
                 targetSize = sizes.banner;
-            } else if (file.includes('hero')) {
-                targetSize = sizes.hero;
             } else if (file.includes('logo') || file.includes('supplier')) {
                 targetSize = sizes.logo;
-            } else if (file.includes('icon') || stats.size < 50000) {
-                targetSize = sizes.icon;
             } else if (stats.size < 100000) { // Less than 100KB
                 targetSize = sizes.thumbnail;
             }
             
-            // Resize for WebP output
-            const resizedImage = sharp(filePath)
+            // Original WebP at full size (for responsive loading)
+            await sharp(filePath)
+                .webp({ quality: 80 })
+                .toFile(path.join(destDir, `${fileName}-original.webp`));
+                
+            // Resize and optimize
+            await sharp(filePath)
                 .resize({
                     width: targetSize.width,
                     height: targetSize.height,
                     fit: 'inside',
                     withoutEnlargement: true
-                });
-            
-            // Create WebP version (better browser support)
-            await resizedImage
-                .clone()
-                .webp({ quality: 80, effort: 6 })
+                })
+                .webp({ quality: 80 })
                 .toFile(path.join(destDir, `${fileName}-optimized.webp`));
-            
-            // Create AVIF version (better compression but less support)
-            await resizedImage
-                .clone()
-                .avif({ quality: 70, effort: 9 })
-                .toFile(path.join(destDir, `${fileName}-optimized.avif`));
-                
-            // Create responsive sizes for larger images
-            if (stats.size > 200000) {
-                // Medium size
-                await sharp(filePath)
-                    .resize({
-                        width: Math.floor(targetSize.width / 2),
-                        height: targetSize.height ? Math.floor(targetSize.height / 2) : null,
-                        fit: 'inside',
-                        withoutEnlargement: true
-                    })
-                    .webp({ quality: 75, effort: 6 })
-                    .toFile(path.join(destDir, `${fileName}-medium.webp`));
-                
-                // Small size
-                await sharp(filePath)
-                    .resize({
-                        width: Math.floor(targetSize.width / 4),
-                        height: targetSize.height ? Math.floor(targetSize.height / 4) : null,
-                        fit: 'inside',
-                        withoutEnlargement: true
-                    })
-                    .webp({ quality: 70, effort: 6 })
-                    .toFile(path.join(destDir, `${fileName}-small.webp`));
-            }
                 
             console.log(`Optimized: ${fileName}`);
         }
@@ -115,5 +79,4 @@ async function optimizeImages() {
     }
 }
 
-// Run optimization
 optimizeImages(); 

@@ -696,7 +696,7 @@
         x-transition:leave="transition ease-in duration-800"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        style="background: linear-gradient(rgba(0, 60, 80,0), rgba(0, 80, 100, 0.6)), url('/Images/optimized/banner-optimized.webp'); background-size: cover; background-position: center;">
+        style="background: linear-gradient(rgba(0, 60, 80,0), rgba(0, 80, 100, 0.6)), url('/Images/banner.png'); background-size: cover; background-position: center;">
     </div>
     <div class="hero-slide"
         x-show="activeSlide === 1"
