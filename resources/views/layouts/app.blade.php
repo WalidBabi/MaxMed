@@ -164,7 +164,7 @@
             @include('layouts.navigation')
 
             <!-- Flash Messages -->
-            <div class="container mt-3">
+            <div class="container">
                 @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         {{ session('success') }}
