@@ -9,9 +9,9 @@
         <title>@yield('title', 'MaxMed UAE - Medical & Laboratory Equipment Supplier')</title>
 
         <!-- Preconnect to external domains -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link rel="preconnect" href="https://www.googletagmanager.com">
-        <link rel="preconnect" href="https://cdn.jsdelivr.net">
+        <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
         
         <!-- Favicon -->
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
@@ -48,23 +48,38 @@
             .lazy-image.loaded { opacity: 1; }
         </style>
 
-        <!-- Preload LCP image -->
+        <!-- Preload critical assets -->
         <link rel="preload" as="image" fetchpriority="high" href="{{ asset('Images/optimized/banner-optimized.webp') }}" type="image/webp">
-
-        <!-- Deferred CSS -->
-        <link rel="stylesheet" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" media="print" onload="this.media='all'">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" media="print" onload="this.media='all'">
-        <link href="{{ asset('css/custom.css') }}" rel="stylesheet" media="print" onload="this.media='all'">
-        <link rel="stylesheet" href="{{ asset('css/mobile.css') }}" media="print" onload="this.media='all'">
+        <link rel="preload" as="font" href="https://fonts.bunny.net/css?family=figtree:400" type="font/woff2" crossorigin>
+        <link rel="preload" as="style" href="{{ Vite::asset('resources/css/app.css') }}">
+        <link rel="preload" as="script" href="{{ Vite::asset('resources/js/app.js') }}">
         
-        <!-- Fallbacks for browsers without JS -->
-        <noscript>
-            <link rel="stylesheet" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap">
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-            <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
-            <link rel="stylesheet" href="{{ asset('css/mobile.css') }}">
-        </noscript>
+        <!-- Modern image formats detection -->
+        <script>
+            // Feature detection for WebP and AVIF support
+            function checkImageFormatSupport() {
+                const html = document.documentElement;
+                
+                // Check WebP support
+                const webpCheck = new Image();
+                webpCheck.onload = function() { html.classList.add('webp'); };
+                webpCheck.onerror = function() { html.classList.add('no-webp'); };
+                webpCheck.src = 'data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==';
+                
+                // Check AVIF support
+                const avifCheck = new Image();
+                avifCheck.onload = function() { html.classList.add('avif'); };
+                avifCheck.onerror = function() { html.classList.add('no-avif'); };
+                avifCheck.src = 'data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAAB0AAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAIAAAACAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACVtZGF0EgAKCBgANogQEAwgMg8f8D///8WfhwB8+ErK42A=';
+            }
+            
+            // Run the detection on page load
+            checkImageFormatSupport();
+        </script>
 
+        <!-- Deferred non-critical CSS -->
+        <link rel="stylesheet" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" media="print" onload="this.media='all'">
+        
         <!-- Vite assets with defer for JS -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -78,18 +93,68 @@
                         entries.forEach(function(entry) {
                             if (entry.isIntersecting) {
                                 let lazyImage = entry.target;
-                                lazyImage.src = lazyImage.dataset.src;
-                                if(lazyImage.dataset.srcset) {
+                                
+                                // Handle responsive images based on viewport width
+                                if (lazyImage.dataset.srcset) {
                                     lazyImage.srcset = lazyImage.dataset.srcset;
+                                } else if (lazyImage.dataset.src) {
+                                    // Determine appropriate size based on viewport and container width
+                                    const viewportWidth = window.innerWidth;
+                                    const containerWidth = lazyImage.parentElement.offsetWidth;
+                                    const src = lazyImage.dataset.src;
+                                    
+                                    // Choose responsive image size if available
+                                    if (viewportWidth < 768 && src.includes('optimized')) {
+                                        const smallSrc = src.replace('-optimized', '-small');
+                                        // Check if small version exists, otherwise fallback to original
+                                        fetch(smallSrc, {method: 'HEAD'})
+                                            .then(response => {
+                                                if (response.ok) {
+                                                    lazyImage.src = smallSrc;
+                                                } else {
+                                                    lazyImage.src = src;
+                                                }
+                                            })
+                                            .catch(() => lazyImage.src = src);
+                                    } else if (viewportWidth < 1200 && src.includes('optimized')) {
+                                        const mediumSrc = src.replace('-optimized', '-medium');
+                                        // Check if medium version exists, otherwise fallback to original
+                                        fetch(mediumSrc, {method: 'HEAD'})
+                                            .then(response => {
+                                                if (response.ok) {
+                                                    lazyImage.src = mediumSrc;
+                                                } else {
+                                                    lazyImage.src = src;
+                                                }
+                                            })
+                                            .catch(() => lazyImage.src = src);
+                                    } else {
+                                        lazyImage.src = src;
+                                    }
                                 }
+                                
                                 lazyImage.classList.add("loaded");
                                 lazyImageObserver.unobserve(lazyImage);
                             }
                         });
+                    }, {
+                        rootMargin: "200px 0px" // Start loading 200px before image enters viewport
                     });
+                    
                     lazyImages.forEach(function(lazyImage) {
                         lazyImageObserver.observe(lazyImage);
                     });
+                } else {
+                    // Fallback for browsers without IntersectionObserver
+                    setTimeout(function() {
+                        lazyImages.forEach(function(lazyImage) {
+                            lazyImage.src = lazyImage.dataset.src;
+                            if(lazyImage.dataset.srcset) {
+                                lazyImage.srcset = lazyImage.dataset.srcset;
+                            }
+                            lazyImage.classList.add("loaded");
+                        });
+                    }, 100);
                 }
             });
         </script>
@@ -100,10 +165,30 @@
         <script defer src="https://www.googletagmanager.com/gtag/js?id=G-5JRSRT4MLZ"></script>
         <script>
             window.addEventListener('load', function() {
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'G-5JRSRT4MLZ');
+                // Delay loading analytics until page is loaded and idle
+                if ('requestIdleCallback' in window) {
+                    requestIdleCallback(function() {
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', 'G-5JRSRT4MLZ', {
+                            'send_page_view': false // Disable automatic page view to control when it fires
+                        });
+                        
+                        // Send pageview after small delay
+                        setTimeout(function() {
+                            gtag('event', 'page_view');
+                        }, 100);
+                    });
+                } else {
+                    // Fallback for browsers without requestIdleCallback
+                    setTimeout(function() {
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', 'G-5JRSRT4MLZ');
+                    }, 3000); // 3-second delay to prioritize page rendering
+                }
             });
         </script>
     </head>
