@@ -8,7 +8,6 @@ use App\Mail\QuotationRequest as QuotationRequestMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 
 class QuotationController extends Controller
 {
@@ -29,7 +28,6 @@ class QuotationController extends Controller
         ]);
 
         $product = Product::findOrFail($request->product_id);
-        $user = Auth::user();
         
         try {
             Log::info('Starting quotation request process');
@@ -38,7 +36,7 @@ class QuotationController extends Controller
             Log::info('Creating QuotationRequest record');
             $quotationRequest = QuotationRequest::create([
                 'product_id' => $product->id,
-                'user_id' => $user ? $user->id : null,
+                'user_id' => null,
                 'quantity' => $request->quantity,
                 'requirements' => $request->requirements,
                 'notes' => $request->notes,
@@ -52,7 +50,7 @@ class QuotationController extends Controller
                     $request->quantity,
                     $request->requirements,
                     $request->notes,
-                    $user
+                    null
                 ));
                 Log::info('Email sent successfully');
             } catch (\Exception $emailError) {
