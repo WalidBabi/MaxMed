@@ -56,11 +56,6 @@ class CategoryController extends Controller
                 ->with('warning', 'The requested category path is invalid.');
         }
 
-        // Check if subsubcategory has products
-        if (!$subsubcategory->products->count()) {
-            return Redirect::route('categories.subcategory.show', [$category, $subcategory])
-                ->with('warning', 'The requested subcategory has no products.');
-        }
         
         $products = $subsubcategory->products;
         return view('categories.products', compact('subsubcategory', 'products'));
