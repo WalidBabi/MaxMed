@@ -12,14 +12,10 @@ class OrderController extends Controller
     public function index()
     {
         try {
-            if (!auth()->user()->hasVerifiedEmail()) {
-                return redirect()->route('verification.notice');
-            }
-            
-            $orders = auth()->user()->orders()->latest()->paginate(10);
+            $orders = Auth::user()->orders()->latest()->paginate(10);
             
             // Add debugging
-            Log::info('User ID: ' . auth()->id());
+            Log::info('User ID: ' . Auth::id());
             Log::info('Orders count: ' . $orders->count());
 
             return view('orders.index', compact('orders'));
@@ -32,7 +28,7 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         try {
-            if (auth()->user()->cannot('view', $order)) {
+            if (Auth::user()->cannot('view', $order)) {
                 abort(403);
             }
 
