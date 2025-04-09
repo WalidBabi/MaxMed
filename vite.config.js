@@ -36,7 +36,7 @@ export default defineConfig({
         // Enable gzip compression
         terserOptions: {
             compress: {
-                drop_console: true,
+                drop_console: false,
             },
         },
     },

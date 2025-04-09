@@ -35,7 +35,7 @@
                     <h4>Request Quotation for {{ $product->name }}</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('quotation.store') }}" method="POST">
+                    <form action="{{ route('quotation.store') }}" method="POST" id="quotationForm">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
 
@@ -58,6 +58,22 @@
 
                         <button type="submit" class="btn btn-primary">Submit Quote Request</button>
                     </form>
+
+                    <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const form = document.getElementById('quotationForm');
+                        
+                        form.addEventListener('submit', function(e) {
+                            try {
+                                console.log('Form submitted');
+                                // Continue with normal form submission
+                            } catch (error) {
+                                console.error('Error during form submission:', error);
+                                alert('Error submitting form: ' + error.message);
+                            }
+                        });
+                    });
+                    </script>
                 </div>
             </div>
         </div>
