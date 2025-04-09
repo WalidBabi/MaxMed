@@ -71,8 +71,12 @@
 
     <div class="section">
         <h3>Customer Information</h3>
-        <p><span class="highlight">Name:</span> {{ $user->name }}</p>
-        <p><span class="highlight">Email:</span> {{ $user->email }}</p>
+        @if(isset($user) && $user)
+            <p><span class="highlight">Name:</span> {{ $user->name }}</p>
+            <p><span class="highlight">Email:</span> {{ $user->email }}</p>
+        @else
+            <p><span class="highlight">Customer:</span> Guest User</p>
+        @endif
     </div>
 
     <div class="footer">

@@ -63,12 +63,16 @@ class QuotationController extends Controller
             // Send email with robust error handling
             try {
                 Log::info('Attempting to send email');
-                Mail::to('cs@maxmedme.com')->send(new QuotationRequestMail(
+                
+                // Check if we need to handle a guest user
+                $mailTo = 'cs@maxmedme.com';
+                
+                Mail::to($mailTo)->send(new QuotationRequestMail(
                     $product,
                     $request->quantity,
                     $request->requirements,
                     $request->notes,
-                    $user
+                    $user // This can be null but we'll handle it in the template
                 ));
                 Log::info('Email sent successfully');
             } catch (\Exception $emailError) {
