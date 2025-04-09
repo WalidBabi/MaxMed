@@ -17,7 +17,7 @@
                         <input type="text" name="query" placeholder="Search product names or codes"
                             class="w-full py-2 pl-4 bg-gray-100 border-none rounded-l-full focus:outline-none text-sm"
                             value="{{ request('query') }}">
-                        <button type="submit" class=" bg-gradient-to-r from-[#171e60] to-[#0a5694] text-white p-2.5 rounded-lg hover:from-[#0a5694] hover:to-[#171e60] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#171e60] focus:ring-opacity-50 shadow-md">
+                        <button type="submit" aria-label="Search products" class=" bg-gradient-to-r from-[#171e60] to-[#0a5694] text-white p-2.5 rounded-lg hover:from-[#0a5694] hover:to-[#171e60] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#171e60] focus:ring-opacity-50 shadow-md">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
@@ -65,8 +65,8 @@
                             </div>
                         </div>
                         @else
-                        <a href="{{ route('register') }}" class="flex items-center text-[#00a9e0] hover:text-[#0089b7] font-normal h-full">Register</a>
-                        <a href="{{ route('login') }}" class="flex items-center text-[#00a9e0] hover:text-[#0089b7] font-normal h-full">Login</a>
+                        <a href="{{ route('register') }}" class="flex items-center text-[#0064a8] hover:text-[#0052a3] font-normal h-full">Register</a>
+                        <a href="{{ route('login') }}" class="flex items-center text-[#0064a8] hover:text-[#0052a3] font-normal h-full">Login</a>
                         @endauth
 
                         <!-- Main Navigation Categories -->
@@ -128,7 +128,7 @@
                         <input type="text" name="query" placeholder="Search product names, codes or CAS number"
                             class="w-full py-2 pl-4 pr-12 bg-gray-200 border-none rounded-full focus:outline-none text-sm"
                             value="{{ request('query') }}">
-                        <button type="submit" class="absolute right-1 top-1/2 transform -translate-y-1/2 bg-[#00a9e0] text-white p-2 rounded-full hover:bg-[#0089b7] focus:outline-none">
+                        <button type="submit" aria-label="Search products" class="absolute right-1 top-1/2 transform -translate-y-1/2 bg-[#0064a8] text-white p-2 rounded-full hover:bg-[#0052a3] focus:outline-none">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
@@ -153,8 +153,8 @@
                     <button type="submit" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Log Out</button>
                 </form>
                 @else
-                <a href="{{ route('login') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Login</a>
-                <a href="{{ route('register') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Register</a>
+                <a href="{{ route('login') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0064a8] hover:bg-gray-50">Login</a>
+                <a href="{{ route('register') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0064a8] hover:bg-gray-50">Register</a>
                 @endauth
             </div>
         </div>

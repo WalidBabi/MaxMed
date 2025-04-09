@@ -773,10 +773,10 @@
             <a href="{{ route('categories.show', $category) }}" class="text-decoration-none">
                 <div class="category-card">
                     <div class="overflow-hidden">
-                        <img src="{{ $category->image_url }}" class="card-img-top" alt="{{ $category->name }}">
+                        <img src="{{ $category->image_url }}" class="card-img-top" alt="Category image for {{ $category->name }}">
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">{{ $category->name }}</h5>
+                        <h3 class="card-title">{{ $category->name }}</h3>
                     </div>
                 </div>
             </a>
@@ -942,17 +942,20 @@
             <div class="absolute bottom-5 left-0 right-0 feature-nav-dots z-10 flex justify-center space-x-3">
                 <button @click="activeSlide = 0"
                     class="h-3 rounded-full transition-all duration-300 transform hover:scale-110"
-                    :class="activeSlide === 0 ? 'w-8 bg-[#171e60]' : 'w-3 bg-white/70 hover:bg-[#171e60]/70'">
+                    :class="activeSlide === 0 ? 'w-8 bg-[#171e60]' : 'w-3 bg-white/70 hover:bg-[#171e60]/70'"
+                    aria-label="Go to slide 1">
                     <span class="sr-only">Slide 1</span>
                 </button>
                 <button @click="activeSlide = 1"
                     class="h-3 rounded-full transition-all duration-300 transform hover:scale-110"
-                    :class="activeSlide === 1 ? 'w-8 bg-[#171e60]' : 'w-3 bg-white/70 hover:bg-[#171e60]/70'">
+                    :class="activeSlide === 1 ? 'w-8 bg-[#171e60]' : 'w-3 bg-white/70 hover:bg-[#171e60]/70'"
+                    aria-label="Go to slide 2">
                     <span class="sr-only">Slide 2</span>
                 </button>
                 <button @click="activeSlide = 2"
                     class="h-3 rounded-full transition-all duration-300 transform hover:scale-110"
-                    :class="activeSlide === 2 ? 'w-8 bg-[#171e60]' : 'w-3 bg-white/70 hover:bg-[#171e60]/70'">
+                    :class="activeSlide === 2 ? 'w-8 bg-[#171e60]' : 'w-3 bg-white/70 hover:bg-[#171e60]/70'"
+                    aria-label="Go to slide 3">
                     <span class="sr-only">Slide 3</span>
                 </button>
             </div>
