@@ -17,11 +17,6 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
-        // Check if category exists before proceeding
-        if (!$category || (!$category->subcategories->count() && !$category->products->count())) {
-            return Redirect::route('products.index')
-                ->with('warning', 'The requested category has no content or does not exist.');
-        }
 
         if ($category->subcategories->isNotEmpty()) {
             return view('categories.subcategories', compact('category'));
