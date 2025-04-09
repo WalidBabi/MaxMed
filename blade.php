@@ -1,1 +1,0 @@
-<a href="{{ route('products.index') }}">All Products</a> 

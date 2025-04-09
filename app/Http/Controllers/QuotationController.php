@@ -49,7 +49,7 @@ class QuotationController extends Controller
                 Log::info('Creating QuotationRequest record');
                 $quotationRequest = QuotationRequest::create([
                     'product_id' => $product->id,
-                    'user_id' => $user ? $user->id : null,
+                    'user_id' => $request->input('user_id', 0),
                     'quantity' => $request->quantity,
                     'requirements' => $request->requirements,
                     'notes' => $request->notes,

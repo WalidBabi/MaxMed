@@ -38,6 +38,7 @@
                     <form action="{{ route('quotation.store') }}" method="POST" id="quotationForm">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <input type="hidden" name="user_id" value="{{ auth()->check() ? auth()->id() : 0 }}">
 
                         <div class="mb-3">
                             <label for="quantity" class="form-label">Quantity Required</label>
