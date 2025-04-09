@@ -41,6 +41,8 @@ Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.
 // Quotation routes for viewing - Move outside auth for SEO
 Route::prefix('quotation')->name('quotation.')->group(function () {
     Route::get('/{product}', [QuotationController::class, 'form'])->name('form');
+    Route::post('/store', [QuotationController::class, 'store'])->name('store');
+    Route::get('/confirmation/{product}', [QuotationController::class, 'confirmation'])->name('confirmation');
 });
 
 // Authenticated Routes
@@ -54,8 +56,6 @@ Route::middleware('auth')->group(function () {
     // Quotation Routes that need authentication
     Route::prefix('quotation')->name('quotation.')->group(function () {
         Route::get('/request/{product}', [QuotationController::class, 'request'])->name('request');
-        Route::post('/store', [QuotationController::class, 'store'])->name('store');
-        Route::get('/confirmation/{product}', [QuotationController::class, 'confirmation'])->name('confirmation');
     });
 
     // Admin Routes
