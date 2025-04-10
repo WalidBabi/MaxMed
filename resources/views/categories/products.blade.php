@@ -106,7 +106,7 @@
         .products-grid {
             margin-top: 15px;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 28px;
         }
         
@@ -345,7 +345,7 @@
         /* Additional responsive improvements */
         @media (max-width: 992px) {
             .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
                 gap: 20px;
             }
         }
@@ -363,7 +363,7 @@
                 gap: 15px;
             }
             .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
                 gap: 15px;
             }
             .button-group {
