@@ -100,7 +100,7 @@
     .category-container {
         margin-top: 15px;
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         gap: 28px;
     }
     
@@ -117,7 +117,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-        border-radius: 12px;
+      
         overflow: hidden;
         transition: all 0.35s;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);

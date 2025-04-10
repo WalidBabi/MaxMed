@@ -126,7 +126,7 @@
         .products-grid {
             margin-top: 15px;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 28px;
         }
         
@@ -172,7 +172,7 @@
             white-space: normal; /* Changed from nowrap to normal */
             overflow: hidden; /* Added to hide overflow */
             text-overflow: ellipsis; /* Added to show ellipsis */
-            font-weight: bold;
+           
             font-size: 1.2em;
             margin-bottom: 10px;
         }
