@@ -82,7 +82,7 @@
     
     .page-title {
         font-size: 1.25rem;
-        font-weight: 700;
+
         color: #333;
         margin-bottom: 0.5rem;
         transition: color 0.3s;
@@ -91,7 +91,7 @@
     .page-description {
         color: #666;
         margin-bottom: 1rem;
-        font-size: 1rem;
+        font-size: 0.875rem;
         max-width: 800px;
         line-height: 1.6;
     }
@@ -154,7 +154,7 @@
     .category-card .card-title {
         text-align: center;
         font-size: 0.875rem;
-        font-weight: 600;
+      
         color: #222;
         margin-bottom: 0;
         position: relative;
@@ -235,7 +235,7 @@
     
     @media (max-width: 768px) {
         .page-title {
-            font-size: 1.7rem;
+            font-size: 1.25rem;
         }
         .category-container {
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -335,7 +335,7 @@
         <div class="col-md-3">
             @include('layouts.sidebar')
         </div>
-        <div class="col-md-9">
+        <div class="col-md-9 mt-2">
             <div class="page-header mb-4">
                 <h1 class="page-title">Laboratory Equipment & Scientific Instruments</h1>
                 <p class="page-description">Explore our comprehensive range of high-quality laboratory equipment, scientific instruments, diagnostic tools, and innovative research solutions tailored for your facility's needs. MaxMed UAE offers the latest in lab technology for healthcare and research professionals.</p>

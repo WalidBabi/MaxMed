@@ -81,8 +81,8 @@
     }
     
     .page-title {
-        font-size: 2rem;
-        font-weight: 700;
+        font-size: 1.25rem;
+     
         color: #333;
         margin-bottom: 0.5rem;
         transition: color 0.3s;
@@ -91,24 +91,12 @@
     .page-description {
         color: #666;
         margin-bottom: 1rem;
-        font-size: 1.1rem;
+        font-size: 0.875rem;
         max-width: 800px;
         line-height: 1.6;
     }
     
-    /* Breadcrumb styling */
-    .custom-breadcrumb {
-        padding: 0.5rem 0;
-        margin-bottom: 1.5rem;
-        background: transparent;
-    }
     
-    .custom-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
-        content: "›";
-        color: #17a2b8;
-        font-weight: bold;
-        padding: 0 0.5rem;
-    }
 
     /* Enhanced Subcategory Card Styling */
     .subcategory-container {
@@ -166,7 +154,7 @@
     
     .subcategory-card .card-title {
         text-align: center;
-        font-size: 1.3rem;
+        font-size: 0.875rem;
        
         color: #222;
         margin-bottom: 0;
@@ -227,7 +215,7 @@
     
     @media (max-width: 768px) {
         .page-title {
-            font-size: 1.7rem;
+            font-size: 1.25rem;
         }
         .subcategory-container {
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -327,18 +315,12 @@
         <div class="col-md-3">
             @include('layouts.sidebar')
         </div>
-        <div class="col-md-9">
+        <div class="col-md-9 mt-2">
             <div class="page-header mb-4">
                 <h1 class="page-title">{{ $category->name }}</h1>
                 <p class="page-description">Browse subcategories of {{ $category->name }}. Explore our range of high-quality laboratory equipment and scientific instruments.</p>
                 
-                <nav aria-label="breadcrumb" class="custom-breadcrumb">
-                    <ol class="breadcrumb">
-                        
-                        <li class="breadcrumb-item"><a href="{{ route('categories.index') }}">Categories</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ $category->name }}</li>
-                    </ol>
-                </nav>
+               
             </div>
             
             <div class="subcategory-container">
@@ -356,13 +338,7 @@
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">{{ $subcategory->name }}</h5>
-                                <p class="text-center mt-2 mb-0 text-muted small">
-                                    @if($subcategory->hasSubcategories())
-                                    View Subcategories
-                                    @else
-                                    View Products
-                                    @endif
-                                </p>
+                              
                             </div>
                         </div>
                     </a>

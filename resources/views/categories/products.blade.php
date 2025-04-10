@@ -11,8 +11,8 @@
             padding-left: 15px;
         }
         .category-title {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 1.25rem;
+           
             color: #333;
             margin-bottom: 0.5rem;
             transition: color 0.3s;
@@ -25,27 +25,7 @@
             line-height: 1.6;
         }
         
-        /* Enhanced Breadcrumb */
-        .breadcrumb {
-            background-color: transparent;
-            padding: 0.75rem 0;
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        .breadcrumb-item a {
-            color: #6c757d;
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-        .breadcrumb-item a:hover {
-            color: #28a745;
-        }
-        .breadcrumb-item.active {
-            color: #333;
-            font-weight: 600;
-        }
-        
+            
         /* Enhanced Filters Row */
         .filters-row {
             background-color: #f8f9fa;
@@ -72,7 +52,7 @@
         }
         .counter-number {
             font-size: 1.8rem;
-            font-weight: 700;
+            : 700;
             color: #28a745;
             line-height: 1.2;
             animation: countPulse 2s ease-in-out;
@@ -85,7 +65,7 @@
         .counter-label {
             color: #555;
             font-size: 1.15rem;
-            font-weight: 500;
+        
         }
         
         /* Enhanced Empty State */
@@ -110,7 +90,7 @@
         }
         .empty-state-message {
             font-size: 1.8rem;
-            font-weight: 600;
+            : 600;
             color: #495057;
             margin-bottom: 20px;
         }
@@ -216,7 +196,7 @@
             padding: 6px 12px;
             border-radius: 20px;
             letter-spacing: 0.5px;
-            font-weight: 600;
+            : 600;
         }
         .badge.bg-success {
             background-color: #28a745 !important;
@@ -231,7 +211,7 @@
         .btn {
             border-radius: 8px;
             margin-top: 5px;
-            font-weight: 600;
+         
             padding: 12px 20px;
             text-transform: uppercase;
             letter-spacing: 0.6px;
@@ -307,7 +287,7 @@
         }
         .quantity-controls label {
             margin-bottom: 0;
-            font-weight: 600;
+          
             color: #444;
             margin-right: 10px;
         }
@@ -349,7 +329,7 @@
         .pagination-container .page-link {
             border: none;
             color: #555;
-            font-weight: 500;
+    
             padding: 12px 18px;
             transition: all 0.2s;
         }
@@ -372,7 +352,7 @@
         
         @media (max-width: 768px) {
             .category-title {
-                font-size: 1.7rem;
+                font-size: 1.25rem;
             }
             .counter-number {
                 font-size: 1.5rem;
@@ -412,23 +392,19 @@
         }
     </style>
     
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('welcome') }}"><i class="fas fa-home me-1"></i>Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('categories.index') }}">Categories</a></li>
-            <li class="breadcrumb-item active">{{ isset($category) ? $category->name : 'Products' }}</li>
-        </ol>
-    </nav>
+   
     
     <div class="row">
         <div class="col-md-3">
             @include('layouts.sidebar')
         </div>
-        <div class="col-md-9">
+        <div class="col-md-9 mt-2">
             <div class="category-header">
                 <h1 class="category-title">{{ isset($category) ? $category->name : 'All Products' }}</h1>
                 <p class="category-description">{{ isset($category) && $category->description ? $category->description : 'Browse our selection of high-quality products' }}</p>
+           
             </div>
+            
             
             <div class="filters-row">
                 <div class="product-counter">
@@ -484,14 +460,11 @@
                                                     value="1" min="1" max="{{ $product->inventory->quantity }}" 
                                                     class="form-control">
                                             </div> -->
-                                            <div class="button-group">
-                                                <!-- <button type="submit" class="btn btn-primary w-100">
-                                                    <i class="fas fa-shopping-cart me-2"></i> Add to Cart
-                                                </button> -->
-                                                <a href="{{ route('product.show', $product) }}" class="btn btn-secondary w-100 mb-2">
+                                            <div class="button-group" style="max-width: 200px; margin: 0 auto;">
+                                                <a href="{{ route('product.show', $product) }}" class="btn w-100 mb-2" style="background-color: #0a5694; color: white; font-size: 0.875rem; padding: 0.5rem 0.75rem;">
                                                     <i class="fas fa-eye me-2"></i> View Details
                                                 </a>
-                                                <a href="{{ route('quotation.form', $product) }}" class="btn btn-secondary w-100">
+                                                <a href="{{ route('quotation.form', $product) }}" class="btn w-100" style="background-color: #0a5694; color: white; font-size: 0.875rem; padding: 0.5rem 0.75rem;">
                                                     <i class="fas fa-file-invoice me-2"></i> Request Quote
                                                 </a>
                                             </div>

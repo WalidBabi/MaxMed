@@ -5,9 +5,9 @@
             <!-- Top section with Logo and Links -->
             <div class="flex justify-between items-center">
                 <!-- Logo - Now positioned between top and main navigation -->
-                <div class="flex justify-center py-1">
-                    <a href="{{ route('welcome') }}" class="transition hover:opacity-90">
-                        <img src="{{ asset('Images/logo.png') }}" alt="MaxMed Logo" class="block h-[60px] w-[236px] mr-5">
+                <div class="flex justify-center py-1 flex-shrink-0">
+                    <a href="{{ route('welcome') }}" class="transition hover:opacity-90 flex-shrink-0">
+                        <img src="{{ asset('Images/logo.png') }}" alt="MaxMed Logo" class="block h-[60px] w-[236px] mr-5 min-h-[60px] min-w-[236px] flex-shrink-0 !important">
                     </a>
                 </div>
                 

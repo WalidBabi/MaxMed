@@ -57,7 +57,7 @@
         padding: 0.75rem 1.75rem;
         border-radius: 50px;
       
-        font-size: 1rem;
+        font-size: 0.875rem;;
         transition: all 0.3s ease;
         border: 2px solid transparent;
         box-shadow: 0 4px 15px rgba(23, 30, 96, 0.4);
@@ -135,12 +135,11 @@
     /* Features Section */
     .features-section {
         background-color: #f8f9fa;
-        padding: 5rem 0;
+     
     }
 
     .section-title {
         font-size: 2rem;
-        font-weight: 600;
         text-align: center;
         margin-bottom: 3rem;
         position: relative;
@@ -184,7 +183,6 @@
 
     .feature-title {
         font-size: 1.6rem;
-        font-weight: 600;
         margin-bottom: 1rem;
     }
 
@@ -217,10 +215,7 @@
         border-radius: 3px;
     }
 
-    /* Suppliers Section */
-    .suppliers-section {
-        padding: 4rem 0;
-    }
+
 
     .supplier-slide {
         height: 100px;
@@ -327,14 +322,14 @@
         }
 
         .feature-slide {
-            height: auto;
+            height: 600px; /* Increase height for mobile to accommodate stacked content */
         }
 
-        .feature-slide .d-flex {
+        .feature-slide .flex {
             flex-direction: column;
         }
 
-        .feature-slide .w-1\/2 {
+        .feature-slide .md\:w-1\/2 {
             width: 100%;
         }
 
@@ -348,7 +343,7 @@
         }
 
         .category-card .card-title {
-            font-size: 1rem;
+            font-size: 0.875rem;
         }
     }
 
@@ -571,7 +566,7 @@
 
     .category-card .card-title {
         text-align: center;
-        font-size: 1.1rem;
+        font-size: 0.875rem;
      
         color: #222;
         margin-bottom: 0;
@@ -637,7 +632,7 @@
         }
 
         .category-card .card-title {
-            font-size: 1rem;
+            font-size: 0.875rem;;
         }
 
         .feature-slide .w-1\/2 {
@@ -788,7 +783,7 @@
 <!-- Start of Selection -->
 <!-- Start of Selection -->
 <!-- FEATURED PROMOTIONS -->
-<div class="py-20 max-w-7xl mx-auto px-4">
+<div class="py-10 max-w-7xl mx-auto px-4">
     <h3 class="section-title">Featured Products</h3>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
@@ -823,7 +818,7 @@
             </div>
 
             <div class="p-4">
-                <h4 class="text-base font-medium text-gray-900 mb-1">{{ $product->name }}</h4>
+                <h4 class="small font-medium text-gray-900 mb-1">{{ $product->name }}</h4>
 
                 <div class="flex items-end justify-between mt-2">
                     <!-- <div>
@@ -860,7 +855,7 @@
 </div>
 
 <!-- why choose maxmed Section -->
-<div class="features-section py-8 md:py-16">
+<div class="features-section py-8 md:py-10">
     <div class="max-w-7xl mx-auto px-4" x-data="{ activeSlide: 0, autoplay: null }" x-init="autoplay = setInterval(() => { activeSlide = activeSlide === 2 ? 0 : activeSlide + 1 }, 5000)">
         <h3 class="section-title text-center">Why Choose MaxMed?</h3>
 
@@ -965,7 +960,7 @@
     </div>
 </div>
 <!-- Key Suppliers Section -->
-<div class="suppliers-section max-w-7xl mx-auto px-4">
+<div class=" max-w-7xl mx-auto px-4">
     <h3 class="section-title">Key Suppliers</h3>
     <div x-data="{ activeSupplier: 0 }"
         x-init="setInterval(() => { activeSupplier = activeSupplier === 1 ? 0 : activeSupplier + 1 }, 5000)"
