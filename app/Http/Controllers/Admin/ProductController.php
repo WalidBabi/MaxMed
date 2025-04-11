@@ -11,13 +11,57 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category')
-            ->latest()
-            ->paginate(10);
-
-        return view('admin.products.index', compact('products'));
+        $query = Product::with(['category', 'inventory']);
+        
+        // Filter by product name
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('name', 'like', "%{$search}%");
+        }
+        
+        // Filter by category
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->input('category_id'));
+        }
+        
+        // Filter by price range
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->input('min_price'));
+        }
+        
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->input('max_price'));
+        }
+        
+        // Filter by stock status
+        if ($request->filled('stock_status')) {
+            if ($request->input('stock_status') === 'in_stock') {
+                $query->whereHas('inventory', function($q) {
+                    $q->where('quantity', '>', 0);
+                });
+            } elseif ($request->input('stock_status') === 'out_of_stock') {
+                $query->whereHas('inventory', function($q) {
+                    $q->where('quantity', '=', 0);
+                });
+            }
+        }
+        
+        // Apply sorting
+        $sortBy = $request->input('sort_by', 'created_at');
+        $sortOrder = $request->input('sort_order', 'desc');
+        $query->orderBy($sortBy, $sortOrder);
+        
+        $products = $query->paginate(10);
+        
+        // Preserve query parameters in pagination links
+        $products->appends($request->all());
+        
+        // Get all categories for the filter dropdown
+        $categories = Category::all();
+        
+        return view('admin.products.index', compact('products', 'categories'));
     }
 
     public function create()

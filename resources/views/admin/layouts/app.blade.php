@@ -16,14 +16,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
+        :root {
+            --bg-color: #ffffff;
+            --main-color: #171e60;
+            --aux1-color: #0a5694;
+            --aux2-color: #ffffff;
+        }
+        
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
+            background-color: var(--bg-color);
         }
         
         .admin-sidebar {
-            background: #2c3e50;
-            color: #ecf0f1;
+            background: var(--main-color);
+            color: var(--aux2-color);
             width: 260px;
             min-height: 100vh;
             transition: all 0.3s;
@@ -47,17 +54,17 @@
         .nav-pills .nav-link:hover {
             background-color: rgba(255, 255, 255, 0.1);
             color: #fff;
-            border-left: 3px solid #3498db;
+            border-left: 3px solid var(--aux1-color);
         }
         
         .nav-pills .nav-link.active {
-            background-color: rgba(52, 152, 219, 0.2);
+            background-color: rgba(10, 86, 148, 0.2);
             color: #fff;
-            border-left: 3px solid #3498db;
+            border-left: 3px solid var(--aux1-color);
         }
 
         .admin-top-navbar {
-            background-color: #fff;
+            background-color: var(--bg-color);
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
             height: 60px;
         }
@@ -68,21 +75,48 @@
         }
         
         .alert {
-            border-radius: 3px;
-            border-left: 4px solid;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 8px 32px 0 rgba(31, 38, 135, 0.37),
+                inset 0 0 80px rgba(255, 255, 255, 0.3);
+            position: relative;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+        
+        .alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(
+                180deg,
+                rgba(255, 255, 255, 0.3) 0%,
+                rgba(255, 255, 255, 0.1) 100%
+            );
+            border-radius: 8px 8px 0 0;
+            pointer-events: none;
         }
         
         .alert-success {
-            border-left-color: #2ecc71;
+            background: linear-gradient(135deg, rgba(25, 135, 84, 0.1), rgba(255, 255, 255, 0.9));
+            border-left: 4px solid #2ecc71;
         }
         
         .alert-danger {
-            border-left-color: #e74c3c;
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(255, 255, 255, 0.9));
+            border-left: 4px solid #e74c3c;
         }
         
         .dropdown-menu {
             border: none;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            overflow: hidden;
         }
         
         .user-dropdown .dropdown-toggle::after {
@@ -90,14 +124,115 @@
         }
         
         .btn-view-site {
-            background-color: #3498db;
+            background-color: var(--aux1-color);
             color: white;
             transition: all 0.2s;
+            border-radius: 20px;
+            padding: 5px 15px;
         }
         
         .btn-view-site:hover {
-            background-color: #2980b9;
+            background-color: var(--main-color);
             color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Card Styling */
+        .card {
+            border: none;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.35s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card .card-header {
+            background-color: var(--bg-color);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .card .card-title {
+            color: var(--main-color);
+            position: relative;
+        }
+        
+        /* Button Styling */
+        .btn-primary {
+            background-color: var(--main-color);
+            border-color: var(--main-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--aux1-color);
+            border-color: var(--aux1-color);
+        }
+        
+        .btn-outline-primary {
+            color: var(--main-color);
+            border-color: var(--main-color);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--main-color);
+            border-color: var(--main-color);
+            color: white;
+        }
+        
+        /* Page Header Styling */
+        .page-header {
+            margin-bottom: 1.5rem;
+            position: relative;
+            border-left: 4px solid var(--aux1-color);
+            padding-left: 15px;
+        }
+        
+        .page-title {
+            font-size: 1.25rem;
+            color: var(--main-color);
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+        
+        /* Pagination styling */
+        .pagination {
+            margin-bottom: 0;
+        }
+        
+        .page-item.active .page-link {
+            background-color: var(--main-color);
+            border-color: var(--main-color);
+            color: white;
+        }
+        
+        .page-link {
+            color: var(--main-color);
+            padding: 0.5rem 0.75rem;
+            margin-left: -1px;
+            line-height: 1.25;
+            border: 1px solid #dddfeb;
+        }
+        
+        .page-link:hover {
+            color: var(--aux1-color);
+            background-color: #eaecf4;
+            border-color: #dddfeb;
+        }
+        
+        .page-link:focus {
+            box-shadow: 0 0 0 0.2rem rgba(23, 30, 96, 0.25);
+        }
+        
+        .page-item.disabled .page-link {
+            color: #858796;
+            pointer-events: none;
+            background-color: #fff;
+            border-color: #dddfeb;
         }
     </style>
 
@@ -152,7 +287,7 @@
             <div class="px-3 pb-3">
                 <div class="user-dropdown dropdown">
                     <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=3498db&color=fff" 
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=0a5694&color=fff" 
                             alt="User" width="36" height="36" class="rounded-circle me-2">
                         <div>
                             <strong>{{ Auth::user()->name }}</strong>
