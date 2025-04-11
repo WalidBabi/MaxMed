@@ -763,7 +763,19 @@
 
         // Image gallery
         function changeImage(src) {
-            document.getElementById('product-image').src = src;
+            const mainImage = document.getElementById('product-image');
+            mainImage.src = src;
+            
+            // Remove event listeners from previous image to avoid duplicates
+            const glass = document.getElementById("img-magnifier-glass");
+            const panel = document.getElementById("magnifier-panel");
+            if (glass) glass.style.display = "none";
+            if (panel) panel.style.display = "none";
+            
+            // Wait for the image to load, then reinitialize magnifier
+            setTimeout(function() {
+                magnify("product-image", 0.4);
+            }, 100);
             
             // Update active thumbnail
             document.querySelectorAll('.small-img').forEach(img => {
@@ -782,9 +794,7 @@
 
         smallImgs.forEach(img => {
             img.addEventListener('click', function() {
-                mainProductImage.src = this.src;
-                smallImgs.forEach(i => i.classList.remove('active'));
-                this.classList.add('active');
+                changeImage(this.src);
             });
         });
 
