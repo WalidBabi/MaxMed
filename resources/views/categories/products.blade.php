@@ -20,7 +20,7 @@
         .category-description {
             color: #666;
             margin-bottom: 1rem;
-            font-size: 1.1rem;
+            font-size: 0.875rem;
             max-width: 800px;
             line-height: 1.6;
         }
