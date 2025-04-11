@@ -110,8 +110,8 @@ class ProductController extends Controller
             'price_aed' => 'required|numeric|min:0',
             'inventory_quantity' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'delete_images' => 'nullable|string',
             'primary_image_id' => 'nullable|exists:product_images,id'
         ]);
