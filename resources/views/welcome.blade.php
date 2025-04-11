@@ -763,7 +763,17 @@
             });
         }, 300);
     ">
-        @foreach($categories->where('parent_id', null) as $category)
+        @foreach($categories->where('parent_id', null)->sortBy(function($category) {
+            // Define your preferred order here - replace these with your actual category names
+            $order = [
+                'Molecular & Clinical Diagnostics' => 1,
+                'Lab Equipment' => 2, 
+                'Medical Consumables' => 3,
+                'Life Science & Research' => 4
+                // Add more as needed
+            ];
+            return $order[$category->name] ?? 999; // Categories not in list will appear last
+        }) as $category)
         <div class="category-card-wrapper" style="opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.5s ease;">
             <a href="{{ route('categories.show', $category) }}" class="text-decoration-none">
                 <div class="category-card">
