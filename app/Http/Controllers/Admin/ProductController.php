@@ -37,8 +37,8 @@ class ProductController extends Controller
             'price_aed' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif',
-            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif'
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5000',
+            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000'
         ]);
 
         DB::transaction(function () use ($request, $validated) {
@@ -110,8 +110,8 @@ class ProductController extends Controller
             'price_aed' => 'required|numeric|min:0',
             'inventory_quantity' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
-            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000',
+            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000',
             'delete_images' => 'nullable|string',
             'primary_image_id' => 'nullable|exists:product_images,id'
         ]);
