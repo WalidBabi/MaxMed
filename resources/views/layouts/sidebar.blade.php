@@ -12,7 +12,17 @@
             </a>
             
             <div class="space-y-1">
-                @foreach(\App\Models\Category::whereNull('parent_id')->with(['subcategories.subcategories'])->get() as $category)
+                @foreach(\App\Models\Category::whereNull('parent_id')->with(['subcategories.subcategories'])->get()->sortBy(function($category) {
+                    // Define your preferred order here - same as welcome page
+                    $order = [
+                        'Molecular & Clinical Diagnostics' => 1,
+                        'Lab Equipment' => 2, 
+                        'Medical Consumables' => 3,
+                        'Life Science & Research' => 4
+                        // Add more as needed
+                    ];
+                    return $order[$category->name] ?? 999; // Categories not in list will appear last
+                }) as $category)
                 <div class="category-item mb-1" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
                     <a href="{{ route('categories.show', $category) }}"
                         class="flex items-center h-10 px-3 rounded-lg transition-colors {{ request('category') === $category->name ? 'bg-[#0a5694] text-white' : 'hover:bg-[#2a3387] group' }}"
