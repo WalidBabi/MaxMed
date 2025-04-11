@@ -464,10 +464,15 @@
                         <img src="{{ $product->image_url }}" class="product-image" id="product-image" alt="{{ $product->name }}">
                         <div id="img-magnifier-glass"></div>
                     </div>
-                    @if($product->images && $product->images->count() > 1)
+                    @if($product->images && $product->images->count() > 0)
                     <div class="small-img-group">
-                        @foreach($product->images as $image)
-                        <img src="{{ $image->image_url }}" class="small-img {{ $image->is_primary ? 'active' : '' }}" 
+                        <!-- Always include the main product image in thumbnails -->
+                        <img src="{{ $product->image_url }}" class="small-img active" 
+                             alt="{{ $product->name }}" onclick="changeImage('{{ $product->image_url }}')">
+                             
+                        <!-- Display additional non-primary images -->
+                        @foreach($product->images->where('is_primary', false) as $image)
+                        <img src="{{ $image->image_url }}" class="small-img" 
                              alt="{{ $product->name }}" onclick="changeImage('{{ $image->image_url }}')">
                         @endforeach
                     </div>
