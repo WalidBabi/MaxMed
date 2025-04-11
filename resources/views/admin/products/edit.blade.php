@@ -95,7 +95,7 @@
 
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="image" class="form-label">Product Image</label>
+                                    <label for="image" class="form-label">Primary Product Image</label>
                                     @if($product->image)
                                         <div class="mb-3">
                                             <img src="{{ Storage::url($product->image) }}" 
@@ -105,6 +105,48 @@
                                     @endif
                                     <input type="file" name="image" id="image" class="form-control">
                                     @error('image')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="additional_images" class="form-label">Additional Product Images</label>
+                                    
+                                    @if($product->images->count() > 0)
+                                        <div class="row mb-3">
+                                            @foreach($product->images as $image)
+                                                <div class="col-md-3 col-sm-4 col-6 mb-3 position-relative">
+                                                    <img src="{{ $image->image_url }}" 
+                                                         alt="Product image" 
+                                                         class="img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+                                                    <div class="mt-2 d-flex">
+                                                        <button type="button" class="btn btn-sm btn-outline-danger me-2 delete-image" 
+                                                                data-image-id="{{ $image->id }}">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                        <button type="button" class="btn btn-sm btn-outline-primary set-primary-image {{ $image->is_primary ? 'active' : '' }}"
+                                                                data-image-id="{{ $image->id }}" {{ $image->is_primary ? 'disabled' : '' }}>
+                                                            <i class="fas fa-star"></i> {{ $image->is_primary ? 'Primary' : 'Set Primary' }}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <input type="hidden" name="delete_images" id="delete_images">
+                                            <input type="hidden" name="primary_image_id" id="primary_image_id">
+                                        </div>
+                                    @endif
+
+                                    <input type="file" name="additional_images[]" id="additional_images" class="form-control" multiple>
+                                    <small class="text-muted">You can select multiple images (hold Ctrl or Cmd while selecting)</small>
+                                    @error('additional_images')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                    @error('additional_images.*')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -123,3 +165,58 @@
     </div>
 </div>
 @endsection
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Image deletion
+    const deleteButtons = document.querySelectorAll('.delete-image');
+    const deleteImagesInput = document.getElementById('delete_images');
+    let imagesToDelete = [];
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const imageId = this.getAttribute('data-image-id');
+            const imageContainer = this.closest('.col-md-3');
+            
+            // Add image ID to the list of images to delete
+            imagesToDelete.push(imageId);
+            deleteImagesInput.value = imagesToDelete.join(',');
+            
+            // Visually hide the image
+            imageContainer.style.opacity = '0.3';
+            this.disabled = true;
+            
+            // Show a message that the image will be deleted on save
+            const message = document.createElement('div');
+            message.classList.add('badge', 'bg-danger', 'position-absolute', 'top-0', 'end-0');
+            message.innerHTML = 'Will be deleted';
+            imageContainer.appendChild(message);
+        });
+    });
+    
+    // Primary image setting
+    const primaryButtons = document.querySelectorAll('.set-primary-image');
+    const primaryImageInput = document.getElementById('primary_image_id');
+
+    primaryButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const imageId = this.getAttribute('data-image-id');
+            
+            // Reset all buttons
+            primaryButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-star"></i> Set Primary';
+            });
+            
+            // Set this button as active
+            this.classList.add('active');
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-star"></i> Primary';
+            
+            // Set the primary image ID
+            primaryImageInput.value = imageId;
+        });
+    });
+});
+</script>

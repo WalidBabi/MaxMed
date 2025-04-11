@@ -464,6 +464,14 @@
                         <img src="{{ $product->image_url }}" class="product-image" id="product-image" alt="{{ $product->name }}">
                         <div id="img-magnifier-glass"></div>
                     </div>
+                    @if($product->images && $product->images->count() > 1)
+                    <div class="small-img-group">
+                        @foreach($product->images as $image)
+                        <img src="{{ $image->image_url }}" class="small-img {{ $image->is_primary ? 'active' : '' }}" 
+                             alt="{{ $product->name }}" onclick="changeImage('{{ $image->image_url }}')">
+                        @endforeach
+                    </div>
+                    @endif
                 </div>
 
                 <div class="col-lg-12">
@@ -754,6 +762,21 @@
         }
 
         // Image gallery
+        function changeImage(src) {
+            document.getElementById('product-image').src = src;
+            
+            // Update active thumbnail
+            document.querySelectorAll('.small-img').forEach(img => {
+                img.classList.remove('active');
+                if (img.src === src) {
+                    img.classList.add('active');
+                }
+            });
+        }
+        
+        // Make changeImage function globally available
+        window.changeImage = changeImage;
+
         const smallImgs = document.querySelectorAll('.small-img');
         const mainProductImage = document.querySelector('.product-image');
 

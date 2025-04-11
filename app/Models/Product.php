@@ -23,6 +23,16 @@ class Product extends Model
         return $this->hasOne(Inventory::class);
     }
 
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('sort_order');
+    }
+
+    public function primaryImage()
+    {
+        return $this->hasOne(ProductImage::class)->where('is_primary', true);
+    }
+
     public function inStock()
     {
         // If no inventory record exists, you could default to 0 or handle it otherwise.

@@ -104,9 +104,23 @@
 
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="image" class="form-label">Product Image</label>
+                                    <label for="image" class="form-label">Primary Product Image</label>
                                     <input type="file" name="image" id="image" class="form-control">
                                     @error('image')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="additional_images" class="form-label">Additional Product Images</label>
+                                    <input type="file" name="additional_images[]" id="additional_images" class="form-control" multiple>
+                                    <small class="text-muted">You can select multiple images (hold Ctrl or Cmd while selecting)</small>
+                                    @error('additional_images')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                    @error('additional_images.*')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
                                 </div>

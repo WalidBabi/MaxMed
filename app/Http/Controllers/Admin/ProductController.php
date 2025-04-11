@@ -37,20 +37,59 @@ class ProductController extends Controller
             'price_aed' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            $validated['image_url'] = asset('storage/' . $path); // Use asset() to generate URL
-        }
+        DB::transaction(function () use ($request, $validated) {
+            // Create the product first
+            $product = Product::create([
+                'name' => $validated['name'],
+                'description' => $validated['description'],
+                'price' => $validated['price'],
+                'price_aed' => $validated['price_aed'],
+                'category_id' => $validated['category_id'],
+                'image_url' => null, // Will be replaced by primary image
+            ]);
 
-        $product = Product::create($validated);
+            // Create inventory record
+            $product->inventory()->create([
+                'quantity' => $validated['stock']
+            ]);
 
-        // Create inventory record
-        $product->inventory()->create([
-            'quantity' => $validated['stock'] // Save quantity to inventory
-        ]);
+            // Handle primary image
+            if ($request->hasFile('image')) {
+                $path = $request->file('image')->store('products', 'public');
+                $imageUrl = asset('storage/' . $path);
+                
+                // Save primary image in product_images table
+                $primaryImage = $product->images()->create([
+                    'image_path' => $path,
+                    'image_url' => $imageUrl,
+                    'is_primary' => true,
+                    'sort_order' => 0
+                ]);
+                
+                // Also save in product's main image_url field for backward compatibility
+                $product->update(['image_url' => $imageUrl]);
+            }
+
+            // Handle additional images
+            if ($request->hasFile('additional_images')) {
+                $sortOrder = 1;
+                foreach ($request->file('additional_images') as $image) {
+                    $path = $image->store('products', 'public');
+                    $imageUrl = asset('storage/' . $path);
+                    
+                    $product->images()->create([
+                        'image_path' => $path,
+                        'image_url' => $imageUrl,
+                        'is_primary' => false,
+                        'sort_order' => $sortOrder++
+                    ]);
+                }
+            }
+        });
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Product created successfully');
@@ -71,18 +110,11 @@ class ProductController extends Controller
             'price_aed' => 'required|numeric|min:0',
             'inventory_quantity' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'delete_images' => 'nullable|string',
+            'primary_image_id' => 'nullable|exists:product_images,id'
         ]);
-
-        if ($request->hasFile('image')) {
-            // Delete the old image if it exists
-            if ($product->image_url && Storage::disk('public')->exists(str_replace(asset('storage/'), '', $product->image_url))) {
-                Storage::disk('public')->delete(str_replace(asset('storage/'), '', $product->image_url));
-            }
-            // Store new image
-            $path = $request->file('image')->store('products', 'public');
-            $validated['image_url'] = asset('storage/' . $path); // Use asset() to generate URL
-        }
 
         DB::transaction(function () use ($request, $product, $validated) {
             // Update product details
@@ -92,13 +124,101 @@ class ProductController extends Controller
                 'price' => $request->price,
                 'price_aed' => $request->price_aed,
                 'category_id' => $request->category_id,
-                'image_url' => $validated['image_url'] ?? $product->image_url,
             ]);
 
             // Update inventory quantity
             $product->inventory->update([
                 'quantity' => $request->inventory_quantity
             ]);
+
+            // Handle primary image upload if provided
+            if ($request->hasFile('image')) {
+                $path = $request->file('image')->store('products', 'public');
+                $imageUrl = asset('storage/' . $path);
+                
+                // If this product already has a primary image, update it
+                if ($primaryImage = $product->images()->where('is_primary', true)->first()) {
+                    // Delete the old primary image file
+                    if (Storage::disk('public')->exists($primaryImage->image_path)) {
+                        Storage::disk('public')->delete($primaryImage->image_path);
+                    }
+                    
+                    // Update the primary image record
+                    $primaryImage->update([
+                        'image_path' => $path,
+                        'image_url' => $imageUrl
+                    ]);
+                } else {
+                    // Create a new primary image record
+                    $product->images()->create([
+                        'image_path' => $path,
+                        'image_url' => $imageUrl,
+                        'is_primary' => true,
+                        'sort_order' => 0
+                    ]);
+                }
+                
+                // Update product's main image_url field for backward compatibility
+                $product->update(['image_url' => $imageUrl]);
+            }
+
+            // Handle additional images
+            if ($request->hasFile('additional_images')) {
+                $sortOrder = $product->images()->max('sort_order') + 1;
+                foreach ($request->file('additional_images') as $image) {
+                    $path = $image->store('products', 'public');
+                    $imageUrl = asset('storage/' . $path);
+                    
+                    $product->images()->create([
+                        'image_path' => $path,
+                        'image_url' => $imageUrl,
+                        'is_primary' => false,
+                        'sort_order' => $sortOrder++
+                    ]);
+                }
+            }
+
+            // Handle image deletions
+            if ($request->filled('delete_images')) {
+                $imageIds = explode(',', $request->delete_images);
+                
+                foreach ($imageIds as $imageId) {
+                    $image = $product->images()->find($imageId);
+                    
+                    if ($image) {
+                        // Extract the relative path from the image_path
+                        // If image_path already contains the relative path
+                        if (Storage::disk('public')->exists($image->image_path)) {
+                            Storage::disk('public')->delete($image->image_path);
+                        } 
+                        // If image_path contains full URL
+                        else if (str_contains($image->image_url, 'storage/')) {
+                            $relativePath = str_replace(asset('storage/'), '', $image->image_url);
+                            if (Storage::disk('public')->exists($relativePath)) {
+                                Storage::disk('public')->delete($relativePath);
+                            }
+                        }
+                        
+                        // Delete the database record
+                        $image->delete();
+                    }
+                }
+            }
+
+            // Handle changing the primary image
+            if ($request->filled('primary_image_id')) {
+                // Reset all images to non-primary
+                $product->images()->update(['is_primary' => false]);
+                
+                // Set the new primary image
+                $newPrimaryImage = $product->images()->find($request->primary_image_id);
+                if ($newPrimaryImage) {
+                    $newPrimaryImage->update(['is_primary' => true, 'sort_order' => 0]);
+                    
+                    // Update the product's main image_url field
+                    $product->update(['image_url' => $newPrimaryImage->image_url]);
+                }
+            }
         });
 
         return redirect()->route('admin.products.index')
@@ -107,7 +227,25 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        // Delete the image
+        // Delete all product images
+        foreach ($product->images as $image) {
+            // Extract the relative path from the image_path
+            if (Storage::disk('public')->exists($image->image_path)) {
+                Storage::disk('public')->delete($image->image_path);
+            } 
+            // If image_path contains full URL
+            else if (str_contains($image->image_url, 'storage/')) {
+                $relativePath = str_replace(asset('storage/'), '', $image->image_url);
+                if (Storage::disk('public')->exists($relativePath)) {
+                    Storage::disk('public')->delete($relativePath);
+                }
+            }
+        }
+        
+        // Delete the image records
+        $product->images()->delete();
+
+        // Delete the main image if it exists
         if ($product->image_url && Storage::disk('public')->exists(str_replace(asset('storage/'), '', $product->image_url))) {
             Storage::disk('public')->delete(str_replace(asset('storage/'), '', $product->image_url));
         }
