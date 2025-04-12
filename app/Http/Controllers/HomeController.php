@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -22,6 +23,12 @@ class HomeController extends Controller
         ->take(4)
         ->get();
         
-        return view('welcome', compact('categories', 'featuredProducts'));
+        // Get featured brands
+        $featuredBrands = Brand::where('is_featured', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+        
+        return view('welcome', compact('categories', 'featuredProducts', 'featuredBrands'));
     }
-} 
+}

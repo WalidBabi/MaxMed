@@ -77,6 +77,9 @@ Route::middleware('auth')->group(function () {
 
         // Category Management
         Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+        
+        // Brand Management
+        Route::resource('brands', \App\Http\Controllers\Admin\BrandController::class);
     });
 });
 

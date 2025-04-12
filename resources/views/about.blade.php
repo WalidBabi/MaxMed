@@ -38,7 +38,6 @@
     
     .hero-title {
         font-size: 3rem;
-
         margin-bottom: 1.5rem;
         text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         opacity: 0;
@@ -67,8 +66,7 @@
     }
     
     .section-title {
-        font-size: 1.25rem;
-        font-weight: 700;
+        font-size: 2rem;
         margin-bottom: 1.5rem;
         position: relative;
         display: inline-block;
@@ -128,8 +126,7 @@
     }
     
     .values-title {
-        font-size: 1.25rem;
-        font-weight: 700;
+        font-size: 2rem;
         text-align: center;
         margin-bottom: 3rem;
         position: relative;
@@ -206,7 +203,6 @@
     
     .value-title {
         font-size: 1rem;
-        font-weight: 700;
         margin-bottom: 1rem;
         color: #333;
     }
@@ -243,7 +239,7 @@
     /* Responsive Styles */
     @media (max-width: 992px) {
         .hero-title {
-            font-size: 3rem;
+            font-size: 2.5rem;
         }
         
         .about-hero {
@@ -251,7 +247,7 @@
         }
         
         .section-title {
-            font-size: 2rem;
+            font-size: 1.25rem;
         }
         
         .story-image {
@@ -261,11 +257,11 @@
     
     @media (max-width: 768px) {
         .hero-title {
-            font-size: 2.5rem;
+            font-size: 2rem;
         }
         
         .hero-subtitle {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
         
         .about-hero {
@@ -283,7 +279,7 @@
     
     @media (max-width: 576px) {
         .hero-title {
-            font-size: 2rem;
+            font-size: 1.75rem;
         }
         
         .hero-subtitle {
@@ -295,7 +291,7 @@
         }
         
         .section-title {
-            font-size: 1.8rem;
+            font-size: 1.25rem;
         }
     }
 </style>
@@ -303,7 +299,7 @@
 <!-- Hero Section -->
 <div class="about-hero" style="background-image: url('{{ asset('Images/maxmed building.png') }}');">
     <div class="hero-content">
-        <h1 class="hero-title">About MaxMed</h2>
+        <h1 class="hero-title">About MaxMed</h1>
         <p class="hero-subtitle">Leading the Future of Medical Laboratory Equipment</p>
     </div>
 </div>

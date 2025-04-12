@@ -13,7 +13,7 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with(['category', 'inventory']);
+        $query = Product::with(['category', 'inventory', 'brand']);
         
         // Filter by product name
         if ($request->filled('search')) {
@@ -24,6 +24,16 @@ class ProductController extends Controller
         // Filter by category
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->input('category_id'));
+        }
+        
+        // Filter by brand
+        if ($request->filled('brand_id')) {
+            $query->where('brand_id', $request->input('brand_id'));
+        }
+        
+        // Filter by application
+        if ($request->filled('application')) {
+            $query->where('application', $request->input('application'));
         }
         
         // Filter by price range
@@ -81,6 +91,8 @@ class ProductController extends Controller
             'price_aed' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'nullable|exists:brands,id',
+            'application' => 'nullable|string|max:255',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5000',
             'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000'
         ]);
@@ -93,6 +105,8 @@ class ProductController extends Controller
                 'price' => $validated['price'],
                 'price_aed' => $validated['price_aed'],
                 'category_id' => $validated['category_id'],
+                'brand_id' => $validated['brand_id'] ?? null,
+                'application' => $validated['application'] ?? null,
                 'image_url' => null, // Will be replaced by primary image
             ]);
 
@@ -154,6 +168,8 @@ class ProductController extends Controller
             'price_aed' => 'required|numeric|min:0',
             'inventory_quantity' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'nullable|exists:brands,id',
+            'application' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000',
             'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000',
             'delete_images' => 'nullable|string',
@@ -168,6 +184,8 @@ class ProductController extends Controller
                 'price' => $request->price,
                 'price_aed' => $request->price_aed,
                 'category_id' => $request->category_id,
+                'brand_id' => $request->brand_id,
+                'application' => $request->application,
             ]);
 
             // Update inventory quantity

@@ -2,8 +2,9 @@
 
 @section('content')
 <div class="container-fluid py-4">
+
     <div class="page-header mb-4">
-        <h1 class="page-title">Admin Dashboard</h1>
+        <h2>Welcome, {{ Auth::user()->name }}</h2>
         <p class="page-description text-muted">Overview of your store's performance and recent activities</p>
     </div>
 
@@ -52,6 +53,18 @@
                     </div>
                     <h5 class="card-title">Categories</h5>
                     <p class="card-text display-4">{{ \App\Models\Category::count() }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 dashboard-stat-card" onclick="window.location='{{ route('admin.brands.index') }}'" style="cursor: pointer;">
+                <div class="card-body">
+                    <div class="stat-icon">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    <h5 class="card-title">Brands</h5>
+                    <p class="card-text display-4">{{ \App\Models\Brand::count() }}</p>
                 </div>
             </div>
         </div>
@@ -149,36 +162,42 @@
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         position: relative;
     }
-    
-    .dashboard-stat-card:nth-child(1), 
+
+    .dashboard-stat-card:nth-child(1),
     .dashboard-stat-card:nth-child(1) .stat-icon {
         background: linear-gradient(135deg, rgba(255, 187, 0, 0.1), rgba(255, 187, 0, 0.2));
         border-left: 4px solid #ffbb00;
     }
-    
-    .dashboard-stat-card:nth-child(2), 
+
+    .dashboard-stat-card:nth-child(2),
     .dashboard-stat-card:nth-child(2) .stat-icon {
         background: linear-gradient(135deg, rgba(23, 30, 96, 0.1), rgba(23, 30, 96, 0.2));
         border-left: 4px solid #171e60;
     }
-    
-    .dashboard-stat-card:nth-child(3), 
+
+    .dashboard-stat-card:nth-child(3),
     .dashboard-stat-card:nth-child(3) .stat-icon {
         background: linear-gradient(135deg, rgba(10, 86, 148, 0.1), rgba(10, 86, 148, 0.2));
         border-left: 4px solid #0a5694;
     }
-    
-    .dashboard-stat-card:nth-child(4), 
+
+    .dashboard-stat-card:nth-child(4),
     .dashboard-stat-card:nth-child(4) .stat-icon {
         background: linear-gradient(135deg, rgba(25, 135, 84, 0.1), rgba(25, 135, 84, 0.2));
         border-left: 4px solid #198754;
     }
-    
+
+    .dashboard-stat-card:nth-child(5),
+    .dashboard-stat-card:nth-child(5) .stat-icon {
+        background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.2));
+        border-left: 4px solid #dc3545;
+    }
+
     .dashboard-stat-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
     }
-    
+
     .stat-icon {
         display: inline-block;
         width: 50px;
@@ -190,68 +209,74 @@
         color: #fff;
         margin-bottom: 15px;
     }
-    
+
     .dashboard-stat-card:nth-child(1) .stat-icon {
         background-color: #ffbb00;
         color: #fff;
     }
-    
+
     .dashboard-stat-card:nth-child(2) .stat-icon {
         background-color: #171e60;
         color: #fff;
     }
-    
+
     .dashboard-stat-card:nth-child(3) .stat-icon {
         background-color: #0a5694;
         color: #fff;
     }
-    
+
     .dashboard-stat-card:nth-child(4) .stat-icon {
         background-color: #198754;
         color: #fff;
     }
-    
+
+    .dashboard-stat-card:nth-child(5) .stat-icon {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
     .card-title {
         font-size: 1rem;
         color: #495057;
         margin-bottom: 10px;
     }
-    
+
     .card-text.display-4 {
         font-size: 2.5rem;
         font-weight: 700;
         color: #212529;
         margin-bottom: 0;
     }
-    
+
     .lab-badge {
         border-radius: 20px;
         padding: 5px 12px;
         font-size: 0.75rem;
         font-weight: 600;
     }
-    
+
     /* Table styling */
     .table {
         border-collapse: separate;
         border-spacing: 0;
     }
-    
+
     .table thead th {
         border-bottom: 2px solid rgba(0, 0, 0, 0.05);
         font-weight: 600;
         color: #495057;
     }
-    
+
     .table tbody tr {
         transition: all 0.2s;
     }
-    
+
     .table tbody tr:hover {
         background-color: rgba(0, 0, 0, 0.02);
     }
-    
-    .table td, .table th {
+
+    .table td,
+    .table th {
         padding: 0.75rem;
         vertical-align: middle;
         border-top: 1px solid rgba(0, 0, 0, 0.05);

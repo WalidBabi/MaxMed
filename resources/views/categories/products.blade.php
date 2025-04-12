@@ -52,7 +52,7 @@
         }
         .counter-number {
             font-size: 1.8rem;
-            : 700;
+            font-weight: 700;
             color: #28a745;
             line-height: 1.2;
             animation: countPulse 2s ease-in-out;
@@ -90,7 +90,7 @@
         }
         .empty-state-message {
             font-size: 1.8rem;
-            : 600;
+            font-weight: 600;
             color: #495057;
             margin-bottom: 20px;
         }
@@ -196,7 +196,7 @@
             padding: 6px 12px;
             border-radius: 20px;
             letter-spacing: 0.5px;
-            : 600;
+            font-weight: 600;
         }
         .badge.bg-success {
             background-color: #28a745 !important;
@@ -394,11 +394,11 @@
     
    
     
-    <div class="row">
-        <div class="col-md-3">
+    <div class="row sidebar-content-container justify-content-center">
+        <div class="col-md-3 sidebar-column transition-all duration-300">
             @include('layouts.sidebar')
         </div>
-        <div class="col-md-9 mt-2">
+        <div class="col-md-9 mt-2 main-content-column transition-all duration-300">
             <div class="category-header">
                 <h1 class="category-title">{{ isset($category) ? $category->name : 'All Products' }}</h1>
                 <p class="category-description">{{ isset($category) && $category->description ? $category->description : 'Browse our selection of high-quality products' }}</p>
@@ -412,11 +412,6 @@
                         <span class="counter-number">{{ $products->count() }}</span>
                         <span class="counter-label">{{ Str::plural('product', $products->count()) }} found</span>
                     </div>
-                </div>
-                
-                <!-- Placeholder for future filter options -->
-                <div class="filter-options">
-                    <!-- Future filter options would go here -->
                 </div>
             </div>
             
@@ -516,6 +511,8 @@
                 card.style.transform = 'translateY(0)';
             }, 100 + (index * 50));
         });
+        
+        // Sidebar toggle is now handled with CSS transitions in app.blade.php and sidebar.blade.php
     });
 </script>
 @endsection 

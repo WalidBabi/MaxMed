@@ -245,7 +245,7 @@
     }
 </style>
 
-<div class="container-fluid mb-3 mt-3">
+<div class="container-fluid mb-3 mt-3 px-3">
     @if(session('error'))
         <div class="alert border-0 rounded-3 shadow-lg mb-4 position-relative" role="alert"
              x-data="{ show: true }" 
@@ -309,11 +309,11 @@
             </div>
         </div>
     @endif
-    <div class="row">
-        <div class="col-md-3">
+    <div class="row sidebar-content-container justify-content-center">
+        <div class="col-md-3 sidebar-column transition-all duration-300">
             @include('layouts.sidebar')
         </div>
-        <div class="col-md-9 mt-2">
+        <div class="col-md-9 mt-2 main-content-column transition-all duration-300">
             <div class="page-header mb-4">
                 <h1 class="page-title">{{ $subcategory->name }}</h1>
                 <p class="page-description">Browse subcategories of {{ $subcategory->name }}. Explore our range of high-quality laboratory equipment and scientific instruments.</p>
@@ -369,6 +369,8 @@
                 card.style.transform = 'translateY(0)';
             }, 100 + (index * 50));
         });
+        
+        // Sidebar toggle is now handled with CSS transitions in app.blade.php and sidebar.blade.php
     });
 </script>
 

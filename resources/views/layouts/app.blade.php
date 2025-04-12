@@ -46,6 +46,52 @@
                 transition: opacity 0.3s ease-in;
             }
             .lazy-image.loaded { opacity: 1; }
+            
+            /* Sidebar toggle transitions */
+            .sidebar-column {
+                transition: width 0.3s ease-in-out !important;
+                will-change: width;
+                overflow: hidden;
+                position: relative;
+                padding-left: 1rem !important; /* Add padding to prevent cutoff */
+                padding-right: 0.5rem !important; /* Add padding to prevent right cutoff */
+            }
+            
+            .main-content-column {
+                transition: width 0.3s ease-in-out !important;
+                will-change: width;
+                transform: translateZ(0);
+                padding-left: 1rem; /* Consistent padding to prevent layout shift */
+            }
+            
+            .collapsed-sidebar-active {
+                width: calc(100% - 65px) !important;
+                margin-left: 0 !important; /* Remove left margin when collapsed */
+                padding-left: 0.5rem !important; /* Reduce padding when collapsed */
+            }
+            
+            .sidebar-content-container {
+                transition: all 0.3s ease-in-out !important;
+                overflow-x: hidden;
+                transform: translateZ(0);
+                padding-left: 0.5rem !important; /* Add consistent padding */
+                padding-right: 0.5rem !important; /* Add consistent padding */
+            }
+            
+            /* Prevent layout shifts */
+            .category-container, .subcategory-container, .products-grid {
+                transition: opacity 0.3s ease-in-out;
+                transform: translateZ(0);
+                backface-visibility: hidden;
+                perspective: 1000px;
+                contain: layout style paint; /* Modern browsers will use content-visibility */
+            }
+            
+            /* Force hardware acceleration to reduce visual flickering */
+            .row, .col-md-3, .col-md-9 {
+                transform: translateZ(0);
+                backface-visibility: hidden;
+            }
         </style>
 
         <!-- Preload LCP image -->

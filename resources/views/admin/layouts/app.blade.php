@@ -247,7 +247,7 @@
         <div class="admin-sidebar">
             <div class="logo-container d-flex align-items-center">
                 <a href="{{ route('admin.dashboard') }}" class="text-decoration-none text-white">
-                    <h4 class="m-0"><i class="fas fa-medkit me-2"></i>MaxMed Admin</h4>
+                    <h4 class="m-0">MaxMed Admin</h4>
                 </a>
             </div>
             <hr class="mt-0 mb-3 opacity-25">
@@ -280,6 +280,12 @@
                     <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                         <i class="fas fa-th-large me-2"></i>
                         Categories
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.brands.index') }}" class="nav-link {{ request()->routeIs('admin.brands.*') ? 'active' : '' }}">
+                        <i class="fas fa-tag me-2"></i>
+                        Brands
                     </a>
                 </li>
             </ul>

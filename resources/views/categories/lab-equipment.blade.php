@@ -8,11 +8,11 @@
 
 @section('content')
 <div class="container my-5">
-    <div class="row">
-        <div class="col-md-3">
+    <div class="row sidebar-content-container justify-content-center">
+        <div class="col-md-3 sidebar-column transition-all duration-300">
             @include('layouts.sidebar')
         </div>
-        <div class="col-md-9">
+        <div class="col-md-9 main-content-column transition-all duration-300">
             <div class="page-header mb-4">
                 <h1 class="page-title">Laboratory Equipment & Scientific Instruments</h1>
                 <div class="breadcrumbs mb-3">
@@ -78,4 +78,23 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle sidebar toggle event to adjust content
+        document.body.addEventListener('sidebar-toggle', function(e) {
+            // Additional adjustments for smoother transitions
+            const contentContainer = document.querySelector('.main-content-column');
+            if (contentContainer) {
+                setTimeout(() => {
+                    // Force re-layout for smoother transition
+                    contentContainer.style.display = 'none';
+                    setTimeout(() => {
+                        contentContainer.style.display = 'block';
+                    }, 10);
+                }, 300);
+            }
+        });
+    });
+</script>
 @endsection 

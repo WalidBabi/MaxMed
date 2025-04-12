@@ -56,8 +56,9 @@
         color: white;
         padding: 0.75rem 1.75rem;
         border-radius: 50px;
-      
-        font-size: 0.875rem;;
+
+        font-size: 0.875rem;
+        ;
         transition: all 0.3s ease;
         border: 2px solid transparent;
         box-shadow: 0 4px 15px rgba(23, 30, 96, 0.4);
@@ -135,7 +136,7 @@
     /* Features Section */
     .features-section {
         background-color: #f8f9fa;
-     
+
     }
 
     .section-title {
@@ -161,10 +162,10 @@
     .feature-slide {
         position: relative;
         height: 400px;
-        border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
         transition: all 0.5s ease;
+        
     }
 
     .feature-content {
@@ -322,7 +323,8 @@
         }
 
         .feature-slide {
-            height: 600px; /* Increase height for mobile to accommodate stacked content */
+            height: 600px;
+            /* Increase height for mobile to accommodate stacked content */
         }
 
         .feature-slide .flex {
@@ -530,7 +532,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-    
+
         overflow: hidden;
         transition: all 0.35s;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
@@ -567,7 +569,7 @@
     .category-card .card-title {
         text-align: center;
         font-size: 0.875rem;
-     
+
         color: #222;
         margin-bottom: 0;
         position: relative;
@@ -632,7 +634,8 @@
         }
 
         .category-card .card-title {
-            font-size: 0.875rem;;
+            font-size: 0.875rem;
+            ;
         }
 
         .feature-slide .w-1\/2 {
@@ -764,15 +767,15 @@
         }, 300);
     ">
         @foreach($categories->where('parent_id', null)->sortBy(function($category) {
-            // Define your preferred order here - replace these with your actual category names
-            $order = [
-                'Molecular & Clinical Diagnostics' => 1,
-                'Lab Equipment' => 2, 
-                'Medical Consumables' => 3,
-                'Life Science & Research' => 4
-                // Add more as needed
-            ];
-            return $order[$category->name] ?? 999; // Categories not in list will appear last
+        // Define your preferred order here - replace these with your actual category names
+        $order = [
+        'Molecular & Clinical Diagnostics' => 1,
+        'Life Science & Research' => 2,
+        'Lab Equipment' => 3,
+        'Medical Consumables' => 4
+        // Add more as needed
+        ];
+        return $order[$category->name] ?? 999; // Categories not in list will appear last
         }) as $category)
         <div class="category-card-wrapper" style="opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.5s ease;">
             <a href="{{ route('categories.show', $category) }}" class="text-decoration-none">
@@ -798,7 +801,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
         @forelse($featuredProducts as $product)
-        <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+        <div class="bg-white  overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
             x-data="{ showDetails: false }"
             @mouseenter="showDetails = true"
             @mouseleave="showDetails = false">
@@ -815,7 +818,7 @@
                     NEW
                 </div>
                 @endif
-<!-- End of Selection -->
+                <!-- End of Selection -->
 
                 <!-- Overlay with details on hover -->
                 <div class="absolute inset-0 bg-gradient-to-t from-[#171e60] to-transparent opacity-0 transition-opacity duration-300"
@@ -863,14 +866,94 @@
         @endforelse
     </div>
 </div>
-
+<!-- Featured Brands Section -->
+@if($featuredBrands->count() > 0)
+<div class="py-10 max-w-7xl mx-auto px-4">
+    <h3 class="section-title">Featured Brands</h3>
+    
+    @if($featuredBrands->count() > 4)
+    <div x-data="{ activeBrandSlide: 0 }"
+         x-init="setInterval(() => { activeBrandSlide = activeBrandSlide === Math.ceil({{ $featuredBrands->count() }} / 4) - 1 ? 0 : activeBrandSlide + 1 }, 4000)"
+         class="relative mt-8 overflow-hidden">
+        
+        <div class="relative h-[180px]">
+            @php
+                $brandsChunks = $featuredBrands->chunk(4);
+            @endphp
+            
+            @foreach($brandsChunks as $index => $brandChunk)
+            <div class="absolute w-full transition-all duration-500"
+                x-show="activeBrandSlide === {{ $index }}"
+                x-transition:enter="transition ease-out duration-500"
+                x-transition:enter-start="opacity-0 transform translate-x-full"
+                x-transition:enter-end="opacity-100 transform translate-x-0"
+                x-transition:leave="transition ease-in duration-500"
+                x-transition:leave-start="opacity-100 transform translate-x-0"
+                x-transition:leave-end="opacity-0 transform -translate-x-full">
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    @foreach($brandChunk as $brand)
+                    <div class="bg-white  overflow-hidden shadow-md p-4 flex flex-col items-center justify-center h-full">
+                        <div class="flex items-center justify-center h-28">
+                            @if($brand->logo_url)
+                            <img src="{{ $brand->logo_url }}" alt="{{ $brand->name }}" 
+                                 class="max-h-20 max-w-full object-contain transition-transform duration-300 hover:scale-110">
+                            @else
+                            <div class="text-lg font-semibold text-center text-gray-800">{{ $brand->name }}</div>
+                            @endif
+                        </div>
+                        <div class="mt-3 text-center">
+                            <h4 class="text-sm font-medium text-gray-800">{{ $brand->name }}</h4>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endforeach
+        </div>
+        
+        <!-- Navigation dots -->
+        @if($brandsChunks->count() > 1)
+        <div class="flex justify-center space-x-2 mt-4">
+            @foreach($brandsChunks as $index => $chunk)
+            <button @click="activeBrandSlide = {{ $index }}"
+                    class="h-2 rounded-full transition-all duration-300"
+                    :class="activeBrandSlide === {{ $index }} ? 'w-8 bg-[#171e60]' : 'w-2 bg-gray-300'"></button>
+            @endforeach
+        </div>
+        @endif
+    </div>
+    @else
+    <!-- Simple display for 4 or fewer brands -->
+    <div class="mt-8">
+        <div class="grid grid-cols-2 md:grid-cols-{{ $featuredBrands->count() > 1 ? ($featuredBrands->count() > 2 ? '4' : '2') : '1' }} gap-6">
+            @foreach($featuredBrands as $brand)
+            <div class="bg-white  overflow-hidden shadow-md p-4 flex flex-col items-center justify-center">
+                <div class="flex items-center justify-center h-28">
+                    @if($brand->logo_url)
+                    <img src="{{ $brand->logo_url }}" alt="{{ $brand->name }}" 
+                         class="max-h-20 max-w-full object-contain transition-transform duration-300 hover:scale-110">
+                    @else
+                    <div class="text-lg font-semibold text-center text-gray-800">{{ $brand->name }}</div>
+                    @endif
+                </div>
+                <div class="mt-3 text-center">
+                    <h4 class="text-sm font-medium text-gray-800">{{ $brand->name }}</h4>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
+</div>
+@endif
 <!-- why choose maxmed Section -->
-<div class="features-section py-8 md:py-10">
-    <div class="max-w-7xl mx-auto px-4" x-data="{ activeSlide: 0, autoplay: null }" x-init="autoplay = setInterval(() => { activeSlide = activeSlide === 2 ? 0 : activeSlide + 1 }, 5000)">
+<div class="features-section py-8 md:py-10 w-full">
+    <div class="w-full mx-auto px-4" x-data="{ activeSlide: 0, autoplay: null }" x-init="autoplay = setInterval(() => { activeSlide = activeSlide === 2 ? 0 : activeSlide + 1 }, 5000)">
         <h3 class="section-title text-center">Why Choose MaxMed?</h3>
 
         <!-- Carousel container -->
-        <div class="feature-slide relative overflow-hidden rounded-lg shadow-lg">
+        <div class="feature-slide relative overflow-hidden shadow-lg w-full">
             <!-- Slide 1 -->
             <div class="absolute inset-0 w-full h-full transition-opacity duration-700"
                 x-show="activeSlide === 0"
@@ -890,7 +973,7 @@
                     <div class="md:w-1/2 overflow-hidden">
                         <img src="{{ asset('/Images/Innovation.jpg') }}"
                             alt="Innovation"
-                            class="feature-img w-full h-auto rounded-lg shadow-md">
+                            class="feature-img w-full h-auto shadow-md">
                     </div>
                 </div>
             </div>
@@ -908,7 +991,7 @@
                     <div class="md:w-1/2 overflow-hidden">
                         <img src="{{ asset('/Images/bacteria.jpg') }}"
                             alt="Quality"
-                            class="feature-img w-full h-auto rounded-lg shadow-md">
+                            class="feature-img w-full h-auto shadow-md">
                     </div>
                     <div class="md:w-1/2 bg-gradient-to-l from-[#0a5694] to-[#171e60] p-6">
                         <div class="feature-content">
@@ -938,7 +1021,7 @@
                     <div class="md:w-1/2 overflow-hidden">
                         <img src="{{ asset('/Images/Expert.jpg') }}"
                             alt="Support"
-                            class="feature-img w-full h-auto rounded-lg shadow-md">
+                            class="feature-img w-full h-auto shadow-md">
                     </div>
                 </div>
             </div>
@@ -970,15 +1053,15 @@
     </div>
 </div>
 <!-- Key Suppliers Section -->
-<div class=" max-w-7xl mx-auto px-4">
+<!-- <div class=" max-w-7xl mx-auto px-4">
     <h3 class="section-title">Key Suppliers</h3>
     <div x-data="{ activeSupplier: 0 }"
         x-init="setInterval(() => { activeSupplier = activeSupplier === 1 ? 0 : activeSupplier + 1 }, 5000)"
         class="relative overflow-hidden">
 
-        <!-- Supplier logos container with fixed height -->
+     
         <div class="relative h-[100px]">
-            <!-- Supplier logos - Group 1 -->
+        
             <div class="supplier-slide absolute w-full"
                 x-show="activeSupplier === 0"
                 x-transition:enter="transition ease-out duration-800"
@@ -1001,7 +1084,7 @@
                 </div>
             </div>
 
-            <!-- Supplier logos - Group 2 -->
+        
             <div class="supplier-slide absolute w-full"
                 x-show="activeSupplier === 1"
                 x-transition:enter="transition ease-out duration-800"
@@ -1024,11 +1107,10 @@
                 </div>
             </div>
         </div>
-
-
-
     </div>
-</div>
+</div> -->
+
+
 
 @include('layouts.footer')
 @endsection

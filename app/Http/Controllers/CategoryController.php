@@ -15,44 +15,144 @@ class CategoryController extends Controller
         return view('products.index', compact('categories'));
     }
 
-    public function show(Category $category)
+    public function show(Request $request, Category $category)
     {
-
         if ($category->subcategories->isNotEmpty()) {
             return view('categories.subcategories', compact('category'));
         }
 
-        $products = $category->products;
+        // Start building the query
+        $query = Product::with(['category', 'inventory'])->where('category_id', $category->id);
+        
+        // Apply all filters
+        $query = $this->applyFilters($request, $query);
+        
+        // Get paginated results
+        $products = $query->paginate(16);
+        $products->appends($request->all());
+        
         return view('categories.products', compact('category', 'products'));
     }
 
-    public function showSubcategory(Category $category, Category $subcategory)
+    public function showSubcategory(Request $request, Category $category, Category $subcategory)
     {
         // Validate that subcategory belongs to the parent category
         if ($subcategory->parent_id != $category->id) {
             return Redirect::route('products.index')
                 ->with('warning', 'The requested subcategory does not exist in this category.');
         }
-
         
         if ($subcategory->subcategories->isNotEmpty()) {
             return view('categories.subsubcategories', compact('category', 'subcategory'));
         }
         
-        $products = $subcategory->products;
+        // Start building the query
+        $query = Product::with(['category', 'inventory'])->where('category_id', $subcategory->id);
+        
+        // Apply all filters
+        $query = $this->applyFilters($request, $query);
+        
+        // Get paginated results
+        $products = $query->paginate(16);
+        $products->appends($request->all());
+        
         return view('categories.products', compact('subcategory', 'products'));
     }
 
-    public function showSubSubcategory(Category $category, Category $subcategory, Category $subsubcategory)
+    public function showSubSubcategory(Request $request, Category $category, Category $subcategory, Category $subsubcategory)
     {
         // Validate hierarchy
         if ($subcategory->parent_id != $category->id || $subsubcategory->parent_id != $subcategory->id) {
             return Redirect::route('products.index')
                 ->with('warning', 'The requested category path is invalid.');
         }
-
         
-        $products = $subsubcategory->products;
+        // Start building the query
+        $query = Product::with(['category', 'inventory'])->where('category_id', $subsubcategory->id);
+        
+        // Apply all filters
+        $query = $this->applyFilters($request, $query);
+        
+        // Get paginated results
+        $products = $query->paginate(16);
+        $products->appends($request->all());
+        
         return view('categories.products', compact('subsubcategory', 'products'));
+    }
+    
+    /**
+     * Apply all filters from the request to the query
+     *
+     * @param Request $request
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    private function applyFilters(Request $request, $query)
+    {
+        // Filter by search query
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+        
+        // Filter by price range
+        if ($request->filled('price_min')) {
+            $query->where('price_aed', '>=', $request->input('price_min'));
+        }
+        
+        if ($request->filled('price_max')) {
+            $query->where('price_aed', '<=', $request->input('price_max'));
+        }
+        
+        // Filter by stock status
+        if ($request->filled('in_stock')) {
+            $inStock = $request->input('in_stock');
+            $query->whereHas('inventory', function($q) use ($inStock) {
+                if ($inStock == '1') {
+                    $q->where('quantity', '>', 0);
+                } else {
+                    $q->where('quantity', '=', 0);
+                }
+            });
+        }
+        
+        // Filter by brand
+        if ($request->filled('brand')) {
+            // Assuming you have a brand field in products
+            $query->where('brand_id', $request->input('brand'));
+        }
+        
+        // Filter by application
+        if ($request->filled('application')) {
+            // Assuming you have an application field or tag in products
+            $query->where('application', $request->input('application'));
+        }
+        
+        // Handle sorting
+        if ($sortOption = $request->input('sort')) {
+            switch ($sortOption) {
+                case 'price_asc':
+                    $query->orderBy('price_aed', 'asc');
+                    break;
+                case 'price_desc':
+                    $query->orderBy('price_aed', 'desc');
+                    break;
+                case 'name_asc':
+                    $query->orderBy('name', 'asc');
+                    break;
+                case 'newest':
+                default:
+                    $query->orderBy('created_at', 'desc');
+                    break;
+            }
+        } else {
+            // Default sort
+            $query->orderBy('created_at', 'desc');
+        }
+        
+        return $query;
     }
 } 
