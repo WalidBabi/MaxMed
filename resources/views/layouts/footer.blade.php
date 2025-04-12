@@ -24,9 +24,8 @@
                     <li><a href="{{ route('welcome') }}">Home</a></li>
                     <li><a href="{{ route('about') }}">About Us</a></li>
                     <li><a href="{{ route('products.index') }}">Products</a></li>
-                    <li><a href="{{ route('contact') }}">Contact</a></li>
-                    <li><a href="#">Service & Support</a></li>
-                    <li><a href="#">Blog</a></li>
+                    <li><a href="{{ route('contact') }}">Contact Us</a></li>
+                    <li><a href="{{ route('news.index') }}">News</a></li>
                 </ul>
             </div>
 
@@ -34,10 +33,13 @@
             <div class="mt-6 lg:mt-0">
                 <h3 class="footer-heading">Product Categories</h3>
                 <ul class="footer-links">
-                    @foreach(\App\Models\Category::take(5)->get() as $category)
+                    @php
+                        $categories = \App\Models\Category::orderBy('name')->take(6)->get();
+                    @endphp
+                    @foreach($categories as $category)
                     <li><a href="{{ route('categories.show', $category) }}">{{ $category->name }}</a></li>
                     @endforeach
-                    <li><a href="{{ route('products.index') }}" class="text-blue-300 hover:text-blue-200">View All Categories →</a></li>
+                    <li><a href="{{ route('categories.index') }}" class="text-blue-300 hover:text-blue-200">View All Categories →</a></li>
                 </ul>
             </div>
 
