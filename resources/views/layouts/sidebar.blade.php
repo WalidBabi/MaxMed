@@ -100,7 +100,7 @@
                 </div>
                 
                 <!-- Product Filters -->
-                @if(request()->routeIs('categories.subcategory.show') || request()->routeIs('categories.subsubcategory.show') || request()->routeIs('product.show') || request()->is('products*') || (request()->routeIs('categories.show') && isset($products) && count($products) > 0))
+                @if((request()->routeIs('categories.subcategory.show') || request()->routeIs('categories.subsubcategory.show') || request()->routeIs('product.show') || (request()->is('products*') && !request()->routeIs('products.index')) || (request()->routeIs('categories.show') && isset($products) && count($products) > 0)))
                 <div class="mt-8 filter-section" 
                     x-data="{ 
                         filtersOpen: true, 

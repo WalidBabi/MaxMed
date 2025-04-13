@@ -342,7 +342,17 @@
             </div>
             
             <div class="category-container mt-3">
-                @foreach($categories as $category)
+                @foreach($categories->where('parent_id', null)->sortBy(function($category) {
+                    // Define preferred order here
+                    $order = [
+                        'Molecular & Clinical Diagnostics' => 1,
+                        'Life Science & Research' => 2,
+                        'Lab Equipment' => 3,
+                        'Medical Consumables' => 4
+                        // Add more as needed
+                    ];
+                    return $order[$category->name] ?? 999; // Categories not in list will appear last
+                }) as $category)
                 <div class="category-card-wrapper">
                     <a href="{{ route('categories.show', $category) }}" class="text-decoration-none">
                         <div class="category-card">
