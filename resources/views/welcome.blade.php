@@ -1,5 +1,11 @@
 @extends('layouts.app')
 
+@section('title', 'MaxMed - Premium Medical & Laboratory Equipment Supplier in Middle East & Africa')
+
+@section('meta_description', 'MaxMed provides high-quality medical equipment, laboratory supplies, and diagnostic tools across the Middle East, Africa, and global markets. Explore our premium products and innovative solutions.')
+
+@section('meta_keywords', 'medical equipment supplier, laboratory equipment Middle East, diagnostic supplies Africa, premium lab equipment, healthcare solutions international, medical technology, laboratory analysis tools, scientific instruments, hospital supplies Middle East, diagnostic equipment Africa')
+
 @section('content')
 <style>
     /* Enhanced Hero Section */

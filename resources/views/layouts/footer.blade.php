@@ -55,7 +55,7 @@
                     Contact Us
                 </h3>
                 <p class="text-gray-300 hover:text-blue-300 transition-colors duration-300">
-                    <a href="mailto:sales@maxmedme.com">sales@maxmedme.com</a>
+                    <a href="mailto:sales@maxmedme.com">cs@maxmedme.com</a>
                 </p>
                 <p class="text-gray-300 hover:text-blue-300 transition-colors duration-300">
                     <a href="tel:+97155460250">+971 55 460 2500</a>
