@@ -673,7 +673,7 @@
         <div class="who-we-are">
             <div class="who-we-are-content">
                 <h3>Your Partner in Medical Excellence</h3>
-                <p>At MaxMed UAE, we collaborate with global leaders to deliver excellence, ensuring every product meets rigorous quality standards. Our commitment to innovation and reliability has positioned us as a leading medical and laboratory equipment supplier serving clients across the Middle East, Africa, and beyond.</p>
+                <p>At MaxMed Scientific, we collaborate with global leaders to deliver excellence, ensuring every product meets rigorous quality standards. Our commitment to innovation and reliability has positioned us as a leading medical and laboratory equipment supplier serving clients across the Middle East, Africa, and beyond.</p>
                 
                 <div class="highlight-box">
                     <h4>But we're more than suppliers—we're enablers.</h4>
@@ -828,7 +828,7 @@
 <section class="map-section">
     <div class="map-overlay"></div>
     <div style="position: relative; width: 100%; height: 100%;">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3613.9881518064!2d55.11485837652705!3d25.040842477805823!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f1322ad6bc903%3A0x835013db449b5798!2sIbn%20Battuta%20Gate%20Office%20Complex%20Building!5e0!3m2!1sen!2sae!4v1714500000000!5m2!1sen!2sae" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14440.542527223084!2d55.1724694!3d25.0874995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f6c0fdcf8c319%3A0xc1b5948ee66f3482!2sAl%20Barsha%20-%20Dubai!5e0!3m2!1sen!2sae!4v1714500000000!5m2!1sen!2sae" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
         <a href="https://maps.google.com/maps?ll=25.040843,55.114858&z=15&t=m&hl=en&gl=ae&mapclient=embed&q=Ibn+Battuta+Gate+Office+Complex+Building" target="_blank" style="position: absolute; top: 20px; right: 20px; background-color: var(--brand-white); color: var(--text-black); padding: 0.5rem 1rem; border-radius: 50px;  text-decoration: none; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 0.5rem; z-index: 100;">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M8 0a5 5 0 0 0-5 5c0 5 5 11 5 11s5-6 5-11a5 5 0 0 0-5-5zm0 8a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
