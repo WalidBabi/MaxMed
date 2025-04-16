@@ -61,22 +61,6 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="application" class="form-label">Application Area</label>
-                                    <select name="application" id="application" class="form-select">
-                                        <option value="">Select application</option>
-                                        <option value="clinical" {{ old('application') == 'clinical' ? 'selected' : '' }}>Clinical</option>
-                                        <option value="research" {{ old('application') == 'research' ? 'selected' : '' }}>Research</option>
-                                        <option value="industrial" {{ old('application') == 'industrial' ? 'selected' : '' }}>Industrial</option>
-                                        <option value="educational" {{ old('application') == 'educational' ? 'selected' : '' }}>Educational</option>
-                                    </select>
-                                    @error('application')
-                                        <div class="text-danger mt-1">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="description" class="form-label">Description</label>

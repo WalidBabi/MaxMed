@@ -66,12 +66,6 @@ class ProductController extends Controller
             $query->where('brand_id', $request->input('brand'));
         }
         
-        // Filter by application
-        if ($request->filled('application')) {
-            // Assuming you have an application field or tag in products
-            $query->where('application', $request->input('application'));
-        }
-        
         // Handle sorting
         if ($sortOption = $request->input('sort')) {
             switch ($sortOption) {

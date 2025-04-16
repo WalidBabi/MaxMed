@@ -9,10 +9,10 @@
 
     <div class="d-flex justify-content-end mb-4">
         <!-- Filter Toggle Button -->
-        <button class="btn btn-outline-primary me-2" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="{{ request()->hasAny(['search', 'category_id', 'brand_id', 'application', 'stock_status', 'min_price', 'max_price', 'sort_by', 'sort_order']) ? 'true' : 'false' }}" aria-controls="filterCollapse">
+        <button class="btn btn-outline-primary me-2" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="{{ request()->hasAny(['search', 'category_id', 'brand_id', 'stock_status', 'min_price', 'max_price', 'sort_by', 'sort_order']) ? 'true' : 'false' }}" aria-controls="filterCollapse">
             <i class="fas fa-filter me-1"></i> Filters
-            @if(request()->hasAny(['search', 'category_id', 'brand_id', 'application', 'stock_status', 'min_price', 'max_price']))
-                <span class="badge bg-primary ms-1">{{ count(array_filter(request()->only(['search', 'category_id', 'brand_id', 'application', 'stock_status', 'min_price', 'max_price']))) }}</span>
+            @if(request()->hasAny(['search', 'category_id', 'brand_id', 'stock_status', 'min_price', 'max_price']))
+                <span class="badge bg-primary ms-1">{{ count(array_filter(request()->only(['search', 'category_id', 'brand_id', 'stock_status', 'min_price', 'max_price']))) }}</span>
             @endif
         </button>
         <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
@@ -21,7 +21,7 @@
     </div>
 
     <!-- Filter Form -->
-    <div class="card mb-4 collapse {{ request()->hasAny(['search', 'category_id', 'brand_id', 'application', 'stock_status', 'min_price', 'max_price', 'sort_by', 'sort_order']) ? 'show' : '' }}" id="filterCollapse">
+    <div class="card mb-4 collapse {{ request()->hasAny(['search', 'category_id', 'brand_id', 'stock_status', 'min_price', 'max_price', 'sort_by', 'sort_order']) ? 'show' : '' }}" id="filterCollapse">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="card-title mb-0">Filter Products</h5>
         </div>
@@ -55,18 +55,6 @@
                         </select>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="application" class="form-label">Application</label>
-                        <select class="form-select" id="application" name="application">
-                            <option value="">All Applications</option>
-                            <option value="clinical" {{ request('application') == 'clinical' ? 'selected' : '' }}>Clinical</option>
-                            <option value="research" {{ request('application') == 'research' ? 'selected' : '' }}>Research</option>
-                            <option value="industrial" {{ request('application') == 'industrial' ? 'selected' : '' }}>Industrial</option>
-                            <option value="educational" {{ request('application') == 'educational' ? 'selected' : '' }}>Educational</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3 mb-3">
                         <label for="stock_status" class="form-label">Stock Status</label>
                         <select class="form-select" id="stock_status" name="stock_status">
                             <option value="">All</option>
@@ -74,6 +62,8 @@
                             <option value="out_of_stock" {{ request('stock_status') == 'out_of_stock' ? 'selected' : '' }}>Out of Stock</option>
                         </select>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-md-3 mb-3">
                         <label for="min_price" class="form-label">Min Price</label>
                         <input type="number" class="form-control" id="min_price" name="min_price" value="{{ request('min_price') }}" min="0" step="0.01">
@@ -90,8 +80,6 @@
                             <option value="price" {{ request('sort_by') == 'price' ? 'selected' : '' }}>Price</option>
                         </select>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col-md-3 mb-3">
                         <label for="sort_order" class="form-label">Sort Order</label>
                         <select class="form-select" id="sort_order" name="sort_order">
@@ -99,6 +87,8 @@
                             <option value="desc" {{ request('sort_order') == 'desc' ? 'selected' : '' }}>Descending</option>
                         </select>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-md-9 d-flex align-items-end mb-3">
                         <div class="d-grid gap-2 d-md-flex w-100">
                             <button type="submit" class="btn btn-primary flex-grow-1">Apply Filters</button>
