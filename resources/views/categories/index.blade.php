@@ -355,6 +355,13 @@
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">{{ $category->name }}</h5>
+                                @if($category->subcategories->isNotEmpty())
+                                <span class="badge rounded-pill bg-info mt-2">Contains subcategories</span>
+                                @elseif($category->products->isNotEmpty())
+                                <span class="badge rounded-pill bg-success mt-2">{{ $category->products->count() }} products</span>
+                                @else
+                                <span class="badge rounded-pill bg-secondary mt-2">No products yet</span>
+                                @endif
                                 <p class="text-center mt-2 mb-0 text-muted small">
                                     {{ $category->subcategories->isNotEmpty() ? 'View Subcategories' : 'View Products' }}
                                 </p>

@@ -11,13 +11,17 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::whereNull('parent_id')->get();
+        $categories = Category::whereNull('parent_id')
+                    ->with(['subcategories', 'products'])
+                    ->get();
         return view('products.index', compact('categories'));
     }
 
     public function show(Request $request, Category $category)
     {
         if ($category->subcategories->isNotEmpty()) {
+            // Eager load products for subcategories
+            $category->load(['subcategories.products']);
             return view('categories.subcategories', compact('category'));
         }
 
@@ -43,6 +47,8 @@ class CategoryController extends Controller
         }
         
         if ($subcategory->subcategories->isNotEmpty()) {
+            // Eager load products for subsubcategories
+            $subcategory->load(['subcategories.products']);
             return view('categories.subsubcategories', compact('category', 'subcategory'));
         }
         
