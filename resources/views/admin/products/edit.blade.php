@@ -169,6 +169,33 @@
                                 </div>
                             </div>
 
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="specification_image" class="form-label">Product Specification Image</label>
+                                    
+                                    @php
+                                        $specImage = $product->images()->whereNotNull('specification_image_url')->first();
+                                    @endphp
+                                    
+                                    @if($specImage)
+                                        <div class="mb-3">
+                                            <img src="{{ $specImage->specification_image_url }}" 
+                                                 alt="Product specification image" 
+                                                 class="img-thumbnail" style="max-width: 300px;">
+                                            <div class="mt-2">
+                                                <span class="badge bg-info">Current specification image</span>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    
+                                    <input type="file" name="specification_image" id="specification_image" class="form-control">
+                                    <small class="text-muted">Upload an image showing product specifications or technical details</small>
+                                    @error('specification_image')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
                             <div class="col-12 text-end">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-save me-1"></i> Update Product

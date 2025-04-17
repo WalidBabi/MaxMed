@@ -187,6 +187,75 @@
             background-color: rgba(10, 86, 148, 0.05);
         }
 
+        /* Specification Image */
+        .product-specifications-image {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--light-gray);
+        }
+
+        .product-specifications-image h5 {
+            color: var(--main-color);
+            border-bottom: 2px solid var(--auxiliary-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .specification-img {
+            max-height: 500px;
+            transition: all 0.3s;
+        }
+
+        .specification-img:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+            transform: scale(1.01);
+        }
+
+        /* Specification Card */
+        .specification-card {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+        
+        .specification-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .specification-card .card-header {
+            border-bottom: 2px solid var(--main-color);
+            padding: 15px 20px;
+        }
+        
+        .specification-card .text-main {
+            color: var(--main-color);
+            font-weight: 600;
+        }
+        
+        .specification-img-large {
+            padding: 10px;
+            background-color: white;
+            transition: all 0.3s;
+        }
+        
+        .specification-card .card-footer {
+            padding: 12px;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .specification-card .btn-outline-primary {
+            color: var(--auxiliary-color);
+            border-color: var(--auxiliary-color);
+        }
+        
+        .specification-card .btn-outline-primary:hover {
+            background-color: var(--auxiliary-color);
+            color: white;
+        }
+
         /* Responsive Adjustments */
         @media (max-width: 992px) {
             .product-title {
@@ -277,8 +346,10 @@
                         <img src="{{ $product->image_url }}" class="small-img active" 
                              alt="{{ $product->name }}" onclick="changeImage('{{ $product->image_url }}')">
                              
-                        <!-- Display additional non-primary images -->
-                        @foreach($product->images->where('is_primary', false) as $image)
+                        <!-- Display additional non-primary images, excluding specification images -->
+                        @foreach($product->images->where('is_primary', false)->filter(function($image) {
+                            return empty($image->specification_image_url);
+                        }) as $image)
                         <img src="{{ $image->image_url }}" class="small-img" 
                              alt="{{ $product->name }}" onclick="changeImage('{{ $image->image_url }}')">
                         @endforeach
@@ -351,11 +422,41 @@
                             </div>
                         </div>
                         @endif
+
+                        @php
+                            $specImage = $product->images->first(function($image) {
+                                return !empty($image->specification_image_url);
+                            });
+                        @endphp
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    @if(isset($specImage) && $specImage)
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card specification-card">
+                <div class="card-header bg-light">
+                    <h3 class="text-main m-0"><i class="fas fa-file-alt me-2"></i>Product Specifications</h3>
+                </div>
+                <div class="card-body p-0">
+                    <img src="{{ $specImage->specification_image_url }}" 
+                         alt="Product specifications" 
+                         class="img-fluid w-100 specification-img-large" 
+                         style="cursor: pointer; max-height: 800px; object-fit: contain;"
+                         onclick="window.open(this.src, '_blank')">
+                </div>
+                <div class="card-footer text-center bg-light">
+                    <button class="btn btn-sm btn-outline-primary" onclick="window.open('{{ $specImage->specification_image_url }}', '_blank')">
+                        <i class="fas fa-search-plus me-1"></i> View Full Size
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>
 
 <script>

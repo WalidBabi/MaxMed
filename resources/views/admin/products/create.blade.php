@@ -143,6 +143,17 @@
                                 </div>
                             </div>
 
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="specification_image" class="form-label">Product Specification Image</label>
+                                    <input type="file" name="specification_image" id="specification_image" class="form-control">
+                                    <small class="text-muted">Upload an image showing product specifications or technical details</small>
+                                    @error('specification_image')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
                             <div class="col-12 text-end">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-plus me-1"></i> Create Product

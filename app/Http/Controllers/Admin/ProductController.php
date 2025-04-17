@@ -94,7 +94,8 @@ class ProductController extends Controller
             'brand_id' => 'nullable|exists:brands,id',
             'application' => 'nullable|string|max:255',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5000',
-            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000'
+            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000',
+            'specification_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000'
         ]);
 
         DB::transaction(function () use ($request, $validated) {
@@ -130,6 +131,20 @@ class ProductController extends Controller
                 
                 // Also save in product's main image_url field for backward compatibility
                 $product->update(['image_url' => $imageUrl]);
+            }
+
+            // Handle specification image if uploaded
+            if ($request->hasFile('specification_image')) {
+                $path = $request->file('specification_image')->store('products/specifications', 'public');
+                $imageUrl = asset('storage/' . $path);
+                
+                $product->images()->create([
+                    'image_path' => $path,
+                    'image_url' => $imageUrl,
+                    'specification_image_url' => $imageUrl,
+                    'is_primary' => false,
+                    'sort_order' => 999 // High sort order to appear at the end
+                ]);
             }
 
             // Handle additional images
@@ -173,7 +188,8 @@ class ProductController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000',
             'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000',
             'delete_images' => 'nullable|string',
-            'primary_image_id' => 'nullable|exists:product_images,id'
+            'primary_image_id' => 'nullable|exists:product_images,id',
+            'specification_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000'
         ]);
 
         DB::transaction(function () use ($request, $product, $validated) {
@@ -236,6 +252,41 @@ class ProductController extends Controller
                         'image_url' => $imageUrl,
                         'is_primary' => false,
                         'sort_order' => $sortOrder++
+                    ]);
+                }
+            }
+
+            // Handle specification image if uploaded
+            if ($request->hasFile('specification_image')) {
+                // Check if there's an existing specification image
+                $existingSpecImage = $product->images()->whereNotNull('specification_image_url')->first();
+                
+                if ($existingSpecImage) {
+                    // Delete the old specification image file
+                    if (Storage::disk('public')->exists($existingSpecImage->image_path)) {
+                        Storage::disk('public')->delete($existingSpecImage->image_path);
+                    }
+                    
+                    // Update the existing record
+                    $path = $request->file('specification_image')->store('products/specifications', 'public');
+                    $imageUrl = asset('storage/' . $path);
+                    
+                    $existingSpecImage->update([
+                        'image_path' => $path,
+                        'image_url' => $imageUrl,
+                        'specification_image_url' => $imageUrl
+                    ]);
+                } else {
+                    // Create a new specification image record
+                    $path = $request->file('specification_image')->store('products/specifications', 'public');
+                    $imageUrl = asset('storage/' . $path);
+                    
+                    $product->images()->create([
+                        'image_path' => $path,
+                        'image_url' => $imageUrl,
+                        'specification_image_url' => $imageUrl,
+                        'is_primary' => false,
+                        'sort_order' => 999 // High sort order to appear at the end
                     ]);
                 }
             }
