@@ -124,6 +124,12 @@ Route::prefix('categories')->name('categories.')->group(function () {
     
     Route::get('/{category}/{subcategory}/{subsubcategory}', [CategoryController::class, 'showSubSubcategory'])->name('subsubcategory.show')
         ->where(['category' => '[0-9]+', 'subcategory' => '[0-9]+', 'subsubcategory' => '[0-9]+']); // Validate all IDs
+        
+    Route::get('/{category}/{subcategory}/{subsubcategory}/subcategories', [CategoryController::class, 'showSubSubcategory'])->name('subsubcategory.subsubcategories')
+        ->where(['category' => '[0-9]+', 'subcategory' => '[0-9]+', 'subsubcategory' => '[0-9]+']); // For showing the subsubcategories view
+        
+    Route::get('/{category}/{subcategory}/{subsubcategory}/{subsubsubcategory}', [CategoryController::class, 'showSubSubSubcategory'])->name('subsubsubcategory.show')
+        ->where(['category' => '[0-9]+', 'subcategory' => '[0-9]+', 'subsubcategory' => '[0-9]+', 'subsubsubcategory' => '[0-9]+']); // Validate all IDs
 });
 
 // Partners Routes

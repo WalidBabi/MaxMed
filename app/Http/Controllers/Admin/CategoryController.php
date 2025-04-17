@@ -23,6 +23,9 @@ class CategoryController extends Controller
         // Get second-level categories
         $secondLevelCategories = Category::whereIn('parent_id', $topCategories->pluck('id'))->get();
         
+        // Get third-level categories
+        $thirdLevelCategories = Category::whereIn('parent_id', $secondLevelCategories->pluck('id'))->get();
+        
         // Organize categories for dropdown
         $categoriesForDropdown = [];
         
@@ -36,6 +39,14 @@ class CategoryController extends Controller
             // Find parent name
             $parentName = $topCategories->where('id', $subCategory->parent_id)->first()->name;
             $categoriesForDropdown[$subCategory->id] = $parentName . ' › ' . $subCategory->name;
+        }
+        
+        // Add third level categories (subsubcategories)
+        foreach ($thirdLevelCategories as $subsubCategory) {
+            // Find parent and grandparent
+            $parent = $secondLevelCategories->where('id', $subsubCategory->parent_id)->first();
+            $grandparent = $topCategories->where('id', $parent->parent_id)->first();
+            $categoriesForDropdown[$subsubCategory->id] = $grandparent->name . ' › ' . $parent->name . ' › ' . $subsubCategory->name;
         }
         
         return view('admin.categories.create', compact('categoriesForDropdown'));
@@ -76,6 +87,11 @@ class CategoryController extends Controller
             ->where('id', '!=', $category->id)
             ->get();
             
+        // Get third-level categories excluding the current category
+        $thirdLevelCategories = Category::whereIn('parent_id', $secondLevelCategories->pluck('id'))
+            ->where('id', '!=', $category->id)
+            ->get();
+            
         // Don't allow creating circular dependencies
         $childrenIds = $this->getAllChildrenIds($category);
         
@@ -95,6 +111,16 @@ class CategoryController extends Controller
                 // Find parent name
                 $parentName = $topCategories->where('id', $subCategory->parent_id)->first()->name;
                 $categoriesForDropdown[$subCategory->id] = $parentName . ' › ' . $subCategory->name;
+            }
+        }
+        
+        // Add third level categories (subsubcategories)
+        foreach ($thirdLevelCategories as $subsubCategory) {
+            if (!in_array($subsubCategory->id, $childrenIds)) {
+                // Find parent and grandparent names
+                $parent = $secondLevelCategories->where('id', $subsubCategory->parent_id)->first();
+                $grandparent = $topCategories->where('id', $parent->parent_id)->first();
+                $categoriesForDropdown[$subsubCategory->id] = $grandparent->name . ' › ' . $parent->name . ' › ' . $subsubCategory->name;
             }
         }
         

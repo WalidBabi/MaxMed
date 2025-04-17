@@ -28,7 +28,7 @@
                 </thead>
                 <tbody>
                     @php
-                        $topCategories = \App\Models\Category::whereNull('parent_id')->with('subcategories.subcategories')->get();
+                        $topCategories = \App\Models\Category::whereNull('parent_id')->with('subcategories.subcategories.subcategories')->get();
                     @endphp
                     
                     @foreach($topCategories as $category)
@@ -90,6 +90,29 @@
                             </form>
                         </td>
                     </tr>
+                    
+                    @foreach($subsubcategory->subcategories as $subsubsubcategory)
+                    <tr class="subsubsubcategory-row">
+                        <td>
+                            <i class="fas fa-angle-triple-right me-2 text-primary"></i>
+                            {{ $subsubsubcategory->name }}
+                        </td>
+                        <td><span class="level-indicator">Level 4</span></td>
+                        <td>
+                            <a href="{{ route('admin.categories.edit', $subsubsubcategory->id) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-edit me-1"></i>Edit
+                            </a>
+                            <form action="{{ route('admin.categories.destroy', $subsubsubcategory->id) }}" method="POST" style="display:inline;">
+                                @csrf 
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this subsubsub-category?')">
+                                    <i class="fas fa-trash me-1"></i>Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                    
                     @endforeach
                     
                     @endforeach
@@ -126,6 +149,14 @@
     
     .subsubcategory-row td:first-child {
         padding-left: 3.5rem;
+    }
+    
+    .subsubsubcategory-row {
+        background-color: rgba(0, 0, 0, 0.06);
+    }
+    
+    .subsubsubcategory-row td:first-child {
+        padding-left: 5rem;
     }
     
     .table {

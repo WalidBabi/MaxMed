@@ -315,28 +315,30 @@
         </div>
         <div class="col-md-9 mt-2 main-content-column transition-all duration-300">
             <div class="page-header mb-4">
-                <h1 class="page-title">{{ $subcategory->name }}</h1>
-                <p class="page-description">Browse subcategories of {{ $subcategory->name }}. Explore our range of high-quality laboratory equipment and scientific instruments.</p>
+                <h1 class="page-title">{{ $subsubcategory->name }}</h1>
+                <p class="page-description">Browse subcategories of {{ $subsubcategory->name }}. Explore our range of high-quality laboratory equipment and scientific instruments.</p>
                 
               
             </div>
             
             <div class="subcategory-container">
-                @foreach($subcategory->subcategories as $subsubcategory)
+                @foreach($subsubcategory->subcategories as $subsubsubcategory)
                 <div class="subcategory-card-wrapper">
-                    <a href="{{ $subsubcategory->subcategories->isNotEmpty() ? route('categories.subsubcategory.subsubcategories', [$category, $subcategory, $subsubcategory]) : route('categories.subsubcategory.show', [$category, $subcategory, $subsubcategory]) }}" class="text-decoration-none">
+                    <a href="{{ route('categories.subsubsubcategory.show', [$category, $subcategory, $subsubcategory, $subsubsubcategory]) }}" class="text-decoration-none">
                         <div class="subcategory-card">
                             <div class="overflow-hidden">
-                                @if(isset($subsubcategory->image_url))
-                                <img src="{{ $subsubcategory->image_url }}" class="card-img-top" alt="{{ $subsubcategory->name }}">
+                                @if(isset($subsubsubcategory->image_url))
+                                <img src="{{ $subsubsubcategory->image_url }}" class="card-img-top" alt="{{ $subsubsubcategory->name }}">
                                 @else
-                                <img src="{{ asset('images/default-subcategory.jpg') }}" class="card-img-top" alt="{{ $subsubcategory->name }}">
+                                <img src="{{ asset('images/default-subcategory.jpg') }}" class="card-img-top" alt="{{ $subsubsubcategory->name }}">
                                 @endif
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title">{{ $subsubcategory->name }}</h5>
-                                @if($subsubcategory->subcategories->isNotEmpty())
-                                <span class="badge rounded-pill bg-info mt-2">Contains subcategories</span>
+                                <h5 class="card-title">{{ $subsubsubcategory->name }}</h5>
+                                @if($subsubsubcategory->products->isNotEmpty())
+                                <span class="badge rounded-pill bg-success mt-2">{{ $subsubsubcategory->products->count() }} products</span>
+                                @else
+                                <span class="badge rounded-pill bg-secondary mt-2">No products yet</span>
                                 @endif
                             </div>
                         </div>

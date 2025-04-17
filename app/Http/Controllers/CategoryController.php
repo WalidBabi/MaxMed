@@ -67,6 +67,13 @@ class CategoryController extends Controller
                 ->with('warning', 'The requested category path is invalid.');
         }
         
+        // Check if this subsubcategory has subcategories
+        if ($subsubcategory->subcategories->isNotEmpty()) {
+            // Eager load products for showing counts
+            $subsubcategory->load(['subcategories.products']);
+            return view('categories.subsubsubcategories', compact('category', 'subcategory', 'subsubcategory'));
+        }
+        
         // Start building the query
         $query = Product::with(['category', 'inventory'])->where('category_id', $subsubcategory->id);
         
@@ -78,6 +85,29 @@ class CategoryController extends Controller
         $products->appends($request->all());
         
         return view('categories.products', compact('subsubcategory', 'products'));
+    }
+
+    public function showSubSubSubcategory(Request $request, Category $category, Category $subcategory, Category $subsubcategory, Category $subsubsubcategory)
+    {
+        // Validate hierarchy
+        if ($subcategory->parent_id != $category->id || 
+            $subsubcategory->parent_id != $subcategory->id ||
+            $subsubsubcategory->parent_id != $subsubcategory->id) {
+            return Redirect::route('products.index')
+                ->with('warning', 'The requested category path is invalid.');
+        }
+        
+        // Start building the query
+        $query = Product::with(['category', 'inventory'])->where('category_id', $subsubsubcategory->id);
+        
+        // Apply all filters
+        $query = $this->applyFilters($request, $query);
+        
+        // Get paginated results
+        $products = $query->paginate(16);
+        $products->appends($request->all());
+        
+        return view('categories.products', compact('subsubsubcategory', 'products'));
     }
     
     /**

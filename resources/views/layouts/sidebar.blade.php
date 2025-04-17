@@ -19,7 +19,7 @@
                 
                 <!-- Categories section -->
                 <div class="space-y-1 pr-2">
-                    @foreach(\App\Models\Category::whereNull('parent_id')->with(['subcategories.subcategories'])->get()->sortBy(function($category) {
+                    @foreach(\App\Models\Category::whereNull('parent_id')->with(['subcategories.subcategories.subcategories'])->get()->sortBy(function($category) {
                         // Define your preferred order here - same as welcome page
                         $order = [
                             'Molecular & Clinical Diagnostics' => 1,
@@ -83,11 +83,42 @@
                                     x-transition:leave-start="opacity-100 transform translate-y-0"
                                     x-transition:leave-end="opacity-0 transform -translate-y-2">
                                     @foreach($subcategory->subcategories as $subsubcategory)
-                                    <a href="{{ route('categories.subsubcategory.show', [$category, $subcategory, $subsubcategory]) }}"
-                                       class="flex items-center h-7 px-3 rounded-lg transition-colors {{ request('subsubcategory') === $subsubcategory->name ? 'bg-[#0a5694] text-white' : 'text-gray-400 hover:bg-[#2a3387] hover:text-white group' }}"
-                                       style="cursor: pointer !important;">
-                                        <span class="text-xs font-medium">{{ $subsubcategory->name }}</span>
-                                    </a>
+                                    <div class="subsubcategory-item" x-data="{ subsubOpen: false }">
+                                        @if($subsubcategory->subcategories->isNotEmpty())
+                                        <div class="flex items-center h-7 px-3 rounded-lg transition-colors {{ request('subsubcategory') === $subsubcategory->name ? 'bg-[#0a5694] text-white' : 'text-gray-400 hover:bg-[#2a3387] hover:text-white group' }}"
+                                             @click="subsubOpen = !subsubOpen"
+                                             style="cursor: pointer !important;">
+                                            <span class="text-xs font-medium">{{ $subsubcategory->name }}</span>
+                                            <span class="ml-auto transform transition-transform duration-200 text-xs" 
+                                                  :class="{ 'rotate-180': subsubOpen }">▼</span>
+                                        </div>
+                                        @else
+                                        <a href="{{ route('categories.subsubcategory.show', [$category, $subcategory, $subsubcategory]) }}"
+                                           class="flex items-center h-7 px-3 rounded-lg transition-colors {{ request('subsubcategory') === $subsubcategory->name ? 'bg-[#0a5694] text-white' : 'text-gray-400 hover:bg-[#2a3387] hover:text-white group' }}"
+                                           style="cursor: pointer !important;">
+                                            <span class="text-xs font-medium">{{ $subsubcategory->name }}</span>
+                                        </a>
+                                        @endif
+                                        
+                                        @if($subsubcategory->subcategories->isNotEmpty())
+                                        <div class="pl-3 ml-2 border-l border-[#2a3387] mt-1 space-y-1"
+                                             x-show="subsubOpen"
+                                             x-transition:enter="transition ease-out duration-200"
+                                             x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                             x-transition:enter-end="opacity-100 transform translate-y-0"
+                                             x-transition:leave="transition ease-in duration-150"
+                                             x-transition:leave-start="opacity-100 transform translate-y-0"
+                                             x-transition:leave-end="opacity-0 transform -translate-y-2">
+                                            @foreach($subsubcategory->subcategories as $subsubsubcategory)
+                                            <a href="{{ route('categories.subsubsubcategory.show', [$category, $subcategory, $subsubcategory, $subsubsubcategory]) }}"
+                                               class="flex items-center h-6 px-3 rounded-lg transition-colors {{ request('subsubsubcategory') === $subsubsubcategory->name ? 'bg-[#0a5694] text-white' : 'text-gray-500 hover:bg-[#2a3387] hover:text-white group' }}"
+                                               style="cursor: pointer !important;">
+                                                <span class="text-xs font-medium">{{ $subsubsubcategory->name }}</span>
+                                            </a>
+                                            @endforeach
+                                        </div>
+                                        @endif
+                                    </div>
                                     @endforeach
                                 </div>
                                 @endif
