@@ -11,18 +11,16 @@
                     </a>
                 </div>
                 
-                <!-- Enhanced Search Bar - Now more prominent -->
-                <div class="hidden md:block mx-4 w-1/3 relative">
+                <!-- Search Bar - Now in the middle -->
+                <div class="hidden md:block mx-4 w-1/3">
                     <form action="{{ route('search') }}" method="GET" class="flex items-center mb-0">
                         <div class="relative w-full">
-                            <input type="text" name="query" id="search-input" 
-                                placeholder="Search products, categories, or codes"
-                                class="w-full py-2 pl-4 pr-10 bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#171e60] text-sm"
-                                value="{{ request('query') }}"
-                                autocomplete="off">
-                            <div id="search-suggestions" class="absolute z-50 bg-white w-full mt-1 rounded-lg shadow-lg border border-gray-200 hidden"></div>
+                            <input type="text" name="query" id="desktop-search-input" placeholder="Search product names or codes"
+                                class="w-full py-2 pl-4 bg-gray-100 border-none rounded-l-full focus:outline-none text-sm"
+                                value="{{ request('query') }}" autocomplete="off">
+                            <div id="desktop-search-suggestions" class="absolute z-50 w-full bg-white mt-1 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto"></div>
                         </div>
-                        <button type="submit" aria-label="Search products" class="ml-2 bg-gradient-to-r from-[#171e60] to-[#0a5694] text-white p-2.5 rounded-lg hover:from-[#0a5694] hover:to-[#171e60] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#171e60] focus:ring-opacity-50 shadow-md">
+                        <button type="submit" aria-label="Search products" class="bg-gradient-to-r from-[#171e60] to-[#0a5694] text-white p-2.5 rounded-lg hover:from-[#0a5694] hover:to-[#171e60] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#171e60] focus:ring-opacity-50 shadow-md">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
@@ -125,16 +123,14 @@
         <!-- Mobile Navigation Menu -->
         <div :class="{'block': open, 'hidden': !open}" class="hidden md:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-100">
-                <!-- Mobile Search - Enhanced -->
+                <!-- Mobile Search - Updated to match SLS style -->
                 <div class="px-4 py-2">
                     <form action="{{ route('search') }}" method="GET" class="relative">
-                        <input type="text" name="query" id="mobile-search-input" 
-                            placeholder="Search products, categories, or codes"
-                            class="w-full py-2 pl-4 pr-12 bg-gray-200 border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-[#171e60] text-sm"
-                            value="{{ request('query') }}"
-                            autocomplete="off">
-                        <div id="mobile-search-suggestions" class="absolute z-50 bg-white w-full mt-1 rounded-lg shadow-lg border border-gray-200 hidden"></div>
-                        <button type="submit" aria-label="Search products" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#0064a8] text-white p-2 rounded-full hover:bg-[#0052a3] focus:outline-none">
+                        <input type="text" name="query" id="mobile-search-input" placeholder="Search product names, codes or CAS number"
+                            class="w-full py-2 pl-4 pr-12 bg-gray-200 border-none rounded-full focus:outline-none text-sm"
+                            value="{{ request('query') }}" autocomplete="off">
+                        <div id="mobile-search-suggestions" class="absolute z-50 w-full bg-white mt-1 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto"></div>
+                        <button type="submit" aria-label="Search products" class="absolute right-1 top-1/2 transform -translate-y-1/2 bg-[#0064a8] text-white p-2 rounded-full hover:bg-[#0052a3] focus:outline-none">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
@@ -198,129 +194,6 @@
     }
 </script>
 
-<!-- Add Search Autocomplete JavaScript -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Setup for desktop search
-        setupSearchAutocomplete('search-input', 'search-suggestions');
-        
-        // Setup for mobile search
-        setupSearchAutocomplete('mobile-search-input', 'mobile-search-suggestions');
-        
-        function setupSearchAutocomplete(inputId, suggestionsId) {
-            const searchInput = document.getElementById(inputId);
-            const suggestionsContainer = document.getElementById(suggestionsId);
-            
-            if (!searchInput || !suggestionsContainer) return;
-            
-            let debounceTimer;
-            
-            searchInput.addEventListener('focus', function() {
-                if (suggestionsContainer.children.length > 0) {
-                    suggestionsContainer.classList.remove('hidden');
-                }
-            });
-            
-            // Hide suggestions when clicking outside
-            document.addEventListener('click', function(e) {
-                if (e.target !== searchInput && !suggestionsContainer.contains(e.target)) {
-                    suggestionsContainer.classList.add('hidden');
-                }
-            });
-            
-            searchInput.addEventListener('input', function() {
-                const query = this.value.trim();
-                
-                clearTimeout(debounceTimer);
-                
-                if (query.length < 2) {
-                    suggestionsContainer.classList.add('hidden');
-                    return;
-                }
-                
-                debounceTimer = setTimeout(function() {
-                    fetch(`/search/suggestions?query=${encodeURIComponent(query)}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            suggestionsContainer.innerHTML = '';
-                            
-                            if ((!data.products || data.products.length === 0) && 
-                                (!data.categories || data.categories.length === 0)) {
-                                suggestionsContainer.classList.add('hidden');
-                                return;
-                            }
-                            
-                            // Product suggestions
-                            if (data.products && data.products.length > 0) {
-                                const productsHeading = document.createElement('div');
-                                productsHeading.className = 'px-4 py-2 text-xs font-semibold text-gray-500 bg-gray-50';
-                                productsHeading.textContent = 'Products';
-                                suggestionsContainer.appendChild(productsHeading);
-                                
-                                data.products.forEach(product => {
-                                    const item = document.createElement('a');
-                                    item.href = `/product/${product.id}`;
-                                    item.className = 'flex items-center px-4 py-3 hover:bg-gray-50 transition-colors duration-150';
-                                    
-                                    let imgHtml = '';
-                                    if (product.image_url) {
-                                        imgHtml = `<img src="${product.image_url}" alt="${product.name}" class="w-10 h-10 object-cover rounded mr-3">`;
-                                    } else {
-                                        imgHtml = `<div class="w-10 h-10 bg-gray-200 rounded flex items-center justify-center mr-3"><span class="text-xs text-gray-500">No img</span></div>`;
-                                    }
-                                    
-                                    item.innerHTML = `
-                                        ${imgHtml}
-                                        <div class="text-sm">${product.name}</div>
-                                    `;
-                                    
-                                    suggestionsContainer.appendChild(item);
-                                });
-                            }
-                            
-                            // Category suggestions
-                            if (data.categories && data.categories.length > 0) {
-                                const categoriesHeading = document.createElement('div');
-                                categoriesHeading.className = 'px-4 py-2 text-xs font-semibold text-gray-500 bg-gray-50';
-                                categoriesHeading.textContent = 'Categories';
-                                suggestionsContainer.appendChild(categoriesHeading);
-                                
-                                data.categories.forEach(category => {
-                                    const item = document.createElement('a');
-                                    item.href = `/categories/${category.id}`;
-                                    item.className = 'flex items-center px-4 py-3 hover:bg-gray-50 transition-colors duration-150';
-                                    item.innerHTML = `
-                                        <div class="w-10 h-10 bg-[#171e60] text-white rounded flex items-center justify-center mr-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                                            </svg>
-                                        </div>
-                                        <div class="text-sm">${category.name}</div>
-                                    `;
-                                    
-                                    suggestionsContainer.appendChild(item);
-                                });
-                            }
-                            
-                            // Search all results link
-                            const searchAllItem = document.createElement('a');
-                            searchAllItem.href = `/search?query=${encodeURIComponent(query)}`;
-                            searchAllItem.className = 'block px-4 py-3 text-center text-sm font-medium text-[#0a5694] hover:bg-gray-50 transition-colors duration-150 border-t';
-                            searchAllItem.textContent = `See all results for "${query}"`;
-                            suggestionsContainer.appendChild(searchAllItem);
-                            
-                            suggestionsContainer.classList.remove('hidden');
-                        })
-                        .catch(error => {
-                            console.error('Error fetching search suggestions:', error);
-                            suggestionsContainer.classList.add('hidden');
-                        });
-                }, 300); // Debounce delay
-            });
-        }
-    });
-</script>
-
 {{-- Conditionally add script to call the notification function on DOMContentLoaded --}}
 @if(session('success') && str_contains(session('success'), 'cart'))
 <script>
@@ -329,3 +202,113 @@
     });
 </script>
 @endif
+
+{{-- Add autocomplete functionality script before the closing </nav> tag --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Search autocomplete functionality
+        const setupSearchAutocomplete = (inputId, suggestionsId) => {
+            const searchInput = document.getElementById(inputId);
+            const suggestionsContainer = document.getElementById(suggestionsId);
+            
+            if (!searchInput || !suggestionsContainer) return;
+            
+            let debounceTimer;
+            
+            searchInput.addEventListener('input', function() {
+                clearTimeout(debounceTimer);
+                const query = this.value.trim();
+                
+                if (query.length < 2) {
+                    suggestionsContainer.classList.add('hidden');
+                    return;
+                }
+                
+                debounceTimer = setTimeout(() => {
+                    fetch(`{{ route('search.suggestions') }}?query=${encodeURIComponent(query)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            suggestionsContainer.innerHTML = '';
+                            
+                            if (data.completions && data.completions.length > 0) {
+                                data.completions.forEach(suggestion => {
+                                    const suggestionElement = document.createElement('div');
+                                    suggestionElement.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm';
+                                    suggestionElement.textContent = suggestion;
+                                    
+                                    suggestionElement.addEventListener('click', () => {
+                                        searchInput.value = suggestion;
+                                        suggestionsContainer.classList.add('hidden');
+                                        // Submit the parent form
+                                        searchInput.closest('form').submit();
+                                    });
+                                    
+                                    suggestionsContainer.appendChild(suggestionElement);
+                                });
+                                
+                                suggestionsContainer.classList.remove('hidden');
+                            } else {
+                                suggestionsContainer.classList.add('hidden');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching search suggestions:', error);
+                            suggestionsContainer.classList.add('hidden');
+                        });
+                }, 300);
+            });
+            
+            // Close suggestions when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!searchInput.contains(event.target) && !suggestionsContainer.contains(event.target)) {
+                    suggestionsContainer.classList.add('hidden');
+                }
+            });
+            
+            // Navigate through suggestions with keyboard
+            searchInput.addEventListener('keydown', function(e) {
+                if (suggestionsContainer.classList.contains('hidden')) return;
+                
+                const suggestions = suggestionsContainer.querySelectorAll('div');
+                if (suggestions.length === 0) return;
+                
+                let activeIndex = Array.from(suggestions).findIndex(el => el.classList.contains('bg-gray-200'));
+                
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (activeIndex === -1 || activeIndex === suggestions.length - 1) {
+                        activeIndex = 0;
+                    } else {
+                        activeIndex++;
+                    }
+                    updateActiveSuggestion(suggestions, activeIndex);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (activeIndex === -1 || activeIndex === 0) {
+                        activeIndex = suggestions.length - 1;
+                    } else {
+                        activeIndex--;
+                    }
+                    updateActiveSuggestion(suggestions, activeIndex);
+                } else if (e.key === 'Enter' && activeIndex !== -1) {
+                    e.preventDefault();
+                    searchInput.value = suggestions[activeIndex].textContent;
+                    suggestionsContainer.classList.add('hidden');
+                    searchInput.closest('form').submit();
+                } else if (e.key === 'Escape') {
+                    suggestionsContainer.classList.add('hidden');
+                }
+            });
+            
+            function updateActiveSuggestion(suggestions, activeIndex) {
+                suggestions.forEach(s => s.classList.remove('bg-gray-200'));
+                suggestions[activeIndex].classList.add('bg-gray-200');
+                suggestions[activeIndex].scrollIntoView({ block: 'nearest' });
+            }
+        };
+        
+        // Initialize autocomplete for both desktop and mobile search inputs
+        setupSearchAutocomplete('desktop-search-input', 'desktop-search-suggestions');
+        setupSearchAutocomplete('mobile-search-input', 'mobile-search-suggestions');
+    });
+</script>
