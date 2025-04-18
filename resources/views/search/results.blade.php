@@ -52,7 +52,8 @@
                             <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ $product->name }}</h3>
                             <p class="text-gray-600 text-sm mb-4">{{ Str::limit($product->description, 100) }}</p>
                             <div class="flex justify-between items-center">
-                                <!-- Price would go here if needed -->
+                                <!-- Product SKU for identification -->
+                                <span class="text-xs text-gray-500">{{ $product->sku ?? 'No SKU' }}</span>
                                 <div class="mt-2">
                                     <span class="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">View Details</span>
                                 </div>
@@ -96,6 +97,21 @@
             </svg>
             <h3 class="text-xl font-semibold text-gray-800 mb-2">No products found</h3>
             <p class="text-gray-600">We couldn't find any products matching your search "{{ $query }}".</p>
+            
+            <!-- Try alternative search suggestion -->
+            <div class="mt-4 mb-6">
+                <p class="text-gray-700">You can try searching for:</p>
+                <div class="flex flex-wrap justify-center gap-2 mt-2">
+                    <a href="{{ route('search', ['query' => strtolower($query)]) }}" 
+                       class="inline-block px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-sm text-blue-700 hover:bg-blue-100 transition-colors duration-200">
+                        {{ strtolower($query) }}
+                    </a>
+                    <a href="{{ route('search', ['query' => strtoupper($query)]) }}" 
+                       class="inline-block px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-sm text-blue-700 hover:bg-blue-100 transition-colors duration-200">
+                        {{ strtoupper($query) }}
+                    </a>
+                </div>
+            </div>
             
             <!-- Search suggestions -->
             <div class="mt-8 text-left">

@@ -19,62 +19,42 @@ class SearchController extends Controller
         }
 
         try {
-            // Safely prepare the search term
-            $searchTerm = '%' . trim($query) . '%';
+            // Safely prepare the search term and make it case insensitive
+            $searchTerm = '%' . trim(strtolower($query)) . '%';
             
-            // Exact match will have the highest priority
-            $exactMatchQuery = Product::where('name', 'LIKE', trim($query))
-                ->orWhere(function($q) use ($query) {
-                    // Match full product code
-                    $q->where('sku', trim($query));
-                });
-                
-            // If exact matches exist, use them; otherwise perform a broader search
-            $exactMatches = $exactMatchQuery->get();
+            // Debug the search
+            Log::info("Searching for: " . $query . " (Term: " . $searchTerm . ")");
             
-            if ($exactMatches->count() > 0) {
-                $products = $exactMatchQuery->paginate(12);
-            } else {
-                // Use semantic search with weighted relevance scoring
-                $products = Product::selectRaw('
-                    products.*, 
-                    CASE 
-                        WHEN name LIKE ? THEN 10
-                        WHEN name LIKE ? THEN 8 
-                        WHEN description LIKE ? THEN 5
-                        WHEN EXISTS (SELECT 1 FROM categories WHERE categories.id = products.category_id AND categories.name LIKE ?) THEN 3
-                        ELSE 1
-                    END as relevance_score', 
-                    [
-                        trim($query), // Exact match on name
-                        $searchTerm,  // Partial match on name
-                        $searchTerm,  // Match on description
-                        $searchTerm   // Match on category name
-                    ]
-                )
+            // Perform a more flexible search to match suggestions behavior
+            $products = Product::select('products.*')
                 ->where(function($q) use ($searchTerm, $query) {
-                    $q->where('name', 'LIKE', $searchTerm)
-                      ->orWhere('description', 'LIKE', $searchTerm)
-                      ->orWhere('sku', 'LIKE', $searchTerm)
-                      ->orWhereHas('category', function ($categoryQuery) use ($searchTerm) {
-                          $categoryQuery->where('name', 'LIKE', $searchTerm);
-                      });
-                      
-                    // Split the query into words for more intelligent matching
+                    // Search in product fields
+                    $q->whereRaw('LOWER(name) LIKE ?', [$searchTerm])
+                      ->orWhereRaw('LOWER(description) LIKE ?', [$searchTerm])
+                      ->orWhereRaw('LOWER(sku) LIKE ?', [$searchTerm]);
+                    
+                    // Search in categories
+                    $q->orWhereHas('category', function($categoryQuery) use ($searchTerm) {
+                        $categoryQuery->whereRaw('LOWER(name) LIKE ?', [$searchTerm]);
+                    });
+                    
+                    // Handle individual words for multi-word queries
                     $words = explode(' ', trim($query));
                     if (count($words) > 1) {
                         foreach ($words as $word) {
-                            if (strlen($word) > 3) { // Only consider words longer than 3 characters
-                                $wordTerm = '%' . $word . '%';
-                                $q->orWhere('name', 'LIKE', $wordTerm)
-                                  ->orWhere('description', 'LIKE', $wordTerm);
+                            if (strlen($word) > 2) {
+                                $wordTerm = '%' . strtolower($word) . '%';
+                                $q->orWhereRaw('LOWER(name) LIKE ?', [$wordTerm])
+                                  ->orWhereRaw('LOWER(description) LIKE ?', [$wordTerm]);
                             }
                         }
                     }
                 })
-                ->orderByDesc('relevance_score')
+                ->orderBy('name')
                 ->paginate(12);
-            }
+            
+            // Debug results count
+            Log::info("Found " . $products->total() . " products for: " . $query);
             
             return view('search.results', compact('products', 'query'));
             
@@ -104,31 +84,47 @@ class SearchController extends Controller
         }
         
         try {
-            $searchTerm = '%' . trim($query) . '%';
+            $searchTerm = '%' . trim(strtolower($query)) . '%';
             
-            // Get product name suggestions with relevance scoring
+            // Get product name suggestions with relevance scoring - improved case insensitivity
             $productSuggestions = Product::selectRaw('
                 id, 
                 name, 
                 image_url,
                 CASE 
-                    WHEN name LIKE ? THEN 3
-                    WHEN name LIKE ? THEN 2
+                    WHEN LOWER(name) LIKE ? THEN 3
+                    WHEN LOWER(name) LIKE ? THEN 2
+                    WHEN LOWER(sku) LIKE ? THEN 3
                     ELSE 1
                 END as relevance', 
                 [
-                    trim($query), // Exact match
-                    $searchTerm   // Partial match
+                    trim(strtolower($query)),       // Exact match
+                    $searchTerm,                     // Partial match
+                    '%' . trim(strtolower($query)) . '%'  // SKU match
                 ]
             )
-            ->where('name', 'LIKE', $searchTerm)
+            ->where(function($q) use ($searchTerm, $query) {
+                $q->whereRaw('LOWER(name) LIKE ?', [$searchTerm])
+                  ->orWhereRaw('LOWER(sku) LIKE ?', ['%' . trim(strtolower($query)) . '%']);
+                  
+                // Also search individual words for better suggestions
+                $words = explode(' ', trim($query));
+                if (count($words) > 1) {
+                    foreach ($words as $word) {
+                        if (strlen($word) > 2) {
+                            $wordTerm = '%' . strtolower($word) . '%';
+                            $q->orWhereRaw('LOWER(name) LIKE ?', [$wordTerm]);
+                        }
+                    }
+                }
+            })
             ->orderByDesc('relevance')
-            ->take(5)
+            ->take(8) // Increased from 5 to 8 for more suggestions
             ->get();
                 
-            // Get category suggestions
+            // Get category suggestions - improved case insensitivity
             $categorySuggestions = DB::table('categories')
-                ->where('name', 'LIKE', $searchTerm)
+                ->whereRaw('LOWER(name) LIKE ?', [$searchTerm])
                 ->select('id', 'name')
                 ->take(3)
                 ->get()
