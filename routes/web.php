@@ -142,6 +142,7 @@ Route::get('/showproducts', [ProductController::class, 'showProducts'])->name('s
 
 // Search Route
 Route::get('/search', [SearchController::class, 'search'])->name('search');
+Route::get('/search/suggestions', [SearchController::class, 'suggestions'])->name('search.suggestions');
 
 // QR Code Route
 Route::get('/qr-code', [QRCodeController::class, 'generate'])->name('qr.code');

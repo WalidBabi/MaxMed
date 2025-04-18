@@ -11,13 +11,18 @@
                     </a>
                 </div>
                 
-                <!-- Search Bar - Now in the middle -->
-                <div class="hidden md:block mx-4 w-1/3">
+                <!-- Enhanced Search Bar - Now more prominent -->
+                <div class="hidden md:block mx-4 w-1/3 relative">
                     <form action="{{ route('search') }}" method="GET" class="flex items-center mb-0">
-                        <input type="text" name="query" placeholder="Search product names or codes"
-                            class="w-full py-2 pl-4 bg-gray-100 border-none rounded-l-full focus:outline-none text-sm"
-                            value="{{ request('query') }}">
-                        <button type="submit" aria-label="Search products" class=" bg-gradient-to-r from-[#171e60] to-[#0a5694] text-white p-2.5 rounded-lg hover:from-[#0a5694] hover:to-[#171e60] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#171e60] focus:ring-opacity-50 shadow-md">
+                        <div class="relative w-full">
+                            <input type="text" name="query" id="search-input" 
+                                placeholder="Search products, categories, or codes"
+                                class="w-full py-2 pl-4 pr-10 bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#171e60] text-sm"
+                                value="{{ request('query') }}"
+                                autocomplete="off">
+                            <div id="search-suggestions" class="absolute z-50 bg-white w-full mt-1 rounded-lg shadow-lg border border-gray-200 hidden"></div>
+                        </div>
+                        <button type="submit" aria-label="Search products" class="ml-2 bg-gradient-to-r from-[#171e60] to-[#0a5694] text-white p-2.5 rounded-lg hover:from-[#0a5694] hover:to-[#171e60] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#171e60] focus:ring-opacity-50 shadow-md">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
@@ -120,13 +125,16 @@
         <!-- Mobile Navigation Menu -->
         <div :class="{'block': open, 'hidden': !open}" class="hidden md:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-100">
-                <!-- Mobile Search - Updated to match SLS style -->
+                <!-- Mobile Search - Enhanced -->
                 <div class="px-4 py-2">
                     <form action="{{ route('search') }}" method="GET" class="relative">
-                        <input type="text" name="query" placeholder="Search product names, codes or CAS number"
-                            class="w-full py-2 pl-4 pr-12 bg-gray-200 border-none rounded-full focus:outline-none text-sm"
-                            value="{{ request('query') }}">
-                        <button type="submit" aria-label="Search products" class="absolute right-1 top-1/2 transform -translate-y-1/2 bg-[#0064a8] text-white p-2 rounded-full hover:bg-[#0052a3] focus:outline-none">
+                        <input type="text" name="query" id="mobile-search-input" 
+                            placeholder="Search products, categories, or codes"
+                            class="w-full py-2 pl-4 pr-12 bg-gray-200 border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-[#171e60] text-sm"
+                            value="{{ request('query') }}"
+                            autocomplete="off">
+                        <div id="mobile-search-suggestions" class="absolute z-50 bg-white w-full mt-1 rounded-lg shadow-lg border border-gray-200 hidden"></div>
+                        <button type="submit" aria-label="Search products" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#0064a8] text-white p-2 rounded-full hover:bg-[#0052a3] focus:outline-none">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
@@ -188,6 +196,129 @@
             notification.classList.add('hidden');
         }, 3000);
     }
+</script>
+
+<!-- Add Search Autocomplete JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Setup for desktop search
+        setupSearchAutocomplete('search-input', 'search-suggestions');
+        
+        // Setup for mobile search
+        setupSearchAutocomplete('mobile-search-input', 'mobile-search-suggestions');
+        
+        function setupSearchAutocomplete(inputId, suggestionsId) {
+            const searchInput = document.getElementById(inputId);
+            const suggestionsContainer = document.getElementById(suggestionsId);
+            
+            if (!searchInput || !suggestionsContainer) return;
+            
+            let debounceTimer;
+            
+            searchInput.addEventListener('focus', function() {
+                if (suggestionsContainer.children.length > 0) {
+                    suggestionsContainer.classList.remove('hidden');
+                }
+            });
+            
+            // Hide suggestions when clicking outside
+            document.addEventListener('click', function(e) {
+                if (e.target !== searchInput && !suggestionsContainer.contains(e.target)) {
+                    suggestionsContainer.classList.add('hidden');
+                }
+            });
+            
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                
+                clearTimeout(debounceTimer);
+                
+                if (query.length < 2) {
+                    suggestionsContainer.classList.add('hidden');
+                    return;
+                }
+                
+                debounceTimer = setTimeout(function() {
+                    fetch(`/search/suggestions?query=${encodeURIComponent(query)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            suggestionsContainer.innerHTML = '';
+                            
+                            if ((!data.products || data.products.length === 0) && 
+                                (!data.categories || data.categories.length === 0)) {
+                                suggestionsContainer.classList.add('hidden');
+                                return;
+                            }
+                            
+                            // Product suggestions
+                            if (data.products && data.products.length > 0) {
+                                const productsHeading = document.createElement('div');
+                                productsHeading.className = 'px-4 py-2 text-xs font-semibold text-gray-500 bg-gray-50';
+                                productsHeading.textContent = 'Products';
+                                suggestionsContainer.appendChild(productsHeading);
+                                
+                                data.products.forEach(product => {
+                                    const item = document.createElement('a');
+                                    item.href = `/product/${product.id}`;
+                                    item.className = 'flex items-center px-4 py-3 hover:bg-gray-50 transition-colors duration-150';
+                                    
+                                    let imgHtml = '';
+                                    if (product.image_url) {
+                                        imgHtml = `<img src="${product.image_url}" alt="${product.name}" class="w-10 h-10 object-cover rounded mr-3">`;
+                                    } else {
+                                        imgHtml = `<div class="w-10 h-10 bg-gray-200 rounded flex items-center justify-center mr-3"><span class="text-xs text-gray-500">No img</span></div>`;
+                                    }
+                                    
+                                    item.innerHTML = `
+                                        ${imgHtml}
+                                        <div class="text-sm">${product.name}</div>
+                                    `;
+                                    
+                                    suggestionsContainer.appendChild(item);
+                                });
+                            }
+                            
+                            // Category suggestions
+                            if (data.categories && data.categories.length > 0) {
+                                const categoriesHeading = document.createElement('div');
+                                categoriesHeading.className = 'px-4 py-2 text-xs font-semibold text-gray-500 bg-gray-50';
+                                categoriesHeading.textContent = 'Categories';
+                                suggestionsContainer.appendChild(categoriesHeading);
+                                
+                                data.categories.forEach(category => {
+                                    const item = document.createElement('a');
+                                    item.href = `/categories/${category.id}`;
+                                    item.className = 'flex items-center px-4 py-3 hover:bg-gray-50 transition-colors duration-150';
+                                    item.innerHTML = `
+                                        <div class="w-10 h-10 bg-[#171e60] text-white rounded flex items-center justify-center mr-3">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                                            </svg>
+                                        </div>
+                                        <div class="text-sm">${category.name}</div>
+                                    `;
+                                    
+                                    suggestionsContainer.appendChild(item);
+                                });
+                            }
+                            
+                            // Search all results link
+                            const searchAllItem = document.createElement('a');
+                            searchAllItem.href = `/search?query=${encodeURIComponent(query)}`;
+                            searchAllItem.className = 'block px-4 py-3 text-center text-sm font-medium text-[#0a5694] hover:bg-gray-50 transition-colors duration-150 border-t';
+                            searchAllItem.textContent = `See all results for "${query}"`;
+                            suggestionsContainer.appendChild(searchAllItem);
+                            
+                            suggestionsContainer.classList.remove('hidden');
+                        })
+                        .catch(error => {
+                            console.error('Error fetching search suggestions:', error);
+                            suggestionsContainer.classList.add('hidden');
+                        });
+                }, 300); // Debounce delay
+            });
+        }
+    });
 </script>
 
 {{-- Conditionally add script to call the notification function on DOMContentLoaded --}}
