@@ -21,7 +21,7 @@
         "@type": "ContactPoint",
         "telephone": "+971 55 460 2500",
         "contactType": "customer service",
-        "email": "cs@maxmedme.com",
+        "email": "sales@maxmedme.com",
         "availableLanguage": ["English", "Arabic"]
     },
     "areaServed": ["Dubai", "Abu Dhabi", "Sharjah", "Ajman", "UAE", "GCC"],

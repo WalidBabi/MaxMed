@@ -1,6 +1,6 @@
 1- #do a crone job to clean up expired reservations
 php artisan reservations:cleanup 
-2- email when payment is successful and order is placed to cs@maxmedme.com
+2- email when payment is successful and order is placed to sales@maxmedme.com
 
 # On your production server
 sudo chmod -R 755 storage/
@@ -25,3 +25,10 @@ quotation double success message
 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
 
 Analytical -> chromotography consumables -> hplc
+
+
+hplc image brand 
+meter hp 
+add hplc 
+search
+sales in contact

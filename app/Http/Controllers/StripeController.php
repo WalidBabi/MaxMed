@@ -119,7 +119,7 @@ class StripeController extends Controller
 
             // Try to send email notification, but don't fail if it doesn't work
             try {
-                Mail::to('cs@maxmedme.com')
+                Mail::to('sales@maxmedme.com')
                     ->send(new OrderPlaced($order));
             } catch (\Exception $mailException) {
                 Log::warning('Failed to send order confirmation email: ' . $mailException->getMessage());

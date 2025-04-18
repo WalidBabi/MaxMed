@@ -65,7 +65,7 @@ class QuotationController extends Controller
                 Log::info('Attempting to send email');
                 
                 // Check if we need to handle a guest user
-                $mailTo = 'cs@maxmedme.com';
+                $mailTo = 'sales@maxmedme.com';
                 
                 Mail::to($mailTo)->send(new QuotationRequestMail(
                     $product,

@@ -495,7 +495,7 @@
                         </div>
 
                         <!-- Hidden field for recipient email -->
-                        <input type="hidden" name="recipient" value="cs@maxmedme.com">
+                        <input type="hidden" name="recipient" value="sales@maxmedme.com">
                         
                         {{-- reCAPTCHA v2 --}}
                         <div class="form-group" style="transition: all 0.4s ease;">
@@ -555,7 +555,7 @@
                         </h3>
                         <div class="space-y-3">
                             <p class="info-text">
-                                Email: <a href="mailto:cs@maxmedme.com" class="info-link">cs@maxmedme.com</a>
+                                Email: <a href="mailto:sales@maxmedme.com" class="info-link">sales@maxmedme.com</a>
                             </p>
                             <p class="info-text">
                                 Phone: <a href="tel:+97155460250" class="info-link">+971 55 460 2500</a>

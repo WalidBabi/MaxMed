@@ -98,7 +98,7 @@ Route::get('/test-mail', function () {
             'shipping_phone' => '1234567890',
         ]);
 
-        Mail::to('cs@maxmedme.com')->send(new App\Mail\OrderPlaced($order));
+        Mail::to('sales@maxmedme.com')->send(new App\Mail\OrderPlaced($order));
 
         return 'Test email sent! Check logs for details.';
     } catch (\Exception $e) {
