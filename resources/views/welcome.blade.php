@@ -778,7 +778,8 @@
         'Molecular & Clinical Diagnostics' => 1,
         'Life Science & Research' => 2,
         'Lab Equipment' => 3,
-        'Medical Consumables' => 4
+        'Medical Consumables' => 4,
+        'Lab Consumables' => 5
         // Add more as needed
         ];
         return $order[$category->name] ?? 999; // Categories not in list will appear last
