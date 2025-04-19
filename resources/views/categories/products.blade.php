@@ -342,6 +342,25 @@
             color: white;
         }
         
+        /* Pagination tip styling */
+        .pagination-tip {
+            border-left: 4px solid #17a2b8;
+            border-radius: 8px;
+            padding: 15px 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            animation: fadeInDown 0.5s ease-out;
+        }
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
         /* Additional responsive improvements */
         @media (max-width: 992px) {
             .products-grid {
@@ -409,11 +428,22 @@
             <div class="filters-row">
                 <div class="product-counter">
                     <div class="counter-text">
-                        <span class="counter-number">{{ $products->count() }}</span>
-                        <span class="counter-label">{{ Str::plural('product', $products->count()) }} found</span>
+                        <span class="counter-number">{{ $products->total() }}</span>
+                        <span class="counter-label">{{ Str::plural('product', $products->total()) }} found</span>
                     </div>
                 </div>
             </div>
+            
+            @if(session()->missing('pagination_message_shown') && $products->hasPages())
+            <div class="alert alert-info mb-4 pagination-tip" role="alert">
+                <i class="fas fa-info-circle mr-2"></i>
+                Not all products are displayed on this page. Use the pagination controls at the bottom to navigate through more products.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {{ session(['pagination_message_shown' => true]) }}
+            @endif
             
             <div class="products-grid">
                 @if($products->isEmpty())
@@ -512,7 +542,22 @@
             }, 100 + (index * 50));
         });
         
+        // Make alert dismissible
+        const closeButton = document.querySelector('.pagination-tip .close');
+        if (closeButton) {
+            closeButton.addEventListener('click', function() {
+                const alert = this.closest('.alert');
+                if (alert) {
+                    alert.style.opacity = '0';
+                    alert.style.transform = 'translateY(-20px)';
+                    setTimeout(() => {
+                        alert.remove();
+                    }, 300);
+                }
+            });
+        }
+        
         // Sidebar toggle is now handled with CSS transitions in app.blade.php and sidebar.blade.php
     });
 </script>
-@endsection 
+@endsection
