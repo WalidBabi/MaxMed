@@ -1,5 +1,12 @@
 @extends('layouts.app')
 
+@section('title', 'Your Laboratory Cart | MaxMed UAE')
+@section('meta_description', 'Review and checkout laboratory equipment in your MaxMed UAE shopping cart. Secure payment options for scientific instruments in Dubai.')
+
+@if(!session()->has('cart') || count(session('cart')) == 0)
+    @section('meta_robots', 'noindex, follow')
+@endif
+
 @section('content')
 <div class="container py-5">
     <!-- Header Section -->

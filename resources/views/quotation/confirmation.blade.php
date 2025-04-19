@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title', 'Quotation Request Confirmation | MaxMed UAE')
+@section('meta_description', 'Your quotation request for ' . $product->name . ' has been submitted to MaxMed UAE. We will respond shortly with pricing and availability.')
+@section('meta_robots', 'noindex, follow')
+
 @section('content')
 <div class="container py-4">
     <div class="row justify-content-center">

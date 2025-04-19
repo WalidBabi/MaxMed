@@ -2,101 +2,48 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
     <url>
         <loc>https://maxmedme.com</loc>
-    
-            </url>
+    </url>
     <url>
         <loc>https://maxmedme.com/about</loc>
-    
-            </url>
+    </url>
     <url>
         <loc>https://maxmedme.com/contact</loc>
-    
-            </url>
+    </url>
     <url>
         <loc>https://maxmedme.com/products</loc>
-    
-            </url>
+    </url>
     <url>
         <loc>https://maxmedme.com/partners</loc>
-    
-            </url>
+    </url>
     <url>
         <loc>https://maxmedme.com/news</loc>
-    
-            </url>
-    <url>
-        <loc>https://maxmedme.com/categories/39</loc>
-        <lastmod>2025-04-02T16:26:20+00:00</lastmod>
-
-            </url>
-    <url>
-        <loc>https://maxmedme.com/categories/52</loc>
-        <lastmod>2025-04-03T16:44:49+00:00</lastmod>
-
-            </url>
-    <url>
-        <loc>https://maxmedme.com/categories/51</loc>
-        <lastmod>2025-04-02T16:26:37+00:00</lastmod>
-
-            </url>
-    <url>
-        <loc>https://maxmedme.com/categories/51/52</loc>
-        <lastmod>2025-04-03T16:44:49+00:00</lastmod>
-
-            </url>
-    <url>
-        <loc>https://maxmedme.com/categories/49</loc>
-        <lastmod>2025-04-02T16:23:42+00:00</lastmod>
-
-            </url>
-    <url>
-        <loc>https://maxmedme.com/categories/49/39</loc>
-        <lastmod>2025-04-02T16:26:20+00:00</lastmod>
-
-            </url>
-    <url>
-        <loc>https://maxmedme.com/categories/49/51</loc>
-        <lastmod>2025-04-02T16:26:37+00:00</lastmod>
-
-            </url>
-    <url>
-        <loc>https://maxmedme.com/categories/49/51/52</loc>
-        <lastmod>2025-04-03T16:44:49+00:00</lastmod>
-
-            </url>
+    </url>
     <url>
         <loc>https://maxmedme.com/product/32</loc>
         <lastmod>2025-03-20T21:53:02+00:00</lastmod>
-
-            </url>
+    </url>
     <url>
         <loc>https://maxmedme.com/product/31</loc>
         <lastmod>2025-03-20T21:50:10+00:00</lastmod>
-
-            </url>
+    </url>
     <url>
         <loc>https://maxmedme.com/product/30</loc>
         <lastmod>2025-03-24T20:54:29+00:00</lastmod>
-
-            </url>
+    </url>
     <url>
         <loc>https://maxmedme.com/product/33</loc>
         <lastmod>2025-03-20T21:56:16+00:00</lastmod>
-
-            </url>
+    </url>
     <url>
         <loc>https://maxmedme.com/product/34</loc>
         <lastmod>2025-04-03T18:32:27+00:00</lastmod>
-
-            </url>
+    </url>
     <url>
         <loc>https://maxmedme.com/product/35</loc>
         <lastmod>2025-04-03T20:05:25+00:00</lastmod>
-
-            </url>
+    </url>
     <url>
         <loc>https://maxmedme.com/product/36</loc>
         <lastmod>2025-04-07T09:01:16+00:00</lastmod>
-
-            </url>
+    </url>
 </urlset>

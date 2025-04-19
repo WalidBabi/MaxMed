@@ -9,12 +9,27 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 
 class QuotationController extends Controller
 {
+    /**
+     * Handle direct URL access to quotation/ID which should be redirected
+     */
+    public function redirect(Request $request, $productId)
+    {
+        try {
+            $product = Product::findOrFail($productId);
+            return redirect()->route('product.show', $product)->setStatusCode(301);
+        } catch (\Exception $e) {
+            return redirect()->route('products.index')->setStatusCode(301);
+        }
+    }
   
     public function form(Product $product)
     {
+        // Share SEO information with the view
+        View::share('needsNoIndex', true);
         return view('quotation.form', compact('product'));
     }
 
@@ -106,6 +121,8 @@ class QuotationController extends Controller
 
     public function confirmation(Product $product)
     {
+        // Share SEO information with the view
+        View::share('needsNoIndex', true);
         return view('quotation.confirmation', compact('product'));
     }
 } 

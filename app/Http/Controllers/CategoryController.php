@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 
 class CategoryController extends Controller
 {
@@ -19,6 +20,20 @@ class CategoryController extends Controller
 
     public function show(Request $request, Category $category)
     {
+        // Check if URL is www version and redirect to non-www
+        if (strpos($request->getHost(), 'www.') === 0) {
+            return redirect()->to('https://maxmedme.com' . $request->getRequestUri(), 301);
+        }
+        
+        // Check if this category has subcategories or products
+        $hasContent = $category->subcategories->isNotEmpty() || 
+                     Product::where('category_id', $category->id)->exists();
+        
+        if (!$hasContent) {
+            // Share with view that this page has no content (for noindex)
+            View::share('emptyCategory', true);
+        }
+        
         if ($category->subcategories->isNotEmpty()) {
             // Eager load products for subcategories
             $category->load(['subcategories.products']);
@@ -40,10 +55,24 @@ class CategoryController extends Controller
 
     public function showSubcategory(Request $request, Category $category, Category $subcategory)
     {
+        // Check if URL is www version and redirect to non-www
+        if (strpos($request->getHost(), 'www.') === 0) {
+            return redirect()->to('https://maxmedme.com' . $request->getRequestUri(), 301);
+        }
+        
         // Validate that subcategory belongs to the parent category
         if ($subcategory->parent_id != $category->id) {
             return Redirect::route('products.index')
                 ->with('warning', 'The requested subcategory does not exist in this category.');
+        }
+        
+        // Check if this subcategory has content
+        $hasContent = $subcategory->subcategories->isNotEmpty() || 
+                     Product::where('category_id', $subcategory->id)->exists();
+        
+        if (!$hasContent) {
+            // Share with view that this page has no content (for noindex)
+            View::share('emptyCategory', true);
         }
         
         if ($subcategory->subcategories->isNotEmpty()) {
@@ -67,10 +96,24 @@ class CategoryController extends Controller
 
     public function showSubSubcategory(Request $request, Category $category, Category $subcategory, Category $subsubcategory)
     {
+        // Check if URL is www version and redirect to non-www
+        if (strpos($request->getHost(), 'www.') === 0) {
+            return redirect()->to('https://maxmedme.com' . $request->getRequestUri(), 301);
+        }
+        
         // Validate hierarchy
         if ($subcategory->parent_id != $category->id || $subsubcategory->parent_id != $subcategory->id) {
             return Redirect::route('products.index')
                 ->with('warning', 'The requested category path is invalid.');
+        }
+        
+        // Check if this subsubcategory has content
+        $hasContent = $subsubcategory->subcategories->isNotEmpty() || 
+                     Product::where('category_id', $subsubcategory->id)->exists();
+        
+        if (!$hasContent) {
+            // Share with view that this page has no content (for noindex)
+            View::share('emptyCategory', true);
         }
         
         // Check if this subsubcategory has subcategories
@@ -95,12 +138,25 @@ class CategoryController extends Controller
 
     public function showSubSubSubcategory(Request $request, Category $category, Category $subcategory, Category $subsubcategory, Category $subsubsubcategory)
     {
+        // Check if URL is www version and redirect to non-www
+        if (strpos($request->getHost(), 'www.') === 0) {
+            return redirect()->to('https://maxmedme.com' . $request->getRequestUri(), 301);
+        }
+        
         // Validate hierarchy
         if ($subcategory->parent_id != $category->id || 
             $subsubcategory->parent_id != $subcategory->id ||
             $subsubsubcategory->parent_id != $subsubcategory->id) {
             return Redirect::route('products.index')
                 ->with('warning', 'The requested category path is invalid.');
+        }
+        
+        // Check if this subsubsubcategory has content
+        $hasContent = Product::where('category_id', $subsubsubcategory->id)->exists();
+        
+        if (!$hasContent) {
+            // Share with view that this page has no content (for noindex)
+            View::share('emptyCategory', true);
         }
         
         // Start building the query

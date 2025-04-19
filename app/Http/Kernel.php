@@ -10,6 +10,8 @@ use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\Custom404Handler;
+use App\Http\Middleware\CanonicalDomainMiddleware;
 
 class Kernel extends HttpKernel
 {
@@ -26,6 +28,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\CanonicalDomainMiddleware::class,
     ];
 
     /**
@@ -42,6 +45,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\AdminMiddleware::class,
+            \App\Http\Middleware\Custom404Handler::class,
         ],
 
         'api' => [

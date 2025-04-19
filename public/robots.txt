@@ -6,16 +6,69 @@ Disallow: /register
 # Prevent soft 404s by disallowing categories mentioned in Search Console
 Disallow: /categories/43/46
 Disallow: /categories/50
-Disallow: /categories/49
 Disallow: /categories/43/45
 Disallow: /categories/46
 Disallow: /categories/44 
 Disallow: /categories/40
 Disallow: /categories/45
+Disallow: /categories/55
+Disallow: /categories/43
+Disallow: /categories/34
+Disallow: /education%26-training-tools
+Disallow: /analytical-chemistry
+Disallow: /genomics-%26-life-sciences
+Disallow: /veterinary-%26-agri-tools
+Disallow: /forensic-supplies
+Disallow: /molecular-biology
+Disallow: /research-%26-life-sciences
 
+# Additional Soft 404 URLs to disallow
+Disallow: /categories/76
+Disallow: /categories/72
+Disallow: /categories/77
+Disallow: /categories/79
+Disallow: /categories/56
+Disallow: /categories/51/60
+Disallow: /categories/51/55/59
+
+# Block Query Parameters causing duplicate content
+Disallow: /products?category=*
+Disallow: /*?category=MaxWare*
+Disallow: /*?category=consumables
+Disallow: /*?category=Microbiology
+Disallow: /*?category=Analytical*
+Disallow: /*?category=Medical*
+Disallow: /*?category=Molecular*
+Disallow: /*?category=rapid-tests
+
+# Specify www as non-canonical and disallow those URLs
+User-agent: *
+Host: maxmedme.com
+
+# Specifically disallow duplicate URLs from Search Console
+Disallow: /product/80
+Disallow: /product/92
+Disallow: /categories/51/39/84
+Disallow: /categories/51/39/86
+Disallow: /categories/51/39/83
+Disallow: /categories/66/71/72
+Disallow: /categories/66/71/73
+Disallow: /categories/57/74
+Disallow: /categories/60/77
+Disallow: /categories/57/75
+
+# Quotation handling - refine rules
+Allow: /quotation/form
+Allow: /quotation/confirmation
+Disallow: /quotation/*/form
+Disallow: /quotation/*/request
+Disallow: /quotation/[0-9]+$
+
+# Allow specific paths (higher priority than disallow)
 Allow: /cart
-Allow: /quotation/
 Allow: /
+Allow: /categories/49/51
+Allow: /categories/49/51/52
 
 # Allow CSS, JS, and Images
 Allow: /*.js$

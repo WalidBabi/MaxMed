@@ -40,7 +40,8 @@ Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.
 
 // Quotation routes for viewing - Move outside auth for SEO
 Route::prefix('quotation')->name('quotation.')->group(function () {
-    Route::get('/{product}', [QuotationController::class, 'form'])->name('form');
+    Route::get('/{product}', [QuotationController::class, 'redirect'])->name('redirect');
+    Route::get('/{product}/form', [QuotationController::class, 'form'])->name('form');
     Route::post('/store', [QuotationController::class, 'store'])->name('store');
     Route::get('/confirmation/{product}', [QuotationController::class, 'confirmation'])->name('confirmation');
 });
@@ -149,5 +150,28 @@ Route::get('/qr-code', [QRCodeController::class, 'generate'])->name('qr.code');
 
 // Contact Form Route
 Route::post('/contact/submit', [ContactController::class, 'submit'])->name('contact.submit');
+
+// Legacy URL redirects for 404 pages in Google Search Console
+Route::get('/education%26-training-tools', function() {
+    return redirect('/products', 301);
+});
+Route::get('/analytical-chemistry', function() {
+    return redirect('/products', 301);
+});
+Route::get('/genomics-%26-life-sciences', function() {
+    return redirect('/products', 301);
+});
+Route::get('/veterinary-%26-agri-tools', function() {
+    return redirect('/products', 301);
+});
+Route::get('/forensic-supplies', function() {
+    return redirect('/products', 301);
+});
+Route::get('/molecular-biology', function() {
+    return redirect('/products', 301);
+});
+Route::get('/research-%26-life-sciences', function() {
+    return redirect('/products', 301);
+});
 
 require __DIR__ . '/auth.php';

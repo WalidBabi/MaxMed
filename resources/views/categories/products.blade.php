@@ -1,5 +1,23 @@
 @extends('layouts.app')
 
+@if(isset($category))
+    @section('title', $category->name . ' Laboratory Equipment | MaxMed UAE')
+    @section('meta_description', 'Browse ' . $category->name . ' laboratory equipment at MaxMed UAE. Find high-quality scientific instruments and lab supplies in Dubai.')
+@elseif(isset($subcategory))
+    @section('title', $subcategory->name . ' Laboratory Equipment | MaxMed UAE')
+    @section('meta_description', 'Browse ' . $subcategory->name . ' laboratory equipment at MaxMed UAE. Find high-quality scientific instruments and lab supplies in Dubai.')
+@elseif(isset($subsubcategory))
+    @section('title', $subsubcategory->name . ' Laboratory Equipment | MaxMed UAE')
+    @section('meta_description', 'Browse ' . $subsubcategory->name . ' laboratory equipment at MaxMed UAE. Find high-quality scientific instruments and lab supplies in Dubai.')
+@elseif(isset($subsubsubcategory))
+    @section('title', $subsubsubcategory->name . ' Laboratory Equipment | MaxMed UAE')
+    @section('meta_description', 'Browse ' . $subsubsubcategory->name . ' laboratory equipment at MaxMed UAE. Find high-quality scientific instruments and lab supplies in Dubai.')
+@endif
+
+@if(isset($emptyCategory) || (isset($products) && $products->isEmpty()))
+    @section('meta_robots', 'noindex, follow')
+@endif
+
 @section('content')
 <div class="container-fluid py-4">
     <style>
@@ -489,7 +507,7 @@
                                                 <a href="{{ route('product.show', $product) }}" class="btn w-100 mb-2" style="background-color: #0a5694; color: white; font-size: 0.875rem; padding: 0.5rem 0.75rem;">
                                                     <i class="fas fa-eye me-2"></i> View Details
                                                 </a>
-                                                <a href="{{ route('quotation.form', $product) }}" class="btn w-100" style="background-color: #0a5694; color: white; font-size: 0.875rem; padding: 0.5rem 0.75rem;">
+                                                <a href="{{ route('quotation.form', ['product' => $product->id]) }}" class="btn w-100" style="background-color: #0a5694; color: white; font-size: 0.875rem; padding: 0.5rem 0.75rem;">
                                                     <i class="fas fa-file-invoice me-2"></i> Request Quote
                                                 </a>
                                             </div>

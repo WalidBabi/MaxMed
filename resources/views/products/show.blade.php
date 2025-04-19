@@ -360,7 +360,7 @@
                 <div class="col-lg-5">
                     <div class="product-info-section">
                         <div class="d-grid action-buttons mb-4">
-                            <a href="{{ route('quotation.form', $product) }}" class="btn btn-quotation w-100">
+                            <a href="{{ route('quotation.form', ['product' => $product->id]) }}" class="btn btn-quotation w-100">
                                 <i class="fas fa-file-invoice me-2"></i> Request Quotation
                             </a>
                         </div>

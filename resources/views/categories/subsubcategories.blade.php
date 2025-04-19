@@ -1,8 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Laboratory Equipment Subcategories | MaxMed UAE')
+@section('title', $subcategory->name . ' Categories | MaxMed UAE')
 
-@section('meta_description', 'Browse subcategories of laboratory equipment at MaxMed UAE. Find premium scientific instruments and medical supplies for hospitals, research facilities, and medical centers in Dubai.')
+@section('meta_description', 'Browse ' . $subcategory->name . ' laboratory equipment subcategories at MaxMed UAE. Find high-quality scientific instruments and lab supplies in Dubai.')
+
+@if(isset($emptyCategory) || (isset($subcategory) && $subcategory->subcategories->isEmpty()))
+    @section('meta_robots', 'noindex, follow')
+@endif
 
 @section('meta_keywords', 'laboratory subcategories Dubai, lab equipment UAE, scientific subcategories, laboratory supplies, research lab categories')
 

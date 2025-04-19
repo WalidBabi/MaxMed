@@ -16,6 +16,11 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        // Check if URL is www version and redirect to non-www
+        if (strpos($request->getHost(), 'www.') === 0) {
+            return redirect()->to('https://maxmedme.com' . $request->getRequestUri(), 301);
+        }
+        
         $query = Product::with(['category', 'inventory']); // eager load category and inventory
         
         // Filter by search query
@@ -27,11 +32,26 @@ class ProductController extends Controller
             });
         }
         
+        // Get categories for sidebar and filtering
+        $categories = Category::whereNull('parent_id')->with('subcategories')->get();
+        
         // Filter by category
         if ($categoryName = $request->input('category')) {
-            $query->whereHas('category', function ($q) use ($categoryName) {
-                $q->where('name', $categoryName);
+            // Normalize category name by removing special characters for comparison
+            $normalizedCategoryName = preg_replace('/[^\w\s]/', '', $categoryName);
+            
+            $query->whereHas('category', function ($q) use ($normalizedCategoryName, $categoryName) {
+                $q->where('name', 'like', "%{$normalizedCategoryName}%")
+                  ->orWhere('name', 'like', "%{$categoryName}%");
             });
+            
+            // Try to find a matching category for better structured URLs
+            $matchingCategory = Category::where('name', 'like', "%{$normalizedCategoryName}%")
+                ->orWhere('name', 'like', "%{$categoryName}%")
+                ->first();
+                
+            // Don't redirect from /products?category=X URLs to allow these pages to be indexed
+            // This helps with SEO for category-specific product listings
         }
         
         // Filter by subcategory
@@ -94,9 +114,6 @@ class ProductController extends Controller
         // Preserve query parameters in pagination links
         $products->appends($request->all());
         
-        // Fetch only top-level categories (categories without a parent)
-        $categories = Category::whereNull('parent_id')->get();
-        
         return view('products.index', compact('products', 'categories'));
     }
 
@@ -106,22 +123,38 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\View\View
      */
-    public function show(Product $product)
+    public function show(Request $request, Product $product)
     {
+        // Check if URL is www version and redirect to non-www
+        if (strpos($request->getHost(), 'www.') === 0) {
+            return redirect()->to('https://maxmedme.com/product/' . $product->id, 301);
+        }
+        
         // Pass the single product to the view
         return view('products.show', compact('product'));
     }
     
-    public function checkAvailability(Product $product, int $quantity): JsonResponse
+    public function checkAvailability(Request $request, Product $product, int $quantity): JsonResponse
     {
-        // dd($product, $quantity);
+        // Check if URL is www version and redirect to non-www for API calls
+        if (strpos($request->getHost(), 'www.') === 0) {
+            return response()->json([
+                'redirect' => 'https://maxmedme.com/check-availability/' . $product->id . '/' . $quantity
+            ], 301);
+        }
+        
         return response()->json([
             'available' => $product->inventory->quantity >= $quantity
         ]);
     }
 
-    public function showProducts()
+    public function showProducts(Request $request)
     {
+        // Check if URL is www version and redirect to non-www
+        if (strpos($request->getHost(), 'www.') === 0) {
+            return redirect()->to('https://maxmedme.com/showproducts', 301);
+        }
+        
         // Retrieve all products or apply any specific logic
         $products = Product::all(); // or use a query to filter/sort products
 

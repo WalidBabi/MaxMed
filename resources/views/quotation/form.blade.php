@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title', 'Request Quotation for ' . $product->name . ' | MaxMed UAE')
+@section('meta_description', 'Request a quotation for ' . $product->name . ' from MaxMed UAE, supplier of high-quality laboratory equipment in Dubai.')
+@section('meta_robots', 'noindex, follow')
+
 @section('content')
 <div class="container py-4">
     <div class="row justify-content-center">

@@ -1,10 +1,22 @@
 @extends('layouts.app')
 
-@section('title', 'Laboratory Equipment & Scientific Instruments | MaxMed UAE')
+@php
+    $categoryName = request()->input('category');
+    $pageTitle = $categoryName ? "Buy {$categoryName} - MaxMed UAE" : "Shop All Products - MaxMed UAE";
+    $pageDescription = $categoryName 
+        ? "Shop high-quality {$categoryName} products from MaxMed UAE. We offer premium laboratory and medical equipment with fast delivery across UAE."
+        : "Browse our complete collection of laboratory supplies, medical equipment, and scientific instruments. MaxMed UAE offers quality products with fast delivery.";
+@endphp
 
-@section('meta_description', 'Browse MaxMed UAE\'s laboratory equipment categories. Find premium scientific instruments and medical supplies for hospitals, research facilities, and medical centers in Dubai.')
+@section('title', $pageTitle)
 
-@section('meta_keywords', 'laboratory equipment Dubai, lab instruments UAE, scientific equipment, diagnostic tools, research lab supplies, laboratory technology')
+@section('meta_description', $pageDescription)
+
+@section('meta_keywords', $categoryName 
+    ? "{$categoryName}, medical equipment UAE, laboratory supplies Dubai, {$categoryName} supplier, scientific instruments"
+    : "medical equipment UAE, laboratory supplies Dubai, scientific instruments, lab equipment, diagnostic tools, research supplies")
+
+@section('meta_robots', 'index, follow')
 
 @section('content')
 <style>
