@@ -5,6 +5,16 @@
 <meta name="author" content="MaxMed UAE">
 <meta name="robots" content="@yield('meta_robots', 'index, follow')">
 
+<!-- Favicon -->
+<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/favicon/apple-touch-icon.png') }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon/favicon-32x32.png') }}">
+<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon/favicon-16x16.png') }}">
+<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+<link rel="manifest" href="{{ asset('site.webmanifest') }}">
+<link rel="mask-icon" href="{{ asset('img/favicon/safari-pinned-tab.svg') }}" color="#171e60">
+<meta name="msapplication-TileColor" content="#171e60">
+<meta name="theme-color" content="#171e60">
+
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="{{ url()->current() }}">
@@ -75,11 +85,9 @@
 <link rel="canonical" href="{{ $canonicalUrl }}" />
 
 <!-- Mobile Optimization -->
-<meta name="theme-color" content="#171e60">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="format-detection" content="telephone=no">
-<link rel="manifest" href="{{ asset('manifest.json') }}">
 
 <!-- Preconnect to External Resources -->
 <link rel="preconnect" href="https://fonts.bunny.net">
