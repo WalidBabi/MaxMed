@@ -41,6 +41,7 @@ class QuotationController extends Controller
             $validatedData = $request->validate([
                 'product_id' => 'required|exists:products,id',
                 'quantity' => 'required|integer|min:1',
+                'size' => 'nullable|string|max:50',
                 'requirements' => 'nullable|string',
                 'notes' => 'nullable|string',
             ]);
@@ -66,6 +67,7 @@ class QuotationController extends Controller
                     'product_id' => $product->id,
                     'user_id' => $request->input('user_id', 0),
                     'quantity' => $request->quantity,
+                    'size' => $request->size,
                     'requirements' => $request->requirements,
                     'notes' => $request->notes,
                 ]);
@@ -85,6 +87,7 @@ class QuotationController extends Controller
                 Mail::to($mailTo)->send(new QuotationRequestMail(
                     $product,
                     $request->quantity,
+                    $request->size,
                     $request->requirements,
                     $request->notes,
                     $user // This can be null but we'll handle it in the template

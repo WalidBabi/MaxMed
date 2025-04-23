@@ -10,6 +10,7 @@ class QuotationRequest extends Model
         'product_id',
         'user_id',
         'quantity',
+        'size',
         'requirements',
         'notes',
     ];

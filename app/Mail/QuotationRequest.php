@@ -14,6 +14,7 @@ class QuotationRequest extends Mailable
 
     public $product;
     public $quantity;
+    public $size;
     public $requirements;
     public $notes;
     public $user;
@@ -23,6 +24,7 @@ class QuotationRequest extends Mailable
      *
      * @param Product $product
      * @param int $quantity
+     * @param string|null $size
      * @param string|null $requirements
      * @param string|null $notes
      * @param User|null $user
@@ -31,12 +33,14 @@ class QuotationRequest extends Mailable
     public function __construct(
         Product $product,
         int $quantity,
+        ?string $size,
         ?string $requirements,
         ?string $notes,
         ?User $user
     ) {
         $this->product = $product;
         $this->quantity = $quantity;
+        $this->size = $size;
         $this->requirements = $requirements;
         $this->notes = $notes;
         $this->user = $user;

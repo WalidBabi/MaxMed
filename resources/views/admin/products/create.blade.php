@@ -119,6 +119,63 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-check form-switch mt-4">
+                                        <input class="form-check-input" type="checkbox" id="has_size_options" name="has_size_options" value="1" {{ old('has_size_options') ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="has_size_options">Enable size options</label>
+                                    </div>
+                                    @error('has_size_options')
+                                        <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-12" id="size_options_container" style="{{ old('has_size_options') ? '' : 'display: none;' }}">
+                                <div class="card mb-3">
+                                    <div class="card-header bg-light">
+                                        <h5 class="mb-0">Size Options</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row mb-3">
+                                            <div class="col-12">
+                                                <p class="text-muted">Add the available size options for this product.</p>
+                                            </div>
+                                        </div>
+                                        <div id="size_options_list">
+                                            @if(old('size_options'))
+                                                @foreach(old('size_options') as $index => $option)
+                                                <div class="row mb-2 size-option-row">
+                                                    <div class="col-md-10">
+                                                        <input type="text" name="size_options[]" class="form-control" value="{{ $option }}" placeholder="Size option (e.g., Small, Medium, Large)">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" class="btn btn-danger remove-size-option"><i class="fas fa-trash"></i></button>
+                                                    </div>
+                                                </div>
+                                                @endforeach
+                                            @else
+                                                <div class="row mb-2 size-option-row">
+                                                    <div class="col-md-10">
+                                                        <input type="text" name="size_options[]" class="form-control" placeholder="Size option (e.g., Small, Medium, Large)">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" class="btn btn-danger remove-size-option"><i class="fas fa-trash"></i></button>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-12">
+                                                <button type="button" class="btn btn-secondary" id="add_size_option">
+                                                    <i class="fas fa-plus"></i> Add Another Size Option
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="image" class="form-label">Primary Product Image</label>
@@ -265,5 +322,52 @@ Weight
                 descriptionTextarea.selectionEnd = descriptionTextarea.selectionStart;
             });
         }
+        
+        // Size options handling
+        const hasSizeOptions = document.getElementById('has_size_options');
+        const sizeOptionsContainer = document.getElementById('size_options_container');
+        const addSizeOptionBtn = document.getElementById('add_size_option');
+        const sizeOptionsList = document.getElementById('size_options_list');
+
+        if (hasSizeOptions && sizeOptionsContainer) {
+            hasSizeOptions.addEventListener('change', function() {
+                if (this.checked) {
+                    sizeOptionsContainer.style.display = 'block';
+                } else {
+                    sizeOptionsContainer.style.display = 'none';
+                }
+            });
+        }
+
+        if (addSizeOptionBtn && sizeOptionsList) {
+            addSizeOptionBtn.addEventListener('click', function() {
+                const newRow = document.createElement('div');
+                newRow.className = 'row mb-2 size-option-row';
+                newRow.innerHTML = `
+                    <div class="col-md-10">
+                        <input type="text" name="size_options[]" class="form-control" placeholder="Size option (e.g., Small, Medium, Large)">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-danger remove-size-option"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                sizeOptionsList.appendChild(newRow);
+                
+                // Attach event listener to the new remove button
+                const removeBtn = newRow.querySelector('.remove-size-option');
+                if (removeBtn) {
+                    removeBtn.addEventListener('click', function() {
+                        newRow.remove();
+                    });
+                }
+            });
+        }
+
+        // Attach event listeners to existing remove buttons
+        document.querySelectorAll('.remove-size-option').forEach(button => {
+            button.addEventListener('click', function() {
+                this.closest('.size-option-row').remove();
+            });
+        });
     });
 </script>

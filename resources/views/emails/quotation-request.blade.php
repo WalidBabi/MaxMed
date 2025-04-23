@@ -60,6 +60,10 @@
         <h3>Request Details</h3>
         <p><span class="highlight">Quantity:</span> {{ $quantity }}</p>
 
+        @if($size)
+        <p><span class="highlight">Size:</span> {{ $size }}</p>
+        @endif
+
         @if($requirements)
         <p><span class="highlight">Specific Requirements:</span> {{ $requirements }}</p>
         @endif

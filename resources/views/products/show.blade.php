@@ -256,6 +256,27 @@
             color: white;
         }
 
+        /* Size Options */
+        .size-option {
+            min-width: 80px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .size-option:hover {
+            background-color: rgba(23, 30, 96, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .size-option.active {
+            background-color: var(--main-color) !important;
+            color: white;
+            box-shadow: 0 4px 8px rgba(23, 30, 96, 0.15);
+            border-color: var(--main-color);
+        }
+
         /* Responsive Adjustments */
         @media (max-width: 992px) {
             .product-title {
@@ -360,10 +381,31 @@
                 <div class="col-lg-5">
                     <div class="product-info-section">
                         <div class="d-grid action-buttons mb-4">
-                            <a href="{{ route('quotation.form', ['product' => $product->id]) }}" class="btn btn-quotation w-100">
+                            <a href="{{ route('quotation.form', ['product' => $product->id]) }}" class="btn btn-quotation w-100" id="quotation-btn">
                                 <i class="fas fa-file-invoice me-2"></i> Request Quotation
                             </a>
                         </div>
+                        
+                        @if($product->has_size_options)
+                        <div class="mb-4">
+                            <h5 class="mb-3">Size</h5>
+                            <div class="d-flex flex-wrap gap-2">
+                                @php
+                                    $sizeOptions = $product->size_options ?? [];
+                                    if (!is_array($sizeOptions) && !empty($sizeOptions)) {
+                                        // Convert JSON string to array if needed
+                                        $sizeOptions = json_decode($sizeOptions, true) ?? [];
+                                    }
+                                @endphp
+                                
+                                @foreach($sizeOptions as $option)
+                                    <label class="btn btn-outline-secondary size-option">
+                                        <input type="radio" name="size" value="{{ $option }}" class="d-none"> {{ $option }}
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+                        @endif
                         
                         <div class="product-description">
                             <h5>Description</h5>
@@ -461,6 +503,49 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Size option selection
+        const sizeOptions = document.querySelectorAll('.size-option');
+        if (sizeOptions.length > 0) {
+            sizeOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    sizeOptions.forEach(o => {
+                        o.classList.remove('active', 'btn-primary');
+                        o.classList.add('btn-outline-secondary');
+                    });
+                    
+                    // Add active class to selected option
+                    this.classList.remove('btn-outline-secondary');
+                    this.classList.add('active', 'btn-primary');
+                    
+                    // Check the radio input
+                    const radioInput = this.querySelector('input[type="radio"]');
+                    radioInput.checked = true;
+                    
+                    // Store the selected size in form data or local storage if needed
+                    const selectedSize = radioInput.value;
+                    localStorage.setItem('selected_product_size', selectedSize);
+                });
+            });
+            
+            // Update quotation button URL to include selected size
+            const quotationBtn = document.getElementById('quotation-btn');
+            if (quotationBtn) {
+                const baseHref = quotationBtn.getAttribute('href');
+                quotationBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const selectedSize = document.querySelector('.size-option.active input[type="radio"]')?.value;
+                    if (selectedSize) {
+                        // Check if the baseHref already contains a query parameter
+                        const separator = baseHref.includes('?') ? '&' : '?';
+                        window.location.href = baseHref + separator + 'size=' + encodeURIComponent(selectedSize);
+                    } else {
+                        window.location.href = baseHref;
+                    }
+                });
+            }
+        }
+
         // Image Magnifier Glass functionality
         function magnify(imgID, zoom) {
             const img = document.getElementById(imgID);

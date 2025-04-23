@@ -43,6 +43,15 @@
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                         <input type="hidden" name="user_id" value="{{ auth()->check() ? auth()->id() : 0 }}">
+                        <input type="hidden" name="size" value="{{ request('size') }}" id="size-input">
+
+                        @if(request('size'))
+                        <div class="mb-3">
+                            <div class="alert alert-info">
+                                <strong>Selected Size:</strong> {{ request('size') }}
+                            </div>
+                        </div>
+                        @endif
 
                         <div class="mb-3">
                             <label for="quantity" class="form-label">Quantity Required</label>

@@ -31,11 +31,6 @@ class ProductController extends Controller
             $query->where('brand_id', $request->input('brand_id'));
         }
         
-        // Filter by application
-        if ($request->filled('application')) {
-            $query->where('application', $request->input('application'));
-        }
-        
         // Filter by price range
         if ($request->filled('min_price')) {
             $query->where('price', '>=', $request->input('min_price'));
@@ -92,10 +87,12 @@ class ProductController extends Controller
             'stock' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'nullable|exists:brands,id',
-            'application' => 'nullable|string|max:255',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5000',
             'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000',
-            'specification_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000'
+            'specification_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000',
+            'has_size_options' => 'nullable|boolean',
+            'size_options' => 'nullable|array',
+            'size_options.*' => 'nullable|string|max:50'
         ]);
 
         DB::transaction(function () use ($request, $validated) {
@@ -107,8 +104,10 @@ class ProductController extends Controller
                 'price_aed' => $validated['price_aed'],
                 'category_id' => $validated['category_id'],
                 'brand_id' => $validated['brand_id'] ?? null,
-                'application' => $validated['application'] ?? null,
                 'image_url' => null, // Will be replaced by primary image
+                'has_size_options' => $request->has('has_size_options'),
+                'size_options' => $request->has('has_size_options') && $request->filled('size_options') ? 
+                                  json_encode(array_filter($request->size_options)) : null,
             ]);
 
             // Create inventory record
@@ -184,12 +183,14 @@ class ProductController extends Controller
             'inventory_quantity' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'nullable|exists:brands,id',
-            'application' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000',
             'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000',
             'delete_images' => 'nullable|string',
             'primary_image_id' => 'nullable|exists:product_images,id',
-            'specification_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000'
+            'specification_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5000',
+            'has_size_options' => 'nullable|boolean',
+            'size_options' => 'nullable|array',
+            'size_options.*' => 'nullable|string|max:50'
         ]);
 
         DB::transaction(function () use ($request, $product, $validated) {
@@ -201,7 +202,9 @@ class ProductController extends Controller
                 'price_aed' => $request->price_aed,
                 'category_id' => $request->category_id,
                 'brand_id' => $request->brand_id,
-                'application' => $request->application,
+                'has_size_options' => $request->has('has_size_options'),
+                'size_options' => $request->has('has_size_options') && $request->filled('size_options') ? 
+                                  json_encode(array_filter($request->size_options)) : null,
             ]);
 
             // Update inventory quantity
