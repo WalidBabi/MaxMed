@@ -13,6 +13,9 @@
         <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon/favicon-16x16.png') }}">
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
         <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+        <link rel="mask-icon" href="{{ asset('img/favicon/safari-pinned-tab.svg') }}" color="#171e60">
+        <meta name="msapplication-TileColor" content="#171e60">
+        <meta name="msapplication-config" content="{{ asset('browserconfig.xml') }}">
         <meta name="theme-color" content="#171e60">
 
         <!-- Fonts -->
