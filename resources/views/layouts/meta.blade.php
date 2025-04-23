@@ -6,14 +6,12 @@
 <meta name="robots" content="@yield('meta_robots', 'index, follow')">
 
 <!-- Favicon -->
-<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/favicon/apple-touch-icon.png') }}">
-<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon/favicon-32x32.png') }}">
-<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon/favicon-16x16.png') }}">
-<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-<link rel="manifest" href="{{ asset('site.webmanifest') }}">
-<link rel="mask-icon" href="{{ asset('img/favicon/safari-pinned-tab.svg') }}" color="#171e60">
-<meta name="msapplication-TileColor" content="#171e60">
-<meta name="theme-color" content="#171e60">
+<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-title" content="MyWebSite" />
+<link rel="manifest" href="/site.webmanifest" />
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
