@@ -2,10 +2,42 @@
  
 @section('title', 'Contact MaxMed - Medical & Laboratory Equipment Supplier Middle East & Africa')
 
-@section('meta_description', 'Get in touch with MaxMed, a leading supplier of premium medical and laboratory equipment across the Middle East, Africa, and global markets. Contact our team for inquiries about diagnostic supplies and cutting-edge medical solutions.')
+@section('meta_description', 'Get in touch with MaxMed. Call us at +971 55 460 2500 or email sales@maxmedme.com. Leading supplier of premium medical and laboratory equipment across the Middle East, Africa, and global markets.')
 
-@section('meta_keywords', 'contact MaxMed, medical equipment supplier contact, laboratory equipment supplier Middle East, diagnostic supplies Africa, healthcare solutions contact, medical equipment inquiry, laboratory technology support, global medical equipment supplier')
+@section('meta_keywords', 'contact MaxMed, MaxMed phone number, MaxMed email, medical equipment supplier contact, laboratory equipment supplier Middle East, diagnostic supplies Africa, healthcare solutions contact, medical equipment inquiry, laboratory technology support, global medical equipment supplier')
  
+@push('scripts')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "name": "Contact MaxMed UAE",
+  "description": "Contact MaxMed for medical and laboratory equipment in the UAE and Middle East. Call +971 55 460 2500 or email sales@maxmedme.com",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://maxmedme.com/contact"
+  },
+  "provider": {
+    "@type": "MedicalBusiness",
+    "name": "MaxMed UAE",
+    "telephone": "+971 55 460 2500",
+    "email": "sales@maxmedme.com",
+    "url": "https://maxmedme.com",
+    "areaServed": ["Dubai", "Abu Dhabi", "Sharjah", "Ajman", "UAE", "GCC"]
+  },
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "telephone": "+971 55 460 2500",
+      "contactType": "customer service",
+      "email": "sales@maxmedme.com",
+      "availableLanguage": ["English", "Arabic"]
+    }
+  ]
+}
+</script>
+@endpush
+
 @section('content')
 <style>
     /* Enhanced Hero Section */

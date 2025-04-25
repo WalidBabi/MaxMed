@@ -13,6 +13,8 @@
         <link rel="preconnect" href="https://www.googletagmanager.com">
         <link rel="preconnect" href="https://cdn.jsdelivr.net">
     
+        <!-- Schema.org structured data -->
+        @include('layouts.schema')
 
         <!-- Critical CSS inline -->
         <style>

@@ -1,9 +1,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, shrink-to-fit=no, viewport-fit=cover">
-<meta name="description" content="@yield('meta_description', 'MaxMed UAE - Leading supplier of laboratory equipment and medical supplies in Dubai. High-quality scientific instruments, diagnostic tools, and lab technology for healthcare and research facilities throughout UAE.')">
-<meta name="keywords" content="@yield('meta_keywords', 'laboratory equipment Dubai, lab instruments UAE, medical equipment supplier, scientific equipment Abu Dhabi, diagnostic tools, research lab supplies, laboratory technology, microscope supplier, centrifuge machine UAE, hospital supplies, laboratory analysis equipment, medical grade refrigerator')">
+<meta name="description" content="@yield('meta_description', 'MaxMed UAE - Leading supplier of laboratory equipment and medical supplies in Dubai. Contact us at +971 55 460 2500 or email sales@maxmedme.com. High-quality scientific instruments, diagnostic tools, and lab technology for healthcare and research facilities throughout UAE.')">
+<meta name="keywords" content="@yield('meta_keywords', 'laboratory equipment Dubai, lab instruments UAE, medical equipment supplier, scientific equipment Abu Dhabi, diagnostic tools, research lab supplies, laboratory technology, microscope supplier, centrifuge machine UAE, hospital supplies, laboratory analysis equipment, medical grade refrigerator, contact MaxMed, MaxMed phone number')">
 <meta name="author" content="MaxMed UAE">
 <meta name="robots" content="@yield('meta_robots', 'index, follow')">
+
+<!-- Contact Information for Search Engines -->
+<meta name="contact:phone" content="+971 55 460 2500">
+<meta name="contact:email" content="sales@maxmedme.com">
 
 <!-- Favicon -->
 <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('img/favicon/favicon-96x96.png') }}">
@@ -27,6 +31,8 @@
 <meta property="og:image" content="@yield('og_image', asset('Images/banner2.jpeg'))">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="MaxMed UAE">
+<meta property="og:phone_number" content="+971 55 460 2500">
+<meta property="og:email" content="sales@maxmedme.com">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">

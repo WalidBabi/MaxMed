@@ -17,13 +17,31 @@
         "latitude": "25.2048",
         "longitude": "55.2708"
     },
-    "contactPoint": {
-        "@type": "ContactPoint",
-        "telephone": "+971 55 460 2500",
-        "contactType": "customer service",
-        "email": "sales@maxmedme.com",
-        "availableLanguage": ["English", "Arabic"]
-    },
+    "contactPoint": [
+        {
+            "@type": "ContactPoint",
+            "telephone": "+971 55 460 2500",
+            "contactType": "customer service",
+            "email": "sales@maxmedme.com",
+            "availableLanguage": ["English", "Arabic"],
+            "contactOption": "TollFree",
+            "areaServed": ["Dubai", "Abu Dhabi", "Sharjah", "Ajman", "UAE", "GCC"]
+        },
+        {
+            "@type": "ContactPoint",
+            "telephone": "+971 55 460 2500",
+            "contactType": "sales",
+            "email": "sales@maxmedme.com",
+            "availableLanguage": ["English", "Arabic"]
+        },
+        {
+            "@type": "ContactPoint",
+            "telephone": "+971 55 460 2500",
+            "contactType": "technical support",
+            "email": "support@maxmedme.com",
+            "availableLanguage": ["English", "Arabic"]
+        }
+    ],
     "areaServed": ["Dubai", "Abu Dhabi", "Sharjah", "Ajman", "UAE", "GCC"],
     "openingHoursSpecification": {
         "@type": "OpeningHoursSpecification",
@@ -36,7 +54,7 @@
         "https://www.linkedin.com/company/maxmeduae",
         "https://www.instagram.com/maxmeduae"
     ],
-    "keywords": "laboratory equipment Dubai, medical supplies UAE, scientific instruments, lab technology, diagnostic equipment, research lab supplies, hospital equipment, medical laboratory setup",
+    "keywords": "laboratory equipment Dubai, medical supplies UAE, scientific instruments, lab technology, diagnostic equipment, research lab supplies, hospital equipment, medical laboratory setup, contact MaxMed, MaxMed phone number",
     "makesOffer": [
         {
             "@type": "Offer",
@@ -70,6 +88,19 @@
                 "description": "Advanced diagnostic tools and equipment for medical testing"
             }
         }
-    ]
+    ],
+    "potentialAction": {
+        "@type": "ContactAction",
+        "name": "Contact Us",
+        "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://maxmedme.com/contact",
+            "inLanguage": "en-US",
+            "actionPlatform": [
+                "https://schema.org/DesktopWebPlatform",
+                "https://schema.org/MobileWebPlatform"
+            ]
+        }
+    }
 }
 </script> 
