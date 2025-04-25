@@ -60,7 +60,7 @@ Disallow: /categories/57/75
 # Quotation handling - refine rules
 Allow: /quotation/form
 Allow: /quotation/confirmation
-Disallow: /quotation/*/form
+Allow: /quotation/*/form
 Disallow: /quotation/*/request
 Disallow: /quotation/[0-9]+$
 
