@@ -34,7 +34,64 @@
                 
                         <a href="{{ route('welcome') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Home</a>
                         <a href="{{ route('about') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">About</a>
-                        <a href="{{ route('products.index') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Products</a>
+
+                        <!-- Products Dropdown -->
+                        <div class="relative inline-block" x-data="{ open: false, activeSubmenu: null }" @click.away="open = false; activeSubmenu = null">
+                            <button @click="open = !open" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">
+                                <span class="whitespace-nowrap">Products</span>
+                                <svg class="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <div x-show="open"
+                                x-transition:enter="transition ease-out duration-100"
+                                x-transition:enter-start="transform opacity-0 scale-95"
+                                x-transition:enter-end="transform opacity-100 scale-100"
+                                x-transition:leave="transition ease-in duration-75"
+                                x-transition:leave-start="transform opacity-100 scale-100"
+                                x-transition:leave-end="transform opacity-0 scale-95"
+                                class="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50">
+                                @foreach($navCategories as $category)
+                                    @if($category->subcategories->isNotEmpty())
+                                        <div class="relative" x-data="{ id: {{ $category->id }} }">
+                                            <button @click.prevent="activeSubmenu === id ? activeSubmenu = null : activeSubmenu = id" 
+                                                @mouseenter="activeSubmenu = id" @mouseleave="activeSubmenu = null"
+                                                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex justify-between items-center">
+                                                {{ $category->name }}
+                                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
+                                            <div x-show="activeSubmenu === id" 
+                                                @mouseenter="activeSubmenu = id" @mouseleave="activeSubmenu = null"
+                                                class="absolute top-0 left-full bg-white rounded-md shadow-lg py-1 z-60"
+                                                style="display: none; margin-left: 250px; width: 320px;">
+                                                <a href="{{ route('categories.show', $category) }}" class="block px-4 py-2 text-sm font-medium text-gray-800 border-b border-gray-100">
+                                                    All {{ $category->name }}
+                                                </a>
+                                                @foreach($category->subcategories as $subcategory)
+                                                    <a href="{{ route('categories.subcategory.show', [$category, $subcategory]) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                        {{ $subcategory->name }}
+                                                    </a>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @else
+                                        <a href="{{ route('categories.show', $category) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            {{ $category->name }}
+                                        </a>
+                                    @endif
+                                @endforeach
+                                <div class="border-t border-gray-100 my-1"></div>
+                                <a href="{{ route('products.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-medium">
+                                    View All Products
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Replace with simple clickable link -->
+                        <a href="{{ route('industry.index') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full whitespace-nowrap">Industries & Solutions</a>
+                        
                         <!-- <a href="{{ route('partners.index') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Partners</a> -->
                         <a href="{{ route('news.index') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">News</a>
                         <a href="{{ route('contact') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Contact</a>
@@ -140,8 +197,194 @@
 
                 <a href="{{ route('welcome') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Home</a>
                 <a href="{{ route('about') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">About Us</a>
-                <a href="{{ route('products.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Products</a>
-                <!-- <a href="{{ route('partners.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Partners</a> -->
+
+                <!-- Mobile Products Dropdown -->
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" class="flex items-center justify-between w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                        <span class="whitespace-nowrap">Products</span>
+                        <svg :class="{'rotate-180': open}" class="ml-2 h-4 w-4 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div x-show="open" class="pl-4 space-y-1 mt-1">
+                        @foreach($navCategories as $category)
+                            @if($category->subcategories->isNotEmpty())
+                                <div x-data="{ subOpen: false }" class="relative">
+                                    <div class="flex items-start">
+                                        <a href="{{ route('categories.show', $category) }}" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
+                                            {{ $category->name }}
+                                        </a>
+                                        <button @click.prevent="subOpen = !subOpen" class="px-2 py-2 text-gray-500 hover:text-[#00a9e0] focus:outline-none">
+                                            <svg :class="{'rotate-90': subOpen}" class="h-4 w-4 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div x-show="subOpen" class="pl-4 space-y-1 mt-1">
+                                        @foreach($category->subcategories as $subcategory)
+                                            <a href="{{ route('categories.subcategory.show', [$category, $subcategory]) }}" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                                {{ $subcategory->name }}
+                                            </a>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @else
+                                <a href="{{ route('categories.show', $category) }}" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    {{ $category->name }}
+                                </a>
+                            @endif
+                        @endforeach
+                        <a href="{{ route('products.index') }}" class="block px-3 py-2 rounded-md text-sm font-medium text-blue-600 hover:text-blue-800 hover:bg-gray-50">
+                            View All Products
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Mobile Who We Serve Dropdown -->
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" class="flex items-center justify-between w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                        <span class="whitespace-nowrap">Industries & Solutions</span>
+                        <svg :class="{'rotate-180': open}" class="ml-2 h-4 w-4 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div x-show="open" class="pl-4 space-y-1 mt-1">
+                        <!-- Healthcare & Medical Facilities -->
+                        <div x-data="{ subOpen: false }" class="relative">
+                            <div class="flex items-start">
+                                <a href="{{ route('industry.index') }}#healthcare" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
+                                    Medical & Healthcare
+                                </a>
+                                <button @click.prevent="subOpen = !subOpen" class="px-2 py-2 text-gray-500 hover:text-[#00a9e0] focus:outline-none">
+                                    <svg :class="{'rotate-90': subOpen}" class="h-4 w-4 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div x-show="subOpen" class="pl-4 space-y-1 mt-1">
+                                <a href="{{ route('industry.index') }}#clinics" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    Clinics & Medical Centers
+                                </a>
+                                <a href="{{ route('industry.index') }}#hospitals" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    Hospitals
+                                </a>
+                                <a href="{{ route('industry.index') }}#veterinary" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    Veterinary Clinics
+                                </a>
+                                <a href="{{ route('industry.index') }}#medical-labs" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    Medical Laboratories
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Scientific & Research Institutions -->
+                        <div x-data="{ subOpen: false }" class="relative">
+                            <div class="flex items-start">
+                                <a href="{{ route('industry.index') }}#research" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
+                                    Research & Development
+                                </a>
+                                <button @click.prevent="subOpen = !subOpen" class="px-2 py-2 text-gray-500 hover:text-[#00a9e0] focus:outline-none">
+                                    <svg :class="{'rotate-90': subOpen}" class="h-4 w-4 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div x-show="subOpen" class="pl-4 space-y-1 mt-1">
+                                <a href="{{ route('industry.index') }}#research-labs" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    Research Laboratories
+                                </a>
+                                <a href="{{ route('industry.index') }}#academia" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    Universities & Academia
+                                </a>
+                                <a href="{{ route('industry.index') }}#biotech" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    Biotech & Pharmaceutical Industries
+                                </a>
+                                <a href="{{ route('industry.index') }}#forensic" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    Forensic Laboratories
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Government & Regulatory Bodies -->
+                        <div x-data="{ subOpen: false }" class="relative">
+                            <div class="flex items-start">
+                                <a href="{{ route('industry.index') }}#government" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
+                                    Public Sector & Regulation
+                                </a>
+                                <button @click.prevent="subOpen = !subOpen" class="px-2 py-2 text-gray-500 hover:text-[#00a9e0] focus:outline-none">
+                                    <svg :class="{'rotate-90': subOpen}" class="h-4 w-4 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div x-show="subOpen" class="pl-4 space-y-1 mt-1">
+                                <a href="{{ route('industry.index') }}#public-health" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    Public Health Institutions
+                                </a>
+                                <a href="{{ route('industry.index') }}#military" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    Military & Defense Research Centers
+                                </a>
+                                <a href="{{ route('industry.index') }}#regulatory" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    Health Ministries & Regulatory Agencies
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Specialized Testing & Diagnostics -->
+                        <div x-data="{ subOpen: false }" class="relative">
+                            <div class="flex items-start">
+                                <a href="{{ route('industry.index') }}#testing" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
+                                    Testing & Analysis
+                                </a>
+                                <button @click.prevent="subOpen = !subOpen" class="px-2 py-2 text-gray-500 hover:text-[#00a9e0] focus:outline-none">
+                                    <svg :class="{'rotate-90': subOpen}" class="h-4 w-4 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div x-show="subOpen" class="pl-4 space-y-1 mt-1">
+                                <a href="{{ route('industry.index') }}#environment" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    Environment Laboratories
+                                </a>
+                                <a href="{{ route('industry.index') }}#food" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    Food Laboratories
+                                </a>
+                                <a href="{{ route('industry.index') }}#material" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    Material Testing Laboratories
+                                </a>
+                                <a href="{{ route('industry.index') }}#cosmetic" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    Cosmetic & Dermatology Labs
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Emerging & AI-driven Healthcare -->
+                        <div x-data="{ subOpen: false }" class="relative">
+                            <div class="flex items-start">
+                                <a href="{{ route('industry.index') }}#technology" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
+                                    Emerging & AI-driven Healthcare
+                                </a>
+                                <button @click.prevent="subOpen = !subOpen" class="px-2 py-2 text-gray-500 hover:text-[#00a9e0] focus:outline-none">
+                                    <svg :class="{'rotate-90': subOpen}" class="h-4 w-4 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div x-show="subOpen" class="pl-4 space-y-1 mt-1">
+                                <a href="{{ route('industry.index') }}#telemedicine" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    Telemedicine & Remote Diagnostics
+                                </a>
+                                <a href="{{ route('industry.index') }}#ai-medical" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    AI-powered Medical Technology Firms
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Replace with simple clickable link -->
+                <!-- <a href="{{ route('industry.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Industries & Solutions</a> -->
+
                 <a href="{{ route('contact') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Contact Us</a>
                 <a href="{{ route('news.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">News</a>
 

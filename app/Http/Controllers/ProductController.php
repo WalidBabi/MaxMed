@@ -54,6 +54,55 @@ class ProductController extends Controller
             // This helps with SEO for category-specific product listings
         }
         
+        // Filter for industry-specific subcategories (used in "Explore Solutions" buttons)
+        if ($industryFor = $request->input('for')) {
+            $industryMapping = [
+                // Healthcare & Medical Facilities subcategories
+                'clinics' => ['Point-of-care diagnostics', 'Exam room equipment', 'Medical supplies'],
+                'hospitals' => ['Surgical instruments', 'Hospital equipment', 'Patient monitoring', 'Infection control'],
+                'veterinary' => ['Veterinary equipment', 'Animal care', 'Veterinary diagnostics'],
+                'medical-labs' => ['Laboratory equipment', 'Clinical analyzers', 'Lab consumables'],
+                
+                // Scientific & Research Institutions subcategories
+                'research-labs' => ['Research equipment', 'Analytical instruments', 'Laboratory supplies'],
+                'academia' => ['Educational lab equipment', 'Teaching supplies', 'Research instruments'],
+                'biotech-pharma' => ['Biotech equipment', 'Pharmaceutical testing', 'Cell culture'],
+                'forensic' => ['Forensic equipment', 'Evidence collection', 'Analysis tools'],
+                
+                // Specialized Testing & Diagnostics subcategories
+                'environment' => ['Environmental testing', 'Air quality', 'Water analysis', 'Soil testing'],
+                'food' => ['Food testing equipment', 'Safety analysis', 'Quality control'],
+                'material' => ['Material testing', 'Strength analysis', 'Composition testing'],
+                'cosmetic' => ['Cosmetic testing', 'Dermatology equipment', 'Safety analysis'],
+                
+                // Government & Regulatory Bodies subcategories
+                'public-health' => ['Public health monitoring', 'Disease surveillance', 'Community screening'],
+                'military-defense' => ['Military medical equipment', 'Field diagnostics', 'Research tools'],
+                'regulatory' => ['Quality control systems', 'Compliance tools', 'Inspection equipment'],
+                
+                // Emerging & AI-driven Healthcare subcategories
+                'telemedicine' => ['Telehealth systems', 'Remote monitoring', 'Digital diagnostics'],
+                'ai-medical' => ['AI development tools', 'Medical imaging analysis', 'Healthcare data systems']
+            ];
+            
+            // If the requested industry subcategory exists in our mapping
+            if (isset($industryMapping[$industryFor])) {
+                $relatedCategories = $industryMapping[$industryFor];
+                
+                // Filter products by these related categories using 'whereHas' relationship
+                $query->where(function($q) use ($relatedCategories) {
+                    foreach($relatedCategories as $category) {
+                        $q->orWhereHas('category', function($subQ) use ($category) {
+                            $subQ->where('name', 'like', "%{$category}%");
+                        });
+                    }
+                });
+                
+                // Set a view variable to display the industry subcategory name
+                $industryCategory = str_replace('-', ' ', ucwords($industryFor, '-'));
+            }
+        }
+        
         // Filter by subcategory
         if ($request->filled('subcategory')) {
             $query->where('category_id', $request->input('subcategory'));
@@ -113,6 +162,11 @@ class ProductController extends Controller
         
         // Preserve query parameters in pagination links
         $products->appends($request->all());
+        
+        // Use industry-specific view if requested
+        if (isset($industryCategory) && $request->input('for')) {
+            return view('products.industry', compact('products', 'categories', 'industryCategory', 'industryFor'));
+        }
         
         return view('products.index', compact('products', 'categories'));
     }

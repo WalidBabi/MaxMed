@@ -21,6 +21,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\IndustryController;
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
@@ -31,6 +32,11 @@ Route::get('/product/{product}', [ProductController::class, 'show'])->name('prod
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
 Route::get('/check-availability/{product}/{quantity}', [ProductController::class, 'checkAvailability'])->name('check.availability');
+
+// Industry routes
+Route::get('/industries', function() {
+    return view('industries.index');
+})->name('industry.index');
 
 // Cart Routes - Keep publicly accessible for SEO
 Route::get('/cart', [CartController::class, 'viewCart'])->name('cart.view');
