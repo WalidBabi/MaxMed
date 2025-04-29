@@ -51,7 +51,17 @@
                                 x-transition:leave-start="transform opacity-100 scale-100"
                                 x-transition:leave-end="transform opacity-0 scale-95"
                                 class="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50">
-                                @foreach($navCategories as $category)
+                                @foreach($navCategories->sortBy(function($category) {
+                                    // Define the preferred order
+                                    $order = [
+                                        'Molecular & Clinical Diagnostics' => 1,
+                                        'Life Science & Research' => 2,
+                                        'Lab Equipment' => 3,
+                                        'Medical Consumables' => 4,
+                                        'Lab Consumables' => 5
+                                    ];
+                                    return $order[$category->name] ?? 999; // Categories not in list will appear last
+                                }) as $category)
                                     @if($category->subcategories->isNotEmpty())
                                         <div class="relative" x-data="{ id: {{ $category->id }} }">
                                             <button @click.prevent="activeSubmenu === id ? activeSubmenu = null : activeSubmenu = id" 
@@ -207,7 +217,17 @@
                         </svg>
                     </button>
                     <div x-show="open" class="pl-4 space-y-1 mt-1">
-                        @foreach($navCategories as $category)
+                        @foreach($navCategories->sortBy(function($category) {
+                            // Define the preferred order
+                            $order = [
+                                'Molecular & Clinical Diagnostics' => 1,
+                                'Life Science & Research' => 2,
+                                'Lab Equipment' => 3,
+                                'Medical Consumables' => 4,
+                                'Lab Consumables' => 5
+                            ];
+                            return $order[$category->name] ?? 999; // Categories not in list will appear last
+                        }) as $category)
                             @if($category->subcategories->isNotEmpty())
                                 <div x-data="{ subOpen: false }" class="relative">
                                     <div class="flex items-start">
