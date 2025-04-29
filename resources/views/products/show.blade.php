@@ -447,6 +447,20 @@
                             <p>{!! nl2br(e($mainDescription ?? $description)) !!}</p>
                         </div>
 
+                        @if($product->pdf_file)
+                        <div class="pdf-documentation mt-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-file-pdf fa-2x text-danger me-2"></i>
+                                <div>
+                                    <h6 class="mb-1">Product Documentation</h6>
+                                    <a href="{{ Storage::url($product->pdf_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-download me-1"></i> View PDF
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
                         @if(isset($parameters) && count($parameters) > 0)
                         <div class="product-parameters">
                             <h5>Technical Specifications</h5>
@@ -499,6 +513,7 @@
         </div>
     </div>
     @endif
+
 </div>
 
 <script>

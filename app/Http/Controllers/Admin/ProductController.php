@@ -90,6 +90,7 @@ class ProductController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5000',
             'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5000',
             'specification_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5000',
+            'pdf_file' => 'nullable|file|mimes:pdf|max:10000',
             'has_size_options' => 'nullable|boolean',
             'size_options' => 'nullable|array',
             'size_options.*' => 'nullable|string|max:50'
@@ -146,6 +147,12 @@ class ProductController extends Controller
                 ]);
             }
 
+            // Handle PDF file if uploaded
+            if ($request->hasFile('pdf_file')) {
+                $path = $request->file('pdf_file')->store('products/pdfs', 'public');
+                $product->update(['pdf_file' => $path]);
+            }
+
             // Handle additional images
             if ($request->hasFile('additional_images')) {
                 $sortOrder = 1;
@@ -188,6 +195,8 @@ class ProductController extends Controller
             'delete_images' => 'nullable|string',
             'primary_image_id' => 'nullable|exists:product_images,id',
             'specification_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5000',
+            'pdf_file' => 'nullable|file|mimes:pdf|max:10000',
+            'delete_pdf' => 'nullable|boolean',
             'has_size_options' => 'nullable|boolean',
             'size_options' => 'nullable|array',
             'size_options.*' => 'nullable|string|max:50'
@@ -294,6 +303,25 @@ class ProductController extends Controller
                 }
             }
 
+            // Handle PDF file if uploaded
+            if ($request->hasFile('pdf_file')) {
+                // Delete old PDF if exists
+                if ($product->pdf_file && Storage::disk('public')->exists($product->pdf_file)) {
+                    Storage::disk('public')->delete($product->pdf_file);
+                }
+                
+                $path = $request->file('pdf_file')->store('products/pdfs', 'public');
+                $product->update(['pdf_file' => $path]);
+            }
+
+            // Handle PDF deletion if requested
+            if ($request->has('delete_pdf') && $request->delete_pdf == '1') {
+                if ($product->pdf_file && Storage::disk('public')->exists($product->pdf_file)) {
+                    Storage::disk('public')->delete($product->pdf_file);
+                    $product->update(['pdf_file' => null]);
+                }
+            }
+
             // Handle image deletions
             if ($request->filled('delete_images')) {
                 $imageIds = explode(',', $request->delete_images);
@@ -364,6 +392,11 @@ class ProductController extends Controller
         // Delete the main image if it exists
         if ($product->image_url && Storage::disk('public')->exists(str_replace(asset('storage/'), '', $product->image_url))) {
             Storage::disk('public')->delete(str_replace(asset('storage/'), '', $product->image_url));
+        }
+
+        // Delete the PDF file if it exists
+        if ($product->pdf_file && Storage::disk('public')->exists($product->pdf_file)) {
+            Storage::disk('public')->delete($product->pdf_file);
         }
 
         // Delete the inventory record

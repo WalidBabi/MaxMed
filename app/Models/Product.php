@@ -15,7 +15,8 @@ class Product extends Model
         'category_id', 
         'brand_id',
         'has_size_options',
-        'size_options'
+        'size_options',
+        'pdf_file'
     ];
 
     protected $casts = [
