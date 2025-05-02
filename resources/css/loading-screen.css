@@ -1,0 +1,116 @@
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: opacity 0.3s ease-in-out;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.loading-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+/* For vanilla JS implementation */
+.loading-overlay[style*="display: none"] {
+    visibility: hidden;
+}
+
+.petri-dish {
+    width: 120px;
+    height: 120px;
+    background-color: #f5f5f5;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid #e0e0e0;
+}
+
+.dish-content {
+    width: 100px;
+    height: 100px;
+    background-color: #e6f2ff;
+    border-radius: 50%;
+    position: relative;
+}
+
+.bacteria {
+    position: absolute;
+    border-radius: 50%;
+    animation: grow 2s infinite alternate ease-in-out;
+}
+
+.bacteria:nth-child(1) {
+    width: 20px;
+    height: 20px;
+    background-color: #0a5694;
+    top: 30%;
+    left: 30%;
+    animation-delay: 0s;
+}
+
+.bacteria:nth-child(2) {
+    width: 15px;
+    height: 15px;
+    background-color: #171e60;
+    top: 50%;
+    left: 60%;
+    animation-delay: 0.3s;
+}
+
+.bacteria:nth-child(3) {
+    width: 12px;
+    height: 12px;
+    background-color: #3b82f6;
+    top: 70%;
+    left: 40%;
+    animation-delay: 0.6s;
+}
+
+.bacteria:nth-child(4) {
+    width: 18px;
+    height: 18px;
+    background-color: #60a5fa;
+    top: 20%;
+    left: 65%;
+    animation-delay: 0.9s;
+}
+
+.bacteria:nth-child(5) {
+    width: 10px;
+    height: 10px;
+    background-color: #1d4ed8;
+    top: 60%;
+    left: 20%;
+    animation-delay: 1.2s;
+}
+
+@keyframes grow {
+    0% {
+        transform: scale(0.8);
+    }
+    100% {
+        transform: scale(1.2);
+    }
+}
+
+.loading-text {
+    font-size: 1.2rem;
+    color: #171e60;
+    margin-top: 20px;
+    font-weight: 500;
+} 

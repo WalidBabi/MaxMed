@@ -154,6 +154,208 @@
         </script>
     </head>
     <body class="font-sans antialiased bg-gray-50 relative">
+        <!-- Simple Microbiology Loading Screen (vanilla JS only) -->
+        <div id="microLoadingScreen" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 10000; justify-content: center; align-items: center; flex-direction: column;">
+            <div style="width: 120px; height: 120px; background: #f5f5f5; border-radius: 50%; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.1); overflow: hidden; display: flex; justify-content: center; align-items: center; border: 4px solid #e0e0e0;">
+                <div style="width: 100px; height: 100px; background: #e6f2ff; border-radius: 50%; position: relative;">
+                    <div class="bacteria-1"></div>
+                    <div class="bacteria-2"></div>
+                    <div class="bacteria-3"></div>
+                    <div class="bacteria-4"></div>
+                    <div class="bacteria-5"></div>
+                </div>
+            </div>
+            <div style="font-size: 1.2rem; color: #171e60; margin-top: 20px; font-weight: 500;">Analyzing Cultures...</div>
+        </div>
+        
+        <!-- Simple direct script for loading screen -->
+        <script>
+            // Simple loading screen functions
+            const microLoader = {
+                element: null,
+                
+                init: function() {
+                    this.element = document.getElementById('microLoadingScreen');
+                    
+                    // Add navigation listeners
+                    this.setupNavListeners();
+                    
+                    console.log('Micro loading screen initialized');
+                },
+                
+                show: function() {
+                    console.log('Showing micro loader');
+                    if (this.element) {
+                        this.element.style.display = 'flex';
+                    }
+                },
+                
+                hide: function() {
+                    console.log('Hiding micro loader');
+                    if (this.element) {
+                        this.element.style.display = 'none';
+                    }
+                },
+                
+                setupNavListeners: function() {
+                    // Handle regular links
+                    document.body.addEventListener('click', (e) => {
+                        // Find if the clicked element is a link or inside a link
+                        let target = e.target;
+                        while (target && target !== document && target.tagName !== 'A') {
+                            target = target.parentNode;
+                        }
+                        
+                        // If we found a link and it's an internal link
+                        if (target && target.tagName === 'A' && 
+                            target.href && 
+                            target.href.startsWith(window.location.origin) && 
+                            !target.getAttribute('href').startsWith('#')) {
+                            
+                            console.log('Link clicked, showing loader:', target.href);
+                            this.show();
+                        }
+                    });
+                    
+                    // Handle form submissions
+                    document.body.addEventListener('submit', (e) => {
+                        const form = e.target;
+                        if (!form.getAttribute('data-ajax')) {
+                            console.log('Form submitted, showing loader');
+                            this.show();
+                        }
+                    });
+                    
+                    // Handle browser back/forward buttons - IMMEDIATE HIDE
+                    window.addEventListener('popstate', () => {
+                        console.log('Browser back/forward navigation detected');
+                        
+                        // The page is likely already loaded from browser cache,
+                        // so we shouldn't show the loader at all or hide it immediately
+                        this.hide();
+                    });
+                    
+                    // SPECIAL HANDLING FOR BACK/FORWARD CACHE
+                    // This event fires when a page is restored from bfcache (back-forward cache)
+                    window.addEventListener('pageshow', (event) => {
+                        // If the page was loaded from the browser cache
+                        if (event.persisted) {
+                            console.log('Page restored from back/forward cache');
+                            this.hide(); // Immediately hide the loader
+                        }
+                    });
+                    
+                    // Hide immediately when page becomes visible (handles browser cache cases)
+                    document.addEventListener('visibilitychange', () => {
+                        if (document.visibilityState === 'visible') {
+                            console.log('Page visibility changed to visible');
+                            this.hide();
+                        }
+                    });
+                    
+                    // Hide on any page interaction
+                    document.addEventListener('click', () => {
+                        console.log('Page interaction detected');
+                        this.hide();
+                    });
+                    
+                    // Hide on page load
+                    window.addEventListener('load', () => {
+                        console.log('Page loaded, hiding loader');
+                        this.hide();
+                    });
+                    
+                    // Extra safeguard - hide after minimal timeout
+                    document.addEventListener('DOMContentLoaded', () => {
+                        // For back navigation, content is already loaded, so hide immediately
+                        this.hide();
+                        
+                        // Additional safety timeout with minimal delay
+                        setTimeout(() => {
+                            this.hide();
+                        }, 100);
+                    });
+                    
+                    // Add a shorter universal safety timeout
+                    setTimeout(() => {
+                        console.log('Safety timeout reached, forcing loader hide');
+                        this.hide();
+                    }, 2000); // Reduced to 2 seconds maximum
+                }
+            };
+            
+            // Initialize on DOM ready
+            document.addEventListener('DOMContentLoaded', () => {
+                microLoader.init();
+            });
+            
+            // Make available globally
+            window.microLoader = microLoader;
+        </script>
+        
+        <!-- Inline styles for bacteria -->
+        <style>
+            .bacteria-1, .bacteria-2, .bacteria-3, .bacteria-4, .bacteria-5 {
+                position: absolute;
+                border-radius: 50%;
+                animation: microGrow 2s infinite alternate ease-in-out;
+            }
+            
+            .bacteria-1 {
+                width: 20px;
+                height: 20px;
+                background-color: #0a5694;
+                top: 30%;
+                left: 30%;
+                animation-delay: 0s;
+            }
+            
+            .bacteria-2 {
+                width: 15px;
+                height: 15px;
+                background-color: #171e60;
+                top: 50%;
+                left: 60%;
+                animation-delay: 0.3s;
+            }
+            
+            .bacteria-3 {
+                width: 12px;
+                height: 12px;
+                background-color: #3b82f6;
+                top: 70%;
+                left: 40%;
+                animation-delay: 0.6s;
+            }
+            
+            .bacteria-4 {
+                width: 18px;
+                height: 18px;
+                background-color: #60a5fa;
+                top: 20%;
+                left: 65%;
+                animation-delay: 0.9s;
+            }
+            
+            .bacteria-5 {
+                width: 10px;
+                height: 10px;
+                background-color: #1d4ed8;
+                top: 60%;
+                left: 20%;
+                animation-delay: 1.2s;
+            }
+            
+            @keyframes microGrow {
+                0% {
+                    transform: scale(0.8);
+                }
+                100% {
+                    transform: scale(1.2);
+                }
+            }
+        </style>
+        
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             @include('layouts.navigation')
 
@@ -199,7 +401,6 @@
 
         <!-- Defer non-essential JS -->
         <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
         
         <script>
             // Wait until the entire page is loaded, then hide the loader.
