@@ -226,61 +226,41 @@
                         }
                     });
                     
-                    // Handle browser back/forward buttons - IMMEDIATE HIDE
+                    // Handle browser back/forward buttons
                     window.addEventListener('popstate', () => {
                         console.log('Browser back/forward navigation detected');
                         
-                        // The page is likely already loaded from browser cache,
-                        // so we shouldn't show the loader at all or hide it immediately
-                        this.hide();
-                    });
-                    
-                    // SPECIAL HANDLING FOR BACK/FORWARD CACHE
-                    // This event fires when a page is restored from bfcache (back-forward cache)
-                    window.addEventListener('pageshow', (event) => {
-                        // If the page was loaded from the browser cache
-                        if (event.persisted) {
-                            console.log('Page restored from back/forward cache');
-                            this.hide(); // Immediately hide the loader
-                        }
-                    });
-                    
-                    // Hide immediately when page becomes visible (handles browser cache cases)
-                    document.addEventListener('visibilitychange', () => {
-                        if (document.visibilityState === 'visible') {
-                            console.log('Page visibility changed to visible');
+                        // Show loader first
+                        this.show();
+                        
+                        // Always force hide loader after reasonable delay
+                        // This is crucial for back/forward navigation
+                        setTimeout(() => {
+                            console.log('Forcing loader hide after back/forward navigation');
                             this.hide();
-                        }
+                        }, 800);
                     });
                     
-                    // Hide on any page interaction
-                    document.addEventListener('click', () => {
-                        console.log('Page interaction detected');
-                        this.hide();
-                    });
-                    
-                    // Hide on page load
+                    // Hide on page load and DOMContentLoaded
                     window.addEventListener('load', () => {
                         console.log('Page loaded, hiding loader');
                         this.hide();
                     });
                     
-                    // Extra safeguard - hide after minimal timeout
+                    // Extra safeguard to ensure loader disappears
                     document.addEventListener('DOMContentLoaded', () => {
-                        // For back navigation, content is already loaded, so hide immediately
-                        this.hide();
-                        
-                        // Additional safety timeout with minimal delay
                         setTimeout(() => {
+                            console.log('DOMContentLoaded safeguard, hiding loader');
                             this.hide();
-                        }, 100);
+                        }, 1000);
                     });
                     
-                    // Add a shorter universal safety timeout
-                    setTimeout(() => {
+                    // Add a universal safety timeout that will hide the loader
+                    // no matter what after a reasonable maximum loading time
+                    const safetyTimeout = setTimeout(() => {
                         console.log('Safety timeout reached, forcing loader hide');
                         this.hide();
-                    }, 2000); // Reduced to 2 seconds maximum
+                    }, 8000); // 8 seconds maximum
                 }
             };
             
