@@ -344,7 +344,7 @@
     @endif
 
     <div class="row sidebar-content-container justify-content-center">
-        <div class="col-md-3 sidebar-column transition-all duration-300">
+        <div class="col-md-3 sidebar-column transition-all duration-300" x-data="{}" x-init="$nextTick(() => { $el.classList.add('sidebar-loaded'); })">
             @include('layouts.sidebar')
         </div>
         <div class="col-md-9 mt-2 main-content-column transition-all duration-300">

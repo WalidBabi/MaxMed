@@ -1,4 +1,16 @@
-<div class="sidebar" style="overflow: visible;">
+<div class="sidebar" style="overflow: visible;" x-data="{}" x-init="$nextTick(() => { $el.classList.add('initialized'); })">
+    <style>
+        /* Prevent sidebar flashing during navigation */
+        .sidebar {
+            opacity: 1; /* Make sidebar visible by default */
+            transition: opacity 0.3s ease;
+        }
+        
+        /* Only hide Alpine components until initialized */
+        [x-cloak] { 
+            display: none !important; 
+        }
+    </style>
     <div 
         class="flex flex-col h-auto min-h-full text-gray-100 bg-gradient-to-b from-[#171e60] to-[#0c1244] shadow-xl rounded-lg"
         style="width: 360px; padding-right: 10px;"
@@ -31,7 +43,7 @@
                         ];
                         return $order[$category->name] ?? 999; // Categories not in list will appear last
                     }) as $category)
-                    <div class="category-item mb-1" x-data="{ open: false }">
+                    <div class="category-item mb-1" x-data="{ open: false }" x-cloak>
                         <div class="flex items-center h-10 px-3 rounded-lg transition-colors {{ request('category') === $category->name ? 'bg-[#0a5694] text-white' : 'hover:bg-[#2a3387] group' }}"
                              @click="open = !open"
                              style="cursor: pointer !important;">
@@ -46,14 +58,15 @@
                         @if($category->subcategories->isNotEmpty())
                         <div class="pl-4 ml-2 border-l border-[#2a3387] mt-1 space-y-1"
                              x-show="open"
-                             x-transition:enter="transition ease-out duration-200"
+                             x-cloak
+                             x-transition:enter="transition ease-out duration-300"
                              x-transition:enter-start="opacity-0 transform -translate-y-2"
                              x-transition:enter-end="opacity-100 transform translate-y-0"
-                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave="transition ease-in duration-200"
                              x-transition:leave-start="opacity-100 transform translate-y-0"
                              x-transition:leave-end="opacity-0 transform -translate-y-2">
                             @foreach($category->subcategories as $subcategory)
-                            <div class="subcategory-item" x-data="{ subOpen: false }">
+                            <div class="subcategory-item" x-data="{ subOpen: false }" x-cloak>
                                 @if($subcategory->subcategories->isNotEmpty())
                                 <div class="flex items-center h-8 px-3 rounded-lg transition-colors {{ request('subcategory') === $subcategory->name ? 'bg-[#0a5694] text-white' : 'text-gray-300 hover:bg-[#2a3387] hover:text-white group' }}"
                                      @click="subOpen = !subOpen"
@@ -77,10 +90,11 @@
                                 @if($subcategory->subcategories->isNotEmpty())
                                 <div class="pl-3 ml-2 border-l border-[#2a3387] mt-1 space-y-1"
                                     x-show="subOpen"
-                                    x-transition:enter="transition ease-out duration-200"
+                                    x-cloak
+                                    x-transition:enter="transition ease-out duration-300"
                                     x-transition:enter-start="opacity-0 transform -translate-y-2"
                                     x-transition:enter-end="opacity-100 transform translate-y-0"
-                                    x-transition:leave="transition ease-in duration-150"
+                                    x-transition:leave="transition ease-in duration-200"
                                     x-transition:leave-start="opacity-100 transform translate-y-0"
                                     x-transition:leave-end="opacity-0 transform -translate-y-2">
                                     @foreach($subcategory->subcategories as $subsubcategory)
@@ -147,7 +161,8 @@
                             }
                         }
                     }" 
-                    x-init="checkFirstVisit()">
+                    x-cloak
+                    x-init="$nextTick(() => { setTimeout(() => { $el.classList.add('initialized'); }, 50); checkFirstVisit(); })">
                     <h2 class="text-xs uppercase tracking-wider text-gray-400 font-semibold mb-3 relative">
                         <button class="flex items-center w-full filter-button" @click="filtersOpen = !filtersOpen">
                             <span>Filter Products</span>
@@ -164,6 +179,7 @@
                         <!-- Filter hint tooltip -->
                         <div 
                             x-show="showHint" 
+                            x-cloak
                             x-transition:enter="transition ease-out duration-300"
                             x-transition:enter-start="opacity-0 transform translate-y-2"
                             x-transition:enter-end="opacity-100 transform translate-y-0"
@@ -178,10 +194,11 @@
                     </h2>
                     
                     <div x-show="filtersOpen"
-                         x-transition:enter="transition ease-out duration-200"
+                         x-cloak
+                         x-transition:enter="transition ease-out duration-300"
                          x-transition:enter-start="opacity-0 transform -translate-y-4"
                          x-transition:enter-end="opacity-100 transform translate-y-0"
-                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave="transition ease-in duration-200"
                          x-transition:leave-start="opacity-100 transform translate-y-0"
                          x-transition:leave-end="opacity-0 transform -translate-y-4">
                         

@@ -13,6 +13,15 @@
         <link rel="preconnect" href="https://www.googletagmanager.com">
         <link rel="preconnect" href="https://cdn.jsdelivr.net">
     
+        <!-- Immediate script to prevent flashing of Alpine elements -->
+        <script>
+            // Hide Alpine components until Alpine is loaded
+            document.addEventListener('DOMContentLoaded', function() {
+                // Add a class to the body to indicate JS is available
+                document.body.classList.add('js-enabled');
+            });
+        </script>
+    
         <!-- Schema.org structured data -->
         @include('layouts.schema')
 
@@ -26,6 +35,12 @@
                     // Force the navbar to display block to avoid flashing
                     navbar.classList.add('initialized');
                 }
+                
+                // Force sidebars to be visible
+                document.querySelectorAll('.sidebar, .sidebar-column').forEach(el => {
+                    el.style.opacity = '1';
+                    el.style.visibility = 'visible';
+                });
             });
             
             // Preserve navbar state during page navigation
@@ -48,6 +63,17 @@
                 --brand-main: #171e60;
                 --brand-auxiliary: #0a5694;
                 --brand-white: #ffffff;
+            }
+            
+            /* Hide Alpine elements until Alpine is fully loaded */
+            .js-enabled [x-cloak] {
+                display: none !important;
+            }
+            
+            /* Hide sidebar by default to prevent flashing */
+            body:not(.js-enabled) .sidebar-column, 
+            body:not(.page-loaded) .sidebar-column {
+                opacity: 0 !important;
             }
             
             body {
@@ -116,6 +142,21 @@
                 position: relative;
                 padding-left: 1rem !important; /* Add padding to prevent cutoff */
                 padding-right: 0.5rem !important; /* Add padding to prevent right cutoff */
+                transform: translateZ(0);
+                backface-visibility: hidden; /* Prevent flickering during transitions */
+                opacity: 1 !important; /* Ensure sidebar is always visible */
+            }
+            
+            /* Prevent sidebar flashing during navigation */
+            .sidebar {
+                opacity: 1;
+                transition: opacity 0.3s ease;
+            }
+            
+            /* Remove this class as it's causing issues */
+            body:not(.js-enabled) .sidebar-column, 
+            body:not(.page-loaded) .sidebar-column {
+                opacity: 1 !important; /* Always show sidebar */
             }
             
             .main-content-column {
@@ -281,6 +322,12 @@
                     navbar.style.visibility = 'visible';
                     navbar.style.transition = 'none';
                 }
+                
+                // Make sure all sidebars are visible
+                document.querySelectorAll('.sidebar-column, .sidebar').forEach(el => {
+                    el.style.opacity = '1';
+                    el.style.visibility = 'visible';
+                });
                 
                 // Add transition handlers to internal links for smooth navigation
                 const internalLinks = document.querySelectorAll('a[href^="/"]:not([target]), a[href^="{{ url("/") }}"]:not([target])');
