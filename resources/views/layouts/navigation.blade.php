@@ -1,4 +1,7 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100 dark:border-gray-700 shadow-sm">
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
     <!-- Single Bar with Logo, Links, Search and Navigation -->
     <div class="bg-white py-2">
         <div class="container mx-auto px-4 sm:px-6 lg:px-12">
@@ -42,7 +45,14 @@
                                 activeSubmenu: null, 
                                 activeSubSubmenu: null
                             }" 
-                            @click.away="open = false; activeSubmenu = null; activeSubSubmenu = null">
+                            @click.away="open = false; activeSubmenu = null; activeSubSubmenu = null"
+                            x-init="$nextTick(() => { 
+                                // Initialize dropdown safely after Alpine is fully loaded
+                                // This helps prevent flickering on page loads/navigation
+                                setTimeout(() => { 
+                                    // Delay initialization to ensure smooth operation
+                                }, 50);
+                            })">
                             <button @click="open = !open" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">
                                 <span class="whitespace-nowrap">Products</span>
                                 <svg class="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -50,10 +60,11 @@
                                 </svg>
                             </button>
                             <div x-show="open"
-                                x-transition:enter="transition ease-out duration-100"
+                                x-cloak
+                                x-transition:enter="transition ease-out duration-200"
                                 x-transition:enter-start="transform opacity-0 scale-95"
                                 x-transition:enter-end="transform opacity-100 scale-100"
-                                x-transition:leave="transition ease-in duration-75"
+                                x-transition:leave="transition ease-in duration-150"
                                 x-transition:leave-start="transform opacity-100 scale-100"
                                 x-transition:leave-end="transform opacity-0 scale-95"
                                 class="fixed left-0 right-0 mt-2 bg-white shadow-lg py-2 z-50">
@@ -264,14 +275,21 @@
                 <a href="{{ route('about') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">About Us</a>
 
                 <!-- Mobile Products Dropdown -->
-                <div x-data="{ open: false }" class="relative">
+                <div x-data="{ open: false }" x-cloak class="relative">
                     <button @click="open = !open" class="flex items-center justify-between w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                         <span class="whitespace-nowrap">Products</span>
                         <svg :class="{'rotate-180': open}" class="ml-2 h-4 w-4 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                         </svg>
                     </button>
-                    <div x-show="open" class="pl-4 space-y-1 mt-1">
+                    <div x-show="open" 
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="transform opacity-0"
+                        x-transition:enter-end="transform opacity-100"
+                        x-transition:leave="transition ease-in duration-150"
+                        x-transition:leave-start="transform opacity-100"
+                        x-transition:leave-end="transform opacity-0"
+                        class="pl-4 space-y-1 mt-1">
                         @foreach($navCategories->sortBy(function($category) {
                             // Define the preferred order
                             $order = [
@@ -316,14 +334,21 @@
                 </div>
                 
                 <!-- Mobile Who We Serve Dropdown -->
-                <div x-data="{ open: false }" class="relative">
+                <div x-data="{ open: false }" x-cloak class="relative">
                     <button @click="open = !open" class="flex items-center justify-between w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                         <span class="whitespace-nowrap">Industries & Solutions</span>
                         <svg :class="{'rotate-180': open}" class="ml-2 h-4 w-4 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                         </svg>
                     </button>
-                    <div x-show="open" class="pl-4 space-y-1 mt-1">
+                    <div x-show="open" 
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="transform opacity-0"
+                        x-transition:enter-end="transform opacity-100"
+                        x-transition:leave="transition ease-in duration-150"
+                        x-transition:leave-start="transform opacity-100"
+                        x-transition:leave-end="transform opacity-0"
+                        class="pl-4 space-y-1 mt-1">
                         <!-- Healthcare & Medical Facilities -->
                         <div x-data="{ subOpen: false }" class="relative">
                             <div class="flex items-start">
