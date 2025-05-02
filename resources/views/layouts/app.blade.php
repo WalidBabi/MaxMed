@@ -23,6 +23,19 @@
                 visibility: hidden;
                 transition: opacity 0.25s ease-in-out;
                 pointer-events: none;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            /* Lab-themed loading icon */
+            .lab-loader {
+                width: 120px;
+                height: 120px;
+                position: relative;
+                opacity: 0;
+                transform: scale(0.8);
+                transition: opacity 0.3s ease, transform 0.3s ease;
             }
             
             /* When navigating, show overlay */
@@ -31,9 +44,161 @@
                 visibility: visible;
             }
             
+            /* When navigating, show the loader */
+            body.navigating .lab-loader {
+                opacity: 1;
+                transform: scale(1);
+            }
+            
+            /* Test tube and flask container */
+            .lab-loader-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 15px;
+                position: relative;
+            }
+            
+            /* Test tube styles */
+            .test-tube {
+                width: 22px;
+                height: 70px;
+                background: linear-gradient(to bottom, rgba(255,255,255,0) 20%, #0a5694 20%, #0a5694 100%);
+                border-radius: 0 0 11px 11px;
+                border: 2px solid #171e60;
+                position: relative;
+                transform-origin: center top;
+                animation: shake 3s ease-in-out infinite;
+            }
+            
+            .test-tube::before {
+                content: '';
+                position: absolute;
+                top: -8px;
+                left: -2px;
+                width: 22px;
+                height: 8px;
+                background-color: #171e60;
+                border-radius: 5px 5px 0 0;
+            }
+            
+            /* Flask styles */
+            .flask {
+                width: 40px;
+                height: 70px;
+                position: relative;
+                animation: bubble 4s ease-in-out infinite;
+            }
+            
+            .flask-top {
+                width: 20px;
+                height: 15px;
+                background-color: #171e60;
+                border-radius: 5px 5px 0 0;
+                margin: 0 auto;
+            }
+            
+            .flask-body {
+                width: 40px;
+                height: 45px;
+                background: linear-gradient(to bottom, rgba(255,255,255,0) 30%, #171e60 30%, #00a9e0 100%);
+                border: 2px solid #171e60;
+                border-radius: 0 0 20px 20px;
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .flask-bubble {
+                position: absolute;
+                background-color: rgba(255, 255, 255, 0.6);
+                border-radius: 50%;
+                animation: rise 2s ease-in-out infinite;
+            }
+            
+            .flask-bubble:nth-child(1) {
+                width: 8px;
+                height: 8px;
+                left: 7px;
+                bottom: 0;
+                animation-delay: 0.2s;
+            }
+            
+            .flask-bubble:nth-child(2) {
+                width: 6px;
+                height: 6px;
+                left: 22px;
+                bottom: 0;
+                animation-delay: 0.8s;
+            }
+            
+            .flask-bubble:nth-child(3) {
+                width: 4px;
+                height: 4px;
+                left: 15px;
+                bottom: 0;
+                animation-delay: 1.5s;
+            }
+            
+            /* DNA helix around the containers */
+            .dna-strand {
+                position: absolute;
+                width: 100px;
+                height: 100px;
+                border: 2px dashed rgba(23, 30, 96, 0.3);
+                border-radius: 50%;
+                animation: rotate 8s linear infinite;
+            }
+            
+            .dna-strand:nth-child(1) {
+                border-color: rgba(23, 30, 96, 0.2);
+                animation-duration: 10s;
+            }
+            
+            .dna-strand:nth-child(2) {
+                width: 85px;
+                height: 85px;
+                border-color: rgba(10, 86, 148, 0.2);
+                animation-direction: reverse;
+                animation-duration: 7s;
+            }
+            
+            /* Animations */
+            @keyframes shake {
+                0%, 100% { transform: rotate(0deg); }
+                10% { transform: rotate(5deg); }
+                20% { transform: rotate(-5deg); }
+                30% { transform: rotate(3deg); }
+                40% { transform: rotate(-3deg); }
+                50% { transform: rotate(0deg); }
+            }
+            
+            @keyframes bubble {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-5px); }
+            }
+            
+            @keyframes rise {
+                from { transform: translateY(0); opacity: 1; }
+                to { transform: translateY(-30px); opacity: 0; }
+            }
+            
+            @keyframes rotate {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+            
             /* Override any transitions that might cause flashing */
             body.navigating * {
                 transition: none !important;
+            }
+            
+            /* But keep our loader transitions */
+            body.navigating .lab-loader,
+            body.navigating .test-tube,
+            body.navigating .flask,
+            body.navigating .flask-bubble,
+            body.navigating .dna-strand {
+                transition: all 0.3s ease !important;
             }
         </style>
         
@@ -44,13 +209,17 @@
                 document.body.classList.remove('navigating');
             }
             
+            // Simple function to show the overlay with lab loader
+            function showOverlay() {
+                document.body.classList.add('navigating');
+            }
+            
             // Create page transition system that prevents flashing
             document.addEventListener('DOMContentLoaded', function() {
-                // Create overlay if it doesn't exist
-                if (!document.getElementById('page-transition-overlay')) {
-                    const overlay = document.createElement('div');
-                    overlay.id = 'page-transition-overlay';
-                    document.body.appendChild(overlay);
+                // Create overlay if it doesn't exist (should already be in HTML)
+                const overlay = document.getElementById('page-transition-overlay');
+                if (!overlay) {
+                    console.warn('Page transition overlay not found in DOM');
                 }
                 
                 // Add event listeners to all internal links
@@ -72,8 +241,8 @@
                                 return;
                             }
                             
-                            // Start transition
-                            document.body.classList.add('navigating');
+                            // Start transition with lab loader
+                            showOverlay();
                         });
                     }
                 });
@@ -364,7 +533,23 @@
     </head>
     <body class="font-sans antialiased bg-gray-50 relative">
         <!-- Page transition overlay -->
-        <div id="page-transition-overlay"></div>
+        <div id="page-transition-overlay">
+            <div class="lab-loader">
+                <div class="dna-strand"></div>
+                <div class="dna-strand"></div>
+                <div class="lab-loader-container">
+                    <div class="test-tube"></div>
+                    <div class="flask">
+                        <div class="flask-top"></div>
+                        <div class="flask-body">
+                            <div class="flask-bubble"></div>
+                            <div class="flask-bubble"></div>
+                            <div class="flask-bubble"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900 mt-0 pt-0">
             @include('layouts.navigation')
@@ -502,6 +687,16 @@
                         overlay.style.opacity = "0";
                         overlay.style.visibility = "hidden";
                     }
+                });
+                
+                // Add a small delay for showing loader during navigation
+                // This prevents the loader from showing for very fast page loads
+                window.addEventListener('beforeunload', function(e) {
+                    // Don't show loader immediately - only after a tiny delay
+                    // This prevents flashing for quick navigations
+                    setTimeout(function() {
+                        document.body.classList.add('navigating');
+                    }, 50);
                 });
             })();
         </script>
