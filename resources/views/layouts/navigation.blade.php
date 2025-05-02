@@ -172,7 +172,7 @@
                         <a href="{{ route('news.index') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">News</a>
                         <a href="{{ route('contact') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Contact</a>
                         @auth
-                        <div class="relative inline-block" x-data="{ open: false }" @click.away="open = false">
+                        <div class="relative inline-block" x-data="{ open: false }" x-cloak @click.away="open = false">
                             <button @click="open = !open" class="text-gray-500 hover:text-gray-700 flex items-center font-normal">
                                 <span>{{ Auth::user()->name }}</span>
                                 <svg class="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -180,10 +180,11 @@
                                 </svg>
                             </button>
                             <div x-show="open"
-                                x-transition:enter="transition ease-out duration-100"
+                                x-cloak
+                                x-transition:enter="transition ease-out duration-200"
                                 x-transition:enter-start="transform opacity-0 scale-95"
                                 x-transition:enter-end="transform opacity-100 scale-100"
-                                x-transition:leave="transition ease-in duration-75"
+                                x-transition:leave="transition ease-in duration-150"
                                 x-transition:leave-start="transform opacity-100 scale-100"
                                 x-transition:leave-end="transform opacity-0 scale-95"
                                 class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
@@ -302,7 +303,7 @@
                             return $order[$category->name] ?? 999; // Categories not in list will appear last
                         }) as $category)
                             @if($category->subcategories->isNotEmpty())
-                                <div x-data="{ subOpen: false }" class="relative">
+                                <div x-data="{ subOpen: false }" x-cloak class="relative">
                                     <div class="flex items-start">
                                         <a href="{{ route('categories.show', $category) }}" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
                                             {{ $category->name }}
@@ -313,7 +314,14 @@
                                             </svg>
                                         </button>
                                     </div>
-                                    <div x-show="subOpen" class="pl-4 space-y-1 mt-1">
+                                    <div x-show="subOpen" 
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="transform opacity-0"
+                                        x-transition:enter-end="transform opacity-100"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="transform opacity-100"
+                                        x-transition:leave-end="transform opacity-0"
+                                        class="pl-4 space-y-1 mt-1">
                                         @foreach($category->subcategories as $subcategory)
                                             <a href="{{ route('categories.subcategory.show', [$category, $subcategory]) }}" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                                 {{ $subcategory->name }}
@@ -350,7 +358,7 @@
                         x-transition:leave-end="transform opacity-0"
                         class="pl-4 space-y-1 mt-1">
                         <!-- Healthcare & Medical Facilities -->
-                        <div x-data="{ subOpen: false }" class="relative">
+                        <div x-data="{ subOpen: false }" x-cloak class="relative">
                             <div class="flex items-start">
                                 <a href="{{ route('industry.index') }}#healthcare" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
                                     Medical & Healthcare
@@ -361,7 +369,14 @@
                                     </svg>
                                 </button>
                             </div>
-                            <div x-show="subOpen" class="pl-4 space-y-1 mt-1">
+                            <div x-show="subOpen" 
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="transform opacity-0"
+                                x-transition:enter-end="transform opacity-100"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="transform opacity-100"
+                                x-transition:leave-end="transform opacity-0"
+                                class="pl-4 space-y-1 mt-1">
                                 <a href="{{ route('industry.index') }}#clinics" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Clinics & Medical Centers
                                 </a>
@@ -378,7 +393,7 @@
                         </div>
                         
                         <!-- Scientific & Research Institutions -->
-                        <div x-data="{ subOpen: false }" class="relative">
+                        <div x-data="{ subOpen: false }" x-cloak class="relative">
                             <div class="flex items-start">
                                 <a href="{{ route('industry.index') }}#research" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
                                     Research & Development
@@ -389,7 +404,14 @@
                                     </svg>
                                 </button>
                             </div>
-                            <div x-show="subOpen" class="pl-4 space-y-1 mt-1">
+                            <div x-show="subOpen" 
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="transform opacity-0"
+                                x-transition:enter-end="transform opacity-100"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="transform opacity-100"
+                                x-transition:leave-end="transform opacity-0"
+                                class="pl-4 space-y-1 mt-1">
                                 <a href="{{ route('industry.index') }}#research-labs" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Research Laboratories
                                 </a>
@@ -406,7 +428,7 @@
                         </div>
                         
                         <!-- Government & Regulatory Bodies -->
-                        <div x-data="{ subOpen: false }" class="relative">
+                        <div x-data="{ subOpen: false }" x-cloak class="relative">
                             <div class="flex items-start">
                                 <a href="{{ route('industry.index') }}#government" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
                                     Public Sector & Regulation
@@ -417,7 +439,14 @@
                                     </svg>
                                 </button>
                             </div>
-                            <div x-show="subOpen" class="pl-4 space-y-1 mt-1">
+                            <div x-show="subOpen" 
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="transform opacity-0"
+                                x-transition:enter-end="transform opacity-100"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="transform opacity-100"
+                                x-transition:leave-end="transform opacity-0"
+                                class="pl-4 space-y-1 mt-1">
                                 <a href="{{ route('industry.index') }}#public-health" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Public Health Institutions
                                 </a>
@@ -431,7 +460,7 @@
                         </div>
                         
                         <!-- Specialized Testing & Diagnostics -->
-                        <div x-data="{ subOpen: false }" class="relative">
+                        <div x-data="{ subOpen: false }" x-cloak class="relative">
                             <div class="flex items-start">
                                 <a href="{{ route('industry.index') }}#testing" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
                                     Testing & Analysis
@@ -442,7 +471,14 @@
                                     </svg>
                                 </button>
                             </div>
-                            <div x-show="subOpen" class="pl-4 space-y-1 mt-1">
+                            <div x-show="subOpen" 
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="transform opacity-0"
+                                x-transition:enter-end="transform opacity-100"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="transform opacity-100"
+                                x-transition:leave-end="transform opacity-0"
+                                class="pl-4 space-y-1 mt-1">
                                 <a href="{{ route('industry.index') }}#environment" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Environment Laboratories
                                 </a>
@@ -459,7 +495,7 @@
                         </div>
                         
                         <!-- Emerging & AI-driven Healthcare -->
-                        <div x-data="{ subOpen: false }" class="relative">
+                        <div x-data="{ subOpen: false }" x-cloak class="relative">
                             <div class="flex items-start">
                                 <a href="{{ route('industry.index') }}#technology" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
                                     Emerging & AI-driven Healthcare
@@ -470,7 +506,14 @@
                                     </svg>
                                 </button>
                             </div>
-                            <div x-show="subOpen" class="pl-4 space-y-1 mt-1">
+                            <div x-show="subOpen" 
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="transform opacity-0"
+                                x-transition:enter-end="transform opacity-100"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="transform opacity-100"
+                                x-transition:leave-end="transform opacity-0"
+                                class="pl-4 space-y-1 mt-1">
                                 <a href="{{ route('industry.index') }}#telemedicine" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Telemedicine & Remote Diagnostics
                                 </a>
