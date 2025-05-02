@@ -1,9 +1,27 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 dark:border-gray-700 shadow-sm">
+<nav x-data="{ open: false }" x-cloak class="bg-white border-b border-gray-100 dark:border-gray-700 shadow-sm mt-0">
     <style>
         [x-cloak] { display: none !important; }
+        
+        /* Ensure the navigation bar is only shown when Alpine.js is fully initialized */
+        nav.initialized {
+            display: block !important;
+            margin-top: 0 !important;
+        }
+        
+        /* Remove all top margins/padding that might cause spacing */
+        nav {
+            margin-top: 0 !important; 
+            padding-top: 0 !important;
+            top: 0 !important;
+        }
+        
+        /* Add a placeholder during load to prevent layout shift */
+        body::before {
+            display: none; /* Disable the placeholder */
+        }
     </style>
     <!-- Single Bar with Logo, Links, Search and Navigation -->
-    <div class="bg-white py-2">
+    <div class="bg-white py-2" x-init="$el.closest('nav').classList.add('initialized')">
         <div class="container mx-auto px-4 sm:px-6 lg:px-12">
             <!-- Top section with Logo and Links -->
             <div class="flex justify-between items-center">
@@ -592,6 +610,32 @@
 {{-- Add autocomplete functionality script before the closing </nav> tag --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Page transition to prevent navbar flashing during navigation
+        const links = document.querySelectorAll('a:not([target="_blank"]):not([href^="#"]):not([href^="javascript"]):not([href^="mailto"])');
+        
+        // Apply to internal links that navigate to other pages
+        links.forEach(link => {
+            if (link.hostname === window.location.hostname) {
+                link.addEventListener('click', function(e) {
+                    // Skip if user is pressing modifier keys
+                    if (e.ctrlKey || e.metaKey || e.shiftKey) return;
+                    
+                    // Don't apply to download links or links with data-no-transition
+                    if (link.hasAttribute('download') || link.hasAttribute('data-no-transition')) return;
+                    
+                    const href = link.getAttribute('href');
+                    if (href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+                    
+                    // Store current scroll position in session storage
+                    sessionStorage.setItem('scrollPos', window.scrollY);
+                    
+                    // Don't hide the navbar during the transition to prevent flashing
+                    document.querySelector('nav').style.opacity = '1';
+                    document.querySelector('nav').style.transition = 'none';
+                });
+            }
+        });
+        
         // Search autocomplete functionality
         const setupSearchAutocomplete = (inputId, suggestionsId) => {
             const searchInput = document.getElementById(inputId);

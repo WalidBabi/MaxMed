@@ -16,6 +16,31 @@
         <!-- Schema.org structured data -->
         @include('layouts.schema')
 
+        <!-- Script to prevent navbar flashing during navigation -->
+        <script>
+            // Apply immediate styles to the navbar to prevent flashing
+            document.addEventListener('DOMContentLoaded', function() {
+                // Mark that Alpine is ready
+                const navbar = document.querySelector('nav');
+                if (navbar) {
+                    // Force the navbar to display block to avoid flashing
+                    navbar.classList.add('initialized');
+                }
+            });
+            
+            // Preserve navbar state during page navigation
+            if (window.history && window.history.pushState) {
+                window.addEventListener('beforeunload', function() {
+                    // Keep navbar visible during page transitions
+                    const navbar = document.querySelector('nav');
+                    if (navbar) {
+                        navbar.style.opacity = '1';
+                        navbar.style.transition = 'none';
+                    }
+                });
+            }
+        </script>
+
         <!-- Critical CSS inline -->
         <style>
             /* Critical path CSS only */
@@ -27,9 +52,45 @@
             
             body {
                 margin: 0;
+                padding: 0;
                 font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
                 overflow-x: hidden;
                 width: 100%;
+            }
+            
+            /* Improved navigation stability */
+            nav.initialized {
+                display: block !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+            }
+            
+            /* Prevent layout shifting during navigation/loading */
+            html {
+                scroll-behavior: smooth;
+            }
+            
+            /* Remove the placeholder that was creating margin-top */
+            body::before {
+                display: none; /* Hide the placeholder instead of removing it entirely */
+            }
+            
+            /* Fix navbar positioning */
+            nav {
+                margin-top: 0 !important;
+                position: relative;
+                z-index: 1030;
+            }
+            
+            /* Improve page transitions */
+            .page-loaded .container, 
+            .page-loaded main {
+                animation: fadeIn 0.3s ease-in-out;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0.8; }
+                to { opacity: 1; }
             }
             
             img {
@@ -154,7 +215,7 @@
         </script>
     </head>
     <body class="font-sans antialiased bg-gray-50 relative">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div class="min-h-screen bg-gray-100 dark:bg-gray-900 mt-0 pt-0">
             @include('layouts.navigation')
 
             <!-- Flash Messages -->
@@ -208,6 +269,35 @@
                 if (loader) {
                     loader.style.display = 'none';
                 }
+                
+                // Ensure smooth page transitions and prevent navbar flickering
+                document.body.classList.add('page-loaded');
+                
+                // Make sure navigation is fully visible and properly initialized
+                const navbar = document.querySelector('nav');
+                if (navbar) {
+                    navbar.classList.add('initialized');
+                    navbar.style.opacity = '1';
+                    navbar.style.visibility = 'visible';
+                    navbar.style.transition = 'none';
+                }
+                
+                // Add transition handlers to internal links for smooth navigation
+                const internalLinks = document.querySelectorAll('a[href^="/"]:not([target]), a[href^="{{ url("/") }}"]:not([target])');
+                internalLinks.forEach(link => {
+                    if (!link.hasAttribute('data-no-transition')) {
+                        link.addEventListener('click', function(e) {
+                            // Skip modifier keys
+                            if (e.ctrlKey || e.metaKey || e.shiftKey) return;
+                            
+                            // Keep the navbar visible during page transitions
+                            if (navbar) {
+                                navbar.style.opacity = '1';
+                                navbar.style.transition = 'none';
+                            }
+                        });
+                    }
+                });
             });
         </script>
 
