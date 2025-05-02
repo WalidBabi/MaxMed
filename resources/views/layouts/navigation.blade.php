@@ -36,7 +36,7 @@
                         <a href="{{ route('about') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">About</a>
 
                         <!-- Products Dropdown -->
-                        <div class="relative inline-block" x-data="{ open: false, activeSubmenu: null }" @click.away="open = false; activeSubmenu = null">
+                        <div class="relative inline-block" x-data="{ open: false, activeSubmenu: null, activeSubSubmenu: null }" @click.away="open = false; activeSubmenu = null; activeSubSubmenu = null">
                             <button @click="open = !open" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">
                                 <span class="whitespace-nowrap">Products</span>
                                 <svg class="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -50,52 +50,101 @@
                                 x-transition:leave="transition ease-in duration-75"
                                 x-transition:leave-start="transform opacity-100 scale-100"
                                 x-transition:leave-end="transform opacity-0 scale-95"
-                                class="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50">
-                                @foreach($navCategories->sortBy(function($category) {
-                                    // Define the preferred order
-                                    $order = [
-                                        'Molecular & Clinical Diagnostics' => 1,
-                                        'Life Science & Research' => 2,
-                                        'Lab Equipment' => 3,
-                                        'Medical Consumables' => 4,
-                                        'Lab Consumables' => 5
-                                    ];
-                                    return $order[$category->name] ?? 999; // Categories not in list will appear last
-                                }) as $category)
-                                    @if($category->subcategories->isNotEmpty())
-                                        <div class="relative" x-data="{ id: {{ $category->id }} }">
-                                            <button @click.prevent="activeSubmenu === id ? activeSubmenu = null : activeSubmenu = id" 
-                                                @mouseenter="activeSubmenu = id" @mouseleave="activeSubmenu = null"
-                                                class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex justify-between items-center">
-                                                {{ $category->name }}
-                                                <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                                                </svg>
-                                            </button>
-                                            <div x-show="activeSubmenu === id" 
-                                                @mouseenter="activeSubmenu = id" @mouseleave="activeSubmenu = null"
-                                                class="absolute top-0 left-full bg-white rounded-md shadow-lg py-1 z-60"
-                                                style="display: none; margin-left: 250px; width: 320px;">
-                                                <a href="{{ route('categories.show', $category) }}" class="block px-4 py-2 text-sm font-medium text-gray-800 border-b border-gray-100">
-                                                    All {{ $category->name }}
-                                                </a>
-                                                @foreach($category->subcategories as $subcategory)
-                                                    <a href="{{ route('categories.subcategory.show', [$category, $subcategory]) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                        {{ $subcategory->name }}
-                                                    </a>
-                                                @endforeach
-                                            </div>
+                                class="fixed left-0 right-0 mt-2 bg-white shadow-lg py-2 z-50">
+                                <div class="container mx-auto px-4">
+                                    <div class="flex">
+                                        <!-- First Level Menu -->
+                                        <div class="w-64 border-r border-gray-100">
+                                            @foreach($navCategories->sortBy(function($category) {
+                                                // Define the preferred order
+                                                $order = [
+                                                    'Molecular & Clinical Diagnostics' => 1,
+                                                    'Life Science & Research' => 2,
+                                                    'Lab Equipment' => 3,
+                                                    'Medical Consumables' => 4,
+                                                    'Lab Consumables' => 5
+                                                ];
+                                                return $order[$category->name] ?? 999; // Categories not in list will appear last
+                                            }) as $category)
+                                                <div class="relative" x-data="{ id: {{ $category->id }} }">
+                                                    <button @click="if (activeSubmenu !== id) { activeSubmenu = id; activeSubSubmenu = null; } else { activeSubmenu = null; }" 
+                                                        class="w-full text-left px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 flex justify-between items-center">
+                                                        {{ $category->name }}
+                                                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            @endforeach
+                                            <div class="border-t border-gray-100 my-1"></div>
+                                            <a href="{{ route('products.index') }}" class="block px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100">
+                                                View All Products
+                                            </a>
                                         </div>
-                                    @else
-                                        <a href="{{ route('categories.show', $category) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                            {{ $category->name }}
-                                        </a>
-                                    @endif
-                                @endforeach
-                                <div class="border-t border-gray-100 my-1"></div>
-                                <a href="{{ route('products.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-medium">
-                                    View All Products
-                                </a>
+
+                                        <!-- Second Level Menu -->
+                                        <div x-show="activeSubmenu !== null" 
+                                            x-transition:enter="transition ease-out duration-100"
+                                            x-transition:enter-start="transform opacity-0"
+                                            x-transition:enter-end="transform opacity-100"
+                                            x-transition:leave="transition ease-in duration-75"
+                                            x-transition:leave-start="transform opacity-100"
+                                            x-transition:leave-end="transform opacity-0"
+                                            class="w-64 border-r border-gray-100">
+                                            @foreach($navCategories as $category)
+                                                <div x-show="activeSubmenu === {{ $category->id }}">
+                                                    <a href="{{ route('categories.show', $category) }}" class="block px-4 py-2 text-sm font-medium text-gray-900 border-b border-gray-100">
+                                                        All {{ $category->name }}
+                                                    </a>
+                                                    @foreach($category->subcategories as $subcategory)
+                                                        @if($subcategory->subcategories->isNotEmpty())
+                                                            <div class="relative" x-data="{ subId: {{ $subcategory->id }} }">
+                                                                <button @click="if (activeSubSubmenu !== subId) { activeSubSubmenu = subId; } else { activeSubSubmenu = null; }"
+                                                                    class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex justify-between items-center">
+                                                                    {{ $subcategory->name }}
+                                                                    <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
+                                                        @else
+                                                            <a href="{{ route('categories.subcategory.show', [$category, $subcategory]) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                                {{ $subcategory->name }}
+                                                            </a>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                            @endforeach
+                                        </div>
+
+                                        <!-- Third Level Menu -->
+                                        <div x-show="activeSubSubmenu !== null"
+                                            x-transition:enter="transition ease-out duration-100"
+                                            x-transition:enter-start="transform opacity-0"
+                                            x-transition:enter-end="transform opacity-100"
+                                            x-transition:leave="transition ease-in duration-75"
+                                            x-transition:leave-start="transform opacity-100"
+                                            x-transition:leave-end="transform opacity-0"
+                                            class="w-64">
+                                            @foreach($navCategories as $category)
+                                                @foreach($category->subcategories as $subcategory)
+                                                    @if($subcategory->subcategories->isNotEmpty())
+                                                        <div x-show="activeSubSubmenu === {{ $subcategory->id }}">
+                                                            <a href="{{ route('categories.subcategory.show', [$category, $subcategory]) }}" class="block px-4 py-2 text-sm font-medium text-gray-900 border-b border-gray-100">
+                                                                All {{ $subcategory->name }}
+                                                            </a>
+                                                            @foreach($subcategory->subcategories as $subsubcategory)
+                                                                <a href="{{ route('categories.subsubcategory.show', [$category, $subcategory, $subsubcategory]) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                                    {{ $subsubcategory->name }}
+                                                                </a>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
+                                                @endforeach
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
