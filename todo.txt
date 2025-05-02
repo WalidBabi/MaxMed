@@ -7,11 +7,9 @@ sudo chmod -R 755 storage/
 sudo chmod -R 777 storage/logs/
 sudo chmod -R 777 storage/framework/sessions/
 
-SEO
 
 Max AI 
 
-google ads
 design business card sales specialist QR code
 catalog send to companies 
 
@@ -21,16 +19,11 @@ by country Heinz herenz
 
 
 linux
-quotation double success message
+
 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
 
-Analytical -> chromotography consumables -> hplc
 
 
-
-meter hp 
-add hplc 
-search
 
 
 busienss card

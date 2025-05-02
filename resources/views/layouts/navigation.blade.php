@@ -36,7 +36,13 @@
                         <a href="{{ route('about') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">About</a>
 
                         <!-- Products Dropdown -->
-                        <div class="relative inline-block" x-data="{ open: false, activeSubmenu: null, activeSubSubmenu: null }" @click.away="open = false; activeSubmenu = null; activeSubSubmenu = null">
+                        <div class="relative inline-block" 
+                            x-data="{ 
+                                open: false, 
+                                activeSubmenu: null, 
+                                activeSubSubmenu: null
+                            }" 
+                            @click.away="open = false; activeSubmenu = null; activeSubSubmenu = null">
                             <button @click="open = !open" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">
                                 <span class="whitespace-nowrap">Products</span>
                                 <svg class="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
