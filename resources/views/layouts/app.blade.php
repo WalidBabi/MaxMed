@@ -8,6 +8,98 @@
         @include('layouts.meta')
         <title>@yield('title', 'MaxMed UAE - Medical & Laboratory Equipment Supplier')</title>
 
+        <!-- Page Transition System - Prevents flashing -->
+        <style>
+            /* Page transition overlay */
+            #page-transition-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: #fff;
+                z-index: 9999;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.25s ease-in-out;
+                pointer-events: none;
+            }
+            
+            /* When navigating, show overlay */
+            body.navigating #page-transition-overlay {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            /* Override any transitions that might cause flashing */
+            body.navigating * {
+                transition: none !important;
+            }
+        </style>
+        
+        <!-- Page Transition Script - Prevents flashing -->
+        <script>
+            // Simple function to remove the overlay
+            function hideOverlay() {
+                document.body.classList.remove('navigating');
+            }
+            
+            // Create page transition system that prevents flashing
+            document.addEventListener('DOMContentLoaded', function() {
+                // Create overlay if it doesn't exist
+                if (!document.getElementById('page-transition-overlay')) {
+                    const overlay = document.createElement('div');
+                    overlay.id = 'page-transition-overlay';
+                    document.body.appendChild(overlay);
+                }
+                
+                // Add event listeners to all internal links
+                document.querySelectorAll('a').forEach(link => {
+                    // Only handle links to the same domain
+                    if (link.hostname === window.location.hostname) {
+                        link.addEventListener('click', function(e) {
+                            // Skip if using modifier keys or it's a download
+                            if (e.ctrlKey || e.metaKey || e.shiftKey || link.hasAttribute('download')) {
+                                return;
+                            }
+                            
+                            // Skip for special links
+                            if (link.getAttribute('href').startsWith('#') || 
+                                link.getAttribute('href').startsWith('mailto:') || 
+                                link.getAttribute('href').startsWith('tel:') ||
+                                link.getAttribute('target') === '_blank' ||
+                                link.hasAttribute('data-no-transition')) {
+                                return;
+                            }
+                            
+                            // Start transition
+                            document.body.classList.add('navigating');
+                        });
+                    }
+                });
+                
+                // Handle browser back/forward navigation
+                window.addEventListener('popstate', hideOverlay);
+                
+                // Handle page showing from cache
+                window.addEventListener('pageshow', function(e) {
+                    if (e.persisted) {
+                        // Page was loaded from back-forward cache
+                        hideOverlay();
+                    }
+                });
+                
+                // Mark page as loaded
+                document.body.classList.add('page-loaded');
+                
+                // Always ensure overlay is hidden after load
+                hideOverlay();
+            });
+            
+            // Hide overlay when page is fully loaded
+            window.addEventListener('load', hideOverlay);
+        </script>
+        
         <!-- Preconnect to external domains -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link rel="preconnect" href="https://www.googletagmanager.com">
@@ -19,6 +111,29 @@
             document.addEventListener('DOMContentLoaded', function() {
                 // Add a class to the body to indicate JS is available
                 document.body.classList.add('js-enabled');
+                
+                // Preserve Alpine state during navigation
+                document.addEventListener('alpine:initialized', () => {
+                    document.body.classList.add('alpine-ready');
+                });
+            });
+            
+            // Preserve Alpine state during page transitions
+            window.addEventListener('beforeunload', function(e) {
+                // Check if this is actually a page navigation and not a browser back/forward
+                if (e.currentTarget.performance && e.currentTarget.performance.navigation) {
+                    const navType = e.currentTarget.performance.navigation.type;
+                    // Only apply for normal navigation, not for reload (1) or back/forward (2)
+                    if (navType !== 1 && navType !== 2) {
+                        if (window.Alpine) {
+                            // Don't destroy Alpine components during navigation
+                            document.body.classList.add('navigating');
+                        }
+                    }
+                } else {
+                    // For browsers that don't support the above
+                    document.body.classList.add('navigating');
+                }
             });
         </script>
     
@@ -63,6 +178,30 @@
                 --brand-main: #171e60;
                 --brand-auxiliary: #0a5694;
                 --brand-white: #ffffff;
+                --page-transition-duration: 200ms;
+            }
+            
+            /* Improve page transitions */
+            html, body {
+                scroll-behavior: smooth;
+            }
+            
+            /* Body state management */
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+                overflow-x: hidden;
+                width: 100%;
+                opacity: 1;
+                transition: opacity var(--page-transition-duration) ease-in-out;
+            }
+            
+            /* Show initial content once page is loaded */
+            body.page-loaded .container,
+            body.page-loaded main,
+            body.page-loaded .row {
+                animation: none !important;
             }
             
             /* Hide Alpine elements until Alpine is fully loaded */
@@ -70,53 +209,28 @@
                 display: none !important;
             }
             
-            /* Hide sidebar by default to prevent flashing */
-            body:not(.js-enabled) .sidebar-column, 
-            body:not(.page-loaded) .sidebar-column {
-                opacity: 0 !important;
-            }
-            
-            body {
-                margin: 0;
-                padding: 0;
-                font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-                overflow-x: hidden;
-                width: 100%;
-            }
-            
-            /* Improved navigation stability */
-            nav.initialized {
-                display: block !important;
+            /* Make sure sidebar is always visible */
+            .sidebar-column,
+            .sidebar {
                 opacity: 1 !important;
                 visibility: visible !important;
             }
             
-            /* Prevent layout shifting during navigation/loading */
-            html {
-                scroll-behavior: smooth;
-            }
-            
-            /* Remove the placeholder that was creating margin-top */
-            body::before {
-                display: none; /* Hide the placeholder instead of removing it entirely */
-            }
-            
-            /* Fix navbar positioning */
+            /* Force fixed elements like navigation to stay visible */
             nav {
-                margin-top: 0 !important;
+                opacity: 1 !important;
+                visibility: visible !important;
                 position: relative;
                 z-index: 1030;
+                margin-top: 0 !important;
+                padding-top: 0 !important;
+                top: 0 !important;
             }
             
-            /* Improve page transitions */
-            .page-loaded .container, 
-            .page-loaded main {
-                animation: fadeIn 0.3s ease-in-out;
-            }
-            
-            @keyframes fadeIn {
-                from { opacity: 0.8; }
-                to { opacity: 1; }
+            /* Remove any styles that might be hiding elements */
+            body:not(.js-enabled) .sidebar-column, 
+            body:not(.page-loaded) .sidebar-column {
+                opacity: 1 !important; /* Always show sidebar */
             }
             
             img {
@@ -144,19 +258,12 @@
                 padding-right: 0.5rem !important; /* Add padding to prevent right cutoff */
                 transform: translateZ(0);
                 backface-visibility: hidden; /* Prevent flickering during transitions */
-                opacity: 1 !important; /* Ensure sidebar is always visible */
             }
             
             /* Prevent sidebar flashing during navigation */
             .sidebar {
                 opacity: 1;
                 transition: opacity 0.3s ease;
-            }
-            
-            /* Remove this class as it's causing issues */
-            body:not(.js-enabled) .sidebar-column, 
-            body:not(.page-loaded) .sidebar-column {
-                opacity: 1 !important; /* Always show sidebar */
             }
             
             .main-content-column {
@@ -256,6 +363,9 @@
         </script>
     </head>
     <body class="font-sans antialiased bg-gray-50 relative">
+        <!-- Page transition overlay -->
+        <div id="page-transition-overlay"></div>
+        
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900 mt-0 pt-0">
             @include('layouts.navigation')
 
@@ -306,12 +416,15 @@
         <script>
             // Wait until the entire page is loaded, then hide the loader.
             window.addEventListener('load', function(){
+                // Remove navigation class to hide overlay
+                document.body.classList.remove('navigating');
+                
                 const loader = document.getElementById('loader');
                 if (loader) {
                     loader.style.display = 'none';
                 }
                 
-                // Ensure smooth page transitions and prevent navbar flickering
+                // Ensure smooth page transitions and prevent flickering
                 document.body.classList.add('page-loaded');
                 
                 // Make sure navigation is fully visible and properly initialized
@@ -320,7 +433,6 @@
                     navbar.classList.add('initialized');
                     navbar.style.opacity = '1';
                     navbar.style.visibility = 'visible';
-                    navbar.style.transition = 'none';
                 }
                 
                 // Make sure all sidebars are visible
@@ -334,14 +446,18 @@
                 internalLinks.forEach(link => {
                     if (!link.hasAttribute('data-no-transition')) {
                         link.addEventListener('click', function(e) {
-                            // Skip modifier keys
+                            // Skip if using modifier keys
                             if (e.ctrlKey || e.metaKey || e.shiftKey) return;
                             
-                            // Keep the navbar visible during page transitions
-                            if (navbar) {
-                                navbar.style.opacity = '1';
-                                navbar.style.transition = 'none';
+                            // Skip for specific links
+                            if (link.getAttribute('href').startsWith('#') || 
+                                link.getAttribute('href').startsWith('mailto:') || 
+                                link.getAttribute('href').startsWith('tel:')) {
+                                return;
                             }
+                            
+                            // Start transition
+                            document.body.classList.add('navigating');
                         });
                     }
                 });
@@ -359,5 +475,35 @@
                 </div>
             </a>
         </div>
+
+        <!-- Extra script to handle browser back button overlay removal -->
+        <script>
+            // Ensure overlay is removed on back navigation
+            (function() {
+                // Forcibly remove overlay when page loads from back button
+                window.addEventListener('pageshow', function(e) {
+                    document.body.classList.remove('navigating');
+                    
+                    // Force all related styles to be cleared
+                    const overlay = document.getElementById('page-transition-overlay');
+                    if (overlay) {
+                        overlay.style.opacity = "0";
+                        overlay.style.visibility = "hidden";
+                    }
+                });
+                
+                // Also handle popstate events
+                window.addEventListener('popstate', function() {
+                    document.body.classList.remove('navigating');
+                    
+                    // Force all related styles to be cleared
+                    const overlay = document.getElementById('page-transition-overlay');
+                    if (overlay) {
+                        overlay.style.opacity = "0";
+                        overlay.style.visibility = "hidden";
+                    }
+                });
+            })();
+        </script>
     </body>
 </html>
