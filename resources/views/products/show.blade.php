@@ -423,7 +423,7 @@
                     @if($product->images && $product->images->count() > 0)
                     <div class="small-img-container">
                         <button class="scroll-btn left" id="scroll-left" aria-label="Scroll left">
-                            <i class="fas fa-chevron-left"></i>
+                            &larr;
                         </button>
                         <div class="small-img-group" id="img-gallery">
                             <!-- Always include the main product image in thumbnails -->
@@ -439,7 +439,7 @@
                             @endforeach
                         </div>
                         <button class="scroll-btn right" id="scroll-right" aria-label="Scroll right">
-                            <i class="fas fa-chevron-right"></i>
+                            &rarr;
                         </button>
                     </div>
                     @endif
