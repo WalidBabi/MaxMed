@@ -79,12 +79,70 @@
 
         .small-img-group {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 10px;
             margin-top: 15px;
+            overflow-x: auto;
+            padding: 10px 5px;
+            position: relative;
+            scrollbar-width: thin;
+            scrollbar-color: var(--auxiliary-color) var(--light-gray);
+            max-width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .small-img-group::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .small-img-group::-webkit-scrollbar-track {
+            background: var(--light-gray);
+            border-radius: 10px;
+        }
+
+        .small-img-group::-webkit-scrollbar-thumb {
+            background: var(--auxiliary-color);
+            border-radius: 10px;
+        }
+
+        .small-img-container {
+            position: relative;
+        }
+
+        .scroll-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--main-color);
+            color: white;
+            border: none;
+            opacity: 0.8;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.2s ease;
+        }
+
+        .scroll-btn:hover {
+            opacity: 1;
+        }
+
+        .scroll-btn.left {
+            left: 5px;
+        }
+
+        .scroll-btn.right {
+            right: 5px;
         }
 
         .small-img {
+            min-width: 80px;
             width: 80px;
             height: 80px;
             object-fit: cover;
@@ -93,6 +151,7 @@
             border: 2px solid var(--light-gray);
             padding: 3px;
             transition: all 0.3s;
+            flex-shrink: 0;
         }
 
         .small-img:hover {
@@ -362,18 +421,26 @@
                         <div id="img-magnifier-glass"></div>
                     </div>
                     @if($product->images && $product->images->count() > 0)
-                    <div class="small-img-group">
-                        <!-- Always include the main product image in thumbnails -->
-                        <img src="{{ $product->image_url }}" class="small-img active" 
-                             alt="{{ $product->name }}" onclick="changeImage('{{ $product->image_url }}')">
-                             
-                        <!-- Display additional non-primary images, excluding specification images -->
-                        @foreach($product->images->where('is_primary', false)->filter(function($image) {
-                            return empty($image->specification_image_url);
-                        }) as $image)
-                        <img src="{{ $image->image_url }}" class="small-img" 
-                             alt="{{ $product->name }}" onclick="changeImage('{{ $image->image_url }}')">
-                        @endforeach
+                    <div class="small-img-container">
+                        <button class="scroll-btn left" id="scroll-left" aria-label="Scroll left">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="small-img-group" id="img-gallery">
+                            <!-- Always include the main product image in thumbnails -->
+                            <img src="{{ $product->image_url }}" class="small-img active" 
+                                 alt="{{ $product->name }}" onclick="changeImage('{{ $product->image_url }}')">
+                                 
+                            <!-- Display additional non-primary images, excluding specification images -->
+                            @foreach($product->images->where('is_primary', false)->filter(function($image) {
+                                return empty($image->specification_image_url);
+                            }) as $image)
+                            <img src="{{ $image->image_url }}" class="small-img" 
+                                 alt="{{ $product->name }}" onclick="changeImage('{{ $image->image_url }}')">
+                            @endforeach
+                        </div>
+                        <button class="scroll-btn right" id="scroll-right" aria-label="Scroll right">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
                     </div>
                     @endif
                 </div>
@@ -701,6 +768,64 @@
                     el.style.transform = 'translateY(0)';
                 }, 100 + (index * 100));
             });
+        }
+        
+        // Handle image gallery scrolling
+        const scrollLeftBtn = document.getElementById('scroll-left');
+        const scrollRightBtn = document.getElementById('scroll-right');
+        const imgGallery = document.getElementById('img-gallery');
+        
+        if (scrollLeftBtn && scrollRightBtn && imgGallery) {
+            // Function to check if scroll buttons should be visible
+            function updateScrollButtonsVisibility() {
+                const isScrollable = imgGallery.scrollWidth > imgGallery.clientWidth;
+                const atStart = imgGallery.scrollLeft <= 10;
+                const atEnd = imgGallery.scrollLeft + imgGallery.clientWidth >= imgGallery.scrollWidth - 10;
+                
+                scrollLeftBtn.style.display = (!isScrollable || atStart) ? 'none' : 'flex';
+                scrollRightBtn.style.display = (!isScrollable || atEnd) ? 'none' : 'flex';
+            }
+            
+            // Initial check
+            updateScrollButtonsVisibility();
+            
+            // Scroll amount for each button click
+            const scrollAmount = 200;
+            
+            // Scroll left button
+            scrollLeftBtn.addEventListener('click', () => {
+                imgGallery.scrollBy({
+                    left: -scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Scroll right button
+            scrollRightBtn.addEventListener('click', () => {
+                imgGallery.scrollBy({
+                    left: scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Update button visibility on scroll
+            imgGallery.addEventListener('scroll', updateScrollButtonsVisibility);
+            
+            // Update button visibility on window resize
+            window.addEventListener('resize', updateScrollButtonsVisibility);
+            
+            // Scroll active image into view when page loads
+            const activeImg = imgGallery.querySelector('.small-img.active');
+            if (activeImg) {
+                setTimeout(() => {
+                    activeImg.scrollIntoView({
+                        behavior: 'smooth',
+                        inline: 'center',
+                        block: 'nearest'
+                    });
+                    updateScrollButtonsVisibility();
+                }, 500);
+            }
         }
     });
 </script>
