@@ -150,16 +150,9 @@
             transform: translateY(-7px);
             box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
         }
-        .product-card .overflow-hidden {
-            height: 240px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
         .product-card img {
             height: 240px;
-            width: 100%;
-            object-fit: contain;
+            object-fit: cover;
             transition: transform 0.5s ease;
         }
         .product-card:hover img {
@@ -172,16 +165,14 @@
             flex-direction: column;
             padding: 22px;
             justify-content: space-between;
-            min-height: 200px; /* Minimum height for consistent card sizing */
         }
         .card-title {
-            white-space: normal;
-            overflow: visible; /* Changed to ensure title is fully visible */
-            display: block;
+            white-space: normal; /* Changed from nowrap to normal */
+            overflow: hidden; /* Added to hide overflow */
+            text-overflow: ellipsis; /* Added to show ellipsis */
+           
             font-size: 1.2em;
             margin-bottom: 10px;
-            max-height: 3.6em; /* Approximately 3 lines of text */
-            line-height: 1.2em;
         }
         .card-title a {
             text-decoration: none;
@@ -488,11 +479,11 @@
                     <div class="product-card-wrapper">
                         <div class="card h-100 product-card">
                             <a href="{{ route('product.show', $product) }}" class="overflow-hidden">
-                                <img src="{{ $product->image_url }}" class="card-img-top" alt="{{ $product->name }}">
+                                <img src="{{ $product->image_url }}" class="card-img-top" alt="{{ $product->name }}" style="width: 100%; height: auto;">
                             </a>
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">
-                                    <a href="{{ route('product.show', $product) }}" title="{{ $product->name }}">{{ $product->name }}</a>
+                                    <a href="{{ route('product.show', $product) }}">{{ $product->name }}</a>
                                 </h5>
                                 <p class="card-text">
                                     <!-- <strong>${{ number_format($product->price, 2) }}</strong> -->
@@ -512,7 +503,7 @@
                                                     value="1" min="1" max="{{ $product->inventory->quantity }}" 
                                                     class="form-control">
                                             </div> -->
-                                            <div class="button-group" style="margin: 0 auto;">
+                                            <div class="button-group" style="max-width: 200px; margin: 0 auto;">
                                                 <a href="{{ route('product.show', $product) }}" class="btn w-100 mb-2" style="background-color: #0a5694; color: white; font-size: 0.875rem; padding: 0.5rem 0.75rem;">
                                                     <i class="fas fa-eye me-2"></i> View Details
                                                 </a>
