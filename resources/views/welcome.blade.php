@@ -806,54 +806,32 @@
 <div class="py-10 max-w-7xl mx-auto px-4">
     <h3 class="section-title">Featured Products</h3>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+    <div class="products-grid mt-8">
         @forelse($featuredProducts as $product)
-        <div class="bg-white  overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
-            x-data="{ showDetails: false }"
-            @mouseenter="showDetails = true"
-            @mouseleave="showDetails = false">
-
-            <div class="relative h-80 w-full overflow-hidden">
-                <!-- Product image -->
-                <img src="{{ $product->image_url ?? asset('/Images/placeholder.jpg') }}"
-                    alt="{{ $product->name }}"
-                    class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
-
-                <!-- "New" badge if added in the last 14 days -->
-                @if($product->created_at >= \Carbon\Carbon::now()->subDays(14))
-                <div class="absolute top-3 left-3 bg-green-800 text-white text-xs font-bold px-3 py-1.5 rounded-full transform -rotate-3 shadow-md">
-                    NEW
-                </div>
-                @endif
-                <!-- End of Selection -->
-
-                <!-- Overlay with details on hover -->
-                <div class="absolute inset-0 bg-gradient-to-t from-[#171e60] to-transparent opacity-0 transition-opacity duration-300"
-                    :class="{ 'opacity-90': showDetails }">
-                    <div class="absolute bottom-4 left-4 right-4 text-white transform translate-y-4 transition-transform duration-300"
-                        :class="{ 'translate-y-0': showDetails }">
-                        <p class="text-sm font-normal">{{ Str::limit($product->description ?? '', 100) }}</p>
+        <div class="product-card-wrapper">
+            <div class="card h-100 product-card">
+                <a href="{{ route('product.show', $product) }}" class="product-image-container">
+                    <img src="{{ $product->image_url ?? asset('/Images/placeholder.jpg') }}" alt="{{ $product->name }}">
+                    @if($product->created_at >= \Carbon\Carbon::now()->subDays(14))
+                    <div class="position-absolute top-0 start-0 m-3">
+                        <span class="badge bg-success px-2 py-1 rounded-pill shadow-sm">NEW</span>
                     </div>
-                </div>
-            </div>
-
-            <div class="p-4">
-                <h4 class="small font-medium text-gray-900 mb-1">{{ $product->name }}</h4>
-
-                <div class="flex items-end justify-between mt-2">
-                    <!-- <div>
-                           
-                                <span class="text-[#171e60] font-bold">{{ number_format($product->price, 2) }} AED</span>
-                    
-                        </div> -->
-
-                    <a href="{{ route('product.show', $product) }}"
-                        class="inline-flex items-center justify-center bg-[#0a5694] hover:bg-[#171e60] text-white text-sm font-medium py-2 px-3 rounded-md transition-colors duration-300">
-                        View Details
-                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                        </svg>
-                    </a>
+                    @endif
+                </a>
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">
+                        <a href="{{ route('product.show', $product) }}">{{ $product->name }}</a>
+                    </h5>
+                    <div class="card-footer">
+                        <div class="button-group">
+                            <a href="{{ route('product.show', $product) }}" class="btn btn-view">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+                            <a href="{{ route('quotation.form', ['product' => $product->id]) }}" class="btn btn-quote">
+                                <i class="fas fa-file-invoice"></i> Request Quote
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

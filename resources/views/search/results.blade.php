@@ -14,32 +14,40 @@
     </div>
 
     @if($products->count() > 0)
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div class="products-grid">
             @foreach($products as $product)
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                    <a href="{{ route('product.show', $product->id) }}">
-                        @if($product->image_url)
-                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-full h-48 object-cover">
-                        @else
-                            <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
-                                <span class="text-gray-500">No image available</span>
-                            </div>
-                        @endif
-                        <div class="p-4">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ $product->name }}</h3>
-                            <p class="text-gray-600 text-sm mb-4">{{ Str::limit($product->description, 100) }}</p>
-                            <div class="flex justify-between items-center">
-                                <!-- <span class="text-[#171e60] font-bold">${{ number_format($product->price, 2) }}</span> -->
-                                <span class="text-sm text-gray-500">
-                                    @if($product->category)
-                                        {{ $product->category->name }}
-                                    @else
-                                        Uncategorized
-                                    @endif
-                                </span>
+                <div class="product-card-wrapper">
+                    <div class="card h-100 product-card">
+                        <a href="{{ route('product.show', $product) }}" class="product-image-container">
+                            @if($product->image_url)
+                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                            @else
+                                <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                    <span class="text-gray-500">No image</span>
+                                </div>
+                            @endif
+                            @if($product->category)
+                                <div class="position-absolute top-0 end-0 m-3">
+                                    <span class="badge bg-light text-dark px-2 py-1 rounded-pill shadow-sm">{{ $product->category->name }}</span>
+                                </div>
+                            @endif
+                        </a>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">
+                                <a href="{{ route('product.show', $product) }}">{{ $product->name }}</a>
+                            </h5>
+                            <div class="card-footer">
+                                <div class="button-group">
+                                    <a href="{{ route('product.show', $product) }}" class="btn btn-view">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </a>
+                                    <a href="{{ route('quotation.form', ['product' => $product->id]) }}" class="btn btn-quote">
+                                        <i class="fas fa-file-invoice"></i> Request Quote
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             @endforeach
         </div>

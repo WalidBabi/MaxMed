@@ -1,0 +1,213 @@
+/* Product Cards - MaxMed
+   A unified card style system for consistent product display
+   ========================================================== */
+
+/* Improved Product Grid Layout */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 25px;
+}
+
+/* Product Card Wrapper */
+.product-card-wrapper {
+    height: 100%;
+    transition: transform 0.3s, box-shadow 0.3s;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Product Card */
+.product-card {
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    border: none !important;
+    background-color: #fff;
+    position: relative;
+    transition: all 0.35s;
+}
+
+.product-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Image Container with Fixed Aspect Ratio */
+.product-image-container {
+    position: relative;
+    width: 100%;
+    padding-top: 100%; /* 1:1 Aspect Ratio */
+    overflow: hidden;
+    background-color: #f9f9f9;
+}
+
+.product-card img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ensures the entire image is visible */
+    background-color: #f9f9f9; /* Light background for image container */
+    transition: transform 0.5s ease;
+}
+
+.product-card:hover img {
+    transform: scale(1.08);
+}
+
+/* Card Body */
+.product-card .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    position: relative;
+}
+
+/* Card Title */
+.product-card .card-title {
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 3rem; /* Fixed height for title (2 lines) */
+}
+
+.product-card .card-title a {
+    text-decoration: none;
+    color: #222;
+    transition: color 0.2s;
+}
+
+.product-card .card-title a:hover {
+    color: #28a745;
+}
+
+/* Card Footer */
+.product-card .card-footer {
+    background-color: transparent;
+    border-top: none;
+    padding: 0;
+    margin-top: auto; /* Push footer to bottom of card */
+}
+
+/* Button Group */
+.product-card .button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+/* Action Buttons */
+.product-card .btn {
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    transition: all 0.35s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.product-card .btn i {
+    font-size: 0.9rem;
+}
+
+/* View Details Button */
+.product-card .btn-view {
+    background-color: #0a5694;
+    color: white;
+}
+
+.product-card .btn-view:hover {
+    background-color: #084476;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(10, 86, 148, 0.3);
+}
+
+/* Quote Button */
+.product-card .btn-quote {
+    background-color: #28a745;
+    color: white;
+}
+
+.product-card .btn-quote:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+/* Badge Styling */
+.product-card .badge {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.product-card .badge.bg-success {
+    background-color: #28a745 !important;
+    box-shadow: 0 2px 5px rgba(40, 167, 69, 0.3);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    .product-card .card-title {
+        font-size: 0.95rem;
+    }
+    .product-card .btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+} 

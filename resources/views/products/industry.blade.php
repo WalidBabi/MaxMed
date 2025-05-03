@@ -188,23 +188,34 @@
             </div>
             
             <!-- Products Display -->
-            <div class="row">
+            <div class="products-grid">
                 @if($products->count() > 0)
                     @foreach($products as $product)
-                        <div class="col-lg-4 col-md-6 mb-4">
-                            <div class="product-card h-100">
-                                <a href="{{ route('products.show', $product) }}" class="text-decoration-none">
-                                    <div class="product-image-container">
-                                        <img src="{{ $product->image_url }}" class="product-image" alt="{{ $product->name }}">
-                                    </div>
-                                    <div class="card-body">
-                                        <h3 class="product-title">{{ $product->name }}</h3>
-                                        <p class="product-description">{{ Str::limit(strip_tags($product->description), 100) }}</p>
-                                        @if($product->category)
-                                            <span class="category-badge">{{ $product->category->name }}</span>
-                                        @endif
-                                    </div>
+                        <div class="product-card-wrapper">
+                            <div class="card h-100 product-card">
+                                <a href="{{ route('product.show', $product) }}" class="product-image-container">
+                                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                                    @if($product->category)
+                                        <div class="position-absolute top-0 end-0 m-3">
+                                            <span class="badge bg-light text-dark px-2 py-1 rounded-pill shadow-sm">{{ $product->category->name }}</span>
+                                        </div>
+                                    @endif
                                 </a>
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">
+                                        <a href="{{ route('product.show', $product) }}">{{ $product->name }}</a>
+                                    </h5>
+                                    <div class="card-footer">
+                                        <div class="button-group">
+                                            <a href="{{ route('product.show', $product) }}" class="btn btn-view">
+                                                <i class="fas fa-eye"></i> View Details
+                                            </a>
+                                            <a href="{{ route('quotation.form', ['product' => $product->id]) }}" class="btn btn-quote">
+                                                <i class="fas fa-file-invoice"></i> Request Quote
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     @endforeach

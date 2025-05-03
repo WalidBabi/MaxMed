@@ -479,6 +479,7 @@
         <link rel="stylesheet" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" media="print" onload="this.media='all'">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" media="print" onload="this.media='all'">
         <link href="{{ asset('css/custom.css') }}" rel="stylesheet" media="print" onload="this.media='all'">
+        <link href="{{ asset('css/product-cards.css') }}" rel="stylesheet" media="print" onload="this.media='all'">
         <link rel="stylesheet" href="{{ asset('css/mobile.css') }}" media="print" onload="this.media='all'">
         
         <!-- Fallbacks for browsers without JS -->
@@ -486,6 +487,7 @@
             <link rel="stylesheet" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap">
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
             <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/product-cards.css') }}" rel="stylesheet">
             <link rel="stylesheet" href="{{ asset('css/mobile.css') }}">
         </noscript>
 
