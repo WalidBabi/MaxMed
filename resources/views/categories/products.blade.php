@@ -120,158 +120,277 @@
             line-height: 1.6;
         }
         
-        /* NEW PRODUCT CARD STYLING */
         /* Improved Product Grid Layout */
         .products-grid {
+            margin-top: 15px;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 25px;
-            margin-top: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 28px;
         }
         
-        /* Product Card Wrapper */
+        /* Enhanced Product Card Styling */
         .product-card-wrapper {
             height: 100%;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: transform 0.3s;
         }
-        
-        /* Product Card */
         .product-card {
             height: 100%;
             border-radius: 12px;
             overflow: hidden;
+            transition: all 0.35s;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             border: none !important;
             background-color: #fff;
             position: relative;
-            transition: all 0.35s;
         }
-        
         .product-card:hover {
             transform: translateY(-7px);
             box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
         }
-        
-        /* Image Container with Fixed Aspect Ratio */
-        .product-image-container {
-            position: relative;
-            width: 100%;
-            padding-top: 100%; /* 1:1 Aspect Ratio */
-            overflow: hidden;
-        }
-        
         .product-card img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Changed from cover to contain */
-            background-color: #f9f9f9; /* Light background for image container */
+            height: 240px;
+            object-fit: cover;
             transition: transform 0.5s ease;
         }
-        
         .product-card:hover img {
             transform: scale(1.08);
         }
-        
-        /* Card Body */
-        .product-card .card-body {
-            flex: 1;
+        .card-body {
+            flex: 1 1 auto;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            padding: 1.5rem;
-            position: relative;
+            padding: 22px;
+            justify-content: space-between;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+            min-height: 200px; /* Minimum height for consistent card sizing */
+=======
+            height: 200px; /* Fixed height for consistent card sizing */
+>>>>>>> ef93437c4a71d3e016de82cb69171d9fad1a25aa
+>>>>>>> 130400b294c52b3b54e5d7256d3e2f1ec0eea356
         }
-        
-        /* Card Title */
-        .product-card .card-title {
-            margin-bottom: 0.75rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            height: 3rem; /* Fixed height for title (2 lines) */
+        .card-title {
+            white-space: normal; /* Changed from nowrap to normal */
+            overflow: hidden; /* Added to hide overflow */
+            text-overflow: ellipsis; /* Added to show ellipsis */
+           
+            font-size: 1.2em;
+            margin-bottom: 10px;
         }
-        
-        .product-card .card-title a {
+        .card-title a {
             text-decoration: none;
             color: #222;
             transition: color 0.2s;
+            position: relative;
         }
-        
-        .product-card .card-title a:hover {
+        .card-title a:hover {
             color: #28a745;
         }
-        
-        /* Card Footer */
-        .product-card .card-footer {
-            background-color: transparent;
-            border-top: none;
-            padding: 0;
-            margin-top: auto; /* Push footer to bottom of card */
+        .card-title a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #28a745;
+            transition: width 0.3s;
         }
-        
-        /* Button Group */
-        .product-card .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .card-title a:hover:after {
             width: 100%;
         }
+        .card-text {
+            color: #444;
+            margin-bottom: 15px;
+            font-size: 1.15em;
+        }
+        .price-aed {
+            font-size: 0.9em;
+            color: #777;
+            margin-top: 3px;
+            display: block;
+        }
         
-        /* Action Buttons */
-        .product-card .btn {
+        /* Badge improvements */
+        .badge {
+            font-size: 0.85em;
+            padding: 6px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        .badge.bg-success {
+            background-color: #28a745 !important;
+            box-shadow: 0 2px 5px rgba(40, 167, 69, 0.3);
+        }
+        .badge.bg-danger {
+            background-color: #dc3545 !important;
+            box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
+        }
+        
+        /* Enhanced buttons */
+        .btn {
             border-radius: 8px;
-            padding: 0.5rem 0.75rem;
-            font-size: 0.875rem;
+            margin-top: 5px;
+         
+            padding: 12px 20px;
             text-transform: uppercase;
             letter-spacing: 0.6px;
+            font-size: 0.85em;
             transition: all 0.35s;
+        }
+        .btn-primary {
+            background-color: #28a745;
+            border-color: #28a745;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary:hover {
+            background-color: #218838;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(33, 136, 56, 0.4);
+        }
+        .btn-primary:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        .btn-primary:hover:after {
+            animation: ripple 1s ease-out;
+        }
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+        .btn-secondary {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+            color: #fff;
+        }
+        .btn-secondary:hover {
+            background-color: #138496;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(19, 132, 150, 0.4);
+        }
+        
+        /* Card footer enhancements */
+        .card-footer {
+            background-color: transparent;
+            padding: 5px 0 0;
+            border-top: none;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        /* Enhanced quantity controls */
+        .quantity-controls {
             display: flex;
             align-items: center;
+            margin-bottom: 15px;
+            width: 100%;
+            position: relative;
+        }
+        .quantity-controls label {
+            margin-bottom: 0;
+          
+            color: #444;
+            margin-right: 10px;
+        }
+        .quantity-controls input {
+            width: 70px;
+            text-align: center;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+            padding: 8px 5px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .quantity-controls input:focus {
+            border-color: #28a745;
+            box-shadow: inset 0 1px 3px rgba(40, 167, 69, 0.2);
+            outline: none;
+        }
+        
+        /* Button group improvements */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        
+        /* Pagination styling enhancement */
+        .pagination-container {
+            margin-top: 40px;
+            display: flex;
             justify-content: center;
-            gap: 8px;
         }
-        
-        .product-card .btn i {
-            font-size: 0.9rem;
+        .pagination-container .pagination {
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            border-radius: 30px;
+            overflow: hidden;
         }
-        
-        /* View Details Button */
-        .product-card .btn-view {
-            background-color: #0a5694;
-            color: white;
+        .pagination-container .page-link {
+            border: none;
+            color: #555;
+    
+            padding: 12px 18px;
+            transition: all 0.2s;
         }
-        
-        .product-card .btn-view:hover {
-            background-color: #084476;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(10, 86, 148, 0.3);
+        .pagination-container .page-link:hover {
+            background-color: #f4f4f4;
+            color: #28a745;
         }
-        
-        /* Quote Button */
-        .product-card .btn-quote {
+        .pagination-container .page-item.active .page-link {
             background-color: #28a745;
             color: white;
         }
         
-        .product-card .btn-quote:hover {
-            background-color: #218838;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+        /* Pagination tip styling */
+        .pagination-tip {
+            border-left: 4px solid #17a2b8;
+            border-radius: 8px;
+            padding: 15px 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            animation: fadeInDown 0.5s ease-out;
+        }
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
-        /* Responsive Adjustments */
+        /* Additional responsive improvements */
         @media (max-width: 992px) {
             .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
                 gap: 20px;
             }
         }
@@ -292,19 +411,19 @@
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
                 gap: 15px;
             }
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .btn {
+                width: 100%;
+                padding: 10px 15px;
+            }
         }
         
         @media (max-width: 576px) {
             .products-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
-            .product-card .card-title {
-                font-size: 0.95rem;
-            }
-            .product-card .btn {
-                padding: 0.4rem 0.6rem;
-                font-size: 0.8rem;
+                grid-template-columns: 1fr;
             }
             .category-header {
                 padding-left: 10px;
@@ -314,12 +433,6 @@
             }
             .empty-state-message {
                 font-size: 1.5rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .products-grid {
-                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -373,22 +486,41 @@
                     @foreach($products as $product)
                     <div class="product-card-wrapper">
                         <div class="card h-100 product-card">
-                            <a href="{{ route('product.show', $product) }}" class="product-image-container">
-                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                            <a href="{{ route('product.show', $product) }}" class="overflow-hidden">
+                                <img src="{{ $product->image_url }}" class="card-img-top" alt="{{ $product->name }}" style="width: 100%; height: auto;">
                             </a>
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">
                                     <a href="{{ route('product.show', $product) }}">{{ $product->name }}</a>
                                 </h5>
+                                <p class="card-text">
+                                    <!-- <strong>${{ number_format($product->price, 2) }}</strong> -->
+                                    <!-- <span class="price-aed d-block">AED {{ number_format($product->price_aed, 2) }}</span> -->
+                                </p>
                                 <div class="card-footer">
-                                    <div class="button-group">
-                                        <a href="{{ route('product.show', $product) }}" class="btn btn-view">
-                                            <i class="fas fa-eye"></i> View Details
-                                        </a>
-                                        <a href="{{ route('quotation.form', ['product' => $product->id]) }}" class="btn btn-quote">
-                                            <i class="fas fa-file-invoice"></i> Request Quote
-                                        </a>
-                                    </div>
+                         
+                                        <div class="d-flex align-items-center mb-2">
+                                            <!-- <span class="badge bg-success me-3"><i class="fas fa-check me-1"></i>In Stock</span>
+                                            <small class="text-muted">{{ $product->inventory->quantity }} available</small> -->
+                                        </div>
+                                        <form action="{{ route('cart.add', $product) }}" method="POST" class="w-100">
+                                            @csrf
+                                            <!-- <div class="quantity-controls">
+                                                <label for="quantity-{{ $product->id }}">Quantity:</label>
+                                                <input type="number" name="quantity" id="quantity-{{ $product->id }}" 
+                                                    value="1" min="1" max="{{ $product->inventory->quantity }}" 
+                                                    class="form-control">
+                                            </div> -->
+                                            <div class="button-group" style="max-width: 200px; margin: 0 auto;">
+                                                <a href="{{ route('product.show', $product) }}" class="btn w-100 mb-2" style="background-color: #0a5694; color: white; font-size: 0.875rem; padding: 0.5rem 0.75rem;">
+                                                    <i class="fas fa-eye me-2"></i> View Details
+                                                </a>
+                                                <a href="{{ route('quotation.form', ['product' => $product->id]) }}" class="btn w-100" style="background-color: #0a5694; color: white; font-size: 0.875rem; padding: 0.5rem 0.75rem;">
+                                                    <i class="fas fa-file-invoice me-2"></i> Request Quote
+                                                </a>
+                                            </div>
+                                        </form>
+                                  
                                 </div>
                             </div>
                         </div>
