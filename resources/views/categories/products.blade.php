@@ -165,6 +165,14 @@
             flex-direction: column;
             padding: 22px;
             justify-content: space-between;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+            min-height: 200px; /* Minimum height for consistent card sizing */
+=======
+            height: 200px; /* Fixed height for consistent card sizing */
+>>>>>>> ef93437c4a71d3e016de82cb69171d9fad1a25aa
+>>>>>>> 130400b294c52b3b54e5d7256d3e2f1ec0eea356
         }
         .card-title {
             white-space: normal; /* Changed from nowrap to normal */
