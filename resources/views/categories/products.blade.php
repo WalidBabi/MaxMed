@@ -25,12 +25,12 @@
         .category-header {
             margin-bottom: 2rem;
             position: relative;
-            border-left: 4px solid #3498db;
+            border-left: 4px solid #171e60;
             padding-left: 15px;
         }
         .category-title {
             font-size: 1.5rem;
-            color: #2c3e50;
+            color: #171e60;
             margin-bottom: 0.75rem;
             font-weight: 600;
         }
@@ -152,24 +152,24 @@
         
         .btn-view {
             background-color: #f8f9fa;
-            color: #495057;
+            color: #171e60;
             border: 1px solid #dee2e6;
             flex: 1;
         }
         
         .btn-view:hover {
             background-color: #e9ecef;
-            color: #212529;
+            color: #0a5694;
         }
         
         .btn-quote {
-            background-color: #007bff;
+            background-color: #0a5694;
             color: white;
             flex: 1;
         }
         
         .btn-quote:hover {
-            background-color: #0069d9;
+            background-color: #171e60;
         }
         
         /* Featured badge styling */
@@ -178,7 +178,7 @@
             top: 12px;
             right: 12px;
             background: rgba(255, 255, 255, 0.95);
-            color: #2c3e50;
+            color: #171e60;
             padding: 5px 10px;
             border-radius: 2px;
             font-size: 0.7rem;
@@ -225,7 +225,7 @@
             border-radius: 4px;
             margin-bottom: 30px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            border-left: 4px solid #3498db;
+            border-left: 4px solid #0a5694;
             display: flex;
             justify-content: space-between;
             align-items: center;

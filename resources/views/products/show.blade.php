@@ -3,41 +3,31 @@
 @section('content')
 <div class="container-fluid py-4">
     <style>
-        /* Modern Product Detail Page Styling */
+        /* Professional Product Detail Page Styling */
         :root {
             --main-color: #171e60;
             --auxiliary-color: #0a5694;
-            --accent-color: #28a745;
+            --accent-color: #0a5694;
             --white: #ffffff;
-            --light-gray: #f7f7f7;
+            --light-gray: #f8f9fa;
             --medium-gray: #e0e0e0;
-            --dark-gray: #333333;
-            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --dark-gray: #495057;
+            --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --transition: all 0.2s ease;
         }
 
         /* Breadcrumb Navigation */
         .breadcrumb-container {
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            position: relative;
-        }
-        
-        .breadcrumb-container::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(to right, var(--light-gray), var(--medium-gray), var(--light-gray));
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--medium-gray);
         }
         
         .breadcrumb {
             background-color: transparent;
             padding: 0;
             margin: 0;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
@@ -47,65 +37,38 @@
             color: var(--auxiliary-color);
             text-decoration: none;
             transition: var(--transition);
-            position: relative;
         }
 
         .breadcrumb-item a:hover {
             color: var(--main-color);
         }
-        
-        .breadcrumb-item a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -3px;
-            left: 0;
-            background-color: var(--main-color);
-            transition: width 0.3s;
-        }
-        
-        .breadcrumb-item a:hover::after {
-            width: 100%;
-        }
 
         .breadcrumb-item.active {
             color: var(--main-color);
-            font-weight: 600;
+            font-weight: 500;
         }
         
-        .breadcrumb-item + .breadcrumb-item::before {
-            color: var(--medium-gray);
-        }
-
         /* Product Header */
         .product-header {
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.5rem;
             position: relative;
             border-left: 4px solid var(--main-color);
             padding-left: 15px;
-            animation: fadeIn 0.8s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .product-title {
-            font-size: 2.2rem;
-            font-weight: 700;
+            font-size: 1.75rem;
+            font-weight: 600;
             color: var(--main-color);
             margin-bottom: 0.5rem;
-            transition: var(--transition);
         }
 
         /* Product Container */
         .product-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2.5rem;
-            margin-bottom: 3rem;
+            gap: 2rem;
+            margin-bottom: 2rem;
         }
         
         @media (max-width: 992px) {
@@ -118,14 +81,11 @@
         .gallery-section {
             position: relative;
             background-color: var(--white);
-            border-radius: 12px;
+            border-radius: 4px;
             overflow: hidden;
             box-shadow: var(--box-shadow);
             transition: var(--transition);
-        }
-        
-        .gallery-section:hover {
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 1px solid #eaeaea;
         }
 
         .product-image-container {
@@ -145,85 +105,51 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
-            transition: transform 0.6s ease;
+            transition: transform 0.3s ease;
             padding: 20px;
         }
 
         .product-image:hover {
-            transform: scale(1.03);
+            transform: scale(1.02);
         }
 
         .small-img-container {
             position: relative;
-            padding: 20px;
+            padding: 15px;
             background-color: var(--light-gray);
-            border-top: 1px solid var(--medium-gray);
+            border-top: 1px solid #eaeaea;
         }
 
         .small-img-group {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             overflow-x: auto;
             padding: 5px;
             scrollbar-width: thin;
-            scrollbar-color: var(--auxiliary-color) var(--light-gray);
-            -webkit-overflow-scrolling: touch;
+            scrollbar-color: var(--medium-gray) var(--light-gray);
         }
 
         .small-img-group::-webkit-scrollbar {
-            height: 5px;
+            height: 4px;
         }
 
         .small-img-group::-webkit-scrollbar-track {
             background: var(--light-gray);
-            border-radius: 10px;
+            border-radius: 4px;
         }
 
         .small-img-group::-webkit-scrollbar-thumb {
-            background: var(--auxiliary-color);
-            border-radius: 10px;
-        }
-
-        .scroll-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background-color: var(--main-color);
-            color: white;
-            border: none;
-            opacity: 0.9;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-            transition: var(--transition);
-        }
-
-        .scroll-btn:hover {
-            opacity: 1;
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .scroll-btn.left {
-            left: 10px;
-        }
-
-        .scroll-btn.right {
-            right: 10px;
+            background: var(--medium-gray);
+            border-radius: 4px;
         }
 
         .small-img {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             object-fit: cover;
             cursor: pointer;
-            border-radius: 8px;
-            border: 2px solid transparent;
+            border-radius: 3px;
+            border: 1px solid #eaeaea;
             padding: 3px;
             transition: var(--transition);
             flex-shrink: 0;
@@ -231,38 +157,33 @@
         }
 
         .small-img:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            border-color: var(--auxiliary-color);
         }
 
         .small-img.active {
             border-color: var(--main-color);
-            box-shadow: 0 5px 10px rgba(23, 30, 96, 0.25);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         /* Content Section */
         .content-section {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
 
         .section-card {
             background-color: var(--white);
-            border-radius: 12px;
+            border-radius: 4px;
             overflow: hidden;
             box-shadow: var(--box-shadow);
             transition: var(--transition);
-        }
-        
-        .section-card:hover {
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            transform: translateY(-5px);
+            border: 1px solid #eaeaea;
         }
 
         .card-header {
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid var(--light-gray);
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #eaeaea;
             background-color: var(--white);
             position: relative;
         }
@@ -271,22 +192,13 @@
             margin: 0;
             color: var(--main-color);
             font-weight: 600;
+            font-size: 1.1rem;
             display: flex;
             align-items: center;
-            gap: 8px;
-        }
-        
-        .card-header h4::before {
-            content: '';
-            display: block;
-            width: 4px;
-            height: 20px;
-            background-color: var(--auxiliary-color);
-            border-radius: 2px;
         }
 
         .card-body {
-            padding: 1.5rem;
+            padding: 1.25rem;
         }
 
         /* Action Section */
@@ -297,45 +209,23 @@
         }
 
         .btn-quotation {
-            background: linear-gradient(135deg, var(--auxiliary-color), var(--main-color));
+            background-color: var(--auxiliary-color);
             border: none;
             color: var(--white);
-            padding: 14px 25px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            font-size: 1rem;
-            border-radius: 8px;
+            padding: 12px 20px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            border-radius: 3px;
             transition: var(--transition);
-            position: relative;
-            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            z-index: 1;
-        }
-
-        .btn-quotation::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
-            transition: transform 0.6s;
-            z-index: -1;
+            gap: 8px;
         }
 
         .btn-quotation:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(23, 30, 96, 0.25);
+            background-color: var(--main-color);
             color: var(--white);
-        }
-
-        .btn-quotation:hover::before {
-            transform: translateX(100%);
         }
 
         /* Size Options */
@@ -347,40 +237,39 @@
 
         .size-option {
             min-width: 60px;
-            padding: 8px 15px;
-            border: 2px solid var(--medium-gray);
+            padding: 8px 12px;
+            border: 1px solid var(--medium-gray);
             background-color: var(--white);
             transition: var(--transition);
             cursor: pointer;
-            border-radius: 6px;
-            font-weight: 500;
+            border-radius: 3px;
+            font-weight: 400;
             text-align: center;
+            font-size: 0.9rem;
         }
 
         .size-option:hover {
             border-color: var(--auxiliary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .size-option.active {
-            background-color: var(--main-color) !important;
+            background-color: var(--main-color);
             color: white;
             border-color: var(--main-color);
-            box-shadow: 0 4px 8px rgba(23, 30, 96, 0.25);
         }
 
         /* Product Description */
         .product-description p {
             color: var(--dark-gray);
-            line-height: 1.7;
+            line-height: 1.6;
             margin-bottom: 0;
+            font-size: 0.95rem;
         }
 
         /* Product Documentation */
         .pdf-documentation {
-            background-color: rgba(23, 30, 96, 0.05);
-            border-radius: 8px;
+            background-color: var(--light-gray);
+            border-radius: 3px;
             padding: 15px;
             display: flex;
             align-items: center;
@@ -388,13 +277,9 @@
             transition: var(--transition);
         }
         
-        .pdf-documentation:hover {
-            background-color: rgba(23, 30, 96, 0.08);
-        }
-        
         .pdf-icon {
             color: #e74c3c;
-            font-size: 2rem;
+            font-size: 1.75rem;
             flex-shrink: 0;
         }
         
@@ -405,14 +290,15 @@
         .pdf-content h6 {
             margin-bottom: 8px;
             color: var(--main-color);
-            font-weight: 600;
+            font-weight: 500;
+            font-size: 0.95rem;
         }
         
         .btn-pdf {
-            background-color: transparent;
+            background-color: var(--white);
             color: var(--auxiliary-color);
-            border: 1px solid var(--auxiliary-color);
-            border-radius: 6px;
+            border: 1px solid #dee2e6;
+            border-radius: 3px;
             padding: 6px 12px;
             font-size: 0.85rem;
             transition: var(--transition);
@@ -424,7 +310,7 @@
         .btn-pdf:hover {
             background-color: var(--auxiliary-color);
             color: var(--white);
-            transform: translateY(-2px);
+            border-color: var(--auxiliary-color);
         }
 
         /* Technical Specifications */
@@ -443,12 +329,13 @@
         }
         
         .specifications-table td {
-            padding: 12px 15px;
+            padding: 10px 15px;
             border-bottom: 1px solid var(--light-gray);
+            font-size: 0.9rem;
         }
         
         .specifications-table td:first-child {
-            font-weight: 600;
+            font-weight: 500;
             color: var(--main-color);
             width: 40%;
         }
@@ -460,35 +347,37 @@
         /* Specification Image */
         .specifications-image {
             width: 100%;
-            border-radius: 8px;
+            border-radius: 3px;
             transition: var(--transition);
             cursor: pointer;
+            border: 1px solid #eaeaea;
         }
         
         .specifications-image:hover {
-            transform: scale(1.01);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-color: var(--auxiliary-color);
         }
 
         /* Image Magnifier Glass */
         #img-magnifier-glass {
             position: absolute;
-            border: 3px solid var(--main-color);
+            border: 2px solid var(--main-color);
             border-radius: 50%;
             cursor: none;
             width: 100px;
             height: 100px;
             display: none;
             z-index: 100;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            pointer-events: none;
+            will-change: transform;
         }
         
         /* Magnifier Display Panel */
         .magnifier-panel {
-            width: 400px;
-            height: 400px;
-            border: 3px solid var(--main-color);
-            border-radius: 8px;
+            width: 350px;
+            height: 350px;
+            border: 1px solid #eaeaea;
+            border-radius: 4px;
             overflow: hidden;
             position: fixed;
             top: 42%;
@@ -496,19 +385,20 @@
             transform: translate(-50%, -50%);
             background-repeat: no-repeat;
             background-color: var(--white);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             display: none;
             z-index: 1000;
+            will-change: background-position;
         }
 
         /* Responsive Adjustments */
         @media (max-width: 992px) {
             .product-title {
-                font-size: 1.8rem;
+                font-size: 1.5rem;
             }
             
             .product-container {
-                gap: 2rem;
+                gap: 1.5rem;
             }
         }
 
@@ -523,25 +413,25 @@
             }
             
             .btn-quotation {
-                padding: 12px 20px;
+                padding: 10px 16px;
             }
         }
 
         @media (max-width: 576px) {
             .product-header {
-                margin-bottom: 1.5rem;
+                margin-bottom: 1rem;
             }
             
             .product-title {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
             }
             
             .product-container {
-                gap: 1.5rem;
+                gap: 1rem;
             }
             
             .card-body {
-                padding: 1.25rem;
+                padding: 1rem;
             }
         }
     </style>
@@ -576,9 +466,6 @@
             
             @if($product->images && $product->images->count() > 0)
             <div class="small-img-container">
-                <button class="scroll-btn left" id="scroll-left" aria-label="Scroll left">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
                 <div class="small-img-group" id="img-gallery">
                     <!-- Main product image in thumbnails -->
                     <img src="{{ $product->image_url }}" class="small-img active" 
@@ -592,9 +479,6 @@
                          alt="{{ $product->name }}" onclick="changeImage('{{ $image->image_url }}')">
                     @endforeach
                 </div>
-                <button class="scroll-btn right" id="scroll-right" aria-label="Scroll right">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
             </div>
             @endif
         </div>
@@ -786,7 +670,7 @@
             }
         }
 
-        // Image Magnifier Glass functionality
+        // Improved Image Magnifier Glass functionality
         function magnify(imgID, zoom) {
             const img = document.getElementById(imgID);
             if (!img) return;
@@ -800,20 +684,21 @@
             glass.style.backgroundRepeat = "no-repeat";
             panel.style.backgroundImage = "url('" + img.src + "')";
             
-            // Calculate background size based on the image's natural dimensions
-            img.onload = function() {
-                const w = img.naturalWidth;
-                const h = img.naturalHeight;
+            // Pre-calculate image dimensions to avoid repeated calculations
+            let w, h;
+            const updateDimensions = () => {
+                w = img.naturalWidth;
+                h = img.naturalHeight;
                 glass.style.backgroundSize = (w * zoom) + "px " + (h * zoom) + "px";
                 panel.style.backgroundSize = (w * (zoom * 1.5)) + "px " + (h * (zoom * 1.5)) + "px";
             };
             
             // If image is already loaded
             if (img.complete) {
-                const w = img.naturalWidth;
-                const h = img.naturalHeight;
-                glass.style.backgroundSize = (w * zoom) + "px " + (h * zoom) + "px";
-                panel.style.backgroundSize = (w * (zoom * 1.5)) + "px " + (h * (zoom * 1.5)) + "px";
+                updateDimensions();
+            } else {
+                // Wait for image to load
+                img.onload = updateDimensions;
             }
             
             // Mouse event handlers
@@ -827,15 +712,31 @@
                 panel.style.display = "none";
             });
             
-            img.addEventListener("mousemove", moveMagnifier);
+            // Use requestAnimationFrame for smoother performance
+            let ticking = false;
+            let lastX = 0, lastY = 0;
+            let rect;
             
-            function moveMagnifier(e) {
-                e.preventDefault();
+            img.addEventListener("mousemove", function(e) {
+                lastX = e.clientX;
+                lastY = e.clientY;
+                
+                if (!ticking) {
+                    window.requestAnimationFrame(function() {
+                        moveMagnifier(lastX, lastY);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+            
+            function moveMagnifier(clientX, clientY) {
+                // Get current rect only when needed
+                rect = img.getBoundingClientRect();
                 
                 // Get cursor position
-                const rect = img.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
+                const x = clientX - rect.left;
+                const y = clientY - rect.top;
                 
                 // Prevent the magnifier glass from being positioned outside the image
                 if (x < 0 || x > rect.width || y < 0 || y > rect.height) {
@@ -853,28 +754,28 @@
                 glass.style.top = Math.min(Math.max(y - glassSize/2, 0), rect.height - glassSize) + "px";
                 
                 // Calculate the ratio of the image dimensions to displayed dimensions
-                const rx = (img.naturalWidth / rect.width);
-                const ry = (img.naturalHeight / rect.height);
+                const rx = w / rect.width;
+                const ry = h / rect.height;
                 
                 // Set the background position for the glass
                 const bgPosX = x * rx * zoom - glassSize/2;
                 const bgPosY = y * ry * zoom - glassSize/2;
-                glass.style.backgroundPosition = "-" + bgPosX + "px -" + bgPosY + "px";
+                glass.style.backgroundPosition = `-${bgPosX}px -${bgPosY}px`;
                 
-                // Set the background position for the panel - center on the hovered point
+                // Set the background position for the panel
                 const panelCenterX = panel.offsetWidth / 2;
                 const panelCenterY = panel.offsetHeight / 2;
-                const panelZoom = zoom * 1.5; // Higher zoom for the panel
+                const panelZoom = zoom * 1.5;
                 const panelBgPosX = x * rx * panelZoom - panelCenterX;
                 const panelBgPosY = y * ry * panelZoom - panelCenterY;
-                panel.style.backgroundPosition = "-" + panelBgPosX + "px -" + panelBgPosY + "px";
+                panel.style.backgroundPosition = `-${panelBgPosX}px -${panelBgPosY}px`;
             }
         }
 
         // Initialize magnifier
         setTimeout(function() {
             magnify("product-image", 0.4);
-        }, 500);
+        }, 300);
         
         // Image gallery
         function changeImage(src) {
@@ -903,64 +804,11 @@
         
         // Make changeImage function globally available
         window.changeImage = changeImage;
-
-        // Add fade-in effect for sections
-        const sections = document.querySelectorAll('.section-card');
-        sections.forEach((section, index) => {
-            section.style.opacity = '0';
-            section.style.transform = 'translateY(20px)';
-            section.style.transition = 'opacity 0.4s ease, transform 0.5s ease';
-            
-            setTimeout(() => {
-                section.style.opacity = '1';
-                section.style.transform = 'translateY(0)';
-            }, 100 + (index * 150));
-        });
         
         // Handle image gallery scrolling
-        const scrollLeftBtn = document.getElementById('scroll-left');
-        const scrollRightBtn = document.getElementById('scroll-right');
         const imgGallery = document.getElementById('img-gallery');
         
-        if (scrollLeftBtn && scrollRightBtn && imgGallery) {
-            // Function to check if scroll buttons should be visible
-            function updateScrollButtonsVisibility() {
-                const isScrollable = imgGallery.scrollWidth > imgGallery.clientWidth;
-                const atStart = imgGallery.scrollLeft <= 10;
-                const atEnd = imgGallery.scrollLeft + imgGallery.clientWidth >= imgGallery.scrollWidth - 10;
-                
-                scrollLeftBtn.style.display = (!isScrollable || atStart) ? 'none' : 'flex';
-                scrollRightBtn.style.display = (!isScrollable || atEnd) ? 'none' : 'flex';
-            }
-            
-            // Initial check
-            updateScrollButtonsVisibility();
-            
-            // Scroll amount for each button click
-            const scrollAmount = 200;
-            
-            // Scroll left button
-            scrollLeftBtn.addEventListener('click', () => {
-                imgGallery.scrollBy({
-                    left: -scrollAmount,
-                    behavior: 'smooth'
-                });
-            });
-            
-            // Scroll right button
-            scrollRightBtn.addEventListener('click', () => {
-                imgGallery.scrollBy({
-                    left: scrollAmount,
-                    behavior: 'smooth'
-                });
-            });
-            
-            // Update button visibility on scroll
-            imgGallery.addEventListener('scroll', updateScrollButtonsVisibility);
-            
-            // Update button visibility on window resize
-            window.addEventListener('resize', updateScrollButtonsVisibility);
-            
+        if (imgGallery) {
             // Scroll active image into view when page loads
             const activeImg = imgGallery.querySelector('.small-img.active');
             if (activeImg) {
@@ -970,7 +818,6 @@
                         inline: 'center',
                         block: 'nearest'
                     });
-                    updateScrollButtonsVisibility();
                 }, 500);
             }
         }
