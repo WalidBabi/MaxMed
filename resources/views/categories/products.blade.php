@@ -23,35 +23,209 @@
     <style>
         /* Page Layout */
         .category-header {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             position: relative;
-            border-left: 4px solid #28a745;
+            border-left: 4px solid #3498db;
             padding-left: 15px;
         }
         .category-title {
-            font-size: 1.25rem;
-           
-            color: #333;
-            margin-bottom: 0.5rem;
-            transition: color 0.3s;
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
         }
         .category-description {
-            color: #666;
+            color: #7f8c8d;
             margin-bottom: 1rem;
-            font-size: 0.875rem;
+            font-size: 0.95rem;
             max-width: 800px;
             line-height: 1.6;
         }
         
-            
-        /* Enhanced Filters Row */
+        /* Professional grid layout */
+        .masonry-layout {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+        
+        /* Professional card styling */
+        .masonry-item {
+            display: block;
+            width: 100%;
+            margin-bottom: 0;
+            height: 100%;
+        }
+        
+        .product-item {
+            position: relative;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+            background-color: #fff;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #eaeaea;
+        }
+        
+        .product-item:hover {
+            transform: none;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .product-image-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            padding-bottom: 75%; /* 4:3 aspect ratio */
+            background: #f8f8f8;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .product-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+        
+        .product-item:hover .product-image {
+            transform: scale(1.03);
+        }
+        
+        .product-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            flex-grow: 1;
+        }
+        
+        .product-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin: 0 0 20px 0;
+            color: #333;
+            line-height: 1.5;
+            text-align: left;
+            height: 45px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        
+        .product-title a {
+            color: #2c3e50;
+            text-decoration: none;
+        }
+        
+        .product-title a:hover {
+            color: #3498db;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            margin-top: auto;
+        }
+        
+        .btn-action {
+            padding: 8px 12px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .btn-view {
+            background-color: #f8f9fa;
+            color: #495057;
+            border: 1px solid #dee2e6;
+            flex: 1;
+        }
+        
+        .btn-view:hover {
+            background-color: #e9ecef;
+            color: #212529;
+        }
+        
+        .btn-quote {
+            background-color: #007bff;
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-quote:hover {
+            background-color: #0069d9;
+        }
+        
+        /* Featured badge styling */
+        .product-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #2c3e50;
+            padding: 5px 10px;
+            border-radius: 2px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            z-index: 2;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 1200px) {
+            .masonry-layout {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .masonry-layout {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .masonry-layout {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+            .product-content {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .masonry-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Professional filters styling */
         .filters-row {
             background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 18px 25px;
+            border-radius: 4px;
             margin-bottom: 30px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
-            border-left: 4px solid #17a2b8;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #3498db;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -83,7 +257,6 @@
         .counter-label {
             color: #555;
             font-size: 1.15rem;
-        
         }
         
         /* Enhanced Empty State */
@@ -120,227 +293,6 @@
             line-height: 1.6;
         }
         
-        /* Improved Product Grid Layout */
-        .products-grid {
-            margin-top: 15px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 28px;
-        }
-        
-        /* Enhanced Product Card Styling */
-        .product-card-wrapper {
-            height: 100%;
-            transition: transform 0.3s;
-        }
-        .product-card {
-            height: 100%;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.35s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            border: none !important;
-            background-color: #fff;
-            position: relative;
-        }
-        .product-card:hover {
-            transform: translateY(-7px);
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
-        }
-        .product-card img {
-            height: 240px;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-        .product-card:hover img {
-            transform: scale(1.08);
-        }
-        .card-body {
-            flex: 1 1 auto;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            padding: 22px;
-            justify-content: space-between;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-            min-height: 200px; /* Minimum height for consistent card sizing */
-=======
-            height: 200px; /* Fixed height for consistent card sizing */
->>>>>>> ef93437c4a71d3e016de82cb69171d9fad1a25aa
->>>>>>> 130400b294c52b3b54e5d7256d3e2f1ec0eea356
-        }
-        .card-title {
-            white-space: normal; /* Changed from nowrap to normal */
-            overflow: hidden; /* Added to hide overflow */
-            text-overflow: ellipsis; /* Added to show ellipsis */
-           
-            font-size: 1.2em;
-            margin-bottom: 10px;
-        }
-        .card-title a {
-            text-decoration: none;
-            color: #222;
-            transition: color 0.2s;
-            position: relative;
-        }
-        .card-title a:hover {
-            color: #28a745;
-        }
-        .card-title a:after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 0;
-            background-color: #28a745;
-            transition: width 0.3s;
-        }
-        .card-title a:hover:after {
-            width: 100%;
-        }
-        .card-text {
-            color: #444;
-            margin-bottom: 15px;
-            font-size: 1.15em;
-        }
-        .price-aed {
-            font-size: 0.9em;
-            color: #777;
-            margin-top: 3px;
-            display: block;
-        }
-        
-        /* Badge improvements */
-        .badge {
-            font-size: 0.85em;
-            padding: 6px 12px;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-        }
-        .badge.bg-success {
-            background-color: #28a745 !important;
-            box-shadow: 0 2px 5px rgba(40, 167, 69, 0.3);
-        }
-        .badge.bg-danger {
-            background-color: #dc3545 !important;
-            box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
-        }
-        
-        /* Enhanced buttons */
-        .btn {
-            border-radius: 8px;
-            margin-top: 5px;
-         
-            padding: 12px 20px;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            font-size: 0.85em;
-            transition: all 0.35s;
-        }
-        .btn-primary {
-            background-color: #28a745;
-            border-color: #28a745;
-            color: #fff;
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-primary:hover {
-            background-color: #218838;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(33, 136, 56, 0.4);
-        }
-        .btn-primary:after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.5);
-            opacity: 0;
-            border-radius: 100%;
-            transform: scale(1, 1) translate(-50%);
-            transform-origin: 50% 50%;
-        }
-        .btn-primary:hover:after {
-            animation: ripple 1s ease-out;
-        }
-        @keyframes ripple {
-            0% {
-                transform: scale(0, 0);
-                opacity: 0.5;
-            }
-            100% {
-                transform: scale(20, 20);
-                opacity: 0;
-            }
-        }
-        .btn-secondary {
-            background-color: #17a2b8;
-            border-color: #17a2b8;
-            color: #fff;
-        }
-        .btn-secondary:hover {
-            background-color: #138496;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(19, 132, 150, 0.4);
-        }
-        
-        /* Card footer enhancements */
-        .card-footer {
-            background-color: transparent;
-            padding: 5px 0 0;
-            border-top: none;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        /* Enhanced quantity controls */
-        .quantity-controls {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            width: 100%;
-            position: relative;
-        }
-        .quantity-controls label {
-            margin-bottom: 0;
-          
-            color: #444;
-            margin-right: 10px;
-        }
-        .quantity-controls input {
-            width: 70px;
-            text-align: center;
-            border-radius: 6px;
-            border: 1px solid #dee2e6;
-            padding: 8px 5px;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .quantity-controls input:focus {
-            border-color: #28a745;
-            box-shadow: inset 0 1px 3px rgba(40, 167, 69, 0.2);
-            outline: none;
-        }
-        
-        /* Button group improvements */
-        .button-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 15px;
-            width: 100%;
-            flex-wrap: wrap;
-        }
-        
         /* Pagination styling enhancement */
         .pagination-container {
             margin-top: 40px;
@@ -355,7 +307,6 @@
         .pagination-container .page-link {
             border: none;
             color: #555;
-    
             padding: 12px 18px;
             transition: all 0.2s;
         }
@@ -386,58 +337,7 @@
                 transform: translateY(0);
             }
         }
-        
-        /* Additional responsive improvements */
-        @media (max-width: 992px) {
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 20px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .category-title {
-                font-size: 1.25rem;
-            }
-            .counter-number {
-                font-size: 1.5rem;
-            }
-            .filters-row {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 15px;
-            }
-            .button-group {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .btn {
-                width: 100%;
-                padding: 10px 15px;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
-            .category-header {
-                padding-left: 10px;
-            }
-            .empty-state {
-                padding: 40px 20px;
-            }
-            .empty-state-message {
-                font-size: 1.5rem;
-            }
-        }
     </style>
-    
-   
     
     <div class="row sidebar-content-container justify-content-center">
         <div class="col-md-3 sidebar-column transition-all duration-300">
@@ -447,9 +347,7 @@
             <div class="category-header">
                 <h1 class="category-title">{{ isset($category) ? $category->name : 'All Products' }}</h1>
                 <p class="category-description">{{ isset($category) && $category->description ? $category->description : 'Browse our selection of high-quality products' }}</p>
-           
             </div>
-            
             
             <div class="filters-row">
                 <div class="product-counter">
@@ -471,63 +369,53 @@
             {{ session(['pagination_message_shown' => true]) }}
             @endif
             
-            <div class="products-grid">
-                @if($products->isEmpty())
-                    <div class="col-12">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">
-                                <i class="fas fa-box-open"></i>
-                            </div>
-                            <h3 class="empty-state-message">Coming Soon</h3>
-                            <p class="empty-state-description">We're working on adding products to this category. Please check back later or browse other categories.</p>
+            @if($products->isEmpty())
+                <div class="col-12">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-box-open"></i>
                         </div>
+                        <h3 class="empty-state-message">Coming Soon</h3>
+                        <p class="empty-state-description">We're working on adding products to this category. Please check back later or browse other categories.</p>
                     </div>
-                @else
-                    @foreach($products as $product)
-                    <div class="product-card-wrapper">
-                        <div class="card h-100 product-card">
-                            <a href="{{ route('product.show', $product) }}" class="overflow-hidden">
-                                <img src="{{ $product->image_url }}" class="card-img-top" alt="{{ $product->name }}" style="width: 100%; height: auto;">
-                            </a>
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">
-                                    <a href="{{ route('product.show', $product) }}">{{ $product->name }}</a>
-                                </h5>
-                                <p class="card-text">
-                                    <!-- <strong>${{ number_format($product->price, 2) }}</strong> -->
-                                    <!-- <span class="price-aed d-block">AED {{ number_format($product->price_aed, 2) }}</span> -->
-                                </p>
-                                <div class="card-footer">
-                         
-                                        <div class="d-flex align-items-center mb-2">
-                                            <!-- <span class="badge bg-success me-3"><i class="fas fa-check me-1"></i>In Stock</span>
-                                            <small class="text-muted">{{ $product->inventory->quantity }} available</small> -->
-                                        </div>
-                                        <form action="{{ route('cart.add', $product) }}" method="POST" class="w-100">
-                                            @csrf
-                                            <!-- <div class="quantity-controls">
-                                                <label for="quantity-{{ $product->id }}">Quantity:</label>
-                                                <input type="number" name="quantity" id="quantity-{{ $product->id }}" 
-                                                    value="1" min="1" max="{{ $product->inventory->quantity }}" 
-                                                    class="form-control">
-                                            </div> -->
-                                            <div class="button-group" style="max-width: 200px; margin: 0 auto;">
-                                                <a href="{{ route('product.show', $product) }}" class="btn w-100 mb-2" style="background-color: #0a5694; color: white; font-size: 0.875rem; padding: 0.5rem 0.75rem;">
-                                                    <i class="fas fa-eye me-2"></i> View Details
-                                                </a>
-                                                <a href="{{ route('quotation.form', ['product' => $product->id]) }}" class="btn w-100" style="background-color: #0a5694; color: white; font-size: 0.875rem; padding: 0.5rem 0.75rem;">
-                                                    <i class="fas fa-file-invoice me-2"></i> Request Quote
-                                                </a>
-                                            </div>
-                                        </form>
-                                  
+                </div>
+            @else
+                <div class="masonry-layout">
+                    @foreach($products as $index => $product)
+                        @php
+                            // Determine if this is a featured product (first or every 7th)
+                            $isFeatured = ($index === 0 || $index % 7 === 0);
+                        @endphp
+                        
+                        <div class="masonry-item">
+                            <div class="product-item">
+                                @if($isFeatured)
+                                    <div class="product-badge">Featured</div>
+                                @endif
+                                
+                                <div class="product-image-container">
+                                    <img src="{{ $product->image_url }}" class="product-image" alt="{{ $product->name }}">
+                                </div>
+                                
+                                <div class="product-content">
+                                    <h3 class="product-title">
+                                        <a href="{{ route('product.show', $product) }}">{{ $product->name }}</a>
+                                    </h3>
+                                    
+                                    <div class="product-actions">
+                                        <a href="{{ route('product.show', $product) }}" class="btn-action btn-view">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                        <a href="{{ route('quotation.form', ['product' => $product->id]) }}" class="btn-action btn-quote">
+                                            <i class="fas fa-file-invoice"></i> Quote
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     @endforeach
-                @endif
-            </div>
+                </div>
+            @endif
             
             @if(isset($products) && method_exists($products, 'links'))
             <div class="pagination-container mt-4">
@@ -539,32 +427,16 @@
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Quantity control validation
-        document.querySelectorAll('.quantity-controls input').forEach(function(input) {
-            input.addEventListener('input', function() {
-                const max = parseInt(this.max, 10);
-                const min = parseInt(this.min, 10);
-                let value = parseInt(this.value, 10);
-
-                if (isNaN(value) || value < min) {
-                    this.value = min;
-                } else if (value > max) {
-                    alert('The requested quantity exceeds the available stock.');
-                    this.value = max;
-                }
-            });
-        });
-        
-        // Add smooth fade-in effect to product cards
-        const productCards = document.querySelectorAll('.product-card-wrapper');
-        productCards.forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.4s ease, transform 0.5s ease';
+        // Add staggered animation to product items
+        const masonryItems = document.querySelectorAll('.masonry-item');
+        masonryItems.forEach((item, index) => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(30px)';
+            item.style.transition = 'opacity 0.5s ease, transform 0.6s ease';
             
             setTimeout(() => {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0)';
             }, 100 + (index * 50));
         });
         
@@ -582,8 +454,6 @@
                 }
             });
         }
-        
-        // Sidebar toggle is now handled with CSS transitions in app.blade.php and sidebar.blade.php
     });
 </script>
 @endsection

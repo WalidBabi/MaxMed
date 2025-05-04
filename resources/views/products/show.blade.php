@@ -3,44 +3,93 @@
 @section('content')
 <div class="container-fluid py-4">
     <style>
-        /* Enhanced Product Detail Page Styling with Brand Colors */
+        /* Modern Product Detail Page Styling */
         :root {
             --main-color: #171e60;
             --auxiliary-color: #0a5694;
+            --accent-color: #28a745;
             --white: #ffffff;
-            --light-gray: #f0f0f0;
+            --light-gray: #f7f7f7;
             --medium-gray: #e0e0e0;
+            --dark-gray: #333333;
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
+        /* Breadcrumb Navigation */
+        .breadcrumb-container {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            position: relative;
+        }
+        
+        .breadcrumb-container::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right, var(--light-gray), var(--medium-gray), var(--light-gray));
+        }
+        
         .breadcrumb {
             background-color: transparent;
-            padding: 0.75rem 0;
-            margin-bottom: 1.5rem;
+            padding: 0;
+            margin: 0;
             font-size: 0.95rem;
-            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
         }
 
         .breadcrumb-item a {
             color: var(--auxiliary-color);
             text-decoration: none;
-            transition: color 0.2s ease;
+            transition: var(--transition);
+            position: relative;
         }
 
         .breadcrumb-item a:hover {
             color: var(--main-color);
+        }
+        
+        .breadcrumb-item a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -3px;
+            left: 0;
+            background-color: var(--main-color);
+            transition: width 0.3s;
+        }
+        
+        .breadcrumb-item a:hover::after {
+            width: 100%;
         }
 
         .breadcrumb-item.active {
             color: var(--main-color);
             font-weight: 600;
         }
+        
+        .breadcrumb-item + .breadcrumb-item::before {
+            color: var(--medium-gray);
+        }
 
         /* Product Header */
         .product-header {
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             position: relative;
             border-left: 4px solid var(--main-color);
             padding-left: 15px;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .product-title {
@@ -48,51 +97,81 @@
             font-weight: 700;
             color: var(--main-color);
             margin-bottom: 0.5rem;
-            transition: color 0.3s;
+            transition: var(--transition);
         }
 
-        /* Product Images */
+        /* Product Container */
+        .product-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        @media (max-width: 992px) {
+            .product-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Image Gallery Section */
+        .gallery-section {
+            position: relative;
+            background-color: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+        
+        .gallery-section:hover {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
         .product-image-container {
             position: relative;
-            border-radius: 8px;
+            padding-bottom: 75%;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             background-color: var(--white);
-            height: 450px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid var(--light-gray);
         }
 
         .product-image {
-            height: auto;
-            max-height: 400px;
-            max-width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
-            transition: transform 0.5s ease;
+            transition: transform 0.6s ease;
+            padding: 20px;
         }
 
         .product-image:hover {
-            transform: scale(1.05);
+            transform: scale(1.03);
+        }
+
+        .small-img-container {
+            position: relative;
+            padding: 20px;
+            background-color: var(--light-gray);
+            border-top: 1px solid var(--medium-gray);
         }
 
         .small-img-group {
             display: flex;
-            justify-content: flex-start;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 12px;
             overflow-x: auto;
-            padding: 10px 5px;
-            position: relative;
+            padding: 5px;
             scrollbar-width: thin;
             scrollbar-color: var(--auxiliary-color) var(--light-gray);
-            max-width: 100%;
             -webkit-overflow-scrolling: touch;
         }
 
         .small-img-group::-webkit-scrollbar {
-            height: 6px;
+            height: 5px;
         }
 
         .small-img-group::-webkit-scrollbar-track {
@@ -105,269 +184,297 @@
             border-radius: 10px;
         }
 
-        .small-img-container {
-            position: relative;
-        }
-
         .scroll-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 32px;
-            height: 32px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             background-color: var(--main-color);
             color: white;
             border: none;
-            opacity: 0.8;
+            opacity: 0.9;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transition: opacity 0.2s ease;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+            transition: var(--transition);
         }
 
         .scroll-btn:hover {
             opacity: 1;
+            transform: translateY(-50%) scale(1.1);
         }
 
         .scroll-btn.left {
-            left: 5px;
+            left: 10px;
         }
 
         .scroll-btn.right {
-            right: 5px;
+            right: 10px;
         }
 
         .small-img {
-            min-width: 80px;
             width: 80px;
             height: 80px;
             object-fit: cover;
             cursor: pointer;
-            border-radius: 6px;
-            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            border: 2px solid transparent;
             padding: 3px;
-            transition: all 0.3s;
+            transition: var(--transition);
             flex-shrink: 0;
+            background-color: var(--white);
         }
 
         .small-img:hover {
             transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
         }
 
         .small-img.active {
             border-color: var(--main-color);
-            box-shadow: 0 4px 8px rgba(23, 30, 96, 0.25);
+            box-shadow: 0 5px 10px rgba(23, 30, 96, 0.25);
         }
 
-        /* Product Info Section */
-        .product-info-section {
-            border-radius: 8px;
+        /* Content Section */
+        .content-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .section-card {
             background-color: var(--white);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            border: 1px solid var(--light-gray);
-            padding: 25px;
-            height: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+        
+        .section-card:hover {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
         }
 
-        /* Quotation Button */
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--light-gray);
+            background-color: var(--white);
+            position: relative;
+        }
+        
+        .card-header h4 {
+            margin: 0;
+            color: var(--main-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .card-header h4::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 20px;
+            background-color: var(--auxiliary-color);
+            border-radius: 2px;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Action Section */
+        .action-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
         .btn-quotation {
-            background-color: var(--main-color);
-            border-color: var(--main-color);
+            background: linear-gradient(135deg, var(--auxiliary-color), var(--main-color));
+            border: none;
             color: var(--white);
-            padding: 12px 25px;
+            padding: 14px 25px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.6px;
             font-size: 1rem;
             border-radius: 8px;
-            transition: all 0.35s;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            z-index: 1;
+        }
+
+        .btn-quotation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+            transition: transform 0.6s;
+            z-index: -1;
         }
 
         .btn-quotation:hover {
-            background-color: var(--auxiliary-color);
-            border-color: var(--auxiliary-color);
-            color: var(--white);
             transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(10, 86, 148, 0.3);
+            box-shadow: 0 10px 20px rgba(23, 30, 96, 0.25);
+            color: var(--white);
         }
 
-        /* Product Description */
-        .product-description {
-            background-color: rgba(240, 240, 240, 0.3);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 2rem;
-            border: 1px solid var(--light-gray);
-        }
-
-        .product-description h5 {
-            color: var(--main-color);
-            border-bottom: 2px solid var(--auxiliary-color);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-
-        .product-description p {
-            color: #333;
-            line-height: 1.7;
-        }
-
-        /* Technical Specifications */
-        .product-parameters {
-            background-color: var(--white);
-            border-radius: 8px;
-            padding: 20px;
-            border: 1px solid var(--light-gray);
-        }
-
-        .product-parameters h5 {
-            color: var(--main-color);
-            border-bottom: 2px solid var(--auxiliary-color);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-
-        .product-parameters .table {
-            margin-bottom: 0;
-        }
-
-        .product-parameters .table td.fw-medium {
-            color: var(--main-color);
-            font-weight: 600;
-        }
-
-        .product-parameters .table-striped > tbody > tr:nth-of-type(odd) {
-            background-color: rgba(10, 86, 148, 0.05);
-        }
-
-        /* Specification Image */
-        .product-specifications-image {
-            background-color: var(--white);
-            border-radius: 8px;
-            padding: 20px;
-            border: 1px solid var(--light-gray);
-        }
-
-        .product-specifications-image h5 {
-            color: var(--main-color);
-            border-bottom: 2px solid var(--auxiliary-color);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-
-        .specification-img {
-            max-height: 500px;
-            transition: all 0.3s;
-        }
-
-        .specification-img:hover {
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
-            transform: scale(1.01);
-        }
-
-        /* Specification Card */
-        .specification-card {
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s;
-        }
-        
-        .specification-card:hover {
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-        }
-        
-        .specification-card .card-header {
-            border-bottom: 2px solid var(--main-color);
-            padding: 15px 20px;
-        }
-        
-        .specification-card .text-main {
-            color: var(--main-color);
-            font-weight: 600;
-        }
-        
-        .specification-img-large {
-            padding: 10px;
-            background-color: white;
-            transition: all 0.3s;
-        }
-        
-        .specification-card .card-footer {
-            padding: 12px;
-            border-top: 1px solid var(--light-gray);
-        }
-        
-        .specification-card .btn-outline-primary {
-            color: var(--auxiliary-color);
-            border-color: var(--auxiliary-color);
-        }
-        
-        .specification-card .btn-outline-primary:hover {
-            background-color: var(--auxiliary-color);
-            color: white;
+        .btn-quotation:hover::before {
+            transform: translateX(100%);
         }
 
         /* Size Options */
+        .size-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
         .size-option {
-            min-width: 80px;
-            transition: all 0.2s ease;
+            min-width: 60px;
+            padding: 8px 15px;
+            border: 2px solid var(--medium-gray);
+            background-color: var(--white);
+            transition: var(--transition);
             cursor: pointer;
             border-radius: 6px;
             font-weight: 500;
+            text-align: center;
         }
 
         .size-option:hover {
-            background-color: rgba(23, 30, 96, 0.1);
+            border-color: var(--auxiliary-color);
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .size-option.active {
             background-color: var(--main-color) !important;
             color: white;
-            box-shadow: 0 4px 8px rgba(23, 30, 96, 0.15);
             border-color: var(--main-color);
+            box-shadow: 0 4px 8px rgba(23, 30, 96, 0.25);
         }
 
-        /* Responsive Adjustments */
-        @media (max-width: 992px) {
-            .product-title {
-                font-size: 1.8rem;
-            }
+        /* Product Description */
+        .product-description p {
+            color: var(--dark-gray);
+            line-height: 1.7;
+            margin-bottom: 0;
         }
 
-        @media (max-width: 768px) {
-            .product-image-container {
-                height: 350px;
-                margin-bottom: 2rem;
-            }
+        /* Product Documentation */
+        .pdf-documentation {
+            background-color: rgba(23, 30, 96, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+        
+        .pdf-documentation:hover {
+            background-color: rgba(23, 30, 96, 0.08);
+        }
+        
+        .pdf-icon {
+            color: #e74c3c;
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+        
+        .pdf-content {
+            flex-grow: 1;
+        }
+        
+        .pdf-content h6 {
+            margin-bottom: 8px;
+            color: var(--main-color);
+            font-weight: 600;
+        }
+        
+        .btn-pdf {
+            background-color: transparent;
+            color: var(--auxiliary-color);
+            border: 1px solid var(--auxiliary-color);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-pdf:hover {
+            background-color: var(--auxiliary-color);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
 
-            .small-img {
-                width: 60px;
-                height: 60px;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
+        /* Technical Specifications */
+        .specifications-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        .specifications-table tr {
+            transition: var(--transition);
+        }
+        
+        .specifications-table tr:hover {
+            background-color: rgba(10, 86, 148, 0.05);
+        }
+        
+        .specifications-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .specifications-table td:first-child {
+            font-weight: 600;
+            color: var(--main-color);
+            width: 40%;
+        }
+        
+        .specifications-table tr:last-child td {
+            border-bottom: none;
+        }
 
-            .btn-quotation {
-                width: 100%;
-            }
+        /* Specification Image */
+        .specifications-image {
+            width: 100%;
+            border-radius: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .specifications-image:hover {
+            transform: scale(1.01);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         /* Image Magnifier Glass */
         #img-magnifier-glass {
             position: absolute;
             border: 3px solid var(--main-color);
-            border-radius: 0;
+            border-radius: 50%;
             cursor: none;
             width: 100px;
             height: 100px;
@@ -381,6 +488,7 @@
             width: 400px;
             height: 400px;
             border: 3px solid var(--main-color);
+            border-radius: 8px;
             overflow: hidden;
             position: fixed;
             top: 42%;
@@ -388,195 +496,247 @@
             transform: translate(-50%, -50%);
             background-repeat: no-repeat;
             background-color: var(--white);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             display: none;
             z-index: 1000;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .product-title {
+                font-size: 1.8rem;
+            }
+            
+            .product-container {
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .product-image-container {
+                padding-bottom: 75%;
+            }
+
+            .small-img {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .btn-quotation {
+                padding: 12px 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .product-header {
+                margin-bottom: 1.5rem;
+            }
+            
+            .product-title {
+                font-size: 1.5rem;
+            }
+            
+            .product-container {
+                gap: 1.5rem;
+            }
+            
+            .card-body {
+                padding: 1.25rem;
+            }
         }
     </style>
 
     <!-- Floating magnifier panel -->
     <div class="magnifier-panel" id="magnifier-panel"></div>
 
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('welcome') }}"><i class="fas fa-home me-1"></i>Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('products.index') }}">Products</a></li>
-            @if($product->category)
-            <li class="breadcrumb-item"><a href="{{ route('categories.show', $product->category) }}">{{ $product->category->name }}</a></li>
-            @endif
-            <li class="breadcrumb-item active" aria-current="page">{{ $product->name }}</li>
-        </ol>
-    </nav>
+    <div class="breadcrumb-container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('welcome') }}"><i class="fas fa-home me-1"></i>Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('products.index') }}">Products</a></li>
+                @if($product->category)
+                <li class="breadcrumb-item"><a href="{{ route('categories.show', $product->category) }}">{{ $product->category->name }}</a></li>
+                @endif
+                <li class="breadcrumb-item active" aria-current="page">{{ $product->name }}</li>
+            </ol>
+        </nav>
+    </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="product-header">
-                <h1 class="product-title">{{ $product->name }}</h1>
+    <div class="product-header">
+        <h1 class="product-title">{{ $product->name }}</h1>
+    </div>
+
+    <div class="product-container">
+        <!-- Image Gallery Section -->
+        <div class="gallery-section">
+            <div class="product-image-container">
+                <img src="{{ $product->image_url }}" class="product-image" id="product-image" alt="{{ $product->name }}">
+                <div id="img-magnifier-glass"></div>
             </div>
+            
+            @if($product->images && $product->images->count() > 0)
+            <div class="small-img-container">
+                <button class="scroll-btn left" id="scroll-left" aria-label="Scroll left">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="small-img-group" id="img-gallery">
+                    <!-- Main product image in thumbnails -->
+                    <img src="{{ $product->image_url }}" class="small-img active" 
+                         alt="{{ $product->name }}" onclick="changeImage('{{ $product->image_url }}')">
+                         
+                    <!-- Additional non-primary images -->
+                    @foreach($product->images->where('is_primary', false)->filter(function($image) {
+                        return empty($image->specification_image_url);
+                    }) as $image)
+                    <img src="{{ $image->image_url }}" class="small-img" 
+                         alt="{{ $product->name }}" onclick="changeImage('{{ $image->image_url }}')">
+                    @endforeach
+                </div>
+                <button class="scroll-btn right" id="scroll-right" aria-label="Scroll right">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            @endif
+        </div>
 
-            <div class="row">
-                <div class="col-lg-7 mb-4">
-                    <div class="product-image-container">
-                        <img src="{{ $product->image_url }}" class="product-image" id="product-image" alt="{{ $product->name }}">
-                        <div id="img-magnifier-glass"></div>
-                    </div>
-                    @if($product->images && $product->images->count() > 0)
-                    <div class="small-img-container">
-                        <button class="scroll-btn left" id="scroll-left" aria-label="Scroll left">
-                            &larr;
-                        </button>
-                        <div class="small-img-group" id="img-gallery">
-                            <!-- Always include the main product image in thumbnails -->
-                            <img src="{{ $product->image_url }}" class="small-img active" 
-                                 alt="{{ $product->name }}" onclick="changeImage('{{ $product->image_url }}')">
-                                 
-                            <!-- Display additional non-primary images, excluding specification images -->
-                            @foreach($product->images->where('is_primary', false)->filter(function($image) {
-                                return empty($image->specification_image_url);
-                            }) as $image)
-                            <img src="{{ $image->image_url }}" class="small-img" 
-                                 alt="{{ $product->name }}" onclick="changeImage('{{ $image->image_url }}')">
+        <!-- Content Section -->
+        <div class="content-section">
+            <!-- Action Section -->
+            <div class="section-card">
+                <div class="card-body action-section">
+                    <a href="{{ route('quotation.form', ['product' => $product->id]) }}" class="btn btn-quotation" id="quotation-btn">
+                        <i class="fas fa-file-invoice"></i> Request Quotation
+                    </a>
+                    
+                    @if($product->has_size_options)
+                    <div class="mt-3">
+                        <h5 class="mb-3">Select Size</h5>
+                        <div class="size-options">
+                            @php
+                                $sizeOptions = $product->size_options ?? [];
+                                if (!is_array($sizeOptions) && !empty($sizeOptions)) {
+                                    $sizeOptions = json_decode($sizeOptions, true) ?? [];
+                                }
+                            @endphp
+                            
+                            @foreach($sizeOptions as $option)
+                                <label class="size-option">
+                                    <input type="radio" name="size" value="{{ $option }}" class="d-none"> {{ $option }}
+                                </label>
                             @endforeach
                         </div>
-                        <button class="scroll-btn right" id="scroll-right" aria-label="Scroll right">
-                            &rarr;
-                        </button>
                     </div>
                     @endif
                 </div>
-
-                <div class="col-lg-5">
-                    <div class="product-info-section">
-                        <div class="d-grid action-buttons mb-4">
-                            <a href="{{ route('quotation.form', ['product' => $product->id]) }}" class="btn btn-quotation w-100" id="quotation-btn">
-                                <i class="fas fa-file-invoice me-2"></i> Request Quotation
+            </div>
+            
+            <!-- Description Section -->
+            <div class="section-card">
+                <div class="card-header">
+                    <h4>Description</h4>
+                </div>
+                <div class="card-body product-description">
+                    @php
+                    // Check if the description contains PRODUCT PARAMETERS
+                    $description = $product->description;
+                    $hasParameters = strpos($description, 'PRODUCT PARAMETERS') !== false;
+                    
+                    if ($hasParameters) {
+                        // Split the content
+                        $parts = explode('PRODUCT PARAMETERS', $description, 2);
+                        $mainDescription = trim($parts[0]);
+                        $parametersSection = trim($parts[1]);
+                        
+                        // Parse parameters - handle alternating lines as key-value pairs
+                        $lines = preg_split('/\r\n|\r|\n/', $parametersSection);
+                        $parameters = [];
+                        $currentKey = null;
+                        
+                        foreach ($lines as $i => $line) {
+                            $line = trim($line);
+                            if (empty($line)) continue;
+                            
+                            if ($i % 2 === 0) {
+                                // Even lines are keys
+                                $currentKey = $line;
+                            } else {
+                                // Odd lines are values
+                                if ($currentKey !== null) {
+                                    $parameters[$currentKey] = $line;
+                                }
+                            }
+                        }
+                    } else {
+                        $mainDescription = $description;
+                    }
+                    @endphp
+                    
+                    <p>{!! nl2br(e($mainDescription ?? $description)) !!}</p>
+                </div>
+            </div>
+            
+            <!-- PDF Documentation -->
+            @if($product->pdf_file)
+            <div class="section-card">
+                <div class="card-header">
+                    <h4>Documentation</h4>
+                </div>
+                <div class="card-body">
+                    <div class="pdf-documentation">
+                        <div class="pdf-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="pdf-content">
+                            <h6>Product Specification PDF</h6>
+                            <a href="{{ Storage::url($product->pdf_file) }}" target="_blank" class="btn btn-pdf">
+                                <i class="fas fa-download"></i> Download PDF
                             </a>
                         </div>
-                        
-                        @if($product->has_size_options)
-                        <div class="mb-4">
-                            <h5 class="mb-3">Size</h5>
-                            <div class="d-flex flex-wrap gap-2">
-                                @php
-                                    $sizeOptions = $product->size_options ?? [];
-                                    if (!is_array($sizeOptions) && !empty($sizeOptions)) {
-                                        // Convert JSON string to array if needed
-                                        $sizeOptions = json_decode($sizeOptions, true) ?? [];
-                                    }
-                                @endphp
-                                
-                                @foreach($sizeOptions as $option)
-                                    <label class="btn btn-outline-secondary size-option">
-                                        <input type="radio" name="size" value="{{ $option }}" class="d-none"> {{ $option }}
-                                    </label>
-                                @endforeach
-                            </div>
-                        </div>
-                        @endif
-                        
-                        <div class="product-description">
-                            <h5>Description</h5>
-                            @php
-                            // Check if the description contains PRODUCT PARAMETERS
-                            $description = $product->description;
-                            $hasParameters = strpos($description, 'PRODUCT PARAMETERS') !== false;
-                            
-                            if ($hasParameters) {
-                                // Split the content
-                                $parts = explode('PRODUCT PARAMETERS', $description, 2);
-                                $mainDescription = trim($parts[0]);
-                                $parametersSection = trim($parts[1]);
-                                
-                                // Parse parameters - handle alternating lines as key-value pairs
-                                $lines = preg_split('/\r\n|\r|\n/', $parametersSection);
-                                $parameters = [];
-                                $currentKey = null;
-                                
-                                foreach ($lines as $i => $line) {
-                                    $line = trim($line);
-                                    if (empty($line)) continue;
-                                    
-                                    if ($i % 2 === 0) {
-                                        // Even lines are keys
-                                        $currentKey = $line;
-                                    } else {
-                                        // Odd lines are values
-                                        if ($currentKey !== null) {
-                                            $parameters[$currentKey] = $line;
-                                        }
-                                    }
-                                }
-                            } else {
-                                $mainDescription = $description;
-                            }
-                            @endphp
-                            
-                            <p>{!! nl2br(e($mainDescription ?? $description)) !!}</p>
-                        </div>
-
-                        @if($product->pdf_file)
-                        <div class="pdf-documentation mt-3">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-file-pdf fa-2x text-danger me-2"></i>
-                                <div>
-                                    <h6 class="mb-1">Product Documentation</h6>
-                                    <a href="{{ Storage::url($product->pdf_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-download me-1"></i> View PDF
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
-
-                        @if(isset($parameters) && count($parameters) > 0)
-                        <div class="product-parameters">
-                            <h5>Technical Specifications</h5>
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <tbody>
-                                        @foreach($parameters as $key => $value)
-                                        <tr>
-                                            <td class="fw-medium" style="width: 40%;">{{ $key }}</td>
-                                            <td>{{ $value }}</td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        @endif
-
-                        @php
-                            $specImage = $product->images->first(function($image) {
-                                return !empty($image->specification_image_url);
-                            });
-                        @endphp
                     </div>
                 </div>
             </div>
+            @endif
+            
+            <!-- Technical Specifications -->
+            @if(isset($parameters) && count($parameters) > 0)
+            <div class="section-card">
+                <div class="card-header">
+                    <h4>Technical Specifications</h4>
+                </div>
+                <div class="card-body">
+                    <table class="specifications-table">
+                        <tbody>
+                            @foreach($parameters as $key => $value)
+                            <tr>
+                                <td>{{ $key }}</td>
+                                <td>{{ $value }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 
+    <!-- Specification Image (if available) -->
+    @php
+        $specImage = $product->images->first(function($image) {
+            return !empty($image->specification_image_url);
+        });
+    @endphp
+    
     @if(isset($specImage) && $specImage)
-    <div class="row mt-5">
-        <div class="col-12">
-            <div class="card specification-card">
-                <div class="card-header bg-light">
-                    <h3 class="text-main m-0"><i class="fas fa-file-alt me-2"></i>Product Specifications</h3>
-                </div>
-                <div class="card-body p-0">
-                    <img src="{{ $specImage->specification_image_url }}" 
-                         alt="Product specifications" 
-                         class="img-fluid w-100 specification-img-large" 
-                         style="cursor: pointer; max-height: 800px; object-fit: contain;"
-                         onclick="window.open(this.src, '_blank')">
-                </div>
-                <div class="card-footer text-center bg-light">
-                    <button class="btn btn-sm btn-outline-primary" onclick="window.open('{{ $specImage->specification_image_url }}', '_blank')">
-                        <i class="fas fa-search-plus me-1"></i> View Full Size
-                    </button>
-                </div>
-            </div>
+    <div class="section-card mb-4">
+        <div class="card-header">
+            <h4>Product Specifications Diagram</h4>
+        </div>
+        <div class="card-body p-3">
+            <img src="{{ $specImage->specification_image_url }}" 
+                 alt="Product specifications diagram" 
+                 class="specifications-image" 
+                 onclick="window.open(this.src, '_blank')">
         </div>
     </div>
     @endif
@@ -592,13 +752,11 @@
                 option.addEventListener('click', function() {
                     // Remove active class from all options
                     sizeOptions.forEach(o => {
-                        o.classList.remove('active', 'btn-primary');
-                        o.classList.add('btn-outline-secondary');
+                        o.classList.remove('active');
                     });
                     
                     // Add active class to selected option
-                    this.classList.remove('btn-outline-secondary');
-                    this.classList.add('active', 'btn-primary');
+                    this.classList.add('active');
                     
                     // Check the radio input
                     const radioInput = this.querySelector('input[type="radio"]');
@@ -746,29 +904,18 @@
         // Make changeImage function globally available
         window.changeImage = changeImage;
 
-        const smallImgs = document.querySelectorAll('.small-img');
-        smallImgs.forEach(img => {
-            img.addEventListener('click', function() {
-                changeImage(this.src);
-            });
+        // Add fade-in effect for sections
+        const sections = document.querySelectorAll('.section-card');
+        sections.forEach((section, index) => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.4s ease, transform 0.5s ease';
+            
+            setTimeout(() => {
+                section.style.opacity = '1';
+                section.style.transform = 'translateY(0)';
+            }, 100 + (index * 150));
         });
-
-        // Add fade-in effect
-        const productContainer = document.querySelector('.product-image-container');
-        const productInfo = document.querySelector('.product-info-section');
-
-        if (productContainer && productInfo) {
-            [productContainer, productInfo].forEach((el, index) => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(20px)';
-                el.style.transition = 'opacity 0.4s ease, transform 0.5s ease';
-
-                setTimeout(() => {
-                    el.style.opacity = '1';
-                    el.style.transform = 'translateY(0)';
-                }, 100 + (index * 100));
-            });
-        }
         
         // Handle image gallery scrolling
         const scrollLeftBtn = document.getElementById('scroll-left');
