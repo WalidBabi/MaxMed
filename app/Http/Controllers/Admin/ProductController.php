@@ -14,12 +14,15 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with(['category', 'inventory', 'brand']);
+        $query = Product::with(['category', 'inventory', 'brand', 'images']);
         
         // Filter by product name
         if ($request->filled('search')) {
-            $search = $request->input('search');
-            $query->where('name', 'like', "%{$search}%");
+            $search = strtolower($request->input('search'));
+            $query->where(function($q) use ($search) {
+                $q->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"])
+                  ->orWhereRaw('LOWER(description) LIKE ?', ["%{$search}%"]);
+            });
         }
         
         // Filter by category
@@ -203,28 +206,28 @@ class ProductController extends Controller
             'size_options.*' => 'nullable|string|max:50'
         ]);
 
-        DB::transaction(function () use ($request, $product, $validated) {
-            // Update product details
-            $product->update([
-                'name' => $validated['name'],
-                'description' => $validated['description'],
-                'price' => $validated['price'],
-                'price_aed' => $validated['price_aed'],
-                'category_id' => $validated['category_id'],
-                'brand_id' => $validated['brand_id'],
-                'has_size_options' => $request->has('has_size_options'),
-                'size_options' => $request->has('has_size_options') && $request->filled('size_options') ? 
-                                  json_encode(array_filter($request->size_options)) : null,
-            ]);
+        try {
+            DB::transaction(function () use ($request, $product, $validated) {
+                // Update product details
+                $product->update([
+                    'name' => $validated['name'],
+                    'description' => $validated['description'],
+                    'price' => $validated['price'],
+                    'price_aed' => $validated['price_aed'],
+                    'category_id' => $validated['category_id'],
+                    'brand_id' => $validated['brand_id'],
+                    'has_size_options' => $request->has('has_size_options'),
+                    'size_options' => $request->has('has_size_options') && $request->filled('size_options') ? 
+                                    json_encode(array_filter($request->size_options)) : null,
+                ]);
 
-            // Update inventory quantity
-            $product->inventory->update([
-                'quantity' => $validated['inventory_quantity']
-            ]);
+                // Update inventory quantity
+                $product->inventory->update([
+                    'quantity' => $validated['inventory_quantity']
+                ]);
 
-            // Handle primary image upload if provided
-            if ($request->hasFile('image')) {
-                try {
+                // Handle primary image upload if provided
+                if ($request->hasFile('image')) {
                     $file = $request->file('image');
                     Log::info('Attempting to upload image', [
                         'original_name' => $file->getClientOriginalName(),
@@ -232,17 +235,6 @@ class ProductController extends Controller
                         'size' => $file->getSize(),
                         'error' => $file->getError()
                     ]);
-
-                    // Validate file size
-                    if ($file->getSize() > 5000000) { // 5MB in bytes
-                        throw new \Exception('File size exceeds 5MB limit');
-                    }
-
-                    // Validate mime type
-                    $allowedMimes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
-                    if (!in_array($file->getMimeType(), $allowedMimes)) {
-                        throw new \Exception('Invalid file type. Allowed types: JPEG, PNG, JPG, GIF, WEBP');
-                    }
 
                     // Ensure the storage directory exists
                     $storagePath = 'products';
@@ -293,136 +285,138 @@ class ProductController extends Controller
                     // Update product's main image_url field for backward compatibility
                     $product->update(['image_url' => $imageUrl]);
                     Log::info('Product image_url updated', ['url' => $imageUrl]);
-                    
-                } catch (\Exception $e) {
-                    Log::error('Primary image upload failed', [
-                        'error' => $e->getMessage(),
-                        'trace' => $e->getTraceAsString()
-                    ]);
-                    throw new \Exception('Failed to upload primary image: ' . $e->getMessage());
                 }
-            }
 
-            // Handle additional images
-            if ($request->hasFile('additional_images')) {
-                try {
-                    $sortOrder = $product->images()->max('sort_order') + 1;
-                    foreach ($request->file('additional_images') as $image) {
-                        $path = $image->store('products', 'public');
+                // Handle additional images
+                if ($request->hasFile('additional_images')) {
+                    try {
+                        $sortOrder = $product->images()->max('sort_order') + 1;
+                        foreach ($request->file('additional_images') as $image) {
+                            $path = $image->store('products', 'public');
+                            $imageUrl = asset('storage/' . $path);
+                            
+                            $product->images()->create([
+                                'image_path' => $path,
+                                'image_url' => $imageUrl,
+                                'is_primary' => false,
+                                'sort_order' => $sortOrder++
+                            ]);
+                        }
+                    } catch (\Exception $e) {
+                        \Log::error('Additional images upload failed: ' . $e->getMessage());
+                        throw new \Exception('Failed to upload additional images. Please try again.');
+                    }
+                }
+
+                // Handle specification image if uploaded
+                if ($request->hasFile('specification_image')) {
+                    // Check if there's an existing specification image
+                    $existingSpecImage = $product->images()->whereNotNull('specification_image_url')->first();
+                    
+                    if ($existingSpecImage) {
+                        // Delete the old specification image file
+                        if (Storage::disk('public')->exists($existingSpecImage->image_path)) {
+                            Storage::disk('public')->delete($existingSpecImage->image_path);
+                        }
+                        
+                        // Update the existing record
+                        $path = $request->file('specification_image')->store('products/specifications', 'public');
+                        $imageUrl = asset('storage/' . $path);
+                        
+                        $existingSpecImage->update([
+                            'image_path' => $path,
+                            'image_url' => $imageUrl,
+                            'specification_image_url' => $imageUrl
+                        ]);
+                    } else {
+                        // Create a new specification image record
+                        $path = $request->file('specification_image')->store('products/specifications', 'public');
                         $imageUrl = asset('storage/' . $path);
                         
                         $product->images()->create([
                             'image_path' => $path,
                             'image_url' => $imageUrl,
+                            'specification_image_url' => $imageUrl,
                             'is_primary' => false,
-                            'sort_order' => $sortOrder++
+                            'sort_order' => 999 // High sort order to appear at the end
                         ]);
                     }
-                } catch (\Exception $e) {
-                    \Log::error('Additional images upload failed: ' . $e->getMessage());
-                    throw new \Exception('Failed to upload additional images. Please try again.');
                 }
-            }
 
-            // Handle specification image if uploaded
-            if ($request->hasFile('specification_image')) {
-                // Check if there's an existing specification image
-                $existingSpecImage = $product->images()->whereNotNull('specification_image_url')->first();
-                
-                if ($existingSpecImage) {
-                    // Delete the old specification image file
-                    if (Storage::disk('public')->exists($existingSpecImage->image_path)) {
-                        Storage::disk('public')->delete($existingSpecImage->image_path);
+                // Handle PDF file if uploaded
+                if ($request->hasFile('pdf_file')) {
+                    // Delete old PDF if exists
+                    if ($product->pdf_file && Storage::disk('public')->exists($product->pdf_file)) {
+                        Storage::disk('public')->delete($product->pdf_file);
                     }
                     
-                    // Update the existing record
-                    $path = $request->file('specification_image')->store('products/specifications', 'public');
-                    $imageUrl = asset('storage/' . $path);
-                    
-                    $existingSpecImage->update([
-                        'image_path' => $path,
-                        'image_url' => $imageUrl,
-                        'specification_image_url' => $imageUrl
-                    ]);
-                } else {
-                    // Create a new specification image record
-                    $path = $request->file('specification_image')->store('products/specifications', 'public');
-                    $imageUrl = asset('storage/' . $path);
-                    
-                    $product->images()->create([
-                        'image_path' => $path,
-                        'image_url' => $imageUrl,
-                        'specification_image_url' => $imageUrl,
-                        'is_primary' => false,
-                        'sort_order' => 999 // High sort order to appear at the end
-                    ]);
+                    $path = $request->file('pdf_file')->store('products/pdfs', 'public');
+                    $product->update(['pdf_file' => $path]);
                 }
-            }
 
-            // Handle PDF file if uploaded
-            if ($request->hasFile('pdf_file')) {
-                // Delete old PDF if exists
-                if ($product->pdf_file && Storage::disk('public')->exists($product->pdf_file)) {
-                    Storage::disk('public')->delete($product->pdf_file);
+                // Handle PDF deletion if requested
+                if ($request->has('delete_pdf') && $request->delete_pdf == '1') {
+                    if ($product->pdf_file && Storage::disk('public')->exists($product->pdf_file)) {
+                        Storage::disk('public')->delete($product->pdf_file);
+                        $product->update(['pdf_file' => null]);
+                    }
                 }
-                
-                $path = $request->file('pdf_file')->store('products/pdfs', 'public');
-                $product->update(['pdf_file' => $path]);
-            }
 
-            // Handle PDF deletion if requested
-            if ($request->has('delete_pdf') && $request->delete_pdf == '1') {
-                if ($product->pdf_file && Storage::disk('public')->exists($product->pdf_file)) {
-                    Storage::disk('public')->delete($product->pdf_file);
-                    $product->update(['pdf_file' => null]);
-                }
-            }
-
-            // Handle image deletions
-            if ($request->filled('delete_images')) {
-                $imageIds = explode(',', $request->delete_images);
-                
-                foreach ($imageIds as $imageId) {
-                    $image = $product->images()->find($imageId);
+                // Handle image deletions
+                if ($request->filled('delete_images')) {
+                    $imageIds = explode(',', $request->delete_images);
                     
-                    if ($image) {
-                        // Extract the relative path from the image_path
-                        // If image_path already contains the relative path
-                        if (Storage::disk('public')->exists($image->image_path)) {
-                            Storage::disk('public')->delete($image->image_path);
-                        } 
-                        // If image_path contains full URL
-                        else if (str_contains($image->image_url, 'storage/')) {
-                            $relativePath = str_replace(asset('storage/'), '', $image->image_url);
-                            if (Storage::disk('public')->exists($relativePath)) {
-                                Storage::disk('public')->delete($relativePath);
-                            }
-                        }
+                    foreach ($imageIds as $imageId) {
+                        $image = $product->images()->find($imageId);
                         
-                        // Delete the database record
-                        $image->delete();
+                        if ($image) {
+                            // Extract the relative path from the image_path
+                            // If image_path already contains the relative path
+                            if (Storage::disk('public')->exists($image->image_path)) {
+                                Storage::disk('public')->delete($image->image_path);
+                            } 
+                            // If image_path contains full URL
+                            else if (str_contains($image->image_url, 'storage/')) {
+                                $relativePath = str_replace(asset('storage/'), '', $image->image_url);
+                                if (Storage::disk('public')->exists($relativePath)) {
+                                    Storage::disk('public')->delete($relativePath);
+                                }
+                            }
+                            
+                            // Delete the database record
+                            $image->delete();
+                        }
                     }
                 }
-            }
 
-            // Handle changing the primary image
-            if ($request->filled('primary_image_id')) {
-                // Reset all images to non-primary
-                $product->images()->update(['is_primary' => false]);
-                
-                // Set the new primary image
-                $newPrimaryImage = $product->images()->find($request->primary_image_id);
-                if ($newPrimaryImage) {
-                    $newPrimaryImage->update(['is_primary' => true, 'sort_order' => 0]);
+                // Handle changing the primary image
+                if ($request->filled('primary_image_id')) {
+                    // Reset all images to non-primary
+                    $product->images()->update(['is_primary' => false]);
                     
-                    // Update the product's main image_url field
-                    $product->update(['image_url' => $newPrimaryImage->image_url]);
+                    // Set the new primary image
+                    $newPrimaryImage = $product->images()->find($request->primary_image_id);
+                    if ($newPrimaryImage) {
+                        $newPrimaryImage->update(['is_primary' => true, 'sort_order' => 0]);
+                        
+                        // Update the product's main image_url field
+                        $product->update(['image_url' => $newPrimaryImage->image_url]);
+                    }
                 }
-            }
-        });
+            });
 
-        return redirect()->route('admin.products.index')
-            ->with('success', 'Product updated successfully');
+            return redirect()->route('admin.products.index')
+                ->with('success', 'Product updated successfully');
+        } catch (\Exception $e) {
+            Log::error('Product update failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Failed to update product: ' . $e->getMessage()]);
+        }
     }
 
     public function destroy(Product $product)
