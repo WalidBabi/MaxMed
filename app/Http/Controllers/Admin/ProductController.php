@@ -251,8 +251,8 @@ class ProductController extends Controller
                     
                     Log::info('File stored successfully', ['path' => $path]);
                     
-                    // Generate the full URL
-                    $imageUrl = Storage::disk('public')->url($path);
+                    // Generate the full URL using the correct path
+                    $imageUrl = url('storage/' . $path);
                     Log::info('Generated image URL', ['url' => $imageUrl]);
                     
                     // If this product already has a primary image, update it
@@ -260,7 +260,7 @@ class ProductController extends Controller
                         Log::info('Updating existing primary image', ['image_id' => $primaryImage->id]);
                         
                         // Delete the old primary image file
-                        if (Storage::disk('public')->exists($primaryImage->image_path)) {
+                        if ($primaryImage->image_path && Storage::disk('public')->exists($primaryImage->image_path)) {
                             Storage::disk('public')->delete($primaryImage->image_path);
                             Log::info('Old primary image deleted', ['path' => $primaryImage->image_path]);
                         }
@@ -292,8 +292,12 @@ class ProductController extends Controller
                     try {
                         $sortOrder = $product->images()->max('sort_order') + 1;
                         foreach ($request->file('additional_images') as $image) {
-                            $path = $image->store('products', 'public');
-                            $imageUrl = asset('storage/' . $path);
+                            $path = $image->store($storagePath, 'public');
+                            if (!$path) {
+                                throw new \Exception('Failed to store additional image');
+                            }
+                            
+                            $imageUrl = url('storage/' . $path);
                             
                             $product->images()->create([
                                 'image_path' => $path,
@@ -303,43 +307,60 @@ class ProductController extends Controller
                             ]);
                         }
                     } catch (\Exception $e) {
-                        \Log::error('Additional images upload failed: ' . $e->getMessage());
-                        throw new \Exception('Failed to upload additional images. Please try again.');
+                        Log::error('Additional images upload failed', [
+                            'error' => $e->getMessage(),
+                            'trace' => $e->getTraceAsString()
+                        ]);
+                        throw new \Exception('Failed to upload additional images: ' . $e->getMessage());
                     }
                 }
 
                 // Handle specification image if uploaded
                 if ($request->hasFile('specification_image')) {
-                    // Check if there's an existing specification image
-                    $existingSpecImage = $product->images()->whereNotNull('specification_image_url')->first();
-                    
-                    if ($existingSpecImage) {
-                        // Delete the old specification image file
-                        if (Storage::disk('public')->exists($existingSpecImage->image_path)) {
-                            Storage::disk('public')->delete($existingSpecImage->image_path);
+                    try {
+                        $specPath = 'products/specifications';
+                        if (!Storage::disk('public')->exists($specPath)) {
+                            Storage::disk('public')->makeDirectory($specPath);
                         }
                         
-                        // Update the existing record
-                        $path = $request->file('specification_image')->store('products/specifications', 'public');
-                        $imageUrl = asset('storage/' . $path);
+                        $path = $request->file('specification_image')->store($specPath, 'public');
+                        if (!$path) {
+                            throw new \Exception('Failed to store specification image');
+                        }
                         
-                        $existingSpecImage->update([
-                            'image_path' => $path,
-                            'image_url' => $imageUrl,
-                            'specification_image_url' => $imageUrl
-                        ]);
-                    } else {
-                        // Create a new specification image record
-                        $path = $request->file('specification_image')->store('products/specifications', 'public');
-                        $imageUrl = asset('storage/' . $path);
+                        $imageUrl = url('storage/' . $path);
                         
-                        $product->images()->create([
-                            'image_path' => $path,
-                            'image_url' => $imageUrl,
-                            'specification_image_url' => $imageUrl,
-                            'is_primary' => false,
-                            'sort_order' => 999 // High sort order to appear at the end
+                        // Check if there's an existing specification image
+                        $existingSpecImage = $product->images()->whereNotNull('specification_image_url')->first();
+                        
+                        if ($existingSpecImage) {
+                            // Delete the old specification image file
+                            if ($existingSpecImage->image_path && Storage::disk('public')->exists($existingSpecImage->image_path)) {
+                                Storage::disk('public')->delete($existingSpecImage->image_path);
+                            }
+                            
+                            // Update the existing record
+                            $existingSpecImage->update([
+                                'image_path' => $path,
+                                'image_url' => $imageUrl,
+                                'specification_image_url' => $imageUrl
+                            ]);
+                        } else {
+                            // Create a new specification image record
+                            $product->images()->create([
+                                'image_path' => $path,
+                                'image_url' => $imageUrl,
+                                'specification_image_url' => $imageUrl,
+                                'is_primary' => false,
+                                'sort_order' => 999
+                            ]);
+                        }
+                    } catch (\Exception $e) {
+                        Log::error('Specification image upload failed', [
+                            'error' => $e->getMessage(),
+                            'trace' => $e->getTraceAsString()
                         ]);
+                        throw new \Exception('Failed to upload specification image: ' . $e->getMessage());
                     }
                 }
 
