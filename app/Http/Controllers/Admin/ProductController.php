@@ -226,7 +226,7 @@ class ProductController extends Controller
             if ($request->hasFile('image')) {
                 try {
                     $file = $request->file('image');
-                    \Log::info('Attempting to upload image', [
+                    Log::info('Attempting to upload image', [
                         'original_name' => $file->getClientOriginalName(),
                         'mime_type' => $file->getMimeType(),
                         'size' => $file->getSize(),
@@ -244,19 +244,33 @@ class ProductController extends Controller
                         throw new \Exception('Invalid file type. Allowed types: JPEG, PNG, JPG, GIF, WEBP');
                     }
 
-                    $path = $file->store('products', 'public');
-                    \Log::info('File stored successfully', ['path' => $path]);
+                    // Ensure the storage directory exists
+                    $storagePath = 'products';
+                    if (!Storage::disk('public')->exists($storagePath)) {
+                        Storage::disk('public')->makeDirectory($storagePath);
+                        Log::info('Created storage directory', ['path' => $storagePath]);
+                    }
+
+                    // Store the file
+                    $path = $file->store($storagePath, 'public');
+                    if (!$path) {
+                        throw new \Exception('Failed to store file in storage');
+                    }
                     
-                    $imageUrl = asset('storage/' . $path);
+                    Log::info('File stored successfully', ['path' => $path]);
+                    
+                    // Generate the full URL
+                    $imageUrl = Storage::disk('public')->url($path);
+                    Log::info('Generated image URL', ['url' => $imageUrl]);
                     
                     // If this product already has a primary image, update it
                     if ($primaryImage = $product->images()->where('is_primary', true)->first()) {
-                        \Log::info('Updating existing primary image', ['image_id' => $primaryImage->id]);
+                        Log::info('Updating existing primary image', ['image_id' => $primaryImage->id]);
                         
                         // Delete the old primary image file
                         if (Storage::disk('public')->exists($primaryImage->image_path)) {
                             Storage::disk('public')->delete($primaryImage->image_path);
-                            \Log::info('Old primary image deleted', ['path' => $primaryImage->image_path]);
+                            Log::info('Old primary image deleted', ['path' => $primaryImage->image_path]);
                         }
                         
                         // Update the primary image record
@@ -264,9 +278,9 @@ class ProductController extends Controller
                             'image_path' => $path,
                             'image_url' => $imageUrl
                         ]);
-                        \Log::info('Primary image record updated');
+                        Log::info('Primary image record updated');
                     } else {
-                        \Log::info('Creating new primary image record');
+                        Log::info('Creating new primary image record');
                         // Create a new primary image record
                         $product->images()->create([
                             'image_path' => $path,
@@ -278,10 +292,10 @@ class ProductController extends Controller
                     
                     // Update product's main image_url field for backward compatibility
                     $product->update(['image_url' => $imageUrl]);
-                    \Log::info('Product image_url updated', ['url' => $imageUrl]);
+                    Log::info('Product image_url updated', ['url' => $imageUrl]);
                     
                 } catch (\Exception $e) {
-                    \Log::error('Primary image upload failed', [
+                    Log::error('Primary image upload failed', [
                         'error' => $e->getMessage(),
                         'trace' => $e->getTraceAsString()
                     ]);
