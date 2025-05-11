@@ -290,6 +290,7 @@ class ProductController extends Controller
                 // Handle additional images
                 if ($request->hasFile('additional_images')) {
                     try {
+                        $storagePath = 'products';
                         $sortOrder = $product->images()->max('sort_order') + 1;
                         foreach ($request->file('additional_images') as $image) {
                             $path = $image->store($storagePath, 'public');
