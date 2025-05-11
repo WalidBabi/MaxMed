@@ -8,6 +8,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -224,14 +225,38 @@ class ProductController extends Controller
             // Handle primary image upload if provided
             if ($request->hasFile('image')) {
                 try {
-                    $path = $request->file('image')->store('products', 'public');
+                    $file = $request->file('image');
+                    \Log::info('Attempting to upload image', [
+                        'original_name' => $file->getClientOriginalName(),
+                        'mime_type' => $file->getMimeType(),
+                        'size' => $file->getSize(),
+                        'error' => $file->getError()
+                    ]);
+
+                    // Validate file size
+                    if ($file->getSize() > 5000000) { // 5MB in bytes
+                        throw new \Exception('File size exceeds 5MB limit');
+                    }
+
+                    // Validate mime type
+                    $allowedMimes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
+                    if (!in_array($file->getMimeType(), $allowedMimes)) {
+                        throw new \Exception('Invalid file type. Allowed types: JPEG, PNG, JPG, GIF, WEBP');
+                    }
+
+                    $path = $file->store('products', 'public');
+                    \Log::info('File stored successfully', ['path' => $path]);
+                    
                     $imageUrl = asset('storage/' . $path);
                     
                     // If this product already has a primary image, update it
                     if ($primaryImage = $product->images()->where('is_primary', true)->first()) {
+                        \Log::info('Updating existing primary image', ['image_id' => $primaryImage->id]);
+                        
                         // Delete the old primary image file
                         if (Storage::disk('public')->exists($primaryImage->image_path)) {
                             Storage::disk('public')->delete($primaryImage->image_path);
+                            \Log::info('Old primary image deleted', ['path' => $primaryImage->image_path]);
                         }
                         
                         // Update the primary image record
@@ -239,7 +264,9 @@ class ProductController extends Controller
                             'image_path' => $path,
                             'image_url' => $imageUrl
                         ]);
+                        \Log::info('Primary image record updated');
                     } else {
+                        \Log::info('Creating new primary image record');
                         // Create a new primary image record
                         $product->images()->create([
                             'image_path' => $path,
@@ -251,9 +278,14 @@ class ProductController extends Controller
                     
                     // Update product's main image_url field for backward compatibility
                     $product->update(['image_url' => $imageUrl]);
+                    \Log::info('Product image_url updated', ['url' => $imageUrl]);
+                    
                 } catch (\Exception $e) {
-                    \Log::error('Primary image upload failed: ' . $e->getMessage());
-                    throw new \Exception('Failed to upload primary image. Please try again.');
+                    \Log::error('Primary image upload failed', [
+                        'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString()
+                    ]);
+                    throw new \Exception('Failed to upload primary image: ' . $e->getMessage());
                 }
             }
 
