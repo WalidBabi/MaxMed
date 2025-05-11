@@ -205,12 +205,12 @@ class ProductController extends Controller
         DB::transaction(function () use ($request, $product, $validated) {
             // Update product details
             $product->update([
-                'name' => $request->name,
-                'description' => $request->description,
-                'price' => $request->price,
-                'price_aed' => $request->price_aed,
-                'category_id' => $request->category_id,
-                'brand_id' => $request->brand_id,
+                'name' => $validated['name'],
+                'description' => $validated['description'],
+                'price' => $validated['price'],
+                'price_aed' => $validated['price_aed'],
+                'category_id' => $validated['category_id'],
+                'brand_id' => $validated['brand_id'],
                 'has_size_options' => $request->has('has_size_options'),
                 'size_options' => $request->has('has_size_options') && $request->filled('size_options') ? 
                                   json_encode(array_filter($request->size_options)) : null,
@@ -218,7 +218,7 @@ class ProductController extends Controller
 
             // Update inventory quantity
             $product->inventory->update([
-                'quantity' => $request->inventory_quantity
+                'quantity' => $validated['inventory_quantity']
             ]);
 
             // Handle primary image upload if provided
