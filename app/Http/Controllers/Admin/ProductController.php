@@ -223,48 +223,58 @@ class ProductController extends Controller
 
             // Handle primary image upload if provided
             if ($request->hasFile('image')) {
-                $path = $request->file('image')->store('products', 'public');
-                $imageUrl = asset('storage/' . $path);
-                
-                // If this product already has a primary image, update it
-                if ($primaryImage = $product->images()->where('is_primary', true)->first()) {
-                    // Delete the old primary image file
-                    if (Storage::disk('public')->exists($primaryImage->image_path)) {
-                        Storage::disk('public')->delete($primaryImage->image_path);
+                try {
+                    $path = $request->file('image')->store('products', 'public');
+                    $imageUrl = asset('storage/' . $path);
+                    
+                    // If this product already has a primary image, update it
+                    if ($primaryImage = $product->images()->where('is_primary', true)->first()) {
+                        // Delete the old primary image file
+                        if (Storage::disk('public')->exists($primaryImage->image_path)) {
+                            Storage::disk('public')->delete($primaryImage->image_path);
+                        }
+                        
+                        // Update the primary image record
+                        $primaryImage->update([
+                            'image_path' => $path,
+                            'image_url' => $imageUrl
+                        ]);
+                    } else {
+                        // Create a new primary image record
+                        $product->images()->create([
+                            'image_path' => $path,
+                            'image_url' => $imageUrl,
+                            'is_primary' => true,
+                            'sort_order' => 0
+                        ]);
                     }
                     
-                    // Update the primary image record
-                    $primaryImage->update([
-                        'image_path' => $path,
-                        'image_url' => $imageUrl
-                    ]);
-                } else {
-                    // Create a new primary image record
-                    $product->images()->create([
-                        'image_path' => $path,
-                        'image_url' => $imageUrl,
-                        'is_primary' => true,
-                        'sort_order' => 0
-                    ]);
+                    // Update product's main image_url field for backward compatibility
+                    $product->update(['image_url' => $imageUrl]);
+                } catch (\Exception $e) {
+                    \Log::error('Primary image upload failed: ' . $e->getMessage());
+                    throw new \Exception('Failed to upload primary image. Please try again.');
                 }
-                
-                // Update product's main image_url field for backward compatibility
-                $product->update(['image_url' => $imageUrl]);
             }
 
             // Handle additional images
             if ($request->hasFile('additional_images')) {
-                $sortOrder = $product->images()->max('sort_order') + 1;
-                foreach ($request->file('additional_images') as $image) {
-                    $path = $image->store('products', 'public');
-                    $imageUrl = asset('storage/' . $path);
-                    
-                    $product->images()->create([
-                        'image_path' => $path,
-                        'image_url' => $imageUrl,
-                        'is_primary' => false,
-                        'sort_order' => $sortOrder++
-                    ]);
+                try {
+                    $sortOrder = $product->images()->max('sort_order') + 1;
+                    foreach ($request->file('additional_images') as $image) {
+                        $path = $image->store('products', 'public');
+                        $imageUrl = asset('storage/' . $path);
+                        
+                        $product->images()->create([
+                            'image_path' => $path,
+                            'image_url' => $imageUrl,
+                            'is_primary' => false,
+                            'sort_order' => $sortOrder++
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    \Log::error('Additional images upload failed: ' . $e->getMessage());
+                    throw new \Exception('Failed to upload additional images. Please try again.');
                 }
             }
 
