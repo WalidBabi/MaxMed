@@ -37,4 +37,20 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    /**
+     * Get the delivery associated with the order.
+     */
+    public function delivery()
+    {
+        return $this->hasOne(Delivery::class);
+    }
+
+    /**
+     * Check if the order has a delivery.
+     */
+    public function hasDelivery(): bool
+    {
+        return $this->delivery()->exists();
+    }
 } 

@@ -285,6 +285,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('admin.deliveries.index') }}" class="nav-link {{ request()->routeIs('admin.deliveries.*') ? 'active' : '' }}">
+                        <i class="fas fa-truck me-2"></i>
+                        Deliveries
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                         <i class="fas fa-th-large me-2"></i>
                         Categories
@@ -294,6 +300,12 @@
                     <a href="{{ route('admin.brands.index') }}" class="nav-link {{ request()->routeIs('admin.brands.*') ? 'active' : '' }}">
                         <i class="fas fa-tag me-2"></i>
                         Brands
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.customers.index') }}" class="nav-link {{ request()->routeIs('admin.customers.*') ? 'active' : '' }}">
+                        <i class="fas fa-users me-2"></i>
+                        Customers
                     </a>
                 </li>
             </ul>

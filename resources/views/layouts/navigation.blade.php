@@ -55,6 +55,7 @@
                 
                         <a href="{{ route('welcome') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Home</a>
                         <a href="{{ route('about') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">About</a>
+                        <a href="/partners" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Partners</a>
 
                         <!-- Products Dropdown -->
                         <div class="relative inline-block" 
@@ -292,6 +293,7 @@
 
                 <a href="{{ route('welcome') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Home</a>
                 <a href="{{ route('about') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">About Us</a>
+                <a href="/partners" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Partners</a>
 
                 <!-- Mobile Products Dropdown -->
                 <div x-data="{ open: false }" x-cloak class="relative">

@@ -68,6 +68,29 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 dashboard-stat-card" onclick="window.location='{{ route('admin.deliveries.index') }}'" style="cursor: pointer;">
+                <div class="card-body">
+                    <div class="stat-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h5 class="card-title">Deliveries</h5>
+                    @php
+                        $deliveryCount = \App\Models\Delivery::count();
+                        $inTransitCount = \App\Models\Delivery::where('status', 'in_transit')->count();
+                        $deliveredCount = \App\Models\Delivery::where('status', 'delivered')->count();
+                        $pendingCount = \App\Models\Delivery::where('status', 'pending')->count();
+                    @endphp
+                    <p class="card-text display-4">{{ $deliveryCount }}</p>
+                    <div class="delivery-stats mt-2">
+                        <span class="badge bg-primary me-1">In Transit: {{ $inTransitCount }}</span>
+                        <span class="badge bg-success me-1">Delivered: {{ $deliveredCount }}</span>
+                        <span class="badge bg-warning">Pending: {{ $pendingCount }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="row">
@@ -191,6 +214,24 @@
     .dashboard-stat-card:nth-child(5) .stat-icon {
         background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.2));
         border-left: 4px solid #dc3545;
+    }
+
+    .dashboard-stat-card:nth-child(6),
+    .dashboard-stat-card:nth-child(6) .stat-icon {
+        background: linear-gradient(135deg, rgba(13, 110, 253, 0.1), rgba(13, 110, 253, 0.2));
+        border-left: 4px solid #0d6efd;
+    }
+    
+    .delivery-stats {
+        font-size: 0.75rem;
+        line-height: 1.2;
+    }
+    
+    .delivery-stats .badge {
+        margin-bottom: 0.25rem;
+        display: inline-block;
+        padding: 0.25rem 0.4rem;
+        font-weight: 500;
     }
 
     .dashboard-stat-card:hover {

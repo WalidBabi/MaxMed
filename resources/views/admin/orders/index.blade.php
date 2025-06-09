@@ -4,6 +4,9 @@
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Orders Management</h1>
+        <a href="{{ route('admin.orders.create') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Create New Order
+        </a>
     </div>
 
     <div class="card">

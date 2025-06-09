@@ -27,6 +27,14 @@ use App\Http\Controllers\IndustryController;
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
 Route::get('/about', fn() => view('about'))->name('about');
 Route::get('/contact', fn() => view('contact'))->name('contact');
+
+// Partners Route Group
+Route::group(['namespace' => 'App\Http\Controllers'], function() {
+    // Simple test route
+    Route::get('/partners', function() {
+        return view('partners.index');
+    })->name('partners');
+});
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/product/{product}', [ProductController::class, 'show'])->name('product.show');
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
@@ -78,6 +86,8 @@ Route::middleware('auth')->group(function () {
         // Order Management
         Route::prefix('orders')->name('orders.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Admin\OrderController::class, 'index'])->name('index');
+            Route::get('/create', [\App\Http\Controllers\Admin\OrderController::class, 'create'])->name('create');
+            Route::post('/', [\App\Http\Controllers\Admin\OrderController::class, 'store'])->name('store');
             Route::get('/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('show');
             Route::put('/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('status.update');
         });
@@ -87,6 +97,19 @@ Route::middleware('auth')->group(function () {
         
         // Brand Management
         Route::resource('brands', \App\Http\Controllers\Admin\BrandController::class);
+
+                // Delivery Management
+        Route::resource('deliveries', \App\Http\Controllers\Admin\DeliveryController::class)->except(['show']);
+        Route::get('deliveries/{delivery}', [\App\Http\Controllers\Admin\DeliveryController::class, 'show'])->name('deliveries.show');
+        Route::post('deliveries/{delivery}/mark-as-shipped', [\App\Http\Controllers\Admin\DeliveryController::class, 'markAsShipped'])->name('deliveries.mark-as-shipped');
+        Route::post('deliveries/{delivery}/mark-as-delivered', [\App\Http\Controllers\Admin\DeliveryController::class, 'markAsDelivered'])->name('deliveries.mark-as-delivered');
+        Route::post('deliveries/{delivery}/update-status', [\App\Http\Controllers\Admin\DeliveryController::class, 'updateStatus'])->name('deliveries.update-status');
+        
+        // Add link to deliveries in the admin sidebar
+        Route::get('deliveries', [\App\Http\Controllers\Admin\DeliveryController::class, 'index'])->name('deliveries.index');
+        
+        // Customer Management
+        Route::resource('customers', \App\Http\Controllers\Admin\CustomerController::class);
     });
 });
 
@@ -113,6 +136,18 @@ Route::get('/test-mail', function () {
         return 'Error: ' . $e->getMessage();
     }
 })->name('test.mail');
+
+// Delivery Signature Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/deliveries/{delivery}/sign', [\App\Http\Controllers\DeliverySignatureController::class, 'show'])
+        ->name('deliveries.sign');
+    Route::post('/deliveries/{delivery}/sign', [\App\Http\Controllers\DeliverySignatureController::class, 'store'])
+        ->name('deliveries.sign.store');
+    
+    // Save signature to file
+    Route::post('/deliveries/{delivery}/save-signature', [\App\Http\Controllers\SignatureController::class, 'saveSignature'])
+        ->name('deliveries.signature.save');
+});
 
 // Orders Routes
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
