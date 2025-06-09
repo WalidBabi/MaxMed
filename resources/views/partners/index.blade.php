@@ -24,17 +24,17 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Supplier 1 -->
             <div class="flex items-center justify-center p-8 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
-                <img src="{{ asset('images/partners/Ringbio logo.png') }}" alt="Partner 1" class="max-h-40 w-auto">
+                <img src="{{ asset('images/partners/Ringbiologo.png') }}" alt="Partner 1" class="max-h-40 w-auto">
             </div>
 
             <!-- Supplier 2 -->
             <div class="flex items-center justify-center p-8 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
-                <img src="{{ asset('images/partners/Dlab logo.svg') }}" alt="HealthTech Solutions" class="max-h-40 w-auto">
+                <img src="{{ asset('images/partners/Dlablogo.svg') }}" alt="HealthTech Solutions" class="max-h-40 w-auto">
             </div>
 
             <!-- Supplier 3 -->
             <div class="flex items-center justify-center p-8 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
-                <img src="{{ asset('images/partners/Biobase logo.png') }}" alt="Global Medical Supply" class="max-h-40 w-auto">
+                <img src="{{ asset('images/partners/Biobaselogo.png') }}" alt="Global Medical Supply" class="max-h-40 w-auto">
             </div>
         </div>
     </div>
