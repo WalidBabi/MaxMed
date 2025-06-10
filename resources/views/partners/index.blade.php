@@ -24,21 +24,21 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Supplier 1 -->
             <div class="flex items-center justify-center p-8 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
-                <img src="{{ asset('Images/Partners/Ringbiologo.png') }}" alt="Partner 1" class="max-h-40 w-auto">
+                <img src="{{ asset('Images/Partners/Ringbiologo.png') }}" alt="Ringbio" class="max-h-40 w-auto">
             </div>
 
             <!-- Supplier 2 -->
             <div class="flex items-center justify-center p-8 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
-                <img src="{{ asset('Images/Partners/Dlablogo.svg') }}" alt="HealthTech Solutions" class="max-h-40 w-auto">
+                <img src="{{ asset('Images/Partners/Dlablogo.svg') }}" alt="Dlab" class="max-h-40 w-auto">
             </div>
 
             <!-- Supplier 3 -->
             <div class="flex items-center justify-center p-8 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
-                <img src="{{ asset('Images/Partners/Biobaselogo.png') }}" alt="Global Medical Supply" class="max-h-40 w-auto">
+                <img src="{{ asset('Images/Partners/Biobaselogo.png') }}" alt="Biobase" class="max-h-40 w-auto">
             </div>
              <!-- Supplier 4 -->
              <div class="flex items-center justify-center p-8 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
-                <img src="{{ asset('Images/Partners/AbeomicsLogo.png') }}" alt="Global Medical Supply" class="max-h-40 w-auto">
+                <img src="{{ asset('Images/Partners/AbeomicsLogo.png') }}" alt="Abeomics" class="max-h-40 w-auto">
             </div>
         </div>
     </div>
