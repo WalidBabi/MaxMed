@@ -16,7 +16,7 @@
             data-theme="outline"
             data-text="sign_in_with"
             data-shape="rectangular"
-            data-logo_alignment="left"
+            data-logo_alignment="right"
             data-width="300">
         </div>
     </div>
