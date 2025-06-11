@@ -9,6 +9,23 @@
 @push('head')
     <meta name="google-signin-client_id" content="{{ config('services.google.client_id') }}">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        // Global variable to track Google API ready state
+        window.googleAPILoaded = false;
+        
+        // Function to be called when Google API is loaded
+        function onGoogleAPILoaded() {
+            window.googleAPILoaded = true;
+            // If we have a pending initialize function, call it
+            if (window.pendingGoogleInit) {
+                window.pendingGoogleInit();
+                window.pendingGoogleInit = null;
+            }
+        }
+        
+        // Add event listener for Google API load
+        document.addEventListener('gapi.loaded', onGoogleAPILoaded);
+    </script>
 @endpush
 
 @section('content')
@@ -17,21 +34,34 @@
     <div id="g_id_onload"
         data-client_id="{{ config('services.google.client_id') }}"
         data-callback="handleCredentialResponse"
-        data-auto_prompt="true"
-        data-cancel_on_tap_outside="false"
+        data-auto_prompt="false"
         data-context="signin"
         data-ux_mode="popup"
         data-itp_support="true">
     </div>
     <div id="google-one-tap-container" class="google-one-tap-container">
-        <div class="g_id_signin"
-            data-type="standard"
-            data-size="large"
-            data-theme="outline"
-            data-text="sign_in_with"
-            data-shape="rectangular"
-            data-logo_alignment="left"
-            data-width="300">
+        <div class="google-one-tap-inner">
+            <div class="google-one-tap-header">
+                <h4>Sign in with Google</h4>
+                <button onclick="document.getElementById('google-one-tap-container').style.display='none'" class="google-one-tap-close">
+                    &times;
+                </button>
+            </div>
+            <div class="google-one-tap-content">
+                <p>Sign in for a faster, easier experience</p>
+                <div class="g_id_signin"
+                    data-type="standard"
+                    data-size="large"
+                    data-theme="outline"
+                    data-text="sign_in_with"
+                    data-shape="rectangular"
+                    data-logo_alignment="left"
+                    data-width="300">
+                </div>
+                <div class="google-one-tap-footer">
+                    <small>By continuing, you agree to our <a href="{{ route('privacy.policy') }}">Terms of Service</a> and <a href="{{ route('privacy.policy') }}">Privacy Policy</a>.</small>
+                </div>
+            </div>
         </div>
     </div>
 @endguest
@@ -41,14 +71,18 @@
         position: fixed;
         top: 20px;
         right: 20px;
-        z-index: 1050; /* Above navbar */
+        z-index: 9999; /* Ensure it's above everything */
         background: white;
         border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        padding: 15px;
-        transition: all 0.3s ease;
-        border: 1px solid #e0e0e0;
-        max-width: 350px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        max-width: 380px;
+        overflow: hidden;
+        transform: translateY(0);
+        opacity: 1;
+        display: none; /* Start hidden, will be shown by JS */
+        animation: slideIn 0.3s ease-out forwards;
         animation: slideIn 0.5s ease-out;
     }
     
@@ -57,9 +91,110 @@
         to { transform: translateY(0); opacity: 1; }
     }
 
-    .google-one-tap-container:hover {
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        transform: translateY(-2px);
+    .google-one-tap-inner {
+        position: relative;
+        padding: 0;
+    }
+
+    .google-one-tap-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 20px;
+        background: linear-gradient(135deg, #4285f4, #34a853);
+        color: white;
+    }
+
+    .google-one-tap-header h4 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    .google-one-tap-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0 8px;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+    }
+
+    .google-one-tap-close:hover {
+        opacity: 1;
+    }
+
+    .google-one-tap-content {
+        padding: 20px;
+    }
+
+    .google-one-tap-content p {
+        margin: 0 0 16px;
+        color: #5f6368;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .google-one-tap-footer {
+        margin-top: 16px;
+        padding-top: 12px;
+        border-top: 1px solid #f1f3f4;
+        text-align: center;
+    }
+
+    .google-one-tap-footer small {
+        font-size: 11px;
+        color: #9aa0a6;
+    }
+
+    .google-one-tap-footer a {
+        color: #1a73e8;
+        text-decoration: none;
+    }
+
+    .google-one-tap-footer a:hover {
+        text-decoration: underline;
+    }
+
+    /* Animation */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+        .google-one-tap-container {
+            right: 10px;
+            left: 10px;
+            max-width: none;
+            width: auto;
+        }
     }
 
     /* Enhanced Hero Section */
@@ -1178,6 +1313,43 @@
 
 <!-- Add JavaScript for Biology Particles -->
 <script>
+    // Show the Google One Tap container
+    function showGoogleOneTapContainer() {
+        const container = document.getElementById('google-one-tap-container');
+        if (container) {
+            container.style.display = 'block';
+            container.style.animation = 'slideIn 0.3s ease-out forwards';
+            
+            // Add click outside to close
+            setTimeout(() => {
+                document.addEventListener('click', handleClickOutside);
+            }, 100);
+        }
+    }
+    
+    // Hide the Google One Tap container
+    function hideGoogleOneTapContainer() {
+        const container = document.getElementById('google-one-tap-container');
+        if (container) {
+            container.style.animation = 'fadeOut 0.3s ease-out forwards';
+            setTimeout(() => {
+                container.style.display = 'none';
+                document.removeEventListener('click', handleClickOutside);
+            }, 300);
+        }
+    }
+    
+    // Handle clicks outside the container
+    function handleClickOutside(event) {
+        const container = document.getElementById('google-one-tap-container');
+        const button = document.querySelector('.g_id_signin iframe');
+        
+        if (container && !container.contains(event.target) && 
+            button && !button.contains(event.target)) {
+            hideGoogleOneTapContainer();
+        }
+    }
+
     // Initialize Google One Tap
     function initializeOneTap() {
         // Only initialize if user is not authenticated
@@ -1185,49 +1357,103 @@
             const container = document.getElementById('google-one-tap-container');
             if (!container) return;
 
-            // Make sure the Google API is loaded
-            if (!window.google || !window.google.accounts || !window.google.accounts.id) {
-                console.error('Google One Tap API not loaded');
-                return;
+            // Function to actually initialize Google One Tap
+            const initGoogleOneTap = () => {
+                // Make sure the Google API is loaded
+                if (!window.google || !window.google.accounts || !window.google.accounts.id) {
+                    console.error('Google One Tap API not loaded');
+                    return;
+                }
+                
+                // Set up the One Tap UI
+                try {
+
+                    // Configure Google One Tap
+                    window.google.accounts.id.initialize({
+                        client_id: '{{ config('services.google.client_id') }}',
+                        callback: handleCredentialResponse,
+                        context: 'signin',
+                        ux_mode: 'popup',
+                        itp_support: true,
+                        auto_select: true
+                    });
+                    
+                    // Show the One Tap UI
+                    try {
+                        window.google.accounts.id.prompt((notification) => {
+                            console.log('Google One Tap notification:', notification);
+                            if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                                console.log('One Tap prompt was not displayed or was skipped');
+                                showGoogleOneTapContainer();
+                            } else if (notification.getNotDisplayedReason() === 'suppressed_by_user') {
+                                console.log('One Tap was suppressed by user');
+                            }
+                        });
+                    } catch (error) {
+                        console.error('Error initializing Google One Tap:', error);
+                        showGoogleOneTapContainer();
+                    }
+
+                    // Show the container after a short delay if not shown by the prompt
+                    const showTimeout = setTimeout(() => {
+                        if (container && container.style.display !== 'block') {
+                            showGoogleOneTapContainer();
+                        }
+                        clearTimeout(showTimeout);
+                    }, 1500);
+                    
+                    // Clean up event listeners when the page is unloaded
+                    window.addEventListener('beforeunload', () => {
+                        clearTimeout(showTimeout);
+                        document.removeEventListener('click', handleClickOutside);
+                    });
+                } catch (error) {
+                    console.error('Error in Google One Tap initialization:', error);
+                    showGoogleOneTapContainer();
+                }
+            };
+
+            // Check if Google API is already loaded
+            if (window.googleAPILoaded) {
+                initGoogleOneTap();
+            } else {
+                // Store the init function to be called when Google API is loaded
+                window.pendingGoogleInit = initGoogleOneTap;
+                
+                // Set a timeout in case the Google API fails to load
+                setTimeout(() => {
+                    if (!window.googleAPILoaded && container) {
+                        console.error('Google API failed to load after timeout');
+                        container.style.display = 'block';
+                    }
+                }, 5000);
             }
-
-            // Configure Google One Tap
-            window.google.accounts.id.initialize({
-                client_id: '{{ config('services.google.client_id') }}',
-                callback: handleCredentialResponse,
-                context: 'signin',
-                ux_mode: 'popup',
-                itp_support: true
-            });
-            
-            // Show the One Tap UI
-            window.google.accounts.id.prompt((notification) => {
-                if (notification.isNotDisplayed()) {
-                    console.log('One Tap prompt was not displayed');
-                    container.style.display = 'block';
-                } else if (notification.isSkippedMoment()) {
-                    console.log('One Tap prompt was skipped');
-                    container.style.display = 'block';
-                } else {
-                    container.style.display = 'block';
-                }
-            });
-
-            // Show the container after a short delay if not shown by the prompt
-            setTimeout(() => {
-                if (container.style.display !== 'block') {
-                    container.style.display = 'block';
-                }
-            }, 1000);
         @endguest
     }
 
     // Handle Google One Tap response
     function handleCredentialResponse(response) {
-        const container = document.getElementById('google-one-tap-container');
-        if (container) container.style.display = 'none';
+        hideGoogleOneTapContainer();
         
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        // Show loading state
+        const container = document.getElementById('google-one-tap-container');
+        if (container) {
+            container.innerHTML = `
+                <div class="google-one-tap-loading" style="padding: 30px; text-align: center;">
+                    <div class="spinner" style="width: 30px; height: 30px; margin: 0 auto 15px; border: 3px solid #f3f3f3; border-top: 3px solid #4285f4; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                    <p>Signing you in...</p>
+                </div>
+            `;
+            container.style.display = 'block';
+        }
+        
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        
+        if (!csrfToken) {
+            console.error('CSRF token not found');
+            showError('Session expired. Please refresh the page and try again.');
+            return;
+        }
         
         fetch('/google/one-tap', {
             method: 'POST',
@@ -1235,31 +1461,63 @@
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': csrfToken,
                 'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
                 'g_csrf_token': csrfToken,
                 'credential': response.credential
             })
         })
-        .then(response => response.json())
-        .then(data => {
+        .then(async (response) => {
+            const data = await response.json();
+            
+            if (!response.ok) {
+                // Handle HTTP errors (4xx, 5xx)
+                const error = data.message || 'Failed to sign in with Google. Please try again.';
+                throw new Error(error);
+            }
+            
             if (data.redirect) {
-                window.location.href = data.redirect;
+                // Add a small delay to show the loading state
+                setTimeout(() => {
+                    window.location.href = data.redirect;
+                }, 500);
             } else if (data.error) {
                 throw new Error(data.error);
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            if (container) container.style.display = 'block'; // Show again on error
-            alert('Failed to sign in with Google. Please try again.');
+            showError(error.message || 'Failed to sign in with Google. Please try again.');
         });
+        
+        function showError(message) {
+            if (container) {
+                container.innerHTML = `
+                    <div class="google-one-tap-error" style="padding: 20px; text-align: center; color: #d32f2f;">
+                        <p style="margin: 0 0 15px;">${message}</p>
+                        <button onclick="initializeOneTap()" style="background: #4285f4; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px;">
+                            Try Again
+                        </button>
+                    </div>
+                `;
+                container.style.display = 'block';
+            } else {
+                alert(message);
+            }
+        }
     }
 
-    // Initialize One Tap when the page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeOneTap();
+    // Initialize One Tap when the page loads and Google API is ready
+    document.addEventListener('DOMContentLoaded', () => {
+        // Small delay to allow other scripts to load
+        setTimeout(initializeOneTap, 500);
     });
+    
+    // Also try to initialize if the script is loaded after DOMContentLoaded
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        setTimeout(initializeOneTap, 1000);
+    }
 
     function initBiologyParticles() {
         const container = document.getElementById('particle-container');

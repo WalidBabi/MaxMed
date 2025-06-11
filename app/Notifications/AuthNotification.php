@@ -13,14 +13,16 @@ class AuthNotification extends Notification
 
     public $type;
     public $user;
+    public $method;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($user, $type)
+    public function __construct($user, $type, $method = 'Email')
     {
         $this->user = $user;
         $this->type = $type;
+        $this->method = $method;
     }
 
     /**
@@ -40,9 +42,12 @@ class AuthNotification extends Notification
             ? 'New User Registration' 
             : 'User Login Detected';
             
-        $message = $this->type === 'registered'
-            ? 'A new user has registered: ' . $this->user->name . ' (' . $this->user->email . ')'
-            : 'User ' . $this->user->name . ' (' . $this->user->email . ') has logged in at ' . now();
+        if ($this->type === 'registered') {
+            $message = 'A new user has registered: ' . $this->user->name . ' (' . $this->user->email . ')';
+        } else {
+            $message = 'User ' . $this->user->name . ' (' . $this->user->email . ') has logged in at ' . now() . 
+                     ' using ' . $this->method . ' authentication';
+        }
 
         return (new MailMessage)
             ->subject($subject)

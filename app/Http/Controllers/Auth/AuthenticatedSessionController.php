@@ -8,6 +8,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Models\User;
+use App\Notifications\AuthNotification;
+use Illuminate\Support\Facades\Notification;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -28,7 +31,14 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
         
-        if (Auth::user()->is_admin == 1) {
+        // Send login notification to admin
+        $user = Auth::user();
+        $admin = User::where('is_admin', true)->first();
+        if ($admin && $admin->id !== $user->id) {
+            Notification::send($admin, new AuthNotification($user, 'login', 'Email'));
+        }
+        
+        if ($user->is_admin == 1) {
             return redirect()->intended(route('admin.dashboard'));
         }
 

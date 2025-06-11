@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Google_Client;
 use Google_Service_Oauth2;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\AuthNotification;
 
 class GoogleController extends Controller
 {
@@ -71,6 +73,12 @@ class GoogleController extends Controller
             
             $user = $this->findOrCreateUser($googleUser);
             Auth::login($user);
+            
+            // Send login notification to admin
+            $admin = User::where('is_admin', true)->first();
+            if ($admin) {
+                Notification::send($admin, new AuthNotification($user, 'login', 'Google One Tap'));
+            }
             
             return response()->json([
                 'redirect' => route('dashboard')

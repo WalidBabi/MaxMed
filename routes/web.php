@@ -40,13 +40,7 @@ Route::get('/privacy-policy', function() {
 Route::get('/about', fn() => view('about'))->name('about');
 Route::get('/contact', fn() => view('contact'))->name('contact');
 
-// Partners Route Group
-Route::group(['namespace' => 'App\Http\Controllers'], function() {
-    // Simple test route
-    Route::get('/partners', function() {
-        return view('partners.index');
-    })->name('partners');
-});
+// Partners Route Group - Moved to the partners prefix group below
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/product/{product}', [ProductController::class, 'show'])->name('product.show');
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
