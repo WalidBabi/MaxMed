@@ -24,6 +24,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IndustryController;
 use App\Http\Controllers\Auth\GoogleController;
 
+// Cookie Consent Routes
+Route::post('/cookie-consent', [CookieConsentController::class, 'store'])->name('cookie.consent');
+
 // Google OAuth Routes
 Route::get('/login/google', [GoogleController::class, 'redirect'])->name('login.google');
 Route::get('/login/google/callback', [GoogleController::class, 'callback']);
@@ -31,6 +34,9 @@ Route::post('/google/one-tap', [GoogleController::class, 'handleOneTap'])->name(
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
+Route::get('/privacy-policy', function() {
+    return view('privacy-policy');
+})->name('privacy.policy');
 Route::get('/about', fn() => view('about'))->name('about');
 Route::get('/contact', fn() => view('contact'))->name('contact');
 

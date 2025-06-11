@@ -712,5 +712,6 @@
         
         <!-- Footer -->
         @include('layouts.footer')
+        @include('components.cookie-consent')
     </body>
 </html>
