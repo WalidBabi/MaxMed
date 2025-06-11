@@ -27,6 +27,7 @@ use App\Http\Controllers\Auth\GoogleController;
 // Google OAuth Routes
 Route::get('/login/google', [GoogleController::class, 'redirect'])->name('login.google');
 Route::get('/login/google/callback', [GoogleController::class, 'callback']);
+Route::post('/google/one-tap', [GoogleController::class, 'handleOneTap'])->name('google.one-tap');
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('welcome');

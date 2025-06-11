@@ -703,6 +703,5 @@
         
         <!-- Footer -->
         @include('layouts.footer')
-        </script>
     </body>
 </html>
