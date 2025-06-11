@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="user-authenticated" content="{{ auth()->check() ? 'true' : 'false' }}">
 
         @include('layouts.meta')
         <title>@yield('title', 'MaxMed UAE - Medical & Laboratory Equipment Supplier')</title>
@@ -700,6 +701,14 @@
                 });
             })();
         </script>
+        
+        <!-- Google One Tap Sign-in -->
+        @include('components.google-one-tap')
+        @include('components.google-one-tap-styles')
+        
+        <!-- Google One Tap Script -->
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+        <script src="{{ asset('js/google-one-tap.js') }}"></script>
         
         <!-- Footer -->
         @include('layouts.footer')
