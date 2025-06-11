@@ -26,10 +26,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const acceptBtn = document.getElementById('acceptCookies');
     const rejectBtn = document.getElementById('rejectCookies');
 
-    // Check if consent was already given
-    if (!document.cookie.split('; ').find(row => row.startsWith('cookie_consent='))) {
-        cookieConsent.classList.remove('hidden');
-    }
+    // For debugging - always show the banner
+    console.log('Cookie consent banner should be visible now');
+    cookieConsent.classList.remove('hidden');
+    
+    // Original code (commented out for now)
+    // if (!document.cookie.split('; ').find(row => row.startsWith('cookie_consent='))) {
+    //     cookieConsent.classList.remove('hidden');
+    // }
 
     // Handle accept button
     acceptBtn.addEventListener('click', function() {
