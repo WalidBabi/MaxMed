@@ -24,29 +24,31 @@
         data-itp_support="true">
     </div>
     <div class="fixed top-4 right-4 z-50">
-        <div class="bg-white rounded-lg shadow-md p-2">
+        <div class="bg-white rounded-lg shadow-md p-1 pr-3 flex items-center">
             <div class="g_id_signin"
-                data-type="icon"
-                data-shape="pill"
+                data-type="standard"
+                data-shape="rectangular"
                 data-theme="outline"
                 data-text="signin_with"
                 data-size="medium"
-                data-logo_alignment="left">
+                data-logo_alignment="left"
+                data-width="180">
             </div>
         </div>
     </div>
 @endguest
 <style>
-    /* Google One Tap Container Styles */
+    /* Google Sign-in Button Styles */
     .g_id_signin {
         border: none !important;
         background: transparent !important;
+        height: 40px !important;
     }
     
     .g_id_signin > div {
         margin: 0 !important;
         width: auto !important;
-        height: auto !important;
+        height: 100% !important;
     }
 
     /* Enhanced Hero Section */
