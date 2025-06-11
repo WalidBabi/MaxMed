@@ -17,13 +17,13 @@
     <div id="g_id_onload"
         data-client_id="{{ config('services.google.client_id') }}"
         data-callback="handleCredentialResponse"
-        data-auto_prompt="true"
-        data-cancel_on_tap_outside="false"
+        data-auto_prompt="false"
+        data-cancel_on_tap_outside="true"
         data-context="signin"
         data-ux_mode="popup"
         data-itp_support="true">
     </div>
-    <div class="google-one-tap-container">
+    <div id="google-one-tap-container" class="google-one-tap-container" style="display: none;">
         <div class="g_id_signin"
             data-type="standard"
             data-size="large"
@@ -1170,36 +1170,55 @@
 
 <!-- Add JavaScript for Biology Particles -->
 <script>
+    // Initialize Google One Tap
+    function initializeOneTap() {
+        // Only initialize if user is not authenticated
+        @guest
+            const container = document.getElementById('google-one-tap-container');
+            if (container) {
+                container.style.display = 'block';
+                
+                // Re-render the button to ensure it's visible
+                if (window.google && window.google.accounts && window.google.accounts.id) {
+                    window.google.accounts.id.initialize({
+                        client_id: '{{ config('services.google.client_id') }}',
+                        callback: handleCredentialResponse,
+                        context: 'signin',
+                        ux_mode: 'popup',
+                        itp_support: true
+                    });
+                    
+                    window.google.accounts.id.prompt((notification) => {
+                        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                            // Continue with your own login experience
+                            container.style.display = 'none';
+                        }
+                    });
+                }
+            }
+        @endguest
+    }
+
     // Handle Google One Tap response
     function handleCredentialResponse(response) {
+        const container = document.getElementById('google-one-tap-container');
+        if (container) container.style.display = 'none';
+        
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         
-        // Show loading state
-        const signInButton = document.querySelector('.g_id_signin');
-        const originalHtml = signInButton ? signInButton.innerHTML : '';
-        if (signInButton) {
-            signInButton.innerHTML = '<div style="padding: 10px 0;">Signing in...</div>';
-        }
-
-        fetch("{{ route('google.one-tap') }}", {
+        fetch('/google/one-tap', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-Requested-With': 'XMLHttpRequest',
             },
-            body: JSON.stringify({ 
-                credential: response.credential,
-                g_csrf_token: '{{ csrf_token() }}'
+            body: JSON.stringify({
+                'g_csrf_token': csrfToken,
+                'credential': response.credential
             })
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             if (data.redirect) {
                 window.location.href = data.redirect;
@@ -1208,52 +1227,16 @@
             }
         })
         .catch(error => {
-            console.error('Authentication error:', error);
+            console.error('Error:', error);
+            if (container) container.style.display = 'block'; // Show again on error
             alert('Failed to sign in with Google. Please try again.');
-            // Reset the button
-            if (signInButton) {
-                signInButton.innerHTML = originalHtml;
-            }
-            // Re-initialize the Google One Tap prompt
-            google.accounts.id.prompt(notification => {
-                if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                    console.log('One Tap prompt was not displayed');
-                }
-            });
         });
     }
 
-    // Initialize Google One Tap
-    window.onload = function() {
-        try {
-            const clientId = "{{ config('services.google.client_id') }}";
-            if (!clientId) {
-                console.error('Google Client ID is not configured');
-                return;
-            }
-
-            google.accounts.id.initialize({
-                client_id: clientId,
-                callback: handleCredentialResponse,
-                auto_select: true,
-                cancel_on_tap_outside: false,
-                context: 'signin',
-                ux_mode: 'popup',
-                itp_support: true
-            });
-            
-            // Show the One Tap prompt after a short delay to ensure everything is loaded
-            setTimeout(() => {
-                google.accounts.id.prompt(notification => {
-                    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                        console.log('One Tap prompt was not displayed');
-                    }
-                });
-            }, 1000);
-        } catch (error) {
-            console.error('Error initializing Google One Tap:', error);
-        }
-    };
+    // Initialize One Tap when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeOneTap();
+    });
 
     function initBiologyParticles() {
         const container = document.getElementById('particle-container');
