@@ -58,53 +58,42 @@ class GoogleController extends Controller
             $response = $client->get('https://www.googleapis.com/oauth2/v3/certs');
             $keys = json_decode($response->getBody()->getContents(), true);
             
-            // Decode the JWT header to get the key ID
-            $jwtParts = explode('.', $credential);
-            if (count($jwtParts) !== 3) {
-                throw new \Exception('Invalid JWT format');
-            }
+            // Try to verify with each key until one works
+            $payload = null;
+            $lastException = null;
 
-            $header = json_decode(base64_decode(str_replace(['-', '_'], ['+', '/'], $jwtParts[0])), true);
-            if (!$header || !isset($header['kid'])) {
-                throw new \Exception('Invalid JWT header');
-            }
-            $keyId = $header['kid'];
-            
-            // Find the matching key
-            $publicKey = null;
             foreach ($keys['keys'] as $key) {
-                if (isset($key['kid']) && $key['kid'] === $keyId) {
-                    $publicKey = $key;
-                    break;
+                try {
+                    $publicKey = $this->convertKeyToPem($key);
+                    $payload = JWT::decode($credential, new Key($publicKey, 'RS256'));
+                    break; // Exit loop if verification succeeds
+                } catch (\Exception $e) {
+                    $lastException = $e;
+                    continue; // Try next key
                 }
             }
-            
-            if (!$publicKey) {
-                throw new \Exception('Public key not found');
+
+            if (!$payload) {
+                throw $lastException ?? new \Exception('Failed to verify token with any key');
             }
-            
-            // Verify the JWT token
-            $jwt = JWT::decode($credential, new Key(
-                $this->convertKeyToPem($publicKey),
-                'RS256'
-            ));
 
             // Verify the token audience
-            if ($jwt->aud !== config('services.google.client_id')) {
+            if ($payload->aud !== config('services.google.client_id')) {
                 throw new \Exception('Invalid audience');
             }
 
             // Verify the token issuer
-            if ($jwt->iss !== 'https://accounts.google.com' && $jwt->iss !== 'accounts.google.com') {
+            $validIssuers = ['https://accounts.google.com', 'accounts.google.com'];
+            if (!in_array($payload->iss, $validIssuers)) {
                 throw new \Exception('Invalid issuer');
             }
             
             // The token is valid, proceed with login/registration
             $googleUser = (object) [
-                'name' => $jwt->name ?? $jwt->email,
-                'email' => $jwt->email,
-                'id' => $jwt->sub,
-                'avatar' => $jwt->picture ?? null,
+                'name' => $payload->name ?? $payload->email,
+                'email' => $payload->email,
+                'id' => $payload->sub,
+                'avatar' => $payload->picture ?? null,
             ];
             
             $user = $this->findOrCreateUser($googleUser);
@@ -164,13 +153,8 @@ class GoogleController extends Controller
     {
         $remainder = strlen($input) % 4;
         if ($remainder) {
-            $padlen = 4 - $remainder;
-            $input .= str_repeat('=', $padlen);
+            $input .= str_repeat('=', 4 - $remainder);
         }
-        return strtr($input, [
-            '-' => '+',
-            '_' => '/',
-            '~' => '='
-        ]);
+        return strtr($input, '-_', '+/');
     }
 }
