@@ -9,8 +9,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
+use Google_Client;
+use Google_Service_Oauth2;
 
 class GoogleController extends Controller
 {
@@ -49,51 +49,24 @@ class GoogleController extends Controller
 
             $credential = $request->input('credential');
             
-            // Get Google's public keys
-            $client = new \GuzzleHttp\Client([
-                'timeout' => 10,
-                'verify' => true,
+            // Initialize Google Client
+            $client = new Google_Client([
+                'client_id' => config('services.google.client_id'),
             ]);
-
-            $response = $client->get('https://www.googleapis.com/oauth2/v3/certs');
-            $keys = json_decode($response->getBody()->getContents(), true);
             
-            // Try to verify with each key until one works
-            $payload = null;
-            $lastException = null;
-
-            foreach ($keys['keys'] as $key) {
-                try {
-                    $publicKey = $this->convertKeyToPem($key);
-                    $payload = JWT::decode($credential, new Key($publicKey, 'RS256'));
-                    break; // Exit loop if verification succeeds
-                } catch (\Exception $e) {
-                    $lastException = $e;
-                    continue; // Try next key
-                }
-            }
-
+            // Get the ID token from the credential
+            $payload = $client->verifyIdToken($credential);
+            
             if (!$payload) {
-                throw $lastException ?? new \Exception('Failed to verify token with any key');
-            }
-
-            // Verify the token audience
-            if ($payload->aud !== config('services.google.client_id')) {
-                throw new \Exception('Invalid audience');
-            }
-
-            // Verify the token issuer
-            $validIssuers = ['https://accounts.google.com', 'accounts.google.com'];
-            if (!in_array($payload->iss, $validIssuers)) {
-                throw new \Exception('Invalid issuer');
+                throw new \Exception('Invalid ID token');
             }
             
             // The token is valid, proceed with login/registration
             $googleUser = (object) [
-                'name' => $payload->name ?? $payload->email,
-                'email' => $payload->email,
-                'id' => $payload->sub,
-                'avatar' => $payload->picture ?? null,
+                'name' => $payload['name'] ?? $payload['email'],
+                'email' => $payload['email'],
+                'id' => $payload['sub'],
+                'avatar' => $payload['picture'] ?? null,
             ];
             
             $user = $this->findOrCreateUser($googleUser);
@@ -108,7 +81,7 @@ class GoogleController extends Controller
             \Log::error($e->getTraceAsString());
             
             return response()->json([
-                'error' => $e->getMessage()
+                'error' => 'Failed to authenticate with Google. Please try again.'
             ], 401);
         }
     }
@@ -129,32 +102,5 @@ class GoogleController extends Controller
         return $user;
     }
     
-    protected function convertKeyToPem($key)
-    {
-        if (!isset($key['n']) || !isset($key['e'])) {
-            throw new \Exception('Invalid key format: missing n or e parameters');
-        }
 
-        // Convert the key components to PEM format
-        $modulus = $this->base64urlToBase64($key['n']);
-        $exponent = $this->base64urlToBase64($key['e']);
-        
-        // Create the public key in PEM format
-        $pem = "-----BEGIN PUBLIC KEY-----\n";
-        $pem .= "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A\n";
-        $pem .= chunk_split($modulus, 64, "\n");
-        $pem .= $exponent . "\n";
-        $pem .= "-----END PUBLIC KEY-----";
-        
-        return $pem;
-    }
-    
-    protected function base64urlToBase64($input) 
-    {
-        $remainder = strlen($input) % 4;
-        if ($remainder) {
-            $input .= str_repeat('=', 4 - $remainder);
-        }
-        return strtr($input, '-_', '+/');
-    }
 }
