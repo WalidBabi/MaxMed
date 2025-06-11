@@ -6,8 +6,54 @@
 
 @section('meta_keywords', 'medical equipment supplier, laboratory equipment Middle East, diagnostic supplies Africa, premium lab equipment, healthcare solutions international, medical technology, laboratory analysis tools, scientific instruments, hospital supplies Middle East, diagnostic equipment Africa')
 
+@push('head')
+    <meta name="google-signin-client_id" content="{{ config('services.google.client_id') }}">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+@endpush
+
 @section('content')
+<!-- Google One Tap Sign In -->
+@guest
+    <div id="g_id_onload"
+        data-client_id="{{ config('services.google.client_id') }}"
+        data-callback="handleCredentialResponse"
+        data-auto_prompt="true"
+        data-cancel_on_tap_outside="false"
+        data-context="signin"
+        data-ux_mode="popup"
+        data-itp_support="true">
+    </div>
+    <div class="google-one-tap-container">
+        <div class="g_id_signin"
+            data-type="standard"
+            data-size="large"
+            data-theme="outline"
+            data-text="sign_in_with"
+            data-shape="rectangular"
+            data-logo_alignment="left"
+            data-width="12">
+        </div>
+    </div>
+@endguest
 <style>
+    /* Google One Tap Container */
+    .google-one-tap-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1050; /* Increased to be above navbar */
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .google-one-tap-container:hover {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        transform: translateY(-2px);
+    }
+
     /* Enhanced Hero Section */
     .hero-section {
         position: relative;
@@ -1119,11 +1165,96 @@
 
 
 
-@include('layouts.footer')
+{{-- Footer is included in app.blade.php --}}
 @endsection
 
 <!-- Add JavaScript for Biology Particles -->
 <script>
+    // Handle Google One Tap response
+    function handleCredentialResponse(response) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        
+        // Show loading state
+        const signInButton = document.querySelector('.g_id_signin');
+        const originalHtml = signInButton ? signInButton.innerHTML : '';
+        if (signInButton) {
+            signInButton.innerHTML = '<div style="padding: 10px 0;">Signing in...</div>';
+        }
+
+        fetch("{{ route('google.one-tap') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ 
+                credential: response.credential,
+                g_csrf_token: '{{ csrf_token() }}'
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            } else if (data.error) {
+                throw new Error(data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Authentication error:', error);
+            alert('Failed to sign in with Google. Please try again.');
+            // Reset the button
+            if (signInButton) {
+                signInButton.innerHTML = originalHtml;
+            }
+            // Re-initialize the Google One Tap prompt
+            google.accounts.id.prompt(notification => {
+                if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                    console.log('One Tap prompt was not displayed');
+                }
+            });
+        });
+    }
+
+    // Initialize Google One Tap
+    window.onload = function() {
+        try {
+            const clientId = "{{ config('services.google.client_id') }}";
+            if (!clientId) {
+                console.error('Google Client ID is not configured');
+                return;
+            }
+
+            google.accounts.id.initialize({
+                client_id: clientId,
+                callback: handleCredentialResponse,
+                auto_select: true,
+                cancel_on_tap_outside: false,
+                context: 'signin',
+                ux_mode: 'popup',
+                itp_support: true
+            });
+            
+            // Show the One Tap prompt after a short delay to ensure everything is loaded
+            setTimeout(() => {
+                google.accounts.id.prompt(notification => {
+                    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                        console.log('One Tap prompt was not displayed');
+                    }
+                });
+            }, 1000);
+        } catch (error) {
+            console.error('Error initializing Google One Tap:', error);
+        }
+    };
+
     function initBiologyParticles() {
         const container = document.getElementById('particle-container');
         if (!container) return null;

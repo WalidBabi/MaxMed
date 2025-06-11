@@ -898,5 +898,5 @@
     });
 </script>
 
-@include('layouts.footer')
+{{-- Footer is included in app.blade.php --}}
 @endsection
