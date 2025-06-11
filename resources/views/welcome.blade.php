@@ -23,35 +23,30 @@
         data-ux_mode="popup"
         data-itp_support="true">
     </div>
-    <div class="google-one-tap-container">
-        <div class="g_id_signin"
-            data-type="standard"
-            data-size="large"
-            data-theme="outline"
-            data-text="sign_in_with"
-            data-shape="rectangular"
-            data-logo_alignment="left"
-            data-width="12">
+    <div class="fixed top-4 right-4 z-50">
+        <div class="bg-white rounded-lg shadow-md p-2">
+            <div class="g_id_signin"
+                data-type="icon"
+                data-shape="pill"
+                data-theme="outline"
+                data-text="signin_with"
+                data-size="medium"
+                data-logo_alignment="left">
+            </div>
         </div>
     </div>
 @endguest
 <style>
-    /* Google One Tap Container */
-    .google-one-tap-container {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 1050; /* Increased to be above navbar */
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        padding: 10px;
-        transition: all 0.3s ease;
+    /* Google One Tap Container Styles */
+    .g_id_signin {
+        border: none !important;
+        background: transparent !important;
     }
-
-    .google-one-tap-container:hover {
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        transform: translateY(-2px);
+    
+    .g_id_signin > div {
+        margin: 0 !important;
+        width: auto !important;
+        height: auto !important;
     }
 
     /* Enhanced Hero Section */
