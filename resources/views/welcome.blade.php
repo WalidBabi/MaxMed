@@ -17,13 +17,13 @@
     <div id="g_id_onload"
         data-client_id="{{ config('services.google.client_id') }}"
         data-callback="handleCredentialResponse"
-        data-auto_prompt="false"
-        data-cancel_on_tap_outside="true"
+        data-auto_prompt="true"
+        data-cancel_on_tap_outside="false"
         data-context="signin"
         data-ux_mode="popup"
         data-itp_support="true">
     </div>
-    <div id="google-one-tap-container" class="google-one-tap-container" style="display: none;">
+    <div id="google-one-tap-container" class="google-one-tap-container">
         <div class="g_id_signin"
             data-type="standard"
             data-size="large"
@@ -31,7 +31,7 @@
             data-text="sign_in_with"
             data-shape="rectangular"
             data-logo_alignment="left"
-            data-width="12">
+            data-width="300">
         </div>
     </div>
 @endguest
@@ -41,12 +41,20 @@
         position: fixed;
         top: 20px;
         right: 20px;
-        z-index: 1050; /* Increased to be above navbar */
+        z-index: 1050; /* Above navbar */
         background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        padding: 10px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        padding: 15px;
         transition: all 0.3s ease;
+        border: 1px solid #e0e0e0;
+        max-width: 350px;
+        animation: slideIn 0.5s ease-out;
+    }
+    
+    @keyframes slideIn {
+        from { transform: translateY(-20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
     }
 
     .google-one-tap-container:hover {
@@ -1175,27 +1183,42 @@
         // Only initialize if user is not authenticated
         @guest
             const container = document.getElementById('google-one-tap-container');
-            if (container) {
-                container.style.display = 'block';
-                
-                // Re-render the button to ensure it's visible
-                if (window.google && window.google.accounts && window.google.accounts.id) {
-                    window.google.accounts.id.initialize({
-                        client_id: '{{ config('services.google.client_id') }}',
-                        callback: handleCredentialResponse,
-                        context: 'signin',
-                        ux_mode: 'popup',
-                        itp_support: true
-                    });
-                    
-                    window.google.accounts.id.prompt((notification) => {
-                        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                            // Continue with your own login experience
-                            container.style.display = 'none';
-                        }
-                    });
-                }
+            if (!container) return;
+
+            // Make sure the Google API is loaded
+            if (!window.google || !window.google.accounts || !window.google.accounts.id) {
+                console.error('Google One Tap API not loaded');
+                return;
             }
+
+            // Configure Google One Tap
+            window.google.accounts.id.initialize({
+                client_id: '{{ config('services.google.client_id') }}',
+                callback: handleCredentialResponse,
+                context: 'signin',
+                ux_mode: 'popup',
+                itp_support: true
+            });
+            
+            // Show the One Tap UI
+            window.google.accounts.id.prompt((notification) => {
+                if (notification.isNotDisplayed()) {
+                    console.log('One Tap prompt was not displayed');
+                    container.style.display = 'block';
+                } else if (notification.isSkippedMoment()) {
+                    console.log('One Tap prompt was skipped');
+                    container.style.display = 'block';
+                } else {
+                    container.style.display = 'block';
+                }
+            });
+
+            // Show the container after a short delay if not shown by the prompt
+            setTimeout(() => {
+                if (container.style.display !== 'block') {
+                    container.style.display = 'block';
+                }
+            }, 1000);
         @endguest
     }
 
