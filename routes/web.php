@@ -22,6 +22,11 @@ use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IndustryController;
+use App\Http\Controllers\Auth\GoogleController;
+
+// Google OAuth Routes
+Route::get('/login/google', [GoogleController::class, 'redirect'])->name('login.google');
+Route::get('/login/google/callback', [GoogleController::class, 'callback']);
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
