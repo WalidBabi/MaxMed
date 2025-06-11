@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class AuthNotification extends Notification
+class AuthNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -18,7 +18,7 @@ class AuthNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct($user, $type, $method = 'Email')
+    public function __construct($user, string $type, string $method = 'Email')
     {
         $this->user = $user;
         $this->type = $type;
@@ -39,19 +39,34 @@ class AuthNotification extends Notification
     public function toMail($notifiable): MailMessage
     {
         $subject = $this->type === 'registered' 
-            ? 'New User Registration' 
-            : 'User Login Detected';
+            ? '🎉 Welcome to ' . config('app.name') . ' - Account Registered' 
+            : '🔐 Login Detected on Your Account';
             
         if ($this->type === 'registered') {
-            $message = 'A new user has registered: ' . $this->user->name . ' (' . $this->user->email . ')';
+            $greeting = 'Welcome to ' . config('app.name') . '!';
+            $message = 'Your account has been successfully registered. We\'re excited to have you on board!';
+            $actionText = 'Go to Dashboard';
+            $actionUrl = url('/dashboard');
         } else {
-            $message = 'User ' . $this->user->name . ' (' . $this->user->email . ') has logged in at ' . now() . 
-                     ' using ' . $this->method . ' authentication';
+            $greeting = 'New Login Alert';
+            $message = 'We noticed a login to your account from a new device or location.';
+            $actionText = 'View Account Activity';
+            $actionUrl = url('/account/security');
         }
 
         return (new MailMessage)
             ->subject($subject)
-            ->line($message);
+            ->greeting($greeting)
+            ->line($message)
+            ->line('**Account Details:**')
+            ->line('- **Name:** ' . $this->user->name)
+            ->line('- **Email:** ' . $this->user->email)
+            ->line('- **Time:** ' . now()->toDayDateTimeString())
+            ->line('- **Authentication Method:** ' . $this->method)
+            ->action($actionText, $actionUrl)
+            ->line('If you did not perform this action, please secure your account immediately.')
+            ->salutation('Regards,  
+' . config('app.name') . ' Team');
     }
 
     /**
@@ -63,6 +78,7 @@ class AuthNotification extends Notification
             'user_id' => $this->user->id,
             'type' => $this->type,
             'time' => now(),
+            'method' => $this->method,
         ];
     }
 }
