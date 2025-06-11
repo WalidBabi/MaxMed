@@ -43,9 +43,7 @@
         <div class="google-one-tap-inner">
             <div class="google-one-tap-header">
                 <h4>Sign in with Google</h4>
-                <button onclick="document.getElementById('google-one-tap-container').style.display='none'" class="google-one-tap-close">
-                    &times;
-                </button>
+              
             </div>
             <div class="google-one-tap-content">
                 <p>Sign in for a faster, easier experience</p>
