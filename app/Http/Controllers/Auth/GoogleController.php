@@ -150,11 +150,14 @@ class GoogleController extends Controller
         $modulus = $this->base64urlToBase64($key['n']);
         $exponent = $this->base64urlToBase64($key['e']);
         
-        $publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A" . $modulus . $exponent;
+        // Create the public key in PEM format
+        $pem = "-----BEGIN PUBLIC KEY-----\n";
+        $pem .= "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A\n";
+        $pem .= chunk_split($modulus, 64, "\n");
+        $pem .= $exponent . "\n";
+        $pem .= "-----END PUBLIC KEY-----";
         
-        return "-----BEGIN PUBLIC KEY-----\n" . 
-               chunk_split(base64_encode(hex2bin($publicKey)), 64, "\n") . 
-               "-----END PUBLIC KEY-----";
+        return $pem;
     }
     
     protected function base64urlToBase64($input) 
@@ -164,6 +167,10 @@ class GoogleController extends Controller
             $padlen = 4 - $remainder;
             $input .= str_repeat('=', $padlen);
         }
-        return strtr($input, '-_', '+/');
+        return strtr($input, [
+            '-' => '+',
+            '_' => '/',
+            '~' => '='
+        ]);
     }
 }
