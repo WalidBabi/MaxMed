@@ -48,7 +48,7 @@ class RegisteredUserController extends Controller
         // Send notification to admin
         $admin = User::where('is_admin', true)->first();
         if ($admin) {
-            Notification::send($admin, new AuthNotification($user, 'registered'));
+            Notification::send($admin, new AuthNotification($user, 'registered', 'Email'));
         }
 
         Auth::login($user);

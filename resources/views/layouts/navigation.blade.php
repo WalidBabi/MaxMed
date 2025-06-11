@@ -55,7 +55,7 @@
                 
                         <a href="{{ route('welcome') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Home</a>
                         <a href="{{ route('about') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">About</a>
-                        <a href="/partners" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Partners</a>
+                        <a href="{{ route('partners.index') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Partners</a>
 
                         <!-- Products Dropdown -->
                         <div class="relative inline-block" 
