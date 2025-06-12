@@ -130,58 +130,105 @@
                                 </div>
                             </div>
                         </div>
+                    </div>   
+
+                    <!-- Previous Feedback Section -->
+                    @if($order->feedback->count() > 0)
+                        <div class="mt-8">
+                            <h3 class="text-xl font-semibold mb-4 text-gray-800">Previous Feedback</h3>
+                            <div class="space-y-4">
+                                @foreach($order->feedback as $feedback)
+                                    <div class="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <div class="flex items-center">
+                                                    <span class="text-sm text-gray-500">{{ $feedback->created_at->format('M d, Y H:i') }}</span>
+                                                    <span class="ml-2 px-2 py-1 text-xs rounded-full
+                                                        @if($feedback->rating >= 4) bg-green-100 text-green-800
+                                                        @elseif($feedback->rating >= 3) bg-blue-100 text-blue-800
+                                                        @elseif($feedback->rating >= 2) bg-yellow-100 text-yellow-800
+                                                        @else bg-red-100 text-red-800
+                                                        @endif">
+                                                        {{ $feedback->rating }}/5
+                                                    </span>
+                                                </div>
+                                                <p class="mt-2 text-gray-700">{{ $feedback->feedback }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    <!-- Feedback Section -->
+                    <div class="mt-8">
+                        <button onclick="openFeedbackModal('{{ $order->id }}', '{{ $order->order_number }}')" 
+                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-black bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                            </svg>
+                            Provide Feedback
+                        </button>
                     </div>
 
-                    <!-- Customer Information -->
-                    <div class="grid md:grid-cols-2 gap-8">
-                      
-                        <!-- Payment Information -->
-                        <div>
-                            <h3 class="text-xl font-semibold mb-4 text-gray-800">Payment Information</h3>
-                            <div class="bg-white rounded-lg border border-gray-200 p-5">
-                                @if($order->transaction)
-                                    <div class="flex items-center mb-3">
-                                        <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                                        </svg>
-                                        <p><span class="text-gray-600">Payment Method:</span> <span class="font-medium">{{ ucfirst($order->transaction->payment_method) }}</span></p>
+                    <!-- Feedback Modal -->
+                    <div id="feedbackModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden" style="z-index: 50;">
+                        <div class="flex items-center justify-center min-h-screen p-4">
+                            <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                                <div class="px-6 py-4 border-b border-gray-200">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="text-lg font-medium text-gray-900">Provide Feedback for Order #<span id="orderNumber"></span></h3>
+                                        <button onclick="closeFeedbackModal()" class="text-gray-400 hover:text-gray-500">
+                                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
                                     </div>
-                                    
-                                    <div class="flex items-center">
-                                        <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        <p><span class="text-gray-600">Status:</span> 
-                                            <span class="font-medium 
-                                                @if($order->transaction->status === 'completed') text-green-600 
-                                                @elseif($order->transaction->status === 'pending') text-yellow-600 
-                                                @else text-red-600 
-                                                @endif">
-                                                {{ ucfirst($order->transaction->status) }}
-                                            </span>
-                                        </p>
+                                </div>
+                                <form action="{{ route('feedback.store') }}" method="POST" class="px-6 py-4">
+                                    @csrf
+                                    <input type="hidden" name="order_id" id="orderId">
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label for="rating" class="block text-sm font-medium text-gray-700">Rating</label>
+                                            <select name="rating" id="rating" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                <option value="5">Excellent</option>
+                                                <option value="4">Very Good</option>
+                                                <option value="3">Good</option>
+                                                <option value="2">Fair</option>
+                                                <option value="1">Poor</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label for="feedback" class="block text-sm font-medium text-gray-700">Your Feedback</label>
+                                            <textarea name="feedback" id="feedback" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="Please share your experience with this order..."></textarea>
+                                        </div>
                                     </div>
-                                @else
-                                    <div class="flex items-center justify-center h-24 text-gray-500">
-                                        <p>No payment information available</p>
+                                    <div class="mt-6 flex justify-end space-x-3">
+                                        <button type="button" onclick="closeFeedbackModal()" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            Cancel
+                                        </button>
+                                        <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            Submit Feedback
+                                        </button>
                                     </div>
-                                @endif
+                                </form>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Actions Button -->
-                    <div class="mt-8 flex justify-center md:justify-end space-x-4">
-                        <button onclick="window.print()" class="inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-300 rounded-md font-semibold text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors duration-200">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
-                            </svg>
-                            Print Order
-                        </button>
-                        <a href="{{ route('orders.index') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
-                            Back to Orders
-                        </a>
-                    </div>
+
+                    <script>
+                        function openFeedbackModal(orderId, orderNumber) {
+                            document.getElementById('orderId').value = orderId;
+                            document.getElementById('orderNumber').textContent = orderNumber;
+                            document.getElementById('feedbackModal').classList.remove('hidden');
+                        }
+
+                        function closeFeedbackModal() {
+                            document.getElementById('feedbackModal').classList.add('hidden');
+                        }
+                    </script>
                 </div>
             </div>
         </div>

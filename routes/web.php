@@ -23,9 +23,10 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IndustryController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\FeedbackController;
 
 // Cookie Consent Routes
-Route::post('/cookie-consent', [CookieConsentController::class, 'store'])->name('cookie.consent');
+// Route::post('/cookie-consent', [CookieConsentController::class, 'store'])->name('cookie.consent');
 
 // Google OAuth Routes
 Route::get('/login/google', [GoogleController::class, 'redirect'])->name('login.google');
@@ -117,6 +118,13 @@ Route::middleware('auth')->group(function () {
         // Customer Management
         Route::resource('customers', \App\Http\Controllers\Admin\CustomerController::class);
     });
+
+    // Orders Routes
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+
+    // Feedback Route
+    Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 });
 
 // Test Mail Route
@@ -155,9 +163,7 @@ Route::middleware(['auth'])->group(function () {
         ->name('deliveries.signature.save');
 });
 
-// Orders Routes
-Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+// Orders Routes - moved to authenticated section
 
 // Categories Routes
 Route::prefix('categories')->name('categories.')->group(function () {

@@ -1,6 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    @keyframes pulse-feedback {
+        0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7);
+        }
+        70% {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 10px rgba(22, 163, 74, 0);
+        }
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(22, 163, 74, 0);
+        }
+    }
+    .animate-pulse-feedback {
+        animation: pulse-feedback 2s infinite;
+    }
+</style>
 <div class="bg-gray-50 py-8 min-h-screen">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <!-- Header Section -->
@@ -101,7 +120,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="px-4 py-4 sm:px-6 flex justify-end">
+                        <div class="px-4 py-4 sm:px-6 flex justify-end space-x-3">
                             <a href="{{ route('orders.show', $order) }}" 
                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 View Details
@@ -109,15 +128,75 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                                 </svg>
                             </a>
+                            <button onclick="openFeedbackModal('{{ $order->id }}', '{{ $order->order_number }}')" 
+                                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-black bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 animate-pulse-feedback">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                                </svg>
+                                Provide Feedback
+                            </button>
                         </div>
                     </div>
                 @endforeach
             </div>
 
-            <!-- Pagination -->
-            <div class="mt-8 bg-white px-4 py-4 sm:px-6 shadow sm:rounded-lg">
-                {{ $orders->links() }}
+            <!-- Feedback Modal -->
+            <div id="feedbackModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden" style="z-index: 50;">
+                <div class="flex items-center justify-center min-h-screen p-4">
+                    <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-lg font-medium text-gray-900">Provide Feedback for Order #<span id="orderNumber"></span></h3>
+                                <button onclick="closeFeedbackModal()" class="text-gray-400 hover:text-gray-500">
+                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <form action="{{ route('feedback.store') }}" method="POST" class="px-6 py-4">
+                            @csrf
+                            <input type="hidden" name="order_id" id="orderId">
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="rating" class="block text-sm font-medium text-gray-700">Rating</label>
+                                    <select name="rating" id="rating" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                        <option value="5">Excellent</option>
+                                        <option value="4">Very Good</option>
+                                        <option value="3">Good</option>
+                                        <option value="2">Fair</option>
+                                        <option value="1">Poor</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="feedback" class="block text-sm font-medium text-gray-700">Your Feedback</label>
+                                    <textarea name="feedback" id="feedback" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="Please share your experience with this order..."></textarea>
+                                </div>
+                            </div>
+                            <div class="mt-6 flex justify-end space-x-3">
+                                <button type="button" onclick="closeFeedbackModal()" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Submit Feedback
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
+
+            <script>
+                function openFeedbackModal(orderId, orderNumber) {
+                    document.getElementById('orderId').value = orderId;
+                    document.getElementById('orderNumber').textContent = orderNumber;
+                    document.getElementById('feedbackModal').classList.remove('hidden');
+                }
+
+                function closeFeedbackModal() {
+                    document.getElementById('feedbackModal').classList.add('hidden');
+                }
+            </script>
         @endif
     </div>
 </div>

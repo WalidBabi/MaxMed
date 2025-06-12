@@ -1,326 +1,189 @@
 @extends('admin.layouts.app')
 
 @section('content')
-<div class="container-fluid py-4">
-
-    <div class="page-header mb-4">
-        <h2>Welcome, {{ Auth::user()->name }}</h2>
-        <p class="page-description text-muted">Overview of your store's performance and recent activities</p>
+<div class="main-content">
+    <!-- Welcome Section -->
+    <div class="welcome-card bg-white rounded-3 p-4 shadow-sm mb-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+            <div>
+                <h2 class="h4 mb-1">Welcome back, {{ Auth::user()->name }}! 👋</h2>
+                <p class="text-muted mb-0">Here's what's happening with your store today.</p>
+            </div>
+            <div class="mt-3 mt-md-0">
+                <span class="badge bg-light text-dark">
+                    <i class="far fa-calendar-alt me-2"></i>
+                    {{ now()->format('l, F j, Y') }}
+                </span>
+            </div>
+        </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 dashboard-stat-card" onclick="window.location='{{ route('admin.orders.index') }}'" style="cursor: pointer;">
-                <div class="card-body">
-                    <div class="stat-icon">
-                        <i class="fas fa-shopping-cart"></i>
+    <!-- Sales Section -->
+    <div class="section-header mb-3">
+        <h3 class="h5 text-muted mb-0">SALES</h3>
+    </div>
+    <div class="row g-4 mb-4">
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <a href="{{ route('admin.customers.index') }}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-shape icon-lg bg-soft-indigo text-indigo rounded-3 mb-3">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                        <h5 class="mb-1">Customers</h5>
+                        <p class="text-muted small mb-0">View customer details</p>
                     </div>
-                    <h5 class="card-title">Orders</h5>
-                    <p class="card-text display-4">{{ \App\Models\Order::count() }}</p>
                 </div>
-            </div>
+            </a>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <a href="{{ route('admin.orders.index') }}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-shape icon-lg bg-soft-success text-success rounded-3 mb-3">
+                            <i class="fas fa-shopping-cart fa-2x"></i>
+                        </div>
+                        <h5 class="mb-1">Orders</h5>
+                        <p class="text-muted small mb-0">View and manage orders</p>
+                    </div>
+                </div>
+            </a>
         </div>
 
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 dashboard-stat-card" onclick="window.location='{{ route('admin.products.index') }}'" style="cursor: pointer;">
-                <div class="card-body">
-                    <div class="stat-icon">
-                        <i class="fas fa-box"></i>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <a href="{{ route('admin.deliveries.index') }}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-shape icon-lg bg-soft-warning text-warning rounded-3 mb-3">
+                            <i class="fas fa-truck fa-2x"></i>
+                        </div>
+                        <h5 class="mb-1">Deliveries</h5>
+                        <p class="text-muted small mb-0">Track shipments</p>
                     </div>
-                    <h5 class="card-title">Products</h5>
-                    <p class="card-text display-4">{{ \App\Models\Product::count() }}</p>
                 </div>
-            </div>
+            </a>
         </div>
 
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 dashboard-stat-card" onclick="window.location='{{ route('admin.news.index') }}'" style="cursor: pointer;">
-                <div class="card-body">
-                    <div class="stat-icon">
-                        <i class="fas fa-newspaper"></i>
-                    </div>
-                    <h5 class="card-title">News Articles</h5>
-                    <p class="card-text display-4">{{ \App\Models\News::count() }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 dashboard-stat-card" onclick="window.location='{{ route('admin.categories.index') }}'" style="cursor: pointer;">
-                <div class="card-body">
-                    <div class="stat-icon">
-                        <i class="fas fa-th-large"></i>
-                    </div>
-                    <h5 class="card-title">Categories</h5>
-                    <p class="card-text display-4">{{ \App\Models\Category::count() }}</p>
-                </div>
-            </div>
-        </div>
         
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 dashboard-stat-card" onclick="window.location='{{ route('admin.brands.index') }}'" style="cursor: pointer;">
-                <div class="card-body">
-                    <div class="stat-icon">
-                        <i class="fas fa-tag"></i>
-                    </div>
-                    <h5 class="card-title">Brands</h5>
-                    <p class="card-text display-4">{{ \App\Models\Brand::count() }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 dashboard-stat-card" onclick="window.location='{{ route('admin.deliveries.index') }}'" style="cursor: pointer;">
-                <div class="card-body">
-                    <div class="stat-icon">
-                        <i class="fas fa-truck"></i>
-                    </div>
-                    <h5 class="card-title">Deliveries</h5>
-                    @php
-                        $deliveryCount = \App\Models\Delivery::count();
-                        $inTransitCount = \App\Models\Delivery::where('status', 'in_transit')->count();
-                        $deliveredCount = \App\Models\Delivery::where('status', 'delivered')->count();
-                        $pendingCount = \App\Models\Delivery::where('status', 'pending')->count();
-                    @endphp
-                    <p class="card-text display-4">{{ $deliveryCount }}</p>
-                    <div class="delivery-stats mt-2">
-                        <span class="badge bg-primary me-1">In Transit: {{ $inTransitCount }}</span>
-                        <span class="badge bg-success me-1">Delivered: {{ $deliveredCount }}</span>
-                        <span class="badge bg-warning">Pending: {{ $pendingCount }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Recent Orders</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Customer</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                    <th>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach(\App\Models\Order::latest()->take(5)->get() as $order)
-                                <tr>
-                                    <td>{{ $order->id }}</td>
-                                    <td>{{ $order->user->name }}</td>
-                                    <td>${{ number_format($order->total_amount, 2) }}</td>
-                                    <td>
-                                        <span class="badge lab-badge bg-{{ $order->status === 'completed' ? 'success' : ($order->status === 'processing' ? 'warning' : 'secondary') }}">
-                                            {{ ucfirst($order->status) }}
-                                        </span>
-                                    </td>
-                                    <td>{{ $order->created_at->format('M d, Y') }}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+    <!-- Management Section -->
+    <div class="section-header mb-3">
+        <h3 class="h5 text-muted mb-0">MANAGEMENT</h3>
+    </div>
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <a href="{{ route('admin.products.index') }}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-shape icon-lg bg-soft-primary text-primary rounded-3 mb-3">
+                            <i class="fas fa-box fa-2x"></i>
+                        </div>
+                        <h5 class="mb-1">Products</h5>
+                        <p class="text-muted small mb-0">Manage your products</p>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <a href="{{ route('admin.orders.index') }}" class="btn btn-primary">View All Orders</a>
-                </div>
-            </div>
+            </a>
         </div>
 
-        <div class="col-md-6 mb-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Low Stock Products</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Price</th>
-                                    <th>Stock</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach(\App\Models\Product::whereHas('inventory', function($query) {
-                                $query->where('quantity', '<', 10);
-                                    })->take(5)->get() as $product)
-                                    <tr>
-                                        <td>{{ $product->name }}</td>
-                                        <td>${{ number_format($product->price, 2) }}</td>
-                                        <td>
-                                            <span class="badge lab-badge bg-{{ $product->inventory->quantity < 5 ? 'danger' : 'warning' }}">
-                                                {{ $product->inventory->quantity }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                            </tbody>
-                        </table>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <a href="{{ route('admin.news.index') }}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-shape icon-lg bg-soft-info text-info rounded-3 mb-3">
+                            <i class="fas fa-newspaper fa-2x"></i>
+                        </div>
+                        <h5 class="mb-1">News</h5>
+                        <p class="text-muted small mb-0">Manage news articles</p>
                     </div>
                 </div>
-                <div class="card-footer">
-                    <a href="{{ route('admin.products.index') }}" class="btn btn-primary">Manage Inventory</a>
+            </a>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <a href="{{ route('admin.categories.index') }}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-shape icon-lg bg-soft-danger text-danger rounded-3 mb-3">
+                            <i class="fas fa-th-large fa-2x"></i>
+                        </div>
+                        <h5 class="mb-1">Categories</h5>
+                        <p class="text-muted small mb-0">Manage product categories</p>
+                    </div>
                 </div>
-            </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <a href="{{ route('admin.brands.index') }}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-shape icon-lg bg-soft-purple text-purple rounded-3 mb-3">
+                            <i class="fas fa-tag fa-2x"></i>
+                        </div>
+                        <h5 class="mb-1">Brands</h5>
+                        <p class="text-muted small mb-0">Manage product brands</p>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 </div>
 
 <style>
-    .dashboard-stat-card {
-        border: none;
-        border-radius: 8px;
-        overflow: hidden;
-        transition: all 0.35s;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        position: relative;
-    }
-
-    .dashboard-stat-card:nth-child(1),
-    .dashboard-stat-card:nth-child(1) .stat-icon {
-        background: linear-gradient(135deg, rgba(255, 187, 0, 0.1), rgba(255, 187, 0, 0.2));
-        border-left: 4px solid #ffbb00;
-    }
-
-    .dashboard-stat-card:nth-child(2),
-    .dashboard-stat-card:nth-child(2) .stat-icon {
-        background: linear-gradient(135deg, rgba(23, 30, 96, 0.1), rgba(23, 30, 96, 0.2));
-        border-left: 4px solid #171e60;
-    }
-
-    .dashboard-stat-card:nth-child(3),
-    .dashboard-stat-card:nth-child(3) .stat-icon {
-        background: linear-gradient(135deg, rgba(10, 86, 148, 0.1), rgba(10, 86, 148, 0.2));
-        border-left: 4px solid #0a5694;
-    }
-
-    .dashboard-stat-card:nth-child(4),
-    .dashboard-stat-card:nth-child(4) .stat-icon {
-        background: linear-gradient(135deg, rgba(25, 135, 84, 0.1), rgba(25, 135, 84, 0.2));
-        border-left: 4px solid #198754;
-    }
-
-    .dashboard-stat-card:nth-child(5),
-    .dashboard-stat-card:nth-child(5) .stat-icon {
-        background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.2));
-        border-left: 4px solid #dc3545;
-    }
-
-    .dashboard-stat-card:nth-child(6),
-    .dashboard-stat-card:nth-child(6) .stat-icon {
-        background: linear-gradient(135deg, rgba(13, 110, 253, 0.1), rgba(13, 110, 253, 0.2));
-        border-left: 4px solid #0d6efd;
+    /* Custom styles */
+    .hover-lift {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     }
     
-    .delivery-stats {
-        font-size: 0.75rem;
-        line-height: 1.2;
-    }
-    
-    .delivery-stats .badge {
-        margin-bottom: 0.25rem;
-        display: inline-block;
-        padding: 0.25rem 0.4rem;
-        font-weight: 500;
-    }
-
-    .dashboard-stat-card:hover {
+    .hover-lift:hover {
         transform: translateY(-5px);
-        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08) !important;
+    }
+    
+    .icon-shape {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 4rem;
+        height: 4rem;
+    }
+    
+    .bg-soft-primary { background-color: rgba(79, 70, 229, 0.1) !important; }
+    .bg-soft-success { background-color: rgba(16, 185, 129, 0.1) !important; }
+    .bg-soft-info { background-color: rgba(59, 130, 246, 0.1) !important; }
+    .bg-soft-warning { background-color: rgba(245, 158, 11, 0.1) !important; }
+    .bg-soft-danger { background-color: rgba(239, 68, 68, 0.1) !important; }
+    .bg-soft-purple { background-color: rgba(139, 92, 246, 0.1) !important; }
+    .bg-soft-indigo { background-color: rgba(99, 102, 241, 0.1) !important; }
+    
+    .text-purple { color: #8b5cf6 !important; }
+    .text-indigo { color: #6366f1 !important; }
+    
+    .welcome-card {
+        background: linear-gradient(135deg, #f8f9ff 0%, #f1f3ff 100%);
+        border: 1px solid rgba(79, 70, 229, 0.1);
     }
 
-    .stat-icon {
-        display: inline-block;
-        width: 50px;
-        height: 50px;
-        line-height: 50px;
-        text-align: center;
-        border-radius: 50%;
-        font-size: 20px;
-        color: #fff;
-        margin-bottom: 15px;
+    .section-header {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
-
-    .dashboard-stat-card:nth-child(1) .stat-icon {
-        background-color: #ffbb00;
-        color: #fff;
-    }
-
-    .dashboard-stat-card:nth-child(2) .stat-icon {
-        background-color: #171e60;
-        color: #fff;
-    }
-
-    .dashboard-stat-card:nth-child(3) .stat-icon {
-        background-color: #0a5694;
-        color: #fff;
-    }
-
-    .dashboard-stat-card:nth-child(4) .stat-icon {
-        background-color: #198754;
-        color: #fff;
-    }
-
-    .dashboard-stat-card:nth-child(5) .stat-icon {
-        background-color: #dc3545;
-        color: #fff;
-    }
-
-    .card-title {
-        font-size: 1rem;
-        color: #495057;
-        margin-bottom: 10px;
-    }
-
-    .card-text.display-4 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #212529;
-        margin-bottom: 0;
-    }
-
-    .lab-badge {
-        border-radius: 20px;
-        padding: 5px 12px;
-        font-size: 0.75rem;
+    
+    .section-header h3 {
         font-weight: 600;
-    }
-
-    /* Table styling */
-    .table {
-        border-collapse: separate;
-        border-spacing: 0;
-    }
-
-    .table thead th {
-        border-bottom: 2px solid rgba(0, 0, 0, 0.05);
-        font-weight: 600;
-        color: #495057;
-    }
-
-    .table tbody tr {
-        transition: all 0.2s;
-    }
-
-    .table tbody tr:hover {
-        background-color: rgba(0, 0, 0, 0.02);
-    }
-
-    .table td,
-    .table th {
-        padding: 0.75rem;
-        vertical-align: middle;
-        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        letter-spacing: 1px;
     }
 </style>
+
+<script>
+    // Add fade-in animation to cards
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.classList.add('fade-in');
+        });
+    });
+</script>
 @endsection
