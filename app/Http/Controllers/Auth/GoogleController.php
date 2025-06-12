@@ -13,6 +13,7 @@ use Google_Client;
 use Google_Service_Oauth2;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\AuthNotification;
+use Illuminate\Support\Facades\Log;
 
 class GoogleController extends Controller
 {
@@ -74,19 +75,13 @@ class GoogleController extends Controller
             $user = $this->findOrCreateUser($googleUser);
             Auth::login($user);
             
-            // Send login notification to admin
-            $admin = User::where('is_admin', true)->first();
-            if ($admin) {
-                Notification::send($admin, new AuthNotification($user, 'login', 'Google One Tap'));
-            }
-            
             return response()->json([
                 'redirect' => route('dashboard')
             ]);
             
         } catch (\Exception $e) {
-            \Log::error('Google One Tap Error: ' . $e->getMessage());
-            \Log::error($e->getTraceAsString());
+            Log::error('Google One Tap Error: ' . $e->getMessage());
+            Log::error($e->getTraceAsString());
             
             return response()->json([
                 'error' => 'Failed to authenticate with Google. Please try again.'
@@ -97,6 +92,7 @@ class GoogleController extends Controller
     protected function findOrCreateUser($googleUser)
     {
         $user = User::where('email', $googleUser->email)->first();
+        $isNewUser = false;
 
         if (!$user) {
             $user = User::create([
@@ -105,6 +101,15 @@ class GoogleController extends Controller
                 'password' => Hash::make(Str::random(24)),
                 'email_verified_at' => now(),
             ]);
+            $isNewUser = true;
+        }
+        
+        // Send registration notification to admin for new users
+        if ($isNewUser) {
+            $admin = User::where('is_admin', true)->first();
+            if ($admin) {
+                Notification::send($admin, new AuthNotification($user, 'registered', 'Google OAuth'));
+            }
         }
         
         return $user;
