@@ -22,330 +22,334 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     
     <style>
         :root {
-            --bg-color: #ffffff;
-            --main-color: #171e60;
-            --aux1-color: #0a5694;
-            --aux2-color: #ffffff;
+            --text-color: #7d84ab;
+            --secondary-text-color: #dee2ec;
+            --bg-color: #0c1e35;
+            --secondary-bg-color: #0b1a2c;
+            --border-color: rgba(83, 93, 125, 0.3);
+            --sidebar-header-height: 100px;
+            --sidebar-footer-height: 230px;
         }
-        
+
         body {
+            margin: 0;
+            height: 100vh;
             font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-color);
+            color: #3f4750;
+            font-size: 0.9rem;
         }
-        
-        .admin-sidebar {
-            background: var(--main-color);
-            color: var(--aux2-color);
-            width: 260px;
+
+        .layout {
+            display: flex;
             min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            position: fixed;
+            height: 100vh;
             transition: all 0.3s;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            z-index: 999;
+            z-index: 1000;
         }
-        
-        .logo-container {
-            padding: 1.5rem 1rem;
+
+        .sidebar.collapsed {
+            width: 60px;
         }
-        
-        .nav-pills .nav-link {
-            border-radius: 0;
-            color: rgba(255, 255, 255, 0.8);
-            padding: 0.8rem 1rem;
-            margin: 0.2rem 0;
-            border-left: 3px solid transparent;
-            transition: 0.2s ease-in-out;
+
+        .sidebar-header {
+            height: var(--sidebar-header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
         }
-        
-        .nav-pills .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border-left: 3px solid var(--aux1-color);
+
+        .pro-sidebar-logo {
+            display: flex;
+            align-items: center;
         }
-        
-        .nav-pills .nav-link.active {
-            background-color: rgba(10, 86, 148, 0.2);
-            color: #fff;
-            border-left: 3px solid var(--aux1-color);
+
+        .pro-sidebar-logo > div {
+            width: 35px;
+            min-width: 35px;
+            height: 35px;
+            min-height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            background-color: #ff8100;
+            margin-right: 10px;
+        }
+
+        .pro-sidebar-logo > h5 {
+            color: white;
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar.collapsed .pro-sidebar-logo > h5 {
+            opacity: 0;
+        }
+
+        .menu {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .menu-header {
+            font-weight: 600;
+            padding: 10px 25px;
+            font-size: 0.8em;
+            letter-spacing: 2px;
+            color: var(--secondary-text-color);
+            opacity: 0.5;
+        }
+
+        .menu-item {
+            position: relative;
+            list-style: none;
+        }
+
+        .menu-item a {
+            display: flex;
+            align-items: center;
+            height: 50px;
+            padding: 0 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.3s;
+            list-style: none;
+        }
+
+        .menu-item a:hover {
+            color: var(--secondary-text-color);
+        }
+
+        .menu-icon {
+            font-size: 1.2rem;
+            width: 35px;
+            min-width: 35px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            margin-right: 10px;
+            border-radius: 2px;
+            transition: color 0.3s;
+        }
+
+        .menu-title {
+            font-size: 0.9em;
+            flex-grow: 1;
+        }
+
+        .menu-item.active > a {
+            color: var(--secondary-text-color);
+        }
+
+        .menu-item.active .menu-icon {
+            color: var(--secondary-text-color);
+        }
+
+        .sidebar-collapser {
+            position: fixed;
+            left: 260px;
+            top: 40px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #00829f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            transform: translateX(50%);
+            z-index: 111;
+            cursor: pointer;
+            color: white;
+            box-shadow: 1px 1px 4px var(--bg-color);
+            transition: left 0.3s;
+        }
+
+        .sidebar.collapsed .sidebar-collapser {
+            left: 60px;
+        }
+
+        .content-wrapper {
+            margin-left: 260px;
+            flex-grow: 1;
+            transition: margin-left 0.3s;
+        }
+
+        .sidebar.collapsed + .content-wrapper {
+            margin-left: 60px;
         }
 
         .admin-top-navbar {
-            background-color: var(--bg-color);
+            background-color: white;
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
             height: 60px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-        
-        .content-wrapper {
-            transition: all 0.3s;
-            background-color: #f8f9fa;
-        }
-        
-        .alert {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 
-                0 8px 32px 0 rgba(31, 38, 135, 0.37),
-                inset 0 0 80px rgba(255, 255, 255, 0.3);
-            position: relative;
-            transition: all 0.3s ease;
-            border-radius: 8px;
-        }
-        
-        .alert::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 50%;
-            background: linear-gradient(
-                180deg,
-                rgba(255, 255, 255, 0.3) 0%,
-                rgba(255, 255, 255, 0.1) 100%
-            );
-            border-radius: 8px 8px 0 0;
-            pointer-events: none;
-        }
-        
-        .alert-success {
-            background: linear-gradient(135deg, rgba(25, 135, 84, 0.1), rgba(255, 255, 255, 0.9));
-            border-left: 4px solid #2ecc71;
-        }
-        
-        .alert-danger {
-            background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(255, 255, 255, 0.9));
-            border-left: 4px solid #e74c3c;
-        }
-        
-        .dropdown-menu {
-            border: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        
-        .user-dropdown .dropdown-toggle::after {
-            display: none;
-        }
-        
+
         .btn-view-site {
             background-color: var(--aux1-color);
-            color: white;
+            color: black;
             transition: all 0.2s;
             border-radius: 20px;
             padding: 5px 15px;
+            text-decoration: none;
         }
-        
+
         .btn-view-site:hover {
             background-color: var(--main-color);
-            color: white;
+            color: black;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-        
-        /* Card Styling */
-        .card {
+
+        .btn-logout {
+            background-color: #dc3545;
+            color: white;
             border: none;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: all 0.35s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 5px 15px;
+            border-radius: 20px;
+            transition: all 0.2s;
         }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
-        }
-        
-        .card .card-header {
-            background-color: var(--bg-color);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        
-        .card .card-title {
-            color: var(--main-color);
-            position: relative;
-        }
-        
-        /* Button Styling */
-        .btn-primary {
-            background-color: var(--main-color);
-            border-color: var(--main-color);
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--aux1-color);
-            border-color: var(--aux1-color);
-        }
-        
-        .btn-outline-primary {
-            color: var(--main-color);
-            border-color: var(--main-color);
-        }
-        
-        .btn-outline-primary:hover {
-            background-color: var(--main-color);
-            border-color: var(--main-color);
-            color: white;
-        }
-        
-        /* Page Header Styling */
-        .page-header {
-            margin-bottom: 1.5rem;
-            position: relative;
-            border-left: 4px solid var(--aux1-color);
-            padding-left: 15px;
-        }
-        
-        .page-title {
-            font-size: 1.25rem;
-            color: var(--main-color);
-            margin-bottom: 0.5rem;
-            transition: color 0.3s;
-        }
-        
-        /* Pagination styling */
-        .pagination {
-            margin-bottom: 0;
-        }
-        
-        .page-item.active .page-link {
-            background-color: var(--main-color);
-            border-color: var(--main-color);
-            color: white;
-        }
-        
-        .page-link {
-            color: var(--main-color);
-            padding: 0.5rem 0.75rem;
-            margin-left: -1px;
-            line-height: 1.25;
-            border: 1px solid #dddfeb;
-        }
-        
-        .page-link:hover {
-            color: var(--aux1-color);
-            background-color: #eaecf4;
-            border-color: #dddfeb;
-        }
-        
-        .page-link:focus {
-            box-shadow: 0 0 0 0.2rem rgba(23, 30, 96, 0.25);
-        }
-        
-        .page-item.disabled .page-link {
-            color: #858796;
-            pointer-events: none;
-            background-color: #fff;
-            border-color: #dddfeb;
+
+        .btn-logout:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
     </style>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        document.getElementById('btn-collapse').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+        });
+    </script>
 </head>
 <body>
-    <div class="d-flex">
+    <div class="layout">
         <!-- Sidebar -->
-        <div class="admin-sidebar">
-            <div class="logo-container d-flex align-items-center">
-                <a href="{{ route('admin.dashboard') }}" class="text-decoration-none text-white">
-                    <h4 class="m-0">MaxMed Admin</h4>
-                </a>
-            </div>
-            <hr class="mt-0 mb-3 opacity-25">
-            <ul class="nav nav-pills flex-column mb-auto px-2">
-                <li class="nav-item">
-                    <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                        <i class="fas fa-tachometer-alt me-2"></i>
-                        Dashboard
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.products.index') }}" class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
-                        <i class="fas fa-box me-2"></i>
-                        Products
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.news.index') }}" class="nav-link {{ request()->routeIs('admin.news.*') ? 'active' : '' }}">
-                        <i class="fas fa-newspaper me-2"></i>
-                        News
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.orders.index') }}" class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
-                        <i class="fas fa-shopping-cart me-2"></i>
-                        Orders
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.deliveries.index') }}" class="nav-link {{ request()->routeIs('admin.deliveries.*') ? 'active' : '' }}">
-                        <i class="fas fa-truck me-2"></i>
-                        Deliveries
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
-                        <i class="fas fa-th-large me-2"></i>
-                        Categories
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.brands.index') }}" class="nav-link {{ request()->routeIs('admin.brands.*') ? 'active' : '' }}">
-                        <i class="fas fa-tag me-2"></i>
-                        Brands
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.customers.index') }}" class="nav-link {{ request()->routeIs('admin.customers.*') ? 'active' : '' }}">
-                        <i class="fas fa-users me-2"></i>
-                        Customers
-                    </a>
-                </li>
-            </ul>
-            <hr class="opacity-25">
-            <div class="px-3 pb-3">
-                <div class="user-dropdown dropdown">
-                    <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=0a5694&color=fff" 
-                            alt="User" width="36" height="36" class="rounded-circle me-2">
-                        <div>
-                            <strong>{{ Auth::user()->name }}</strong>
-                            <div class="small text-white-50">Administrator</div>
-                        </div>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
-                        <li><h6 class="dropdown-header">User Options</h6></li>
-                        <li><a class="dropdown-item" href="{{ route('welcome') }}"><i class="fas fa-external-link-alt me-2"></i>View Site</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt me-2"></i>Log out</button>
-                            </form>
-                        </li>
-                    </ul>
+        <aside class="sidebar">
+       
+            <div class="sidebar-header">
+                <div class="pro-sidebar-logo">
+                    <div>M</div>
+                    <h5>MaxMed Admin</h5>
                 </div>
             </div>
-        </div>
+            <nav class="menu">
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    <li class="menu-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                        <a href="{{ route('admin.dashboard') }}">
+                            <span class="menu-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </span>
+                            <span class="menu-title">Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="menu-header"><span>SALES</span></li>
+                    <li class="menu-item {{ request()->routeIs('admin.customers.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.customers.index') }}">
+                            <span class="menu-icon">
+                                <i class="fas fa-users"></i>
+                            </span>
+                            <span class="menu-title">Customers</span>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.orders.index') }}">
+                            <span class="menu-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </span>
+                            <span class="menu-title">Orders</span>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->routeIs('admin.deliveries.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.deliveries.index') }}">
+                            <span class="menu-icon">
+                                <i class="fas fa-truck"></i>
+                            </span>
+                            <span class="menu-title">Deliveries</span>
+                        </a>
+                    </li>
+                   
+
+                    <li class="menu-header"><span>MANAGEMENT</span></li>
+                    <li class="menu-item {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.products.index') }}">
+                            <span class="menu-icon">
+                                <i class="fas fa-box"></i>
+                            </span>
+                            <span class="menu-title">Products</span>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->routeIs('admin.news.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.news.index') }}">
+                            <span class="menu-icon">
+                                <i class="fas fa-newspaper"></i>
+                            </span>
+                            <span class="menu-title">News</span>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.categories.index') }}">
+                            <span class="menu-icon">
+                                <i class="fas fa-th-large"></i>
+                            </span>
+                            <span class="menu-title">Categories</span>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->routeIs('admin.brands.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.brands.index') }}">
+                            <span class="menu-icon">
+                                <i class="fas fa-tag"></i>
+                            </span>
+                            <span class="menu-title">Brands</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
 
         <!-- Main Content -->
-        <div class="content-wrapper flex-grow-1 d-flex flex-column">
+        <div class="content-wrapper">
             <!-- Top Navigation -->
-            <header class="admin-top-navbar sticky-top px-4 d-flex align-items-center justify-content-between">
+            <header class="admin-top-navbar sticky-top">
                 <div>
-                    <h5 class="mb-0 text-muted">{{ ucfirst(request()->segment(2) ?? 'Dashboard') }}</h5>
+                    <h5 class="mb-0">{{ ucfirst(request()->segment(2) ?? 'Dashboard') }}</h5>
                 </div>
-                <div class="d-flex align-items-center">
-                    <a href="{{ route('welcome') }}" class="btn btn-view-site btn-sm">
+                <div class="d-flex align-items-center gap-3">
+                    <a href="{{ route('welcome') }}" class="btn-view-site">
                         <i class="fas fa-external-link-alt me-1"></i> View Site
                     </a>
+                    <form method="POST" action="{{ route('logout') }}" class="m-0">
+                        @csrf
+                        <button type="submit" class="btn-logout">
+                            <i class="fas fa-sign-out-alt me-2"></i>Log out
+                        </button>
+                    </form>
                 </div>
             </header>
 
@@ -367,23 +371,9 @@
             </div>
 
             <!-- Content -->
-            <main class="container-fluid px-4 pb-4 flex-grow-1">
+            <main class="container-fluid px-4 pb-4">
                 @yield('content')
             </main>
-            
-            <!-- Footer -->
-            <footer class="py-3 mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; MaxMed {{ date('Y') }}</div>
-                        <div>
-                            <a href="#" class="text-decoration-none text-muted">Privacy Policy</a>
-                            &middot;
-                            <a href="#" class="text-decoration-none text-muted">Terms &amp; Conditions</a>
-                        </div>
-                    </div>
-                </div>
-            </footer>
         </div>
     </div>
 </body>

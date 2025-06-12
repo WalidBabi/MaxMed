@@ -53,4 +53,9 @@ class Order extends Model
     {
         return $this->delivery()->exists();
     }
+
+    public function feedback()
+    {
+        return $this->hasMany(Feedback::class);
+    }
 } 
