@@ -113,4 +113,17 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Email Address
+    |--------------------------------------------------------------------------
+    |
+    | This option specifies the email address where admin notifications
+    | (such as user registrations and logins) will be sent. If not set,
+    | the system will try to find an admin user in the database.
+    |
+    */
+
+    'admin_email' => env('MAIL_ADMIN_EMAIL'),
+
 ];
