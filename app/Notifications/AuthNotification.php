@@ -44,11 +44,13 @@ class AuthNotification extends Notification
         if ($this->type === 'registered') {
             $greeting = 'New User Registration Alert';
             $message = 'A new user has successfully registered on ' . config('app.name') . '. Please review the registration details below.';
-
+            $actionText = 'View User Profile';
+            $actionUrl = url('/admin/users/' . $this->user->id);
         } else {
             $greeting = 'User Login Activity';
             $message = 'A user has logged into ' . config('app.name') . '. Login activity details are provided below.';
-
+            $actionText = 'View Admin Dashboard';
+            $actionUrl = url('/admin/dashboard');
         }
 
         return (new MailMessage)
