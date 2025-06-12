@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -46,9 +47,24 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
         
         // Send notification to admin
-        $admin = User::where('is_admin', true)->first();
-        if ($admin) {
-            Notification::send($admin, new AuthNotification($user, 'registered', 'Email'));
+        try {
+            $adminEmail = config('mail.admin_email');
+            
+            if ($adminEmail) {
+                // Create a temporary admin object for notification
+                $admin = new User();
+                $admin->email = $adminEmail;
+                $admin->name = 'Admin';
+                $admin->id = 0;
+            } else {
+                $admin = User::where('is_admin', true)->whereNotNull('email')->first();
+            }
+            
+            if ($admin) {
+                Notification::send($admin, new AuthNotification($user, 'registered', 'Email'));
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to send registration notification: ' . $e->getMessage());
         }
 
         Auth::login($user);
