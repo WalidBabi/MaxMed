@@ -97,6 +97,7 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [\App\Http\Controllers\Admin\OrderController::class, 'store'])->name('store');
             Route::get('/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('show');
             Route::put('/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('status.update');
+            Route::delete('/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'destroy'])->name('destroy');
         });
 
         // Category Management

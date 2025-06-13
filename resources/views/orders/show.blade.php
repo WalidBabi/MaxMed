@@ -32,7 +32,7 @@
                     <!-- Order Summary -->
                     <div class="bg-gray-50 rounded-lg p-6 mb-8 shadow-sm">
                         <h3 class="text-xl font-semibold mb-4 text-gray-800">Order Summary</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             <div class="bg-white p-4 rounded-lg shadow-sm">
                                 <p class="text-gray-500 text-sm uppercase tracking-wide">Date Placed</p>
                                 <p class="font-semibold text-gray-900 mt-1">{{ $order->created_at->format('M d, Y') }}</p>
@@ -53,16 +53,7 @@
                                 <p class="text-gray-500 text-sm uppercase tracking-wide">Total Amount</p>
                                 <p class="font-semibold text-gray-900 mt-1">${{ number_format($order->total_amount, 2) }}</p>
                             </div>
-                            <div class="bg-white p-4 rounded-lg shadow-sm">
-                                <p class="text-gray-500 text-sm uppercase tracking-wide">Payment Status</p>
-                                <p class="font-semibold text-gray-900 mt-1">
-                                    @if($order->transaction && $order->transaction->status === 'completed')
-                                        <span class="text-green-600">Paid</span>
-                                    @else
-                                        <span class="text-red-600">Pending</span>
-                                    @endif
-                                </p>
-                            </div>
+                          
                         </div>
                     </div>
 

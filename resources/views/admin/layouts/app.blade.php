@@ -18,8 +18,7 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
     
-    <!-- Styles -->
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
@@ -103,83 +102,65 @@
         }
 
         .menu {
-            padding: 0;
-            margin: 0;
-            list-style: none;
+            padding: 20px 0;
         }
 
         .menu-header {
+            padding: 10px 20px;
+            font-size: 0.75rem;
             font-weight: 600;
-            padding: 10px 25px;
-            font-size: 0.8em;
-            letter-spacing: 2px;
+            text-transform: uppercase;
             color: var(--secondary-text-color);
-            opacity: 0.5;
-        }
-
-        .menu-item {
-            position: relative;
-            list-style: none;
+            margin-top: 20px;
         }
 
         .menu-item a {
             display: flex;
             align-items: center;
-            height: 50px;
-            padding: 0 20px;
+            padding: 12px 20px;
             color: var(--text-color);
             text-decoration: none;
             transition: all 0.3s;
-            list-style: none;
+            border-left: 3px solid transparent;
         }
 
-        .menu-item a:hover {
-            color: var(--secondary-text-color);
+        .menu-item:hover a,
+        .menu-item.active a {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-left-color: #ff8100;
+            color: white;
         }
 
         .menu-icon {
-            font-size: 1.2rem;
-            width: 35px;
-            min-width: 35px;
-            height: 35px;
-            line-height: 35px;
+            width: 20px;
+            margin-right: 15px;
             text-align: center;
-            margin-right: 10px;
-            border-radius: 2px;
-            transition: color 0.3s;
         }
 
         .menu-title {
-            font-size: 0.9em;
-            flex-grow: 1;
+            transition: opacity 0.3s;
         }
 
-        .menu-item.active > a {
-            color: var(--secondary-text-color);
-        }
-
-        .menu-item.active .menu-icon {
-            color: var(--secondary-text-color);
+        .sidebar.collapsed .menu-title {
+            opacity: 0;
         }
 
         .sidebar-collapser {
-            position: fixed;
+            position: absolute;
+            top: 50%;
             left: 260px;
-            top: 40px;
-            width: 20px;
-            height: 20px;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            border: 1px solid var(--border-color);
             border-radius: 50%;
-            background-color: #00829f;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2em;
-            transform: translateX(50%);
-            z-index: 111;
             cursor: pointer;
-            color: white;
-            box-shadow: 1px 1px 4px var(--bg-color);
             transition: left 0.3s;
+            z-index: 1001;
         }
 
         .sidebar.collapsed .sidebar-collapser {
@@ -237,15 +218,6 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
     </style>
-
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById('btn-collapse').addEventListener('click', function() {
-            document.querySelector('.sidebar').classList.toggle('collapsed');
-        });
-    </script>
 </head>
 <body>
     <div class="layout">
@@ -376,5 +348,21 @@
             </main>
         </div>
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Admin-specific scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Bootstrap tooltips if they exist
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+
+    @stack('scripts')
 </body>
 </html> 
