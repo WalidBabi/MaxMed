@@ -301,6 +301,24 @@
                             <span class="menu-title">Brands</span>
                         </a>
                     </li>
+
+                    <li class="menu-header"><span>USER MANAGEMENT</span></li>
+                    <li class="menu-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.users.index') }}">
+                            <span class="menu-icon">
+                                <i class="fas fa-users"></i>
+                            </span>
+                            <span class="menu-title">Users</span>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.roles.index') }}">
+                            <span class="menu-icon">
+                                <i class="fas fa-user-tag"></i>
+                            </span>
+                            <span class="menu-title">Roles</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </aside>
