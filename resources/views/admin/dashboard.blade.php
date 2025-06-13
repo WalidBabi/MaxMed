@@ -128,6 +128,8 @@
             </a>
         </div>
     </div>
+
+
 </div>
 
 <style>
@@ -156,9 +158,13 @@
     .bg-soft-danger { background-color: rgba(239, 68, 68, 0.1) !important; }
     .bg-soft-purple { background-color: rgba(139, 92, 246, 0.1) !important; }
     .bg-soft-indigo { background-color: rgba(99, 102, 241, 0.1) !important; }
+    .bg-soft-blue { background-color: rgba(59, 130, 246, 0.1) !important; }
+    .bg-soft-orange { background-color: rgba(251, 146, 60, 0.1) !important; }
     
     .text-purple { color: #8b5cf6 !important; }
     .text-indigo { color: #6366f1 !important; }
+    .text-blue { color: #3b82f6 !important; }
+    .text-orange { color: #fb923c !important; }
     
     .welcome-card {
         background: linear-gradient(135deg, #f8f9ff 0%, #f1f3ff 100%);

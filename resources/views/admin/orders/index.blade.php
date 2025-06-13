@@ -28,7 +28,7 @@
                             <tr>
                                 <td>{{ $order->id }}</td>
                                 <td>{{ $order->user->name }}</td>
-                                <td>${{ number_format($order->total, 2) }}</td>
+                                <td>${{ number_format($order->total_amount, 2) }}</td>
                                 <td>
                                     <span class="badge bg-{{ $order->status == 'completed' ? 'success' : ($order->status == 'cancelled' ? 'danger' : 'warning') }}">
                                         {{ ucfirst($order->status) }}
@@ -36,9 +36,16 @@
                                 </td>
                                 <td>{{ $order->created_at->format('Y-m-d H:i') }}</td>
                                 <td>
-                                    <a href="{{ route('admin.orders.show', $order) }}" class="btn btn-sm btn-info">
+                                    <a href="{{ route('admin.orders.show', $order) }}" class="btn btn-sm btn-info me-2">
                                         <i class="fas fa-eye"></i> View Details
                                     </a>
+                                    <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this order? This action cannot be undone.')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

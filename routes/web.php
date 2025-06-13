@@ -97,6 +97,7 @@ Route::middleware('auth')->group(function () {
             Route::post('/', [\App\Http\Controllers\Admin\OrderController::class, 'store'])->name('store');
             Route::get('/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'show'])->name('show');
             Route::put('/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('status.update');
+            Route::delete('/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'destroy'])->name('destroy');
         });
 
         // Category Management
@@ -117,6 +118,13 @@ Route::middleware('auth')->group(function () {
         
         // Customer Management
         Route::resource('customers', \App\Http\Controllers\Admin\CustomerController::class);
+        
+        // Role Management
+        Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class);
+        Route::post('roles/{role}/toggle-status', [\App\Http\Controllers\Admin\RoleController::class, 'toggleStatus'])->name('roles.toggle-status');
+        
+        // User Management
+        Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
     });
 
     // Orders Routes

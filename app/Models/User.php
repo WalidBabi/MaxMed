@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
+        'role_id',
     ];
 
     /**
@@ -55,6 +56,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(Customer::class);
     }
+
+    /**
+     * Get the role associated with the user.
+     */
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
     
     /**
      * Check if the user is an admin
@@ -63,7 +72,38 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return $this->is_admin === true;
+        return $this->is_admin === true || ($this->role && $this->role->hasPermission('dashboard.view'));
+    }
+
+    /**
+     * Check if the user has a specific permission
+     *
+     * @param string $permission
+     * @return bool
+     */
+    public function hasPermission(string $permission): bool
+    {
+        if ($this->is_admin) {
+            return true; // Super admin has all permissions
+        }
+
+        return $this->role && $this->role->hasPermission($permission);
+    }
+
+    /**
+     * Check if the user has any of the given permissions
+     *
+     * @param array $permissions
+     * @return bool
+     */
+    public function hasAnyPermission(array $permissions): bool
+    {
+        foreach ($permissions as $permission) {
+            if ($this->hasPermission($permission)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function orders()

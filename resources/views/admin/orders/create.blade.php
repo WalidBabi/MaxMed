@@ -2,27 +2,27 @@
 
 @section('content')
 <div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Create New Order</h1>
-        <a href="{{ route('admin.orders.index') }}" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left"></i> Back to Orders
-        </a>
-    </div>
-
-    <div class="card">
-        <div class="card-body">
-            <form action="{{ route('admin.orders.store') }}" method="POST" id="orderForm">
-                @csrf
-                
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="user_id">Customer *</label>
-                            <select name="customer_id" id="customer_id" class="form-control @error('customer_id') is-invalid @enderror" required>
-                                <option value="">Select Customer</option>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Create New Order</h3>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('admin.orders.store') }}" method="POST">
+                        @csrf
+                        
+                        <!-- Customer Selection -->
+                        <div class="mb-4">
+                            <label for="customer_id" class="form-label">Select Customer <span class="text-danger">*</span></label>
+                            <select name="customer_id" id="customer_id" class="form-select @error('customer_id') is-invalid @enderror" required>
+                                <option value="">Choose a customer...</option>
                                 @foreach($customers as $customer)
                                     <option value="{{ $customer->id }}" {{ old('customer_id') == $customer->id ? 'selected' : '' }}>
-                                        {{ $customer->name }} ({{ $customer->email }})
+                                        {{ $customer->name }} 
+                                        @if($customer->user && $customer->user->email)
+                                            ({{ $customer->user->email }})
+                                        @endif
                                     </option>
                                 @endforeach
                             </select>
@@ -30,158 +30,205 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
-                </div>
 
-                <div class="mb-4">
-                    <h5>Order Items</h5>
-                    <div id="orderItems">
-                        <!-- Order items will be added here by JavaScript -->
-                    </div>
-                    <button type="button" class="btn btn-sm btn-outline-primary mt-2" id="addItem">
-                        <i class="fas fa-plus"></i> Add Item
-                    </button>
-                </div>
+                        <!-- Products -->
+                        <div class="mb-4">
+                            <label class="form-label">Select Products and Quantities</label>
+                            
+                            <!-- Search Box -->
+                            <div class="mb-3">
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="searchInput" 
+                                       placeholder="Type to search products...">
+                            </div>
 
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Create Order
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Product Name</th>
+                                            <th>Price</th>
+                                            <th width="150">Quantity</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($products as $product)
+                                            <tr class="product-row">
+                                                <td>
+                                                    <span class="product-name">{{ $product->name }}</span>
+                                                </td>
+                                                <td>${{ number_format($product->price, 2) }}</td>
+                                                <td>
+                                                    <div class="input-group">
+                                                        <button type="button" 
+                                                                class="btn btn-outline-secondary decrease-btn" 
+                                                                data-product-id="{{ $product->id }}">-</button>
+                                                        <input type="number" 
+                                                               name="quantities[{{ $product->id }}]" 
+                                                               id="quantity-{{ $product->id }}"
+                                                               class="form-control text-center quantity-input"
+                                                               value="0"
+                                                               min="0"
+                                                               data-product-id="{{ $product->id }}"
+                                                               data-price="{{ $product->price }}"
+                                                               style="width: 60px">
+                                                        <button type="button" 
+                                                                class="btn btn-outline-secondary increase-btn" 
+                                                                data-product-id="{{ $product->id }}">+</button>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    $<span id="total-{{ $product->id }}">0.00</span>
+                                                    <input type="hidden" name="selected_products[]" value="{{ $product->id }}">
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
-<!-- Item Template (Hidden) -->
-<template id="itemTemplate">
-    <div class="card mb-3">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-5">
-                    <div class="form-group">
-                        <label>Product</label>
-                        <select name="items[__INDEX__][product_id]" class="form-control product-select" required>
-                            <option value="">Select Product</option>
-                            @foreach($products as $product)
-                                <option value="{{ $product->id }}" data-price="{{ $product->price }}">
-                                    {{ $product->name }} - ${{ number_format($product->price, 2) }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label>Quantity</label>
-                        <input type="number" name="items[__INDEX__][quantity]" class="form-control quantity" value="1" min="1" required>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label>Price</label>
-                        <input type="text" class="form-control price" readonly>
-                    </div>
-                </div>
-                <div class="col-md-1 d-flex align-items-end">
-                    <button type="button" class="btn btn-sm btn-outline-danger remove-item">
-                        <i class="fas fa-times"></i>
-                    </button>
+                        <!-- Order Summary -->
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5>Selected Products: <span id="selectedCount">0</span></h5>
+                                    </div>
+                                    <div class="col-md-6 text-end">
+                                        <h5>Total Amount: $<span id="orderTotal">0.00</span></h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @error('selected_products')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+
+                        @error('quantities')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+
+                        <div class="mt-4 text-end">
+                            <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">Create Order</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-</template>
+</div>
 
 @push('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let itemIndex = 0;
-        const itemsContainer = document.getElementById('orderItems');
-        const addItemBtn = document.getElementById('addItem');
-        
-        // Add first item by default
-        addNewItem();
-        
-        // Add new item
-        addItemBtn.addEventListener('click', addNewItem);
-        
-        // Handle remove item
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.remove-item')) {
-                e.preventDefault();
-                const itemRow = e.target.closest('.item-row');
-                if (itemRow) {
-                    itemRow.remove();
-                    updateIndexes();
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing order form...');
+    
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchText = this.value.toLowerCase();
+            const rows = document.getElementsByClassName('product-row');
+            
+            for (let row of rows) {
+                const productName = row.querySelector('.product-name');
+                if (productName) {
+                    const name = productName.textContent.toLowerCase();
+                    row.style.display = name.includes(searchText) ? '' : 'none';
                 }
             }
         });
+    }
+
+    // Quantity increase buttons
+    const increaseButtons = document.querySelectorAll('.increase-btn');
+    increaseButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const productId = this.getAttribute('data-product-id');
+            const input = document.getElementById('quantity-' + productId);
+            if (input) {
+                const currentValue = parseInt(input.value) || 0;
+                input.value = currentValue + 1;
+                updateProductTotal(productId);
+            }
+        });
+    });
+
+    // Quantity decrease buttons
+    const decreaseButtons = document.querySelectorAll('.decrease-btn');
+    decreaseButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const productId = this.getAttribute('data-product-id');
+            const input = document.getElementById('quantity-' + productId);
+            if (input) {
+                const currentValue = parseInt(input.value) || 0;
+                if (currentValue > 0) {
+                    input.value = currentValue - 1;
+                    updateProductTotal(productId);
+                }
+            }
+        });
+    });
+
+    // Quantity input changes
+    const quantityInputs = document.querySelectorAll('.quantity-input');
+    quantityInputs.forEach(function(input) {
+        input.addEventListener('change', function() {
+            const value = parseInt(this.value) || 0;
+            if (value < 0) {
+                this.value = 0;
+            }
+            const productId = this.getAttribute('data-product-id');
+            updateProductTotal(productId);
+        });
+    });
+
+    function updateProductTotal(productId) {
+        const input = document.getElementById('quantity-' + productId);
+        const totalSpan = document.getElementById('total-' + productId);
         
-        // Handle product/quantity changes
-        document.addEventListener('change', function(e) {
-            const target = e.target;
-            if (target.matches('.product-select, .quantity')) {
-                updateItemPrice(target.closest('.item-row'));
+        if (input && totalSpan) {
+            const quantity = parseInt(input.value) || 0;
+            const price = parseFloat(input.getAttribute('data-price')) || 0;
+            const total = quantity * price;
+            totalSpan.textContent = total.toFixed(2);
+        }
+        
+        updateOrderSummary();
+    }
+
+    function updateOrderSummary() {
+        let totalAmount = 0;
+        let selectedProducts = 0;
+        
+        quantityInputs.forEach(function(input) {
+            const quantity = parseInt(input.value) || 0;
+            if (quantity > 0) {
+                selectedProducts++;
+                const price = parseFloat(input.getAttribute('data-price')) || 0;
+                totalAmount += quantity * price;
             }
         });
         
-        function addNewItem() {
-            const template = document.getElementById('itemTemplate').innerHTML;
-            const newItem = document.createElement('div');
-            newItem.classList.add('item-row');
-            newItem.innerHTML = template.replace(/__INDEX__/g, itemIndex);
-            itemsContainer.appendChild(newItem);
-            
-            // Initialize price for the new item
-            updateItemPrice(newItem);
-            
-            itemIndex++;
-        }
+        const selectedCountEl = document.getElementById('selectedCount');
+        const orderTotalEl = document.getElementById('orderTotal');
+        const submitBtn = document.getElementById('submitBtn');
         
-        function updateItemPrice(itemRow) {
-            if (!itemRow) return;
-            
-            const productSelect = itemRow.querySelector('.product-select');
-            const quantityInput = itemRow.querySelector('.quantity');
-            const priceInput = itemRow.querySelector('.price');
-            
-            if (productSelect && productSelect.value && quantityInput && quantityInput.value) {
-                const price = parseFloat(productSelect.options[productSelect.selectedIndex].dataset.price) || 0;
-                const quantity = parseFloat(quantityInput.value) || 0;
-                priceInput.value = '$' + (price * quantity).toFixed(2);
-            } else {
-                priceInput.value = '';
-            }
-        }
-        
-        function updateIndexes() {
-            const items = itemsContainer.querySelectorAll('.item-row');
-            items.forEach(function(item, index) {
-                item.querySelectorAll('[name^="items["]').forEach(function(input) {
-                    const name = input.getAttribute('name');
-                    const newName = name.replace(/items\[\d+\]/, 'items[' + index + ']');
-                    input.setAttribute('name', newName);
-                });
-            });
-        }
-    });
+        if (selectedCountEl) selectedCountEl.textContent = selectedProducts;
+        if (orderTotalEl) orderTotalEl.textContent = totalAmount.toFixed(2);
+        if (submitBtn) submitBtn.disabled = selectedProducts === 0;
+    }
+
+    // Initial update
+    updateOrderSummary();
+    
+    console.log('Order form initialized successfully');
+});
 </script>
 @endpush
-
-<style>
-.item-row {
-    position: relative;
-}
-
-.remove-item {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
-
-.price {
-    background-color: #f8f9fa;
-}
-</style>
 @endsection

@@ -62,12 +62,7 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="3" class="text-end fw-bold">Total:</td>
-                                        <td>${{ number_format($order->total, 2) }}</td>
-                                    </tr>
-                                </tfoot>
+                          
                             </table>
                         </div>
                     </div>

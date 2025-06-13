@@ -4,13 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
     public function create()
     {
-        // Get customers with their associated users
+        // Get ALL customers (both with and without user accounts)
         $customers = \App\Models\Customer::with('user')->get();
         $products = \App\Models\Product::all();
         
@@ -36,35 +38,118 @@ class OrderController extends Controller
     {
         $validated = $request->validate([
             'customer_id' => 'required|exists:customers,id',
-            'items' => 'required|array',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1',
+            'quantities' => 'required|array',
+            'quantities.*' => 'integer|min:0',
         ]);
 
-        // Get the customer to access user_id
-        $customer = \App\Models\Customer::findOrFail($validated['customer_id']);
+        // Filter out products with zero quantities
+        $selectedProducts = [];
+        if (isset($validated['quantities'])) {
+            foreach ($validated['quantities'] as $productId => $quantity) {
+                if ($quantity > 0) {
+                    $selectedProducts[$productId] = $quantity;
+                }
+            }
+        }
+
+        // Validate that at least one product is selected
+        if (empty($selectedProducts)) {
+            return back()->withErrors(['quantities' => 'Please select at least one product with a quantity greater than 0.'])->withInput();
+        }
+
+        // Get the customer
+        $customer = \App\Models\Customer::with('user')->findOrFail($validated['customer_id']);
+        
+        // Determine user_id for the order
+        $userId = $this->getUserIdForOrder($customer);
 
         $order = \App\Models\Order::create([
-            'user_id' => $customer->user_id,
+            'user_id' => $userId,
             'status' => 'processing',
-            'total' => 0, // Will be calculated
+            'total_amount' => 0, // Will be calculated
+            'order_number' => 'ORD-' . strtoupper(uniqid()),
+            'shipping_address' => $customer->shipping_street ?: $customer->billing_street ?: 'Admin Created Order',
+            'shipping_city' => $customer->shipping_city ?: $customer->billing_city ?: 'N/A',
+            'shipping_state' => $customer->shipping_state ?: $customer->billing_state ?: 'N/A',
+            'shipping_zipcode' => $customer->shipping_zip ?: $customer->billing_zip ?: '00000',
+            'shipping_phone' => $customer->phone ?: 'N/A',
+            'notes' => "Customer: {$customer->name}" . ($customer->user ? '' : ' (No User Account)'),
         ]);
 
         $total = 0;
-        foreach ($validated['items'] as $item) {
-            $product = \App\Models\Product::find($item['product_id']);
-            $order->orderItems()->create([
-                'product_id' => $product->id,
-                'quantity' => $item['quantity'],
-                'price' => $product->price,
-            ]);
-            $total += $product->price * $item['quantity'];
+        foreach ($selectedProducts as $productId => $quantity) {
+            $product = \App\Models\Product::find($productId);
+            if ($product) {
+                $order->orderItems()->create([
+                    'product_id' => $product->id,
+                    'quantity' => $quantity,
+                    'price' => $product->price,
+                ]);
+                $total += $product->price * $quantity;
+            }
         }
 
-        $order->update(['total' => $total]);
+        $order->update(['total_amount' => $total]);
 
         return redirect()->route('admin.orders.show', $order)
-            ->with('success', 'Order created successfully');
+            ->with('success', 'Order created successfully for ' . $customer->name);
+    }
+
+    /**
+     * Get or create a user ID for the order
+     * 
+     * CHOOSE YOUR APPROACH:
+     * - Option 1: Guest User (current implementation)
+     * - Option 2: Auto-create user accounts (see autoCreateUserForCustomer method)
+     */
+    private function getUserIdForOrder($customer)
+    {
+        // If customer has a user account, use it
+        if ($customer->user_id && $customer->user) {
+            return $customer->user_id;
+        }
+
+        // OPTION 1: Use guest user (current implementation)
+        return $this->getGuestUserId();
+        
+        // OPTION 2: Auto-create user account (uncomment to use)
+        // return $this->autoCreateUserForCustomer($customer);
+    }
+
+    /**
+     * OPTION 1: Get or create the guest user for customers without accounts
+     */
+    private function getGuestUserId()
+    {
+        $guestUser = User::firstOrCreate(
+            ['email' => 'guest@maxmedme.com'],
+            [
+                'name' => 'Guest Customer',
+                'password' => bcrypt('random_password_' . time()),
+                'is_admin' => false,
+            ]
+        );
+
+        return $guestUser->id;
+    }
+
+    /**
+     * OPTION 2: Auto-create a user account for the customer
+     */
+    private function autoCreateUserForCustomer($customer)
+    {
+        // Create a user account for the customer
+        $user = User::create([
+            'name' => $customer->name,
+            'email' => $customer->email ?: ($customer->name . '@noemail.local'),
+            'password' => bcrypt(Str::random(16)), // Random password
+            'is_admin' => false,
+        ]);
+
+        // Link the customer to the new user
+        $customer->update(['user_id' => $user->id]);
+
+        return $user->id;
     }
 
     public function updateStatus(Request $request, Order $order)
@@ -78,5 +163,22 @@ class OrderController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Order status updated successfully');
+    }
+
+    public function destroy(Order $order)
+    {
+        try {
+            // Delete associated order items first
+            $order->orderItems()->delete();
+            
+            // Delete the order
+            $order->delete();
+            
+            return redirect()->route('admin.orders.index')
+                ->with('success', 'Order deleted successfully');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('error', 'Failed to delete order. Please try again.');
+        }
     }
 } 
