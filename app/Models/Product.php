@@ -14,6 +14,7 @@ class Product extends Model
         'image_url', 
         'category_id', 
         'brand_id',
+        'supplier_id',
         'has_size_options',
         'size_options',
         'pdf_file'
@@ -48,6 +49,11 @@ class Product extends Model
     public function primaryImage()
     {
         return $this->hasOne(ProductImage::class)->where('is_primary', true);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(User::class, 'supplier_id');
     }
 
     public function inStock()

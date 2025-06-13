@@ -127,6 +127,13 @@ Route::middleware('auth')->group(function () {
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
     });
 
+    // Supplier Routes
+    Route::prefix('supplier')->name('supplier.')->middleware(['auth'])->group(function () {
+        Route::get('/dashboard', [\App\Http\Controllers\Supplier\DashboardController::class, 'index'])->name('dashboard');
+        Route::resource('products', \App\Http\Controllers\Supplier\ProductController::class);
+        Route::resource('feedback', \App\Http\Controllers\Supplier\SystemFeedbackController::class);
+    });
+
     // Orders Routes
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');

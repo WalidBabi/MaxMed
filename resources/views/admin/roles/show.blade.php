@@ -87,6 +87,7 @@
                                     'Users' => ['users.view', 'users.create', 'users.edit', 'users.delete'],
                                     'Roles' => ['roles.view', 'roles.create', 'roles.edit', 'roles.delete'],
                                     'Products' => ['products.view', 'products.create', 'products.edit', 'products.delete'],
+                                    'Supplier Products' => ['supplier.products.view', 'supplier.products.create', 'supplier.products.edit', 'supplier.products.delete'],
                                     'Orders' => ['orders.view', 'orders.create', 'orders.edit', 'orders.delete'],
                                     'Customers' => ['customers.view', 'customers.create', 'customers.edit', 'customers.delete'],
                                     'Deliveries' => ['deliveries.view', 'deliveries.create', 'deliveries.edit', 'deliveries.delete'],
