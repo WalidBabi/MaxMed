@@ -51,7 +51,7 @@
                             </div>
                             <div class="bg-white p-4 rounded-lg shadow-sm">
                                 <p class="text-gray-500 text-sm uppercase tracking-wide">Total Amount</p>
-                                <p class="font-semibold text-gray-900 mt-1">${{ number_format($order->total_amount, 2) }}</p>
+                                <p class="font-semibold text-gray-900 mt-1">AED{{ number_format($order->total_amount, 2) }}</p>
                             </div>
                           
                         </div>
@@ -114,9 +114,9 @@
                             <div class="p-4 bg-gray-50">
                                 <div class="flex justify-end">
                                     <div class="text-right">
-                                        <p class="text-gray-600">Subtotal: <span class="font-medium">${{ number_format($order->total_amount, 2) }}</span></p>
-                                        <p class="text-gray-600">Shipping: <span class="font-medium">$0.00</span></p>
-                                        <p class="text-gray-800 text-lg font-bold mt-2">Total: <span>${{ number_format($order->total_amount, 2) }}</span></p>
+                                        <p class="text-gray-600">Subtotal: <span class="font-medium">AED{{ number_format($order->total_amount, 2) }}</span></p>
+                                        <p class="text-gray-600">Shipping: <span class="font-medium">AED0.00</span></p>
+                                        <p class="text-gray-800 text-lg font-bold mt-2">Total: <span>AED{{ number_format($order->total_amount, 2) }}</span></p>
                                     </div>
                                 </div>
                             </div>
