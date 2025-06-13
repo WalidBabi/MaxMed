@@ -67,6 +67,40 @@
         
     </div>
 
+    <!-- User Management Section -->
+    <div class="section-header mb-3">
+        <h3 class="h5 text-muted mb-0">USER MANAGEMENT</h3>
+    </div>
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <a href="{{ route('admin.users.index') }}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-shape icon-lg bg-soft-blue text-blue rounded-3 mb-3">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                        <h5 class="mb-1">Users</h5>
+                        <p class="text-muted small mb-0">Manage user accounts</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <a href="{{ route('admin.roles.index') }}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-shape icon-lg bg-soft-orange text-orange rounded-3 mb-3">
+                            <i class="fas fa-user-tag fa-2x"></i>
+                        </div>
+                        <h5 class="mb-1">Roles</h5>
+                        <p class="text-muted small mb-0">Manage user roles & permissions</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
     <!-- Management Section -->
     <div class="section-header mb-3">
         <h3 class="h5 text-muted mb-0">MANAGEMENT</h3>

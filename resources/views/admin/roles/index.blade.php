@@ -189,5 +189,6 @@
     .pagination-wrapper .page-link i {
         font-size: 0.75rem;
     }
+
 </style>
 @endsection 

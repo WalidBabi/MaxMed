@@ -55,6 +55,8 @@
             height: 100vh;
             transition: all 0.3s;
             z-index: 1000;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
         .sidebar.collapsed {
@@ -103,6 +105,8 @@
 
         .menu {
             padding: 20px 0;
+            flex: 1;
+            min-height: 0;
         }
 
         .menu-header {
@@ -216,6 +220,24 @@
             background-color: #c82333;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Custom Scrollbar for Sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
     </style>
 </head>
