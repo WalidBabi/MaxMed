@@ -13,6 +13,69 @@
         </a>
     </div>
 
+    <!-- Search Section -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <form method="GET" action="{{ route('admin.users.index') }}" class="row g-3">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        <input type="text" 
+                               class="form-control border-start-0" 
+                               name="search" 
+                               value="{{ request('search') }}" 
+                               placeholder="Search by name or email...">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" name="role">
+                        <option value="">All Roles</option>
+                        <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Super Admin</option>
+                        @if(isset($roles))
+                            @foreach($roles as $role)
+                                <option value="{{ $role->id }}" {{ request('role') == $role->id ? 'selected' : '' }}>
+                                    {{ $role->display_name }}
+                                </option>
+                            @endforeach
+                        @endif
+                        <option value="no_role" {{ request('role') == 'no_role' ? 'selected' : '' }}>No Role</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" name="status">
+                        <option value="">All Status</option>
+                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select class="form-select" name="sort">
+                        <option value="created_desc" {{ request('sort') == 'created_desc' ? 'selected' : '' }}>Newest First</option>
+                        <option value="created_asc" {{ request('sort') == 'created_asc' ? 'selected' : '' }}>Oldest First</option>
+                        <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Name A-Z</option>
+                        <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name Z-A</option>
+                        <option value="email_asc" {{ request('sort') == 'email_asc' ? 'selected' : '' }}>Email A-Z</option>
+                        <option value="email_desc" {{ request('sort') == 'email_desc' ? 'selected' : '' }}>Email Z-A</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary flex-fill">
+                            <i class="fas fa-search me-1"></i>Search
+                        </button>
+                        @if(request()->hasAny(['search', 'role', 'status', 'sort']))
+                            <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        @endif
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Users Table -->
     <div class="card border-0 shadow-sm">
         <div class="card-body">
@@ -196,6 +259,33 @@
         color: #6b7280;
         font-size: 0.875rem;
         font-weight: 500;
+    }
+    
+    /* Search Form Styling */
+    .input-group-text {
+        background-color: #f8f9fa !important;
+        border-color: #e9ecef;
+    }
+    
+    .form-control:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+    }
+    
+    .form-select:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+    }
+    
+    .btn-outline-secondary {
+        border-color: #e5e7eb;
+        color: #6b7280;
+    }
+    
+    .btn-outline-secondary:hover {
+        background-color: #f3f4f6;
+        border-color: #d1d5db;
+        color: #374151;
     }
 </style>
 @endsection 

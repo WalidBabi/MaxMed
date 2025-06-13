@@ -15,11 +15,65 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with('role')->orderBy('created_at', 'desc')->paginate(10);
+        $query = User::with('role');
+
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        // Role filter
+        if ($request->filled('role')) {
+            if ($request->role === 'admin') {
+                $query->where('is_admin', true);
+            } elseif ($request->role === 'no_role') {
+                $query->where('role_id', null)->where('is_admin', false);
+            } else {
+                $query->where('role_id', $request->role);
+            }
+        }
+
+        // Status filter (for future use when status field is added)
+        if ($request->filled('status')) {
+            // Add status filtering logic here when status field is implemented
+            // $query->where('status', $request->status);
+        }
+
+        // Sorting
+        $sort = $request->get('sort', 'created_desc');
+        switch ($sort) {
+            case 'created_asc':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'name_asc':
+                $query->orderBy('name', 'asc');
+                break;
+            case 'name_desc':
+                $query->orderBy('name', 'desc');
+                break;
+            case 'email_asc':
+                $query->orderBy('email', 'asc');
+                break;
+            case 'email_desc':
+                $query->orderBy('email', 'desc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        $users = $query->paginate(10)->appends($request->query());
         
-        return view('admin.users.index', compact('users'));
+        // Get roles for the filter dropdown
+        $roles = Role::where('is_active', true)->get();
+        
+        return view('admin.users.index', compact('users', 'roles'));
     }
 
     /**
