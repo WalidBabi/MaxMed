@@ -96,6 +96,10 @@ class Role extends Model
             'news.create' => 'Create News',
             'news.edit' => 'Edit News',
             'news.delete' => 'Delete News',
+            'supplier.products.view' => 'View Own Products (Supplier)',
+            'supplier.products.create' => 'Create Products (Supplier)',
+            'supplier.products.edit' => 'Edit Own Products (Supplier)',
+            'supplier.products.delete' => 'Delete Own Products (Supplier)',
         ];
     }
 } 

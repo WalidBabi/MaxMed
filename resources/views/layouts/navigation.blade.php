@@ -209,6 +209,8 @@
                                 class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
                                 @if(Auth::user()->is_admin)
                                 <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admin Dashboard</a>
+                                @elseif(Auth::user()->hasPermission('supplier.products.view'))
+                                <a href="{{ route('supplier.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Supplier Dashboard</a>
                                 @endif
                                 <a href="{{ route('orders.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Orders</a>
                                 <form method="POST" action="{{ route('logout') }}">
@@ -554,6 +556,8 @@
                 @auth
                 @if(Auth::user()->is_admin)
                 <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Admin Dashboard</a>
+                @elseif(Auth::user()->hasPermission('supplier.products.view'))
+                <a href="{{ route('supplier.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Supplier Dashboard</a>
                 @endif
                 <a href="{{ route('orders.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">My Orders</a>
                 <form method="POST" action="{{ route('logout') }}">

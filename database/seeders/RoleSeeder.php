@@ -80,6 +80,20 @@ class RoleSeeder extends Seeder
             'is_active' => true,
         ]);
 
+        // Supplier Role
+        Role::create([
+            'name' => 'supplier',
+            'display_name' => 'Supplier',
+            'description' => 'Can manage their own products with limited access',
+            'permissions' => [
+                'supplier.products.view',
+                'supplier.products.create', 
+                'supplier.products.edit',
+                'supplier.products.delete'
+            ],
+            'is_active' => true,
+        ]);
+
         // Viewer Role
         Role::create([
             'name' => 'viewer',
