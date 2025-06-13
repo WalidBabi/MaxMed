@@ -28,7 +28,7 @@
                             <tr>
                                 <td>{{ $order->id }}</td>
                                 <td>{{ $order->user->name }}</td>
-                                <td>${{ number_format($order->total_amount, 2) }}</td>
+                                <td>AED {{ number_format($order->total_amount, 2) }}</td>
                                 <td>
                                     <span class="badge bg-{{ $order->status == 'completed' ? 'success' : ($order->status == 'cancelled' ? 'danger' : 'warning') }}">
                                         {{ ucfirst($order->status) }}

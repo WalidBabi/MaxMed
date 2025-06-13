@@ -88,7 +88,7 @@
                                         <div class="ml-4">
                                             <h4 class="font-semibold text-gray-900">{{ $item->product->name }}</h4>
                                             <p class="text-gray-500 text-sm md:hidden mt-1">
-                                                {{ $item->quantity }} × ${{ number_format($item->price, 2) }}
+                                                {{ $item->quantity }} × AED{{ number_format($item->price, 2) }}
                                             </p>
                                         </div>
                                     </div>
@@ -100,12 +100,12 @@
                                     
                                     <!-- Unit Price (hidden on mobile) -->
                                     <div class="col-span-2 text-center hidden md:block">
-                                        <span>${{ number_format($item->price, 2) }}</span>
+                                        <span>AED{{ number_format($item->price, 2) }}</span>
                                     </div>
                                     
                                     <!-- Total Price -->
                                     <div class="col-span-2 text-right mt-2 md:mt-0">
-                                        <span class="font-semibold text-gray-900">${{ number_format($item->price * $item->quantity, 2) }}</span>
+                                        <span class="font-semibold text-gray-900">AED{{ number_format($item->price * $item->quantity, 2) }}</span>
                                     </div>
                                 </div>
                             @endforeach

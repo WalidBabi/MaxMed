@@ -12,7 +12,7 @@ class OrderController extends Controller
     public function index()
     {
         try {
-            $orders = Auth::user()->orders()->latest()->paginate(10);
+            $orders = Order::where('user_id', Auth::id())->latest()->paginate(10);
             
             // Add debugging
             Log::info('User ID: ' . Auth::id());
@@ -28,12 +28,25 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         try {
-            if (Auth::user()->cannot('view', $order)) {
+            // Check if user owns this order
+            if ($order->user_id !== Auth::id()) {
                 abort(403);
             }
 
-            // Add this line for debugging
+            // Load the order with its items, products, and feedback
+            $order->load(['items.product', 'feedback']);
+
+            // Debug logging
             Log::info('Showing order: ' . $order->id);
+            Log::info('Order items count: ' . $order->items->count());
+            foreach($order->items as $item) {
+                Log::info('Item ID: ' . $item->id . ', Product ID: ' . $item->product_id . ', Quantity: ' . $item->quantity . ', Price: ' . $item->price);
+                if($item->product) {
+                    Log::info('Product Name: ' . $item->product->name);
+                } else {
+                    Log::info('Product not found for item ID: ' . $item->id);
+                }
+            }
 
             return view('orders.show', compact('order'));
         } catch (\Exception $e) {

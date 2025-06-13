@@ -59,7 +59,7 @@
                                                 <td>
                                                     <span class="product-name">{{ $product->name }}</span>
                                                 </td>
-                                                <td>${{ number_format($product->price, 2) }}</td>
+                                                <td>AED {{ number_format($product->price, 2) }}</td>
                                                 <td>
                                                     <div class="input-group">
                                                         <button type="button" 
@@ -80,7 +80,7 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    $<span id="total-{{ $product->id }}">0.00</span>
+                                                    AED <span id="total-{{ $product->id }}">0.00</span>
                                                     <input type="hidden" name="selected_products[]" value="{{ $product->id }}">
                                                 </td>
                                             </tr>
@@ -98,7 +98,7 @@
                                         <h5>Selected Products: <span id="selectedCount">0</span></h5>
                                     </div>
                                     <div class="col-md-6 text-end">
-                                        <h5>Total Amount: $<span id="orderTotal">0.00</span></h5>
+                                        <h5>Total Amount: AED <span id="orderTotal">0.00</span></h5>
                                     </div>
                                 </div>
                             </div>
