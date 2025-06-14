@@ -11,6 +11,7 @@
     "require": {
         "php": "^8.2",
         "aws/aws-sdk-php-laravel": "^3.10",
+        "barryvdh/laravel-dompdf": "^3.1",
         "firebase/php-jwt": "^6.11",
         "google/apiclient": "^2.18",
         "laravel/framework": "^11.31",

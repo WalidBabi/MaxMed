@@ -61,7 +61,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <small class="text-muted">{{ $role->created_at->format('M d, Y') }}</small>
+                                        <small class="text-muted">{{ $role->created_at ? $role->created_at->format('M d, Y') : 'N/A' }}</small>
                                     </td>
                                     <td>
                                         <div class="dropdown">

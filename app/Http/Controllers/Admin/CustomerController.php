@@ -144,4 +144,22 @@ class CustomerController extends Controller
         return redirect()->route('admin.customers.index')
             ->with('success', 'Customer deleted successfully.');
     }
+
+    /**
+     * Get customer by name for email modal
+     */
+    public function getByName($name)
+    {
+        $customer = Customer::where('name', urldecode($name))->first();
+        
+        if ($customer) {
+            return response()->json([
+                'id' => $customer->id,
+                'name' => $customer->name,
+                'email' => $customer->email
+            ]);
+        }
+        
+        return response()->json(['email' => null]);
+    }
 }

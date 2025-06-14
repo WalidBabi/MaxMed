@@ -4,55 +4,37 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdminMiddleware
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
-        // Allow search engines to crawl without authentication
-        $userAgent = $request->header('User-Agent');
-        if ($this->isSearchEngine($userAgent)) {
-            return $next($request);
+        // Add logging to debug the issue
+        \Log::info('AdminMiddleware: Checking authentication', [
+            'authenticated' => auth()->check(),
+            'user_id' => auth()->id(),
+            'is_admin' => auth()->check() ? auth()->user()->isAdmin() : false,
+            'route' => $request->route()->getName(),
+            'method' => $request->method()
+        ]);
+
+        if (!auth()->check()) {
+            \Log::warning('AdminMiddleware: User not authenticated, redirecting to login');
+            return redirect()->route('login');
         }
-        
-        if (Auth::check() && Auth::user()->is_admin) {
-            return $next($request);
+
+        if (!auth()->user()->isAdmin()) {
+            \Log::warning('AdminMiddleware: User is not admin', ['user_id' => auth()->id()]);
+            abort(403, 'Unauthorized access to admin area.');
         }
-        
-        return redirect()->route('welcome')->with('error', 'You do not have permission to access this area.');
-    }
-    
-    /**
-     * Check if the user agent is a search engine bot
-     * 
-     * @param string|null $userAgent
-     * @return bool
-     */
-    private function isSearchEngine(?string $userAgent): bool
-    {
-        if (!$userAgent) {
-            return false;
-        }
-        
-        $bots = [
-            'Googlebot', 'Bingbot', 'Slurp', 'DuckDuckBot', 'Baiduspider',
-            'YandexBot', 'Sogou', 'facebot', 'ia_archiver', 'AhrefsBot'
-        ];
-        
-        foreach ($bots as $bot) {
-            if (stripos($userAgent, $bot) !== false) {
-                return true;
-            }
-        }
-        
-        return false;
+
+        \Log::info('AdminMiddleware: Access granted');
+        return $next($request);
     }
 } 

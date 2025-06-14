@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Order extends Model
 {
@@ -19,6 +20,117 @@ class Order extends Model
         'notes'
     ];
 
+    /**
+     * Boot the model
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        
+        // Automatic workflow triggers
+        static::updated(function ($order) {
+            $order->handleWorkflowAutomation();
+        });
+    }
+
+    /**
+     * Handle automatic workflow progression
+     */
+    public function handleWorkflowAutomation()
+    {
+        // Auto-create delivery when order status changes to shipped
+        if ($this->status === 'shipped' && !$this->hasDelivery()) {
+            $this->autoCreateDelivery();
+        }
+
+        // Auto-update delivery status based on order status
+        if ($this->hasDelivery()) {
+            $this->syncDeliveryStatus();
+        }
+    }
+
+    /**
+     * Automatically create delivery when order is shipped
+     */
+    public function autoCreateDelivery()
+    {
+        try {
+            $delivery = Delivery::create([
+                'order_id' => $this->id,
+                'status' => 'processing',
+                'carrier' => 'MaxMed Logistics',
+                'tracking_number' => 'TRK' . strtoupper(uniqid()),
+                'shipping_address' => $this->getFullShippingAddress(),
+                'billing_address' => $this->getFullShippingAddress(), // Use same for now
+                'shipping_cost' => 0, // Can be calculated based on weight/distance
+                'total_weight' => $this->calculateTotalWeight(),
+                'notes' => 'Auto-created delivery for order ' . $this->order_number,
+                'shipped_at' => now()
+            ]);
+
+            Log::info("Auto-created delivery {$delivery->id} for order {$this->id}");
+
+        } catch (\Exception $e) {
+            Log::error('Failed to auto-create delivery for order: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Sync delivery status with order status
+     */
+    public function syncDeliveryStatus()
+    {
+        $delivery = $this->delivery;
+        
+        $statusMapping = [
+            'shipped' => 'in_transit',
+            'delivered' => 'delivered',
+            'completed' => 'delivered',
+            'cancelled' => 'cancelled'
+        ];
+
+        $newStatus = $statusMapping[$this->status] ?? $delivery->status;
+        
+        if ($newStatus !== $delivery->status) {
+            $delivery->update(['status' => $newStatus]);
+            
+            if ($newStatus === 'delivered' && !$delivery->delivered_at) {
+                $delivery->update(['delivered_at' => now()]);
+            }
+            
+            Log::info("Auto-updated delivery {$delivery->id} status to {$newStatus}");
+        }
+    }
+
+    /**
+     * Get full shipping address
+     */
+    private function getFullShippingAddress()
+    {
+        return implode("\n", array_filter([
+            $this->shipping_address,
+            $this->shipping_city,
+            $this->shipping_state . ' ' . $this->shipping_zipcode,
+            'Phone: ' . $this->shipping_phone
+        ]));
+    }
+
+    /**
+     * Calculate total weight of order items
+     */
+    private function calculateTotalWeight()
+    {
+        $totalWeight = 0;
+        
+        foreach ($this->items as $item) {
+            if ($item->product && $item->product->weight) {
+                $totalWeight += $item->product->weight * $item->quantity;
+            }
+        }
+        
+        return $totalWeight > 0 ? $totalWeight : 1.0; // Default 1kg if no weight data
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -33,6 +145,7 @@ class Order extends Model
     {
         return $this->hasOne(Transaction::class);
     }
+    
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
@@ -57,5 +170,21 @@ class Order extends Model
     public function feedback()
     {
         return $this->hasMany(Feedback::class);
+    }
+
+    /**
+     * Get the invoice associated with the order (proforma invoice that created this order).
+     */
+    public function invoice()
+    {
+        return $this->hasOne(Invoice::class, 'order_id', 'id');
+    }
+
+    /**
+     * Get the proforma invoice that created this order.
+     */
+    public function proformaInvoice()
+    {
+        return $this->hasOne(Invoice::class, 'order_id', 'id')->where('type', 'proforma');
     }
 } 

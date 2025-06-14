@@ -30,7 +30,7 @@
             --bg-color: #0c1e35;
             --secondary-bg-color: #0b1a2c;
             --border-color: rgba(83, 93, 125, 0.3);
-            --sidebar-header-height: 100px;
+            --sidebar-header-height: 60px;
             --sidebar-footer-height: 230px;
         }
 
@@ -95,7 +95,7 @@
             color: white;
             margin: 0;
             font-size: 20px;
-            font-weight: 600;
+         
             transition: opacity 0.3s;
         }
 
@@ -248,8 +248,8 @@
        
             <div class="sidebar-header">
                 <div class="pro-sidebar-logo">
-                    <div>M</div>
-                    <h5>MaxMed Admin</h5>
+                  
+                    <h6>MaxMed Admin</h6>
                 </div>
             </div>
             <nav class="menu">
@@ -262,7 +262,6 @@
                             <span class="menu-title">Dashboard</span>
                         </a>
                     </li>
-
                     <li class="menu-header"><span>SALES</span></li>
                     <li class="menu-item {{ request()->routeIs('admin.customers.*') ? 'active' : '' }}">
                         <a href="{{ route('admin.customers.index') }}">
@@ -270,6 +269,22 @@
                                 <i class="fas fa-users"></i>
                             </span>
                             <span class="menu-title">Customers</span>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->routeIs('admin.quotes.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.quotes.index') }}">
+                            <span class="menu-icon">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                            </span>
+                            <span class="menu-title">Quotes</span>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->routeIs('admin.invoices.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.invoices.index') }}">
+                            <span class="menu-icon">
+                                <i class="fas fa-file-invoice"></i>
+                            </span>
+                            <span class="menu-title">Invoices</span>
                         </a>
                     </li>
                     <li class="menu-item {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
@@ -280,6 +295,7 @@
                             <span class="menu-title">Orders</span>
                         </a>
                     </li>
+                  
                     <li class="menu-item {{ request()->routeIs('admin.deliveries.*') ? 'active' : '' }}">
                         <a href="{{ route('admin.deliveries.index') }}">
                             <span class="menu-icon">
@@ -288,6 +304,7 @@
                             <span class="menu-title">Deliveries</span>
                         </a>
                     </li>
+                  
                    
 
                     <li class="menu-header"><span>MANAGEMENT</span></li>
