@@ -1,0 +1,483 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Quote;
+use App\Models\QuoteItem;
+use App\Models\Customer;
+use App\Mail\QuoteEmail;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+
+class QuoteController extends Controller
+{
+    /**
+     * Display a listing of quotes
+     */
+    public function index()
+    {
+        // Additional security check
+        if (!auth()->check() || !auth()->user()->isAdmin()) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        $quotes = Quote::with('creator')
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        return view('admin.quotes.index', compact('quotes'));
+    }
+
+    /**
+     * Show the form for creating a new quote
+     */
+    public function create()
+    {
+        $customers = \App\Models\Customer::select('id', 'name', 'email', 'company_name')
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
+            
+        $products = \App\Models\Product::with(['brand', 'category'])
+            ->select('id', 'name', 'description', 'price', 'price_aed', 'brand_id', 'category_id')
+            ->orderBy('name')
+            ->get();
+            
+        return view('admin.quotes.create', compact('customers', 'products'));
+    }
+
+    /**
+     * Store a newly created quote
+     */
+    public function store(Request $request)
+    {
+        // Check if user is authenticated and is admin
+        if (!auth()->check()) {
+            \Log::warning('QuoteController store: User not authenticated');
+            return redirect()->route('login')->with('error', 'Please log in to continue.');
+        }
+        
+        if (!auth()->user()->isAdmin()) {
+            \Log::warning('QuoteController store: User is not admin', ['user_id' => auth()->id()]);
+            abort(403, 'Unauthorized access.');
+        }
+        
+        \Log::info('QuoteController store: Starting validation', [
+            'user_id' => auth()->id(),
+            'customer_id' => $request->input('customer_id')
+        ]);
+
+        $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+            'reference_number' => 'nullable|string|max:255',
+            'quote_date' => 'required|date',
+            'expiry_date' => 'required|date|after:quote_date',
+            'salesperson' => 'nullable|string|max:255',
+            'subject' => 'nullable|string',
+            'customer_notes' => 'nullable|string',
+            'terms_conditions' => 'nullable|string',
+            'status' => 'required|in:draft,sent,invoiced',
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.item_details' => 'required|string',
+            'items.*.quantity' => 'required|numeric|min:0',
+            'items.*.rate' => 'required|numeric|min:0',
+            'items.*.discount' => 'nullable|numeric|min:0|max:100',
+            'attachments.*' => 'nullable|file|max:10240' // 10MB max
+        ]);
+
+        // Get customer name from the customer record
+        $customer = \App\Models\Customer::findOrFail($request->customer_id);
+        
+        $quote = Quote::create([
+            'customer_name' => $customer->name,
+            'reference_number' => $request->reference_number,
+            'quote_date' => $request->quote_date,
+            'expiry_date' => $request->expiry_date,
+            'salesperson' => $request->salesperson,
+            'subject' => $request->subject,
+            'customer_notes' => $request->customer_notes,
+            'terms_conditions' => $request->terms_conditions,
+            'status' => $request->status,
+            'created_by' => Auth::id(),
+        ]);
+
+        // Handle attachments
+        $attachments = [];
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $file) {
+                $path = $file->store('quote-attachments', 'public');
+                $attachments[] = [
+                    'name' => $file->getClientOriginalName(),
+                    'path' => $path
+                ];
+            }
+            $quote->update(['attachments' => $attachments]);
+        }
+
+        // Create quote items
+        foreach ($request->items as $index => $itemData) {
+            QuoteItem::create([
+                'quote_id' => $quote->id,
+                'product_id' => $itemData['product_id'],
+                'item_details' => $itemData['item_details'],
+                'quantity' => $itemData['quantity'],
+                'rate' => $itemData['rate'],
+                'discount' => $itemData['discount'] ?? 0,
+                'sort_order' => $index + 1,
+            ]);
+        }
+
+        $quote->calculateTotals();
+
+        return redirect()->route('admin.quotes.index')
+            ->with('success', 'Quote created successfully!');
+    }
+
+    /**
+     * Display the specified quote
+     */
+    public function show(Quote $quote)
+    {
+        $quote->load('items', 'creator');
+        return view('admin.quotes.show', compact('quote'));
+    }
+
+    /**
+     * Show the form for editing the specified quote
+     */
+    public function edit(Quote $quote)
+    {
+        $quote->load('items');
+        $customers = \App\Models\Customer::select('id', 'name', 'email', 'company_name')
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
+            
+        $products = \App\Models\Product::with(['brand', 'category'])
+            ->select('id', 'name', 'description', 'price', 'price_aed', 'brand_id', 'category_id')
+            ->orderBy('name')
+            ->get();
+            
+        return view('admin.quotes.edit', compact('quote', 'customers', 'products'));
+    }
+
+    /**
+     * Update the specified quote
+     */
+    public function update(Request $request, Quote $quote)
+    {
+        try {
+            \Log::info('QuoteController update: Starting update for quote', [
+                'quote_id' => $quote->id,
+                'quote_number' => $quote->quote_number
+            ]);
+
+            $request->validate([
+                'customer_name' => 'required|string|max:255',
+                'reference_number' => 'nullable|string|max:255',
+                'quote_date' => 'required|date',
+                'expiry_date' => 'required|date|after:quote_date',
+                'salesperson' => 'nullable|string|max:255',
+                'subject' => 'nullable|string',
+                'customer_notes' => 'nullable|string',
+                'terms_conditions' => 'nullable|string',
+                'status' => 'required|in:draft,sent,invoiced',
+                'items' => 'required|array|min:1',
+                'items.*.product_id' => 'nullable|exists:products,id',
+                'items.*.item_details' => 'required|string',
+                'items.*.quantity' => 'required|numeric|min:0',
+                'items.*.rate' => 'required|numeric|min:0',
+                'items.*.discount' => 'nullable|numeric|min:0|max:100',
+                'attachments.*' => 'nullable|file|max:10240'
+            ]);
+
+            \Log::info('QuoteController update: Validation passed');
+
+            // Use database transaction to ensure data integrity
+            \DB::transaction(function () use ($request, $quote) {
+                // Update quote basic information
+                $quote->update([
+                    'customer_name' => $request->customer_name,
+                    'reference_number' => $request->reference_number,
+                    'quote_date' => $request->quote_date,
+                    'expiry_date' => $request->expiry_date,
+                    'salesperson' => $request->salesperson,
+                    'subject' => $request->subject,
+                    'customer_notes' => $request->customer_notes,
+                    'terms_conditions' => $request->terms_conditions,
+                    'status' => $request->status,
+                ]);
+
+                \Log::info('QuoteController update: Quote basic info updated');
+
+                // Handle new attachments
+                $existingAttachments = $quote->attachments ?? [];
+                if ($request->hasFile('attachments')) {
+                    foreach ($request->file('attachments') as $file) {
+                        $path = $file->store('quote-attachments', 'public');
+                        $existingAttachments[] = [
+                            'name' => $file->getClientOriginalName(),
+                            'path' => $path
+                        ];
+                    }
+                    $quote->update(['attachments' => $existingAttachments]);
+                    \Log::info('QuoteController update: Attachments updated');
+                }
+
+                // Delete existing items and create new ones
+                \Log::info('QuoteController update: Deleting existing items');
+                $quote->items()->delete();
+                
+                \Log::info('QuoteController update: Creating new items', [
+                    'item_count' => count($request->items)
+                ]);
+                
+                foreach ($request->items as $index => $itemData) {
+                    $quoteItem = QuoteItem::create([
+                        'quote_id' => $quote->id,
+                        'product_id' => $itemData['product_id'] ?? null,
+                        'item_details' => $itemData['item_details'],
+                        'quantity' => $itemData['quantity'],
+                        'rate' => $itemData['rate'],
+                        'discount' => $itemData['discount'] ?? 0,
+                        'sort_order' => $index + 1,
+                    ]);
+                    
+                    \Log::info('QuoteController update: Item created', [
+                        'item_id' => $quoteItem->id,
+                        'product_id' => $quoteItem->product_id
+                    ]);
+                }
+
+                // Recalculate totals
+                $quote->calculateTotals();
+                \Log::info('QuoteController update: Totals calculated');
+            });
+
+            \Log::info('QuoteController update: Quote updated successfully', [
+                'quote_id' => $quote->id
+            ]);
+
+            return redirect()->route('admin.quotes.index')
+                ->with('success', 'Quote updated successfully!');
+
+        } catch (\Exception $e) {
+            \Log::error('QuoteController update: Error updating quote', [
+                'quote_id' => $quote->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Failed to update quote: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Send email for quote from index page
+     */
+    public function sendEmail(Request $request, Quote $quote)
+    {
+        $request->validate([
+            'customer_email' => 'required|email',
+            'cc_emails' => 'nullable|string'
+        ]);
+
+        // Find customer by email
+        $customer = Customer::where('email', $request->customer_email)->first();
+        
+        if (!$customer) {
+            return redirect()->route('admin.quotes.index')
+                ->with('error', 'Customer not found with provided email address.');
+        }
+
+        try {
+            // Parse CC emails
+            $ccEmails = [];
+            if ($request->filled('cc_emails')) {
+                $ccEmails = array_filter(
+                    array_map('trim', explode(',', $request->cc_emails)),
+                    function($email) {
+                        return filter_var($email, FILTER_VALIDATE_EMAIL);
+                    }
+                );
+            }
+
+            Mail::to($customer->email)->send(new QuoteEmail($quote, $customer, $ccEmails));
+            
+            // Update status to sent if email was sent successfully
+            if ($quote->status === 'draft') {
+                $quote->update(['status' => 'sent']);
+            }
+            
+            return redirect()->route('admin.quotes.index')
+                ->with('success', 'Quote email sent successfully to ' . $customer->email . '!');
+        } catch (\Exception $e) {
+            Log::error('Failed to send quote email: ' . $e->getMessage());
+            return redirect()->route('admin.quotes.index')
+                ->with('error', 'Failed to send email: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Remove the specified quote
+     */
+    public function destroy(Quote $quote)
+    {
+        // Delete attachments from storage
+        if ($quote->attachments) {
+            foreach ($quote->attachments as $attachment) {
+                Storage::disk('public')->delete($attachment['path']);
+            }
+        }
+
+        $quote->delete();
+
+        return redirect()->route('admin.quotes.index')
+            ->with('success', 'Quote deleted successfully!');
+    }
+
+    /**
+     * Generate PDF for the quote
+     */
+    public function generatePdf(Quote $quote)
+    {
+        $quote->load('items');
+        
+        $pdf = Pdf::loadView('admin.quotes.pdf', compact('quote'));
+        
+        return $pdf->download($quote->quote_number . '.pdf');
+    }
+
+    /**
+     * Update quote status
+     */
+    public function updateStatus(Request $request, Quote $quote)
+    {
+        $request->validate([
+            'status' => 'required|in:draft,sent,invoiced'
+        ]);
+
+        $quote->update(['status' => $request->status]);
+
+        return redirect()->back()
+            ->with('success', 'Quote status updated successfully!');
+    }
+
+    /**
+     * Remove attachment
+     */
+    public function removeAttachment(Request $request, Quote $quote)
+    {
+        $attachmentIndex = $request->attachment_index;
+        $attachments = $quote->attachments ?? [];
+        
+        if (isset($attachments[$attachmentIndex])) {
+            // Delete file from storage
+            Storage::disk('public')->delete($attachments[$attachmentIndex]['path']);
+            
+            // Remove from array
+            unset($attachments[$attachmentIndex]);
+            $attachments = array_values($attachments); // Reindex array
+            
+            $quote->update(['attachments' => $attachments]);
+        }
+
+        return redirect()->back()
+            ->with('success', 'Attachment removed successfully!');
+    }
+
+    /**
+     * Convert quote to proforma invoice
+     */
+    public function convertToProforma(Quote $quote)
+    {
+        // Check if quote can be converted
+        if ($quote->status === 'invoiced') {
+            return redirect()->route('admin.quotes.index')
+                ->with('error', 'This quote has already been converted to an invoice.');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // Find customer by name to get billing and shipping addresses
+            $customer = Customer::where('name', $quote->customer_name)->first();
+            
+            if (!$customer) {
+                return redirect()->route('admin.quotes.index')
+                    ->with('error', 'Customer not found. Please ensure the customer exists in the system.');
+            }
+
+            // Get billing and shipping addresses
+            $billingAddress = $customer->billing_address ?? 'Billing address not available';
+            $shippingAddress = $customer->shipping_address ?? $billingAddress;
+
+            // Create proforma invoice
+            $invoice = \App\Models\Invoice::create([
+                'type' => 'proforma',
+                'is_proforma' => true,
+                'quote_id' => $quote->id,
+                'customer_name' => $quote->customer_name,
+                'billing_address' => $billingAddress,
+                'shipping_address' => $shippingAddress,
+                'invoice_date' => now(),
+                'due_date' => now()->addDays(30),
+                'description' => $quote->subject,
+                'terms_conditions' => $quote->terms_conditions,
+                'notes' => $quote->customer_notes,
+                'sub_total' => $quote->sub_total,
+                'tax_amount' => $quote->tax_amount ?? 0,
+                'discount_amount' => $quote->discount_amount ?? 0,
+                'total_amount' => $quote->total_amount,
+                'currency' => 'AED',
+                'payment_status' => 'pending',
+                'payment_terms' => 'advance_50', // Default to 50% advance
+                'status' => 'draft',
+                'reference_number' => $quote->reference_number,
+                'created_by' => Auth::id(),
+            ]);
+
+            // Copy quote items to invoice items
+            foreach ($quote->items as $quoteItem) {
+                \App\Models\InvoiceItem::create([
+                    'invoice_id' => $invoice->id,
+                    'product_id' => $quoteItem->product_id,
+                    'item_description' => $quoteItem->item_details,
+                    'quantity' => $quoteItem->quantity,
+                    'unit_price' => $quoteItem->rate,
+                    'discount_percentage' => $quoteItem->discount,
+                    'line_total' => $quoteItem->amount,
+                    'sort_order' => $quoteItem->sort_order,
+                ]);
+            }
+
+            // Update quote status
+            $quote->update(['status' => 'invoiced']);
+
+            DB::commit();
+
+            return redirect()->route('admin.invoices.show', $invoice)
+                ->with('success', 'Quote has been successfully converted to proforma invoice: ' . $invoice->invoice_number);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Failed to convert quote to proforma invoice', [
+                'quote_id' => $quote->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return redirect()->route('admin.quotes.index')
+                ->with('error', 'Failed to convert quote to proforma invoice. Please try again.');
+        }
+    }
+} 

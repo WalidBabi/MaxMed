@@ -20,14 +20,17 @@
                         <select class="form-select @error('order_id') is-invalid @enderror" 
                                 id="order_id" 
                                 name="order_id" 
-                                required>
+                                required {{ $selectedOrder ? 'readonly' : '' }}>
                             <option value="">Select an order</option>
                             @foreach($orders as $id => $label)
-                                <option value="{{ $id }}" {{ old('order_id') == $id ? 'selected' : '' }}>
+                                <option value="{{ $id }}" {{ (old('order_id', $selectedOrder?->id) == $id) ? 'selected' : '' }}>
                                     {{ $label }}
                                 </option>
                             @endforeach
                         </select>
+                        @if($selectedOrder)
+                            <small class="text-muted">Pre-selected from invoice</small>
+                        @endif
                         @error('order_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror

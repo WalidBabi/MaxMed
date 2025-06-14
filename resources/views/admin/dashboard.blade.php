@@ -23,7 +23,7 @@
         <h3 class="h5 text-muted mb-0">SALES</h3>
     </div>
     <div class="row g-4 mb-4">
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
             <a href="{{ route('admin.customers.index') }}" class="text-decoration-none">
                 <div class="card h-100 border-0 shadow-sm hover-lift">
                     <div class="card-body text-center p-4">
@@ -32,6 +32,33 @@
                         </div>
                         <h5 class="mb-1">Customers</h5>
                         <p class="text-muted small mb-0">View customer details</p>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <a href="{{ route('admin.quotes.index') }}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-shape icon-lg bg-soft-purple text-purple rounded-3 mb-3">
+                            <i class="fas fa-file-invoice-dollar fa-2x"></i>
+                        </div>
+                        <h5 class="mb-1">Quotes</h5>
+                        <p class="text-muted small mb-0">Manage quotes</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <a href="{{ route('admin.invoices.index') }}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm hover-lift">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-shape icon-lg bg-soft-danger text-danger rounded-3 mb-3">
+                            <i class="fas fa-file-invoice fa-2x"></i>
+                        </div>
+                        <h5 class="mb-1">Invoices</h5>
+                        <p class="text-muted small mb-0">Manage invoices & payments</p>
                     </div>
                 </div>
             </a>
@@ -50,6 +77,8 @@
             </a>
         </div>
 
+      
+
         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
             <a href="{{ route('admin.deliveries.index') }}" class="text-decoration-none">
                 <div class="card h-100 border-0 shadow-sm hover-lift">
@@ -64,7 +93,7 @@
             </a>
         </div>
 
-        
+
     </div>
 
     <!-- User Management Section -->
@@ -171,12 +200,12 @@
     .hover-lift {
         transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     }
-    
+
     .hover-lift:hover {
         transform: translateY(-5px);
         box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08) !important;
     }
-    
+
     .icon-shape {
         display: inline-flex;
         align-items: center;
@@ -184,22 +213,59 @@
         width: 4rem;
         height: 4rem;
     }
-    
-    .bg-soft-primary { background-color: rgba(79, 70, 229, 0.1) !important; }
-    .bg-soft-success { background-color: rgba(16, 185, 129, 0.1) !important; }
-    .bg-soft-info { background-color: rgba(59, 130, 246, 0.1) !important; }
-    .bg-soft-warning { background-color: rgba(245, 158, 11, 0.1) !important; }
-    .bg-soft-danger { background-color: rgba(239, 68, 68, 0.1) !important; }
-    .bg-soft-purple { background-color: rgba(139, 92, 246, 0.1) !important; }
-    .bg-soft-indigo { background-color: rgba(99, 102, 241, 0.1) !important; }
-    .bg-soft-blue { background-color: rgba(59, 130, 246, 0.1) !important; }
-    .bg-soft-orange { background-color: rgba(251, 146, 60, 0.1) !important; }
-    
-    .text-purple { color: #8b5cf6 !important; }
-    .text-indigo { color: #6366f1 !important; }
-    .text-blue { color: #3b82f6 !important; }
-    .text-orange { color: #fb923c !important; }
-    
+
+    .bg-soft-primary {
+        background-color: rgba(79, 70, 229, 0.1) !important;
+    }
+
+    .bg-soft-success {
+        background-color: rgba(16, 185, 129, 0.1) !important;
+    }
+
+    .bg-soft-info {
+        background-color: rgba(59, 130, 246, 0.1) !important;
+    }
+
+    .bg-soft-warning {
+        background-color: rgba(245, 158, 11, 0.1) !important;
+    }
+
+    .bg-soft-danger {
+        background-color: rgba(239, 68, 68, 0.1) !important;
+    }
+
+    .bg-soft-purple {
+        background-color: rgba(139, 92, 246, 0.1) !important;
+    }
+
+    .bg-soft-indigo {
+        background-color: rgba(99, 102, 241, 0.1) !important;
+    }
+
+    .bg-soft-blue {
+        background-color: rgba(59, 130, 246, 0.1) !important;
+    }
+
+    .bg-soft-orange {
+        background-color: rgba(251, 146, 60, 0.1) !important;
+    }
+
+    .text-purple {
+        color: #8b5cf6 !important;
+    }
+
+    .text-indigo {
+        color: #6366f1 !important;
+    }
+
+    .text-blue {
+        color: #3b82f6 !important;
+    }
+
+    .text-orange {
+        color: #fb923c !important;
+    }
+
     .welcome-card {
         background: linear-gradient(135deg, #f8f9ff 0%, #f1f3ff 100%);
         border: 1px solid rgba(79, 70, 229, 0.1);
@@ -209,7 +275,7 @@
         padding: 0.5rem 0;
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
-    
+
     .section-header h3 {
         font-weight: 600;
         letter-spacing: 1px;

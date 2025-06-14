@@ -8,6 +8,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 
 class DeliveryController extends Controller
 {
@@ -26,16 +27,23 @@ class DeliveryController extends Controller
     /**
      * Show the form for creating a new delivery.
      */
-    public function create(Order $order = null)
+    public function create(Request $request)
     {
-        $orders = $order
-            ? collect([$order->id => 'Order #' . $order->id . ' - ' . $order->user->name])
+        $selectedOrder = null;
+        
+        // Check if order is passed as parameter
+        if ($request->has('order')) {
+            $selectedOrder = Order::find($request->order);
+        }
+        
+        $orders = $selectedOrder
+            ? collect([$selectedOrder->id => 'Order #' . $selectedOrder->id . ' - ' . ($selectedOrder->user->name ?? 'N/A')])
             : Order::whereDoesntHave('delivery')
-                ->where('status', 'shipped')
-                ->pluck('user_id', 'id')
-                ->mapWithKeys(fn($userId, $id) => [$id => 'Order #' . $id . ' - ' . \App\Models\User::find($userId)->name]);
+                ->with('user')
+                ->get()
+                ->mapWithKeys(fn($order) => [$order->id => 'Order #' . $order->id . ' - ' . ($order->user->name ?? 'N/A')]);
 
-        return view('admin.deliveries.create', compact('orders'));
+        return view('admin.deliveries.create', compact('orders', 'selectedOrder'));
     }
 
     /**
@@ -144,46 +152,58 @@ class DeliveryController extends Controller
     {
         $validated = $request->validate([
             'status' => ['required', Rule::in(array_keys(Delivery::$statuses))],
-            'tracking_number' => [
-                Rule::requiredIf(fn() => $request->status === Delivery::STATUS_IN_TRANSIT),
-                'nullable',
-                'string',
-                'max:100',
-                Rule::unique('deliveries')->ignore($delivery->id),
-            ],
-            'carrier' => [
-                Rule::requiredIf(fn() => $request->status === Delivery::STATUS_IN_TRANSIT),
-                'nullable',
-                'string',
-                'max:100',
-            ],
         ]);
 
-        // Update tracking number and carrier if provided
-        if (isset($validated['tracking_number'])) {
-            $delivery->tracking_number = $validated['tracking_number'];
-        }
-        if (isset($validated['carrier'])) {
-            $delivery->carrier = $validated['carrier'];
-        }
+        $oldStatus = $delivery->status;
+        $delivery->update($validated);
 
-        // Update status and timestamps
-        $delivery->status = $validated['status'];
-        
+        // Auto-update timestamps based on status
         if ($validated['status'] === Delivery::STATUS_IN_TRANSIT && !$delivery->shipped_at) {
-            $delivery->shipped_at = now();
+            $delivery->update(['shipped_at' => now()]);
         } elseif ($validated['status'] === Delivery::STATUS_DELIVERED) {
-            $delivery->delivered_at = now();
-            if (!$delivery->shipped_at) {
-                $delivery->shipped_at = now();
-            }
+            $delivery->update([
+                'delivered_at' => now(),
+                'shipped_at' => $delivery->shipped_at ?? now()
+            ]);
         }
-        
-        $delivery->save();
 
         return redirect()
-            ->back()
+            ->route('admin.deliveries.show', $delivery)
             ->with('success', 'Delivery status updated successfully.');
+    }
+
+    /**
+     * Convert proforma invoice to final invoice
+     */
+    public function convertToFinalInvoice(Delivery $delivery)
+    {
+        try {
+            if (!$delivery->hasConvertibleProformaInvoice()) {
+                return redirect()->back()->with('error', 'No convertible proforma invoice found for this delivery.');
+            }
+
+            $proformaInvoice = $delivery->getConvertibleProformaInvoice();
+            
+            if (!$proformaInvoice) {
+                return redirect()->back()->with('error', 'Unable to find proforma invoice.');
+            }
+
+            // Convert proforma to final invoice
+            $finalInvoice = $proformaInvoice->convertToFinalInvoice($delivery->id);
+
+            // Update delivery status if needed
+            if ($delivery->status === 'pending') {
+                $delivery->update(['status' => 'processing']);
+            }
+
+            return redirect()
+                ->route('admin.invoices.show', $finalInvoice)
+                ->with('success', 'Proforma invoice successfully converted to final invoice.');
+
+        } catch (\Exception $e) {
+            Log::error('Failed to convert proforma to final invoice: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to convert invoice: ' . $e->getMessage());
+        }
     }
 
     /**
