@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" x-cloak class="bg-white border-b border-gray-100 dark:border-gray-700 shadow-sm mt-0">
+<nav x-data="{ open: false }" x-cloak class="bg-white border-b border-gray-100 shadow-sm mt-0">
     <style>
         [x-cloak] { display: none !important; }
         
