@@ -229,6 +229,17 @@
                         <a href="{{ route('admin.products.show', $product) }}" class="absolute inset-0"></a>
                         {{ $product->name }}
                     </h3>
+                    @if($product->sku)
+                        <p class="text-xs text-gray-500 mt-1">
+                            <span class="inline-flex items-center">
+                                <svg class="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75H16.5v-.75zM13.5 13.5h.75v.75H13.5v-.75zM13.5 16.5h.75v.75H13.5v-.75zM16.5 13.5h.75v.75H16.5v-.75zM19.5 13.5h.75v.75H19.5v-.75zM19.5 16.5h.75v.75H19.5v-.75zM16.5 16.5h.75v.75H16.5v-.75z" />
+                                </svg>
+                                SKU: {{ $product->sku }}
+                            </span>
+                        </p>
+                    @endif
                     <div class="mt-2 flex items-center justify-between">
                         <div>
                             <p class="text-sm text-gray-500">${{ number_format($product->price, 2) }}</p>

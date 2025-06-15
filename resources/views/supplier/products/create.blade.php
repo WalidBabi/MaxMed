@@ -73,6 +73,20 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label fw-medium">SKU (Auto-generated)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light">
+                                            <i class="fas fa-barcode"></i>
+                                        </span>
+                                        <input type="text" class="form-control bg-light" readonly 
+                                               value="Will auto-generate with MM-#### format">
+                                    </div>
+                                    <small class="text-muted">SKU will be automatically assigned after product creation</small>
+                                </div>
+                            </div>
+
                             <!-- Product Description -->
                             <div class="col-12 mt-4">
                                 <h5 class="mb-3 text-primary">

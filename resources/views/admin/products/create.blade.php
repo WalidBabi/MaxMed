@@ -47,6 +47,22 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label class="form-label fw-medium">SKU (Auto-generated)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light">
+                                            <i class="fas fa-barcode"></i>
+                                        </span>
+                                        <input type="text" id="sku_preview" class="form-control bg-light" readonly 
+                                               value="Will auto-generate based on selected brand">
+                                    </div>
+                                    <small class="text-muted">
+                                        SKU Format: MT-#### (MaxTest), MW-#### (MaxWare), MM-#### (Others)
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label for="category_id" class="form-label fw-medium">Category <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-light">

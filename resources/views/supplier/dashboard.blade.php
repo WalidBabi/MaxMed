@@ -22,198 +22,195 @@
     </div>
 
     <!-- Product Management Section -->
-    <div class="mb-8">
-        <h3 class="text-lg font-semibold text-gray-500 mb-4 tracking-wide">PRODUCT MANAGEMENT</h3>
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <!-- Total Products -->
-            <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-lg metric-card">
-                            <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-                            </svg>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <!-- Product Statistics -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                        <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                        Product Management
+                    </h3>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-blue-50 rounded-lg p-4">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="w-8 h-8 bg-blue-100 rounded-md flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-blue-600">Total Products</p>
+                                    <p class="text-2xl font-bold text-blue-900">{{ $totalProducts }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-green-50 rounded-lg p-4">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="w-8 h-8 bg-green-100 rounded-md flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-sm font-medium text-green-600">Active Products</p>
+                                    <p class="text-2xl font-bold text-green-900">{{ $activeProducts }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Total Products</p>
-                        <p class="text-lg font-semibold text-gray-900">{{ $totalProducts }}</p>
-                        <p class="text-xs text-gray-500 mt-1">Your catalog size</p>
+                    
+                    <div class="flex justify-between items-center">
+                        <p class="text-gray-600">Manage your product catalog and inventory</p>
+                        <a href="{{ route('supplier.products.index') }}" 
+                           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                            Manage Products
+                        </a>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Add New Product -->
-            <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-                <a href="{{ route('supplier.products.create') }}" class="block text-decoration-none">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="flex h-12 w-12 items-center justify-center rounded-lg success-card">
-                                <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600">Add Product</p>
-                            <p class="text-lg font-semibold text-gray-900">New Item</p>
-                            <p class="text-xs text-gray-500 mt-1">Expand your catalog</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-
-            <!-- Manage Products -->
-            <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-                <a href="{{ route('supplier.products.index') }}" class="block text-decoration-none">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="flex h-12 w-12 items-center justify-center rounded-lg warning-card">
-                                <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 17.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600">Manage Products</p>
-                            <p class="text-lg font-semibold text-gray-900">View & Edit</p>
-                            <p class="text-xs text-gray-500 mt-1">Product management</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-
-            <!-- Feedback -->
-            <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-                <a href="{{ route('supplier.feedback.index') }}" class="block text-decoration-none">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <div class="flex h-12 w-12 items-center justify-center rounded-lg danger-card">
-                                <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-gray-600">Feedback</p>
-                            <p class="text-lg font-semibold text-gray-900">Support</p>
-                            <p class="text-xs text-gray-500 mt-1">Help us improve</p>
-                        </div>
-                    </div>
-                </a>
+        <!-- Quick Actions -->
+        <div>
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <h3 class="text-lg font-semibold text-gray-900">Quick Actions</h3>
+                </div>
+                <div class="p-6 space-y-4">
+                    <a href="{{ route('supplier.products.create') }}" 
+                       class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Add New Product
+                    </a>
+                    
+                    <a href="{{ route('supplier.orders.index') }}" 
+                       class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        View Orders
+                    </a>
+                    
+                    <a href="{{ route('supplier.feedback.create') }}" 
+                       class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        Send Feedback
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Recent Products Section -->
-    <div class="mb-8">
-        <h3 class="text-lg font-semibold text-gray-500 mb-4 tracking-wide">RECENT PRODUCTS</h3>
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-            <!-- Recent Products List -->
-            <div class="lg:col-span-2">
-                <div class="card-hover overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
-                    <div class="px-4 py-5 sm:p-6">
-                        @if($recentProducts->count() > 0)
-                            <div class="flow-root">
-                                <ul role="list" class="-my-5 divide-y divide-gray-200">
-                                    @foreach($recentProducts as $product)
-                                        <li class="py-4">
-                                            <div class="flex items-center space-x-4">
-                                                <div class="flex-shrink-0">
-                                                    @if($product->image_url)
-                                                        <img class="h-10 w-10 rounded-lg object-cover" src="{{ $product->image_url }}" alt="{{ $product->name }}">
-                                                    @else
-                                                        <div class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center">
-                                                            <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                                                            </svg>
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                                <div class="min-w-0 flex-1">
-                                                    <p class="truncate text-sm font-medium text-gray-900">{{ $product->name }}</p>
-                                                    <p class="truncate text-sm text-gray-500">{{ $product->category->name ?? 'No category' }}</p>
-                                                </div>
-                                                <div class="flex-shrink-0 text-sm text-gray-500">
-                                                    {{ $product->created_at->format('M d, Y') }}
-                                                </div>
-                                                <div class="flex-shrink-0 flex space-x-2">
-                                                    <a href="{{ route('supplier.products.edit', $product) }}" class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                                                        <svg class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                                                        </svg>
-                                                        Edit
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            <div class="mt-6">
-                                <a href="{{ route('supplier.products.index') }}" class="w-full flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                                    View all products
-                                </a>
-                            </div>
-                        @else
-                            <div class="text-center py-12">
-                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-                                </svg>
-                                <h3 class="mt-2 text-sm font-semibold text-gray-900">No products</h3>
-                                <p class="mt-1 text-sm text-gray-500">Get started by creating your first product.</p>
-                                <div class="mt-6">
-                                    <a href="{{ route('supplier.products.create') }}" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                        <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                                        </svg>
-                                        Add Product
-                                    </a>
-                                </div>
-                            </div>
-                        @endif
+    <!-- Order Management Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <!-- Order Statistics -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                        <svg class="w-5 h-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Order Management
+                    </h3>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-orange-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-orange-900">{{ $orderStats['pending'] }}</div>
+                            <div class="text-sm text-orange-600">Pending</div>
+                        </div>
+                        
+                        <div class="bg-blue-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-blue-900">{{ $orderStats['processing'] }}</div>
+                            <div class="text-sm text-blue-600">Processing</div>
+                        </div>
+                        
+                        <div class="bg-purple-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-purple-900">{{ $orderStats['in_transit'] }}</div>
+                            <div class="text-sm text-purple-600">In Transit</div>
+                        </div>
+                        
+                        <div class="bg-green-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-green-900">{{ $orderStats['delivered_today'] }}</div>
+                            <div class="text-sm text-green-600">Delivered Today</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        <p class="text-gray-600">Process and manage customer orders</p>
+                        <a href="{{ route('supplier.orders.index') }}" 
+                           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Manage Orders
+                        </a>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Quick Actions & Guidelines -->
-            <div class="space-y-6">
-                <!-- Quick Actions -->
-                <div class="card-hover overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
-                    <div class="px-4 py-5 sm:p-6">
-                        <h3 class="text-base font-semibold leading-6 text-gray-900">Quick Actions</h3>
-                        <div class="mt-5 space-y-3">
-                            <a href="{{ route('supplier.products.create') }}" class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
-                                <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                                </svg>
-                                Add New Product
-                            </a>
-                            <a href="{{ route('supplier.feedback.create') }}" class="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                                <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
-                                </svg>
-                                Submit Feedback
-                            </a>
-                        </div>
-                    </div>
+        <!-- Recent Orders Requiring Attention -->
+        <div>
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <h3 class="text-lg font-semibold text-gray-900">Orders Requiring Attention</h3>
                 </div>
-
-                <!-- Supplier Guidelines -->
-                <div class="card-hover overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
-                    <div class="px-4 py-5 sm:p-6">
-                        <h3 class="text-base font-semibold leading-6 text-gray-900">
-                            <svg class="inline h-5 w-5 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                            </svg>
-                            Guidelines
-                        </h3>
-                        <div class="mt-3 text-sm text-gray-600 space-y-2">
-                            <p><strong>Brand:</strong> All supplier products are automatically assigned to the "Yooning" brand.</p>
-                            <p><strong>Updates:</strong> You can edit your product information anytime through the dashboard.</p>
-                            <p><strong>Support:</strong> Use the feedback system to report issues or request features.</p>
+                <div class="p-6">
+                    @if($recentOrders->count() > 0)
+                        <div class="space-y-3">
+                            @foreach($recentOrders as $order)
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">{{ $order->order_number }}</div>
+                                        <div class="text-xs text-gray-500">{{ $order->items->count() }} items</div>
+                                    </div>
+                                    <div class="text-right">
+                                        @php
+                                            $statusClasses = [
+                                                'pending' => 'bg-orange-100 text-orange-800',
+                                                'processing' => 'bg-blue-100 text-blue-800',
+                                            ];
+                                        @endphp
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium {{ $statusClasses[$order->delivery->status] ?? 'bg-gray-100 text-gray-800' }}">
+                                            {{ ucfirst($order->delivery->status) }}
+                                        </span>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
-                    </div>
+                        <div class="mt-4">
+                            <a href="{{ route('supplier.orders.index', ['status' => 'pending']) }}" 
+                               class="text-sm text-purple-600 hover:text-purple-700 font-medium">
+                                View all pending orders →
+                            </a>
+                        </div>
+                    @else
+                        <div class="text-center py-4">
+                            <svg class="mx-auto h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p class="text-sm text-gray-500 mt-2">All caught up!</p>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

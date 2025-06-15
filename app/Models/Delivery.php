@@ -25,6 +25,11 @@ class Delivery extends Model
         'signature_ip_address',
         'signed_at',
         'delivery_conditions',
+        'packing_list_file',
+        'commercial_invoice_file',
+        'processed_by_supplier_at',
+        'sent_to_carrier_at',
+        'supplier_notes',
     ];
     
     /**
@@ -34,9 +39,30 @@ class Delivery extends Model
     {
         parent::boot();
         
-        // Automatic workflow triggers
+        // Auto-trigger workflow automation when delivery is created or updated
+        static::created(function ($delivery) {
+            // Auto-convert proforma invoice when delivery is created in certain statuses
+            if (in_array($delivery->status, ['in_transit', 'delivered'])) {
+                $delivery->autoConvertToFinalInvoice();
+            }
+        });
+
         static::updated(function ($delivery) {
-            $delivery->handleWorkflowAutomation();
+            // Auto-convert proforma invoice when delivery status changes to trigger statuses
+            if ($delivery->wasChanged('status')) {
+                $oldStatus = $delivery->getOriginal('status');
+                $newStatus = $delivery->status;
+                
+                Log::info("Delivery {$delivery->id} status changed from {$oldStatus} to {$newStatus}");
+                
+                // Trigger conversion when status changes to shipping or delivery states
+                if (in_array($newStatus, ['in_transit', 'delivered']) && 
+                    !in_array($oldStatus, ['in_transit', 'delivered'])) {
+                    
+                    Log::info("Triggering auto-conversion for delivery {$delivery->id} due to status change");
+                    $delivery->autoConvertToFinalInvoice();
+                }
+            }
         });
     }
 
@@ -55,7 +81,8 @@ class Delivery extends Model
     }
 
     /**
-     * Automatically convert proforma invoice to final invoice when delivered
+     * Auto-convert proforma invoice to final invoice upon delivery
+     * Handles different payment scenarios and updates all relevant statuses
      */
     public function autoConvertToFinalInvoice()
     {
@@ -63,26 +90,224 @@ class Delivery extends Model
             $proformaInvoice = $this->getConvertibleProformaInvoice();
             
             if (!$proformaInvoice) {
+                Log::info("No convertible proforma invoice found for delivery {$this->id}");
+                return;
+            }
+
+            Log::info("Starting auto-conversion of proforma invoice {$proformaInvoice->id} to final invoice for delivery {$this->id}");
+            
+            // Check payment requirements based on payment terms
+            $conversionReady = $this->isReadyForInvoiceConversion($proformaInvoice);
+            
+            if (!$conversionReady['ready']) {
+                Log::info("Delivery {$this->id} not ready for conversion: {$conversionReady['reason']}");
                 return;
             }
 
             // Convert proforma to final invoice
             $finalInvoice = $proformaInvoice->convertToFinalInvoice($this->id);
 
+            // Update delivery status based on invoice conversion
+            $this->updateStatusAfterInvoiceConversion($proformaInvoice, $finalInvoice);
+
+            // Update order status if exists
+            if ($this->order) {
+                $this->updateOrderStatusAfterConversion($finalInvoice);
+            }
+
             Log::info("Auto-converted proforma invoice {$proformaInvoice->id} to final invoice {$finalInvoice->id} for delivery {$this->id}");
 
-            // Optionally send final invoice email automatically
-            $this->autoSendFinalInvoiceEmail($finalInvoice);
+            // Send final invoice email based on payment situation
+            $this->handleFinalInvoiceNotification($finalInvoice, $proformaInvoice);
 
         } catch (\Exception $e) {
             Log::error('Failed to auto-convert to final invoice: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
         }
     }
 
     /**
-     * Automatically send final invoice email
+     * Check if delivery is ready for invoice conversion based on payment terms
      */
-    private function autoSendFinalInvoiceEmail($finalInvoice)
+    private function isReadyForInvoiceConversion($proformaInvoice): array
+    {
+        $paymentTerms = $proformaInvoice->payment_terms;
+        $paidAmount = $proformaInvoice->paid_amount;
+        $totalAmount = $proformaInvoice->total_amount;
+        $deliveryStatus = $this->status;
+
+        switch ($paymentTerms) {
+            case 'advance_50':
+                $requiredAmount = $totalAmount * 0.5;
+                if ($paidAmount < $requiredAmount) {
+                    return [
+                        'ready' => false, 
+                        'reason' => "50% advance payment required. Paid: {$paidAmount}, Required: {$requiredAmount}"
+                    ];
+                }
+                break;
+
+            case 'advance_100':
+                if ($paidAmount < $totalAmount) {
+                    return [
+                        'ready' => false, 
+                        'reason' => "Full advance payment required. Paid: {$paidAmount}, Required: {$totalAmount}"
+                    ];
+                }
+                break;
+
+            case 'on_delivery':
+                // No advance payment required, but delivery should be shipped/in-transit
+                if (!in_array($deliveryStatus, ['in_transit', 'delivered'])) {
+                    return [
+                        'ready' => false, 
+                        'reason' => "Delivery must be shipped for payment on delivery terms. Current status: {$deliveryStatus}"
+                    ];
+                }
+                break;
+
+            case 'net_30':
+                // Can convert immediately upon shipment
+                if (!in_array($deliveryStatus, ['in_transit', 'delivered'])) {
+                    return [
+                        'ready' => false, 
+                        'reason' => "Delivery must be shipped for net 30 terms. Current status: {$deliveryStatus}"
+                    ];
+                }
+                break;
+
+            case 'custom':
+                // Check custom advance percentage
+                $advancePercentage = $proformaInvoice->advance_percentage ?? 0;
+                if ($advancePercentage > 0) {
+                    $requiredAmount = $totalAmount * ($advancePercentage / 100);
+                    if ($paidAmount < $requiredAmount) {
+                        return [
+                            'ready' => false, 
+                            'reason' => "{$advancePercentage}% advance payment required. Paid: {$paidAmount}, Required: {$requiredAmount}"
+                        ];
+                    }
+                }
+                break;
+        }
+
+        return ['ready' => true, 'reason' => 'All conditions met'];
+    }
+
+    /**
+     * Update delivery status after invoice conversion
+     */
+    private function updateStatusAfterInvoiceConversion($proformaInvoice, $finalInvoice)
+    {
+        $newStatus = $this->status;
+        
+        // Update delivery status based on payment terms and current status
+        switch ($proformaInvoice->payment_terms) {
+            case 'advance_50':
+            case 'advance_100':
+                // If payment was received and goods are ready, ensure proper status
+                if ($this->status === 'pending') {
+                    $newStatus = 'processing';
+                }
+                break;
+                
+            case 'on_delivery':
+                // For payment on delivery, goods should be in transit or delivered
+                if ($this->status === 'pending') {
+                    $newStatus = 'processing';
+                }
+                break;
+        }
+
+        if ($newStatus !== $this->status) {
+            $this->update(['status' => $newStatus]);
+            Log::info("Updated delivery {$this->id} status from {$this->status} to {$newStatus}");
+        }
+    }
+
+    /**
+     * Update order status after invoice conversion
+     */
+    private function updateOrderStatusAfterConversion($finalInvoice)
+    {
+        $currentOrderStatus = $this->order->status;
+        $newOrderStatus = $currentOrderStatus;
+
+        // Determine new order status based on final invoice payment status
+        if ($finalInvoice->payment_status === 'paid') {
+            // Full payment received, can proceed with fulfillment
+            if (in_array($currentOrderStatus, ['pending', 'processing'])) {
+                $newOrderStatus = 'processing';
+            }
+        } elseif ($finalInvoice->payment_status === 'pending' && $finalInvoice->payment_terms === 'on_delivery') {
+            // Payment on delivery, update to ready for shipping
+            if ($currentOrderStatus === 'pending') {
+                $newOrderStatus = 'processing';
+            }
+        }
+
+        if ($newOrderStatus !== $currentOrderStatus) {
+            $this->order->update(['status' => $newOrderStatus]);
+            Log::info("Updated order {$this->order->id} status from {$currentOrderStatus} to {$newOrderStatus}");
+        }
+    }
+
+    /**
+     * Handle final invoice notification based on payment situation
+     */
+    private function handleFinalInvoiceNotification($finalInvoice, $proformaInvoice)
+    {
+        $shouldSendEmail = false;
+        $emailType = 'delivery_completed';
+
+        switch ($proformaInvoice->payment_terms) {
+            case 'advance_50':
+                // Send email for remaining balance
+                if ($finalInvoice->total_amount > 0) {
+                    $shouldSendEmail = true;
+                    $emailType = 'remaining_balance_due';
+                }
+                break;
+
+            case 'advance_100':
+                // Send confirmation email for completed delivery
+                $shouldSendEmail = true;
+                $emailType = 'delivery_completed_paid';
+                break;
+
+            case 'on_delivery':
+                // Send email requesting payment upon delivery
+                $shouldSendEmail = true;
+                $emailType = 'payment_due_on_delivery';
+                break;
+
+            case 'net_30':
+                // Send email with 30-day payment terms
+                $shouldSendEmail = true;
+                $emailType = 'payment_due_net_30';
+                break;
+
+            case 'custom':
+                // Send email based on remaining balance
+                if ($finalInvoice->total_amount > 0) {
+                    $shouldSendEmail = true;
+                    $emailType = 'remaining_balance_due';
+                } else {
+                    $shouldSendEmail = true;
+                    $emailType = 'delivery_completed_paid';
+                }
+                break;
+        }
+
+        if ($shouldSendEmail) {
+            $this->sendFinalInvoiceEmail($finalInvoice, $emailType);
+        }
+    }
+
+    /**
+     * Send final invoice email with context-appropriate message
+     */
+    private function sendFinalInvoiceEmail($finalInvoice, $emailType)
     {
         try {
             // Get customer email from the customer name
@@ -93,11 +318,27 @@ class Delivery extends Model
                 return;
             }
 
+            $emailMessages = [
+                'delivery_completed' => 'Your order has been delivered successfully. Please find the final invoice attached.',
+                'remaining_balance_due' => 'Your order has been processed and is ready for delivery. Please find the final invoice for the remaining balance attached.',
+                'delivery_completed_paid' => 'Your order has been delivered successfully. Thank you for your payment. This final invoice is for your records.',
+                'payment_due_on_delivery' => 'Your order has been delivered. Please find the final invoice attached. Payment is due upon delivery.',
+                'payment_due_net_30' => 'Your order has been processed. Please find the final invoice attached. Payment is due within 30 days.'
+            ];
+
+            $subjects = [
+                'delivery_completed' => 'Final Invoice - Delivery Completed',
+                'remaining_balance_due' => 'Final Invoice - Remaining Balance Due',
+                'delivery_completed_paid' => 'Final Invoice - Delivery Completed (Paid)',
+                'payment_due_on_delivery' => 'Final Invoice - Payment Due on Delivery',
+                'payment_due_net_30' => 'Final Invoice - Payment Due in 30 Days'
+            ];
+
             $emailData = [
                 'to_email' => $customer->email,
                 'cc_emails' => ['sales@maxmedme.com'],
-                'subject' => 'Final Invoice ' . $finalInvoice->invoice_number . ' - Delivery Completed',
-                'message' => 'Your order has been delivered successfully. Please find the final invoice attached.'
+                'subject' => ($subjects[$emailType] ?? 'Final Invoice') . ' - ' . $finalInvoice->invoice_number,
+                'message' => $emailMessages[$emailType] ?? $emailMessages['delivery_completed']
             ];
 
             Mail::to($customer->email)
@@ -111,6 +352,7 @@ class Delivery extends Model
                 'to' => $customer->email,
                 'cc' => ['sales@maxmedme.com'],
                 'subject' => $emailData['subject'],
+                'type' => $emailType,
                 'auto_sent' => true
             ];
 
@@ -120,7 +362,7 @@ class Delivery extends Model
                 'status' => 'sent'
             ]);
 
-            Log::info("Auto-sent final invoice email for invoice {$finalInvoice->id}");
+            Log::info("Auto-sent final invoice email ({$emailType}) for invoice {$finalInvoice->id}");
 
         } catch (\Exception $e) {
             Log::error('Failed to auto-send final invoice email: ' . $e->getMessage());
@@ -158,6 +400,8 @@ class Delivery extends Model
         'shipped_at' => 'datetime',
         'delivered_at' => 'datetime',
         'signed_at' => 'datetime',
+        'processed_by_supplier_at' => 'datetime',
+        'sent_to_carrier_at' => 'datetime',
         'delivery_conditions' => 'array',
     ];
 
@@ -255,14 +499,81 @@ class Delivery extends Model
 
     /**
      * Check if delivery is ready for final invoice conversion
+     * Enhanced to handle different payment scenarios properly
      */
     public function isReadyForFinalInvoice(): bool
     {
-        return in_array($this->status, [
-            self::STATUS_PROCESSING,
-            self::STATUS_IN_TRANSIT,
-            self::STATUS_DELIVERED
-        ]) && $this->hasConvertibleProformaInvoice();
+        $proformaInvoice = $this->getProformaInvoice();
+        
+        if (!$proformaInvoice) {
+            return false;
+        }
+
+        // Check basic conversion requirements
+        if (!$proformaInvoice->canConvertToFinalInvoice()) {
+            return false;
+        }
+
+        // Check if final invoice already exists
+        if ($this->finalInvoice()->exists()) {
+            return false;
+        }
+
+        // Check payment and delivery status requirements
+        $conversionReady = $this->isReadyForInvoiceConversion($proformaInvoice);
+        
+        return $conversionReady['ready'];
+    }
+
+    /**
+     * Get detailed status of final invoice conversion readiness
+     */
+    public function getFinalInvoiceConversionStatus(): array
+    {
+        $proformaInvoice = $this->getProformaInvoice();
+        
+        if (!$proformaInvoice) {
+            return [
+                'ready' => false,
+                'reason' => 'No proforma invoice found',
+                'details' => []
+            ];
+        }
+
+        if (!$proformaInvoice->canConvertToFinalInvoice()) {
+            return [
+                'ready' => false,
+                'reason' => "Proforma invoice status is '{$proformaInvoice->status}' (must be 'confirmed')",
+                'details' => [
+                    'proforma_status' => $proformaInvoice->status,
+                    'required_status' => 'confirmed'
+                ]
+            ];
+        }
+
+        if ($this->finalInvoice()->exists()) {
+            return [
+                'ready' => false,
+                'reason' => 'Final invoice already exists',
+                'details' => [
+                    'final_invoice_id' => $this->finalInvoice()->first()->id ?? null
+                ]
+            ];
+        }
+
+        $conversionCheck = $this->isReadyForInvoiceConversion($proformaInvoice);
+        
+        return [
+            'ready' => $conversionCheck['ready'],
+            'reason' => $conversionCheck['reason'],
+            'details' => [
+                'payment_terms' => $proformaInvoice->payment_terms,
+                'paid_amount' => $proformaInvoice->paid_amount,
+                'total_amount' => $proformaInvoice->total_amount,
+                'delivery_status' => $this->status,
+                'advance_percentage' => $proformaInvoice->advance_percentage
+            ]
+        ];
     }
 
     /**
