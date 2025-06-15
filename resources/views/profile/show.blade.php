@@ -1,4 +1,8 @@
-@extends('admin.layouts.app')
+@if(Auth::user()->role && Auth::user()->role->name === 'supplier')
+    @extends('supplier.layouts.app')
+@else
+    @extends('admin.layouts.app')
+@endif
 
 @section('title', 'Profile')
 
@@ -138,12 +142,21 @@
                             </svg>
                             Change Password
                         </a>
-                        <a href="{{ route('admin.dashboard') }}" class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-                            </svg>
-                            Back to Dashboard
-                        </a>
+                        @if($user->role && $user->role->name === 'supplier')
+                            <a href="{{ route('supplier.dashboard') }}" class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                                </svg>
+                                Back to Supplier Dashboard
+                            </a>
+                        @elseif($user->is_admin || ($user->role && $user->role->hasPermission('dashboard.view')))
+                            <a href="{{ route('admin.dashboard') }}" class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                                </svg>
+                                Back to Dashboard
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
