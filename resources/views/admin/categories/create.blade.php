@@ -3,6 +3,7 @@
 @section('title', 'Create Category')
 
 @section('content')
+<div class="-mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
     <!-- Header -->
     <div class="mb-8">
         <div class="flex items-center justify-between">
@@ -43,9 +44,7 @@
                                 <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Category Name <span class="text-red-500">*</span></label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-                                        </svg>
+                                        
                                     </div>
                                     <input type="text" name="name" id="name" value="{{ old('name') }}" required
                                            placeholder="Enter category name"
@@ -60,9 +59,7 @@
                                 <label for="parent_id" class="block text-sm font-medium text-gray-700 mb-2">Parent Category</label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                                        </svg>
+                                       
                                     </div>
                                     <select name="parent_id" id="parent_id" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('parent_id') border-red-300 @enderror">
                                         <option value="">None (Top Level)</option>
@@ -131,6 +128,7 @@
             </div>
         </div>
     </form>
+</div>
 @endsection
 
 @push('scripts')

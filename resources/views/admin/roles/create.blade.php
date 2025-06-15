@@ -3,6 +3,7 @@
 @section('title', 'Create Role')
 
 @section('content')
+<div class="-mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
     <!-- Header -->
     <div class="mb-8">
         <div class="flex items-center justify-between">
@@ -247,6 +248,7 @@
             </div>
         </div>
     </form>
+</div>
 @endsection
 
 @push('styles')

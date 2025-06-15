@@ -1,6 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('content')
+<div class="-mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
 <div class="main-content">
     <!-- Header Section -->
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -187,6 +188,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <style>

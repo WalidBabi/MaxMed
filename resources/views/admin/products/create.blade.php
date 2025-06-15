@@ -1,6 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('content')
+<div class="-mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
 <div class="container-fluid py-4">
     <div class="row">
         <div class="col-12">
