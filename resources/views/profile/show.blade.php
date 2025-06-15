@@ -84,17 +84,22 @@
                     <h3 class="text-lg font-semibold text-gray-900">Profile Picture</h3>
                 </div>
                 <div class="p-6 text-center">
-                    <div class="mx-auto h-24 w-24 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold mb-4">
-                        {{ strtoupper(substr($user->name, 0, 2)) }}
+                    <div class="mx-auto h-24 w-24 rounded-full mb-4 overflow-hidden border-4 border-gray-100">
+                        @if($user->profile_photo)
+                            <img src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}" class="h-full w-full object-cover">
+                        @else
+                            <div class="h-full w-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold">
+                                {{ strtoupper(substr($user->name, 0, 2)) }}
+                            </div>
+                        @endif
                     </div>
-                    <p class="text-sm text-gray-600">Profile picture coming soon</p>
                 </div>
             </div>
 
             <!-- Account Stats -->
             <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                    <h3 class="text-lg font-semibold text-gray-900">Account Statistics</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">Account Information</h3>
                 </div>
                 <div class="p-6">
                     <div class="space-y-4">
@@ -105,15 +110,9 @@
                             </span>
                         </div>
                         <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600">Role</span>
+                            <span class="text-sm text-gray-600">Account Type</span>
                             <span class="text-sm font-medium text-gray-900">
-                                {{ ucfirst($user->role ?? 'User') }}
-                            </span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-600">Login Count</span>
-                            <span class="text-sm font-medium text-gray-900">
-                                {{ $user->login_count ?? 'N/A' }}
+                                {{ $user->is_admin ? 'Administrator' : 'User' }}
                             </span>
                         </div>
                     </div>
