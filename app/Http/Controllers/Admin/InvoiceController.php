@@ -498,10 +498,27 @@ class InvoiceController extends Controller
 
             $invoice->update($invoiceUpdate);
 
+            // Return JSON response for AJAX requests
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Invoice email sent successfully!'
+                ]);
+            }
+
             return redirect()->back()->with('success', 'Invoice email sent successfully!');
 
         } catch (\Exception $e) {
             Log::error('Failed to send invoice email: ' . $e->getMessage());
+            
+            // Return JSON response for AJAX requests
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to send email: ' . $e->getMessage()
+                ]);
+            }
+            
             return redirect()->back()->with('error', 'Failed to send email: ' . $e->getMessage());
         }
     }

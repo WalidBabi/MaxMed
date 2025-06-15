@@ -153,7 +153,7 @@
                             <div class="text-sm text-gray-500">Total Orders</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-2xl font-bold text-gray-900">${{ number_format($stats['total_spent'], 2) }}</div>
+                            <div class="text-2xl font-bold text-gray-900">AED{{ number_format($stats['total_spent'], 2) }}</div>
                             <div class="text-sm text-gray-500">Total Spent</div>
                         </div>
                     </div>
@@ -401,7 +401,7 @@
                                                     {{ ucfirst($order->status) }}
                                                 </span>
                                             </div>
-                                            <div class="text-sm text-gray-900 font-medium">${{ number_format($order->total_amount, 2) }}</div>
+                                            <div class="text-sm text-gray-900 font-medium">AED{{ number_format($order->total_amount, 2) }}</div>
                                         </div>
                                         <div class="text-xs text-gray-500 mb-2">{{ $order->created_at->format('M d, Y') }}</div>
                                         @if($order->orderItems->count() > 0)
@@ -462,7 +462,7 @@
                                                             {{ ucfirst($quote->status) }}
                                                         </span>
                                                     </div>
-                                                    <div class="text-sm text-gray-900 font-medium">${{ number_format($quote->total_amount, 2) }}</div>
+                                                    <div class="text-sm text-gray-900 font-medium">AED{{ number_format($quote->total_amount, 2) }}</div>
                                                 </div>
                                                 <div class="text-xs text-gray-500 mb-1">{{ $quote->quote_date->format('M d, Y') }}</div>
                                                 @if($quote->subject)
@@ -507,7 +507,7 @@
                                                             {{ ucfirst($invoice->payment_status) }}
                                                         </span>
                                                     </div>
-                                                    <div class="text-sm text-gray-900 font-medium">${{ number_format($invoice->total_amount, 2) }}</div>
+                                                    <div class="text-sm text-gray-900 font-medium">AED{{ number_format($invoice->total_amount, 2) }}</div>
                                                 </div>
                                                 <div class="text-xs text-gray-500 mb-1">{{ $invoice->invoice_date->format('M d, Y') }}</div>
                                                 @if($invoice->due_date)
