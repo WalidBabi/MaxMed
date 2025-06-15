@@ -76,7 +76,47 @@ class CustomerController extends Controller
     public function show(Customer $customer)
     {
         $customer->load('user');
-        return view('admin.customers.show', compact('customer'));
+        
+        // Calculate customer statistics
+        $stats = [
+            'total_orders' => $customer->user_id ? \App\Models\Order::where('user_id', $customer->user_id)->count() : 0,
+            
+            'total_spent' => $customer->user_id ? \App\Models\Order::where('user_id', $customer->user_id)->sum('total_amount') : 0,
+            
+            'total_quotes' => \App\Models\Quote::where('customer_name', $customer->name)->count(),
+            
+            'total_invoices' => \App\Models\Invoice::where('customer_name', $customer->name)->count(),
+            
+            'pending_invoices' => \App\Models\Invoice::where('customer_name', $customer->name)
+                ->where('payment_status', 'pending')->count(),
+                
+            'overdue_invoices' => \App\Models\Invoice::where('customer_name', $customer->name)
+                ->where('payment_status', 'overdue')->count(),
+        ];
+        
+        // Get recent orders
+        $recentOrders = collect();
+        if ($customer->user_id) {
+            $recentOrders = \App\Models\Order::where('user_id', $customer->user_id)
+                ->with(['orderItems.product'])
+                ->latest()
+                ->limit(5)
+                ->get();
+        }
+        
+        // Get recent quotes
+        $recentQuotes = \App\Models\Quote::where('customer_name', $customer->name)
+            ->latest()
+            ->limit(5)
+            ->get();
+            
+        // Get recent invoices  
+        $recentInvoices = \App\Models\Invoice::where('customer_name', $customer->name)
+            ->latest()
+            ->limit(5)
+            ->get();
+        
+        return view('admin.customers.show', compact('customer', 'stats', 'recentOrders', 'recentQuotes', 'recentInvoices'));
     }
 
     /**
