@@ -128,14 +128,10 @@ class User extends Authenticatable
     /**
      * Get profile photo or default initials
      *
-     * @return array
+     * @return string
      */
     public function getProfileDisplayAttribute()
     {
-        return [
-            'photo_url' => $this->profile_photo_url,
-            'initials' => strtoupper(substr($this->name, 0, 2)),
-            'has_photo' => !empty($this->profile_photo)
-        ];
+        return strtoupper(substr($this->name ?? 'U', 0, 2));
     }
 }

@@ -27,9 +27,9 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-8 xl:grid-cols-4">
         <!-- Customer Details Sidebar -->
-        <div class="lg:col-span-1">
+        <div class="xl:col-span-1">
             <!-- Customer Profile Card -->
             <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-6">
                 <div class="px-6 py-4 border-b border-gray-200">
@@ -38,8 +38,7 @@
                 <div class="p-6">
                     <!-- Avatar and Basic Info -->
                     <div class="text-center mb-6">
-                        <div class="mx-auto h-20 w-20 rounded-full flex items-center justify-center text-2xl font-bold text-white mb-3" 
-                             style="background-color: #{{ substr(md5($customer->name), 0, 6) }}">
+                        <div class="mx-auto h-20 w-20 rounded-full flex items-center justify-center text-2xl font-bold text-white mb-3 bg-indigo-600">
                             {{ strtoupper(substr($customer->name, 0, 1)) }}
                         </div>
                         <h4 class="text-xl font-semibold text-gray-900 mb-2">{{ $customer->name }}</h4>
@@ -134,7 +133,7 @@
         </div>
 
         <!-- Main Content Area -->
-        <div class="lg:col-span-2">
+        <div class="xl:col-span-3">
             <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
                 <!-- Tab Navigation -->
                 <div class="border-b border-gray-200">
