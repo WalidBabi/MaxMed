@@ -108,7 +108,7 @@ class ProductController extends Controller
         ]);
 
         DB::transaction(function () use ($request, $validated) {
-            // Create the product first
+            // Create the product first (SKU will be auto-generated based on brand)
             $product = Product::create([
                 'name' => $validated['name'],
                 'description' => $validated['description'],
@@ -216,6 +216,7 @@ class ProductController extends Controller
         try {
             DB::transaction(function () use ($request, $product, $validated) {
                 // Update product details
+                $oldBrandId = $product->brand_id;
                 $product->update([
                     'name' => $validated['name'],
                     'description' => $validated['description'],
@@ -227,6 +228,12 @@ class ProductController extends Controller
                     'size_options' => $request->has('has_size_options') && $request->filled('size_options') ? 
                                     json_encode(array_filter($request->size_options)) : null,
                 ]);
+
+                // If brand changed, regenerate SKU
+                if ($oldBrandId != $validated['brand_id']) {
+                    $newSku = Product::generateSku(null, $validated['brand_id']);
+                    $product->update(['sku' => $newSku]);
+                }
 
                 // Update inventory quantity
                 $product->inventory->update([

@@ -226,6 +226,8 @@ class Invoice extends Model
             throw new \Exception('Cannot convert this proforma invoice to final invoice');
         }
 
+        Log::info("Converting proforma invoice {$this->id} to final invoice. Payment terms: {$this->payment_terms}, Paid amount: {$this->paid_amount}, Total: {$this->total_amount}");
+
         $finalInvoice = $this->replicate([
             'invoice_number',
             'created_at',
@@ -238,41 +240,111 @@ class Invoice extends Model
         $finalInvoice->delivery_id = $deliveryId;
         $finalInvoice->status = 'sent';
         $finalInvoice->invoice_date = now();
-        $finalInvoice->due_date = now()->addDays(30);
-        $finalInvoice->created_by = auth()->id() ?? null;
+        $finalInvoice->due_date = $this->calculateFinalInvoiceDueDate();
+        $finalInvoice->created_by = auth()->id() ?? $userId ?? null;
 
         // Calculate remaining amount based on payment terms and paid amount
         $remainingAmount = $this->getRemainingAmount();
         
-        if ($this->payment_terms === 'advance_50' && $this->paid_amount > 0) {
-            // If 50% advance was paid, final invoice is for remaining 50%
-            $finalInvoice->total_amount = $remainingAmount;
-            $finalInvoice->sub_total = $remainingAmount;
-            $finalInvoice->payment_status = 'pending';
-            $finalInvoice->paid_amount = 0;
-        } elseif ($this->payment_terms === 'advance_100' && $this->paid_amount >= $this->total_amount) {
-            // If full payment was made on proforma, final invoice is for record keeping (0 amount)
-            $finalInvoice->total_amount = 0;
-            $finalInvoice->sub_total = 0;
-            $finalInvoice->payment_status = 'paid';
-            $finalInvoice->paid_amount = 0;
-            $finalInvoice->paid_at = now();
-        } elseif ($this->payment_terms === 'on_delivery') {
-            // Full amount due on delivery
-            $finalInvoice->total_amount = $this->total_amount;
-            $finalInvoice->payment_status = 'pending';
-            $finalInvoice->paid_amount = 0;
-        } else {
-            // Custom terms or other scenarios
-            $finalInvoice->total_amount = $remainingAmount;
-            $finalInvoice->payment_status = $remainingAmount > 0 ? 'pending' : 'paid';
-            $finalInvoice->paid_amount = 0;
-            if ($remainingAmount <= 0) {
-                $finalInvoice->paid_at = now();
-            }
+        Log::info("Remaining amount calculation: {$remainingAmount} (Total: {$this->total_amount}, Paid: {$this->paid_amount})");
+
+        switch ($this->payment_terms) {
+            case 'advance_50':
+                if ($this->paid_amount >= ($this->total_amount * 0.5)) {
+                    // 50% advance was paid, final invoice is for remaining 50%
+                    $finalInvoice->total_amount = $remainingAmount;
+                    $finalInvoice->sub_total = $remainingAmount;
+                    $finalInvoice->payment_status = $remainingAmount > 0 ? 'pending' : 'paid';
+                    $finalInvoice->paid_amount = 0;
+                    $finalInvoice->description = 'Final Invoice - Remaining Balance (50% advance payment received)';
+                    
+                    if ($remainingAmount <= 0) {
+                        $finalInvoice->paid_at = now();
+                    }
+                } else {
+                    throw new \Exception('50% advance payment not received. Cannot convert to final invoice.');
+                }
+                break;
+
+            case 'advance_100':
+                if ($this->paid_amount >= $this->total_amount) {
+                    // Full payment was made on proforma, final invoice is for record keeping
+                    $finalInvoice->total_amount = 0;
+                    $finalInvoice->sub_total = 0;
+                    $finalInvoice->payment_status = 'paid';
+                    $finalInvoice->paid_amount = 0;
+                    $finalInvoice->paid_at = now();
+                    $finalInvoice->description = 'Final Invoice - Delivery Completed (Full payment received on proforma)';
+                } else {
+                    throw new \Exception('Full advance payment not received. Cannot convert to final invoice.');
+                }
+                break;
+
+            case 'on_delivery':
+                // Full amount due on delivery
+                $finalInvoice->total_amount = $this->total_amount;
+                $finalInvoice->sub_total = $this->total_amount;
+                $finalInvoice->payment_status = 'pending';
+                $finalInvoice->paid_amount = 0;
+                $finalInvoice->due_date = now(); // Payment due immediately upon delivery
+                $finalInvoice->description = 'Final Invoice - Payment Due on Delivery';
+                break;
+
+            case 'net_30':
+                // Full amount due within 30 days
+                $finalInvoice->total_amount = $this->total_amount;
+                $finalInvoice->sub_total = $this->total_amount;
+                $finalInvoice->payment_status = 'pending';
+                $finalInvoice->paid_amount = 0;
+                $finalInvoice->due_date = now()->addDays(30);
+                $finalInvoice->description = 'Final Invoice - Payment Due in 30 Days';
+                break;
+
+            case 'custom':
+                $advancePercentage = $this->advance_percentage ?? 0;
+                if ($advancePercentage > 0) {
+                    $requiredAdvance = $this->total_amount * ($advancePercentage / 100);
+                    if ($this->paid_amount >= $requiredAdvance) {
+                        // Custom advance was paid, final invoice is for remaining amount
+                        $finalInvoice->total_amount = $remainingAmount;
+                        $finalInvoice->sub_total = $remainingAmount;
+                        $finalInvoice->payment_status = $remainingAmount > 0 ? 'pending' : 'paid';
+                        $finalInvoice->paid_amount = 0;
+                        $finalInvoice->description = "Final Invoice - Remaining Balance ({$advancePercentage}% advance payment received)";
+                        
+                        if ($remainingAmount <= 0) {
+                            $finalInvoice->paid_at = now();
+                        }
+                    } else {
+                        throw new \Exception("{$advancePercentage}% advance payment not received. Cannot convert to final invoice.");
+                    }
+                } else {
+                    // No advance required, full amount due
+                    $finalInvoice->total_amount = $this->total_amount;
+                    $finalInvoice->sub_total = $this->total_amount;
+                    $finalInvoice->payment_status = 'pending';
+                    $finalInvoice->paid_amount = 0;
+                    $finalInvoice->description = 'Final Invoice - Custom Payment Terms';
+                }
+                break;
+
+            default:
+                // Default case - remaining amount or full amount if no payment
+                $finalInvoice->total_amount = $remainingAmount > 0 ? $remainingAmount : $this->total_amount;
+                $finalInvoice->sub_total = $finalInvoice->total_amount;
+                $finalInvoice->payment_status = $finalInvoice->total_amount > 0 ? 'pending' : 'paid';
+                $finalInvoice->paid_amount = 0;
+                $finalInvoice->description = 'Final Invoice';
+                
+                if ($finalInvoice->total_amount <= 0) {
+                    $finalInvoice->paid_at = now();
+                }
+                break;
         }
 
         $finalInvoice->save();
+
+        Log::info("Created final invoice {$finalInvoice->id} with amount {$finalInvoice->total_amount} and status {$finalInvoice->payment_status}");
 
         // Copy items with potentially adjusted amounts
         foreach ($this->items as $item) {
@@ -284,6 +356,8 @@ class Invoice extends Model
                 $ratio = $finalInvoice->total_amount / $this->total_amount;
                 $newItem->line_total = $item->line_total * $ratio;
                 $newItem->unit_price = $item->unit_price * $ratio;
+                
+                Log::info("Adjusted invoice item {$item->id} by ratio {$ratio}: new line total {$newItem->line_total}");
             }
             
             $newItem->save();
@@ -295,10 +369,32 @@ class Invoice extends Model
         // Update proforma invoice status
         $this->update([
             'status' => 'completed',
-            'updated_by' => auth()->id() ?? null
+            'updated_by' => auth()->id() ?? $userId ?? null
         ]);
 
+        Log::info("Successfully converted proforma invoice {$this->id} to final invoice {$finalInvoice->id}");
+
         return $finalInvoice;
+    }
+
+    /**
+     * Calculate due date for final invoice based on payment terms
+     */
+    private function calculateFinalInvoiceDueDate()
+    {
+        switch ($this->payment_terms) {
+            case 'on_delivery':
+                return now(); // Due immediately
+            case 'net_30':
+                return now()->addDays(30);
+            case 'advance_50':
+            case 'advance_100':
+                return now()->addDays(15); // Give reasonable time for remaining balance
+            case 'custom':
+                return now()->addDays(15); // Default to 15 days for custom terms
+            default:
+                return now()->addDays(30); // Default to 30 days
+        }
     }
 
     /**

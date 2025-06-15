@@ -28,6 +28,11 @@ class Order extends Model
     {
         parent::boot();
         
+        // Auto-create delivery when order is created
+        static::created(function ($order) {
+            $order->autoCreateDelivery();
+        });
+        
         // Automatic workflow triggers
         static::updated(function ($order) {
             $order->handleWorkflowAutomation();
@@ -39,11 +44,6 @@ class Order extends Model
      */
     public function handleWorkflowAutomation()
     {
-        // Auto-create delivery when order status changes to shipped
-        if ($this->status === 'shipped' && !$this->hasDelivery()) {
-            $this->autoCreateDelivery();
-        }
-
         // Auto-update delivery status based on order status
         if ($this->hasDelivery()) {
             $this->syncDeliveryStatus();
@@ -51,28 +51,55 @@ class Order extends Model
     }
 
     /**
-     * Automatically create delivery when order is shipped
+     * Automatically create delivery when order is created
+     * Status starts as 'pending' waiting for supplier to process it
      */
     public function autoCreateDelivery()
     {
         try {
+            // Check if delivery already exists
+            if ($this->hasDelivery()) {
+                Log::info("Delivery already exists for order {$this->id}");
+                return;
+            }
+
             $delivery = Delivery::create([
                 'order_id' => $this->id,
-                'status' => 'processing',
-                'carrier' => 'MaxMed Logistics',
+                'status' => 'pending', // Start as pending - waiting for supplier action
+                'carrier' => 'TBD', // Will be set by supplier
                 'tracking_number' => 'TRK' . strtoupper(uniqid()),
                 'shipping_address' => $this->getFullShippingAddress(),
                 'billing_address' => $this->getFullShippingAddress(), // Use same for now
-                'shipping_cost' => 0, // Can be calculated based on weight/distance
+                'shipping_cost' => 0, // Will be calculated by supplier
                 'total_weight' => $this->calculateTotalWeight(),
                 'notes' => 'Auto-created delivery for order ' . $this->order_number,
-                'shipped_at' => now()
             ]);
 
-            Log::info("Auto-created delivery {$delivery->id} for order {$this->id}");
+            Log::info("Auto-created delivery {$delivery->id} for order {$this->id} with status 'pending'");
+
+            // Notify supplier about new order
+            $this->notifySupplierNewOrder($delivery);
 
         } catch (\Exception $e) {
             Log::error('Failed to auto-create delivery for order: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Notify supplier about new order
+     */
+    private function notifySupplierNewOrder($delivery)
+    {
+        try {
+            // TODO: Implement supplier notification system
+            // For now, we'll just log it
+            Log::info("New order {$this->order_number} ready for supplier processing. Delivery ID: {$delivery->id}");
+            
+            // You can add email notifications to suppliers here
+            // Mail::to('supplier@example.com')->send(new NewOrderNotification($this, $delivery));
+            
+        } catch (\Exception $e) {
+            Log::error('Failed to notify supplier: ' . $e->getMessage());
         }
     }
 

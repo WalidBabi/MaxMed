@@ -149,6 +149,12 @@
                 <div class="p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
                     <dl class="space-y-4">
+                        @if($product->sku)
+                            <div>
+                                <dt class="text-sm font-medium text-gray-500">SKU</dt>
+                                <dd class="text-sm text-gray-900 font-mono">{{ $product->sku }}</dd>
+                            </div>
+                        @endif
                         <div>
                             <dt class="text-sm font-medium text-gray-500">Price (USD)</dt>
                             <dd class="text-2xl font-bold text-gray-900">${{ number_format($product->price, 2) }}</dd>

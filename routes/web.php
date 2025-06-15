@@ -177,6 +177,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [\App\Http\Controllers\Supplier\DashboardController::class, 'index'])->name('dashboard');
         Route::resource('products', \App\Http\Controllers\Supplier\ProductController::class);
         Route::resource('feedback', \App\Http\Controllers\Supplier\SystemFeedbackController::class);
+        
+        // Supplier Order Management Routes
+        Route::get('/orders', [\App\Http\Controllers\Supplier\OrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/{order}', [\App\Http\Controllers\Supplier\OrderController::class, 'show'])->name('orders.show');
+        Route::post('/orders/{order}/mark-processing', [\App\Http\Controllers\Supplier\OrderController::class, 'markAsProcessing'])->name('orders.mark-processing');
+        Route::post('/orders/{order}/submit-documents', [\App\Http\Controllers\Supplier\OrderController::class, 'submitDocuments'])->name('orders.submit-documents');
+        Route::get('/orders/{order}/download-packing-list', [\App\Http\Controllers\Supplier\OrderController::class, 'downloadPackingList'])->name('orders.download-packing-list');
+        Route::get('/orders/{order}/download-commercial-invoice', [\App\Http\Controllers\Supplier\OrderController::class, 'downloadCommercialInvoice'])->name('orders.download-commercial-invoice');
+        Route::post('/orders/{order}/update-status', [\App\Http\Controllers\Supplier\OrderController::class, 'updateStatus'])->name('orders.update-status');
     });
 
     // Orders Routes
@@ -185,6 +194,14 @@ Route::middleware('auth')->group(function () {
 
     // Feedback Route
     Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+});
+
+// Public Delivery Tracking Routes (no authentication required)
+Route::prefix('delivery')->name('delivery.')->group(function () {
+    Route::get('/track', [\App\Http\Controllers\DeliveryController::class, 'track'])->name('track');
+    Route::get('/signature/{tracking}', [\App\Http\Controllers\DeliveryController::class, 'signature'])->name('signature');
+    Route::post('/signature/{tracking}', [\App\Http\Controllers\DeliveryController::class, 'processSignature'])->name('process-signature');
+    Route::get('/receipt/{tracking}', [\App\Http\Controllers\DeliveryController::class, 'downloadReceipt'])->name('receipt');
 });
 
 // Test Mail Route

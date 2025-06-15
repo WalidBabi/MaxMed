@@ -24,7 +24,7 @@ class DashboardController extends Controller
             ->where('supplier_id', $user->id)
             ->get();
 
-        // Calculate statistics
+        // Calculate product statistics
         $totalProducts = $products->count();
         $activeProducts = $products->where('price', '>', 0)->count();
 
@@ -35,10 +35,38 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // Order statistics (without customer/pricing info)
+        $orderStats = [
+            'pending' => \App\Models\Order::whereHas('delivery', function($q) { 
+                $q->where('status', 'pending'); 
+            })->count(),
+            'processing' => \App\Models\Order::whereHas('delivery', function($q) { 
+                $q->where('status', 'processing'); 
+            })->count(),
+            'in_transit' => \App\Models\Order::whereHas('delivery', function($q) { 
+                $q->where('status', 'in_transit'); 
+            })->count(),
+            'delivered_today' => \App\Models\Order::whereHas('delivery', function($q) { 
+                $q->where('status', 'delivered')
+                  ->whereDate('delivered_at', today()); 
+            })->count(),
+        ];
+
+        // Recent orders requiring attention (pending/processing)
+        $recentOrders = \App\Models\Order::with(['delivery', 'items.product'])
+            ->whereHas('delivery', function($q) {
+                $q->whereIn('status', ['pending', 'processing']);
+            })
+            ->latest()
+            ->take(5)
+            ->get();
+
         return view('supplier.dashboard', compact(
             'totalProducts',
             'activeProducts',
-            'recentProducts'
+            'recentProducts',
+            'orderStats',
+            'recentOrders'
         ));
     }
 } 

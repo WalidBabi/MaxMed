@@ -39,6 +39,24 @@
             </div>
             <div class="p-6">
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <!-- SKU Display (Read-only) -->
+                    <div>
+                        <label for="sku_display" class="block text-sm font-medium leading-6 text-gray-900">SKU (Auto-generated)</label>
+                        <div class="mt-2">
+                            <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 bg-gray-50">
+                                <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75H16.5v-.75zM13.5 13.5h.75v.75H13.5v-.75zM13.5 16.5h.75v.75H13.5v-.75zM16.5 13.5h.75v.75H16.5v-.75zM19.5 13.5h.75v.75H19.5v-.75zM19.5 16.5h.75v.75H19.5v-.75zM16.5 16.5h.75v.75H16.5v-.75z" />
+                                    </svg>
+                                </span>
+                                <input type="text" id="sku_display" readonly value="{{ $product->sku }}"
+                                       class="block flex-1 border-0 bg-gray-50 py-1.5 pl-3 text-gray-900 sm:text-sm sm:leading-6">
+                            </div>
+                            <p class="mt-1 text-sm text-gray-500">SKU will regenerate if brand is changed</p>
+                        </div>
+                    </div>
+
                     <!-- Product Name -->
                     <div>
                         <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Product Name <span class="text-red-500">*</span></label>

@@ -173,13 +173,20 @@ class DeliveryController extends Controller
     }
 
     /**
-     * Convert proforma invoice to final invoice
+     * Convert proforma invoice to final invoice with enhanced payment scenario handling
      */
     public function convertToFinalInvoice(Delivery $delivery)
     {
         try {
             if (!$delivery->hasConvertibleProformaInvoice()) {
-                return redirect()->back()->with('error', 'No convertible proforma invoice found for this delivery.');
+                $proformaInvoice = $delivery->getProformaInvoice();
+                
+                if (!$proformaInvoice) {
+                    return redirect()->back()->with('error', 'No proforma invoice found for this delivery.');
+                } else {
+                    $reason = $this->getConversionBlockReason($proformaInvoice, $delivery);
+                    return redirect()->back()->with('error', "Cannot convert proforma invoice: {$reason}");
+                }
             }
 
             $proformaInvoice = $delivery->getConvertibleProformaInvoice();
@@ -188,21 +195,234 @@ class DeliveryController extends Controller
                 return redirect()->back()->with('error', 'Unable to find proforma invoice.');
             }
 
+            // Check if conversion requirements are met
+            $conversionCheck = $this->checkConversionRequirements($proformaInvoice, $delivery);
+            
+            if (!$conversionCheck['ready']) {
+                return redirect()->back()->with('error', $conversionCheck['message']);
+            }
+
             // Convert proforma to final invoice
             $finalInvoice = $proformaInvoice->convertToFinalInvoice($delivery->id);
 
-            // Update delivery status if needed
-            if ($delivery->status === 'pending') {
-                $delivery->update(['status' => 'processing']);
+            // Update delivery status based on conversion
+            $this->updateDeliveryAfterConversion($delivery, $proformaInvoice, $finalInvoice);
+
+            // Update order status if exists
+            if ($delivery->order) {
+                $this->updateOrderAfterConversion($delivery->order, $finalInvoice);
             }
+
+            $successMessage = $this->generateConversionSuccessMessage($proformaInvoice, $finalInvoice);
 
             return redirect()
                 ->route('admin.invoices.show', $finalInvoice)
-                ->with('success', 'Proforma invoice successfully converted to final invoice.');
+                ->with('success', $successMessage);
 
         } catch (\Exception $e) {
             Log::error('Failed to convert proforma to final invoice: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+            
             return redirect()->back()->with('error', 'Failed to convert invoice: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Get detailed reason why conversion is blocked
+     */
+    private function getConversionBlockReason($proformaInvoice, $delivery): string
+    {
+        if (!$proformaInvoice->canConvertToFinalInvoice()) {
+            return "Proforma invoice status is '{$proformaInvoice->status}' (must be 'confirmed')";
+        }
+
+        if ($proformaInvoice->childInvoices()->where('type', 'final')->exists()) {
+            return "Final invoice already exists for this proforma";
+        }
+
+        $paymentTerms = $proformaInvoice->payment_terms;
+        $paidAmount = $proformaInvoice->paid_amount;
+        $totalAmount = $proformaInvoice->total_amount;
+
+        switch ($paymentTerms) {
+            case 'advance_50':
+                $requiredAmount = $totalAmount * 0.5;
+                if ($paidAmount < $requiredAmount) {
+                    return "50% advance payment required. Paid: {$paidAmount} AED, Required: {$requiredAmount} AED";
+                }
+                break;
+
+            case 'advance_100':
+                if ($paidAmount < $totalAmount) {
+                    return "Full advance payment required. Paid: {$paidAmount} AED, Required: {$totalAmount} AED";
+                }
+                break;
+
+            case 'custom':
+                $advancePercentage = $proformaInvoice->advance_percentage ?? 0;
+                if ($advancePercentage > 0) {
+                    $requiredAmount = $totalAmount * ($advancePercentage / 100);
+                    if ($paidAmount < $requiredAmount) {
+                        return "{$advancePercentage}% advance payment required. Paid: {$paidAmount} AED, Required: {$requiredAmount} AED";
+                    }
+                }
+                break;
+        }
+
+        return "Unknown conversion requirement not met";
+    }
+
+    /**
+     * Check if all requirements for conversion are met
+     */
+    private function checkConversionRequirements($proformaInvoice, $delivery): array
+    {
+        $paymentTerms = $proformaInvoice->payment_terms;
+        $paidAmount = $proformaInvoice->paid_amount;
+        $totalAmount = $proformaInvoice->total_amount;
+        $deliveryStatus = $delivery->status;
+
+        // Check payment requirements
+        switch ($paymentTerms) {
+            case 'advance_50':
+                $requiredAmount = $totalAmount * 0.5;
+                if ($paidAmount < $requiredAmount) {
+                    return [
+                        'ready' => false,
+                        'message' => "50% advance payment not received. Please record the advance payment before converting. (Required: {$requiredAmount} AED, Received: {$paidAmount} AED)"
+                    ];
+                }
+                break;
+
+            case 'advance_100':
+                if ($paidAmount < $totalAmount) {
+                    return [
+                        'ready' => false,
+                        'message' => "Full advance payment not received. Please record the full payment before converting. (Required: {$totalAmount} AED, Received: {$paidAmount} AED)"
+                    ];
+                }
+                break;
+
+            case 'on_delivery':
+                if (!in_array($deliveryStatus, ['in_transit', 'delivered'])) {
+                    return [
+                        'ready' => false,
+                        'message' => "For payment on delivery terms, the delivery must be shipped first. Current status: {$deliveryStatus}"
+                    ];
+                }
+                break;
+
+            case 'net_30':
+                if (!in_array($deliveryStatus, ['in_transit', 'delivered'])) {
+                    return [
+                        'ready' => false,
+                        'message' => "For net 30 payment terms, the delivery must be shipped first. Current status: {$deliveryStatus}"
+                    ];
+                }
+                break;
+
+            case 'custom':
+                $advancePercentage = $proformaInvoice->advance_percentage ?? 0;
+                if ($advancePercentage > 0) {
+                    $requiredAmount = $totalAmount * ($advancePercentage / 100);
+                    if ($paidAmount < $requiredAmount) {
+                        return [
+                            'ready' => false,
+                            'message' => "{$advancePercentage}% advance payment not received. Please record the advance payment before converting. (Required: {$requiredAmount} AED, Received: {$paidAmount} AED)"
+                        ];
+                    }
+                }
+                break;
+        }
+
+        return ['ready' => true, 'message' => 'All requirements met'];
+    }
+
+    /**
+     * Update delivery status after successful conversion
+     */
+    private function updateDeliveryAfterConversion($delivery, $proformaInvoice, $finalInvoice)
+    {
+        $currentStatus = $delivery->status;
+        $newStatus = $currentStatus;
+
+        // Update delivery status based on payment situation
+        if ($finalInvoice->payment_status === 'paid') {
+            // Payment completed, ensure delivery is in appropriate status
+            if ($currentStatus === 'pending') {
+                $newStatus = 'processing';
+            }
+        } elseif ($finalInvoice->payment_status === 'pending') {
+            // Payment pending, status depends on payment terms
+            if ($proformaInvoice->payment_terms === 'on_delivery' && $currentStatus === 'pending') {
+                $newStatus = 'processing';
+            }
+        }
+
+        if ($newStatus !== $currentStatus) {
+            $delivery->update(['status' => $newStatus]);
+            Log::info("Updated delivery {$delivery->id} status from {$currentStatus} to {$newStatus} after invoice conversion");
+        }
+    }
+
+    /**
+     * Update order status after successful conversion
+     */
+    private function updateOrderAfterConversion($order, $finalInvoice)
+    {
+        $currentStatus = $order->status;
+        $newStatus = $currentStatus;
+
+        // Update order status based on final invoice payment status
+        if ($finalInvoice->payment_status === 'paid') {
+            if (in_array($currentStatus, ['pending'])) {
+                $newStatus = 'processing';
+            }
+        } elseif ($finalInvoice->payment_status === 'pending') {
+            if ($currentStatus === 'pending') {
+                $newStatus = 'processing';
+            }
+        }
+
+        if ($newStatus !== $currentStatus) {
+            $order->update(['status' => $newStatus]);
+            Log::info("Updated order {$order->id} status from {$currentStatus} to {$newStatus} after invoice conversion");
+        }
+    }
+
+    /**
+     * Generate appropriate success message based on conversion type
+     */
+    private function generateConversionSuccessMessage($proformaInvoice, $finalInvoice): string
+    {
+        $baseMessage = "Proforma invoice {$proformaInvoice->invoice_number} successfully converted to final invoice {$finalInvoice->invoice_number}";
+
+        switch ($proformaInvoice->payment_terms) {
+            case 'advance_50':
+                if ($finalInvoice->total_amount > 0) {
+                    return $baseMessage . ". Remaining balance of {$finalInvoice->total_amount} AED is now due.";
+                } else {
+                    return $baseMessage . ". No remaining balance - delivery is complete.";
+                }
+
+            case 'advance_100':
+                return $baseMessage . ". Full payment received - delivery is complete.";
+
+            case 'on_delivery':
+                return $baseMessage . ". Payment of {$finalInvoice->total_amount} AED is due upon delivery.";
+
+            case 'net_30':
+                return $baseMessage . ". Payment of {$finalInvoice->total_amount} AED is due within 30 days.";
+
+            case 'custom':
+                if ($finalInvoice->total_amount > 0) {
+                    return $baseMessage . ". Remaining balance of {$finalInvoice->total_amount} AED is now due.";
+                } else {
+                    return $baseMessage . ". Full payment received - delivery is complete.";
+                }
+
+            default:
+                return $baseMessage . ".";
         }
     }
 
