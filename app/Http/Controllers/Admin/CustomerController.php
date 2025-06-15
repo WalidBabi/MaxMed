@@ -162,4 +162,26 @@ class CustomerController extends Controller
         
         return response()->json(['email' => null]);
     }
+
+    /**
+     * Get customer details by ID for invoice forms
+     */
+    public function getCustomerDetails($id)
+    {
+        $customer = Customer::find($id);
+        
+        if ($customer) {
+            return response()->json([
+                'id' => $customer->id,
+                'name' => $customer->name,
+                'email' => $customer->email,
+                'company_name' => $customer->company_name,
+                'billing_address' => $customer->billing_address,
+                'shipping_address' => $customer->shipping_address,
+                'phone' => $customer->phone,
+            ]);
+        }
+        
+        return response()->json(['error' => 'Customer not found'], 404);
+    }
 }

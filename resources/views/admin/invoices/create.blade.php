@@ -3,7 +3,6 @@
 @section('title', 'Create Invoice')
 
 @section('content')
-<div class="max-w-7xl mx-auto">
     <!-- Header -->
     <div class="mb-8">
         <div class="flex items-center justify-between">
@@ -11,195 +10,292 @@
                 <h1 class="text-3xl font-bold text-gray-900">Create Invoice</h1>
                 <p class="text-gray-600 mt-2">Create a new proforma or final invoice</p>
             </div>
-            <a href="{{ route('admin.invoices.index') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-                Back to Invoices
-            </a>
+            <div class="flex items-center space-x-3">
+                <a href="{{ route('admin.invoices.index') }}" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                    <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                    </svg>
+                    Back to Invoices
+                </a>
+            </div>
         </div>
     </div>
 
     <!-- Form -->
     <form action="{{ route('admin.invoices.store') }}" method="POST" id="invoiceForm">
         @csrf
-        <div class="row">
+        <div class="grid grid-cols-1 gap-8">
             <!-- Main Form -->
-            <div class="col-lg-8">
+            <div class="space-y-8">
                 <!-- Basic Information -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-light">
-                        <h6 class="mb-0">
-                            <i class="fas fa-file-invoice me-2"></i>Invoice Information
-                        </h6>
+                <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                            <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                            </svg>
+                            Invoice Information
+                        </h3>
                     </div>
-                    <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="type" class="form-label">Invoice Type</label>
-                                <select name="type" id="type" class="form-select" required>
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="type" class="block text-sm font-medium text-gray-700 mb-2">Invoice Type</label>
+                                <select name="type" id="type" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                     <option value="proforma" {{ old('type', 'proforma') == 'proforma' ? 'selected' : '' }}>Proforma Invoice</option>
                                     <option value="final" {{ old('type') == 'final' ? 'selected' : '' }}>Final Invoice</option>
                                 </select>
                             </div>
-                            <div class="col-md-6">
-                                <label for="customer_name" class="form-label">Customer Name</label>
-                                <input type="text" class="form-control" id="customer_name" name="customer_name" 
-                                       value="{{ old('customer_name', $quote->customer_name ?? '') }}" required>
+                            <div>
+                                <label for="customer_id" class="block text-sm font-medium text-gray-700 mb-2">Customer</label>
+                                <select name="customer_id" id="customer_id" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    <option value="">Select a customer...</option>
+                                    @foreach($customers as $customer)
+                                        <option value="{{ $customer->id }}" {{ old('customer_id') == $customer->id ? 'selected' : '' }}>
+                                            {{ $customer->name }}{{ $customer->company_name ? ' - ' . $customer->company_name : '' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <input type="hidden" name="customer_name" id="customer_name_hidden" value="{{ old('customer_name', $quote->customer_name ?? '') }}">
                             </div>
-                            <div class="col-md-6">
-                                <label for="invoice_date" class="form-label">Invoice Date</label>
-                                <input type="date" class="form-control" id="invoice_date" name="invoice_date" 
-                                       value="{{ old('invoice_date', now()->format('Y-m-d')) }}" required>
+                            <div>
+                                <label for="invoice_date" class="block text-sm font-medium text-gray-700 mb-2">Invoice Date</label>
+                                <input type="date" id="invoice_date" name="invoice_date" 
+                                       value="{{ old('invoice_date', now()->format('Y-m-d')) }}" required
+                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
-                            <div class="col-md-6">
-                                <label for="due_date" class="form-label">Due Date</label>
-                                <input type="date" class="form-control" id="due_date" name="due_date" 
-                                       value="{{ old('due_date', now()->addDays(30)->format('Y-m-d')) }}" required>
+                            <div>
+                                <label for="due_date" class="block text-sm font-medium text-gray-700 mb-2">Due Date</label>
+                                <input type="date" id="due_date" name="due_date" 
+                                       value="{{ old('due_date', now()->addDays(30)->format('Y-m-d')) }}" required
+                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
-                            <div class="col-md-6">
-                                <label for="reference_number" class="form-label">Reference Number</label>
-                                <input type="text" class="form-control" id="reference_number" name="reference_number" 
-                                       value="{{ old('reference_number', $quote->reference_number ?? '') }}">
+                            <div>
+                                <label for="reference_number" class="block text-sm font-medium text-gray-700 mb-2">Reference Number</label>
+                                <input type="text" id="reference_number" name="reference_number" 
+                                       value="{{ old('reference_number', $quote->reference_number ?? '') }}"
+                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
-                            <div class="col-md-6">
-                                <label for="po_number" class="form-label">PO Number</label>
-                                <input type="text" class="form-control" id="po_number" name="po_number" 
-                                       value="{{ old('po_number') }}">
+                            <div>
+                                <label for="po_number" class="block text-sm font-medium text-gray-700 mb-2">PO Number</label>
+                                <input type="text" id="po_number" name="po_number" 
+                                       value="{{ old('po_number') }}"
+                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Customer Information -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-light">
-                        <h6 class="mb-0">
-                            <i class="fas fa-user me-2"></i>Customer Information
-                        </h6>
+                <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                            <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                            </svg>
+                            Customer Information
+                        </h3>
                     </div>
-                    <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label for="billing_address" class="form-label">Billing Address</label>
-                                <textarea class="form-control" id="billing_address" name="billing_address" 
-                                          rows="3" required>{{ old('billing_address') }}</textarea>
+                    <div class="p-6">
+                        <div class="space-y-6">
+                            <div>
+                                <label for="billing_address" class="block text-sm font-medium text-gray-700 mb-2">Billing Address</label>
+                                <textarea id="billing_address" name="billing_address" rows="3" required
+                                          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('billing_address') }}</textarea>
+                                <p class="mt-1 text-xs text-gray-500">This will be automatically filled when you select a customer</p>
                             </div>
-                            <div class="col-12">
-                                <label for="shipping_address" class="form-label">Shipping Address</label>
-                                <textarea class="form-control" id="shipping_address" name="shipping_address" 
-                                          rows="3">{{ old('shipping_address') }}</textarea>
+                            <div>
+                                <label for="shipping_address" class="block text-sm font-medium text-gray-700 mb-2">Shipping Address</label>
+                                <textarea id="shipping_address" name="shipping_address" rows="3"
+                                          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('shipping_address') }}</textarea>
+                                <p class="mt-1 text-xs text-gray-500">This will be automatically filled when you select a customer</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Invoice Items -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0">
-                            <i class="fas fa-list me-2"></i>Invoice Items
-                        </h6>
-                        <button type="button" class="btn btn-sm btn-primary" onclick="addItem()">
-                            <i class="fas fa-plus me-1"></i>Add Item
+                <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+                    <div class="px-6 py-4 border-b border-gray-200 flex justify-content-between items-center">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                            <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 17.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                            </svg>
+                            Invoice Items
+                        </h3>
+                        <button type="button" onclick="addItem()" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                            <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                            </svg>
+                            Add Item
                         </button>
                     </div>
-                    <div class="card-body">
-                        <div id="invoice-items">
+                                        <div class="p-6">
+                        <!-- Clean Minimal Table -->
+                        <div class="bg-white">
+                            <!-- Table Header -->
+                            <div class="border-b border-gray-200 pb-4 mb-6">
+                                <div class="grid grid-cols-12 gap-4 text-sm font-medium text-gray-700 uppercase tracking-wide">
+                                    <div class="col-span-5">Item Details</div>
+                                    <div class="col-span-2 text-center">Quantity</div>
+                                    <div class="col-span-2 text-center">Rate</div>
+                                    <div class="col-span-2 text-center">Discount</div>
+                                    <div class="col-span-1 text-center">Amount</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Table Body -->
+                            <div id="invoice-items" class="space-y-4">
                             @if($quote && $quote->items->count() > 0)
                                 @foreach($quote->items as $index => $item)
-                                    <div class="item-row border rounded p-3 mb-3" data-index="{{ $index }}">
-                                        <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <label class="form-label">Item Description</label>
-                                                <textarea name="items[{{ $index }}][item_description]" class="form-control" 
-                                                          rows="2" required>{{ $item->item_details }}</textarea>
+                                    <div class="item-row" data-index="{{ $index }}">
+                                        <div class="grid grid-cols-12 gap-4 items-center py-3">
+                                            <!-- Product & Description Column -->
+                                            <div class="col-span-5">
+                                                <select name="items[{{ $index }}][product_id]" class="product-select w-full text-sm border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" data-index="{{ $index }}">
+                                                    <option value="">Type or click to select an item.</option>
+                                                    @foreach($products as $product)
+                                                        <option value="{{ $product->id }}" 
+                                                                data-name="{{ $product->name }}"
+                                                                data-description="{{ $product->description }}"
+                                                                data-price="{{ $product->price_aed ?? $product->price }}"
+                                                                {{ old("items.{$index}.product_id") == $product->id ? 'selected' : '' }}>
+                                                            {{ $product->name }} @if($product->brand) - {{ $product->brand->name }} @endif
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                <input type="hidden" name="items[{{ $index }}][item_description]" class="item-description" value="{{ $item->item_details }}">
                                             </div>
-                                            <div class="col-md-2">
-                                                <label class="form-label">Quantity</label>
+                                            
+                                            <!-- Quantity Column -->
+                                            <div class="col-span-2 text-center">
                                                 <input type="number" name="items[{{ $index }}][quantity]" 
-                                                       class="form-control quantity-input" step="0.01" 
-                                                       value="{{ $item->quantity }}" required>
+                                                       class="quantity-input w-full text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
+                                                       step="0.01" value="{{ $item->quantity }}" required>
                                             </div>
-                                            <div class="col-md-2">
-                                                <label class="form-label">Unit Price</label>
-                                                <input type="number" name="items[{{ $index }}][unit_price]" 
-                                                       class="form-control price-input" step="0.01" 
-                                                       value="{{ $item->rate }}" required>
+                                            
+                                            <!-- Rate Column -->
+                                            <div class="col-span-2 text-center">
+                                                <div class="flex items-center justify-center">
+                                                    <input type="number" name="items[{{ $index }}][unit_price]" 
+                                                           class="price-input w-16 text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
+                                                           step="0.01" value="{{ $item->rate }}" required>
+                                                    <span class="ml-2 text-gray-500 text-sm">⊞</span>
+                                                </div>
                                             </div>
-                                            <div class="col-md-2">
-                                                <label class="form-label">Discount %</label>
-                                                <input type="number" name="items[{{ $index }}][discount_percentage]" 
-                                                       class="form-control discount-input" step="0.01" min="0" max="100"
-                                                       value="{{ $item->discount }}">
+                                            
+                                            <!-- Discount Column -->
+                                            <div class="col-span-2 text-center">
+                                                <div class="flex items-center justify-center">
+                                                    <input type="number" name="items[{{ $index }}][discount_percentage]" 
+                                                           class="discount-input w-12 text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
+                                                           step="0.01" min="0" max="100" value="{{ $item->discount }}">
+                                                    <select class="ml-1 border-0 bg-transparent text-gray-500 text-sm focus:ring-0">
+                                                        <option>%</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center mt-2">
-                                            <div class="item-total">
-                                                <strong>Line Total: <span class="line-total">{{ number_format($item->amount, 2) }}</span> AED</strong>
+                                            
+                                            <!-- Amount Column -->
+                                            <div class="col-span-1 text-right relative">
+                                                <span class="line-total text-gray-900 font-medium">{{ number_format($item->amount, 2) }}</span>
+                                                <button type="button" onclick="removeItem(this)" 
+                                                        class="absolute -right-6 top-0 text-gray-400 hover:text-red-500">
+                                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </button>
                                             </div>
-                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeItem(this)">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
                                         </div>
                                     </div>
                                 @endforeach
                             @else
-                                <div class="item-row border rounded p-3 mb-3" data-index="0">
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label">Item Description</label>
-                                            <textarea name="items[0][item_description]" class="form-control" 
-                                                      rows="2" required placeholder="Enter item description"></textarea>
+                                <div class="item-row" data-index="0">
+                                    <div class="grid grid-cols-12 gap-4 items-center py-3">
+                                        <!-- Product & Description Column -->
+                                        <div class="col-span-5">
+                                            <select name="items[0][product_id]" class="product-select w-full text-sm border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" data-index="0">
+                                                <option value="">Type or click to select an item.</option>
+                                                @foreach($products as $product)
+                                                    <option value="{{ $product->id }}" 
+                                                            data-name="{{ $product->name }}"
+                                                            data-description="{{ $product->description }}"
+                                                            data-price="{{ $product->price_aed ?? $product->price }}">
+                                                        {{ $product->name }} @if($product->brand) - {{ $product->brand->name }} @endif
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <input type="hidden" name="items[0][item_description]" class="item-description" value="">
                                         </div>
-                                        <div class="col-md-2">
-                                            <label class="form-label">Quantity</label>
+                                        
+                                        <!-- Quantity Column -->
+                                        <div class="col-span-2 text-center">
                                             <input type="number" name="items[0][quantity]" 
-                                                   class="form-control quantity-input" step="0.01" 
-                                                   value="1" required>
+                                                   class="quantity-input w-full text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
+                                                   step="0.01" value="1.00" required>
                                         </div>
-                                        <div class="col-md-2">
-                                            <label class="form-label">Unit Price</label>
-                                            <input type="number" name="items[0][unit_price]" 
-                                                   class="form-control price-input" step="0.01" 
-                                                   value="0" required>
+                                        
+                                        <!-- Rate Column -->
+                                        <div class="col-span-2 text-center">
+                                            <div class="flex items-center justify-center">
+                                                <input type="number" name="items[0][unit_price]" 
+                                                       class="price-input w-16 text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
+                                                       step="0.01" value="0.00" required>
+                                                <span class="ml-2 text-gray-500 text-sm">⊞</span>
+                                            </div>
                                         </div>
-                                        <div class="col-md-2">
-                                            <label class="form-label">Discount %</label>
-                                            <input type="number" name="items[0][discount_percentage]" 
-                                                   class="form-control discount-input" step="0.01" min="0" max="100"
-                                                   value="0">
+                                        
+                                        <!-- Discount Column -->
+                                        <div class="col-span-2 text-center">
+                                            <div class="flex items-center justify-center">
+                                                <input type="number" name="items[0][discount_percentage]" 
+                                                       class="discount-input w-12 text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
+                                                       step="0.01" min="0" max="100" value="0">
+                                                <select class="ml-1 border-0 bg-transparent text-gray-500 text-sm focus:ring-0">
+                                                    <option>%</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center mt-2">
-                                        <div class="item-total">
-                                            <strong>Line Total: <span class="line-total">0.00</span> AED</strong>
+                                        
+                                        <!-- Amount Column -->
+                                        <div class="col-span-1 text-right relative">
+                                            <span class="line-total text-gray-900 font-medium">0.00</span>
+                                            <button type="button" onclick="removeItem(this)" 
+                                                    class="absolute -right-6 top-0 text-gray-400 hover:text-red-500">
+                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
                                         </div>
-                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeItem(this)">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
                                     </div>
                                 </div>
                             @endif
+                            </div>
+                        </div>
+                        
+                        <!-- Add Item Button -->
+                        <div class="mt-4">
+                            <button type="button" onclick="addItem()" class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+                                + Add another line
+                            </button>
                         </div>
                         
                         <!-- Invoice Totals -->
-                        <div class="row justify-content-end mt-4">
-                            <div class="col-md-6">
-                                <div class="card bg-light">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between mb-2">
-                                            <span>Sub Total:</span>
-                                            <span id="sub-total">0.00 AED</span>
-                                        </div>
-                                        <div class="d-flex justify-content-between mb-2">
-                                            <span>Tax:</span>
-                                            <span id="tax-amount">0.00 AED</span>
-                                        </div>
-                                        <hr>
-                                        <div class="d-flex justify-content-between">
-                                            <strong>Total:</strong>
-                                            <strong id="total-amount">0.00 AED</strong>
+                        <div class="mt-8 flex justify-end">
+                            <div class="w-full max-w-sm">
+                                <div class="rounded-lg bg-gray-50 p-6">
+                                    <div class="flex justify-between mb-3">
+                                        <span class="text-sm font-medium text-gray-700">Sub Total:</span>
+                                        <span id="sub-total" class="text-sm font-semibold text-gray-900">0.00 AED</span>
+                                    </div>
+                                    <div class="flex justify-between mb-3">
+                                        <span class="text-sm font-medium text-gray-700">Tax:</span>
+                                        <span id="tax-amount" class="text-sm font-semibold text-gray-900">0.00 AED</span>
+                                    </div>
+                                    <div class="border-t border-gray-200 pt-3">
+                                        <div class="flex justify-between">
+                                            <span class="text-base font-semibold text-gray-900">Total:</span>
+                                            <span id="total-amount" class="text-base font-bold text-gray-900">0.00 AED</span>
                                         </div>
                                     </div>
                                 </div>
@@ -209,83 +305,268 @@
                 </div>
 
                 <!-- Additional Information -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-light">
-                        <h6 class="mb-0">
-                            <i class="fas fa-sticky-note me-2"></i>Additional Information
-                        </h6>
+                <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                            <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25M8.25 9h2.25m-2.25 4.5h2.25m-2.25 4.5h2.25M10.5 21h4.5" />
+                            </svg>
+                            Additional Information
+                        </h3>
                     </div>
-                    <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label for="description" class="form-label">Description</label>
-                                <textarea class="form-control" id="description" name="description" 
-                                          rows="3">{{ old('description', $quote->subject ?? '') }}</textarea>
+                    <div class="p-6">
+                        <div class="space-y-6">
+                            <div>
+                                <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                                <textarea id="description" name="description" rows="3"
+                                          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('description', $quote->subject ?? '') }}</textarea>
                             </div>
-                            <div class="col-12">
-                                <label for="terms_conditions" class="form-label">Terms & Conditions</label>
-                                <textarea class="form-control" id="terms_conditions" name="terms_conditions" 
-                                          rows="3">{{ old('terms_conditions', $quote->terms_conditions ?? '') }}</textarea>
+                            <div>
+                                <label for="terms_conditions" class="block text-sm font-medium text-gray-700 mb-2">Terms & Conditions</label>
+                                <textarea id="terms_conditions" name="terms_conditions" rows="3"
+                                          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('terms_conditions', $quote->terms_conditions ?? '') }}</textarea>
                             </div>
-                            <div class="col-12">
-                                <label for="notes" class="form-label">Notes</label>
-                                <textarea class="form-control" id="notes" name="notes" 
-                                          rows="3">{{ old('notes', $quote->customer_notes ?? '') }}</textarea>
+                            <div>
+                                <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">Notes</label>
+                                <textarea id="notes" name="notes" rows="3"
+                                          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('notes', $quote->customer_notes ?? '') }}</textarea>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Sidebar -->
-            <div class="col-lg-4">
+                <!-- Payment Terms and Actions -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <!-- Payment Terms -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-light">
-                        <h6 class="mb-0">
-                            <i class="fas fa-credit-card me-2"></i>Payment Terms
-                        </h6>
+                <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                            <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                            </svg>
+                            Payment Terms
+                        </h3>
                     </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="payment_terms" class="form-label">Payment Terms</label>
-                            <select name="payment_terms" id="payment_terms" class="form-select" required>
-                                <option value="advance_50" {{ old('payment_terms', 'advance_50') == 'advance_50' ? 'selected' : '' }}>50% Advance Payment</option>
-                                <option value="advance_100" {{ old('payment_terms') == 'advance_100' ? 'selected' : '' }}>100% Advance Payment</option>
-                                <option value="on_delivery" {{ old('payment_terms') == 'on_delivery' ? 'selected' : '' }}>Payment on Delivery</option>
-                                <option value="net_30" {{ old('payment_terms') == 'net_30' ? 'selected' : '' }}>Net 30 Days</option>
-                                <option value="custom" {{ old('payment_terms') == 'custom' ? 'selected' : '' }}>Custom Terms</option>
-                            </select>
-                        </div>
-                        <div class="mb-3" id="custom-percentage" style="display: none;">
-                            <label for="advance_percentage" class="form-label">Advance Percentage</label>
-                            <input type="number" class="form-control" id="advance_percentage" 
-                                   name="advance_percentage" min="0" max="100" step="0.01" 
-                                   value="{{ old('advance_percentage') }}">
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label for="payment_terms" class="block text-sm font-medium text-gray-700 mb-2">Payment Terms</label>
+                                <select name="payment_terms" id="payment_terms" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    <option value="advance_50" {{ old('payment_terms', 'advance_50') == 'advance_50' ? 'selected' : '' }}>50% Advance Payment</option>
+                                    <option value="advance_100" {{ old('payment_terms') == 'advance_100' ? 'selected' : '' }}>100% Advance Payment</option>
+                                    <option value="on_delivery" {{ old('payment_terms') == 'on_delivery' ? 'selected' : '' }}>Payment on Delivery</option>
+                                    <option value="net_30" {{ old('payment_terms') == 'net_30' ? 'selected' : '' }}>Net 30 Days</option>
+                                    <option value="custom" {{ old('payment_terms') == 'custom' ? 'selected' : '' }}>Custom Terms</option>
+                                </select>
+                            </div>
+                            <div id="custom-percentage" style="display: none;">
+                                <label for="advance_percentage" class="block text-sm font-medium text-gray-700 mb-2">Advance Percentage</label>
+                                <input type="number" id="advance_percentage" name="advance_percentage" min="0" max="100" step="0.01" 
+                                       value="{{ old('advance_percentage') }}"
+                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Actions -->
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <button type="submit" name="status" value="draft" class="btn btn-secondary">
-                                <i class="fas fa-save me-2"></i>Save as Draft
+                <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+                    <div class="p-6">
+                        <div class="space-y-3">
+                            <button type="submit" name="status" value="draft" class="w-full inline-flex justify-center items-center rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500">
+                                <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+                                </svg>
+                                Save as Draft
                             </button>
-                            <button type="submit" name="status" value="sent" class="btn btn-primary">
-                                <i class="fas fa-paper-plane me-2"></i>Create & Send
+                            <button type="submit" name="status" value="sent" class="w-full inline-flex justify-center items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                                <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+                                </svg>
+                                Create & Send
                             </button>
                         </div>
                     </div>
                 </div>
+                </div>
             </div>
         </div>
     </form>
-</div>
+@endsection
 
+@push('styles')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+.select2-container--default .select2-selection--single {
+    height: 38px;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 36px;
+    padding-left: 8px;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 36px;
+}
+
+/* Clean minimal table styles */
+.select2-result-product {
+    padding: 12px;
+    border-bottom: 1px solid #f3f4f6;
+}
+.select2-result-product__title {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 0.9rem;
+}
+.select2-result-product__description {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+/* Clean table styling */
+.item-row {
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.item-row:last-child {
+    border-bottom: none;
+}
+
+/* Seamless input styling */
+.item-row input,
+.item-row select {
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 8px 4px;
+}
+
+.item-row input:focus,
+.item-row select:focus {
+    background: rgba(79, 70, 229, 0.05) !important;
+    border-radius: 4px;
+}
+
+/* Clean number input styling */
+.item-row input[type="number"] {
+    -moz-appearance: textfield;
+}
+.item-row input[type="number"]::-webkit-outer-spin-button,
+.item-row input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Minimal select styling */
+.product-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 8px center;
+    background-repeat: no-repeat;
+    background-size: 16px 12px;
+    padding-right: 32px;
+}
+
+/* Simple delete button */
+.item-row button[onclick*="removeItem"] {
+    transition: color 0.15s ease-in-out;
+    padding: 4px;
+}
+.item-row button[onclick*="removeItem"]:hover {
+    color: #ef4444;
+}
+
+/* Select2 minimal styling */
+.select2-container--default .select2-selection--single {
+    background-color: transparent !important;
+    border: none !important;
+    height: 36px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding-left: 0;
+    padding-right: 20px;
+    line-height: 36px;
+    color: #374151 !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 34px;
+    right: 8px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__placeholder {
+    color: #9ca3af !important;
+}
+</style>
+@endpush
+
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-let itemIndex = @if(isset($quote) && $quote->items->count() > 0) {{ $quote->items->count() }} @else 1 @endif;
+let itemIndex = 1;
+
+// Customer selection handling
+document.getElementById('customer_id').addEventListener('change', function() {
+    const customerId = this.value;
+    
+    if (customerId) {
+        // Fetch customer details via API
+        fetch(`/admin/customers/${customerId}/details`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error('Customer not found');
+                    return;
+                }
+                
+                // Update hidden customer name field and address fields
+                document.getElementById('customer_name_hidden').value = data.name || '';
+                document.getElementById('billing_address').value = data.billing_address || '';
+                document.getElementById('shipping_address').value = data.shipping_address || data.billing_address || '';
+            })
+            .catch(error => {
+                console.error('Error fetching customer details:', error);
+            });
+    } else {
+        // Clear fields if no customer selected
+        document.getElementById('customer_name_hidden').value = '';
+        document.getElementById('billing_address').value = '';
+        document.getElementById('shipping_address').value = '';
+    }
+});
+
+// Product selection handling
+function handleProductSelect(selectElement) {
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+    const itemRow = selectElement.closest('.item-row');
+    
+    if (selectedOption.value) {
+        const productName = selectedOption.getAttribute('data-name');
+        const productDescription = selectedOption.getAttribute('data-description');
+        const productPrice = selectedOption.getAttribute('data-price');
+        
+        // Update item description and price
+        const descriptionField = itemRow.querySelector('.item-description');
+        const priceField = itemRow.querySelector('.price-input');
+        
+        if (descriptionField && productName) {
+            descriptionField.value = productName + (productDescription ? '\n' + productDescription : '');
+        }
+        
+        if (priceField && productPrice) {
+            priceField.value = parseFloat(productPrice).toFixed(2);
+        }
+        
+        // Recalculate totals
+        calculateLineTotal(itemRow);
+        calculateTotals();
+    }
+}
 
 // Payment terms handling
 document.getElementById('payment_terms').addEventListener('change', function() {
@@ -301,42 +582,58 @@ document.getElementById('payment_terms').addEventListener('change', function() {
 function addItem() {
     const container = document.getElementById('invoice-items');
     const itemDiv = document.createElement('div');
-    itemDiv.className = 'item-row border rounded p-3 mb-3';
+    itemDiv.className = 'item-row';
     itemDiv.setAttribute('data-index', itemIndex);
     
     itemDiv.innerHTML = `
-        <div class="row g-3">
-            <div class="col-md-6">
-                <label class="form-label">Item Description</label>
-                <textarea name="items[${itemIndex}][item_description]" class="form-control" 
-                          rows="2" required placeholder="Enter item description"></textarea>
+        <div class="grid grid-cols-12 gap-4 items-center py-3">
+            <!-- Product & Description Column -->
+            <div class="col-span-5">
+                <select name="items[${itemIndex}][product_id]" class="product-select w-full text-sm border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" data-index="${itemIndex}">
+                    <option value="">Type or click to select an item.</option>
+                </select>
+                <input type="hidden" name="items[${itemIndex}][item_description]" class="item-description" value="">
             </div>
-            <div class="col-md-2">
-                <label class="form-label">Quantity</label>
+            
+            <!-- Quantity Column -->
+            <div class="col-span-2 text-center">
                 <input type="number" name="items[${itemIndex}][quantity]" 
-                       class="form-control quantity-input" step="0.01" 
-                       value="1" required>
+                       class="quantity-input w-full text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
+                       step="0.01" value="1.00" required>
             </div>
-            <div class="col-md-2">
-                <label class="form-label">Unit Price</label>
-                <input type="number" name="items[${itemIndex}][unit_price]" 
-                       class="form-control price-input" step="0.01" 
-                       value="0" required>
+            
+            <!-- Rate Column -->
+            <div class="col-span-2 text-center">
+                <div class="flex items-center justify-center">
+                    <input type="number" name="items[${itemIndex}][unit_price]" 
+                           class="price-input w-16 text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
+                           step="0.01" value="0.00" required>
+                    <span class="ml-2 text-gray-500 text-sm">⊞</span>
+                </div>
             </div>
-            <div class="col-md-2">
-                <label class="form-label">Discount %</label>
-                <input type="number" name="items[${itemIndex}][discount_percentage]" 
-                       class="form-control discount-input" step="0.01" min="0" max="100"
-                       value="0">
+            
+            <!-- Discount Column -->
+            <div class="col-span-2 text-center">
+                <div class="flex items-center justify-center">
+                    <input type="number" name="items[${itemIndex}][discount_percentage]" 
+                           class="discount-input w-12 text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
+                           step="0.01" min="0" max="100" value="0">
+                    <select class="ml-1 border-0 bg-transparent text-gray-500 text-sm focus:ring-0">
+                        <option>%</option>
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="d-flex justify-content-between align-items-center mt-2">
-            <div class="item-total">
-                <strong>Line Total: <span class="line-total">0.00</span> AED</strong>
+            
+            <!-- Amount Column -->
+            <div class="col-span-1 text-right relative">
+                <span class="line-total text-gray-900 font-medium">0.00</span>
+                <button type="button" onclick="removeItem(this)" 
+                        class="absolute -right-6 top-0 text-gray-400 hover:text-red-500">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
-            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeItem(this)">
-                <i class="fas fa-trash"></i>
-            </button>
         </div>
     `;
     
@@ -345,6 +642,33 @@ function addItem() {
     
     // Add event listeners to new inputs
     addCalculationListeners(itemDiv);
+    
+    // Initialize Select2 for new product select and populate options
+    const productSelect = itemDiv.querySelector('.product-select');
+    if (productSelect) {
+        // Add product options from the page data
+        const existingSelect = document.querySelector('.product-select');
+        if (existingSelect) {
+            const options = existingSelect.innerHTML;
+            productSelect.innerHTML = options;
+        }
+        
+        $(productSelect).select2({
+            placeholder: 'Type or click to select an item.',
+            allowClear: true,
+            width: '100%',
+            minimumInputLength: 0,
+            templateResult: formatProductResult,
+            templateSelection: formatProductSelection,
+            escapeMarkup: function (markup) {
+                return markup;
+            }
+        });
+        
+        productSelect.addEventListener('change', function() {
+            handleProductSelect(this);
+        });
+    }
 }
 
 // Remove item
@@ -401,26 +725,76 @@ function calculateTotals() {
 
 // Initialize calculations on page load
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Select2 for customer dropdown
+    $('#customer_id').select2({
+        placeholder: 'Search and select a customer...',
+        allowClear: true,
+        width: '100%',
+        minimumInputLength: 0,
+        escapeMarkup: function (markup) {
+            return markup;
+        }
+    });
+    
+    // Initialize Select2 for product dropdowns with enhanced search
+    $('.product-select').select2({
+        placeholder: 'Search products by name, brand, or category...',
+        allowClear: true,
+        width: '100%',
+        minimumInputLength: 0,
+        templateResult: formatProductResult,
+        templateSelection: formatProductSelection,
+        escapeMarkup: function (markup) {
+            return markup;
+        }
+    });
+    
+    // Format function for product results in dropdown
+    function formatProductResult(product) {
+        if (product.loading) {
+            return product.text;
+        }
+        
+        var $container = $(
+            "<div class='select2-result-product clearfix'>" +
+                "<div class='select2-result-product__meta'>" +
+                    "<div class='select2-result-product__title'></div>" +
+                    "<div class='select2-result-product__description'></div>" +
+                "</div>" +
+            "</div>"
+        );
+        
+        var element = product.element;
+        if (element) {
+            $container.find(".select2-result-product__title").text(product.text);
+            var price = $(element).data('price');
+            if (price) {
+                $container.find(".select2-result-product__description").text('Price: ' + parseFloat(price).toFixed(2) + ' AED');
+            }
+        } else {
+            $container.find(".select2-result-product__title").text(product.text);
+        }
+        
+        return $container;
+    }
+    
+    // Format function for selected product
+    function formatProductSelection(product) {
+        return product.text || product.element.textContent;
+    }
+    
     addCalculationListeners();
     calculateTotals();
+    
+    // Add event listeners for existing product selects
+    document.querySelectorAll('.product-select').forEach(select => {
+        select.addEventListener('change', function() {
+            handleProductSelect(this);
+        });
+    });
     
     // Trigger payment terms check
     document.getElementById('payment_terms').dispatchEvent(new Event('change'));
 });
 </script>
-
-<style>
-    .item-row {
-        background-color: #f8f9fa;
-        transition: all 0.3s ease;
-    }
-    
-    .item-row:hover {
-        background-color: #e9ecef;
-    }
-    
-    .card-header {
-        border-bottom: 1px solid rgba(0,0,0,.125);
-    }
-</style>
-@endsection 
+@endpush 

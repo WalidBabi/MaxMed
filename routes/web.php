@@ -131,7 +131,8 @@ Route::middleware('auth')->group(function () {
         Route::get('deliveries', [\App\Http\Controllers\Admin\DeliveryController::class, 'index'])->name('deliveries.index');
         
         // Customer Management
-        Route::resource('customers', \App\Http\Controllers\Admin\CustomerController::class);
+                    Route::resource('customers', \App\Http\Controllers\Admin\CustomerController::class);
+            Route::get('customers/{id}/details', [\App\Http\Controllers\Admin\CustomerController::class, 'getCustomerDetails'])->name('customers.details');
         Route::get('customers/by-name/{name}', [\App\Http\Controllers\Admin\CustomerController::class, 'getByName'])->name('customers.by-name');
         
         // Role Management

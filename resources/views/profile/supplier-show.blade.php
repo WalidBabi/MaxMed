@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('supplier.layouts.app')
 
 @section('title', 'Profile')
 
@@ -50,7 +50,7 @@
                                 Active
                             </span>
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                {{ $user->is_admin ? 'Administrator' : 'User' }}
+                                Supplier
                             </span>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Account Type</label>
-                        <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-md">{{ $user->is_admin ? 'Administrator' : 'User' }}</p>
+                        <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-md">Supplier</p>
                     </div>
                 </div>
             </div>
@@ -99,12 +99,12 @@
                         </svg>
                         Edit Profile
                     </a>
-                    <a href="{{ route('admin.dashboard') }}" class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <a href="{{ route('supplier.dashboard') }}" class="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h2a2 2 0 012 2v2H8V5z"></path>
                         </svg>
-                        Back to Dashboard
+                        Back to Supplier Dashboard
                     </a>
                 </div>
             </div>

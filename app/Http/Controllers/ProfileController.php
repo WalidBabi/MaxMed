@@ -18,8 +18,17 @@ class ProfileController extends Controller
      */
     public function show(Request $request): View
     {
+        $user = $request->user();
+        
+        // Determine the correct view based on user role
+        if ($user->role && $user->role->name === 'supplier') {
+            return view('profile.supplier-show', [
+                'user' => $user,
+            ]);
+        }
+        
         return view('profile.show', [
-            'user' => $request->user(),
+            'user' => $user,
         ]);
     }
 
@@ -28,8 +37,17 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+        
+        // Determine the correct view based on user role
+        if ($user->role && $user->role->name === 'supplier') {
+            return view('profile.supplier-edit', [
+                'user' => $user,
+            ]);
+        }
+        
         return view('profile.edit', [
-            'user' => $request->user(),
+            'user' => $user,
         ]);
     }
 
