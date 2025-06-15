@@ -3,6 +3,7 @@
 @section('title', 'Quotes')
 
 @section('content')
+<div class="-mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
 <div class="max-w-7xl mx-auto">
     <!-- Header -->
     <div class="mb-8">
@@ -381,4 +382,5 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
+</div>
 @endsection 
