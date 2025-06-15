@@ -1,4 +1,8 @@
-@extends('admin.layouts.app')
+@if(Auth::user()->role && Auth::user()->role->name === 'supplier')
+    @extends('supplier.layouts.app')
+@else
+    @extends('admin.layouts.app')
+@endif
 
 @section('title', 'Edit Profile')
 

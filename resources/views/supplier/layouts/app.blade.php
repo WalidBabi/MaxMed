@@ -175,13 +175,7 @@
         <div class="main-content-container" :class="{ 'expanded': sidebarHidden }">
             <!-- Top navigation -->
             <div class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-                <!-- Mobile menu button -->
-                <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden" @click="sidebarOpen = true">
-                    <span class="sr-only">Open sidebar</span>
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                    </svg>
-                </button>
+               
 
                 <!-- Desktop sidebar toggle -->
                 <button type="button" class="hidden lg:block -m-2.5 p-2.5 text-gray-700" @click="sidebarHidden = !sidebarHidden">
@@ -222,7 +216,13 @@
                         <div class="relative" x-data="{ open: false }">
                             <button type="button" class="-m-1.5 flex items-center p-1.5" @click="open = !open">
                                 <span class="sr-only">Open user menu</span>
-                                <img class="h-8 w-8 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                                @if(Auth::user()->profile_photo)
+                                    <img class="h-8 w-8 rounded-full bg-gray-50 object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}">
+                                @else
+                                    <div class="h-8 w-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold">
+                                        {{ strtoupper(substr(Auth::user()->name ?? 'U', 0, 2)) }}
+                                    </div>
+                                @endif
                                 <span class="hidden lg:flex lg:items-center">
                                     <span class="ml-4 text-sm font-semibold leading-6 text-gray-900">{{ Auth::user()->name ?? 'Supplier' }}</span>
                                     <svg class="ml-2 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">

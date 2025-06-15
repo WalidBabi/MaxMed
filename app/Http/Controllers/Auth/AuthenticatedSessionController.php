@@ -34,6 +34,11 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(route('admin.dashboard'));
         }
 
+        // Check if user is a supplier
+        if ($user->role && $user->role->name === 'supplier') {
+            return redirect()->intended(route('supplier.dashboard'));
+        }
+
         return redirect()->intended(route('dashboard'));
     }
 
