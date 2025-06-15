@@ -291,13 +291,18 @@
 </div>
 
 <!-- Send Email Modal -->
-<div x-data="{ show: false, isLoading: false }" x-on:open-modal.window="$event.detail == 'send-quote-email' ? show = true : null" x-on:close-modal.window="$event.detail == 'send-quote-email' ? show = false : null" x-show="show" class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50" style="display: none;">
+<div x-data="{ show: false, isLoading: false }" 
+     x-on:open-modal.window="console.log('Modal event received:', $event.detail); $event.detail == 'send-quote-email' ? show = true : null" 
+     x-on:close-modal.window="$event.detail == 'send-quote-email' ? show = false : null" 
+     x-show="show" 
+     class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50" 
+     style="display: none;">
     <div x-show="show" class="fixed inset-0 transform transition-all" x-on:click="show = false" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
         <div class="absolute inset-0 bg-gray-900 bg-opacity-75 backdrop-blur-sm"></div>
     </div>
 
     <div x-show="show" class="mb-6 bg-white rounded-2xl overflow-hidden shadow-2xl transform transition-all sm:w-full sm:max-w-2xl sm:mx-auto border border-gray-200" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-        <form id="sendEmailForm" method="POST" action="" x-data="{ submitting: false }">
+        <form id="sendEmailForm" method="POST" action="" x-data="{ submitting: false }" @submit.prevent="submitEmailForm($event)">
             @csrf
             
             <!-- Header with gradient background -->
@@ -445,8 +450,7 @@
                     </button>
                     <button type="submit" 
                             x-bind:disabled="submitting"
-                            x-on:click="submitting = true"
-                            class="inline-flex items-center px-6 py-2 text-sm font-medium bg-gradient-to-r from-indigo-600 to-blue-600 border border-transparent rounded-lg shadow-lg hover:from-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105">
+                            class="inline-flex items-center px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-blue-600 border border-transparent rounded-lg shadow-lg hover:from-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105">
                         <span x-show="!submitting" class="flex items-center">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
@@ -483,17 +487,29 @@ document.addEventListener('DOMContentLoaded', function() {
     // Enhanced send email functionality
     document.querySelectorAll('.send-email-btn').forEach(button => {
         button.addEventListener('click', function() {
+            console.log('Send email button clicked for quotes');
             const quoteId = this.getAttribute('data-quote-id');
             const customerName = this.getAttribute('data-customer-name');
             const quoteNumber = this.getAttribute('data-quote-number');
             const customerEmail = this.getAttribute('data-customer-email');
             
+            console.log('Quote data:', { quoteId, customerName, quoteNumber, customerEmail });
+            
             const sendEmailForm = document.getElementById('sendEmailForm');
+            if (!sendEmailForm) {
+                console.error('Send email form not found');
+                return;
+            }
+            
             sendEmailForm.action = `/admin/quotes/${quoteId}/send-email`;
+            console.log('Form action set to:', sendEmailForm.action);
             
             // Update modal content
-            document.getElementById('emailModalQuoteNumber').textContent = `Quote ${quoteNumber}`;
-            document.getElementById('emailModalCustomerName').textContent = customerName;
+            const emailModalQuoteNumber = document.getElementById('emailModalQuoteNumber');
+            const emailModalCustomerName = document.getElementById('emailModalCustomerName');
+            
+            if (emailModalQuoteNumber) emailModalQuoteNumber.textContent = `Quote ${quoteNumber}`;
+            if (emailModalCustomerName) emailModalCustomerName.textContent = customerName;
             
             // Use existing email or fetch by customer name
             if (customerEmail && customerEmail.trim() !== '') {
@@ -502,6 +518,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 fetchCustomerEmail(customerName);
             }
             
+            console.log('Dispatching open-modal event for send-quote-email');
             window.dispatchEvent(new CustomEvent('open-modal', { detail: 'send-quote-email' }));
         });
     });
@@ -576,6 +593,136 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 emailStatus.classList.remove('hidden');
             });
+    }
+
+    // Function to handle email form submission
+    window.submitEmailForm = function(event) {
+        const form = event.target;
+        const formData = new FormData(form);
+        const submitButton = form.querySelector('button[type="submit"]');
+        
+        // Set submitting state
+        Alpine.store('emailModal', { submitting: true });
+        
+        console.log('Submitting email form...');
+        
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            // Check if response is JSON
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                // Get the text response for debugging
+                return response.text().then(text => {
+                    console.error('Non-JSON response received:', text);
+                    throw new Error('Server did not return JSON response');
+                });
+            }
+            
+            return response.json();
+        })
+        .then(data => {
+            console.log('Email response:', data);
+            
+            // Reset submitting state
+            Alpine.store('emailModal', { submitting: false });
+            
+            if (data.success) {
+                // Close modal
+                window.dispatchEvent(new CustomEvent('close-modal', { detail: 'send-quote-email' }));
+                
+                // Show success message
+                showNotification('Email sent successfully!', 'success');
+                
+                // Reset form
+                form.reset();
+            } else {
+                // Show error message
+                showNotification(data.message || 'Failed to send email. Please try again.', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Email submission error:', error);
+            
+            // Reset submitting state
+            Alpine.store('emailModal', { submitting: false });
+            
+            // Show more detailed error message
+            let errorMessage = 'An error occurred while sending the email.';
+            if (error.message.includes('HTTP error')) {
+                errorMessage += ' Server returned an error status.';
+            } else if (error.message.includes('JSON')) {
+                errorMessage += ' Server response was not in the expected format.';
+            } else if (error.message.includes('NetworkError') || error.message.includes('fetch')) {
+                errorMessage += ' Network connection failed.';
+            }
+            errorMessage += ' Check console for details.';
+            
+            showNotification(errorMessage, 'error');
+        });
+    };
+
+    // Function to show notifications
+    function showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 z-50 max-w-sm w-full bg-white rounded-lg shadow-lg border-l-4 ${
+            type === 'success' ? 'border-green-400' : 
+            type === 'error' ? 'border-red-400' : 'border-blue-400'
+        } p-4 transition-all duration-300 transform translate-x-full`;
+        
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    ${type === 'success' ? 
+                        '<svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>' :
+                        type === 'error' ? 
+                        '<svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>' :
+                        '<svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>'
+                    }
+                </div>
+                <div class="ml-3 flex-1">
+                    <p class="text-sm font-medium text-gray-900">${message}</p>
+                </div>
+                <div class="ml-4 flex-shrink-0">
+                    <button class="inline-flex text-gray-400 hover:text-gray-500" onclick="this.parentElement.parentElement.parentElement.remove()">
+                        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+        }, 100);
+        
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            notification.classList.add('translate-x-full');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 5000);
     }
 });
 </script>

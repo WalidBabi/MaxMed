@@ -101,7 +101,9 @@
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
                         </div>
                         <input type="text" id="search" name="search" value="{{ request('search') }}" placeholder="Search invoices..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
@@ -405,13 +407,18 @@
 </div>
 
 <!-- Send Email Modal -->
-<div x-data="{ show: false, isLoading: false }" x-on:open-modal.window="$event.detail == 'send-invoice-email' ? show = true : null" x-on:close-modal.window="$event.detail == 'send-invoice-email' ? show = false : null" x-show="show" class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50" style="display: none;">
+<div x-data="{ show: false, isLoading: false }" 
+     x-on:open-modal.window="console.log('Modal event received:', $event.detail); $event.detail == 'send-invoice-email' ? show = true : null" 
+     x-on:close-modal.window="$event.detail == 'send-invoice-email' ? show = false : null" 
+     x-show="show" 
+     class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50" 
+     style="display: none;">
     <div x-show="show" class="fixed inset-0 transform transition-all" x-on:click="show = false" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
         <div class="absolute inset-0 bg-gray-900 bg-opacity-75 backdrop-blur-sm"></div>
     </div>
 
     <div x-show="show" class="mb-6 bg-white rounded-2xl overflow-hidden shadow-2xl transform transition-all sm:w-full sm:max-w-2xl sm:mx-auto border border-gray-200" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-        <form id="sendEmailForm" method="POST" action="" x-data="{ submitting: false }">
+        <form id="sendEmailForm" method="POST" action="" x-data="{ submitting: false }" @submit.prevent="submitEmailForm($event)">
             @csrf
             
             <!-- Header with gradient background -->
@@ -559,7 +566,6 @@
                     </button>
                     <button type="submit" 
                             x-bind:disabled="submitting"
-                            x-on:click="submitting = true"
                             class="inline-flex items-center px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-emerald-600 to-green-600 border border-transparent rounded-lg shadow-lg hover:from-emerald-700 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105">
                         <span x-show="!submitting" class="flex items-center">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -570,9 +576,10 @@
                         <span x-show="submitting" class="flex items-center">
                             <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                             </svg>
-                             Sending...
-                         </span>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Sending...
+                        </span>
                      </button>
                  </div>
              </div>
@@ -596,17 +603,29 @@ document.addEventListener('DOMContentLoaded', function() {
     // Enhanced send email functionality
     document.querySelectorAll('.send-email-btn').forEach(button => {
         button.addEventListener('click', function() {
+            console.log('Send email button clicked for invoices');
             const invoiceId = this.getAttribute('data-invoice-id');
             const customerName = this.getAttribute('data-customer-name');
             const invoiceNumber = this.getAttribute('data-invoice-number');
             const customerEmail = this.getAttribute('data-customer-email');
             
+            console.log('Invoice data:', { invoiceId, customerName, invoiceNumber, customerEmail });
+            
             const sendEmailForm = document.getElementById('sendEmailForm');
+            if (!sendEmailForm) {
+                console.error('Send email form not found');
+                return;
+            }
+            
             sendEmailForm.action = `/admin/invoices/${invoiceId}/send-email`;
+            console.log('Form action set to:', sendEmailForm.action);
             
             // Update modal content
-            document.getElementById('emailModalInvoiceNumber').textContent = `Invoice ${invoiceNumber}`;
-            document.getElementById('emailModalCustomerName').textContent = customerName;
+            const emailModalInvoiceNumber = document.getElementById('emailModalInvoiceNumber');
+            const emailModalCustomerName = document.getElementById('emailModalCustomerName');
+            
+            if (emailModalInvoiceNumber) emailModalInvoiceNumber.textContent = `Invoice ${invoiceNumber}`;
+            if (emailModalCustomerName) emailModalCustomerName.textContent = customerName;
             
             // Use existing email or fetch by customer name
             if (customerEmail && customerEmail.trim() !== '') {
@@ -615,9 +634,212 @@ document.addEventListener('DOMContentLoaded', function() {
                 fetchCustomerEmail(customerName);
             }
             
+            console.log('Dispatching open-modal event for send-invoice-email');
             window.dispatchEvent(new CustomEvent('open-modal', { detail: 'send-invoice-email' }));
         });
     });
+
+    // Helper function to populate email field
+    function populateEmailField(email, message) {
+        const emailInput = document.getElementById('customer_email');
+        const loadingSpinner = document.getElementById('emailLoadingSpinner');
+        const emailFoundIcon = document.getElementById('emailFoundIcon');
+        const emailStatus = document.getElementById('emailStatus');
+        
+        loadingSpinner.classList.add('hidden');
+        emailInput.disabled = false;
+        emailInput.value = email;
+        emailFoundIcon.classList.remove('hidden');
+        emailStatus.className = 'mt-2 text-sm text-green-600 flex items-center';
+        emailStatus.innerHTML = `
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            ${message}
+        `;
+        emailStatus.classList.remove('hidden');
+    }
+
+    // Function to fetch customer email
+    function fetchCustomerEmail(customerName) {
+        const emailInput = document.getElementById('customer_email');
+        const loadingSpinner = document.getElementById('emailLoadingSpinner');
+        const emailFoundIcon = document.getElementById('emailFoundIcon');
+        const emailStatus = document.getElementById('emailStatus');
+        
+        // Show loading state
+        loadingSpinner.classList.remove('hidden');
+        emailFoundIcon.classList.add('hidden');
+        emailStatus.classList.add('hidden');
+        emailInput.value = '';
+        emailInput.disabled = true;
+        
+        // Fetch customer email
+        fetch(`/admin/customers/by-name/${encodeURIComponent(customerName)}`)
+            .then(response => response.json())
+            .then(data => {
+                loadingSpinner.classList.add('hidden');
+                emailInput.disabled = false;
+                
+                if (data.email) {
+                    populateEmailField(data.email, 'Customer email found and populated automatically');
+                } else {
+                    emailStatus.textContent = 'Customer email not found. Please enter manually.';
+                    emailStatus.className = 'mt-2 text-sm text-amber-600 flex items-center';
+                    emailStatus.innerHTML = `
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                        Customer email not found. Please enter manually.
+                    `;
+                    emailStatus.classList.remove('hidden');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching customer email:', error);
+                loadingSpinner.classList.add('hidden');
+                emailInput.disabled = false;
+                emailStatus.textContent = 'Failed to fetch customer email. Please enter manually.';
+                emailStatus.className = 'mt-2 text-sm text-red-600 flex items-center';
+                emailStatus.innerHTML = `
+                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    Failed to fetch customer email. Please enter manually.
+                `;
+                emailStatus.classList.remove('hidden');
+            });
+    }
+
+    // Function to handle email form submission
+    window.submitEmailForm = function(event) {
+        const form = event.target;
+        const formData = new FormData(form);
+        const submitButton = form.querySelector('button[type="submit"]');
+        
+        // Set submitting state
+        Alpine.store('emailModal', { submitting: true });
+        
+        console.log('Submitting email form...');
+        
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            // Check if response is JSON
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                // Get the text response for debugging
+                return response.text().then(text => {
+                    console.error('Non-JSON response received:', text);
+                    throw new Error('Server did not return JSON response');
+                });
+            }
+            
+            return response.json();
+        })
+        .then(data => {
+            console.log('Email response:', data);
+            
+            // Reset submitting state
+            Alpine.store('emailModal', { submitting: false });
+            
+            if (data.success) {
+                // Close modal
+                window.dispatchEvent(new CustomEvent('close-modal', { detail: 'send-invoice-email' }));
+                
+                // Show success message
+                showNotification('Email sent successfully!', 'success');
+                
+                // Reset form
+                form.reset();
+            } else {
+                // Show error message
+                showNotification(data.message || 'Failed to send email. Please try again.', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Email submission error:', error);
+            
+            // Reset submitting state
+            Alpine.store('emailModal', { submitting: false });
+            
+            // Show more detailed error message
+            let errorMessage = 'An error occurred while sending the email.';
+            if (error.message.includes('HTTP error')) {
+                errorMessage += ' Server returned an error status.';
+            } else if (error.message.includes('JSON')) {
+                errorMessage += ' Server response was not in the expected format.';
+            } else if (error.message.includes('NetworkError') || error.message.includes('fetch')) {
+                errorMessage += ' Network connection failed.';
+            }
+            errorMessage += ' Check console for details.';
+            
+            showNotification(errorMessage, 'error');
+        });
+    };
+
+    // Function to show notifications
+    function showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 z-50 max-w-sm w-full bg-white rounded-lg shadow-lg border-l-4 ${
+            type === 'success' ? 'border-green-400' : 
+            type === 'error' ? 'border-red-400' : 'border-blue-400'
+        } p-4 transition-all duration-300 transform translate-x-full`;
+        
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    ${type === 'success' ? 
+                        '<svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>' :
+                        type === 'error' ? 
+                        '<svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>' :
+                        '<svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>'
+                    }
+                </div>
+                <div class="ml-3 flex-1">
+                    <p class="text-sm font-medium text-gray-900">${message}</p>
+                </div>
+                <div class="ml-4 flex-shrink-0">
+                    <button class="inline-flex text-gray-400 hover:text-gray-500" onclick="this.parentElement.parentElement.parentElement.remove()">
+                        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+        }, 100);
+        
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            notification.classList.add('translate-x-full');
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 5000);
+    }
 });
 </script>
 @endpush
