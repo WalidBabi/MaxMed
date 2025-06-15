@@ -1,204 +1,243 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Products Management')
+
 @section('content')
-<div class="container-fluid py-4">
-    <!-- Header Section -->
-    <div class="page-header mb-4">
-        <div class="d-flex justify-content-between align-items-center">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
             <div>
-                <h1 class="page-title mb-1">Products Management</h1>
-                <p class="page-description text-muted">Manage your product inventory, pricing, and categories</p>
+                <h1 class="text-3xl font-bold text-gray-900">Products Management</h1>
+                <p class="text-gray-600 mt-2">Manage your product inventory, pricing, and categories</p>
             </div>
-            <a href="{{ route('admin.products.create') }}" class="btn btn-primary btn-lg">
-                <i class="fas fa-plus me-2"></i> Add New Product
-            </a>
-        </div>
-    </div>
-
-    <!-- Quick Stats -->
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon bg-primary">
-                    <i class="fas fa-box"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>{{ App\Models\Product::count() }}</h3>
-                    <p>Total Products</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon bg-success">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>{{ App\Models\Product::whereHas('inventory', function($query) {
-                        $query->where('quantity', '>', 0);
-                    })->count() }}</h3>
-                    <p>In Stock</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon bg-warning">
-                    <i class="fas fa-exclamation-circle"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>{{ App\Models\Product::whereHas('inventory', function($query) {
-                        $query->where('quantity', '<=', 0);
-                    })->count() }}</h3>
-                    <p>Out of Stock</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stat-card">
-                <div class="stat-icon bg-info">
-                    <i class="fas fa-tags"></i>
-                </div>
-                <div class="stat-info">
-                    <h3>{{ App\Models\Category::count() }}</h3>
-                    <p>Categories</p>
-                </div>
+            <div class="flex items-center space-x-3">
+                <a href="{{ route('admin.products.create') }}" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                    <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                    </svg>
+                    Add New Product
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- Filter Section -->
-    <div class="filter-section mb-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="mb-0">Filter Products</h5>
-            <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse">
-                <i class="fas fa-filter me-1"></i> Toggle Filters
-                @if(request()->hasAny(['search', 'category_id', 'brand_id', 'stock_status', 'min_price', 'max_price']))
-                    <span class="badge bg-primary ms-1">{{ count(array_filter(request()->only(['search', 'category_id', 'brand_id', 'stock_status', 'min_price', 'max_price']))) }}</span>
-                @endif
-            </button>
+    <!-- Key Performance Metrics -->
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+        <!-- Total Products -->
+        <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-lg metric-card">
+                        <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Products</p>
+                    <p class="text-3xl font-bold text-gray-900">{{ App\Models\Product::count() }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- In Stock -->
+        <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-lg success-card">
+                        <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">In Stock</p>
+                    <p class="text-3xl font-bold text-gray-900">{{ App\Models\Product::whereHas('inventory', function($query) { $query->where('quantity', '>', 0); })->count() }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Out of Stock -->
+        <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-lg warning-card">
+                        <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Out of Stock</p>
+                    <p class="text-3xl font-bold text-gray-900">{{ App\Models\Product::whereHas('inventory', function($query) { $query->where('quantity', '<=', 0); })->count() }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-lg danger-card">
+                        <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Categories</p>
+                    <p class="text-3xl font-bold text-gray-900">{{ App\Models\Category::count() }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-8" x-data="{ filtersOpen: {{ request()->hasAny(['search', 'category_id', 'brand_id', 'stock_status', 'min_price', 'max_price', 'sort_by', 'sort_order']) ? 'true' : 'false' }} }">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900">Filter Products</h3>
+                <button @click="filtersOpen = !filtersOpen" class="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                    <svg class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
+                    </svg>
+                    Toggle Filters
+                    @if(request()->hasAny(['search', 'category_id', 'brand_id', 'stock_status', 'min_price', 'max_price']))
+                        <span class="ml-2 inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800">
+                            {{ count(array_filter(request()->only(['search', 'category_id', 'brand_id', 'stock_status', 'min_price', 'max_price']))) }}
+                        </span>
+                    @endif
+                </button>
+            </div>
         </div>
         
-        <div class="collapse {{ request()->hasAny(['search', 'category_id', 'brand_id', 'stock_status', 'min_price', 'max_price', 'sort_by', 'sort_order']) ? 'show' : '' }}" id="filterCollapse">
-            <form action="{{ route('admin.products.index') }}" method="GET" id="filter-form" class="filter-form">
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            <input type="text" class="form-control" id="search" name="search" value="{{ request('search') }}" placeholder="Search by Name">
-                            <label for="search">Search by Name</label>
-                        </div>
+        <div x-show="filtersOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="p-6">
+            <form action="{{ route('admin.products.index') }}" method="GET" class="space-y-6">
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                    <div>
+                        <label for="search" class="block text-sm font-medium text-gray-700">Search by Name</label>
+                        <input type="text" id="search" name="search" value="{{ request('search') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Search products...">
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            <select class="form-select" id="category_id" name="category_id">
-                                <option value="">All Categories</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <label for="category_id">Category</label>
-                        </div>
+                    
+                    <div>
+                        <label for="category_id" class="block text-sm font-medium text-gray-700">Category</label>
+                        <select id="category_id" name="category_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <option value="">All Categories</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            <select class="form-select" id="brand_id" name="brand_id">
-                                <option value="">All Brands</option>
-                                @foreach(App\Models\Brand::orderBy('name')->get() as $brand)
-                                    <option value="{{ $brand->id }}" {{ request('brand_id') == $brand->id ? 'selected' : '' }}>
-                                        {{ $brand->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <label for="brand_id">Brand</label>
-                        </div>
+                    
+                    <div>
+                        <label for="brand_id" class="block text-sm font-medium text-gray-700">Brand</label>
+                        <select id="brand_id" name="brand_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <option value="">All Brands</option>
+                            @foreach(App\Models\Brand::orderBy('name')->get() as $brand)
+                                <option value="{{ $brand->id }}" {{ request('brand_id') == $brand->id ? 'selected' : '' }}>
+                                    {{ $brand->name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            <select class="form-select" id="stock_status" name="stock_status">
-                                <option value="">All</option>
-                                <option value="in_stock" {{ request('stock_status') == 'in_stock' ? 'selected' : '' }}>In Stock</option>
-                                <option value="out_of_stock" {{ request('stock_status') == 'out_of_stock' ? 'selected' : '' }}>Out of Stock</option>
-                            </select>
-                            <label for="stock_status">Stock Status</label>
-                        </div>
+                    
+                    <div>
+                        <label for="stock_status" class="block text-sm font-medium text-gray-700">Stock Status</label>
+                        <select id="stock_status" name="stock_status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <option value="">All</option>
+                            <option value="in_stock" {{ request('stock_status') == 'in_stock' ? 'selected' : '' }}>In Stock</option>
+                            <option value="out_of_stock" {{ request('stock_status') == 'out_of_stock' ? 'selected' : '' }}>Out of Stock</option>
+                        </select>
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            <input type="number" class="form-control" id="min_price" name="min_price" value="{{ request('min_price') }}" min="0" step="0.01" placeholder="Min Price">
-                            <label for="min_price">Min Price</label>
-                        </div>
+                    
+                    <div>
+                        <label for="min_price" class="block text-sm font-medium text-gray-700">Min Price</label>
+                        <input type="number" id="min_price" name="min_price" value="{{ request('min_price') }}" min="0" step="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="0.00">
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            <input type="number" class="form-control" id="max_price" name="max_price" value="{{ request('max_price') }}" min="0" step="0.01" placeholder="Max Price">
-                            <label for="max_price">Max Price</label>
-                        </div>
+                    
+                    <div>
+                        <label for="max_price" class="block text-sm font-medium text-gray-700">Max Price</label>
+                        <input type="number" id="max_price" name="max_price" value="{{ request('max_price') }}" min="0" step="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="0.00">
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            <select class="form-select" id="sort_by" name="sort_by">
-                                <option value="created_at" {{ request('sort_by') == 'created_at' ? 'selected' : '' }}>Date Added</option>
-                                <option value="name" {{ request('sort_by') == 'name' ? 'selected' : '' }}>Name</option>
-                                <option value="price" {{ request('sort_by') == 'price' ? 'selected' : '' }}>Price</option>
-                            </select>
-                            <label for="sort_by">Sort By</label>
-                        </div>
+                    
+                    <div>
+                        <label for="sort_by" class="block text-sm font-medium text-gray-700">Sort By</label>
+                        <select id="sort_by" name="sort_by" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <option value="created_at" {{ request('sort_by') == 'created_at' ? 'selected' : '' }}>Date Added</option>
+                            <option value="name" {{ request('sort_by') == 'name' ? 'selected' : '' }}>Name</option>
+                            <option value="price" {{ request('sort_by') == 'price' ? 'selected' : '' }}>Price</option>
+                        </select>
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            <select class="form-select" id="sort_order" name="sort_order">
-                                <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>Ascending</option>
-                                <option value="desc" {{ request('sort_order') == 'desc' ? 'selected' : '' }}>Descending</option>
-                            </select>
-                            <label for="sort_order">Sort Order</label>
-                        </div>
+                    
+                    <div>
+                        <label for="sort_order" class="block text-sm font-medium text-gray-700">Sort Order</label>
+                        <select id="sort_order" name="sort_order" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>Ascending</option>
+                            <option value="desc" {{ request('sort_order') == 'desc' ? 'selected' : '' }}>Descending</option>
+                        </select>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-12">
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-filter me-2"></i> Apply Filters
-                            </button>
-                            <a href="{{ route('admin.products.index') }}" class="btn btn-outline-secondary">
-                                <i class="fas fa-undo me-2"></i> Reset
-                            </a>
-                        </div>
-                    </div>
+                
+                <div class="flex items-center space-x-3">
+                    <button type="submit" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                        <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
+                        </svg>
+                        Apply Filters
+                    </button>
+                    <a href="{{ route('admin.products.index') }}" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                        <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                        </svg>
+                        Reset
+                    </a>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Products Grid -->
-    <div class="products-grid">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         @foreach($products as $product)
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}">
-                    <div class="product-badges">
-                        <span class="stock-badge {{ $product->inventory->quantity > 0 ? 'in-stock' : 'out-of-stock' }}">
+            <div class="card-hover group relative overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+                <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200">
+                    <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" class="h-48 w-full object-cover object-center group-hover:opacity-75">
+                    <div class="absolute top-4 right-4">
+                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {{ $product->inventory->quantity > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                             {{ $product->inventory->quantity }} in stock
                         </span>
                     </div>
                 </div>
-                <div class="product-info">
-                    <h3 class="product-title">{{ $product->name }}</h3>
-                    <div class="product-pricing">
-                        <span class="price">${{ number_format($product->price, 2) }}</span>
-                        <span class="price-aed">AED {{ number_format($product->price_aed, 2) }}</span>
+                
+                <div class="p-6">
+                    <h3 class="text-sm font-medium text-gray-900">
+                        <span class="absolute inset-0"></span>
+                        {{ $product->name }}
+                    </h3>
+                    <div class="mt-2 flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">${{ number_format($product->price, 2) }}</p>
+                            <p class="text-xs text-gray-400">AED {{ number_format($product->price_aed, 2) }}</p>
+                        </div>
                     </div>
-                    <div class="product-actions">
-                        <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-sm btn-edit">
-                            <i class="fas fa-edit"></i> Edit
+                    
+                    <div class="mt-4 flex space-x-2">
+                        <a href="{{ route('admin.products.edit', $product) }}" class="flex-1 inline-flex justify-center items-center rounded-md bg-indigo-600 px-3 py-2 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500">
+                            <svg class="-ml-0.5 mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                            </svg>
+                            Edit
                         </a>
-                        <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="d-inline">
+                        <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="flex-1">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-delete" onclick="return confirm('Are you sure you want to delete this product?');">
-                                <i class="fas fa-trash"></i> Delete
+                            <button type="submit" class="w-full inline-flex justify-center items-center rounded-md bg-red-600 px-3 py-2 text-xs font-semibold text-white shadow-sm hover:bg-red-500" onclick="return confirm('Are you sure you want to delete this product?');">
+                                <svg class="-ml-0.5 mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                </svg>
+                                Delete
                             </button>
                         </form>
                     </div>
@@ -207,313 +246,50 @@
         @endforeach
     </div>
 
-    @if($products->isEmpty())
-        <div class="empty-state">
-            <div class="empty-state-icon">
-                <i class="fas fa-box-open"></i>
+    <!-- Pagination -->
+    @if($products->hasPages())
+        <div class="mt-8 flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+            <div class="flex flex-1 justify-between sm:hidden">
+                @if($products->onFirstPage())
+                    <span class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500">Previous</span>
+                @else
+                    <a href="{{ $products->previousPageUrl() }}" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</a>
+                @endif
+                
+                @if($products->hasMorePages())
+                    <a href="{{ $products->nextPageUrl() }}" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</a>
+                @else
+                    <span class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500">Next</span>
+                @endif
             </div>
-            <h3>No products found</h3>
-            <p>Try adjusting your filters or add a new product</p>
-            <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
-                <i class="fas fa-plus me-2"></i> Add New Product
-            </a>
-        </div>
-    @else
-        <div class="pagination-container">
-            <div class="pagination-info">
-                Showing {{ $products->firstItem() ?? 0 }} to {{ $products->lastItem() ?? 0 }} of {{ $products->total() }} results
-            </div>
-            <div class="pagination-links">
-                {{ $products->links('pagination::bootstrap-4') }}
+            <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-sm text-gray-700">
+                        Showing <span class="font-medium">{{ $products->firstItem() }}</span> to <span class="font-medium">{{ $products->lastItem() }}</span> of <span class="font-medium">{{ $products->total() }}</span> results
+                    </p>
+                </div>
+                <div>
+                    {{ $products->links() }}
+                </div>
             </div>
         </div>
     @endif
-</div>
 
-<style>
-    /* Modern Card Design */
-    .stat-card {
-        background: white;
-        border-radius: 12px;
-        padding: 20px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        transition: transform 0.2s ease;
-    }
-
-    .stat-card:hover {
-        transform: translateY(-2px);
-    }
-
-    .stat-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1.5rem;
-    }
-
-    .stat-info h3 {
-        margin: 0;
-        font-size: 1.5rem;
-        font-weight: 600;
-    }
-
-    .stat-info p {
-        margin: 0;
-        color: #6c757d;
-        font-size: 0.875rem;
-    }
-
-    /* Filter Section */
-    .filter-section {
-        background: white;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-
-    .filter-form .form-floating {
-        margin-bottom: 0;
-    }
-
-    /* Products Grid */
-    .products-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 24px;
-        margin-bottom: 24px;
-    }
-
-    .product-card {
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .product-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-    .product-image {
-        position: relative;
-        height: 200px;
-        overflow: hidden;
-    }
-
-    .product-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
-
-    .product-card:hover .product-image img {
-        transform: scale(1.05);
-    }
-
-    .product-badges {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-    }
-
-    .stock-badge {
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: white;
-    }
-
-    .stock-badge.in-stock {
-        background: rgba(40, 167, 69, 0.9);
-    }
-
-    .stock-badge.out-of-stock {
-        background: rgba(220, 53, 69, 0.9);
-    }
-
-    .product-info {
-        padding: 16px;
-    }
-
-    .product-title {
-        font-size: 1.1rem;
-        margin-bottom: 8px;
-        color: #212529;
-    }
-
-    .product-pricing {
-        margin-bottom: 16px;
-    }
-
-    .price {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: #212529;
-    }
-
-    .price-aed {
-        font-size: 0.875rem;
-        color: #6c757d;
-        margin-left: 8px;
-    }
-
-    .product-actions {
-        display: flex;
-        gap: 8px;
-    }
-
-    .btn-edit, .btn-delete {
-        flex: 1;
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-size: 0.875rem;
-        transition: all 0.2s ease;
-    }
-
-    .btn-edit {
-        background: #e9ecef;
-        color: #495057;
-        border: none;
-    }
-
-    .btn-edit:hover {
-        background: #dee2e6;
-        color: #212529;
-    }
-
-    .btn-delete {
-        background: #f8d7da;
-        color: #721c24;
-        border: none;
-    }
-
-    .btn-delete:hover {
-        background: #f5c6cb;
-        color: #721c24;
-    }
-
-    /* Empty State */
-    .empty-state {
-        text-align: center;
-        padding: 48px 24px;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-
-    .empty-state-icon {
-        font-size: 3rem;
-        color: #6c757d;
-        margin-bottom: 16px;
-    }
-
-    .empty-state h3 {
-        margin-bottom: 8px;
-        color: #212529;
-    }
-
-    .empty-state p {
-        color: #6c757d;
-        margin-bottom: 24px;
-    }
-
-    /* Pagination */
-    .pagination-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 16px;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-
-    .pagination-info {
-        color: #6c757d;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .products-grid {
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        }
-
-        .stat-card {
-            margin-bottom: 16px;
-        }
-
-        .pagination-container {
-            flex-direction: column;
-            gap: 16px;
-            text-align: center;
-        }
-    }
-</style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Animate cards on page load
-        const cards = document.querySelectorAll('.product-card');
-        cards.forEach((card, index) => {
-            setTimeout(() => {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, 100 * index);
-        });
-
-        // Save filter values to localStorage
-        const filterForm = document.getElementById('filter-form');
-        const filterInputs = filterForm.querySelectorAll('input, select');
-        
-        filterInputs.forEach(input => {
-            input.addEventListener('change', () => {
-                localStorage.setItem(`product_filter_${input.name}`, input.value);
-            });
-        });
-
-        // Restore saved filters
-        const restoreFilters = () => {
-            filterInputs.forEach(input => {
-                const savedValue = localStorage.getItem(`product_filter_${input.name}`);
-                if (savedValue !== null) {
-                    input.value = savedValue;
-                }
-            });
-        };
-
-        // Clear filters
-        const resetButton = filterForm.querySelector('a.btn-outline-secondary');
-        resetButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            filterInputs.forEach(input => {
-                localStorage.removeItem(`product_filter_${input.name}`);
-            });
-            window.location.href = "{{ route('admin.products.index') }}";
-        });
-
-        // Restore filters if no URL parameters
-        if (!window.location.search) {
-            restoreFilters();
-            let hasFilters = false;
-            filterInputs.forEach(input => {
-                if (input.value) hasFilters = true;
-            });
-            
-            if (hasFilters) {
-                filterForm.submit();
-            }
-        }
-    });
-</script>
+    @if($products->isEmpty())
+        <div class="text-center py-12">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+            </svg>
+            <h3 class="mt-2 text-sm font-semibold text-gray-900">No products found</h3>
+            <p class="mt-1 text-sm text-gray-500">Get started by creating your first product.</p>
+            <div class="mt-6">
+                <a href="{{ route('admin.products.create') }}" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                    <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                    </svg>
+                    Add Product
+                </a>
+            </div>
+        </div>
+    @endif
 @endsection

@@ -1,49 +1,71 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Invoice Details')
+
 @section('content')
-<div class="main-content">
-    <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="h4 mb-1">Invoice {{ $invoice->invoice_number }}</h2>
-            <p class="text-muted mb-0">
-                {{ ucfirst($invoice->type) }} Invoice - {{ $invoice->status_options[$invoice->status] ?? ucfirst($invoice->status) }}
-            </p>
-        </div>
-        <div class="d-flex gap-2">
-            <a href="{{ route('admin.invoices.edit', $invoice) }}" class="btn btn-outline-secondary">
-                <i class="fas fa-edit me-2"></i>Edit
-            </a>
-            <a href="{{ route('admin.invoices.pdf', $invoice) }}" class="btn btn-outline-info" target="_blank">
-                <i class="fas fa-file-pdf me-2"></i>Download PDF
-            </a>
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#sendEmailModal">
-                <i class="fas fa-envelope me-2"></i>Send Email
-            </button>
-            <a href="{{ route('admin.invoices.index') }}" class="btn btn-outline-primary">
-                <i class="fas fa-arrow-left me-2"></i>Back to List
-            </a>
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Invoice {{ $invoice->invoice_number }}</h1>
+                <p class="text-gray-600 mt-2">
+                    {{ ucfirst($invoice->type) }} Invoice - {{ $invoice->status_options[$invoice->status] ?? ucfirst($invoice->status) }}
+                </p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <a href="{{ route('admin.invoices.edit', $invoice) }}" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    Edit
+                </a>
+                <a href="{{ route('admin.invoices.pdf', $invoice) }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Download PDF
+                </a>
+                <button class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    Send Email
+                </button>
+                <a href="{{ route('admin.invoices.index') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Back to List
+                </a>
+            </div>
         </div>
     </div>
 
-    <div class="row">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Content -->
-        <div class="col-lg-8">
+        <div class="lg:col-span-2 space-y-8">
             <!-- Invoice Header -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h4 class="text-primary mb-3">{{ $invoice->invoice_number }}</h4>
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h2 class="text-2xl font-bold text-indigo-600 mb-3">{{ $invoice->invoice_number }}</h2>
                             <div class="mb-2">
-                                <span class="badge {{ $invoice->type === 'proforma' ? 'bg-info' : 'bg-success' }} fs-6">
-                                    {{ ucfirst($invoice->type) }} Invoice
-                                </span>
+                                @if($invoice->type === 'proforma')
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                                        Proforma Invoice
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                        Final Invoice
+                                    </span>
+                                @endif
                             </div>
                         </div>
-                        <div class="col-md-6 text-md-end">
-                            <h5 class="mb-1">{{ $invoice->customer_name }}</h5>
-                            <div class="text-muted small">
+                        <div class="md:text-right">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ $invoice->customer_name }}</h3>
+                            <div class="text-sm text-gray-600">
                                 {{ $invoice->billing_address }}
                             </div>
                         </div>
@@ -52,46 +74,49 @@
             </div>
 
             <!-- Invoice Details -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-light">
-                    <h6 class="mb-0">
-                        <i class="fas fa-info-circle me-2"></i>Invoice Details
-                    </h6>
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-900">Invoice Details</h3>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="text-muted small">Invoice Date</label>
-                            <div class="fw-medium">{{ $invoice->invoice_date->format('F j, Y') }}</div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500 mb-1">Invoice Date</label>
+                            <p class="text-sm font-semibold text-gray-900">{{ $invoice->invoice_date->format('M d, Y') }}</p>
                         </div>
-                        <div class="col-md-4">
-                            <label class="text-muted small">Due Date</label>
-                            <div class="fw-medium">{{ $invoice->due_date->format('F j, Y') }}</div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500 mb-1">Due Date</label>
+                            <p class="text-sm font-semibold text-gray-900">{{ $invoice->due_date->format('M d, Y') }}</p>
                         </div>
-                        <div class="col-md-4">
-                            <label class="text-muted small">Payment Terms</label>
-                            <div class="fw-medium">{{ $invoice::PAYMENT_TERMS[$invoice->payment_terms] ?? ucfirst($invoice->payment_terms) }}</div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500 mb-1">Payment Terms</label>
+                            <p class="text-sm text-gray-900">{{ $invoice::PAYMENT_TERMS[$invoice->payment_terms] ?? ucfirst($invoice->payment_terms) }}</p>
                         </div>
                         @if($invoice->reference_number)
-                        <div class="col-md-4">
-                            <label class="text-muted small">Reference Number</label>
-                            <div class="fw-medium">{{ $invoice->reference_number }}</div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500 mb-1">Reference Number</label>
+                            <p class="text-sm text-gray-900">{{ $invoice->reference_number }}</p>
                         </div>
                         @endif
                         @if($invoice->po_number)
-                        <div class="col-md-4">
-                            <label class="text-muted small">PO Number</label>
-                            <div class="fw-medium">{{ $invoice->po_number }}</div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500 mb-1">PO Number</label>
+                            <p class="text-sm text-gray-900">{{ $invoice->po_number }}</p>
                         </div>
                         @endif
                         @if($invoice->quote)
-                        <div class="col-md-4">
-                            <label class="text-muted small">Related Quote</label>
-                            <div class="fw-medium">
-                                <a href="{{ route('admin.quotes.show', $invoice->quote) }}" class="text-decoration-none">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500 mb-1">Related Quote</label>
+                            <p class="text-sm text-gray-900">
+                                <a href="{{ route('admin.quotes.show', $invoice->quote) }}" class="text-indigo-600 hover:text-indigo-900">
                                     {{ $invoice->quote->quote_number }}
                                 </a>
-                            </div>
+                            </p>
                         </div>
                         @endif
                     </div>
@@ -99,80 +124,85 @@
             </div>
 
             <!-- Invoice Items -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-light">
-                    <h6 class="mb-0">
-                        <i class="fas fa-list me-2"></i>Invoice Items
-                    </h6>
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V9a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-900">Invoice Items</h3>
+                    </div>
                 </div>
-                <div class="card-body">
+                <div class="p-6">
                     @if($invoice->items->count() > 0)
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead class="table-light">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
                                     <tr>
-                                        <th>Item Description</th>
-                                        <th class="text-center">Quantity</th>
-                                        <th class="text-end">Unit Price</th>
-                                        <th class="text-center">Discount</th>
-                                        <th class="text-end">Line Total</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Description</th>
+                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Unit Price</th>
+                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Discount</th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Line Total</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach($invoice->items as $item)
-                                        <tr>
-                                            <td>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 text-sm text-gray-900">
                                                 {{ $item->item_description }}
                                                 @if($item->specifications)
-                                                    <br><small class="text-muted">{{ $item->specifications }}</small>
+                                                    <div class="text-xs text-gray-500 mt-1">{{ $item->specifications }}</div>
                                                 @endif
                                             </td>
-                                            <td class="text-center">
+                                            <td class="px-6 py-4 text-center text-sm text-gray-900">
                                                 {{ number_format($item->quantity, 2) }}
                                                 @if($item->unit_of_measure)
                                                     {{ $item->unit_of_measure }}
                                                 @endif
                                             </td>
-                                            <td class="text-end">{{ $item->formatted_unit_price }} {{ $invoice->currency }}</td>
-                                            <td class="text-center">{{ number_format($item->discount_percentage, 2) }}%</td>
-                                            <td class="text-end fw-medium">{{ $item->formatted_line_total }} {{ $invoice->currency }}</td>
+                                            <td class="px-6 py-4 text-right text-sm text-gray-900">{{ $item->formatted_unit_price }} {{ $invoice->currency }}</td>
+                                            <td class="px-6 py-4 text-center text-sm text-gray-900">{{ number_format($item->discount_percentage, 2) }}%</td>
+                                            <td class="px-6 py-4 text-right text-sm font-medium text-gray-900">{{ $item->formatted_line_total }} {{ $invoice->currency }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
                         
-                        <div class="row justify-content-end mt-3">
-                            <div class="col-md-6">
-                                <div class="d-flex justify-content-between py-2">
-                                    <span class="fw-medium">Sub Total:</span>
-                                    <span class="fw-bold">{{ $invoice->formatted_total }} {{ $invoice->currency }}</span>
+                        <div class="mt-6 flex justify-end">
+                            <div class="w-full max-w-sm">
+                                <div class="flex justify-between py-2 text-sm">
+                                    <span class="font-medium text-gray-900">Sub Total:</span>
+                                    <span class="font-bold text-gray-900">{{ $invoice->formatted_total }} {{ $invoice->currency }}</span>
                                 </div>
                                 @if($invoice->tax_amount > 0)
-                                <div class="d-flex justify-content-between py-2">
-                                    <span class="fw-medium">Tax:</span>
-                                    <span class="fw-bold">{{ number_format($invoice->tax_amount, 2) }} {{ $invoice->currency }}</span>
+                                <div class="flex justify-between py-2 text-sm">
+                                    <span class="font-medium text-gray-900">Tax:</span>
+                                    <span class="font-bold text-gray-900">{{ number_format($invoice->tax_amount, 2) }} {{ $invoice->currency }}</span>
                                 </div>
                                 @endif
                                 @if($invoice->discount_amount > 0)
-                                <div class="d-flex justify-content-between py-2">
-                                    <span class="fw-medium">Discount:</span>
-                                    <span class="fw-bold">-{{ number_format($invoice->discount_amount, 2) }} {{ $invoice->currency }}</span>
+                                <div class="flex justify-between py-2 text-sm">
+                                    <span class="font-medium text-gray-900">Discount:</span>
+                                    <span class="font-bold text-gray-900">-{{ number_format($invoice->discount_amount, 2) }} {{ $invoice->currency }}</span>
                                 </div>
                                 @endif
-                                <div class="d-flex justify-content-between py-2 border-top">
-                                    <span class="fw-medium fs-5">Total:</span>
-                                    <span class="fw-bold fs-5 text-primary">{{ $invoice->formatted_total }} {{ $invoice->currency }}</span>
+                                <div class="flex justify-between py-3 text-lg border-t border-gray-200">
+                                    <span class="font-semibold text-gray-900">Total:</span>
+                                    <span class="font-bold text-indigo-600">{{ $invoice->formatted_total }} {{ $invoice->currency }}</span>
                                 </div>
                             </div>
                         </div>
                     @else
-                        <div class="text-center py-4">
-                            <div class="icon-shape icon-lg bg-soft-secondary text-secondary rounded-3 mx-auto mb-3">
-                                <i class="fas fa-list fa-2x"></i>
+                        <div class="text-center py-12">
+                            <div class="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V9a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                </svg>
                             </div>
-                            <h6>No Items Added</h6>
-                            <p class="text-muted mb-0">This invoice doesn't have any items yet.</p>
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">No Items Added</h3>
+                            <p class="text-gray-500">This invoice doesn't have any items yet.</p>
                         </div>
                     @endif
                 </div>
@@ -180,34 +210,51 @@
 
             <!-- Payment History -->
             @if($invoice->payments->count() > 0)
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-light">
-                    <h6 class="mb-0">
-                        <i class="fas fa-credit-card me-2"></i>Payment History
-                    </h6>
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-900">Payment History</h3>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-sm">
-                            <thead>
+                <div class="p-6">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
                                 <tr>
-                                    <th>Payment #</th>
-                                    <th>Date</th>
-                                    <th>Method</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                    <th>Reference</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment #</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Method</th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reference</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach($invoice->payments as $payment)
-                                    <tr>
-                                        <td class="fw-medium">{{ $payment->payment_number }}</td>
-                                        <td>{{ $payment->payment_date->format('M j, Y') }}</td>
-                                        <td>{{ $payment::PAYMENT_METHODS[$payment->payment_method] ?? ucfirst($payment->payment_method) }}</td>
-                                        <td>{{ $payment->formatted_amount }} {{ $payment->currency }}</td>
-                                        <td><span class="{{ $payment->status_badge_class }}">{{ ucfirst($payment->status) }}</span></td>
-                                        <td>{{ $payment->transaction_reference ?: '-' }}</td>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $payment->payment_number }}</td>
+                                        <td class="px-6 py-4 text-sm text-gray-900">{{ $payment->payment_date->format('M d, Y') }}</td>
+                                        <td class="px-6 py-4 text-sm text-gray-900">{{ ucfirst($payment->payment_method) }}</td>
+                                        <td class="px-6 py-4 text-right text-sm font-medium text-gray-900">{{ number_format($payment->amount, 2) }} {{ $invoice->currency }}</td>
+                                        <td class="px-6 py-4 text-sm">
+                                            @if($payment->status === 'completed')
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                    Completed
+                                                </span>
+                                            @elseif($payment->status === 'pending')
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                    Pending
+                                                </span>
+                                            @else
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                    {{ ucfirst($payment->status) }}
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-900">{{ $payment->reference_number ?? '-' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -217,632 +264,233 @@
             </div>
             @endif
 
-            <!-- Additional Information -->
-            @if($invoice->description || $invoice->terms_conditions || $invoice->notes)
-            <div class="row">
-                @if($invoice->description)
-                <div class="col-md-6 mb-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0">
-                                <i class="fas fa-align-left me-2"></i>Description
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <p class="mb-0 text-muted">{{ $invoice->description }}</p>
-                        </div>
+            <!-- Notes -->
+            @if($invoice->notes)
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-900">Notes</h3>
                     </div>
                 </div>
-                @endif
+                <div class="p-6">
+                    <p class="text-sm text-gray-600">{{ $invoice->notes }}</p>
+                </div>
+            </div>
+            @endif
 
-                @if($invoice->terms_conditions)
-                <div class="col-md-6 mb-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0">
-                                <i class="fas fa-file-contract me-2"></i>Terms & Conditions
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <p class="mb-0 text-muted small">{{ $invoice->terms_conditions }}</p>
-                        </div>
+            <!-- Terms & Conditions -->
+            @if($invoice->terms_conditions)
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-900">Terms & Conditions</h3>
                     </div>
                 </div>
-                @endif
-
-                @if($invoice->notes)
-                <div class="col-12 mb-4">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0">
-                                <i class="fas fa-sticky-note me-2"></i>Notes
-                            </h6>
-                        </div>
-                        <div class="card-body">
-                            <p class="mb-0 text-muted">{{ $invoice->notes }}</p>
-                        </div>
-                    </div>
+                <div class="p-6">
+                    <p class="text-sm text-gray-600">{{ $invoice->terms_conditions }}</p>
                 </div>
-                @endif
             </div>
             @endif
         </div>
 
         <!-- Sidebar -->
-        <div class="col-lg-4">
+        <div class="space-y-6">
             <!-- Invoice Status -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-light">
-                    <h6 class="mb-0">
-                        <i class="fas fa-info-circle me-2"></i>Invoice Status
-                    </h6>
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <h3 class="text-lg font-semibold text-gray-900">Invoice Status</h3>
                 </div>
-                <div class="card-body">
-                    <form action="{{ route('admin.invoices.status.update', $invoice) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <div class="mb-3">
-                            <select name="status" class="form-select" required>
-                                @foreach($invoice::STATUS_OPTIONS as $value => $label)
-                                    <option value="{{ $value }}" {{ $invoice->status == $value ? 'selected' : '' }}>
-                                        {{ $label }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-save me-2"></i>Update Status
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Payment Summary -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-light">
-                    <h6 class="mb-0">
-                        <i class="fas fa-chart-pie me-2"></i>Payment Summary
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <div class="row text-center g-3">
-                        <div class="col-12">
-                            <div class="border-bottom pb-2 mb-2">
-                                <h4 class="mb-0 text-primary">{{ $invoice->formatted_total }}</h4>
-                                <small class="text-muted">Total Amount ({{ $invoice->currency }})</small>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <h6 class="mb-0 text-success">{{ $invoice->formatted_paid_amount }}</h6>
-                            <small class="text-muted">Paid</small>
-                        </div>
-                        <div class="col-6">
-                            <h6 class="mb-0 text-warning">{{ $invoice->formatted_remaining_amount }}</h6>
-                            <small class="text-muted">Remaining</small>
-                        </div>
-                        <div class="col-12">
-                            <span class="{{ $invoice->payment_status_badge_class }}">
-                                {{ $invoice::PAYMENT_STATUS[$invoice->payment_status] ?? ucfirst($invoice->payment_status) }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Record Payment -->
-            @if($invoice->payment_status !== 'paid')
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-light">
-                    <h6 class="mb-0">
-                        <i class="fas fa-plus me-2"></i>Record Payment
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('admin.invoices.record-payment', $invoice) }}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="amount" class="form-label">Amount</label>
-                            <input type="number" class="form-control" id="amount" name="amount" 
-                                   step="0.01" max="{{ $invoice->getRemainingAmount() }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="payment_method" class="form-label">Payment Method</label>
-                            <select name="payment_method" id="payment_method" class="form-select" required>
-                                @foreach(\App\Models\Payment::PAYMENT_METHODS as $value => $label)
-                                    <option value="{{ $value }}">{{ $label }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="payment_date" class="form-label">Payment Date</label>
-                            <input type="date" class="form-control" id="payment_date" name="payment_date" 
-                                   value="{{ now()->format('Y-m-d') }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="transaction_reference" class="form-label">Transaction Reference</label>
-                            <input type="text" class="form-control" id="transaction_reference" name="transaction_reference">
-                        </div>
-                        <button type="submit" class="btn btn-success w-100">
-                            <i class="fas fa-credit-card me-2"></i>Record Payment
-                        </button>
-                    </form>
-                </div>
-            </div>
-            @endif
-
-            <!-- Convert Actions -->
-            @if($invoice->type === 'proforma' && $invoice->canConvertToFinalInvoice())
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-light">
-                    <h6 class="mb-0">
-                        <i class="fas fa-exchange-alt me-2"></i>Convert to Final
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted small mb-3">Convert this proforma invoice to a final invoice when ready to deliver.</p>
-                    <form action="{{ route('admin.invoices.convert-to-final', $invoice) }}" method="POST" 
-                          onsubmit="return confirm('Are you sure you want to convert this to a final invoice?')">
-                        @csrf
-                        <button type="submit" class="btn btn-warning w-100">
-                            <i class="fas fa-exchange-alt me-2"></i>Convert to Final Invoice
-                        </button>
-                    </form>
-                </div>
-            </div>
-            @endif
-
-            <!-- Related Invoices -->
-            @if($invoice->parentInvoice || $invoice->childInvoices->count() > 0)
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-light">
-                    <h6 class="mb-0">
-                        <i class="fas fa-link me-2"></i>Related Invoices
-                    </h6>
-                </div>
-                <div class="card-body">
-                    @if($invoice->parentInvoice)
-                        <div class="mb-2">
-                            <strong>Parent:</strong>
-                            <a href="{{ route('admin.invoices.show', $invoice->parentInvoice) }}" class="text-decoration-none">
-                                {{ $invoice->parentInvoice->invoice_number }}
-                            </a>
-                        </div>
-                    @endif
-                    @foreach($invoice->childInvoices as $childInvoice)
-                        <div class="mb-2">
-                            <strong>Child:</strong>
-                            <a href="{{ route('admin.invoices.show', $childInvoice) }}" class="text-decoration-none">
-                                {{ $childInvoice->invoice_number }}
-                            </a>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-            @endif
-
-            <!-- Actions Card -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-light">
-                    <h6 class="mb-0">
-                        <i class="fas fa-cogs me-2"></i>Actions
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <a href="{{ route('admin.invoices.edit', $invoice) }}" class="btn btn-outline-primary">
-                            <i class="fas fa-edit me-2"></i>Edit Invoice
-                        </a>
-                        <a href="{{ route('admin.invoices.pdf', $invoice) }}" class="btn btn-outline-info">
-                            <i class="fas fa-file-pdf me-2"></i>Download PDF
-                        </a>
-                        <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#sendEmailModal">
-                            <i class="fas fa-envelope me-2"></i>Send Email
-                        </button>
-
-                        @if($invoice->type === 'proforma' && $invoice->status === 'confirmed')
-                            <!-- Create Order & Delivery -->
-                            @if(!$invoice->order_id)
-                                <div class="border-top pt-3 mt-3">
-                                    <h6 class="text-muted mb-2">Order & Delivery</h6>
-                                    <form action="{{ route('admin.invoices.create-order', $invoice) }}" method="POST" class="mb-2">
-                                        @csrf
-                                        <button type="submit" class="btn btn-warning w-100" 
-                                                onclick="return confirm('Create an order from this proforma invoice?')">
-                                            <i class="fas fa-shopping-cart me-2"></i>Create Order
-                                        </button>
-                                    </form>
-                                    <small class="text-muted">Create an order to enable delivery tracking</small>
-                                </div>
+                <div class="p-6 space-y-4">
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Status:</span>
+                        <span class="text-sm font-medium">
+                            @if($invoice->status === 'draft')
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    Draft
+                                </span>
+                            @elseif($invoice->status === 'sent')
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    Sent
+                                </span>
+                            @elseif($invoice->status === 'approved')
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    Approved
+                                </span>
                             @else
-                                <!-- Order exists, check for delivery -->
-                                @if(!$invoice->order->hasDelivery())
-                                    <div class="border-top pt-3 mt-3">
-                                        <h6 class="text-muted mb-2">Delivery</h6>
-                                        <a href="{{ route('admin.deliveries.create', ['order' => $invoice->order_id]) }}" 
-                                           class="btn btn-info w-100">
-                                            <i class="fas fa-truck me-2"></i>Create Delivery
-                                        </a>
-                                        <small class="text-muted">Create delivery record for order #{{ $invoice->order_id }}</small>
-                                    </div>
-                                @else
-                                    <!-- Delivery exists -->
-                                    <div class="border-top pt-3 mt-3">
-                                        <h6 class="text-muted mb-2">Delivery</h6>
-                                        <a href="{{ route('admin.deliveries.show', $invoice->order->delivery) }}" 
-                                           class="btn btn-success w-100">
-                                            <i class="fas fa-eye me-2"></i>View Delivery
-                                        </a>
-                                        <small class="text-muted">Delivery #{{ $invoice->order->delivery->id }}</small>
-                                    </div>
-                                @endif
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                    {{ ucfirst($invoice->status) }}
+                                </span>
                             @endif
-                        @endif
-
-                        @if($invoice->type === 'final' && $invoice->delivery_id)
-                            <div class="border-top pt-3 mt-3">
-                                <h6 class="text-muted mb-2">Delivery</h6>
-                                <a href="{{ route('admin.deliveries.show', $invoice->delivery_id) }}" 
-                                   class="btn btn-success w-100">
-                                    <i class="fas fa-truck me-2"></i>View Delivery
-                                </a>
-                                <small class="text-muted">Linked to delivery #{{ $invoice->delivery_id }}</small>
-                            </div>
-                        @endif
+                        </span>
                     </div>
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Payment Status:</span>
+                        <span class="text-sm font-medium">
+                            @if($invoice->payment_status === 'pending')
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                    Pending
+                                </span>
+                            @elseif($invoice->payment_status === 'paid')
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    Paid
+                                </span>
+                            @elseif($invoice->payment_status === 'partial')
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    Partial
+                                </span>
+                            @else
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                    {{ ucfirst($invoice->payment_status) }}
+                                </span>
+                            @endif
+                        </span>
+                    </div>
+                    @if($invoice->paid_amount > 0)
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Paid Amount:</span>
+                        <span class="text-sm font-medium text-green-600">{{ number_format($invoice->paid_amount, 2) }} {{ $invoice->currency }}</span>
+                    </div>
+                    @endif
+                    @if($invoice->payment_status !== 'paid' && $invoice->paid_amount > 0)
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Balance Due:</span>
+                        <span class="text-sm font-medium text-red-600">{{ number_format($invoice->total_amount - $invoice->paid_amount, 2) }} {{ $invoice->currency }}</span>
+                    </div>
+                    @endif
                 </div>
             </div>
 
-            <!-- Link to Existing Delivery -->
-            @if($invoice->type === 'proforma' && !$invoice->delivery_id)
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-light">
-                    <h6 class="mb-0">
-                        <i class="fas fa-link me-2"></i>Link to Delivery
-                    </h6>
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <h3 class="text-lg font-semibold text-gray-900">Quick Actions</h3>
                 </div>
-                <div class="card-body">
-                    <form action="{{ route('admin.invoices.link-delivery', $invoice) }}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label for="delivery_id" class="form-label">Select Delivery</label>
-                            <select name="delivery_id" id="delivery_id" class="form-select" required>
-                                <option value="">Choose a delivery...</option>
-                                @foreach(\App\Models\Delivery::with('order')->whereNull('id')->orWhereNotIn('id', \App\Models\Invoice::whereNotNull('delivery_id')->pluck('delivery_id'))->get() as $delivery)
-                                    <option value="{{ $delivery->id }}">
-                                        Delivery #{{ $delivery->id }} - Order #{{ $delivery->order_id }} 
-                                        ({{ $delivery->status }})
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-outline-primary w-100">
-                            <i class="fas fa-link me-2"></i>Link to Delivery
-                        </button>
-                    </form>
-                </div>
-            </div>
-            @endif
-
-            <!-- Automation Workflow Status -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-light">
-                    <h6 class="mb-0">
-                        <i class="fas fa-robot me-2"></i>Automation Workflow
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <div class="workflow-steps">
-                        <!-- Step 1: Proforma Invoice -->
-                        <div class="step {{ $invoice->type === 'proforma' ? 'active' : 'completed' }}">
-                            <div class="step-icon">
-                                <i class="fas fa-file-invoice"></i>
-                            </div>
-                            <div class="step-content">
-                                <h6>Proforma Invoice</h6>
-                                <small class="text-muted">{{ $invoice->invoice_number }}</small>
-                                @if($invoice->type === 'proforma')
-                                    <div class="mt-1">
-                                        <span class="badge bg-{{ $invoice->payment_status === 'paid' ? 'success' : 'warning' }}">
-                                            {{ ucfirst($invoice->payment_status) }}
-                                        </span>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Step 2: Order Creation -->
-                        <div class="step {{ $invoice->order_id ? 'completed' : ($invoice->payment_status === 'paid' ? 'pending' : 'disabled') }}">
-                            <div class="step-icon">
-                                <i class="fas fa-shopping-cart"></i>
-                            </div>
-                            <div class="step-content">
-                                <h6>Order Creation</h6>
-                                @if($invoice->order_id)
-                                    <small class="text-success">
-                                        <a href="{{ route('admin.orders.show', $invoice->order_id) }}">Order #{{ $invoice->order_id }}</a>
-                                    </small>
-                                    <div class="mt-1">
-                                        <span class="badge bg-info">{{ ucfirst($invoice->order->status ?? 'N/A') }}</span>
-                                    </div>
-                                @else
-                                    <small class="text-muted">
-                                        {{ $invoice->payment_status === 'paid' ? 'Will auto-create when payment confirmed' : 'Waiting for payment' }}
-                                    </small>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Step 3: Delivery -->
-                        @php
-                            $hasDelivery = $invoice->order_id && $invoice->order->hasDelivery();
-                            $delivery = $hasDelivery ? $invoice->order->delivery : null;
-                        @endphp
-                        <div class="step {{ $hasDelivery ? 'completed' : ($invoice->order_id && $invoice->order->status === 'shipped' ? 'pending' : 'disabled') }}">
-                            <div class="step-icon">
-                                <i class="fas fa-truck"></i>
-                            </div>
-                            <div class="step-content">
-                                <h6>Delivery</h6>
-                                @if($hasDelivery)
-                                    <small class="text-success">
-                                        <a href="{{ route('admin.deliveries.show', $delivery) }}">Delivery #{{ $delivery->id }}</a>
-                                    </small>
-                                    <div class="mt-1">
-                                        <span class="badge bg-{{ $delivery->status === 'delivered' ? 'success' : 'primary' }}">
-                                            {{ ucfirst(str_replace('_', ' ', $delivery->status)) }}
-                                        </span>
-                                    </div>
-                                @else
-                                    <small class="text-muted">
-                                        {{ $invoice->order_id ? 'Will auto-create when order shipped' : 'Waiting for order' }}
-                                    </small>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- Step 4: Final Invoice -->
-                        @php
-                            $finalInvoice = $invoice->childInvoices()->where('type', 'final')->first();
-                        @endphp
-                        <div class="step {{ $finalInvoice ? 'completed' : ($hasDelivery && $delivery->status === 'delivered' ? 'pending' : 'disabled') }}">
-                            <div class="step-icon">
-                                <i class="fas fa-file-invoice-dollar"></i>
-                            </div>
-                            <div class="step-content">
-                                <h6>Final Invoice</h6>
-                                @if($finalInvoice)
-                                    <small class="text-success">
-                                        <a href="{{ route('admin.invoices.show', $finalInvoice) }}">{{ $finalInvoice->invoice_number }}</a>
-                                    </small>
-                                    <div class="mt-1">
-                                        <span class="badge bg-success">Completed</span>
-                                    </div>
-                                @else
-                                    <small class="text-muted">
-                                        {{ $hasDelivery ? 'Will auto-create when delivered' : 'Waiting for delivery' }}
-                                    </small>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Automation Status -->
-                    <div class="mt-3 p-3 bg-light rounded">
-                        <h6 class="mb-2">
-                            <i class="fas fa-cogs me-1"></i>Automation Status
-                        </h6>
-                        @if($invoice->type === 'proforma' && $invoice->payment_status !== 'paid')
-                            <div class="text-warning">
-                                <i class="fas fa-clock me-1"></i>
-                                Waiting for payment to trigger order creation
-                            </div>
-                        @elseif($invoice->order_id && !$hasDelivery)
-                            <div class="text-info">
-                                <i class="fas fa-shipping-fast me-1"></i>
-                                Order created. Delivery will auto-create when shipped
-                            </div>
-                        @elseif($hasDelivery && !$finalInvoice)
-                            <div class="text-primary">
-                                <i class="fas fa-truck me-1"></i>
-                                Delivery in progress. Final invoice will auto-create when delivered
-                            </div>
-                        @elseif($finalInvoice)
-                            <div class="text-success">
-                                <i class="fas fa-check-circle me-1"></i>
-                                Workflow completed! Final invoice generated automatically
-                            </div>
-                        @else
-                            <div class="text-secondary">
-                                <i class="fas fa-play me-1"></i>
-                                Automation ready to begin
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Send Email Modal -->
-<div class="modal fade" id="sendEmailModal" tabindex="-1" aria-labelledby="sendEmailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="sendEmailModalLabel">Send Invoice Email</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="{{ route('admin.invoices.send-email', $invoice) }}" method="POST">
-                @csrf
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="to_email" class="form-label">To Email Address</label>
-                        <input type="email" class="form-control" id="to_email" name="to_email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="cc_emails" class="form-label">CC Email Addresses (comma separated)</label>
-                        <input type="text" class="form-control" id="cc_emails" name="cc_emails" 
-                               placeholder="email1@example.com, email2@example.com">
-                    </div>
-                    <div class="mb-3">
-                        <label for="subject" class="form-label">Subject</label>
-                        <input type="text" class="form-control" id="subject" name="subject" 
-                               value="{{ $invoice->type === 'proforma' ? 'Proforma Invoice' : 'Invoice' }} {{ $invoice->invoice_number }}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="message" class="form-label">Message</label>
-                        <textarea class="form-control" id="message" name="message" rows="4" 
-                                  placeholder="Enter additional message (optional)"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-envelope me-2"></i>Send Email
+                <div class="p-6 space-y-3">
+                    <button class="w-full inline-flex items-center justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        Send Email
+                    </button>
+                    
+                    @if($invoice->payment_status !== 'paid')
+                    <button class="w-full inline-flex items-center justify-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                        Record Payment
+                    </button>
+                    @endif
+                    
+                    <button class="w-full inline-flex items-center justify-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Delete Invoice
                     </button>
                 </div>
-            </form>
+            </div>
+
+            <!-- Invoice Summary -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <h3 class="text-lg font-semibold text-gray-900">Invoice Summary</h3>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Items Count:</span>
+                        <span class="text-sm font-medium text-gray-900">{{ $invoice->items->count() }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Sub Total:</span>
+                        <span class="text-sm font-medium text-gray-900">{{ $invoice->formatted_total }} {{ $invoice->currency }}</span>
+                    </div>
+                    @if($invoice->tax_amount > 0)
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Tax:</span>
+                        <span class="text-sm font-medium text-gray-900">{{ number_format($invoice->tax_amount, 2) }} {{ $invoice->currency }}</span>
+                    </div>
+                    @endif
+                    <div class="flex justify-between pt-4 border-t border-gray-200">
+                        <span class="text-base font-semibold text-gray-900">Total Amount:</span>
+                        <span class="text-base font-bold text-indigo-600">{{ $invoice->formatted_total }} {{ $invoice->currency }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Timeline -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <h3 class="text-lg font-semibold text-gray-900">Activity Timeline</h3>
+                </div>
+                <div class="p-6">
+                    <div class="flow-root">
+                        <ul class="-mb-8">
+                            <li>
+                                <div class="relative pb-8">
+                                    <div class="relative flex space-x-3">
+                                        <div>
+                                            <span class="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center ring-8 ring-white">
+                                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <div>
+                                                <div class="text-sm">
+                                                    <span class="font-medium text-gray-900">Invoice Created</span>
+                                                </div>
+                                                <p class="mt-0.5 text-xs text-gray-500">
+                                                    {{ $invoice->created_at->format('M d, Y \a\t H:i') }}
+                                                </p>
+                                            </div>
+                                            <div class="mt-2 text-sm text-gray-700">
+                                                <p>Invoice {{ $invoice->invoice_number }} was created</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            @if($invoice->updated_at != $invoice->created_at)
+                            <li>
+                                <div class="relative">
+                                    <div class="relative flex space-x-3">
+                                        <div>
+                                            <span class="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center ring-8 ring-white">
+                                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <div>
+                                                <div class="text-sm">
+                                                    <span class="font-medium text-gray-900">Invoice Updated</span>
+                                                </div>
+                                                <p class="mt-0.5 text-xs text-gray-500">
+                                                    {{ $invoice->updated_at->format('M d, Y \a\t H:i') }}
+                                                </p>
+                                            </div>
+                                            <div class="mt-2 text-sm text-gray-700">
+                                                <p>Invoice details were last modified</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            @endif
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-<style>
-    .icon-shape {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .icon-shape.icon-lg {
-        width: 4rem;
-        height: 4rem;
-    }
-    
-    .bg-soft-secondary {
-        background-color: rgba(108, 117, 125, 0.1) !important;
-    }
-    
-    .table-hover tbody tr:hover {
-        background-color: rgba(0, 0, 0, 0.02);
-    }
-    
-    .card-header {
-        border-bottom: 1px solid rgba(0,0,0,.125);
-    }
-
-    .workflow-steps {
-        position: relative;
-    }
-
-    .step {
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 1.5rem;
-        position: relative;
-    }
-
-    .step:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        left: 20px;
-        top: 40px;
-        width: 2px;
-        height: calc(100% + 0.5rem);
-        background-color: #dee2e6;
-        z-index: 1;
-    }
-
-    .step.completed:not(:last-child)::after {
-        background-color: #28a745;
-    }
-
-    .step.pending:not(:last-child)::after {
-        background-color: #ffc107;
-    }
-
-    .step-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 1rem;
-        position: relative;
-        z-index: 2;
-        font-size: 16px;
-    }
-
-    .step.active .step-icon {
-        background-color: #007bff;
-        color: white;
-        box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
-    }
-
-    .step.completed .step-icon {
-        background-color: #28a745;
-        color: white;
-    }
-
-    .step.pending .step-icon {
-        background-color: #ffc107;
-        color: #212529;
-    }
-
-    .step.disabled .step-icon {
-        background-color: #e9ecef;
-        color: #6c757d;
-    }
-
-    .step-content {
-        flex: 1;
-        padding-top: 0.25rem;
-    }
-
-    .step-content h6 {
-        margin-bottom: 0.25rem;
-        font-size: 0.9rem;
-    }
-
-    .step.disabled .step-content {
-        opacity: 0.6;
-    }
-
-    .step.disabled .step-content h6 {
-        color: #6c757d;
-    }
-
-    /* Animation for active steps */
-    .step.active .step-icon {
-        animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-        0% {
-            box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
-        }
-        70% {
-            box-shadow: 0 0 0 10px rgba(0, 123, 255, 0);
-        }
-        100% {
-            box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
-        }
-    }
-
-    .step.pending .step-icon {
-        animation: pulse-warning 2s infinite;
-    }
-
-    @keyframes pulse-warning {
-        0% {
-            box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
-        }
-        70% {
-            box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
-        }
-        100% {
-            box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
-        }
-    }
-</style>
 @endsection 

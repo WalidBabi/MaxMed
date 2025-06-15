@@ -1,612 +1,320 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Edit Product')
+
 @section('content')
-<div class="container-fluid py-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3 mb-0">Edit Product</h1>
-                <a href="{{ route('admin.products.index') }}" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-2"></i> Back to Products
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Edit Product</h1>
+                <p class="text-gray-600 mt-2">Update product information and settings</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <a href="{{ route('admin.products.index') }}" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                    <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                    </svg>
+                    Back to Products
                 </a>
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body p-4">
-                    <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-                        @csrf
-                        @method('PUT')
-                        
-                        <div class="row g-4">
-                            <!-- Basic Information -->
-                            <div class="col-12">
-                                <h5 class="mb-3 text-primary">
-                                    <i class="fas fa-info-circle me-2"></i>Basic Information
-                                </h5>
+    <!-- Form -->
+    <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+        @csrf
+        @method('PUT')
+        
+        <!-- Basic Information -->
+        <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <svg class="h-5 w-5 text-indigo-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                    </svg>
+                    Basic Information
+                </h3>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <!-- Product Name -->
+                    <div>
+                        <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Product Name <span class="text-red-500">*</span></label>
+                        <div class="mt-2">
+                            <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
+                                <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                                    </svg>
+                                </span>
+                                <input type="text" name="name" id="name" value="{{ old('name', $product->name) }}" 
+                                       class="block flex-1 border-0 bg-transparent py-1.5 pl-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" 
+                                       placeholder="Enter product name" required>
                             </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="name" class="form-label fw-medium">Product Name <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light">
-                                            <i class="fas fa-box"></i>
-                                        </span>
-                                        <input type="text" name="name" id="name" value="{{ old('name', $product->name) }}"
-                                               class="form-control" required>
-                                    </div>
-                                    @error('name')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="category_id" class="form-label fw-medium">Category <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light">
-                                            <i class="fas fa-tags"></i>
-                                        </span>
-                                        <select name="category_id" id="category_id" class="form-select" required>
-                                            @foreach($categories as $category)
-                                                <option value="{{ $category->id }}" 
-                                                    {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
-                                                    {{ $category->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    @error('category_id')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="brand_id" class="form-label fw-medium">Brand</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light">
-                                            <i class="fas fa-trademark"></i>
-                                        </span>
-                                        <select name="brand_id" id="brand_id" class="form-select">
-                                            <option value="">Select a brand</option>
-                                            @foreach(App\Models\Brand::orderBy('name')->get() as $brand)
-                                                <option value="{{ $brand->id }}" {{ old('brand_id', $product->brand_id) == $brand->id ? 'selected' : '' }}>
-                                                    {{ $brand->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    @error('brand_id')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <!-- Pricing Information -->
-                            <div class="col-12 mt-4">
-                                <h5 class="mb-3 text-primary">
-                                    <i class="fas fa-dollar-sign me-2"></i>Pricing Information
-                                </h5>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="price" class="form-label fw-medium">Price (USD) <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light">$</span>
-                                        <input type="number" step="0.01" name="price" id="price" 
-                                               value="{{ old('price', $product->price) }}"
-                                               class="form-control" required>
-                                    </div>
-                                    @error('price')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="price_aed" class="form-label fw-medium">Price (AED) <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light">AED</span>
-                                        <input type="number" step="0.01" name="price_aed" id="price_aed" 
-                                               value="{{ old('price_aed', $product->price_aed) }}"
-                                               class="form-control" required>
-                                    </div>
-                                    @error('price_aed')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="inventory_quantity" class="form-label fw-medium">Stock Quantity <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-light">
-                                            <i class="fas fa-boxes"></i>
-                                        </span>
-                                        <input type="number" name="inventory_quantity" id="inventory_quantity" 
-                                               value="{{ old('inventory_quantity', $product->inventory->quantity) }}"
-                                               class="form-control" min="0" required>
-                                    </div>
-                                    @error('inventory_quantity')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <!-- Product Description -->
-                            <div class="col-12 mt-4">
-                                <h5 class="mb-3 text-primary">
-                                    <i class="fas fa-align-left me-2"></i>Product Description
-                                </h5>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="description" class="form-label fw-medium">Description <span class="text-danger">*</span></label>
-                                    <textarea name="description" id="description" rows="3"
-                                              class="form-control">{{ old('description', $product->description) }}</textarea>
-                                    @error('description')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <!-- Size Options -->
-                            <div class="col-12 mt-4">
-                                <h5 class="mb-3 text-primary">
-                                    <i class="fas fa-ruler me-2"></i>Size Options
-                                </h5>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="has_size_options" name="has_size_options" value="1" {{ old('has_size_options', $product->has_size_options) ? 'checked' : '' }}>
-                                        <label class="form-check-label fw-medium" for="has_size_options">Enable size options</label>
-                                    </div>
-                                    @error('has_size_options')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-12" id="size_options_container" style="{{ old('has_size_options', $product->has_size_options) ? '' : 'display: none;' }}">
-                                <div class="card border-0 shadow-sm">
-                                    <div class="card-body">
-                                        <div class="row mb-3">
-                                            <div class="col-12">
-                                                <p class="text-muted">Add the available size options for this product.</p>
-                                            </div>
-                                        </div>
-                                        <div id="size_options_list">
-                                            @php
-                                                $sizeOptions = old('size_options', $product->size_options ?? []);
-                                                if (!is_array($sizeOptions) && !empty($sizeOptions)) {
-                                                    // Convert JSON string to array if needed
-                                                    $sizeOptions = json_decode($sizeOptions, true) ?? [];
-                                                }
-                                            @endphp
-                                            
-                                            @if(count($sizeOptions) > 0)
-                                                @foreach($sizeOptions as $option)
-                                                <div class="row mb-2 size-option-row">
-                                                    <div class="col-md-10">
-                                                        <div class="input-group">
-                                                            <span class="input-group-text bg-light">
-                                                                <i class="fas fa-ruler-combined"></i>
-                                                            </span>
-                                                            <input type="text" name="size_options[]" class="form-control" value="{{ $option }}" placeholder="Size option (e.g., Small, Medium, Large)">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <button type="button" class="btn btn-danger remove-size-option">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                @endforeach
-                                            @else
-                                                <div class="row mb-2 size-option-row">
-                                                    <div class="col-md-10">
-                                                        <div class="input-group">
-                                                            <span class="input-group-text bg-light">
-                                                                <i class="fas fa-ruler-combined"></i>
-                                                            </span>
-                                                            <input type="text" name="size_options[]" class="form-control" placeholder="Size option (e.g., Small, Medium, Large)">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <button type="button" class="btn btn-danger remove-size-option">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            @endif
-                                        </div>
-                                        <div class="row mt-3">
-                                            <div class="col-12">
-                                                <button type="button" class="btn btn-outline-primary" id="add_size_option">
-                                                    <i class="fas fa-plus"></i> Add Another Size Option
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Product Images -->
-                            <div class="col-12 mt-4">
-                                <h5 class="mb-3 text-primary">
-                                    <i class="fas fa-images me-2"></i>Product Images
-                                </h5>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="image" class="form-label fw-medium">Primary Product Image</label>
-                                    @if($product->image)
-                                        <div class="mb-3">
-                                            <img src="{{ Storage::url($product->image) }}" 
-                                                 alt="Current product image" 
-                                                 class="img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
-                                        </div>
-                                    @endif
-                                    <div class="input-group">
-                                        <input type="file" name="image" id="image" class="form-control">
-                                    </div>
-                                    <small class="text-muted">Recommended size: 800x800px, Max file size: 5MB</small>
-                                    @error('image')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="additional_images" class="form-label fw-medium">Additional Product Images</label>
-                                    
-                                    @if($product->images->count() > 0)
-                                        <div class="row mb-3">
-                                            @foreach($product->images as $image)
-                                                <div class="col-md-3 col-sm-4 col-6 mb-3 position-relative">
-                                                    <img src="{{ $image->image_url }}" 
-                                                         alt="Product image" 
-                                                         class="img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
-                                                    <div class="mt-2 d-flex">
-                                                        <button type="button" class="btn btn-sm btn-outline-danger me-2 delete-image" 
-                                                                data-image-id="{{ $image->id }}">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                        <button type="button" class="btn btn-sm btn-outline-primary set-primary-image {{ $image->is_primary ? 'active' : '' }}"
-                                                                data-image-id="{{ $image->id }}" {{ $image->is_primary ? 'disabled' : '' }}>
-                                                            <i class="fas fa-star"></i> {{ $image->is_primary ? 'Primary' : 'Set Primary' }}
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <input type="hidden" name="delete_images" id="delete_images">
-                                            <input type="hidden" name="primary_image_id" id="primary_image_id">
-                                        </div>
-                                    @endif
-
-                                    <div class="input-group">
-                                        <input type="file" name="additional_images[]" id="additional_images" class="form-control" multiple>
-                                    </div>
-                                    <small class="text-muted">You can select multiple images (hold Ctrl or Cmd while selecting)</small>
-                                    @error('additional_images')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                    @error('additional_images.*')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="specification_image" class="form-label fw-medium">Product Specification Image</label>
-                                    
-                                    @php
-                                        $specImage = $product->images()->whereNotNull('specification_image_url')->first();
-                                    @endphp
-                                    
-                                    @if($specImage)
-                                        <div class="mb-3">
-                                            <img src="{{ $specImage->specification_image_url }}" 
-                                                 alt="Product specification image" 
-                                                 class="img-thumbnail" style="max-width: 300px;">
-                                            <div class="mt-2">
-                                                <span class="badge bg-info">Current specification image</span>
-                                            </div>
-                                        </div>
-                                    @endif
-                                    
-                                    <div class="input-group">
-                                        <input type="file" name="specification_image" id="specification_image" class="form-control">
-                                    </div>
-                                    <small class="text-muted">Upload an image showing product specifications or technical details</small>
-                                    @error('specification_image')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <!-- Product Documentation -->
-                            <div class="col-12 mt-4">
-                                <h5 class="mb-3 text-primary">
-                                    <i class="fas fa-file-pdf me-2"></i>Product Documentation
-                                </h5>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="pdf_file" class="form-label fw-medium">Product PDF</label>
-                                    
-                                    @if($product->pdf_file)
-                                        <div class="mb-3">
-                                            <a href="{{ Storage::url($product->pdf_file) }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                                <i class="fas fa-file-pdf"></i> View Current PDF
-                                            </a>
-                                            <button type="button" class="btn btn-sm btn-outline-danger" id="delete_pdf">
-                                                <i class="fas fa-trash"></i> Delete PDF
-                                            </button>
-                                            <input type="hidden" name="delete_pdf" id="delete_pdf_input" value="0">
-                                        </div>
-                                    @endif
-                                    
-                                    <div class="input-group">
-                                        <input type="file" name="pdf_file" id="pdf_file" class="form-control" accept=".pdf">
-                                    </div>
-                                    <small class="text-muted">Upload a PDF file containing product documentation or specifications</small>
-                                    @error('pdf_file')
-                                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <!-- Submit Button -->
-                            <div class="col-12 mt-4">
-                                <div class="d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary px-4">
-                                        <i class="fas fa-save me-2"></i> Update Product
-                                    </button>
-                                </div>
-                            </div>
+                            @error('name')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
-                    </form>
+                    </div>
+
+                    <!-- Category -->
+                    <div>
+                        <label for="category_id" class="block text-sm font-medium leading-6 text-gray-900">Category <span class="text-red-500">*</span></label>
+                        <div class="mt-2">
+                            <select name="category_id" id="category_id" required
+                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                <option value="">Select a category</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('category_id')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Brand -->
+                    <div>
+                        <label for="brand_id" class="block text-sm font-medium leading-6 text-gray-900">Brand</label>
+                        <div class="mt-2">
+                            <select name="brand_id" id="brand_id"
+                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                <option value="">Select a brand</option>
+                                @foreach(App\Models\Brand::orderBy('name')->get() as $brand)
+                                    <option value="{{ $brand->id }}" {{ old('brand_id', $product->brand_id) == $brand->id ? 'selected' : '' }}>
+                                        {{ $brand->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('brand_id')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Stock Quantity -->
+                    <div>
+                        <label for="inventory_quantity" class="block text-sm font-medium leading-6 text-gray-900">Stock Quantity <span class="text-red-500">*</span></label>
+                        <div class="mt-2">
+                            <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
+                                <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm">
+                                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                                    </svg>
+                                </span>
+                                <input type="number" name="inventory_quantity" id="inventory_quantity" 
+                                       value="{{ old('inventory_quantity', $product->inventory->quantity) }}" min="0"
+                                       class="block flex-1 border-0 bg-transparent py-1.5 pl-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" 
+                                       placeholder="0" required>
+                            </div>
+                            @error('inventory_quantity')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<style>
-    .form-control:focus, .form-select:focus {
-        border-color: #0d6efd;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
-    }
+        <!-- Pricing Information -->
+        <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <svg class="h-5 w-5 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Pricing Information
+                </h3>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <!-- Price USD -->
+                    <div>
+                        <label for="price" class="block text-sm font-medium leading-6 text-gray-900">Price (USD) <span class="text-red-500">*</span></label>
+                        <div class="mt-2">
+                            <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
+                                <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm">$</span>
+                                <input type="number" step="0.01" name="price" id="price" 
+                                       value="{{ old('price', $product->price) }}"
+                                       class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" 
+                                       placeholder="0.00" required>
+                            </div>
+                            @error('price')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
 
-    .input-group-text {
-        background-color: #f8f9fa;
-        border-color: #dee2e6;
-    }
-
-    .card {
-        border-radius: 0.5rem;
-    }
-
-    .btn {
-        border-radius: 0.375rem;
-    }
-
-    .form-check-input:checked {
-        background-color: #0d6efd;
-        border-color: #0d6efd;
-    }
-
-    .form-label {
-        color: #495057;
-    }
-
-    .text-primary {
-        color: #0d6efd !important;
-    }
-
-    .btn-outline-primary {
-        color: #0d6efd;
-        border-color: #0d6efd;
-    }
-
-    .btn-outline-primary:hover {
-        background-color: #0d6efd;
-        color: #fff;
-    }
-
-    .btn-danger {
-        background-color: #dc3545;
-        border-color: #dc3545;
-    }
-
-    .btn-danger:hover {
-        background-color: #bb2d3b;
-        border-color: #b02a37;
-    }
-
-    .invalid-feedback {
-        font-size: 0.875rem;
-    }
-
-    .text-muted {
-        color: #6c757d !important;
-    }
-
-    .shadow-sm {
-        box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
-    }
-
-    .border-0 {
-        border: 0 !important;
-    }
-
-    .img-thumbnail {
-        border-radius: 0.375rem;
-        transition: transform 0.2s ease;
-    }
-
-    .img-thumbnail:hover {
-        transform: scale(1.05);
-    }
-
-    .badge {
-        font-weight: 500;
-    }
-</style>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Form validation
-    const forms = document.querySelectorAll('.needs-validation');
-    Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            form.classList.add('was-validated');
-        }, false);
-    });
-
-    // Image deletion
-    const deleteButtons = document.querySelectorAll('.delete-image');
-    const deleteImagesInput = document.getElementById('delete_images');
-    let imagesToDelete = [];
-
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const imageId = this.getAttribute('data-image-id');
-            const imageContainer = this.closest('.col-md-3');
-            
-            // Add image ID to the list of images to delete
-            imagesToDelete.push(imageId);
-            deleteImagesInput.value = imagesToDelete.join(',');
-            
-            // Visually hide the image
-            imageContainer.style.opacity = '0.3';
-            this.disabled = true;
-            
-            // Show a message that the image will be deleted on save
-            const message = document.createElement('div');
-            message.classList.add('badge', 'bg-danger', 'position-absolute', 'top-0', 'end-0');
-            message.innerHTML = 'Will be deleted';
-            imageContainer.appendChild(message);
-        });
-    });
-    
-    // Primary image setting
-    const primaryButtons = document.querySelectorAll('.set-primary-image');
-    const primaryImageInput = document.getElementById('primary_image_id');
-
-    primaryButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const imageId = this.getAttribute('data-image-id');
-            
-            // Reset all buttons
-            primaryButtons.forEach(btn => {
-                btn.classList.remove('active');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-star"></i> Set Primary';
-            });
-            
-            // Set this button as active
-            this.classList.add('active');
-            this.disabled = true;
-            this.innerHTML = '<i class="fas fa-star"></i> Primary';
-            
-            // Set the primary image ID
-            primaryImageInput.value = imageId;
-        });
-    });
-    
-    // Size options handling
-    const hasSizeOptions = document.getElementById('has_size_options');
-    const sizeOptionsContainer = document.getElementById('size_options_container');
-    const addSizeOptionBtn = document.getElementById('add_size_option');
-    const sizeOptionsList = document.getElementById('size_options_list');
-
-    if (hasSizeOptions && sizeOptionsContainer) {
-        hasSizeOptions.addEventListener('change', function() {
-            if (this.checked) {
-                sizeOptionsContainer.style.display = 'block';
-            } else {
-                sizeOptionsContainer.style.display = 'none';
-            }
-        });
-    }
-
-    if (addSizeOptionBtn && sizeOptionsList) {
-        addSizeOptionBtn.addEventListener('click', function() {
-            const newRow = document.createElement('div');
-            newRow.className = 'row mb-2 size-option-row';
-            newRow.innerHTML = `
-                <div class="col-md-10">
-                    <div class="input-group">
-                        <span class="input-group-text bg-light">
-                            <i class="fas fa-ruler-combined"></i>
-                        </span>
-                        <input type="text" name="size_options[]" class="form-control" placeholder="Size option (e.g., Small, Medium, Large)">
+                    <!-- Price AED -->
+                    <div>
+                        <label for="price_aed" class="block text-sm font-medium leading-6 text-gray-900">Price (AED) <span class="text-red-500">*</span></label>
+                        <div class="mt-2">
+                            <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
+                                <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm">AED</span>
+                                <input type="number" step="0.01" name="price_aed" id="price_aed" 
+                                       value="{{ old('price_aed', $product->price_aed) }}"
+                                       class="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" 
+                                       placeholder="0.00" required>
+                            </div>
+                            @error('price_aed')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <button type="button" class="btn btn-danger remove-size-option">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            `;
-            sizeOptionsList.appendChild(newRow);
-            
-            // Attach event listener to the new remove button
-            const removeBtn = newRow.querySelector('.remove-size-option');
-            if (removeBtn) {
-                removeBtn.addEventListener('click', function() {
-                    newRow.remove();
-                });
-            }
-        });
-    }
+            </div>
+        </div>
 
-    // Attach event listeners to existing remove buttons
-    document.querySelectorAll('.remove-size-option').forEach(button => {
-        button.addEventListener('click', function() {
-            this.closest('.size-option-row').remove();
+        <!-- Product Description -->
+        <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <svg class="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
+                    </svg>
+                    Product Description
+                </h3>
+            </div>
+            <div class="p-6">
+                <div>
+                    <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Description <span class="text-red-500">*</span></label>
+                    <div class="mt-2">
+                        <textarea name="description" id="description" rows="4"
+                                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  placeholder="Enter product description...">{{ old('description', $product->description) }}</textarea>
+                        @error('description')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Size Options -->
+        <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <svg class="h-5 w-5 text-purple-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h4.125m0-15.75c0-1.036.84-1.875 1.875-1.875h5.25c1.035 0 1.875.84 1.875 1.875v15.75c0 .621-.504 1.125-1.125 1.125H9.75M8.25 9.75h4.5v2.25H8.25V9.75z" />
+                    </svg>
+                    Size Options
+                </h3>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center">
+                    <input id="has_size_options" name="has_size_options" type="checkbox" value="1" 
+                           {{ old('has_size_options', $product->has_size_options) ? 'checked' : '' }}
+                           class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                    <label for="has_size_options" class="ml-3 text-sm font-medium leading-6 text-gray-900">Enable size options for this product</label>
+                </div>
+                @error('has_size_options')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+
+                <div id="size_options_container" class="mt-6" style="{{ old('has_size_options', $product->has_size_options) ? '' : 'display: none;' }}">
+                    <div class="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                        <p class="text-sm text-gray-600 mb-4">Add the available size options for this product.</p>
+                        <div id="size_options_list">
+                            @php
+                                $sizeOptions = old('size_options', $product->size_options ?? []);
+                                if (!is_array($sizeOptions) && !empty($sizeOptions)) {
+                                    $sizeOptions = json_decode($sizeOptions, true) ?? [];
+                                }
+                            @endphp
+                            
+                            @if(count($sizeOptions) > 0)
+                                @foreach($sizeOptions as $index => $option)
+                                    <div class="size-option-item flex items-center space-x-3 mb-3">
+                                        <input type="text" name="size_options[{{ $index }}][size]" 
+                                               value="{{ $option['size'] ?? '' }}" 
+                                               placeholder="Size (e.g., S, M, L, XL)"
+                                               class="block w-1/3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <input type="number" step="0.01" name="size_options[{{ $index }}][price_modifier]" 
+                                               value="{{ $option['price_modifier'] ?? '0' }}" 
+                                               placeholder="Price modifier"
+                                               class="block w-1/3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <button type="button" class="remove-size-option inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500">
+                                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                @endforeach
+                            @endif
+                        </div>
+                        <button type="button" id="add_size_option" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                            <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                            </svg>
+                            Add Size Option
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex items-center justify-end gap-x-6 pt-6">
+            <a href="{{ route('admin.products.index') }}" class="text-sm font-semibold leading-6 text-gray-900">Cancel</a>
+            <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                Update Product
+            </button>
+        </div>
+    </form>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Size options functionality
+        const hasSizeOptionsCheckbox = document.getElementById('has_size_options');
+        const sizeOptionsContainer = document.getElementById('size_options_container');
+        
+        if (hasSizeOptionsCheckbox && sizeOptionsContainer) {
+            hasSizeOptionsCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    sizeOptionsContainer.style.display = 'block';
+                } else {
+                    sizeOptionsContainer.style.display = 'none';
+                }
+            });
+        }
+
+        let sizeOptionIndex = {{ count($sizeOptions ?? []) }};
+
+        const addSizeOptionBtn = document.getElementById('add_size_option');
+        if (addSizeOptionBtn) {
+            addSizeOptionBtn.addEventListener('click', function() {
+                const container = document.getElementById('size_options_list');
+                const newOption = document.createElement('div');
+                newOption.className = 'size-option-item flex items-center space-x-3 mb-3';
+                newOption.innerHTML = `
+                    <input type="text" name="size_options[${sizeOptionIndex}][size]" 
+                           placeholder="Size (e.g., S, M, L, XL)"
+                           class="block w-1/3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    <input type="number" step="0.01" name="size_options[${sizeOptionIndex}][price_modifier]" 
+                           value="0" placeholder="Price modifier"
+                           class="block w-1/3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    <button type="button" class="remove-size-option inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                `;
+                container.appendChild(newOption);
+                sizeOptionIndex++;
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.remove-size-option')) {
+                e.target.closest('.size-option-item').remove();
+            }
         });
     });
-
-    // PDF deletion handling
-    const deletePdfBtn = document.getElementById('delete_pdf');
-    const deletePdfInput = document.getElementById('delete_pdf_input');
-    
-    if (deletePdfBtn && deletePdfInput) {
-        deletePdfBtn.addEventListener('click', function() {
-            if (confirm('Are you sure you want to delete the PDF file?')) {
-                deletePdfInput.value = '1';
-                this.closest('.mb-3').style.opacity = '0.5';
-                this.disabled = true;
-            }
-        });
-    }
-});
 </script>
+@endpush
 @endsection

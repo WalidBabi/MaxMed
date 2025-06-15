@@ -1,16 +1,23 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Create Invoice')
+
 @section('content')
-<div class="main-content">
-    <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="h4 mb-1">Create Invoice</h2>
-            <p class="text-muted mb-0">Create a new proforma or final invoice</p>
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Create Invoice</h1>
+                <p class="text-gray-600 mt-2">Create a new proforma or final invoice</p>
+            </div>
+            <a href="{{ route('admin.invoices.index') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Invoices
+            </a>
         </div>
-        <a href="{{ route('admin.invoices.index') }}" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Back to Invoices
-        </a>
     </div>
 
     <!-- Form -->
@@ -278,7 +285,7 @@
 </div>
 
 <script>
-let itemIndex = {{ $quote && $quote->items->count() > 0 ? $quote->items->count() : 1 }};
+let itemIndex = @if(isset($quote) && $quote->items->count() > 0) {{ $quote->items->count() }} @else 1 @endif;
 
 // Payment terms handling
 document.getElementById('payment_terms').addEventListener('change', function() {

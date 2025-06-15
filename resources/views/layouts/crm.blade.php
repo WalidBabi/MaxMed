@@ -1,82 +1,57 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-gray-50">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>@yield('title', 'MaxMed Admin') - Professional Administration System</title>
-
-    <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/favicon/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon/favicon-16x16.png') }}">
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
-    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
-    <meta name="theme-color" content="#171e60">
-
+    
+    <title>@yield('title', 'MaxMed CRM') - Professional Customer Relationship Management</title>
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
-
+    
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
+    
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <!-- Additional Styling -->
     <style>
-        /* CRM-style sidebar styling */
+        /* CRM Sidebar styling */
         .crm-sidebar {
-            background: white;
-            color: #374151;
+            background: #ffffff;
             min-height: 100vh;
             position: relative;
-            z-index: 30;
             border-right: 1px solid #e5e7eb;
-        }
-
-        .crm-sidebar .menu-item a {
-            transition: all 0.3s;
-            color: #6b7280;
-        }
-
-        .crm-sidebar .menu-item:hover a {
-            background-color: #f3f4f6;
-            color: #4f46e5;
-        }
-
-        .crm-sidebar .menu-item.active a,
-        .sidebar-active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white !important;
+            z-index: 30;
         }
 
         /* Card hover effects */
+        .sidebar-active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
         .card-hover {
             transition: all 0.3s ease;
         }
-
         .card-hover:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
-
         .metric-card {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
-
         .success-card {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
         }
-
         .warning-card {
             background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
         }
-
         .danger-card {
             background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
         }
@@ -87,13 +62,13 @@
             padding: 0;
             overflow-x: hidden;
         }
-
+        
         .min-h-full {
             position: relative;
             display: flex;
             min-height: 100vh;
         }
-
+        
         /* Desktop sidebar positioning */
         @media (min-width: 1024px) {
             .sidebar-container {
@@ -108,11 +83,11 @@
                 transform: translateX(0);
                 transition: transform 0.3s ease-in-out;
             }
-
+            
             .sidebar-container.hidden {
                 transform: translateX(-100%);
             }
-
+            
             .main-content-container {
                 margin-left: 18rem;
                 min-height: 100vh;
@@ -121,19 +96,19 @@
                 z-index: 10;
                 transition: margin-left 0.3s ease-in-out;
             }
-
+            
             .main-content-container.expanded {
                 margin-left: 0;
                 width: 100%;
             }
         }
-
+        
         /* Mobile responsiveness */
         @media (max-width: 1023px) {
             .sidebar-container {
                 display: none;
             }
-
+            
             .sidebar-container.mobile-open {
                 display: flex;
                 position: fixed;
@@ -143,18 +118,18 @@
                 width: 18rem;
                 z-index: 50;
             }
-
+            
             .main-content-container {
                 margin-left: 0;
                 width: 100%;
             }
         }
-
+        
         /* Override any conflicting Tailwind classes */
         .lg\:pl-72 {
             padding-left: 0 !important;
         }
-
+        
         .lg\:fixed {
             position: static !important;
         }
@@ -168,14 +143,15 @@
 
         <!-- Desktop sidebar -->
         <div class="sidebar-container" :class="{ 'hidden': sidebarHidden, 'mobile-open': sidebarOpen }">
-            @include('admin.partials.sidebar')
+            @include('crm.partials.sidebar')
         </div>
 
         <!-- Main content area -->
         <div class="main-content-container" :class="{ 'expanded': sidebarHidden }">
             <!-- Top navigation -->
             <div class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-                
+             
+
 
                 <!-- Desktop sidebar toggle -->
                 <button type="button" class="hidden lg:block -m-2.5 p-2.5 text-gray-700" @click="sidebarHidden = !sidebarHidden">
@@ -194,7 +170,7 @@
                 <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
                     <!-- Spacer to push items to the right -->
                     <div class="flex-1"></div>
-
+                    
                     <div class="flex items-center gap-x-4 lg:gap-x-6">
                         <!-- View Customer Site Button -->
                         <a href="{{ route('welcome') }}" target="_blank" class="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500 flex items-center gap-x-2">
@@ -205,11 +181,12 @@
                         </a>
 
                         <!-- Notifications -->
-                        <button type="button" class="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
+                        <button type="button" class="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500 relative">
                             <span class="sr-only">View notifications</span>
                             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                             </svg>
+                            <span class="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 text-xs text-white flex items-center justify-center">3</span>
                         </button>
 
                         <!-- User menu -->
@@ -224,7 +201,7 @@
                                     </svg>
                                 </span>
                             </button>
-
+                            
                             <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5" style="display: none;">
                                 <a href="{{ route('profile.show') }}" class="block px-3 py-1 text-sm leading-6 text-gray-900 hover:bg-gray-50">Your profile</a>
                                 <form method="POST" action="{{ route('logout') }}">
@@ -241,33 +218,33 @@
             <main class="py-10">
                 <div class="px-4 sm:px-6 lg:px-8">
                     @if(session('success'))
-                    <div class="mb-6 rounded-md bg-green-50 p-4">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.236 4.53L7.53 10.53a.75.75 0 00-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <div class="ml-3">
-                                <p class="text-sm font-medium text-green-800">{{ session('success') }}</p>
+                        <div class="mb-6 rounded-md bg-green-50 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.236 4.53L7.53 10.53a.75.75 0 00-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-green-800">{{ session('success') }}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     @endif
 
                     @if(session('error'))
-                    <div class="mb-6 rounded-md bg-red-50 p-4">
-                        <div class="flex">
-                            <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <div class="ml-3">
-                                <p class="text-sm font-medium text-red-800">{{ session('error') }}</p>
+                        <div class="mb-6 rounded-md bg-red-50 p-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-red-800">{{ session('error') }}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     @endif
 
                     @yield('content')
@@ -278,8 +255,7 @@
 
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
+    
     @stack('scripts')
 </body>
-
-</html>
+</html> 

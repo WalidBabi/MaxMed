@@ -1,5 +1,7 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Create Quote')
+
 @push('styles')
 <!-- Select2 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -7,47 +9,66 @@
 @endpush
 
 @section('content')
-<div class="main-content">
-    <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="h4 mb-1">New Quote</h2>
-            <p class="text-muted mb-0">Create a new quote for customers</p>
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Create New Quote</h1>
+                <p class="text-gray-600 mt-2">Create a new quote for customers</p>
+            </div>
+            <a href="{{ route('admin.quotes.index') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Quotes
+            </a>
         </div>
-        <a href="{{ route('admin.quotes.index') }}" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Back to Quotes
-        </a>
     </div>
 
     @if($errors->any())
-        <div class="alert alert-danger mb-4">
-            <h6 class="alert-heading">Please fix the following errors:</h6>
-            <ul class="mb-0">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+        <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+                    <div class="mt-2 text-sm text-red-700">
+                        <ul class="list-disc pl-5 space-y-1">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     @endif
 
     <form id="quoteForm" action="{{ route('admin.quotes.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
-        <div class="row">
-            <div class="col-lg-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 space-y-8">
                 <!-- Basic Information -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-light">
-                        <h6 class="mb-0">
-                            <i class="fas fa-info-circle me-2"></i>Quote Information
-                        </h6>
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-gray-900">Quote Information</h3>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="customer_id" class="form-label">Customer <span class="text-danger">*</span></label>
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="customer_id" class="block text-sm font-medium text-gray-700 mb-2">Customer <span class="text-red-500">*</span></label>
                                 <select id="customer_id" name="customer_id" required 
-                                        class="form-select @error('customer_id') is-invalid @enderror">
+                                        class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('customer_id') border-red-300 @enderror">
                                     <option value="">Select a customer</option>
                                     @foreach($customers as $customer)
                                         <option value="{{ $customer->id }}" {{ old('customer_id') == $customer->id ? 'selected' : '' }}>
@@ -56,16 +77,16 @@
                                     @endforeach
                                 </select>
                                 @error('customer_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
-                            <div class="col-md-6">
-                                <label for="quote_number" class="form-label">Quote Number</label>
+                            <div>
+                                <label for="quote_number" class="block text-sm font-medium text-gray-700 mb-2">Quote Number</label>
                                 <input type="text" id="quote_number" 
                                        value="{{ \App\Models\Quote::generateQuoteNumber() }}" readonly
-                                       class="form-control bg-light">
-                                <small class="form-text text-muted">Auto-generated</small>
+                                       class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-500">
+                                <p class="mt-1 text-sm text-gray-500">Auto-generated</p>
                             </div>
 
                             <div class="col-md-6">
