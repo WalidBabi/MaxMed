@@ -31,11 +31,11 @@
                     <h3 class="text-lg font-semibold text-gray-900">Profile Information</h3>
                     <p class="text-sm text-gray-600 mt-1">Update your account's profile information and email address</p>
                 </div>
-                <form method="post" action="{{ route('profile.update') }}" class="p-6">
+                <form method="post" action="{{ route('profile.update') }}" class="p-6" enctype="multipart/form-data">
                     @csrf
                     @method('patch')
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 gap-6">
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
                             <input id="name" name="name" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" value="{{ old('name', $user->name) }}" required autofocus autocomplete="name">
@@ -45,28 +45,33 @@
                         </div>
 
                         <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                            <input id="email" name="email" type="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" value="{{ old('email', $user->email) }}" required autocomplete="username">
-                            @error('email')
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <div class="mt-1 block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm text-sm text-gray-600">
+                                {{ $user->email }}
+                                @if($user->email_verified_at)
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 ml-2">
+                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Verified
+                                    </span>
+                                @endif
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">Contact support to change your email address</p>
+                        </div>
+
+                        <div>
+                            <label for="profile_photo" class="block text-sm font-medium text-gray-700 mb-2">Profile Photo</label>
+                            <input type="file" id="profile_photo" name="profile_photo" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" onchange="previewImage(this)">
+                            @error('profile_photo')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
-
-                            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                                <div class="mt-2">
-                                    <p class="text-sm text-gray-800">
-                                        Your email address is unverified.
-                                        <button form="send-verification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                            Click here to re-send the verification email.
-                                        </button>
-                                    </p>
-
-                                    @if (session('status') === 'verification-link-sent')
-                                        <p class="mt-2 font-medium text-sm text-green-600">
-                                            A new verification link has been sent to your email address.
-                                        </p>
-                                    @endif
-                                </div>
-                            @endif
+                            <p class="mt-2 text-sm text-gray-500">JPG, PNG, GIF, WEBP up to 2MB</p>
+                            
+                            <!-- Photo preview -->
+                            <div id="photo-preview" class="mt-3 hidden">
+                                <img id="preview-image" class="h-20 w-20 rounded-full object-cover border-2 border-gray-200" alt="Preview">
+                            </div>
                         </div>
                     </div>
 
@@ -160,10 +165,32 @@
                     <h3 class="text-lg font-semibold text-gray-900">Profile Picture</h3>
                 </div>
                 <div class="p-6 text-center">
-                    <div class="mx-auto h-24 w-24 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold mb-4">
-                        {{ strtoupper(substr($user->name, 0, 2)) }}
+                    <div class="mx-auto h-24 w-24 rounded-full mb-4 overflow-hidden border-4 border-gray-100">
+                        @if($user->profile_photo)
+                            <img src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}" class="h-full w-full object-cover">
+                        @else
+                            <div class="h-full w-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold">
+                                {{ strtoupper(substr($user->name, 0, 2)) }}
+                            </div>
+                        @endif
                     </div>
-                    <p class="text-sm text-gray-600">Profile picture coming soon</p>
+                    
+                    @if($user->profile_photo)
+                        <form method="post" action="{{ route('profile.photo.remove') }}" class="mt-3">
+                            @csrf
+                            @method('delete')
+                            <button type="submit" onclick="return confirm('Are you sure you want to remove your profile photo?')" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                                Remove Photo
+                            </button>
+                        </form>
+                    @endif
+                    
+                    @if (session('status') === 'photo-removed')
+                        <p class="mt-2 text-sm text-green-600">Photo removed successfully.</p>
+                    @endif
                 </div>
             </div>
 
@@ -256,4 +283,24 @@
         </form>
     @endif
 </div>
+
+<script>
+function previewImage(input) {
+    const previewDiv = document.getElementById('photo-preview');
+    const previewImage = document.getElementById('preview-image');
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            previewImage.src = e.target.result;
+            previewDiv.classList.remove('hidden');
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        previewDiv.classList.add('hidden');
+    }
+}
+</script>
 @endsection 

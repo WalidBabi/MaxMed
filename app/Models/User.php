@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'is_admin',
         'role_id',
+        'profile_photo',
     ];
 
     /**
@@ -109,5 +110,32 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    /**
+     * Get the profile photo URL
+     *
+     * @return string|null
+     */
+    public function getProfilePhotoUrlAttribute()
+    {
+        if ($this->profile_photo) {
+            return asset('storage/' . $this->profile_photo);
+        }
+        return null;
+    }
+
+    /**
+     * Get profile photo or default initials
+     *
+     * @return array
+     */
+    public function getProfileDisplayAttribute()
+    {
+        return [
+            'photo_url' => $this->profile_photo_url,
+            'initials' => strtoupper(substr($this->name, 0, 2)),
+            'has_photo' => !empty($this->profile_photo)
+        ];
     }
 }
