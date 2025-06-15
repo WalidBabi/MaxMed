@@ -73,6 +73,13 @@ class ProductController extends Controller
         return view('admin.products.index', compact('products', 'categories'));
     }
 
+    public function show(Product $product)
+    {
+        $product->load(['category', 'brand', 'inventory', 'images']);
+        
+        return view('admin.products.show', compact('product'));
+    }
+
     public function create()
     {
         // Fetch categories that do not have subcategories

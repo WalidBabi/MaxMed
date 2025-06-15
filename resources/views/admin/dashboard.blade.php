@@ -295,6 +295,46 @@
         a.text-decoration-none:hover {
             text-decoration: none;
         }
+
+        /* Standard Button Styles for Consistency */
+        .btn-primary {
+            @apply inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500;
+        }
+        .btn-secondary {
+            @apply inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50;
+        }
+        .btn-danger {
+            @apply inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500;
+        }
+        .btn-success {
+            @apply inline-flex items-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500;
+        }
+        .btn-warning {
+            @apply inline-flex items-center rounded-md bg-yellow-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-500;
+        }
+        .btn-info {
+            @apply inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500;
+        }
+        
+        /* Small Button Variants */
+        .btn-sm {
+            @apply px-2.5 py-1.5 text-xs;
+        }
+        
+        /* Standard Card Spacing */
+        .admin-card {
+            @apply card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-8;
+        }
+        
+        /* Standard Statistics Card */
+        .stats-card {
+            @apply card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5;
+        }
+        
+        /* Standard Action Button Spacing */
+        .action-buttons {
+            @apply flex items-center justify-end space-x-2;
+        }
     </style>
 </div>
 @endsection

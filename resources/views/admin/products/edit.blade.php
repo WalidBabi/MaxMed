@@ -225,19 +225,20 @@
                                 if (!is_array($sizeOptions) && !empty($sizeOptions)) {
                                     $sizeOptions = json_decode($sizeOptions, true) ?? [];
                                 }
+                                // Handle simple string array format (which is what we actually use)
+                                if (!empty($sizeOptions) && !is_array(reset($sizeOptions))) {
+                                    // Already a simple array of strings, keep as is
+                                    $sizeOptions = array_values($sizeOptions);
+                                }
                             @endphp
                             
                             @if(count($sizeOptions) > 0)
                                 @foreach($sizeOptions as $index => $option)
                                     <div class="size-option-item flex items-center space-x-3 mb-3">
-                                        <input type="text" name="size_options[{{ $index }}][size]" 
-                                               value="{{ $option['size'] ?? '' }}" 
+                                        <input type="text" name="size_options[]" 
+                                               value="{{ $option }}" 
                                                placeholder="Size (e.g., S, M, L, XL)"
-                                               class="block w-1/3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                        <input type="number" step="0.01" name="size_options[{{ $index }}][price_modifier]" 
-                                               value="{{ $option['price_modifier'] ?? '0' }}" 
-                                               placeholder="Price modifier"
-                                               class="block w-1/3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                               class="block flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         <button type="button" class="remove-size-option inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500">
                                             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -293,12 +294,9 @@
                 const newOption = document.createElement('div');
                 newOption.className = 'size-option-item flex items-center space-x-3 mb-3';
                 newOption.innerHTML = `
-                    <input type="text" name="size_options[${sizeOptionIndex}][size]" 
+                    <input type="text" name="size_options[]" 
                            placeholder="Size (e.g., S, M, L, XL)"
-                           class="block w-1/3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                    <input type="number" step="0.01" name="size_options[${sizeOptionIndex}][price_modifier]" 
-                           value="0" placeholder="Price modifier"
-                           class="block w-1/3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                           class="block flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     <button type="button" class="remove-size-option inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500">
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
