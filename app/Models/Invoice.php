@@ -440,7 +440,7 @@ class Invoice extends Model
                     'order_id' => $order->id,
                     'product_id' => $invoiceItem->product_id,
                     'quantity' => $invoiceItem->quantity,
-                    'price' => $invoiceItem->unit_price,
+                    'price' => $invoiceItem->product ? $invoiceItem->product->price_aed : $invoiceItem->unit_price,
                     'variation' => $invoiceItem->specifications
                 ]);
             }

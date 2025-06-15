@@ -587,6 +587,8 @@
 
 @push('scripts')
 <script>
+let currentInvoiceId = null; // Store current invoice ID for status updates
+
 document.addEventListener('DOMContentLoaded', function() {
     // Delete invoice functionality
     document.querySelectorAll('.delete-invoice-btn').forEach(button => {
@@ -606,6 +608,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const customerName = this.getAttribute('data-customer-name');
             const invoiceNumber = this.getAttribute('data-invoice-number');
             const customerEmail = this.getAttribute('data-customer-email');
+            
+            // Store invoice ID globally for status updates
+            currentInvoiceId = invoiceId;
             
             console.log('Invoice data:', { invoiceId, customerName, invoiceNumber, customerEmail });
             
@@ -758,8 +763,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Close modal
                 window.dispatchEvent(new CustomEvent('close-modal', { detail: 'send-invoice-email' }));
                 
-                // Show success message
-                showNotification('Email sent successfully!', 'success');
+                // Show success message with status update info
+                let message = 'Email sent successfully!';
+                if (data.previous_status && data.new_status && data.previous_status !== data.new_status) {
+                    message += ` Status updated from ${data.previous_status} to ${data.new_status}.`;
+                }
+                showNotification(message, 'success');
+                
+                // Update invoice status in the UI if it changed
+                if (data.new_status && data.previous_status !== data.new_status) {
+                    updateInvoiceStatusInUI(currentInvoiceId, data.new_status);
+                }
                 
                 // Reset form
                 form.reset();
@@ -788,6 +802,56 @@ document.addEventListener('DOMContentLoaded', function() {
             showNotification(errorMessage, 'error');
         });
     };
+
+    // Function to update invoice status in the UI
+    function updateInvoiceStatusInUI(invoiceId, newStatus) {
+        console.log('Updating invoice status in UI:', { invoiceId, newStatus });
+        
+        // Find the invoice row in the table
+        const invoiceRows = document.querySelectorAll('tbody tr');
+        invoiceRows.forEach(row => {
+            const sendEmailBtn = row.querySelector('.send-email-btn');
+            if (sendEmailBtn && sendEmailBtn.getAttribute('data-invoice-id') === invoiceId) {
+                // Find the status cell (5th column)
+                const statusCell = row.querySelector('td:nth-child(5)');
+                if (statusCell) {
+                    let statusBadge = '';
+                    switch (newStatus) {
+                        case 'draft':
+                            statusBadge = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Draft</span>`;
+                            break;
+                        case 'sent':
+                            statusBadge = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Sent</span>`;
+                            break;
+                        case 'approved':
+                            statusBadge = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Approved</span>`;
+                            break;
+                        default:
+                            statusBadge = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}</span>`;
+                    }
+                    statusCell.innerHTML = statusBadge;
+                    
+                    // Add a subtle animation to highlight the change
+                    statusCell.classList.add('bg-green-50');
+                    setTimeout(() => {
+                        statusCell.classList.remove('bg-green-50');
+                    }, 2000);
+                }
+                
+                // Update statistics if needed (for draft->sent conversion)
+                if (newStatus === 'sent') {
+                    updateInvoiceStatistics();
+                }
+            }
+        });
+    }
+
+    // Function to update statistics cards for invoices
+    function updateInvoiceStatistics() {
+        // The statistics are calculated server-side, but we could provide visual feedback
+        // For now, we'll just log that the status changed
+        console.log('Invoice status updated - statistics may need refresh');
+    }
 
     // Function to show notifications
     function showNotification(message, type = 'info') {

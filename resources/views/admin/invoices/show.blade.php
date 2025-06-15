@@ -26,12 +26,7 @@
                     </svg>
                     Download PDF
                 </a>
-                <button class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                    </svg>
-                    Send Email
-                </button>
+            
                 <a href="{{ route('admin.invoices.index') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -254,7 +249,7 @@
                                                 </span>
                                             @endif
                                         </td>
-                                        <td class="px-6 py-4 text-sm text-gray-900">{{ $payment->reference_number ?? '-' }}</td>
+                                        <td class="px-6 py-4 text-sm text-gray-900">{{ $payment->transaction_reference ?? '-' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -372,28 +367,137 @@
                     <h3 class="text-lg font-semibold text-gray-900">Quick Actions</h3>
                 </div>
                 <div class="p-6 space-y-3">
-                    <button class="w-full inline-flex items-center justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                        </svg>
-                        Send Email
-                    </button>
-                    
                     @if($invoice->payment_status !== 'paid')
-                    <button class="w-full inline-flex items-center justify-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <button onclick="openPaymentModal()" class="w-full inline-flex items-center justify-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                         </svg>
                         Record Payment
                     </button>
                     @endif
-                    
-                    <button class="w-full inline-flex items-center justify-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                        </svg>
-                        Delete Invoice
-                    </button>
+                </div>
+            </div>
+
+            <!-- Payment Modal -->
+            <div id="paymentModal" class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50 hidden">
+                <div class="fixed inset-0 transform transition-all" onclick="closePaymentModal()">
+                    <div class="absolute inset-0 bg-gray-900 bg-opacity-75 backdrop-blur-sm"></div>
+                </div>
+                
+                <div class="relative sm:w-full sm:max-w-lg sm:mx-auto">
+                    <div class="bg-white rounded-lg shadow-xl transform transition-all sm:w-full">
+                        <!-- Modal Header -->
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 rounded-t-lg">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                                    <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                    </svg>
+                                    Record Payment
+                                </h3>
+                                <button onclick="closePaymentModal()" class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600 transition ease-in-out duration-150">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Modal Body -->
+                        <form action="{{ route('admin.invoices.record-payment', $invoice) }}" method="POST">
+                            @csrf
+                            <div class="px-6 py-4 space-y-6">
+                                <!-- Payment Amount -->
+                                <div>
+                                    <label for="payment_amount" class="block text-sm font-medium text-gray-700 mb-2">Payment Amount <span class="text-red-500">*</span></label>
+                                    <input type="number" 
+                                           id="payment_amount" 
+                                           name="amount" 
+                                           step="0.01" 
+                                           min="0.01" 
+                                           max="{{ $invoice->total_amount - $invoice->paid_amount }}"
+                                           value="{{ old('amount', $invoice->total_amount - $invoice->paid_amount) }}"
+                                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('amount') border-red-300 @enderror" 
+                                           required>
+                                    @error('amount')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                    <p class="mt-1 text-xs text-gray-500">
+                                        Remaining balance: {{ number_format($invoice->total_amount - $invoice->paid_amount, 2) }} {{ $invoice->currency }}
+                                    </p>
+                                </div>
+
+                                <!-- Payment Method -->
+                                <div>
+                                    <label for="payment_method" class="block text-sm font-medium text-gray-700 mb-2">Payment Method <span class="text-red-500">*</span></label>
+                                    <select name="payment_method" id="payment_method" required class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('payment_method') border-red-300 @enderror">
+                                        <option value="">Select Payment Method</option>
+                                        @foreach(\App\Models\Payment::PAYMENT_METHODS as $key => $label)
+                                            <option value="{{ $key }}" {{ old('payment_method') == $key ? 'selected' : '' }}>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('payment_method')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <!-- Payment Date -->
+                                <div>
+                                    <label for="payment_date" class="block text-sm font-medium text-gray-700 mb-2">Payment Date <span class="text-red-500">*</span></label>
+                                    <input type="date" 
+                                           id="payment_date" 
+                                           name="payment_date" 
+                                           value="{{ old('payment_date', date('Y-m-d')) }}"
+                                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('payment_date') border-red-300 @enderror" 
+                                           required>
+                                    @error('payment_date')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <!-- Transaction Reference -->
+                                <div>
+                                    <label for="transaction_reference" class="block text-sm font-medium text-gray-700 mb-2">Transaction Reference</label>
+                                    <input type="text" 
+                                           id="transaction_reference" 
+                                           name="transaction_reference" 
+                                           value="{{ old('transaction_reference') }}"
+                                           placeholder="e.g., Check #1234, Transfer ID, etc."
+                                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('transaction_reference') border-red-300 @enderror">
+                                    @error('transaction_reference')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                    <p class="mt-1 text-xs text-gray-500">Optional: Reference number for tracking</p>
+                                </div>
+
+                                <!-- Payment Notes -->
+                                <div>
+                                    <label for="payment_notes" class="block text-sm font-medium text-gray-700 mb-2">Payment Notes</label>
+                                    <textarea name="payment_notes" 
+                                              id="payment_notes" 
+                                              rows="3" 
+                                              placeholder="Additional notes about this payment..."
+                                              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('payment_notes') border-red-300 @enderror">{{ old('payment_notes') }}</textarea>
+                                    @error('payment_notes')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- Modal Footer -->
+                            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 rounded-b-lg sm:flex sm:flex-row-reverse">
+                                <button type="submit" 
+                                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                    Record Payment
+                                </button>
+                                <button type="button" 
+                                        onclick="closePaymentModal()" 
+                                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
 
@@ -493,4 +597,48 @@
         </div>
     </div>
 </div>
+
+<script>
+function openPaymentModal() {
+    document.getElementById('paymentModal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closePaymentModal() {
+    document.getElementById('paymentModal').classList.add('hidden');
+    document.body.style.overflow = 'unset';
+}
+
+// Close modal when clicking outside (except for the inner modal content)
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentModal = document.getElementById('paymentModal');
+    const modalContent = paymentModal.querySelector('.bg-white');
+    
+    paymentModal.addEventListener('click', function(e) {
+        if (e.target === paymentModal || e.target.classList.contains('bg-gray-900')) {
+            closePaymentModal();
+        }
+    });
+    
+    // Prevent closing when clicking inside modal content
+    modalContent.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+});
+
+// Close modal on escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closePaymentModal();
+    }
+});
+
+// Auto-open modal if there are validation errors for payment form
+@if($errors->any() && old('amount'))
+    document.addEventListener('DOMContentLoaded', function() {
+        openPaymentModal();
+    });
+@endif
+</script>
+
 @endsection 

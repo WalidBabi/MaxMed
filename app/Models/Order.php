@@ -9,6 +9,7 @@ class Order extends Model
 {
     protected $fillable = [
         'user_id',
+        'customer_id',
         'order_number',
         'total_amount',
         'status',
@@ -134,6 +135,61 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(\App\Models\Customer::class);
+    }
+
+    /**
+     * Get customer information - works for both new orders (with customer_id) and legacy orders
+     */
+    public function getCustomerInfo()
+    {
+        // If we have a direct customer relationship, use it
+        if ($this->customer_id && $this->customer) {
+            return $this->customer;
+        }
+
+        // For legacy orders, try to find customer by user_id
+        if ($this->user_id) {
+            $customer = \App\Models\Customer::where('user_id', $this->user_id)->first();
+            if ($customer) {
+                return $customer;
+            }
+        }
+
+        // Return null if no customer found
+        return null;
+    }
+
+    /**
+     * Get customer name - works for both new and legacy orders
+     */
+    public function getCustomerName()
+    {
+        $customer = $this->getCustomerInfo();
+        if ($customer) {
+            return $customer->name;
+        }
+
+        // Fallback to user name
+        return $this->user ? $this->user->name : 'N/A';
+    }
+
+    /**
+     * Get customer email - works for both new and legacy orders
+     */
+    public function getCustomerEmail()
+    {
+        $customer = $this->getCustomerInfo();
+        if ($customer) {
+            return $customer->email ?: ($customer->user ? $customer->user->email : 'N/A');
+        }
+
+        // Fallback to user email
+        return $this->user ? $this->user->email : 'N/A';
     }
 
     public function items()

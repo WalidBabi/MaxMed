@@ -116,14 +116,14 @@
 
                 <!-- Invoice Items -->
                 <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
-                    <div class="px-6 py-4 border-b border-gray-200 flex justify-content-between items-center">
+                    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                         <h3 class="text-lg font-semibold text-gray-900 flex items-center">
                             <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 17.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
                             </svg>
                             Invoice Items
                         </h3>
-                        <button type="button" onclick="addItem()" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                        <button type="button" id="addItem" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
                             <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                             </svg>
@@ -144,67 +144,82 @@
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="invoice-items" class="bg-white divide-y divide-gray-200">
+                                <tbody id="itemsTable" class="bg-white divide-y divide-gray-200">
                                     @if($quote && $quote->items->count() > 0)
                                         @foreach($quote->items as $index => $item)
-                                            <tr class="item-row bg-white hover:bg-gray-50" draggable="true">
-                                                <td class="px-3 py-4 text-center">
-                                                    <svg class="w-4 h-4 text-gray-400 cursor-pointer drag-handle mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
-                                                    </svg>
-                                                </td>
-                                                <td class="px-3 py-4">
-                                                    <select name="items[{{ $index }}][product_id]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 product-select" required>
-                                                        <option value="">Select a product</option>
-                                                        @foreach($products as $product)
-                                                            <option value="{{ $product->id }}" 
-                                                                    data-name="{{ $product->name }}"
-                                                                    data-description="{{ $product->description }}"
-                                                                    data-price="{{ $product->price_aed ?? $product->price }}">
-                                                                {{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                    <input type="hidden" name="items[{{ $index }}][item_description]" class="item-description" value="{{ $item->item_details }}">
-                                                </td>
-                                                <td class="px-3 py-4">
-                                                    <input type="number" step="0.01" name="items[{{ $index }}][quantity]" value="{{ $item->quantity }}" required
-                                                           class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 quantity-input">
-                                                </td>
-                                                <td class="px-3 py-4">
-                                                    <input type="number" step="0.01" name="items[{{ $index }}][unit_price]" value="{{ $item->rate }}" required
-                                                           class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rate-input">
-                                                </td>
-                                                <td class="px-3 py-4">
-                                                    <div class="flex">
-                                                        <input type="number" step="0.01" name="items[{{ $index }}][discount_percentage]" value="{{ $item->discount }}" min="0" max="100"
-                                                               class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 discount-input">
-                                                        <span class="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm rounded-r-md">%</span>
+                                        <tr class="item-row bg-white hover:bg-gray-50" draggable="true">
+                                            <td class="px-3 py-4 text-center">
+                                                <svg class="w-4 h-4 text-gray-400 cursor-pointer drag-handle mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                                                </svg>
+                                            </td>
+                                            <td class="px-3 py-4">
+                                                <div class="relative product-dropdown-container">
+                                                    <input type="text" 
+                                                           class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 product-search-input" 
+                                                           placeholder="Search products..." 
+                                                           value="{{ $item->item_details }}"
+                                                           autocomplete="off">
+                                                    <input type="hidden" name="items[{{ $index }}][product_id]" class="product-id-input" value="{{ $item->product_id ?? '' }}">
+                                                    <input type="hidden" name="items[{{ $index }}][item_description]" class="item-details-hidden" value="{{ $item->item_details }}">
+                                                    
+                                                    <!-- Dropdown List -->
+                                                    <div class="product-dropdown-list hidden">
+                                                        <div class="p-2 text-sm text-gray-500 dropdown-loading hidden">Searching...</div>
+                                                        <div class="dropdown-items">
+                                                            @foreach($products as $product)
+                                                                <div class="dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0" 
+                                                                     data-id="{{ $product->id }}"
+                                                                     data-name="{{ $product->name }}"
+                                                                     data-description="{{ $product->description }}"
+                                                                     data-price="{{ $product->price_aed ?? $product->price }}"
+                                                                     data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
+                                                                    <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
+                                                                    @if($product->description)
+                                                                        <div class="text-gray-600 text-xs mt-1">{{ Str::limit($product->description, 80) }}</div>
+                                                                    @endif
+                                                                    @if($product->price_aed ?? $product->price)
+                                                                        <div class="text-indigo-600 text-sm font-medium mt-1">AED {{ number_format($product->price_aed ?? $product->price, 2) }}</div>
+                                                                    @endif
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                        <div class="p-3 text-sm text-gray-500 text-center dropdown-no-results hidden">No products found</div>
                                                     </div>
-                                                </td>
-                                                <td class="px-3 py-4 text-right">
-                                                    <span class="line-total font-medium text-gray-900">{{ number_format($item->amount, 2) }}</span>
-                                                </td>
-                                                <td class="px-3 py-4 text-center">
-                                                    <button type="button" onclick="removeItem(this)" class="inline-flex items-center p-1 border border-transparent rounded-full text-red-600 hover:bg-red-50">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                                        </svg>
-                                                    </button>
-                                                </td>
-                                            </tr>
+                                                </div>
+                                            </td>
+                                            <td class="px-3 py-4">
+                                                <input type="number" step="0.01" name="items[{{ $index }}][quantity]" value="{{ $item->quantity }}" required
+                                                       class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 quantity-input">
+                                            </td>
+                                            <td class="px-3 py-4">
+                                                <input type="number" step="0.01" name="items[{{ $index }}][unit_price]" value="{{ $item->rate }}" required
+                                                       class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rate-input">
+                                            </td>
+                                            <td class="px-3 py-4">
+                                                <div class="flex">
+                                                    <input type="number" step="0.01" name="items[{{ $index }}][discount_percentage]" value="{{ $item->discount }}" min="0" max="100"
+                                                           class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 discount-input">
+                                                    <span class="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm rounded-r-md">%</span>
+                                                </div>
+                                            </td>
+                                            <td class="px-3 py-4 text-right">
+                                                <span class="amount-display font-medium text-gray-900">{{ number_format($item->amount, 2) }}</span>
+                                            </td>
+                                            <td class="px-3 py-4 text-center">
+                                                <button type="button" onclick="removeItem(this)" class="inline-flex items-center p-1 border border-transparent rounded-full text-red-600 hover:bg-red-50">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                    </svg>
+                                                </button>
+                                            </td>
+                                        </tr>
                                         @endforeach
                                     @endif
                                 </tbody>
                             </table>
                         </div>
-                        
-                        <!-- Add Item Button -->
-                        <div class="mt-4">
-                            <button type="button" onclick="addItem()" class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">
-                                + Add another line
-                            </button>
-                        </div>
+                   
                         
                         <!-- Invoice Totals -->
                         <div class="mt-8 flex justify-end">
@@ -212,7 +227,7 @@
                                 <div class="rounded-lg bg-gray-50 p-6">
                                     <div class="flex justify-between mb-3">
                                         <span class="text-sm font-medium text-gray-700">Sub Total:</span>
-                                        <span id="sub-total" class="text-sm font-semibold text-gray-900">0.00 AED</span>
+                                        <span id="subTotal" class="text-sm font-semibold text-gray-900">0.00 AED</span>
                                     </div>
                                     <div class="flex justify-between mb-3">
                                         <span class="text-sm font-medium text-gray-700">Tax:</span>
@@ -221,7 +236,7 @@
                                     <div class="border-t border-gray-200 pt-3">
                                         <div class="flex justify-between">
                                             <span class="text-base font-semibold text-gray-900">Total:</span>
-                                            <span id="total-amount" class="text-base font-bold text-gray-900">0.00 AED</span>
+                                            <span id="totalAmount" class="text-base font-bold text-gray-900">0.00 AED</span>
                                         </div>
                                     </div>
                                 </div>
@@ -320,21 +335,7 @@
 @endsection
 
 @push('styles')
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
-.select2-container--default .select2-selection--single {
-    height: 38px;
-    border: 1px solid #d1d5db;
-    border-radius: 0.375rem;
-}
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: 36px;
-    padding-left: 8px;
-}
-.select2-container--default .select2-selection--single .select2-selection__arrow {
-    height: 36px;
-}
-
 /* Fixed table layout for consistent column widths */
 .items-table {
     table-layout: fixed;
@@ -352,22 +353,6 @@
     min-width: 100px;
 }
 
-/* Select2 result styling */
-.select2-result-product {
-    padding: 12px;
-    border-bottom: 1px solid #f3f4f6;
-}
-.select2-result-product__title {
-    font-weight: 600;
-    color: #1f2937;
-    font-size: 0.9rem;
-}
-.select2-result-product__description {
-    font-size: 0.8rem;
-    color: #6b7280;
-    margin-top: 4px;
-}
-
 /* Item row styling */
 .item-row {
     cursor: grab;
@@ -381,85 +366,70 @@
     cursor: grab;
 }
 
-/* Enhanced Select2 Styling */
-.select2-container--default .select2-selection--single {
-    height: 38px;
+/* Custom Dropdown Styles */
+.product-dropdown-container {
+    position: relative;
+}
+
+.product-dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
     border: 1px solid #d1d5db;
     border-radius: 0.375rem;
-    background-color: #fff;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.select2-container--default .select2-selection--single:focus-within {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
-}
-
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: 36px;
-    padding-left: 12px;
-    padding-right: 20px;
-    color: #374151;
-}
-
-.select2-container--default .select2-selection--single .select2-selection__arrow {
-    height: 36px;
-    right: 8px;
-}
-
-.select2-container--default .select2-selection--single .select2-selection__placeholder {
-    color: #9ca3af;
-}
-
-.select2-dropdown {
-    border: 1px solid #d1d5db;
-    border-radius: 0.375rem;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-}
-
-.select2-search--dropdown {
-    padding: 8px;
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #d1d5db;
-}
-
-.select2-search__field {
-    width: 100% !important;
-    border: 1px solid #d1d5db !important;
-    border-radius: 0.375rem !important;
-    padding: 8px 12px !important;
-    font-size: 0.875rem !important;
-}
-
-.select2-results__options {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     max-height: 300px;
+    overflow-y: auto;
+    background: white;
+    z-index: 9999;
+    margin-top: 4px;
 }
 
-.select2-results__option {
-    padding: 10px 12px;
-    line-height: 1.5;
-    color: #374151;
+/* Ensure table cells don't interfere with dropdown positioning */
+.items-table td {
+    position: relative;
+    z-index: 1;
+}
+
+.items-table .product-dropdown-container {
+    z-index: 10;
+}
+
+.items-table .product-dropdown-list {
+    z-index: 9999;
+}
+
+.dropdown-item {
+    transition: background-color 0.15s ease-in-out;
     cursor: pointer;
 }
 
-.select2-results__option:hover,
-.select2-results__option--highlighted {
-    background-color: #f3f4f6 !important;
-    color: #374151 !important;
+.dropdown-item:hover {
+    background-color: #f8fafc;
 }
 
-.select2-results__option--selected {
-    background-color: #6366f1 !important;
-    color: #fff !important;
+.dropdown-item.bg-indigo-50 {
+    background-color: #eef2ff;
+}
+
+.product-search-input {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+}
+
+.hidden {
+    display: none;
 }
 </style>
 @endpush
 
 @push('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-let itemIndex = 1;
+let itemCounter = 0;
 
 // Customer selection handling
 document.getElementById('customer_id').addEventListener('change', function() {
@@ -491,34 +461,6 @@ document.getElementById('customer_id').addEventListener('change', function() {
     }
 });
 
-// Product selection handling
-function handleProductSelect(selectElement) {
-    const selectedOption = selectElement.options[selectElement.selectedIndex];
-    const itemRow = selectElement.closest('tr');
-    
-    if (selectedOption.value) {
-        const productName = selectedOption.getAttribute('data-name');
-        const productDescription = selectedOption.getAttribute('data-description');
-        const productPrice = selectedOption.getAttribute('data-price');
-        
-        // Update item description and price
-        const descriptionField = itemRow.querySelector('.item-description');
-        const priceField = itemRow.querySelector('.rate-input');
-        
-        if (descriptionField && productName) {
-            descriptionField.value = productName + (productDescription ? '\n' + productDescription : '');
-        }
-        
-        if (priceField && productPrice) {
-            priceField.value = parseFloat(productPrice).toFixed(2);
-        }
-        
-        // Recalculate totals
-        calculateLineTotal(itemRow);
-        calculateTotals();
-    }
-}
-
 // Payment terms handling
 document.getElementById('payment_terms').addEventListener('change', function() {
     const customDiv = document.getElementById('custom-percentage');
@@ -529,9 +471,8 @@ document.getElementById('payment_terms').addEventListener('change', function() {
     }
 });
 
-// Add new item
 function addItem() {
-    const tbody = document.getElementById('invoice-items');
+    const tbody = document.getElementById('itemsTable');
     const row = document.createElement('tr');
     row.className = 'item-row bg-white hover:bg-gray-50';
     row.draggable = true;
@@ -542,36 +483,56 @@ function addItem() {
             </svg>
         </td>
         <td class="px-3 py-4">
-            <select name="items[${itemIndex}][product_id]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 product-select" required>
-                <option value="">Select a product</option>
-                @foreach($products as $product)
-                    <option value="{{ $product->id }}" 
-                            data-name="{{ $product->name }}"
-                            data-description="{{ $product->description }}"
-                            data-price="{{ $product->price_aed ?? $product->price }}">
-                        {{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}
-                    </option>
-                @endforeach
-            </select>
-            <input type="hidden" name="items[${itemIndex}][item_description]" class="item-description" value="">
+            <div class="relative product-dropdown-container">
+                <input type="text" 
+                       class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 product-search-input" 
+                       placeholder="Search products..." 
+                       autocomplete="off">
+                <input type="hidden" name="items[${itemCounter}][product_id]" class="product-id-input">
+                <input type="hidden" name="items[${itemCounter}][item_description]" class="item-details-hidden">
+                
+                <!-- Dropdown List -->
+                <div class="product-dropdown-list hidden">
+                    <div class="p-2 text-sm text-gray-500 dropdown-loading hidden">Searching...</div>
+                    <div class="dropdown-items">
+                        @foreach($products as $product)
+                            <div class="dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0" 
+                                 data-id="{{ $product->id }}"
+                                 data-name="{{ $product->name }}"
+                                 data-description="{{ $product->description }}"
+                                 data-price="{{ $product->price_aed ?? $product->price }}"
+                                 data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
+                                <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
+                                @if($product->description)
+                                    <div class="text-gray-600 text-xs mt-1">{{ Str::limit($product->description, 80) }}</div>
+                                @endif
+                                @if($product->price_aed ?? $product->price)
+                                    <div class="text-indigo-600 text-sm font-medium mt-1">AED {{ number_format($product->price_aed ?? $product->price, 2) }}</div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="p-3 text-sm text-gray-500 text-center dropdown-no-results hidden">No products found</div>
+                </div>
+            </div>
         </td>
         <td class="px-3 py-4">
-            <input type="number" step="0.01" name="items[${itemIndex}][quantity]" value="1.00" required
+            <input type="number" step="0.01" name="items[${itemCounter}][quantity]" value="1.00" required
                    class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 quantity-input">
         </td>
         <td class="px-3 py-4">
-            <input type="number" step="0.01" name="items[${itemIndex}][unit_price]" value="0.00" required
+            <input type="number" step="0.01" name="items[${itemCounter}][unit_price]" value="0.00" required
                    class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rate-input">
         </td>
         <td class="px-3 py-4">
             <div class="flex">
-                <input type="number" step="0.01" name="items[${itemIndex}][discount_percentage]" value="0" min="0" max="100"
+                <input type="number" step="0.01" name="items[${itemCounter}][discount_percentage]" value="0" min="0" max="100"
                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 discount-input">
                 <span class="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm rounded-r-md">%</span>
             </div>
         </td>
         <td class="px-3 py-4 text-right">
-            <span class="line-total font-medium text-gray-900">0.00</span>
+            <span class="amount-display font-medium text-gray-900">0.00</span>
         </td>
         <td class="px-3 py-4 text-center">
             <button type="button" onclick="removeItem(this)" class="inline-flex items-center p-1 border border-transparent rounded-full text-red-600 hover:bg-red-50">
@@ -583,229 +544,258 @@ function addItem() {
     `;
     
     tbody.appendChild(row);
-    itemIndex++;
+    itemCounter++;
     
-    // Add event listeners to new inputs
-    addCalculationListeners(row);
+    // Add event listeners for calculation
+    const quantityInput = row.querySelector('.quantity-input');
+    const rateInput = row.querySelector('.rate-input');
+    const discountInput = row.querySelector('.discount-input');
+    const productSearchInput = row.querySelector('.product-search-input');
+    const productIdInput = row.querySelector('.product-id-input');
+    const itemDetailsHidden = row.querySelector('.item-details-hidden');
+    const dropdownList = row.querySelector('.product-dropdown-list');
+    const dropdownItems = row.querySelector('.dropdown-items');
+    const dropdownNoResults = row.querySelector('.dropdown-no-results');
     
-    // Initialize Select2 for new product select
-    const productSelect = row.querySelector('.product-select');
-    if (productSelect) {
-        // Populate product options dynamically
-        const existingSelect = document.querySelector('.product-select');
-        if (existingSelect && existingSelect !== productSelect) {
-            const options = existingSelect.innerHTML;
-            productSelect.innerHTML = options;
-        }
-        
-        // Initialize Select2 with enhanced search
-        $(productSelect).select2({
-            placeholder: 'Search and select a product...',
-            allowClear: true,
-            width: '100%',
-            minimumInputLength: 0,
-            templateResult: formatProductResult,
-            templateSelection: formatProductSelection,
-            matcher: function(params, data) {
-                // If there are no search terms, return all data
-                if ($.trim(params.term) === '') {
-                    return data;
-                }
-                
-                // Skip if no text property
-                if (typeof data.text === 'undefined') {
-                    return null;
-                }
-                
-                // Search in multiple fields
-                const searchTerm = params.term.toLowerCase();
-                const searchText = data.text.toLowerCase();
-                const productName = $(data.element).data('name') ? $(data.element).data('name').toString().toLowerCase() : '';
-                const productDescription = $(data.element).data('description') ? $(data.element).data('description').toString().toLowerCase() : '';
-                
-                const combinedText = searchText + ' ' + productName + ' ' + productDescription;
-                
-                if (combinedText.indexOf(searchTerm) > -1) {
-                    return data;
-                }
-                
-                return null;
-            },
-            escapeMarkup: function (markup) {
-                return markup;
-            }
-        });
-        
-        // Handle Select2 change event
-        $(productSelect).on('select2:select', function(e) {
-            handleProductSelect(this);
-        });
-        
-        $(productSelect).on('select2:clear', function(e) {
-            const itemRow = this.closest('tr');
-            itemRow.querySelector('.item-description').value = '';
-            itemRow.querySelector('.rate-input').value = 0;
-            calculateLineTotal(itemRow);
-            calculateTotals();
-        });
-    }
-}
-
-// Remove item
-function removeItem(button) {
-    const tbody = document.getElementById('invoice-items');
-    if (tbody.children.length > 1) {
-        button.closest('tr').remove();
-        calculateTotals();
-    } else {
-        alert('You must have at least one item.');
-    }
-}
-
-// Add calculation listeners to inputs
-function addCalculationListeners(container = document) {
-    const inputs = container.querySelectorAll('.quantity-input, .price-input, .discount-input');
-    inputs.forEach(input => {
-        input.addEventListener('input', function() {
-            calculateLineTotal(this.closest('.item-row'));
-            calculateTotals();
-        });
-    });
-}
-
-// Calculate line total for a specific item
-function calculateLineTotal(itemRow) {
-    const quantity = parseFloat(itemRow.querySelector('.quantity-input').value) || 0;
-    const price = parseFloat(itemRow.querySelector('.rate-input').value) || 0;
-    const discount = parseFloat(itemRow.querySelector('.discount-input').value) || 0;
-    
-    const subtotal = quantity * price;
-    const discountAmount = subtotal * (discount / 100);
-    const total = subtotal - discountAmount;
-    
-    itemRow.querySelector('.line-total').textContent = total.toFixed(2);
-}
-
-// Calculate invoice totals
-function calculateTotals() {
-    let subTotal = 0;
-    
-    document.querySelectorAll('.item-row').forEach(row => {
-        const lineTotal = parseFloat(row.querySelector('.line-total').textContent) || 0;
-        subTotal += lineTotal;
+    [quantityInput, rateInput, discountInput].forEach(input => {
+        input.addEventListener('input', calculateRowAmount);
     });
     
-    const taxAmount = 0; // Add tax calculation if needed
-    const totalAmount = subTotal + taxAmount;
+    // Initialize custom dropdown functionality
+    initializeCustomDropdown(productSearchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput);
     
-    document.getElementById('sub-total').textContent = subTotal.toFixed(2) + ' AED';
-    document.getElementById('tax-amount').textContent = taxAmount.toFixed(2) + ' AED';
-    document.getElementById('total-amount').textContent = totalAmount.toFixed(2) + ' AED';
-}
-
-// Format function for product results in dropdown
-function formatProductResult(product) {
-    if (product.loading) {
-        return product.text;
-    }
-    
-    var $container = $(
-        "<div class='select2-result-product clearfix'>" +
-            "<div class='select2-result-product__meta'>" +
-                "<div class='select2-result-product__title'></div>" +
-                "<div class='select2-result-product__description'></div>" +
-            "</div>" +
-        "</div>"
-    );
-    
-    var element = product.element;
-    if (element) {
-        $container.find(".select2-result-product__title").text(product.text);
-        var price = $(element).data('price');
-        if (price) {
-            $container.find(".select2-result-product__description").text('Price: ' + parseFloat(price).toFixed(2) + ' AED');
-        }
-    } else {
-        $container.find(".select2-result-product__title").text(product.text);
-    }
-    
-    return $container;
-}
-
-// Format function for selected product
-function formatProductSelection(product) {
-    return product.text || product.element.textContent;
-}
-
-// Initialize calculations on page load
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Select2 for customer dropdown
-    $('#customer_id').select2({
-        placeholder: 'Search and select a customer...',
-        allowClear: true,
-        width: '100%',
-        minimumInputLength: 0,
-        escapeMarkup: function (markup) {
-            return markup;
-        }
-    });
-    
-    // Initialize Select2 for product dropdowns with enhanced search
-    $('.product-select').select2({
-        placeholder: 'Search products by name, brand, or category...',
-        allowClear: true,
-        width: '100%',
-        minimumInputLength: 0,
-        templateResult: formatProductResult,
-        templateSelection: formatProductSelection,
-        escapeMarkup: function (markup) {
-            return markup;
-        }
-    });
-    
-    // Format function for product results in dropdown
-    function formatProductResult(product) {
-        if (product.loading) {
-            return product.text;
-        }
-        
-        var $container = $(
-            "<div class='select2-result-product clearfix'>" +
-                "<div class='select2-result-product__meta'>" +
-                    "<div class='select2-result-product__title'></div>" +
-                    "<div class='select2-result-product__description'></div>" +
-                "</div>" +
-            "</div>"
-        );
-        
-        var element = product.element;
-        if (element) {
-            $container.find(".select2-result-product__title").text(product.text);
-            var price = $(element).data('price');
-            if (price) {
-                $container.find(".select2-result-product__description").text('Price: ' + parseFloat(price).toFixed(2) + ' AED');
-            }
-        } else {
-            $container.find(".select2-result-product__title").text(product.text);
-        }
-        
-        return $container;
-    }
-    
-    // Format function for selected product
-    function formatProductSelection(product) {
-        return product.text || product.element.textContent;
-    }
-    
-    addCalculationListeners();
     calculateTotals();
+}
+
+function removeItem(button) {
+    button.closest('tr').remove();
+    calculateTotals();
+}
+
+function calculateRowAmount(event) {
+    const row = event.target.closest('tr');
+    const quantity = parseFloat(row.querySelector('.quantity-input').value) || 0;
+    const rate = parseFloat(row.querySelector('.rate-input').value) || 0;
+    const discount = parseFloat(row.querySelector('.discount-input').value) || 0;
     
-    // Add event listeners for existing product selects
-    document.querySelectorAll('.product-select').forEach(select => {
-        select.addEventListener('change', function() {
-            handleProductSelect(this);
+    const subtotal = quantity * rate;
+    const discountAmount = (subtotal * discount) / 100;
+    const amount = subtotal - discountAmount;
+    
+    row.querySelector('.amount-display').textContent = amount.toFixed(2);
+    calculateTotals();
+}
+
+function calculateTotals() {
+    const amounts = document.querySelectorAll('.amount-display');
+    let total = 0;
+    
+    amounts.forEach(amount => {
+        total += parseFloat(amount.textContent) || 0;
+    });
+    
+    document.getElementById('subTotal').textContent = total.toFixed(2);
+    document.getElementById('totalAmount').textContent = total.toFixed(2);
+}
+
+function validateForm() {
+    // Validate that we have at least one item
+    const itemRows = document.querySelectorAll('#itemsTable tr');
+    if (itemRows.length === 0) {
+        alert('Please add at least one item before saving the invoice.');
+        return false;
+    }
+    
+    // Check if required fields are filled
+    const customerSelect = document.getElementById('customer_id');
+    if (!customerSelect.value) {
+        alert('Please select a customer before saving the invoice.');
+        customerSelect.focus();
+        return false;
+    }
+    
+    // Validate that all item rows have required data
+    let hasEmptyItems = false;
+    itemRows.forEach(row => {
+        const productIdInput = row.querySelector('input[name*="[product_id]"]');
+        const quantity = row.querySelector('input[name*="[quantity]"]');
+        const rate = row.querySelector('input[name*="[unit_price]"]');
+        
+        if (!productIdInput || !productIdInput.value) {
+            hasEmptyItems = true;
+        }
+        if (!quantity || parseFloat(quantity.value) <= 0) {
+            hasEmptyItems = true;
+        }
+        if (!rate || parseFloat(rate.value) < 0) {
+            hasEmptyItems = true;
+        }
+    });
+    
+    if (hasEmptyItems) {
+        alert('Please select products and fill in all quantities and rates.');
+        return false;
+    }
+    
+    return true;
+}
+
+// Initialize custom dropdown functionality
+function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput) {
+    const allDropdownItems = dropdownItems.querySelectorAll('.dropdown-item');
+    let selectedIndex = -1;
+    
+    // Show dropdown when input is focused
+    searchInput.addEventListener('focus', function() {
+        dropdownList.classList.remove('hidden');
+        filterDropdownItems('');
+    });
+    
+    // Filter items as user types
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        filterDropdownItems(searchTerm);
+        selectedIndex = -1;
+        dropdownList.classList.remove('hidden');
+    });
+    
+    // Handle keyboard navigation
+    searchInput.addEventListener('keydown', function(e) {
+        const visibleItems = dropdownItems.querySelectorAll('.dropdown-item:not(.hidden)');
+        
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            selectedIndex = Math.min(selectedIndex + 1, visibleItems.length - 1);
+            updateSelection(visibleItems);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            selectedIndex = Math.max(selectedIndex - 1, -1);
+            updateSelection(visibleItems);
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (selectedIndex >= 0 && visibleItems[selectedIndex]) {
+                selectProduct(visibleItems[selectedIndex]);
+            }
+        } else if (e.key === 'Escape') {
+            dropdownList.classList.add('hidden');
+            selectedIndex = -1;
+        }
+    });
+    
+    // Handle item clicks
+    allDropdownItems.forEach(item => {
+        item.addEventListener('click', function() {
+            selectProduct(this);
         });
     });
+    
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !dropdownList.contains(e.target)) {
+            dropdownList.classList.add('hidden');
+            selectedIndex = -1;
+        }
+    });
+    
+    function filterDropdownItems(searchTerm) {
+        let visibleCount = 0;
+        
+        allDropdownItems.forEach(item => {
+            const searchText = item.dataset.searchText || '';
+            
+            if (searchTerm === '' || searchText.includes(searchTerm)) {
+                item.classList.remove('hidden');
+                visibleCount++;
+            } else {
+                item.classList.add('hidden');
+            }
+        });
+        
+        // Show/hide no results message
+        if (visibleCount === 0) {
+            dropdownNoResults.classList.remove('hidden');
+        } else {
+            dropdownNoResults.classList.add('hidden');
+        }
+    }
+    
+    function updateSelection(visibleItems) {
+        // Remove previous selection
+        visibleItems.forEach(item => item.classList.remove('bg-indigo-50'));
+        
+        // Add selection to current item
+        if (selectedIndex >= 0 && visibleItems[selectedIndex]) {
+            visibleItems[selectedIndex].classList.add('bg-indigo-50');
+        }
+    }
+    
+    function selectProduct(item) {
+        const productId = item.dataset.id;
+        const productName = item.dataset.name;
+        const productPrice = item.dataset.price;
+        
+        // Set values
+        searchInput.value = productName;
+        productIdInput.value = productId;
+        itemDetailsHidden.value = productName;
+        rateInput.value = productPrice || 0;
+        
+        // Hide dropdown
+        dropdownList.classList.add('hidden');
+        selectedIndex = -1;
+        
+        // Trigger calculation
+        calculateRowAmount({ target: rateInput });
+    }
+    
+    // Clear selection function
+    searchInput.addEventListener('blur', function() {
+        // Small delay to allow click events to process
+        setTimeout(() => {
+            if (!productIdInput.value && searchInput.value) {
+                // If no product was selected but there's text, clear it
+                searchInput.value = '';
+                itemDetailsHidden.value = '';
+                rateInput.value = 0;
+                calculateRowAmount({ target: rateInput });
+            }
+        }, 200);
+    });
+}
+
+// Initialize with one item
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('addItem').addEventListener('click', addItem);
+    
+    // Initialize existing items if any
+    const existingItems = document.querySelectorAll('.item-row');
+    existingItems.forEach(row => {
+        const quantityInput = row.querySelector('.quantity-input');
+        const rateInput = row.querySelector('.rate-input');
+        const discountInput = row.querySelector('.discount-input');
+        const productSearchInput = row.querySelector('.product-search-input');
+        const productIdInput = row.querySelector('.product-id-input');
+        const itemDetailsHidden = row.querySelector('.item-details-hidden');
+        const dropdownList = row.querySelector('.product-dropdown-list');
+        const dropdownItems = row.querySelector('.dropdown-items');
+        const dropdownNoResults = row.querySelector('.dropdown-no-results');
+        
+        [quantityInput, rateInput, discountInput].forEach(input => {
+            input.addEventListener('input', calculateRowAmount);
+        });
+        
+        // Initialize custom dropdown functionality
+        if (productSearchInput) {
+            initializeCustomDropdown(productSearchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput);
+        }
+    });
+    
+    // Add initial default item if none exist
+    if (existingItems.length === 0) {
+        addItem();
+    }
+    
+    calculateTotals();
     
     // Trigger payment terms check
     document.getElementById('payment_terms').dispatchEvent(new Event('change'));

@@ -39,11 +39,11 @@
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div>
                             <dt class="text-sm font-medium text-gray-500">Customer Name</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ $order->user ? $order->user->name : 'N/A' }}</dd>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $order->getCustomerName() }}</dd>
                         </div>
                         <div>
                             <dt class="text-sm font-medium text-gray-500">Email Address</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ $order->user ? $order->user->email : 'N/A' }}</dd>
+                            <dd class="mt-1 text-sm text-gray-900">{{ $order->getCustomerEmail() }}</dd>
                         </div>
                         <div>
                             <dt class="text-sm font-medium text-gray-500">Order Date</dt>
@@ -164,16 +164,6 @@
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-500">Items ({{ $order->orderItems->count() }})</span>
                             <span class="text-gray-900">AED {{ number_format($subtotal, 2) }}</span>
-                        </div>
-                        
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-500">Shipping</span>
-                            <span class="text-gray-900">AED 0.00</span>
-                        </div>
-                        
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-500">Tax</span>
-                            <span class="text-gray-900">AED 0.00</span>
                         </div>
                         
                         <div class="border-t border-gray-200 pt-3">

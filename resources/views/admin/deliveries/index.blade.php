@@ -70,9 +70,15 @@
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $delivery->id }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <a href="{{ route('admin.orders.show', $delivery->order) }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                                            #{{ $delivery->order_id }}
-                                        </a>
+                                        @if($delivery->order)
+                                            <a href="{{ route('admin.orders.show', $delivery->order) }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                                                #{{ $delivery->order_id }}
+                                            </a>
+                                        @else
+                                            <span class="text-sm text-red-600">
+                                                #{{ $delivery->order_id }} (Order not found)
+                                            </span>
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @php

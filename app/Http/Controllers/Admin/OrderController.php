@@ -21,7 +21,7 @@ class OrderController extends Controller
     
     public function index()
     {
-        $orders = Order::with(['user', 'orderItems.product'])
+        $orders = Order::with(['user', 'customer', 'orderItems.product'])
             ->latest()
             ->paginate(10);
             
@@ -30,7 +30,7 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
-        $order->load(['user', 'orderItems.product']);
+        $order->load(['user', 'customer', 'orderItems.product']);
         return view('admin.orders.show', compact('order'));
     }
 
@@ -65,6 +65,7 @@ class OrderController extends Controller
 
         $order = \App\Models\Order::create([
             'user_id' => $userId,
+            'customer_id' => $customer->id,
             'status' => 'processing',
             'total_amount' => 0, // Will be calculated
             'order_number' => 'ORD-' . strtoupper(uniqid()),
@@ -83,9 +84,9 @@ class OrderController extends Controller
                 $order->orderItems()->create([
                     'product_id' => $product->id,
                     'quantity' => $quantity,
-                    'price' => $product->price,
+                    'price' => $product->price_aed,
                 ]);
-                $total += $product->price * $quantity;
+                $total += $product->price_aed * $quantity;
             }
         }
 

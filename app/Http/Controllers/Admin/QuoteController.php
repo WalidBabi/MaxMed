@@ -314,6 +314,8 @@ class QuoteController extends Controller
 
             Mail::to($request->customer_email)->send(new QuoteEmail($quote, $customer, $ccEmails));
             
+            $previousStatus = $quote->status;
+            
             // Update status to sent if email was sent successfully
             if ($quote->status === 'draft') {
                 $quote->update(['status' => 'sent']);
@@ -323,7 +325,9 @@ class QuoteController extends Controller
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Quote email sent successfully!'
+                    'message' => 'Quote email sent successfully!',
+                    'previous_status' => $previousStatus,
+                    'new_status' => $quote->fresh()->status
                 ]);
             }
             
@@ -464,7 +468,9 @@ class QuoteController extends Controller
 
             // Copy quote items to invoice items
             foreach ($quote->items as $quoteItem) {
-                \App\Models\InvoiceItem::create([
+                Log::info("Converting quote item {$quoteItem->id}: product_id={$quoteItem->product_id}, item_details={$quoteItem->item_details}");
+                
+                $invoiceItemData = [
                     'invoice_id' => $invoice->id,
                     'product_id' => $quoteItem->product_id,
                     'item_description' => $quoteItem->item_details,
@@ -473,7 +479,17 @@ class QuoteController extends Controller
                     'discount_percentage' => $quoteItem->discount,
                     'line_total' => $quoteItem->amount,
                     'sort_order' => $quoteItem->sort_order,
-                ]);
+                ];
+                
+                Log::info("Creating invoice item with data:", $invoiceItemData);
+                
+                $invoiceItem = \App\Models\InvoiceItem::create($invoiceItemData);
+                
+                Log::info("Created invoice item {$invoiceItem->id}: product_id={$invoiceItem->product_id}");
+                
+                // Refresh from database and check again
+                $invoiceItem->refresh();
+                Log::info("After refresh - invoice item {$invoiceItem->id}: product_id={$invoiceItem->product_id}");
             }
 
             // Update quote status
