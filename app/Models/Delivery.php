@@ -11,6 +11,7 @@ class Delivery extends Model
 {
     protected $fillable = [
         'order_id',
+        'delivery_number',
         'tracking_number',
         'status',
         'carrier',
@@ -39,6 +40,13 @@ class Delivery extends Model
     {
         parent::boot();
         
+        // Generate delivery number when creating a new delivery
+        static::creating(function ($delivery) {
+            if (empty($delivery->delivery_number)) {
+                $delivery->delivery_number = static::generateDeliveryNumber();
+            }
+        });
+        
         // Auto-trigger workflow automation when delivery is created or updated
         static::created(function ($delivery) {
             // Auto-convert proforma invoice when delivery is created in certain statuses
@@ -64,6 +72,17 @@ class Delivery extends Model
                 }
             }
         });
+    }
+
+    /**
+     * Generate a unique delivery number in format DL-000001
+     */
+    public static function generateDeliveryNumber(): string
+    {
+        $lastDelivery = static::orderBy('id', 'desc')->first();
+        $nextNumber = $lastDelivery ? $lastDelivery->id + 1 : 1;
+        
+        return 'DL-' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
     }
 
     /**
