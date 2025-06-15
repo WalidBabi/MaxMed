@@ -35,7 +35,7 @@
         @method('PUT')
         
         <!-- Basic Information -->
-        <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+        <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-6">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-lg font-semibold text-gray-900 flex items-center">
                     <svg class="h-5 w-5 text-indigo-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -107,7 +107,7 @@
         </div>
 
         <!-- Company Information -->
-        <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+        <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-6">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-lg font-semibold text-gray-900 flex items-center">
                     <svg class="h-5 w-5 text-purple-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -157,7 +157,7 @@
         </div>
 
         <!-- Address Information -->
-        <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+        <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-6">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-lg font-semibold text-gray-900 flex items-center">
                     <svg class="h-5 w-5 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -198,7 +198,7 @@
         </div>
 
         <!-- Notes -->
-        <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+        <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-6">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-lg font-semibold text-gray-900 flex items-center">
                     <svg class="h-5 w-5 text-yellow-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
