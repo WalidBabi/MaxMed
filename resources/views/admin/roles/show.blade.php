@@ -1,86 +1,130 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Role Details: ' . $role->display_name)
+
 @section('content')
-<div class="main-content">
-    <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="h4 mb-1">Role Details: {{ $role->display_name }}</h2>
-            <p class="text-muted mb-0">View role permissions and assigned users</p>
-        </div>
-        <div class="d-flex gap-2">
-            <a href="{{ route('admin.roles.edit', $role) }}" class="btn btn-primary">
-                <i class="fas fa-edit me-2"></i>Edit Role
-            </a>
-            <a href="{{ route('admin.roles.index') }}" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left me-2"></i>Back to Roles
-            </a>
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Role Details: {{ $role->display_name }}</h1>
+                <p class="text-gray-600 mt-2">View role permissions and assigned users</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <a href="{{ route('admin.roles.edit', $role) }}" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                    <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                    </svg>
+                    Edit Role
+                </a>
+                <a href="{{ route('admin.roles.index') }}" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                    <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                    </svg>
+                    Back to Roles
+                </a>
+            </div>
         </div>
     </div>
 
-    <div class="row">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Role Information -->
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="icon-shape icon-lg bg-soft-primary text-primary rounded-3 me-3">
-                            <i class="fas fa-user-tag fa-2x"></i>
+        <div class="space-y-8">
+            <!-- Basic Info Card -->
+            <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                        <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        Role Information
+                    </h3>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center mb-6">
+                        <div class="flex-shrink-0 h-16 w-16 bg-indigo-100 rounded-full flex items-center justify-center">
+                            <svg class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
                         </div>
-                        <div>
-                            <h5 class="mb-0">{{ $role->display_name }}</h5>
-                            <p class="text-muted small mb-0">{{ $role->name }}</p>
+                        <div class="ml-4">
+                            <h4 class="text-xl font-semibold text-gray-900">{{ $role->display_name }}</h4>
+                            <p class="text-gray-500">{{ $role->name }}</p>
                         </div>
                     </div>
                     
-                    <div class="row text-center mb-3">
-                        <div class="col-6">
-                            <div class="border-end">
-                                <h6 class="mb-0">{{ $role->users->count() }}</h6>
-                                <small class="text-muted">Users</small>
-                            </div>
+                    <!-- Stats -->
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-blue-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-blue-600">{{ $role->users->count() }}</div>
+                            <div class="text-sm text-blue-800">{{ Str::plural('User', $role->users->count()) }}</div>
                         </div>
-                        <div class="col-6">
-                            <h6 class="mb-0">{{ count($role->permissions ?? []) }}</h6>
-                            <small class="text-muted">Permissions</small>
+                        <div class="bg-green-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-green-600">{{ count($role->permissions ?? []) }}</div>
+                            <div class="text-sm text-green-800">{{ Str::plural('Permission', count($role->permissions ?? [])) }}</div>
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <strong>Status:</strong>
-                        @if($role->is_active)
-                            <span class="badge bg-soft-success text-success ms-2">Active</span>
-                        @else
-                            <span class="badge bg-soft-danger text-danger ms-2">Inactive</span>
-                        @endif
+                    <!-- Status -->
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-gray-700">Status:</span>
+                            @if($role->is_active)
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-green-400" fill="currentColor" viewBox="0 0 8 8">
+                                        <circle cx="4" cy="4" r="3" />
+                                    </svg>
+                                    Active
+                                </span>
+                            @else
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                    <svg class="-ml-0.5 mr-1.5 h-2 w-2 text-red-400" fill="currentColor" viewBox="0 0 8 8">
+                                        <circle cx="4" cy="4" r="3" />
+                                    </svg>
+                                    Inactive
+                                </span>
+                            @endif
+                        </div>
                     </div>
 
+                    <!-- Description -->
                     @if($role->description)
-                        <div class="mb-3">
-                            <strong>Description:</strong>
-                            <p class="text-muted small mb-0 mt-2">{{ $role->description }}</p>
+                        <div class="mb-6">
+                            <h5 class="text-sm font-medium text-gray-700 mb-2">Description:</h5>
+                            <p class="text-sm text-gray-600">{{ $role->description }}</p>
                         </div>
                     @endif
 
-                    <div class="small text-muted">
-                        <p><strong>Created:</strong> {{ $role->created_at->format('M d, Y \a\t H:i') }}</p>
-                        <p class="mb-0"><strong>Last Updated:</strong> {{ $role->updated_at->format('M d, Y \a\t H:i') }}</p>
+                    <!-- Timestamps -->
+                    <div class="border-t border-gray-200 pt-4 space-y-2 text-sm text-gray-600">
+                        <div class="flex justify-between">
+                            <span class="font-medium">Created:</span>
+                            <span>{{ $role->created_at->format('M d, Y \a\t H:i') }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="font-medium">Last Updated:</span>
+                            <span>{{ $role->updated_at->format('M d, Y \a\t H:i') }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-8">
             <!-- Permissions -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-light">
-                    <h6 class="mb-0">
-                        <i class="fas fa-shield-alt me-2"></i>Permissions
-                    </h6>
+            <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                        <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.623 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                        </svg>
+                        Permissions
+                    </h3>
                 </div>
-                <div class="card-body">
+                <div class="p-6">
                     @if(count($role->permissions ?? []) > 0)
-                        <div class="row">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             @php
                                 $permissionGroups = [
                                     'Dashboard' => ['dashboard.view'],
@@ -102,120 +146,126 @@
                                     $hasGroupPermissions = array_intersect($groupPermissions, $role->permissions ?? []);
                                 @endphp
                                 @if(!empty($hasGroupPermissions))
-                                    <div class="col-md-6 col-lg-4 mb-3">
-                                        <div class="card border">
-                                            <div class="card-header bg-light py-2">
-                                                <h6 class="mb-0">{{ $group }}</h6>
-                                            </div>
-                                            <div class="card-body py-2">
-                                                @foreach($groupPermissions as $permission)
-                                                    @if(in_array($permission, $role->permissions ?? []))
-                                                        <div class="d-flex align-items-center mb-1">
-                                                            <i class="fas fa-check text-success me-2"></i>
-                                                            <span class="small">{{ $availablePermissions[$permission] ?? $permission }}</span>
-                                                        </div>
-                                                    @endif
-                                                @endforeach
-                                            </div>
+                                    <div class="border border-gray-200 rounded-lg">
+                                        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200 rounded-t-lg">
+                                            <h4 class="text-sm font-medium text-gray-900">{{ $group }}</h4>
+                                        </div>
+                                        <div class="p-4 space-y-2">
+                                            @foreach($groupPermissions as $permission)
+                                                @if(in_array($permission, $role->permissions ?? []))
+                                                    <div class="flex items-center">
+                                                        <svg class="h-4 w-4 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                        </svg>
+                                                        <span class="text-sm text-gray-700">{{ $availablePermissions[$permission] ?? $permission }}</span>
+                                                    </div>
+                                                @endif
+                                            @endforeach
                                         </div>
                                     </div>
                                 @endif
                             @endforeach
                         </div>
                     @else
-                        <div class="text-center py-4">
-                            <i class="fas fa-shield-alt fa-3x text-muted mb-3"></i>
-                            <h6>No Permissions Assigned</h6>
-                            <p class="text-muted">This role has no permissions assigned yet.</p>
+                        <div class="text-center py-12">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.623 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                            </svg>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">No Permissions Assigned</h3>
+                            <p class="mt-1 text-sm text-gray-500">This role has no permissions assigned yet.</p>
+                            <div class="mt-6">
+                                <a href="{{ route('admin.roles.edit', $role) }}" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                                    <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                    </svg>
+                                    Add Permissions
+                                </a>
+                            </div>
                         </div>
                     @endif
                 </div>
             </div>
 
             <!-- Assigned Users -->
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-light">
-                    <h6 class="mb-0">
-                        <i class="fas fa-users me-2"></i>Assigned Users ({{ $role->users->count() }})
-                    </h6>
+            <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                        <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                        </svg>
+                        Assigned Users ({{ $role->users->count() }})
+                    </h3>
                 </div>
-                <div class="card-body">
+                <div class="overflow-hidden">
                     @if($role->users->count() > 0)
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Status</th>
-                                        <th>Joined</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($role->users as $user)
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="icon-shape icon-sm bg-soft-primary text-primary rounded-circle me-2">
-                                                        <i class="fas fa-user"></i>
-                                                    </div>
-                                                    {{ $user->name }}
-                                                </div>
-                                            </td>
-                                            <td>{{ $user->email }}</td>
-                                            <td>
-                                                @if($user->is_admin)
-                                                    <span class="badge bg-soft-warning text-warning">Super Admin</span>
+                        <div class="divide-y divide-gray-200">
+                            @foreach($role->users as $user)
+                                <div class="px-6 py-4 hover:bg-gray-50">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                @if($user->avatar)
+                                                    <img class="h-10 w-10 rounded-full" src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}">
                                                 @else
-                                                    <span class="badge bg-soft-info text-info">User</span>
+                                                    <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                                                        <span class="text-indigo-600 font-medium">{{ substr($user->name, 0, 1) }}</span>
+                                                    </div>
                                                 @endif
-                                            </td>
-                                            <td>
-                                                <small class="text-muted">{{ $user->created_at->format('M d, Y') }}</small>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
+                                                <div class="text-sm text-gray-500">{{ $user->email }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            @if($user->is_active)
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                    Active
+                                                </span>
+                                            @else
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                    Inactive
+                                                </span>
+                                            @endif
+                                            <a href="{{ route('admin.users.show', $user) }}" class="text-indigo-600 hover:text-indigo-900 text-sm font-medium">
+                                                View
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     @else
-                        <div class="text-center py-4">
-                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                            <h6>No Users Assigned</h6>
-                            <p class="text-muted">No users have been assigned to this role yet.</p>
+                        <div class="text-center py-12">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                            </svg>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">No Users Assigned</h3>
+                            <p class="mt-1 text-sm text-gray-500">No users have been assigned to this role yet.</p>
+                            <div class="mt-6">
+                                <a href="{{ route('admin.users.index') }}" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                                    <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                                    </svg>
+                                    Manage Users
+                                </a>
+                            </div>
                         </div>
                     @endif
                 </div>
             </div>
         </div>
     </div>
-</div>
+@endsection
 
+@push('styles')
 <style>
-    .icon-shape {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .icon-shape.icon-sm {
-        width: 2rem;
-        height: 2rem;
-    }
-    
-    .icon-shape.icon-lg {
-        width: 4rem;
-        height: 4rem;
-    }
-    
-    .bg-soft-primary { background-color: rgba(79, 70, 229, 0.1) !important; }
-    .bg-soft-success { background-color: rgba(16, 185, 129, 0.1) !important; }
-    .bg-soft-info { background-color: rgba(59, 130, 246, 0.1) !important; }
-    .bg-soft-warning { background-color: rgba(245, 158, 11, 0.1) !important; }
-    .bg-soft-danger { background-color: rgba(239, 68, 68, 0.1) !important; }
-    
-    .card-header {
-        border-bottom: 1px solid rgba(0,0,0,.125);
-    }
+.card-hover {
+    transition: all 0.2s ease-in-out;
+}
+.card-hover:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
 </style>
-@endsection 
+@endpush 
