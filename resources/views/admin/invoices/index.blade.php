@@ -177,6 +177,7 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice #</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Terms</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
@@ -212,7 +213,17 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">{{ $invoice->customer_name }}</div>
-                                    <div class="text-sm text-gray-500">{{ $invoice->customer_email ?? 'No email' }}</div>
+                                    
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">
+                                        {{ $invoice->payment_terms ?? 'Net 30' }}
+                                    </div>
+                                    @if($invoice->due_date)
+                                        <div class="text-xs text-gray-500">
+                                            Due: {{ $invoice->due_date->format('M d, Y') }}
+                                        </div>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($invoice->status === 'draft')
@@ -812,8 +823,8 @@ document.addEventListener('DOMContentLoaded', function() {
         invoiceRows.forEach(row => {
             const sendEmailBtn = row.querySelector('.send-email-btn');
             if (sendEmailBtn && sendEmailBtn.getAttribute('data-invoice-id') === invoiceId) {
-                // Find the status cell (5th column)
-                const statusCell = row.querySelector('td:nth-child(5)');
+                // Find the status cell (6th column)
+                const statusCell = row.querySelector('td:nth-child(6)');
                 if (statusCell) {
                     let statusBadge = '';
                     switch (newStatus) {
