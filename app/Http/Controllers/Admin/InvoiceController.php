@@ -134,7 +134,8 @@ class InvoiceController extends Controller
                 // Log for debugging
                 Log::info("Converting quote item {$quoteItem->id}: product_id={$quoteItem->product_id}, item_details={$quoteItem->item_details}");
                 
-                $invoiceItem = InvoiceItem::create([
+                // Create invoice item data array
+                $invoiceItemData = [
                     'invoice_id' => $invoice->id,
                     'product_id' => $quoteItem->product_id, // Ensure product_id is transferred
                     'item_description' => $quoteItem->item_details,
@@ -144,10 +145,19 @@ class InvoiceController extends Controller
                     'discount_amount' => $discountAmount,
                     'line_total' => $lineTotal,
                     'sort_order' => $index + 1
-                ]);
+                ];
+                
+                // Debug log the data being passed to create
+                Log::info("Creating invoice item with data:", $invoiceItemData);
+                
+                $invoiceItem = InvoiceItem::create($invoiceItemData);
                 
                 // Log the created invoice item to verify product_id transfer
                 Log::info("Created invoice item {$invoiceItem->id}: product_id={$invoiceItem->product_id}");
+                
+                // Refresh from database and check again
+                $invoiceItem->refresh();
+                Log::info("After refresh - invoice item {$invoiceItem->id}: product_id={$invoiceItem->product_id}");
             }
 
             // Update quote status
@@ -250,7 +260,7 @@ class InvoiceController extends Controller
      */
     public function edit(Invoice $invoice)
     {
-        $invoice->load('items');
+        $invoice->load(['items', 'items.product']);
         
         $customers = Customer::select('id', 'name', 'email', 'company_name')
             ->where('is_active', true)
@@ -477,6 +487,8 @@ class InvoiceController extends Controller
                 ->cc($ccEmails)
                 ->send(new InvoiceEmail($invoice, $emailData));
 
+            $previousStatus = $invoice->status;
+
             // Update email history
             $emailHistory = $invoice->email_history ?? [];
             $emailHistory[] = [
@@ -502,7 +514,9 @@ class InvoiceController extends Controller
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Invoice email sent successfully!'
+                    'message' => 'Invoice email sent successfully!',
+                    'previous_status' => $previousStatus,
+                    'new_status' => $invoice->fresh()->status
                 ]);
             }
 
@@ -592,7 +606,7 @@ class InvoiceController extends Controller
                     'order_id' => $order->id,
                     'product_id' => $invoiceItem->product_id,
                     'quantity' => $invoiceItem->quantity,
-                    'price' => $invoiceItem->unit_price,
+                    'price' => $invoiceItem->product ? $invoiceItem->product->price_aed : $invoiceItem->unit_price,
                     'variation' => $invoiceItem->specifications
                 ]);
             }

@@ -44,7 +44,9 @@
                             @foreach($customers as $customer)
                                 <option value="{{ $customer->id }}" {{ old('customer_id') == $customer->id ? 'selected' : '' }}>
                                     {{ $customer->name }} 
-                                    @if($customer->user && $customer->user->email)
+                                    @if($customer->email)
+                                        ({{ $customer->email }})
+                                    @elseif($customer->user && $customer->user->email)
                                         ({{ $customer->user->email }})
                                     @endif
                                 </option>
@@ -96,7 +98,7 @@
                                                 @endif
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm font-medium text-gray-900">AED {{ number_format($product->price, 2) }}</div>
+                                                <div class="text-sm font-medium text-gray-900">AED {{ number_format($product->price_aed, 2) }}</div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="flex items-center">
@@ -114,7 +116,7 @@
                                                            value="0"
                                                            min="0"
                                                            data-product-id="{{ $product->id }}"
-                                                           data-price="{{ $product->price }}">
+                                                           data-price="{{ $product->price_aed}}">
                                                     <button type="button" 
                                                             class="increase-btn inline-flex items-center p-1 border border-gray-300 rounded-r-md bg-gray-50 text-gray-600 hover:bg-gray-100" 
                                                             data-product-id="{{ $product->id }}">
@@ -308,4 +310,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
-@endsection

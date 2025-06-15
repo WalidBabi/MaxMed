@@ -58,8 +58,8 @@
                                                 </div>
                                             </div>
                                             <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">{{ $order->user->name }}</div>
-                                                <div class="text-sm text-gray-500">{{ $order->user->email ?? 'No email' }}</div>
+                                                <div class="text-sm font-medium text-gray-900">{{ $order->getCustomerName() }}</div>
+                                                <div class="text-sm text-gray-500">{{ $order->getCustomerEmail() }}</div>
                                             </div>
                                         </div>
                                     </td>

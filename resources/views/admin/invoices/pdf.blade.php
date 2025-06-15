@@ -653,17 +653,23 @@
         @endif
 
         <!-- PAYMENT INFORMATION -->
-        @if($invoice->type === 'proforma' && $invoice->requires_advance_payment)
+        @if($invoice->type === 'proforma' && ($invoice->requires_advance_payment || $invoice->payment_terms === 'on_delivery'))
         <div class="payment-section">
             <div class="payment-title">Payment Information</div>
             @if($invoice->payment_terms === 'advance_50')
                 <div class="payment-text">This is a proforma invoice requiring <strong>50% advance payment ({{ number_format($invoice->getAdvanceAmount(), 2) }} {{ $invoice->currency }})</strong> before we proceed with your order.</div>
             @elseif($invoice->payment_terms === 'advance_100')
                 <div class="payment-text">This is a proforma invoice requiring <strong>full payment ({{ number_format($invoice->total_amount, 2) }} {{ $invoice->currency }})</strong> before we proceed with your order.</div>
+            @elseif($invoice->payment_terms === 'on_delivery')
+                <div class="payment-text">This is a proforma invoice for <strong>payment on delivery</strong>. No advance payment is required.</div>
             @elseif($invoice->payment_terms === 'custom' && $invoice->advance_percentage)
                 <div class="payment-text">This is a proforma invoice requiring <strong>{{ $invoice->advance_percentage }}% advance payment ({{ number_format($invoice->getAdvanceAmount(), 2) }} {{ $invoice->currency }})</strong> before we proceed with your order.</div>
             @endif
-            <div class="payment-text">Once payment is received, we will confirm your order and provide you with a delivery timeline.</div>
+            @if($invoice->payment_terms === 'on_delivery')
+                <div class="payment-text">We will confirm your order and arrange delivery. Payment will be collected upon delivery.</div>
+            @else
+                <div class="payment-text">Once payment is received, we will confirm your order and provide you with a delivery timeline.</div>
+            @endif
         </div>
         @endif
 

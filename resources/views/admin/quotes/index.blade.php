@@ -471,6 +471,8 @@
 
 @push('scripts')
 <script>
+let currentQuoteId = null; // Store current quote ID for status updates
+
 document.addEventListener('DOMContentLoaded', function() {
     // Delete quote functionality
     document.querySelectorAll('.delete-quote-btn').forEach(button => {
@@ -490,6 +492,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const customerName = this.getAttribute('data-customer-name');
             const quoteNumber = this.getAttribute('data-quote-number');
             const customerEmail = this.getAttribute('data-customer-email');
+            
+            // Store quote ID globally for status updates
+            currentQuoteId = quoteId;
             
             console.log('Quote data:', { quoteId, customerName, quoteNumber, customerEmail });
             
@@ -642,8 +647,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Close modal
                 window.dispatchEvent(new CustomEvent('close-modal', { detail: 'send-quote-email' }));
                 
-                // Show success message
-                showNotification('Email sent successfully!', 'success');
+                // Show success message with status update info
+                let message = 'Email sent successfully!';
+                if (data.previous_status && data.new_status && data.previous_status !== data.new_status) {
+                    message += ` Status updated from ${data.previous_status} to ${data.new_status}.`;
+                }
+                showNotification(message, 'success');
+                
+                // Update quote status in the UI if it changed
+                if (data.new_status && data.previous_status !== data.new_status) {
+                    updateQuoteStatusInUI(currentQuoteId, data.new_status);
+                }
                 
                 // Reset form
                 form.reset();
@@ -672,6 +686,59 @@ document.addEventListener('DOMContentLoaded', function() {
             showNotification(errorMessage, 'error');
         });
     };
+
+    // Function to update quote status in the UI
+    function updateQuoteStatusInUI(quoteId, newStatus) {
+        console.log('Updating quote status in UI:', { quoteId, newStatus });
+        
+        // Find the quote row in the table
+        const quoteRows = document.querySelectorAll('tbody tr');
+        quoteRows.forEach(row => {
+            const sendEmailBtn = row.querySelector('.send-email-btn');
+            if (sendEmailBtn && sendEmailBtn.getAttribute('data-quote-id') === quoteId) {
+                // Find the status cell
+                const statusCell = row.querySelector('td:nth-child(4)'); // Status is the 4th column
+                if (statusCell) {
+                    let statusBadge = '';
+                    switch (newStatus) {
+                        case 'draft':
+                            statusBadge = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Draft</span>`;
+                            break;
+                        case 'sent':
+                            statusBadge = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Sent</span>`;
+                            break;
+                        case 'invoiced':
+                            statusBadge = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Invoiced</span>`;
+                            break;
+                        default:
+                            statusBadge = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}</span>`;
+                    }
+                    statusCell.innerHTML = statusBadge;
+                    
+                    // Add a subtle animation to highlight the change
+                    statusCell.classList.add('bg-green-50');
+                    setTimeout(() => {
+                        statusCell.classList.remove('bg-green-50');
+                    }, 2000);
+                }
+                
+                // Update statistics if needed (for draft->sent conversion)
+                if (newStatus === 'sent') {
+                    updateStatistics();
+                }
+            }
+        });
+    }
+
+    // Function to update statistics cards
+    function updateStatistics() {
+        // Get current pending count and decrease by 1, sent count increase by 1
+        const pendingCard = document.querySelector('.card-hover:nth-child(2) .text-3xl');
+        const currentPending = parseInt(pendingCard.textContent);
+        if (currentPending > 0) {
+            pendingCard.textContent = currentPending; // Sent status is still considered "pending" in the UI logic
+        }
+    }
 
     // Function to show notifications
     function showNotification(message, type = 'info') {
