@@ -291,14 +291,6 @@ class QuoteController extends Controller
             'cc_emails' => 'nullable|string'
         ]);
 
-        // Find customer by email
-        $customer = Customer::where('email', $request->customer_email)->first();
-        
-        if (!$customer) {
-            return redirect()->route('admin.quotes.index')
-                ->with('error', 'Customer not found with provided email address.');
-        }
-
         try {
             // Parse CC emails
             $ccEmails = [];
@@ -311,19 +303,43 @@ class QuoteController extends Controller
                 );
             }
 
-            Mail::to($customer->email)->send(new QuoteEmail($quote, $customer, $ccEmails));
+            // Find or create customer by email
+            $customer = Customer::where('email', $request->customer_email)->first();
+            if (!$customer) {
+                // Create a minimal customer record for sending email
+                $customer = new Customer();
+                $customer->email = $request->customer_email;
+                $customer->name = $quote->customer_name; // Use quote's customer name
+            }
+
+            Mail::to($request->customer_email)->send(new QuoteEmail($quote, $customer, $ccEmails));
             
             // Update status to sent if email was sent successfully
             if ($quote->status === 'draft') {
                 $quote->update(['status' => 'sent']);
             }
             
-            return redirect()->route('admin.quotes.index')
-                ->with('success', 'Quote email sent successfully to ' . $customer->email . '!');
+            // Return JSON response for AJAX requests
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Quote email sent successfully!'
+                ]);
+            }
+            
+            return redirect()->back()->with('success', 'Quote email sent successfully to ' . $request->customer_email . '!');
         } catch (\Exception $e) {
             Log::error('Failed to send quote email: ' . $e->getMessage());
-            return redirect()->route('admin.quotes.index')
-                ->with('error', 'Failed to send email: ' . $e->getMessage());
+            
+            // Return JSON response for AJAX requests
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to send email: ' . $e->getMessage()
+                ]);
+            }
+            
+            return redirect()->back()->with('error', 'Failed to send email: ' . $e->getMessage());
         }
     }
 
