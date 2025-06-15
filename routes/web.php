@@ -24,6 +24,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IndustryController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\CrmController;
+use App\Http\Controllers\CrmLeadController;
 
 // Cookie Consent Routes
 // Route::post('/cookie-consent', [CookieConsentController::class, 'store'])->name('cookie.consent');
@@ -78,6 +80,17 @@ Route::middleware('auth')->group(function () {
     // Quotation Routes that need authentication
     Route::prefix('quotation')->name('quotation.')->group(function () {
         Route::get('/request/{product}', [QuotationController::class, 'request'])->name('request');
+    });
+
+    // CRM Routes
+    Route::prefix('crm')->name('crm.')->group(function () {
+        Route::get('/', [CrmController::class, 'dashboard'])->name('dashboard');
+        Route::get('/reports', [CrmController::class, 'reports'])->name('reports');
+        
+        // Lead Management
+        Route::resource('leads', CrmLeadController::class);
+        Route::post('leads/{lead}/activity', [CrmLeadController::class, 'addActivity'])->name('leads.activity.add');
+        Route::post('leads/{lead}/convert', [CrmLeadController::class, 'convert'])->name('leads.convert');
     });
 
     // Admin Routes

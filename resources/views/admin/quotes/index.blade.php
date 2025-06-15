@@ -1,357 +1,384 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Quotes')
+
 @section('content')
-<div class="main-content">
-    <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="h4 mb-1">Quote Management</h2>
-            <p class="text-muted mb-0">Create and manage customer quotes</p>
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Quote Management</h1>
+                <p class="text-gray-600 mt-2">Create and manage customer quotes</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <a href="{{ route('admin.quotes.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    New Quote
+                </a>
+            </div>
         </div>
-        <a href="{{ route('admin.quotes.create') }}" class="btn btn-primary">
-            <i class="fas fa-plus me-2"></i>New Quote
-        </a>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Quotes</p>
+                    <p class="text-2xl font-semibold text-gray-900">{{ $quotes->total() }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Pending</p>
+                    <p class="text-2xl font-semibold text-gray-900">{{ $quotes->where('status', 'draft')->count() + $quotes->where('status', 'sent')->count() }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Converted</p>
+                    <p class="text-2xl font-semibold text-gray-900">{{ $quotes->where('status', 'invoiced')->count() }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Value</p>
+                    <p class="text-2xl font-semibold text-gray-900">{{ number_format($quotes->sum('total_amount'), 0) }} AED</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Quotes Table -->
-    <div class="card border-0 shadow-sm">
-        <div class="card-body">
-            @if($quotes->count() > 0)
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Date</th>
-                                <th>Quote Number</th>
-                                <th>Customer Name</th>
-                                <th>Status</th>
-                                <th>Amount (AED)</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($quotes as $quote)
-                                <tr>
-                                    <td class="text-nowrap">
-                                        {{ $quote->created_at->format('d M Y') }}
-                                    </td>
-                                    <td class="fw-medium">
-                                        {{ $quote->quote_number }}
-                                    </td>
-                                    <td>
-                                        {{ $quote->customer_name }}
-                                    </td>
-                                    <td>
-                                        @if($quote->status === 'draft')
-                                            <span class="badge bg-soft-secondary text-secondary">Draft</span>
-                                        @elseif($quote->status === 'sent')
-                                            <span class="badge bg-soft-info text-info">Sent</span>
-                                        @elseif($quote->status === 'invoiced')
-                                            <span class="badge bg-soft-success text-success">Invoiced</span>
-                                        @else
-                                            <span class="badge bg-soft-warning text-warning">{{ ucfirst($quote->status) }}</span>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <h3 class="text-lg font-semibold text-gray-900">All Quotes</h3>
+            <p class="text-sm text-gray-600 mt-1">Manage and track all customer quotes</p>
+        </div>
+
+        @if($quotes->count() > 0)
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quote Number</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach($quotes as $quote)
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ $quote->created_at->format('M d, Y') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">{{ $quote->quote_number }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">{{ $quote->customer_name }}</div>
+                                    <div class="text-sm text-gray-500">{{ $quote->customer_email ?? 'No email' }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($quote->status === 'draft')
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                            Draft
+                                        </span>
+                                    @elseif($quote->status === 'sent')
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            Sent
+                                        </span>
+                                    @elseif($quote->status === 'invoiced')
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            Invoiced
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                            {{ ucfirst($quote->status) }}
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    {{ number_format($quote->total_amount, 2) }} AED
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex items-center justify-end space-x-2">
+                                        <a href="{{ route('admin.quotes.show', $quote) }}" class="text-indigo-600 hover:text-indigo-900" title="View Quote">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                            </svg>
+                                        </a>
+                                        <a href="{{ route('admin.quotes.edit', $quote) }}" class="text-green-600 hover:text-green-900" title="Edit Quote">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                            </svg>
+                                        </a>
+                                        <a href="{{ route('admin.quotes.pdf', $quote) }}" class="text-red-600 hover:text-red-900" title="Download PDF">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            </svg>
+                                        </a>
+                                        @if($quote->status !== 'invoiced')
+                                            <a href="{{ route('admin.quotes.convert-to-proforma', $quote) }}" 
+                                               class="text-yellow-600 hover:text-yellow-900" 
+                                               title="Convert to Proforma Invoice"
+                                               onclick="return confirm('Are you sure you want to convert this quote to a proforma invoice?')">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                </svg>
+                                            </a>
                                         @endif
-                                    </td>
-                                    <td class="text-nowrap fw-medium">
-                                        {{ number_format($quote->total_amount, 2) }}
-                                    </td>
-                                    <td>
-                                        <div class="d-flex gap-2">
-                                            <a href="{{ route('admin.quotes.show', $quote) }}" 
-                                               class="btn btn-sm btn-outline-primary" 
-                                               data-bs-toggle="tooltip" 
-                                               title="View Quote">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ route('admin.quotes.edit', $quote) }}" 
-                                               class="btn btn-sm btn-outline-success" 
-                                               data-bs-toggle="tooltip" 
-                                               title="Edit Quote">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a href="{{ route('admin.quotes.pdf', $quote) }}" 
-                                               class="btn btn-sm btn-outline-danger" 
-                                               data-bs-toggle="tooltip" 
-                                               title="Download PDF">
-                                                <i class="fas fa-file-pdf"></i>
-                                            </a>
-                                            @if($quote->status !== 'invoiced')
-                                                <a href="{{ route('admin.quotes.convert-to-proforma', $quote) }}" 
-                                                   class="btn btn-sm btn-outline-warning" 
-                                                   data-bs-toggle="tooltip" 
-                                                   title="Convert to Proforma Invoice"
-                                                   onclick="return confirm('Are you sure you want to convert this quote to a proforma invoice?')">
-                                                    <i class="fas fa-file-invoice"></i>
-                                                </a>
-                                            @endif
-                                            <button class="btn btn-sm btn-outline-info send-email-btn" 
-                                                    data-bs-toggle="tooltip" 
-                                                    data-quote-id="{{ $quote->id }}"
-                                                    data-customer-name="{{ $quote->customer_name }}"
-                                                    data-quote-number="{{ $quote->quote_number }}"
-                                                    title="Send Email">
-                                                <i class="fas fa-envelope"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger delete-quote-btn" 
-                                                    data-quote-id="{{ $quote->id }}"
-                                                    data-bs-toggle="tooltip" 
-                                                    title="Delete Quote">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                <div class="text-center py-5">
-                    <div class="icon-shape icon-lg bg-soft-primary text-primary rounded-3 mx-auto mb-3">
-                        <i class="fas fa-file-invoice-dollar fa-2x"></i>
+                                        <button class="text-blue-600 hover:text-blue-900 send-email-btn" 
+                                                data-quote-id="{{ $quote->id }}"
+                                                data-customer-name="{{ $quote->customer_name }}"
+                                                data-quote-number="{{ $quote->quote_number }}"
+                                                title="Send Email">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                            </svg>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900 delete-quote-btn" 
+                                                data-quote-id="{{ $quote->id }}"
+                                                title="Delete Quote">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            @if($quotes->hasPages())
+                <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                    <div class="flex-1 flex justify-between sm:hidden">
+                        @if($quotes->onFirstPage())
+                            <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-500 bg-white cursor-default">
+                                Previous
+                            </span>
+                        @else
+                            <a href="{{ $quotes->previousPageUrl() }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                Previous
+                            </a>
+                        @endif
+
+                        @if($quotes->hasMorePages())
+                            <a href="{{ $quotes->nextPageUrl() }}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                Next
+                            </a>
+                        @else
+                            <span class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-500 bg-white cursor-default">
+                                Next
+                            </span>
+                        @endif
                     </div>
-                    <h5>No Quotes Found</h5>
-                    <p class="text-muted mb-4">Get started by creating your first quote</p>
-                    <a href="{{ route('admin.quotes.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Create Quote
-                    </a>
+                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-sm text-gray-700">
+                                Showing <span class="font-medium">{{ $quotes->firstItem() ?? 0 }}</span> to <span class="font-medium">{{ $quotes->lastItem() ?? 0 }}</span> of <span class="font-medium">{{ $quotes->total() }}</span> results
+                            </p>
+                        </div>
+                        <div>
+                            {{ $quotes->links() }}
+                        </div>
+                    </div>
                 </div>
             @endif
-        </div>
+        @else
+            <div class="text-center py-12">
+                <div class="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">No Quotes Found</h3>
+                <p class="text-gray-500 mb-6">Get started by creating your first quote</p>
+                <a href="{{ route('admin.quotes.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Create Quote
+                </a>
+            </div>
+        @endif
     </div>
-
-    @if($quotes->hasPages())
-        <div class="d-flex justify-content-between align-items-center mt-4">
-            <div class="pagination-info">
-                Showing {{ $quotes->firstItem() ?? 0 }} to {{ $quotes->lastItem() ?? 0 }} of {{ $quotes->total() }} results
-            </div>
-            <div class="pagination-wrapper">
-                {{ $quotes->links() }}
-            </div>
-        </div>
-    @endif
 </div>
 
 <!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Delete Quote</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div x-data="{ show: false }" x-on:open-modal.window="$event.detail == 'confirm-quote-deletion' ? show = true : null" x-on:close-modal.window="$event.detail == 'confirm-quote-deletion' ? show = false : null" x-show="show" class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50" style="display: none;">
+    <div x-show="show" class="fixed inset-0 transform transition-all" x-on:click="show = false" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+    </div>
+
+    <div x-show="show" class="mb-6 bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:max-w-lg sm:mx-auto" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+                <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                    <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                </div>
+                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Delete Quote</h3>
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-500">Are you sure you want to delete this quote? This action cannot be undone.</p>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                Are you sure you want to delete this quote? This action cannot be undone.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form id="deleteForm" method="POST" class="d-inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-            </div>
+        </div>
+        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+            <form id="deleteForm" method="POST" class="w-full sm:w-auto">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                    Delete
+                </button>
+            </form>
+            <button type="button" x-on:click="show = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                Cancel
+            </button>
         </div>
     </div>
 </div>
 
 <!-- Send Email Modal -->
-<div class="modal fade" id="sendEmailModal" tabindex="-1" aria-labelledby="sendEmailModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="sendEmailModalLabel">Send Quote Email</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div x-data="{ show: false }" x-on:open-modal.window="$event.detail == 'send-quote-email' ? show = true : null" x-on:close-modal.window="$event.detail == 'send-quote-email' ? show = false : null" x-show="show" class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50" style="display: none;">
+    <div x-show="show" class="fixed inset-0 transform transition-all" x-on:click="show = false" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+    </div>
+
+    <div x-show="show" class="mb-6 bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:max-w-lg sm:mx-auto" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+        <form id="sendEmailForm" method="POST" action="">
+            @csrf
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="sm:flex sm:items-start">
+                    <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                        <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Send Quote Email</h3>
+                        <div class="mt-4 space-y-4">
+                            <div>
+                                <label for="customer_email" class="block text-sm font-medium text-gray-700">Customer Email</label>
+                                <input type="email" id="customer_email" name="customer_email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" readonly>
+                            </div>
+                            
+                            <div>
+                                <label for="cc_emails" class="block text-sm font-medium text-gray-700">CC Email Addresses</label>
+                                <input type="text" id="cc_emails" name="cc_emails" value="sales@maxmedme.com" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <p class="mt-1 text-xs text-gray-500">Separate multiple email addresses with commas</p>
+                            </div>
+                            
+                            <div class="rounded-md bg-blue-50 p-4">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-blue-700">The quote PDF will be automatically attached to the email.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <form id="sendEmailForm" method="POST" action="">
-                @csrf
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="customer_email" class="form-label">Customer Email</label>
-                        <input type="email" id="customer_email" name="customer_email" 
-                               class="form-control" readonly>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="cc_emails" class="form-label">CC Email Addresses</label>
-                        <input type="text" id="cc_emails" name="cc_emails" 
-                               value="sales@maxmedme.com"
-                               class="form-control">
-                        <small class="form-text text-muted">Separate multiple email addresses with commas</small>
-                    </div>
-                    
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        The quote PDF will be automatically attached to the email.
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-paper-plane me-2"></i>Send Email
-                    </button>
-                </div>
-            </form>
-        </div>
+            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                    Send Email
+                </button>
+                <button type="button" x-on:click="show = false" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    Cancel
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
-<style>
-    .icon-shape {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .icon-shape.icon-lg {
-        width: 4rem;
-        height: 4rem;
-    }
-    
-    .bg-soft-primary { background-color: rgba(79, 70, 229, 0.1) !important; }
-    .bg-soft-success { background-color: rgba(16, 185, 129, 0.1) !important; }
-    .bg-soft-info { background-color: rgba(59, 130, 246, 0.1) !important; }
-    .bg-soft-warning { background-color: rgba(245, 158, 11, 0.1) !important; }
-    .bg-soft-secondary { background-color: rgba(108, 117, 125, 0.1) !important; }
-    
-    .table-hover tbody tr:hover {
-        background-color: rgba(0, 0, 0, 0.02);
-    }
-    
-    .pagination-wrapper .pagination {
-        gap: 0.25rem;
-    }
-    
-    .pagination-wrapper .page-link {
-        border: 1px solid #e5e7eb;
-        color: #6b7280;
-        padding: 0.5rem 0.75rem;
-        margin: 0;
-        border-radius: 0.375rem !important;
-        font-size: 0.875rem;
-        font-weight: 500;
-        transition: all 0.2s ease;
-        text-decoration: none;
-    }
-    
-    .pagination-wrapper .page-item:not(.active) .page-link:hover {
-        background-color: #f9fafb;
-        border-color: #d1d5db;
-        color: #374151;
-        transform: translateY(-1px);
-    }
-    
-    .pagination-wrapper .page-item.active .page-link {
-        background-color: #4f46e5;
-        border-color: #4f46e5;
-        color: white;
-        font-weight: 600;
-    }
-    
-    .pagination-wrapper .page-item.disabled .page-link {
-        color: #d1d5db;
-        background-color: #f9fafb;
-        border-color: #e5e7eb;
-        cursor: not-allowed;
-    }
-    
-    .pagination-info {
-        color: #6b7280;
-        font-size: 0.875rem;
-        font-weight: 500;
-    }
-</style>
-
+@push('scripts')
 <script>
-function deleteQuote(quoteId) {
-    document.getElementById('deleteForm').action = '/admin/quotes/' + quoteId;
-    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-    deleteModal.show();
-}
-
-// Event delegation for send email buttons and delete buttons
 document.addEventListener('DOMContentLoaded', function() {
-    document.addEventListener('click', function(e) {
-        if (e.target.closest('.send-email-btn')) {
-            const button = e.target.closest('.send-email-btn');
-            const quoteId = button.getAttribute('data-quote-id');
-            const customerName = button.getAttribute('data-customer-name');
-            const quoteNumber = button.getAttribute('data-quote-number');
+    // Delete quote functionality
+    document.querySelectorAll('.delete-quote-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const quoteId = this.getAttribute('data-quote-id');
+            const deleteForm = document.getElementById('deleteForm');
+            deleteForm.action = `/admin/quotes/${quoteId}`;
+            window.dispatchEvent(new CustomEvent('open-modal', { detail: 'confirm-quote-deletion' }));
+        });
+    });
+
+    // Send email functionality
+    document.querySelectorAll('.send-email-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const quoteId = this.getAttribute('data-quote-id');
+            const customerName = this.getAttribute('data-customer-name');
+            const quoteNumber = this.getAttribute('data-quote-number');
             
-            openEmailModal(quoteId, customerName, quoteNumber);
-        }
-        
-        if (e.target.closest('.delete-quote-btn')) {
-            const button = e.target.closest('.delete-quote-btn');
-            const quoteId = button.getAttribute('data-quote-id');
-            deleteQuote(quoteId);
-        }
+            const sendEmailForm = document.getElementById('sendEmailForm');
+            sendEmailForm.action = `/admin/quotes/${quoteId}/send-email`;
+            
+            // You might want to populate customer email here if available
+            document.getElementById('customer_email').value = ''; // Set customer email if available
+            
+            window.dispatchEvent(new CustomEvent('open-modal', { detail: 'send-quote-email' }));
+        });
     });
 });
-
-function openEmailModal(quoteId, customerName, quoteNumber) {
-    // Set modal title
-    document.getElementById('sendEmailModalLabel').textContent = `Send Email - Quote ${quoteNumber}`;
-    
-    // Set form action
-    document.getElementById('sendEmailForm').action = `/admin/quotes/${quoteId}/send-email`;
-    
-    // Fetch customer email
-    fetch(`/admin/customers/by-name/${encodeURIComponent(customerName)}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.email) {
-                document.getElementById('customer_email').value = data.email;
-            } else {
-                document.getElementById('customer_email').value = '';
-                document.getElementById('customer_email').placeholder = 'No email found for this customer';
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching customer email:', error);
-            document.getElementById('customer_email').value = '';
-            document.getElementById('customer_email').placeholder = 'Error loading customer email';
-        });
-    
-    // Set CC emails to default
-    document.getElementById('cc_emails').value = 'sales@maxmedme.com';
-    
-    // Show modal
-    const emailModal = new bootstrap.Modal(document.getElementById('sendEmailModal'));
-    emailModal.show();
-}
-
-// Handle email form submission
-document.getElementById('sendEmailForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const customerEmail = document.getElementById('customer_email').value;
-    if (!customerEmail) {
-        alert('Customer email is required to send the quote.');
-        return;
-    }
-    
-    const ccEmails = document.getElementById('cc_emails').value.trim();
-    if (ccEmails) {
-        const emailArray = ccEmails.split(',').map(email => email.trim());
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        
-        for (let email of emailArray) {
-            if (!emailRegex.test(email)) {
-                alert(`Invalid email format: ${email}`);
-                return;
-            }
-        }
-    }
-    
-    // Show loading state
-    const submitButton = this.querySelector('button[type="submit"]');
-    const originalText = submitButton.innerHTML;
-    submitButton.disabled = true;
-    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
-    
-    // Submit form
-    this.submit();
-});
 </script>
+@endpush
 @endsection 

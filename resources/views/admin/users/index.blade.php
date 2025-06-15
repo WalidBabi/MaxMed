@@ -1,73 +1,95 @@
 @extends('admin.layouts.app')
 
+@section('title', 'User Management')
+
 @section('content')
-<div class="main-content">
-    <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="h4 mb-1">User Management</h2>
-            <p class="text-muted mb-0">Manage system users and their roles</p>
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">User Management</h1>
+                <p class="text-gray-600 mt-2">Manage system users and their roles</p>
+            </div>
+            <div class="flex items-center space-x-3">
+                <a href="{{ route('admin.users.create') }}" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                    <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                    </svg>
+                    Add New User
+                </a>
+            </div>
         </div>
-        <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
-            <i class="fas fa-plus me-2"></i>Add New User
-        </a>
     </div>
 
     <!-- Search Section -->
-    <div class="card border-0 shadow-sm mb-4">
-        <div class="card-body">
-            <form method="GET" action="{{ route('admin.users.index') }}" class="row g-3">
-                <div class="col-md-4">
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0">
-                            <i class="fas fa-search text-muted"></i>
-                        </span>
-                        <input type="text" 
-                               class="form-control border-start-0" 
-                               name="search" 
-                               value="{{ request('search') }}" 
-                               placeholder="Search by name or email...">
+    <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-8">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Search & Filter</h3>
+        </div>
+        <div class="p-6">
+            <form method="GET" action="{{ route('admin.users.index') }}" class="space-y-4">
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                    <div>
+                        <label for="search" class="block text-sm font-medium text-gray-700">Search</label>
+                        <div class="relative mt-1">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                                </svg>
+                            </div>
+                            <input type="text" id="search" name="search" value="{{ request('search') }}" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Search by name or email...">
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-2">
-                    <select class="form-select" name="role">
-                        <option value="">All Roles</option>
-                        <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Super Admin</option>
-                        @if(isset($roles))
-                            @foreach($roles as $role)
-                                <option value="{{ $role->id }}" {{ request('role') == $role->id ? 'selected' : '' }}>
-                                    {{ $role->display_name }}
-                                </option>
-                            @endforeach
-                        @endif
-                        <option value="no_role" {{ request('role') == 'no_role' ? 'selected' : '' }}>No Role</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <select class="form-select" name="status">
-                        <option value="">All Status</option>
-                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
-                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <select class="form-select" name="sort">
-                        <option value="created_desc" {{ request('sort') == 'created_desc' ? 'selected' : '' }}>Newest First</option>
-                        <option value="created_asc" {{ request('sort') == 'created_asc' ? 'selected' : '' }}>Oldest First</option>
-                        <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Name A-Z</option>
-                        <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name Z-A</option>
-                        <option value="email_asc" {{ request('sort') == 'email_asc' ? 'selected' : '' }}>Email A-Z</option>
-                        <option value="email_desc" {{ request('sort') == 'email_desc' ? 'selected' : '' }}>Email Z-A</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary flex-fill">
-                            <i class="fas fa-search me-1"></i>Search
+                    
+                    <div>
+                        <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+                        <select id="role" name="role" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                            <option value="">All Roles</option>
+                            <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Super Admin</option>
+                            @if(isset($roles))
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->id }}" {{ request('role') == $role->id ? 'selected' : '' }}>
+                                        {{ $role->display_name }}
+                                    </option>
+                                @endforeach
+                            @endif
+                            <option value="no_role" {{ request('role') == 'no_role' ? 'selected' : '' }}>No Role</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                        <select id="status" name="status" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                            <option value="">All Status</option>
+                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="sort" class="block text-sm font-medium text-gray-700">Sort By</label>
+                        <select id="sort" name="sort" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                            <option value="created_desc" {{ request('sort') == 'created_desc' ? 'selected' : '' }}>Newest First</option>
+                            <option value="created_asc" {{ request('sort') == 'created_asc' ? 'selected' : '' }}>Oldest First</option>
+                            <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Name A-Z</option>
+                            <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name Z-A</option>
+                            <option value="email_asc" {{ request('sort') == 'email_asc' ? 'selected' : '' }}>Email A-Z</option>
+                            <option value="email_desc" {{ request('sort') == 'email_desc' ? 'selected' : '' }}>Email Z-A</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex items-end space-x-2">
+                        <button type="submit" class="flex-1 inline-flex justify-center items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                            <svg class="-ml-0.5 mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                            </svg>
+                            Search
                         </button>
                         @if(request()->hasAny(['search', 'role', 'status', 'sort']))
-                            <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary">
-                                <i class="fas fa-times"></i>
+                            <a href="{{ route('admin.users.index') }}" class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
                             </a>
                         @endif
                     </div>
@@ -77,79 +99,90 @@
     </div>
 
     <!-- Users Table -->
-    <div class="card border-0 shadow-sm">
-        <div class="card-body">
+    <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">All Users</h3>
+        </div>
+        
+        <div class="overflow-hidden">
             @if($users->count() > 0)
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-light">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
                             <tr>
-                                <th>User</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Status</th>
-                                <th>Joined</th>
-                                <th>Actions</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                                <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="bg-white divide-y divide-gray-200">
                             @foreach($users as $user)
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="icon-shape icon-sm bg-soft-primary text-primary rounded-circle me-3">
-                                                <i class="fas fa-user"></i>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                                                    <svg class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                                                    </svg>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <h6 class="mb-0">{{ $user->name }}</h6>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
                                                 @if($user->id === Auth::user()->id)
-                                                    <small class="text-muted">(You)</small>
+                                                    <div class="text-sm text-gray-500">(You)</div>
                                                 @endif
                                             </div>
                                         </div>
                                     </td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">{{ $user->email }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
                                         @if($user->is_admin)
-                                            <span class="badge bg-soft-warning text-warning">Super Admin</span>
+                                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800">Super Admin</span>
                                         @elseif($user->role)
-                                            <span class="badge bg-soft-info text-info">{{ $user->role->display_name }}</span>
+                                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800">{{ $user->role->display_name }}</span>
                                         @else
-                                            <span class="badge bg-soft-secondary text-secondary">No Role</span>
+                                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-800">No Role</span>
                                         @endif
                                     </td>
-                                    <td>
-                                        <span class="badge bg-soft-success text-success">Active</span>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800">Active</span>
                                     </td>
-                                    <td>
-                                        <small class="text-muted">{{ $user->created_at->format('M d, Y') }}</small>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-500">{{ $user->created_at->format('M d, Y') }}</div>
                                     </td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="{{ route('admin.users.show', $user) }}">
-                                                    <i class="fas fa-eye me-2"></i>View
-                                                </a></li>
-                                                <li><a class="dropdown-item" href="{{ route('admin.users.edit', $user) }}">
-                                                    <i class="fas fa-edit me-2"></i>Edit
-                                                </a></li>
-                                                @if($user->id !== Auth::user()->id)
-                                                    <li><hr class="dropdown-divider"></li>
-                                                    <li>
-                                                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="dropdown-item text-danger" 
-                                                                    onclick="return confirm('Are you sure you want to delete this user?')">
-                                                                <i class="fas fa-trash me-2"></i>Delete
-                                                            </button>
-                                                        </form>
-                                                    </li>
-                                                @endif
-                                            </ul>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex items-center justify-end space-x-2">
+                                            <a href="{{ route('admin.users.show', $user) }}" class="inline-flex items-center rounded-md bg-white px-2.5 py-1.5 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                                <svg class="-ml-0.5 mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                </svg>
+                                                View
+                                            </a>
+                                            <a href="{{ route('admin.users.edit', $user) }}" class="inline-flex items-center rounded-md bg-indigo-600 px-2.5 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500">
+                                                <svg class="-ml-0.5 mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                                </svg>
+                                                Edit
+                                            </a>
+                                            @if($user->id !== Auth::user()->id)
+                                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="inline-flex items-center rounded-md bg-red-600 px-2.5 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-red-500" onclick="return confirm('Are you sure you want to delete this user?')">
+                                                        <svg class="-ml-0.5 mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                                        </svg>
+                                                        Delete
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -160,132 +193,63 @@
 
                 <!-- Pagination -->
                 @if($users->hasPages())
-                    <div class="d-flex justify-content-between align-items-center mt-4">
-                        <div class="text-muted small">
-                            Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }} users
+                    <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                        <div class="flex-1 flex justify-between sm:hidden">
+                            @if($users->onFirstPage())
+                                <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-500 bg-white cursor-default">
+                                    Previous
+                                </span>
+                            @else
+                                <a href="{{ $users->previousPageUrl() }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    Previous
+                                </a>
+                            @endif
+
+                            @if($users->hasMorePages())
+                                <a href="{{ $users->nextPageUrl() }}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                    Next
+                                </a>
+                            @else
+                                <span class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-500 bg-white cursor-default">
+                                    Next
+                                </span>
+                            @endif
                         </div>
-                        <div class="pagination-wrapper">
-                            {{ $users->links('admin.partials.pagination') }}
+                        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                            <div>
+                                <p class="text-sm text-gray-700">
+                                    Showing
+                                    <span class="font-medium">{{ $users->firstItem() }}</span>
+                                    to
+                                    <span class="font-medium">{{ $users->lastItem() }}</span>
+                                    of
+                                    <span class="font-medium">{{ $users->total() }}</span>
+                                    users
+                                </p>
+                            </div>
+                            <div>
+                                {{ $users->links() }}
+                            </div>
                         </div>
                     </div>
                 @endif
             @else
-                <div class="text-center py-5">
-                    <div class="icon-shape icon-lg bg-soft-primary text-primary rounded-3 mx-auto mb-3">
-                        <i class="fas fa-users fa-2x"></i>
+                <div class="text-center py-12">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                    </svg>
+                    <h3 class="mt-2 text-sm font-semibold text-gray-900">No Users Found</h3>
+                    <p class="mt-1 text-sm text-gray-500">Get started by creating your first user</p>
+                    <div class="mt-6">
+                        <a href="{{ route('admin.users.create') }}" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                            <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                            </svg>
+                            Create User
+                        </a>
                     </div>
-                    <h5>No Users Found</h5>
-                    <p class="text-muted mb-4">Get started by creating your first user</p>
-                    <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Create User
-                    </a>
                 </div>
             @endif
         </div>
     </div>
-</div>
-
-<style>
-    .icon-shape {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .icon-shape.icon-sm {
-        width: 2rem;
-        height: 2rem;
-    }
-    
-    .icon-shape.icon-lg {
-        width: 4rem;
-        height: 4rem;
-    }
-    
-    .bg-soft-primary { background-color: rgba(79, 70, 229, 0.1) !important; }
-    .bg-soft-success { background-color: rgba(16, 185, 129, 0.1) !important; }
-    .bg-soft-info { background-color: rgba(59, 130, 246, 0.1) !important; }
-    .bg-soft-warning { background-color: rgba(245, 158, 11, 0.1) !important; }
-    .bg-soft-secondary { background-color: rgba(108, 117, 125, 0.1) !important; }
-    
-    .table-hover tbody tr:hover {
-        background-color: rgba(0, 0, 0, 0.02);
-    }
-    
-    /* Custom Pagination Styling */
-    .pagination-wrapper .pagination {
-        gap: 0.25rem;
-    }
-    
-    .pagination-wrapper .page-link {
-        border: 1px solid #e5e7eb;
-        color: #6b7280;
-        padding: 0.5rem 0.75rem;
-        margin: 0;
-        border-radius: 0.375rem !important;
-        font-size: 0.875rem;
-        font-weight: 500;
-        transition: all 0.2s ease;
-        text-decoration: none;
-    }
-    
-    .pagination-wrapper .page-item:not(.active) .page-link:hover {
-        background-color: #f9fafb;
-        border-color: #d1d5db;
-        color: #374151;
-        transform: translateY(-1px);
-    }
-    
-    .pagination-wrapper .page-item.active .page-link {
-        background-color: #4f46e5;
-        border-color: #4f46e5;
-        color: white;
-        font-weight: 600;
-    }
-    
-    .pagination-wrapper .page-item.disabled .page-link {
-        color: #d1d5db;
-        background-color: #f9fafb;
-        border-color: #e5e7eb;
-        cursor: not-allowed;
-    }
-    
-    .pagination-wrapper .page-link i {
-        font-size: 0.75rem;
-    }
-    
-    /* Pagination info styling */
-    .pagination-info {
-        color: #6b7280;
-        font-size: 0.875rem;
-        font-weight: 500;
-    }
-    
-    /* Search Form Styling */
-    .input-group-text {
-        background-color: #f8f9fa !important;
-        border-color: #e9ecef;
-    }
-    
-    .form-control:focus {
-        border-color: #4f46e5;
-        box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
-    }
-    
-    .form-select:focus {
-        border-color: #4f46e5;
-        box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
-    }
-    
-    .btn-outline-secondary {
-        border-color: #e5e7eb;
-        color: #6b7280;
-    }
-    
-    .btn-outline-secondary:hover {
-        background-color: #f3f4f6;
-        border-color: #d1d5db;
-        color: #374151;
-    }
-</style>
 @endsection 
