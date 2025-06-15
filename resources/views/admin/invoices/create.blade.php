@@ -130,147 +130,73 @@
                             Add Item
                         </button>
                     </div>
-                                        <div class="p-6">
-                        <!-- Clean Minimal Table -->
-                        <div class="bg-white">
-                            <!-- Table Header -->
-                            <div class="border-b border-gray-200 pb-4 mb-6">
-                                <div class="grid grid-cols-12 gap-4 text-sm font-medium text-gray-700 uppercase tracking-wide">
-                                    <div class="col-span-5">Item Details</div>
-                                    <div class="col-span-2 text-center">Quantity</div>
-                                    <div class="col-span-2 text-center">Rate</div>
-                                    <div class="col-span-2 text-center">Discount</div>
-                                    <div class="col-span-1 text-center">Amount</div>
-                                </div>
-                            </div>
-                            
-                            <!-- Table Body -->
-                            <div id="invoice-items" class="space-y-4">
-                            @if($quote && $quote->items->count() > 0)
-                                @foreach($quote->items as $index => $item)
-                                    <div class="item-row" data-index="{{ $index }}">
-                                        <div class="grid grid-cols-12 gap-4 items-center py-3">
-                                            <!-- Product & Description Column -->
-                                            <div class="col-span-5">
-                                                <select name="items[{{ $index }}][product_id]" class="product-select w-full text-sm border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" data-index="{{ $index }}">
-                                                    <option value="">Type or click to select an item.</option>
-                                                    @foreach($products as $product)
-                                                        <option value="{{ $product->id }}" 
-                                                                data-name="{{ $product->name }}"
-                                                                data-description="{{ $product->description }}"
-                                                                data-price="{{ $product->price_aed ?? $product->price }}"
-                                                                {{ old("items.{$index}.product_id") == $product->id ? 'selected' : '' }}>
-                                                            {{ $product->name }} @if($product->brand) - {{ $product->brand->name }} @endif
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                                <input type="hidden" name="items[{{ $index }}][item_description]" class="item-description" value="{{ $item->item_details }}">
-                                            </div>
-                                            
-                                            <!-- Quantity Column -->
-                                            <div class="col-span-2 text-center">
-                                                <input type="number" name="items[{{ $index }}][quantity]" 
-                                                       class="quantity-input w-full text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
-                                                       step="0.01" value="{{ $item->quantity }}" required>
-                                            </div>
-                                            
-                                            <!-- Rate Column -->
-                                            <div class="col-span-2 text-center">
-                                                <div class="flex items-center justify-center">
-                                                    <input type="number" name="items[{{ $index }}][unit_price]" 
-                                                           class="price-input w-16 text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
-                                                           step="0.01" value="{{ $item->rate }}" required>
-                                                    <span class="ml-2 text-gray-500 text-sm">⊞</span>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Discount Column -->
-                                            <div class="col-span-2 text-center">
-                                                <div class="flex items-center justify-center">
-                                                    <input type="number" name="items[{{ $index }}][discount_percentage]" 
-                                                           class="discount-input w-12 text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
-                                                           step="0.01" min="0" max="100" value="{{ $item->discount }}">
-                                                    <select class="ml-1 border-0 bg-transparent text-gray-500 text-sm focus:ring-0">
-                                                        <option>%</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Amount Column -->
-                                            <div class="col-span-1 text-right relative">
-                                                <span class="line-total text-gray-900 font-medium">{{ number_format($item->amount, 2) }}</span>
-                                                <button type="button" onclick="removeItem(this)" 
-                                                        class="absolute -right-6 top-0 text-gray-400 hover:text-red-500">
-                                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    <div class="p-6">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 items-table">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-10">Drag</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Details</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Quantity</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-28">Rate</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-28">Discount</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-28">Amount</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="invoice-items" class="bg-white divide-y divide-gray-200">
+                                    @if($quote && $quote->items->count() > 0)
+                                        @foreach($quote->items as $index => $item)
+                                            <tr class="item-row bg-white hover:bg-gray-50" draggable="true">
+                                                <td class="px-3 py-4 text-center">
+                                                    <svg class="w-4 h-4 text-gray-400 cursor-pointer drag-handle mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
                                                     </svg>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @else
-                                <div class="item-row" data-index="0">
-                                    <div class="grid grid-cols-12 gap-4 items-center py-3">
-                                        <!-- Product & Description Column -->
-                                        <div class="col-span-5">
-                                            <select name="items[0][product_id]" class="product-select w-full text-sm border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" data-index="0">
-                                                <option value="">Type or click to select an item.</option>
-                                                @foreach($products as $product)
-                                                    <option value="{{ $product->id }}" 
-                                                            data-name="{{ $product->name }}"
-                                                            data-description="{{ $product->description }}"
-                                                            data-price="{{ $product->price_aed ?? $product->price }}">
-                                                        {{ $product->name }} @if($product->brand) - {{ $product->brand->name }} @endif
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            <input type="hidden" name="items[0][item_description]" class="item-description" value="">
-                                        </div>
-                                        
-                                        <!-- Quantity Column -->
-                                        <div class="col-span-2 text-center">
-                                            <input type="number" name="items[0][quantity]" 
-                                                   class="quantity-input w-full text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
-                                                   step="0.01" value="1.00" required>
-                                        </div>
-                                        
-                                        <!-- Rate Column -->
-                                        <div class="col-span-2 text-center">
-                                            <div class="flex items-center justify-center">
-                                                <input type="number" name="items[0][unit_price]" 
-                                                       class="price-input w-16 text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
-                                                       step="0.01" value="0.00" required>
-                                                <span class="ml-2 text-gray-500 text-sm">⊞</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Discount Column -->
-                                        <div class="col-span-2 text-center">
-                                            <div class="flex items-center justify-center">
-                                                <input type="number" name="items[0][discount_percentage]" 
-                                                       class="discount-input w-12 text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
-                                                       step="0.01" min="0" max="100" value="0">
-                                                <select class="ml-1 border-0 bg-transparent text-gray-500 text-sm focus:ring-0">
-                                                    <option>%</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- Amount Column -->
-                                        <div class="col-span-1 text-right relative">
-                                            <span class="line-total text-gray-900 font-medium">0.00</span>
-                                            <button type="button" onclick="removeItem(this)" 
-                                                    class="absolute -right-6 top-0 text-gray-400 hover:text-red-500">
-                                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-                            </div>
+                                                </td>
+                                                <td class="px-3 py-4">
+                                                    <select name="items[{{ $index }}][product_id]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 product-select" required>
+                                                        <option value="">Select a product</option>
+                                                        @foreach($products as $product)
+                                                            <option value="{{ $product->id }}" 
+                                                                    data-name="{{ $product->name }}"
+                                                                    data-description="{{ $product->description }}"
+                                                                    data-price="{{ $product->price_aed ?? $product->price }}">
+                                                                {{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    <input type="hidden" name="items[{{ $index }}][item_description]" class="item-description" value="{{ $item->item_details }}">
+                                                </td>
+                                                <td class="px-3 py-4">
+                                                    <input type="number" step="0.01" name="items[{{ $index }}][quantity]" value="{{ $item->quantity }}" required
+                                                           class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 quantity-input">
+                                                </td>
+                                                <td class="px-3 py-4">
+                                                    <input type="number" step="0.01" name="items[{{ $index }}][unit_price]" value="{{ $item->rate }}" required
+                                                           class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rate-input">
+                                                </td>
+                                                <td class="px-3 py-4">
+                                                    <div class="flex">
+                                                        <input type="number" step="0.01" name="items[{{ $index }}][discount_percentage]" value="{{ $item->discount }}" min="0" max="100"
+                                                               class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 discount-input">
+                                                        <span class="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm rounded-r-md">%</span>
+                                                    </div>
+                                                </td>
+                                                <td class="px-3 py-4 text-right">
+                                                    <span class="line-total font-medium text-gray-900">{{ number_format($item->amount, 2) }}</span>
+                                                </td>
+                                                <td class="px-3 py-4 text-center">
+                                                    <button type="button" onclick="removeItem(this)" class="inline-flex items-center p-1 border border-transparent rounded-full text-red-600 hover:bg-red-50">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                        </svg>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
+                                </tbody>
+                            </table>
                         </div>
                         
                         <!-- Add Item Button -->
@@ -409,7 +335,24 @@
     height: 36px;
 }
 
-/* Clean minimal table styles */
+/* Fixed table layout for consistent column widths */
+.items-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.items-table th,
+.items-table td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.items-table input,
+.items-table select {
+    min-width: 100px;
+}
+
+/* Select2 result styling */
 .select2-result-product {
     padding: 12px;
     border-bottom: 1px solid #f3f4f6;
@@ -425,81 +368,89 @@
     margin-top: 4px;
 }
 
-/* Clean table styling */
+/* Item row styling */
 .item-row {
-    border-bottom: 1px solid #f3f4f6;
+    cursor: grab;
 }
 
-.item-row:last-child {
-    border-bottom: none;
+.item-row:active {
+    cursor: grabbing;
 }
 
-/* Seamless input styling */
-.item-row input,
-.item-row select {
-    background: transparent !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    padding: 8px 4px;
+.drag-handle {
+    cursor: grab;
 }
 
-.item-row input:focus,
-.item-row select:focus {
-    background: rgba(79, 70, 229, 0.05) !important;
-    border-radius: 4px;
-}
-
-/* Clean number input styling */
-.item-row input[type="number"] {
-    -moz-appearance: textfield;
-}
-.item-row input[type="number"]::-webkit-outer-spin-button,
-.item-row input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-/* Minimal select styling */
-.product-select {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-    background-position: right 8px center;
-    background-repeat: no-repeat;
-    background-size: 16px 12px;
-    padding-right: 32px;
-}
-
-/* Simple delete button */
-.item-row button[onclick*="removeItem"] {
-    transition: color 0.15s ease-in-out;
-    padding: 4px;
-}
-.item-row button[onclick*="removeItem"]:hover {
-    color: #ef4444;
-}
-
-/* Select2 minimal styling */
+/* Enhanced Select2 Styling */
 .select2-container--default .select2-selection--single {
-    background-color: transparent !important;
-    border: none !important;
-    height: 36px;
+    height: 38px;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    background-color: #fff;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.select2-container--default .select2-selection--single:focus-within {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
 }
 
 .select2-container--default .select2-selection--single .select2-selection__rendered {
-    padding-left: 0;
-    padding-right: 20px;
     line-height: 36px;
-    color: #374151 !important;
+    padding-left: 12px;
+    padding-right: 20px;
+    color: #374151;
 }
 
 .select2-container--default .select2-selection--single .select2-selection__arrow {
-    height: 34px;
+    height: 36px;
     right: 8px;
 }
 
 .select2-container--default .select2-selection--single .select2-selection__placeholder {
-    color: #9ca3af !important;
+    color: #9ca3af;
+}
+
+.select2-dropdown {
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.select2-search--dropdown {
+    padding: 8px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #d1d5db;
+}
+
+.select2-search__field {
+    width: 100% !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 0.375rem !important;
+    padding: 8px 12px !important;
+    font-size: 0.875rem !important;
+}
+
+.select2-results__options {
+    max-height: 300px;
+}
+
+.select2-results__option {
+    padding: 10px 12px;
+    line-height: 1.5;
+    color: #374151;
+    cursor: pointer;
+}
+
+.select2-results__option:hover,
+.select2-results__option--highlighted {
+    background-color: #f3f4f6 !important;
+    color: #374151 !important;
+}
+
+.select2-results__option--selected {
+    background-color: #6366f1 !important;
+    color: #fff !important;
 }
 </style>
 @endpush
@@ -543,7 +494,7 @@ document.getElementById('customer_id').addEventListener('change', function() {
 // Product selection handling
 function handleProductSelect(selectElement) {
     const selectedOption = selectElement.options[selectElement.selectedIndex];
-    const itemRow = selectElement.closest('.item-row');
+    const itemRow = selectElement.closest('tr');
     
     if (selectedOption.value) {
         const productName = selectedOption.getAttribute('data-name');
@@ -552,7 +503,7 @@ function handleProductSelect(selectElement) {
         
         // Update item description and price
         const descriptionField = itemRow.querySelector('.item-description');
-        const priceField = itemRow.querySelector('.price-input');
+        const priceField = itemRow.querySelector('.rate-input');
         
         if (descriptionField && productName) {
             descriptionField.value = productName + (productDescription ? '\n' + productDescription : '');
@@ -580,102 +531,131 @@ document.getElementById('payment_terms').addEventListener('change', function() {
 
 // Add new item
 function addItem() {
-    const container = document.getElementById('invoice-items');
-    const itemDiv = document.createElement('div');
-    itemDiv.className = 'item-row';
-    itemDiv.setAttribute('data-index', itemIndex);
-    
-    itemDiv.innerHTML = `
-        <div class="grid grid-cols-12 gap-4 items-center py-3">
-            <!-- Product & Description Column -->
-            <div class="col-span-5">
-                <select name="items[${itemIndex}][product_id]" class="product-select w-full text-sm border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" data-index="${itemIndex}">
-                    <option value="">Type or click to select an item.</option>
-                </select>
-                <input type="hidden" name="items[${itemIndex}][item_description]" class="item-description" value="">
+    const tbody = document.getElementById('invoice-items');
+    const row = document.createElement('tr');
+    row.className = 'item-row bg-white hover:bg-gray-50';
+    row.draggable = true;
+    row.innerHTML = `
+        <td class="px-3 py-4 text-center">
+            <svg class="w-4 h-4 text-gray-400 cursor-pointer drag-handle mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+            </svg>
+        </td>
+        <td class="px-3 py-4">
+            <select name="items[${itemIndex}][product_id]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 product-select" required>
+                <option value="">Select a product</option>
+                @foreach($products as $product)
+                    <option value="{{ $product->id }}" 
+                            data-name="{{ $product->name }}"
+                            data-description="{{ $product->description }}"
+                            data-price="{{ $product->price_aed ?? $product->price }}">
+                        {{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}
+                    </option>
+                @endforeach
+            </select>
+            <input type="hidden" name="items[${itemIndex}][item_description]" class="item-description" value="">
+        </td>
+        <td class="px-3 py-4">
+            <input type="number" step="0.01" name="items[${itemIndex}][quantity]" value="1.00" required
+                   class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 quantity-input">
+        </td>
+        <td class="px-3 py-4">
+            <input type="number" step="0.01" name="items[${itemIndex}][unit_price]" value="0.00" required
+                   class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rate-input">
+        </td>
+        <td class="px-3 py-4">
+            <div class="flex">
+                <input type="number" step="0.01" name="items[${itemIndex}][discount_percentage]" value="0" min="0" max="100"
+                       class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 discount-input">
+                <span class="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm rounded-r-md">%</span>
             </div>
-            
-            <!-- Quantity Column -->
-            <div class="col-span-2 text-center">
-                <input type="number" name="items[${itemIndex}][quantity]" 
-                       class="quantity-input w-full text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
-                       step="0.01" value="1.00" required>
-            </div>
-            
-            <!-- Rate Column -->
-            <div class="col-span-2 text-center">
-                <div class="flex items-center justify-center">
-                    <input type="number" name="items[${itemIndex}][unit_price]" 
-                           class="price-input w-16 text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
-                           step="0.01" value="0.00" required>
-                    <span class="ml-2 text-gray-500 text-sm">⊞</span>
-                </div>
-            </div>
-            
-            <!-- Discount Column -->
-            <div class="col-span-2 text-center">
-                <div class="flex items-center justify-center">
-                    <input type="number" name="items[${itemIndex}][discount_percentage]" 
-                           class="discount-input w-12 text-center border-0 bg-transparent focus:ring-0 focus:border-0 text-gray-900" 
-                           step="0.01" min="0" max="100" value="0">
-                    <select class="ml-1 border-0 bg-transparent text-gray-500 text-sm focus:ring-0">
-                        <option>%</option>
-                    </select>
-                </div>
-            </div>
-            
-            <!-- Amount Column -->
-            <div class="col-span-1 text-right relative">
-                <span class="line-total text-gray-900 font-medium">0.00</span>
-                <button type="button" onclick="removeItem(this)" 
-                        class="absolute -right-6 top-0 text-gray-400 hover:text-red-500">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </div>
+        </td>
+        <td class="px-3 py-4 text-right">
+            <span class="line-total font-medium text-gray-900">0.00</span>
+        </td>
+        <td class="px-3 py-4 text-center">
+            <button type="button" onclick="removeItem(this)" class="inline-flex items-center p-1 border border-transparent rounded-full text-red-600 hover:bg-red-50">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </td>
     `;
     
-    container.appendChild(itemDiv);
+    tbody.appendChild(row);
     itemIndex++;
     
     // Add event listeners to new inputs
-    addCalculationListeners(itemDiv);
+    addCalculationListeners(row);
     
-    // Initialize Select2 for new product select and populate options
-    const productSelect = itemDiv.querySelector('.product-select');
+    // Initialize Select2 for new product select
+    const productSelect = row.querySelector('.product-select');
     if (productSelect) {
-        // Add product options from the page data
+        // Populate product options dynamically
         const existingSelect = document.querySelector('.product-select');
-        if (existingSelect) {
+        if (existingSelect && existingSelect !== productSelect) {
             const options = existingSelect.innerHTML;
             productSelect.innerHTML = options;
         }
         
+        // Initialize Select2 with enhanced search
         $(productSelect).select2({
-            placeholder: 'Type or click to select an item.',
+            placeholder: 'Search and select a product...',
             allowClear: true,
             width: '100%',
             minimumInputLength: 0,
             templateResult: formatProductResult,
             templateSelection: formatProductSelection,
+            matcher: function(params, data) {
+                // If there are no search terms, return all data
+                if ($.trim(params.term) === '') {
+                    return data;
+                }
+                
+                // Skip if no text property
+                if (typeof data.text === 'undefined') {
+                    return null;
+                }
+                
+                // Search in multiple fields
+                const searchTerm = params.term.toLowerCase();
+                const searchText = data.text.toLowerCase();
+                const productName = $(data.element).data('name') ? $(data.element).data('name').toString().toLowerCase() : '';
+                const productDescription = $(data.element).data('description') ? $(data.element).data('description').toString().toLowerCase() : '';
+                
+                const combinedText = searchText + ' ' + productName + ' ' + productDescription;
+                
+                if (combinedText.indexOf(searchTerm) > -1) {
+                    return data;
+                }
+                
+                return null;
+            },
             escapeMarkup: function (markup) {
                 return markup;
             }
         });
         
-        productSelect.addEventListener('change', function() {
+        // Handle Select2 change event
+        $(productSelect).on('select2:select', function(e) {
             handleProductSelect(this);
+        });
+        
+        $(productSelect).on('select2:clear', function(e) {
+            const itemRow = this.closest('tr');
+            itemRow.querySelector('.item-description').value = '';
+            itemRow.querySelector('.rate-input').value = 0;
+            calculateLineTotal(itemRow);
+            calculateTotals();
         });
     }
 }
 
 // Remove item
 function removeItem(button) {
-    const container = document.getElementById('invoice-items');
-    if (container.children.length > 1) {
-        button.closest('.item-row').remove();
+    const tbody = document.getElementById('invoice-items');
+    if (tbody.children.length > 1) {
+        button.closest('tr').remove();
         calculateTotals();
     } else {
         alert('You must have at least one item.');
@@ -696,7 +676,7 @@ function addCalculationListeners(container = document) {
 // Calculate line total for a specific item
 function calculateLineTotal(itemRow) {
     const quantity = parseFloat(itemRow.querySelector('.quantity-input').value) || 0;
-    const price = parseFloat(itemRow.querySelector('.price-input').value) || 0;
+    const price = parseFloat(itemRow.querySelector('.rate-input').value) || 0;
     const discount = parseFloat(itemRow.querySelector('.discount-input').value) || 0;
     
     const subtotal = quantity * price;
@@ -721,6 +701,40 @@ function calculateTotals() {
     document.getElementById('sub-total').textContent = subTotal.toFixed(2) + ' AED';
     document.getElementById('tax-amount').textContent = taxAmount.toFixed(2) + ' AED';
     document.getElementById('total-amount').textContent = totalAmount.toFixed(2) + ' AED';
+}
+
+// Format function for product results in dropdown
+function formatProductResult(product) {
+    if (product.loading) {
+        return product.text;
+    }
+    
+    var $container = $(
+        "<div class='select2-result-product clearfix'>" +
+            "<div class='select2-result-product__meta'>" +
+                "<div class='select2-result-product__title'></div>" +
+                "<div class='select2-result-product__description'></div>" +
+            "</div>" +
+        "</div>"
+    );
+    
+    var element = product.element;
+    if (element) {
+        $container.find(".select2-result-product__title").text(product.text);
+        var price = $(element).data('price');
+        if (price) {
+            $container.find(".select2-result-product__description").text('Price: ' + parseFloat(price).toFixed(2) + ' AED');
+        }
+    } else {
+        $container.find(".select2-result-product__title").text(product.text);
+    }
+    
+    return $container;
+}
+
+// Format function for selected product
+function formatProductSelection(product) {
+    return product.text || product.element.textContent;
 }
 
 // Initialize calculations on page load

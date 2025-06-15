@@ -349,6 +349,65 @@
     .items-table select {
         min-width: 100px;
     }
+    
+    /* Custom Dropdown Styles */
+    .product-dropdown-container {
+        position: relative;
+    }
+    
+    .product-dropdown-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        max-height: 300px;
+        overflow-y: auto;
+        background: white;
+        z-index: 9999;
+        margin-top: 4px;
+    }
+    
+    /* Ensure table cells don't interfere with dropdown positioning */
+    .items-table td {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .items-table .product-dropdown-container {
+        z-index: 10;
+    }
+    
+    .items-table .product-dropdown-list {
+        z-index: 9999;
+    }
+    
+    .dropdown-item {
+        transition: background-color 0.15s ease-in-out;
+        cursor: pointer;
+    }
+    
+    .dropdown-item:hover {
+        background-color: #f8fafc;
+    }
+    
+    .dropdown-item.bg-indigo-50 {
+        background-color: #eef2ff;
+    }
+    
+    .product-search-input {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+    }
+    
+    .hidden {
+        display: none;
+    }
 </style>
 @endpush
 
@@ -368,18 +427,38 @@ function addItem() {
             </svg>
         </td>
         <td class="px-3 py-4">
-            <select name="items[${itemCounter}][product_id]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 product-select" required>
-                <option value="">Select a product</option>
-                @foreach($products as $product)
-                    <option value="{{ $product->id }}" 
-                            data-name="{{ $product->name }}"
-                            data-description="{{ $product->description }}"
-                            data-price="{{ $product->price_aed ?? $product->price }}">
-                        {{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}
-                    </option>
-                @endforeach
-            </select>
-            <input type="hidden" name="items[${itemCounter}][item_details]" class="item-details-hidden">
+            <div class="relative product-dropdown-container">
+                <input type="text" 
+                       class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 product-search-input" 
+                       placeholder="Search products..." 
+                       autocomplete="off">
+                <input type="hidden" name="items[${itemCounter}][product_id]" class="product-id-input">
+                <input type="hidden" name="items[${itemCounter}][item_details]" class="item-details-hidden">
+                
+                <!-- Dropdown List -->
+                <div class="product-dropdown-list hidden">
+                    <div class="p-2 text-sm text-gray-500 dropdown-loading hidden">Searching...</div>
+                    <div class="dropdown-items">
+                        @foreach($products as $product)
+                            <div class="dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0" 
+                                 data-id="{{ $product->id }}"
+                                 data-name="{{ $product->name }}"
+                                 data-description="{{ $product->description }}"
+                                 data-price="{{ $product->price_aed ?? $product->price }}"
+                                 data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
+                                <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
+                                @if($product->description)
+                                    <div class="text-gray-600 text-xs mt-1">{{ Str::limit($product->description, 80) }}</div>
+                                @endif
+                                @if($product->price_aed ?? $product->price)
+                                    <div class="text-indigo-600 text-sm font-medium mt-1">AED {{ number_format($product->price_aed ?? $product->price, 2) }}</div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="p-3 text-sm text-gray-500 text-center dropdown-no-results hidden">No products found</div>
+                </div>
+            </div>
         </td>
         <td class="px-3 py-4">
             <input type="number" step="0.01" name="items[${itemCounter}][quantity]" value="1.00" required
@@ -415,34 +494,19 @@ function addItem() {
     const quantityInput = row.querySelector('.quantity-input');
     const rateInput = row.querySelector('.rate-input');
     const discountInput = row.querySelector('.discount-input');
-    const productSelect = row.querySelector('.product-select');
+    const productSearchInput = row.querySelector('.product-search-input');
+    const productIdInput = row.querySelector('.product-id-input');
     const itemDetailsHidden = row.querySelector('.item-details-hidden');
+    const dropdownList = row.querySelector('.product-dropdown-list');
+    const dropdownItems = row.querySelector('.dropdown-items');
+    const dropdownNoResults = row.querySelector('.dropdown-no-results');
     
     [quantityInput, rateInput, discountInput].forEach(input => {
         input.addEventListener('input', calculateRowAmount);
     });
     
-    // Add event listener for product selection
-    productSelect.addEventListener('change', function() {
-        const selectedOption = this.options[this.selectedIndex];
-        if (selectedOption.value) {
-            const productName = selectedOption.getAttribute('data-name');
-            const productPrice = selectedOption.getAttribute('data-price');
-            
-            // Set the item details (name only)
-            itemDetailsHidden.value = productName;
-            
-            // Set the rate
-            rateInput.value = productPrice || 0;
-            
-            // Trigger calculation
-            calculateRowAmount({ target: rateInput });
-        } else {
-            itemDetailsHidden.value = '';
-            rateInput.value = 0;
-            calculateRowAmount({ target: rateInput });
-        }
-    });
+    // Initialize custom dropdown functionality
+    initializeCustomDropdown(productSearchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput);
     
     calculateTotals();
 }
@@ -497,11 +561,11 @@ function validateForm() {
     // Validate that all item rows have required data
     let hasEmptyItems = false;
     itemRows.forEach(row => {
-        const productSelect = row.querySelector('select[name*="[product_id]"]');
+        const productIdInput = row.querySelector('input[name*="[product_id]"]');
         const quantity = row.querySelector('input[name*="[quantity]"]');
         const rate = row.querySelector('input[name*="[rate]"]');
         
-        if (!productSelect || !productSelect.value) {
+        if (!productIdInput || !productIdInput.value) {
             hasEmptyItems = true;
         }
         if (!quantity || parseFloat(quantity.value) <= 0) {
@@ -528,10 +592,135 @@ function validateForm() {
     return true;
 }
 
+// Initialize custom dropdown functionality
+function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput) {
+    const allDropdownItems = dropdownItems.querySelectorAll('.dropdown-item');
+    let selectedIndex = -1;
+    
+    // Show dropdown when input is focused
+    searchInput.addEventListener('focus', function() {
+        dropdownList.classList.remove('hidden');
+        filterDropdownItems('');
+    });
+    
+    // Filter items as user types
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        filterDropdownItems(searchTerm);
+        selectedIndex = -1;
+        dropdownList.classList.remove('hidden');
+    });
+    
+    // Handle keyboard navigation
+    searchInput.addEventListener('keydown', function(e) {
+        const visibleItems = dropdownItems.querySelectorAll('.dropdown-item:not(.hidden)');
+        
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            selectedIndex = Math.min(selectedIndex + 1, visibleItems.length - 1);
+            updateSelection(visibleItems);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            selectedIndex = Math.max(selectedIndex - 1, -1);
+            updateSelection(visibleItems);
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (selectedIndex >= 0 && visibleItems[selectedIndex]) {
+                selectProduct(visibleItems[selectedIndex]);
+            }
+        } else if (e.key === 'Escape') {
+            dropdownList.classList.add('hidden');
+            selectedIndex = -1;
+        }
+    });
+    
+    // Handle item clicks
+    allDropdownItems.forEach(item => {
+        item.addEventListener('click', function() {
+            selectProduct(this);
+        });
+    });
+    
+    // Hide dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !dropdownList.contains(e.target)) {
+            dropdownList.classList.add('hidden');
+            selectedIndex = -1;
+        }
+    });
+    
+    function filterDropdownItems(searchTerm) {
+        let visibleCount = 0;
+        
+        allDropdownItems.forEach(item => {
+            const searchText = item.dataset.searchText || '';
+            
+            if (searchTerm === '' || searchText.includes(searchTerm)) {
+                item.classList.remove('hidden');
+                visibleCount++;
+            } else {
+                item.classList.add('hidden');
+            }
+        });
+        
+        // Show/hide no results message
+        if (visibleCount === 0) {
+            dropdownNoResults.classList.remove('hidden');
+        } else {
+            dropdownNoResults.classList.add('hidden');
+        }
+    }
+    
+    function updateSelection(visibleItems) {
+        // Remove previous selection
+        visibleItems.forEach(item => item.classList.remove('bg-indigo-50'));
+        
+        // Add selection to current item
+        if (selectedIndex >= 0 && visibleItems[selectedIndex]) {
+            visibleItems[selectedIndex].classList.add('bg-indigo-50');
+        }
+    }
+    
+    function selectProduct(item) {
+        const productId = item.dataset.id;
+        const productName = item.dataset.name;
+        const productPrice = item.dataset.price;
+        
+        // Set values
+        searchInput.value = productName;
+        productIdInput.value = productId;
+        itemDetailsHidden.value = productName;
+        rateInput.value = productPrice || 0;
+        
+        // Hide dropdown
+        dropdownList.classList.add('hidden');
+        selectedIndex = -1;
+        
+        // Trigger calculation
+        calculateRowAmount({ target: rateInput });
+    }
+    
+    // Clear selection function
+    searchInput.addEventListener('blur', function() {
+        // Small delay to allow click events to process
+        setTimeout(() => {
+            if (!productIdInput.value && searchInput.value) {
+                // If no product was selected but there's text, clear it
+                searchInput.value = '';
+                itemDetailsHidden.value = '';
+                rateInput.value = 0;
+                calculateRowAmount({ target: rateInput });
+            }
+        }, 200);
+    });
+}
+
 // Initialize with one item
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('addItem').addEventListener('click', addItem);
-    addItem(); // Add initial item
+    
+    // Add initial default item
+    addItem();
     
     // File upload handling
     const fileInput = document.getElementById('attachments');
@@ -552,5 +741,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-@endpush
-@endsection 
+@endpush 
