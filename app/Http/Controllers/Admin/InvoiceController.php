@@ -445,12 +445,7 @@ class InvoiceController extends Controller
             DB::commit();
 
             // Add success message with workflow status
-            $message = 'Payment recorded successfully!';
-            if ($finalInvoice->order_id) {
-                $message .= ' Order has been automatically created.';
-            } else {
-                $message .= ' Check logs for workflow automation details.';
-            }
+            $message = $this->generatePaymentSuccessMessage($invoice, $finalInvoice);
 
             return redirect()->back()->with('success', $message);
 
@@ -624,6 +619,65 @@ class InvoiceController extends Controller
             Log::error('Failed to create order from invoice: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed to create order: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Generate appropriate success message for payment recording
+     */
+    private function generatePaymentSuccessMessage(Invoice $originalInvoice, Invoice $updatedInvoice): string
+    {
+        $message = 'Payment recorded successfully!';
+        
+        // Check if order was created during this payment
+        $orderCreatedNow = !$originalInvoice->order_id && $updatedInvoice->order_id;
+        
+        // Check if order already existed
+        $orderAlreadyExisted = $originalInvoice->order_id;
+        
+        // Special handling for payment terms that can create orders
+        $orderCreatingPaymentTerms = ['on_delivery', 'net_30'];
+        $isOrderCreatingPaymentTerm = in_array($updatedInvoice->payment_terms, $orderCreatingPaymentTerms);
+        
+        if ($orderCreatedNow) {
+            $message .= ' Order has been automatically created and is now being processed.';
+        } elseif ($orderAlreadyExisted && $isOrderCreatingPaymentTerm) {
+            $orderNumber = $updatedInvoice->order ? $updatedInvoice->order->order_number : 'N/A';
+            
+            if ($updatedInvoice->payment_terms === 'on_delivery') {
+                $message .= " Order {$orderNumber} is already in progress. Payment will be collected upon delivery.";
+            } elseif ($updatedInvoice->payment_terms === 'net_30') {
+                $message .= " Order {$orderNumber} is already in progress. Payment recorded for Net 30 terms.";
+            }
+        } elseif ($orderAlreadyExisted) {
+            $orderNumber = $updatedInvoice->order ? $updatedInvoice->order->order_number : 'N/A';
+            $message .= " Order {$orderNumber} is already in progress.";
+        } else {
+            // No order created or exists
+            if ($isOrderCreatingPaymentTerm) {
+                if ($updatedInvoice->payment_terms === 'on_delivery') {
+                    $message .= ' Order creation is pending - please ensure delivery address is complete.';
+                } elseif ($updatedInvoice->payment_terms === 'net_30') {
+                    $trustLevel = $updatedInvoice->getCustomerTrustLevel();
+                    if ($trustLevel === 'high') {
+                        $message .= ' Order creation is pending - check invoice and payment status.';
+                    } elseif ($trustLevel === 'medium') {
+                        $requiredAmount = $updatedInvoice->total_amount * 0.25;
+                        if ($updatedInvoice->paid_amount < $requiredAmount) {
+                            $message .= ' Order will be created when ' . number_format($requiredAmount, 2) . ' ' . $updatedInvoice->currency . ' (25%) is paid.';
+                        } else {
+                            $message .= ' Order creation is pending - check invoice status.';
+                        }
+                    } else {
+                        $message .= ' Order will be created when full payment is received.';
+                    }
+                }
+            } else {
+                // Other payment terms
+                $message .= ' Order creation pending payment requirements.';
+            }
+        }
+        
+        return $message;
     }
 
     /**
