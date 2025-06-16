@@ -86,7 +86,7 @@ class OrderController extends Controller
 
             Log::info("Order {$order->order_number} marked as processing by supplier. Delivery ID: {$delivery->id}");
 
-            return redirect()->back()->with('success', 'Order marked as processing successfully!');
+            return redirect()->back()->with('success', 'Order marked as processing successfully! Your dedication ensures quality healthcare delivery.');
 
         } catch (\Exception $e) {
             Log::error('Failed to mark order as processing: ' . $e->getMessage());
@@ -188,7 +188,7 @@ class OrderController extends Controller
             // Trigger invoice conversion if applicable
             $delivery->autoConvertToFinalInvoice();
 
-            return redirect()->back()->with('success', 'The product is now on the way to MaxMed.');
+            return redirect()->back()->with('success', 'The product is now on the way to MaxMed. Your partnership makes healthcare excellence possible.');
 
         } catch (\Exception $e) {
             Log::error('Failed to submit documents: ' . $e->getMessage());
