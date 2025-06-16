@@ -21,6 +21,22 @@
         </div>
     </div>
 
+    <!-- Appreciation Message -->
+    <div class="mb-8">
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-blue-800">Your partnership drives our success. Together, we're delivering excellence to healthcare providers across the region.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Product Management Section -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
         <!-- Product Statistics -->
