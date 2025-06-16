@@ -187,7 +187,7 @@ class OrderController extends Controller
             // Trigger invoice conversion if applicable
             $delivery->autoConvertToFinalInvoice();
 
-            return redirect()->back()->with('success', 'Documents submitted and order sent to carrier successfully!');
+            return redirect()->back()->with('success', 'The product is now on the way to MaxMed.');
 
         } catch (\Exception $e) {
             Log::error('Failed to submit documents: ' . $e->getMessage());
