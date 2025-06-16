@@ -46,7 +46,7 @@
                 
                 <a href="{{ route('supplier.orders.index', ['status' => 'in_transit']) }}" 
                    class="@if($status === 'in_transit') border-purple-500 text-purple-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm">
-                    In Transit
+                    Shipped to MaxMed
                     <span class="@if($status === 'in_transit') bg-purple-100 text-purple-600 @else bg-gray-100 text-gray-900 @endif ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium">{{ $statusCounts['in_transit'] }}</span>
                 </a>
                 
@@ -127,7 +127,11 @@
                                         ];
                                     @endphp
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $statusClasses[$delivery->status] ?? 'bg-gray-100 text-gray-800' }}">
-                                        {{ ucfirst(str_replace('_', ' ', $delivery->status)) }}
+                                        @if($delivery->status === 'in_transit')
+                                            Shipped to MaxMed
+                                        @else
+                                            {{ ucfirst(str_replace('_', ' ', $delivery->status)) }}
+                                        @endif
                                     </span>
                                 </td>
                                 

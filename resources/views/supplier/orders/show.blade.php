@@ -30,7 +30,11 @@
                     ];
                 @endphp
                 <span class="inline-flex items-center px-3 py-2 rounded-full text-sm font-medium {{ $statusClasses[$delivery->status] ?? 'bg-gray-100 text-gray-800' }}">
-                    {{ ucfirst(str_replace('_', ' ', $delivery->status)) }}
+                    @if($delivery->status === 'in_transit')
+                        Shipped to MaxMed
+                    @else
+                        {{ ucfirst(str_replace('_', ' ', $delivery->status)) }}
+                    @endif
                 </span>
             </div>
         </div>
@@ -67,30 +71,8 @@
                             <label class="block text-sm font-medium text-gray-700 mb-1">Order Status</label>
                             <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-md">{{ ucfirst($order->status) }}</p>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Delivery Required</label>
-                            <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-md">
-                                <span class="inline-flex items-center text-green-700">
-                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                    </svg>
-                                    Yes
-                                </span>
-                            </p>
-                        </div>
+
                     </div>
-                    
-                    <div class="mt-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Delivery Address</label>
-                        <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-md">{{ $order->shipping_address }}</p>
-                    </div>
-                    
-                    @if($order->notes)
-                        <div class="mt-6">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Order Notes</label>
-                            <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-md">{{ $order->notes }}</p>
-                        </div>
-                    @endif
                 </div>
             </div>
 
@@ -277,8 +259,8 @@
                                     @endif
                                 </div>
                                 <div class="ml-3">
-                                    <p class="text-sm font-medium text-gray-900">In Transit</p>
-                                    <p class="text-xs text-gray-500">Sent to carrier</p>
+                                    <p class="text-sm font-medium text-gray-900">Shipped to MaxMed</p>
+                                    <p class="text-xs text-gray-500">Order sent to carrier and on the way</p>
                                 </div>
                             </div>
                             
@@ -321,14 +303,51 @@
                             </form>
                         @elseif($delivery->status === 'processing')
                             <button type="button" 
-                                    class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                                    class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 shadow-md"
                                     onclick="document.getElementById('submit-documents-modal').style.display='block'">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
-                                Submit Documents
+                                Ship to MaxMed
                             </button>
                         @endif
+                        
+                                                 <!-- Additional Status Controls -->
+                         @if($delivery->status === 'processing')
+                             <div class="border-t pt-4">
+                                 <h4 class="text-sm font-medium text-gray-900 mb-3">Status Controls</h4>
+                                 <div class="space-y-2">
+                                     <form action="{{ route('supplier.orders.mark-pending', $order) }}" method="POST">
+                                         @csrf
+                                         <button type="submit" 
+                                                 class="w-full inline-flex justify-center items-center px-3 py-2 border border-orange-300 text-sm font-medium rounded-md text-orange-700 bg-orange-50 hover:bg-orange-100"
+                                                 onclick="return confirm('Mark this order as pending again?')">
+                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                             </svg>
+                                             Back to Pending
+                                         </button>
+                                     </form>
+                                 </div>
+                             </div>
+                         @elseif($delivery->status === 'in_transit')
+                             <div class="border-t pt-4">
+                                 <h4 class="text-sm font-medium text-gray-900 mb-3">Status Controls</h4>
+                                 <div class="space-y-2">
+                                     <form action="{{ route('supplier.orders.mark-processing', $order) }}" method="POST">
+                                         @csrf
+                                         <button type="submit" 
+                                                 class="w-full inline-flex justify-center items-center px-3 py-2 border border-blue-300 text-sm font-medium rounded-md text-blue-700 bg-blue-50 hover:bg-blue-100"
+                                                 onclick="return confirm('Mark this order as processing again?')">
+                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                             </svg>
+                                             Back to Processing
+                                         </button>
+                                     </form>
+                                 </div>
+                             </div>
+                         @endif
                         
                         <!-- Document Downloads -->
                         @if($delivery->packing_list_file || $delivery->commercial_invoice_file)
@@ -366,11 +385,8 @@
                             @if($delivery->processed_by_supplier_at)
                                 <div>Processing: {{ $delivery->processed_by_supplier_at->format('M d, Y H:i') }}</div>
                             @endif
-                            @if($delivery->sent_to_carrier_at)
-                                <div>Sent to Carrier: {{ $delivery->sent_to_carrier_at->format('M d, Y H:i') }}</div>
-                            @endif
-                            @if($delivery->delivered_at)
-                                <div>Delivered: {{ $delivery->delivered_at->format('M d, Y H:i') }}</div>
+                            @if($delivery->status === 'in_transit')
+                                <div>Shipped to MaxMed: {{ $delivery->updated_at->format('M d, Y H:i') }}</div>
                             @endif
                         </div>
                     </div>
@@ -381,77 +397,161 @@
 </div>
 
 <!-- Submit Documents Modal -->
-<div id="submit-documents-modal" style="display: none;" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
-        <div class="mt-3">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-medium text-gray-900">Submit Documents & Send to Carrier</h3>
-                <button onclick="document.getElementById('submit-documents-modal').style.display='none'" class="text-gray-400 hover:text-gray-600">
+<div id="submit-documents-modal" style="display: none;" class="fixed inset-0 bg-black bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
+    <div class="relative mx-auto w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
+        <!-- Modal Header -->
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="flex-shrink-0">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Ship Order to MaxMed</h3>
+                        <p class="text-indigo-100 text-sm">Submit documents and send to carrier</p>
+                    </div>
+                </div>
+                <button onclick="document.getElementById('submit-documents-modal').style.display='none'" 
+                        class="hover:text-indigo-100 transition-colors duration-200 rounded-full p-1 hover:bg-white hover:bg-opacity-20">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
+        </div>
             
-            <form action="{{ route('supplier.orders.submit-documents', $order) }}" method="POST" enctype="multipart/form-data">
+        <!-- Modal Content -->
+        <div class="px-6 py-6">
+            <form id="submit-documents-form" action="{{ route('supplier.orders.submit-documents', $order) }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="space-y-4">
-                    <div>
-                        <label for="packing_list" class="block text-sm font-medium text-gray-700 mb-1">Packing List *</label>
-                        <input type="file" id="packing_list" name="packing_list" required 
-                               accept=".pdf,.jpg,.jpeg,.png"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
-                        <p class="text-xs text-gray-500 mt-1">PDF, JPG, PNG files up to 5MB</p>
+                <div class="space-y-6">
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                </svg>
+                                <div class="text-sm text-blue-800">
+                                    <p class="font-medium mb-1">Required Documents</p>
+                                    <p>Please upload both packing list and commercial invoice to complete the shipping process.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label for="packing_list" class="block text-sm font-semibold text-gray-900">
+                                <span class="flex items-center">
+                                    <svg class="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    Packing List *
+                                </span>
+                            </label>
+                            <input type="file" id="packing_list" name="packing_list" required 
+                                   accept=".pdf,.jpg,.jpeg,.png"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                            <p class="text-xs text-gray-500 mt-1">PDF, JPG, PNG files up to 5MB</p>
+                        </div>
+                    
+                        <div class="space-y-2">
+                            <label for="commercial_invoice" class="block text-sm font-semibold text-gray-900">
+                                <span class="flex items-center">
+                                    <svg class="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    Commercial Invoice *
+                                </span>
+                            </label>
+                            <input type="file" id="commercial_invoice" name="commercial_invoice" required 
+                                   accept=".pdf,.jpg,.jpeg,.png"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                            <p class="text-xs text-gray-500 mt-1">PDF, JPG, PNG files up to 5MB</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-amber-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            <div class="text-sm text-amber-800">
+                                <h4 class="font-medium mb-1">Important: Customs Clearance Notice</h4>
+                                <p class="text-xs">Please consider reducing the commercial invoice value to facilitate faster customs clearance, if legally permissible in your jurisdiction. This can help avoid delays and additional inspection fees.</p>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div>
-                        <label for="commercial_invoice" class="block text-sm font-medium text-gray-700 mb-1">Commercial Invoice *</label>
-                        <input type="file" id="commercial_invoice" name="commercial_invoice" required 
-                               accept=".pdf,.jpg,.jpeg,.png"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
-                        <p class="text-xs text-gray-500 mt-1">PDF, JPG, PNG files up to 5MB</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label for="carrier" class="block text-sm font-semibold text-gray-900">
+                                <span class="flex items-center">
+                                    <svg class="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2v0a2 2 0 01-2-2v-4a2 2 0 00-2-2H8z"></path>
+                                    </svg>
+                                    Carrier *
+                                </span>
+                            </label>
+                            <input type="text" id="carrier" name="carrier" required 
+                                   placeholder="e.g., DHL, FedEx, Aramex"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label for="tracking_number" class="block text-sm font-semibold text-gray-900">
+                                <span class="flex items-center">
+                                    <svg class="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"></path>
+                                    </svg>
+                                    Tracking Number *
+                                </span>
+                            </label>
+                            <input type="text" id="tracking_number" name="tracking_number" required 
+                                   placeholder="Enter tracking number"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200">
+                        </div>
                     </div>
                     
-                    <div>
-                        <label for="carrier" class="block text-sm font-medium text-gray-700 mb-1">Carrier *</label>
-                        <input type="text" id="carrier" name="carrier" required 
-                               placeholder="e.g., DHL, FedEx, Aramex"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
-                    </div>
+
                     
-                    <div>
-                        <label for="tracking_number" class="block text-sm font-medium text-gray-700 mb-1">Tracking Number *</label>
-                        <input type="text" id="tracking_number" name="tracking_number" required 
-                               placeholder="Enter tracking number"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                    <div class="space-y-2">
+                        <label for="supplier_notes" class="block text-sm font-semibold text-gray-900">
+                            <span class="flex items-center">
+                                <svg class="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                                Supplier Notes
+                            </span>
+                        </label>
+                        <textarea id="supplier_notes" name="supplier_notes" rows="4"
+                                  placeholder="Any additional notes or instructions regarding shipment, customs clearance considerations, special handling requirements, etc."
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-200 resize-none"></textarea>
+                        <p class="text-xs text-gray-500 mt-1">Include any relevant information about customs documentation, declared values, or special shipping instructions.</p>
                     </div>
-                    
-                    <div>
-                        <label for="shipping_cost" class="block text-sm font-medium text-gray-700 mb-1">Shipping Cost (AED)</label>
-                        <input type="number" id="shipping_cost" name="shipping_cost" step="0.01" min="0"
-                               placeholder="0.00"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
-                    </div>
-                    
-                    <div>
-                        <label for="supplier_notes" class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
-                        <textarea id="supplier_notes" name="supplier_notes" rows="3"
-                                  placeholder="Any additional notes or instructions"
-                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"></textarea>
-                    </div>
-                </div>
-                
-                <div class="flex justify-end space-x-3 mt-6">
-                    <button type="button" onclick="document.getElementById('submit-documents-modal').style.display='none'"
-                            class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        Cancel
-                    </button>
-                    <button type="submit"
-                            class="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
-                        Submit & Send to Carrier
-                    </button>
                 </div>
             </form>
+        </div>
+        
+        <!-- Modal Footer -->
+        <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+            <div class="flex justify-end space-x-3">
+                <button type="button" onclick="document.getElementById('submit-documents-modal').style.display='none'"
+                        class="px-6 py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200">
+                    Cancel
+                </button>
+                <button type="submit" form="submit-documents-form"
+                        class="px-6 py-3 border border-transparent rounded-lg text-sm font-medium bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 shadow-lg transform hover:scale-105 transition-all duration-200">
+                    <span class="flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
+                        Ship Order to MaxMed
+                    </span>
+                </button>
+            </div>
         </div>
     </div>
 </div>

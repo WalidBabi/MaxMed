@@ -74,8 +74,8 @@ class OrderController extends Controller
                 return redirect()->back()->with('error', 'No delivery found for this order.');
             }
 
-            if ($delivery->status !== 'pending') {
-                return redirect()->back()->with('error', 'Order is not in pending status.');
+            if ($delivery->status !== 'pending' && $delivery->status !== 'in_transit') {
+                return redirect()->back()->with('error', 'Order can only be marked as processing from pending or in_transit status.');
             }
 
             $delivery->update([
@@ -90,6 +90,38 @@ class OrderController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Failed to mark order as processing: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to update order status.');
+        }
+    }
+
+    /**
+     * Mark order back to pending status
+     * This changes delivery status from 'processing' to 'pending'
+     */
+    public function markAsPending(Order $order)
+    {
+        try {
+            $delivery = $order->delivery;
+            
+            if (!$delivery) {
+                return redirect()->back()->with('error', 'No delivery found for this order.');
+            }
+
+            if ($delivery->status !== 'processing') {
+                return redirect()->back()->with('error', 'Order can only be marked as pending from processing status.');
+            }
+
+            $delivery->update([
+                'status' => 'pending',
+                'supplier_notes' => 'Order marked back to pending by supplier'
+            ]);
+
+            Log::info("Order {$order->order_number} marked as pending by supplier. Delivery ID: {$delivery->id}");
+
+            return redirect()->back()->with('success', 'Order marked as pending successfully!');
+
+        } catch (\Exception $e) {
+            Log::error('Failed to mark order as pending: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed to update order status.');
         }
     }
@@ -145,7 +177,12 @@ class OrderController extends Controller
                 'supplier_notes' => $request->supplier_notes
             ]);
 
-            Log::info("Order {$order->order_number} documents submitted and marked as in_transit. Delivery ID: {$delivery->id}");
+            // Also update the order status to 'shipped'
+            $order->update([
+                'status' => 'shipped'
+            ]);
+
+            Log::info("Order {$order->order_number} documents submitted, delivery marked as in_transit, and order status changed to shipped. Delivery ID: {$delivery->id}");
 
             // Trigger invoice conversion if applicable
             $delivery->autoConvertToFinalInvoice();

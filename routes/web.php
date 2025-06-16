@@ -161,6 +161,18 @@ Route::middleware('auth')->group(function () {
         Route::post('invoices/{invoice}/create-order', [\App\Http\Controllers\Admin\InvoiceController::class, 'createOrder'])->name('invoices.create-order');
         Route::post('invoices/{invoice}/link-delivery', [\App\Http\Controllers\Admin\InvoiceController::class, 'linkDelivery'])->name('invoices.link-delivery');
         
+        // Purchase Order Management
+        Route::resource('purchase-orders', \App\Http\Controllers\Admin\PurchaseOrderController::class);
+        Route::post('purchase-orders/{purchaseOrder}/send-to-supplier', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'sendToSupplier'])->name('purchase-orders.send-to-supplier');
+        Route::post('purchase-orders/{purchaseOrder}/acknowledge', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'markAsAcknowledged'])->name('purchase-orders.acknowledge');
+        Route::post('purchase-orders/{purchaseOrder}/update-status', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'updateStatus'])->name('purchase-orders.update-status');
+        Route::post('purchase-orders/{purchaseOrder}/create-payment', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'createPayment'])->name('purchase-orders.create-payment');
+        
+        // Supplier Payments Management
+        Route::resource('supplier-payments', \App\Http\Controllers\Admin\SupplierPaymentController::class)->only(['index', 'show', 'edit', 'update']);
+        Route::post('supplier-payments/{supplierPayment}/mark-completed', [\App\Http\Controllers\Admin\SupplierPaymentController::class, 'markAsCompleted'])->name('supplier-payments.mark-completed');
+        Route::post('supplier-payments/{supplierPayment}/mark-failed', [\App\Http\Controllers\Admin\SupplierPaymentController::class, 'markAsFailed'])->name('supplier-payments.mark-failed');
+        
         // Test route for debugging
         Route::post('quotes/test-store', function(\Illuminate\Http\Request $request) {
             \Log::info('Test store route hit', [
@@ -182,6 +194,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/orders', [\App\Http\Controllers\Supplier\OrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{order}', [\App\Http\Controllers\Supplier\OrderController::class, 'show'])->name('orders.show');
         Route::post('/orders/{order}/mark-processing', [\App\Http\Controllers\Supplier\OrderController::class, 'markAsProcessing'])->name('orders.mark-processing');
+        Route::post('/orders/{order}/mark-pending', [\App\Http\Controllers\Supplier\OrderController::class, 'markAsPending'])->name('orders.mark-pending');
         Route::post('/orders/{order}/submit-documents', [\App\Http\Controllers\Supplier\OrderController::class, 'submitDocuments'])->name('orders.submit-documents');
         Route::get('/orders/{order}/download-packing-list', [\App\Http\Controllers\Supplier\OrderController::class, 'downloadPackingList'])->name('orders.download-packing-list');
         Route::get('/orders/{order}/download-commercial-invoice', [\App\Http\Controllers\Supplier\OrderController::class, 'downloadCommercialInvoice'])->name('orders.download-commercial-invoice');

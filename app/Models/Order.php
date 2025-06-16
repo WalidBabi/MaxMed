@@ -28,6 +28,13 @@ class Order extends Model
     {
         parent::boot();
         
+        // Generate order number when creating a new order
+        static::creating(function ($order) {
+            if (empty($order->order_number)) {
+                $order->order_number = static::generateOrderNumber();
+            }
+        });
+        
         // Auto-create delivery when order is created
         static::created(function ($order) {
             $order->autoCreateDelivery();
@@ -37,6 +44,37 @@ class Order extends Model
         static::updated(function ($order) {
             $order->handleWorkflowAutomation();
         });
+    }
+
+    /**
+     * Generate a unique order number in format ORD-000001
+     */
+    public static function generateOrderNumber(): string
+    {
+        $lastOrder = static::where('order_number', 'like', 'ORD-%')
+            ->orderByRaw('CAST(SUBSTRING(order_number, 5) AS UNSIGNED) DESC')
+            ->first();
+        
+        $nextNumber = 1;
+        if ($lastOrder && $lastOrder->order_number) {
+            // Extract the number part from the order number
+            $numberPart = substr($lastOrder->order_number, 4); // Remove 'ORD-' prefix
+            if (is_numeric($numberPart)) {
+                $nextNumber = intval($numberPart) + 1;
+            }
+        }
+        
+        $orderNumber = 'ORD-' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+        
+        // Safety check to ensure uniqueness
+        $counter = 0;
+        while (static::where('order_number', $orderNumber)->exists() && $counter < 1000) {
+            $nextNumber++;
+            $orderNumber = 'ORD-' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+            $counter++;
+        }
+        
+        return $orderNumber;
     }
 
     /**
@@ -248,6 +286,22 @@ class Order extends Model
     public function hasDelivery(): bool
     {
         return $this->delivery()->exists();
+    }
+
+    /**
+     * Get the purchase order associated with the order.
+     */
+    public function purchaseOrder()
+    {
+        return $this->hasOne(\App\Models\PurchaseOrder::class);
+    }
+
+    /**
+     * Check if the order has a purchase order.
+     */
+    public function hasPurchaseOrder(): bool
+    {
+        return $this->purchaseOrder()->exists();
     }
 
     public function feedback()

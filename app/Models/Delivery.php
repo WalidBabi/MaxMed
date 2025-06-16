@@ -79,10 +79,30 @@ class Delivery extends Model
      */
     public static function generateDeliveryNumber(): string
     {
-        $lastDelivery = static::orderBy('id', 'desc')->first();
-        $nextNumber = $lastDelivery ? $lastDelivery->id + 1 : 1;
+        $lastDelivery = static::where('delivery_number', 'like', 'DL-%')
+            ->orderByRaw('CAST(SUBSTRING(delivery_number, 4) AS UNSIGNED) DESC')
+            ->first();
         
-        return 'DL-' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+        $nextNumber = 1;
+        if ($lastDelivery && $lastDelivery->delivery_number) {
+            // Extract the number part from the delivery number
+            $numberPart = substr($lastDelivery->delivery_number, 3); // Remove 'DL-' prefix
+            if (is_numeric($numberPart)) {
+                $nextNumber = intval($numberPart) + 1;
+            }
+        }
+        
+        $deliveryNumber = 'DL-' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+        
+        // Safety check to ensure uniqueness
+        $counter = 0;
+        while (static::where('delivery_number', $deliveryNumber)->exists() && $counter < 1000) {
+            $nextNumber++;
+            $deliveryNumber = 'DL-' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+            $counter++;
+        }
+        
+        return $deliveryNumber;
     }
 
     /**
