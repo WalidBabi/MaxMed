@@ -74,8 +74,8 @@ class OrderController extends Controller
                 return redirect()->back()->with('error', 'No delivery found for this order.');
             }
 
-            if ($delivery->status !== 'pending' && $delivery->status !== 'in_transit') {
-                return redirect()->back()->with('error', 'Order can only be marked as processing from pending or in_transit status.');
+            if ($delivery->status !== 'pending') {
+                return redirect()->back()->with('error', 'Order can only be marked as processing from pending status.');
             }
 
             $delivery->update([
@@ -129,6 +129,7 @@ class OrderController extends Controller
     /**
      * Submit documents and mark as sent to carrier
      * This changes delivery status from 'processing' to 'in_transit'
+     * Once shipped, the order cannot be reverted back to processing
      */
     public function submitDocuments(Request $request, Order $order)
     {

@@ -312,43 +312,26 @@
                             </button>
                         @endif
                         
-                                                 <!-- Additional Status Controls -->
-                         @if($delivery->status === 'processing')
-                             <div class="border-t pt-4">
-                                 <h4 class="text-sm font-medium text-gray-900 mb-3">Status Controls</h4>
-                                 <div class="space-y-2">
-                                     <form action="{{ route('supplier.orders.mark-pending', $order) }}" method="POST">
-                                         @csrf
-                                         <button type="submit" 
-                                                 class="w-full inline-flex justify-center items-center px-3 py-2 border border-orange-300 text-sm font-medium rounded-md text-orange-700 bg-orange-50 hover:bg-orange-100"
-                                                 onclick="return confirm('Mark this order as pending again?')">
-                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                             </svg>
-                                             Back to Pending
-                                         </button>
-                                     </form>
-                                 </div>
-                             </div>
-                         @elseif($delivery->status === 'in_transit')
-                             <div class="border-t pt-4">
-                                 <h4 class="text-sm font-medium text-gray-900 mb-3">Status Controls</h4>
-                                 <div class="space-y-2">
-                                     <form action="{{ route('supplier.orders.mark-processing', $order) }}" method="POST">
-                                         @csrf
-                                         <button type="submit" 
-                                                 class="w-full inline-flex justify-center items-center px-3 py-2 border border-blue-300 text-sm font-medium rounded-md text-blue-700 bg-blue-50 hover:bg-blue-100"
-                                                 onclick="return confirm('Mark this order as processing again?')">
-                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                                             </svg>
-                                             Back to Processing
-                                         </button>
-                                     </form>
-                                 </div>
-                             </div>
-                         @endif
-                        
+                        <!-- Additional Status Controls -->
+                        @if($delivery->status === 'processing')
+                            <div class="border-t pt-4">
+                                <h4 class="text-sm font-medium text-gray-900 mb-3">Status Controls</h4>
+                                <div class="space-y-2">
+                                    <form action="{{ route('supplier.orders.mark-pending', $order) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" 
+                                                class="w-full inline-flex justify-center items-center px-3 py-2 border border-orange-300 text-sm font-medium rounded-md text-orange-700 bg-orange-50 hover:bg-orange-100"
+                                                onclick="return confirm('Mark this order as pending again?')">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            Back to Pending
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        @endif
+
                         <!-- Document Downloads -->
                         @if($delivery->packing_list_file || $delivery->commercial_invoice_file)
                             <div class="border-t pt-4">
