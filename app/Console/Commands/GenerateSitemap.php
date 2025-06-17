@@ -87,32 +87,48 @@ class GenerateSitemap extends Command
         $sitemap = Sitemap::create();
         $productCount = 0;
 
-        // Add products with better SEO optimization
-        Product::chunk(100, function ($products) use ($sitemap, $baseUrl, &$productCount) {
-            foreach ($products as $product) {
-                $priority = 0.8;
-                
-                // Boost priority for newer products
-                if ($product->created_at && $product->created_at->diffInDays() < 30) {
-                    $priority = 0.9;
-                }
+        // Add products with better SEO optimization - EXCLUDE PROBLEMATIC PRODUCTS
+        $excludedProductIds = [
+            // 404 Products from Search Console data
+            138, 147, 150, 129, 124, 169, 121, 149, 148, 158, 145, 142, 
+            181, 151, 116, 160, 155, 68, 162, 173, 122, 32, 275, 31, 
+            170, 30, 139, 114, 172, 182, 236, 167, 67, 177, 180, 171, 
+            178, 176, 179, 282, 270, 281, 285,
+            // Products causing robots.txt conflicts
+            80, 92
+        ];
 
-                // Boost priority for products with images
-                if ($product->image_url) {
-                    $priority = min(1.0, $priority + 0.1);
-                }
+        Product::whereNotIn('id', $excludedProductIds)
+            ->chunk(100, function ($products) use ($sitemap, $baseUrl, &$productCount) {
+                foreach ($products as $product) {
+                    // Only include products that actually exist and have valid data
+                    if (!$product->name || !$product->id) {
+                        continue;
+                    }
 
-                $sitemap->add(Url::create($baseUrl . "/product/{$product->id}")
-                    ->setPriority($priority)
-                    ->setChangeFrequency('weekly')
-                    ->setLastModificationDate($product->updated_at ?? $product->created_at));
-                
-                $productCount++;
-            }
-        });
+                    $priority = 0.8;
+                    
+                    // Boost priority for newer products
+                    if ($product->created_at && $product->created_at->diffInDays() < 30) {
+                        $priority = 0.9;
+                    }
+
+                    // Boost priority for products with images
+                    if ($product->image_url) {
+                        $priority = min(1.0, $priority + 0.1);
+                    }
+
+                    $sitemap->add(Url::create($baseUrl . "/product/{$product->id}")
+                        ->setPriority($priority)
+                        ->setChangeFrequency('weekly')
+                        ->setLastModificationDate($product->updated_at ?? $product->created_at));
+                    
+                    $productCount++;
+                }
+            });
 
         $sitemap->writeToFile(public_path('sitemap-products.xml'));
-        $this->info("✓ Products sitemap generated ({$productCount} products)");
+        $this->info("✓ Products sitemap generated ({$productCount} products, excluded problematic URLs)");
     }
 
     private function generateCategorySitemap($baseUrl)
@@ -120,11 +136,26 @@ class GenerateSitemap extends Command
         $sitemap = Sitemap::create();
         $categoryCount = 0;
 
+        // Excluded category paths from Search Console 404 data
+        $excludedCategoryPaths = [
+            '51/55/58', '43/46', '50', '43/45', '46', '44', '40', '45', 
+            '55', '43', '34', '76', '72', '77', '79', '56', '51/60', 
+            '51/55/59', '51/39/84', '51/39/86', '51/39/83', '66/71/72', 
+            '66/71/73', '57/74', '60/77', '57/75', '51/55', '49/39',
+            '51/52', '52', '35', '41', '43/44', '34/35', '36', '38', 
+            '33', '34/37', '32', '37'
+        ];
+
         // Add categories - only include valid categories with content
         Category::whereHas('products')
             ->orWhereHas('subcategories')
-            ->chunk(50, function ($categories) use ($sitemap, $baseUrl, &$categoryCount) {
+            ->chunk(50, function ($categories) use ($sitemap, $baseUrl, &$categoryCount, $excludedCategoryPaths) {
                 foreach ($categories as $category) {
+                    // Skip excluded categories
+                    if (in_array($category->id, array_map('intval', explode('/', implode('/', $excludedCategoryPaths))))) {
+                        continue;
+                    }
+
                     $productCount = $category->products()->count();
                     $subcategoryCount = $category->subcategories()->count();
                     
@@ -140,8 +171,13 @@ class GenerateSitemap extends Command
                     
                     $categoryCount++;
 
-                    // Add subcategories with content
+                    // Add subcategories with content - check against excluded paths
                     foreach ($category->subcategories()->whereHas('products')->get() as $subcategory) {
+                        $categoryPath = "{$category->id}/{$subcategory->id}";
+                        if (in_array($categoryPath, $excludedCategoryPaths)) {
+                            continue;
+                        }
+
                         $subProductCount = $subcategory->products()->count();
                         $subPriority = max(0.6, min(0.8, 0.6 + ($subProductCount * 0.01)));
 
@@ -152,8 +188,13 @@ class GenerateSitemap extends Command
                         
                         $categoryCount++;
 
-                        // Add sub-subcategories with products
+                        // Add sub-subcategories with products - check against excluded paths
                         foreach ($subcategory->subcategories()->whereHas('products')->get() as $subsubcategory) {
+                            $subCategoryPath = "{$category->id}/{$subcategory->id}/{$subsubcategory->id}";
+                            if (in_array($subCategoryPath, $excludedCategoryPaths)) {
+                                continue;
+                            }
+
                             $sitemap->add(Url::create($baseUrl . "/categories/{$category->id}/{$subcategory->id}/{$subsubcategory->id}")
                                 ->setPriority(0.6)
                                 ->setChangeFrequency('weekly')
@@ -166,7 +207,7 @@ class GenerateSitemap extends Command
             });
 
         $sitemap->writeToFile(public_path('sitemap-categories.xml'));
-        $this->info("✓ Categories sitemap generated ({$categoryCount} categories)");
+        $this->info("✓ Categories sitemap generated ({$categoryCount} categories, excluded problematic URLs)");
     }
 
     private function generateNewsSitemap($baseUrl)
