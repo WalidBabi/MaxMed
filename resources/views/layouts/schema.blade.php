@@ -55,39 +55,39 @@
         "https://www.instagram.com/maxmeduae"
     ],
     "keywords": "laboratory equipment Dubai, medical supplies UAE, scientific instruments, lab technology, diagnostic equipment, research lab supplies, hospital equipment, medical laboratory setup, contact MaxMed, MaxMed phone number",
-    "makesOffer": [
-        {
-            "@type": "Offer",
-            "itemOffered": {
-                "@type": "Product",
+    "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Laboratory & Medical Equipment",
+        "itemListElement": [
+            {
+                "@type": "OfferCatalog",
                 "name": "Laboratory Equipment",
                 "description": "High-quality laboratory equipment for medical and research facilities"
-            }
-        },
-        {
-            "@type": "Offer",
-            "itemOffered": {
-                "@type": "Product",
+            },
+            {
+                "@type": "OfferCatalog", 
                 "name": "Scientific Instruments",
                 "description": "Precision scientific instruments for laboratory analysis and research"
-            }
-        },
-        {
-            "@type": "Offer",
-            "itemOffered": {
-                "@type": "Product",
-                "name": "Medical Supplies",
+            },
+            {
+                "@type": "OfferCatalog",
+                "name": "Medical Supplies", 
                 "description": "Essential medical supplies for hospitals and healthcare facilities"
-            }
-        },
-        {
-            "@type": "Offer",
-            "itemOffered": {
-                "@type": "Product",
+            },
+            {
+                "@type": "OfferCatalog",
                 "name": "Diagnostic Equipment",
                 "description": "Advanced diagnostic tools and equipment for medical testing"
             }
-        }
+        ]
+    },
+    "serviceType": [
+        "Laboratory Equipment Supply",
+        "Medical Equipment Distribution", 
+        "Scientific Instrument Sales",
+        "Technical Support Services",
+        "Equipment Installation",
+        "Maintenance Services"
     ],
     "potentialAction": {
         "@type": "ContactAction",

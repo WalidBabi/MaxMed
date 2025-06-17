@@ -19,13 +19,17 @@ class Product extends Model
         'supplier_id',
         'has_size_options',
         'size_options',
-        'pdf_file'
+        'pdf_file',
+        'average_rating',
+        'review_count'
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
         'has_size_options' => 'boolean',
-        'size_options' => 'array'
+        'size_options' => 'array',
+        'average_rating' => 'decimal:1',
+        'review_count' => 'integer'
     ];
 
     public function category()
