@@ -373,15 +373,17 @@ class Delivery extends Model
                 'payment_due_net_30' => 'Final Invoice - Payment Due in 30 Days'
             ];
 
+            $salesEmail = app()->environment('production') ? 'sales@maxmedme.com' : 'wbabi@localhost.com';
+            
             $emailData = [
                 'to_email' => $customer->email,
-                'cc_emails' => ['sales@maxmedme.com'],
+                'cc_emails' => [$salesEmail],
                 'subject' => ($subjects[$emailType] ?? 'Final Invoice') . ' - ' . $finalInvoice->invoice_number,
                 'message' => $emailMessages[$emailType] ?? $emailMessages['delivery_completed']
             ];
 
             Mail::to($customer->email)
-                ->cc(['sales@maxmedme.com'])
+                ->cc([$salesEmail])
                 ->send(new \App\Mail\InvoiceEmail($finalInvoice, $emailData));
 
             // Update email history
@@ -389,7 +391,7 @@ class Delivery extends Model
             $emailHistory[] = [
                 'sent_at' => now()->toISOString(),
                 'to' => $customer->email,
-                'cc' => ['sales@maxmedme.com'],
+                'cc' => [$salesEmail],
                 'subject' => $emailData['subject'],
                 'type' => $emailType,
                 'auto_sent' => true

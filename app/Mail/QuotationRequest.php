@@ -18,6 +18,11 @@ class QuotationRequest extends Mailable
     public $requirements;
     public $notes;
     public $user;
+    public $deliveryTimeline;
+    public $contactName;
+    public $contactEmail;
+    public $contactPhone;
+    public $contactCompany;
 
     /**
      * Create a new message instance.
@@ -28,6 +33,11 @@ class QuotationRequest extends Mailable
      * @param string|null $requirements
      * @param string|null $notes
      * @param User|null $user
+     * @param string|null $deliveryTimeline
+     * @param string|null $contactName
+     * @param string|null $contactEmail
+     * @param string|null $contactPhone
+     * @param string|null $contactCompany
      * @return void
      */
     public function __construct(
@@ -36,7 +46,12 @@ class QuotationRequest extends Mailable
         ?string $size,
         ?string $requirements,
         ?string $notes,
-        ?User $user
+        ?User $user,
+        ?string $deliveryTimeline = null,
+        ?string $contactName = null,
+        ?string $contactEmail = null,
+        ?string $contactPhone = null,
+        ?string $contactCompany = null
     ) {
         $this->product = $product;
         $this->quantity = $quantity;
@@ -44,6 +59,11 @@ class QuotationRequest extends Mailable
         $this->requirements = $requirements;
         $this->notes = $notes;
         $this->user = $user;
+        $this->deliveryTimeline = $deliveryTimeline;
+        $this->contactName = $contactName;
+        $this->contactEmail = $contactEmail;
+        $this->contactPhone = $contactPhone;
+        $this->contactCompany = $contactCompany;
     }
 
     /**

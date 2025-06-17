@@ -50,6 +50,19 @@ class CrmLead extends Model
         return $this->hasMany(CrmDeal::class, 'lead_id');
     }
 
+    public function quotationRequests()
+    {
+        return $this->hasMany(QuotationRequest::class, 'lead_id');
+    }
+
+    // Methods
+    public function hasActiveQuotationRequest()
+    {
+        return $this->quotationRequests()
+            ->whereIn('status', ['pending', 'forwarded', 'supplier_responded'])
+            ->exists();
+    }
+
     // Accessors
     public function getFullNameAttribute()
     {

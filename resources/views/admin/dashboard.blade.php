@@ -108,6 +108,92 @@
         </div>
     </div>
 
+    <!-- Supplier Management Section -->
+    <div class="mb-8">
+        <h3 class="text-lg font-semibold text-gray-500 mb-4 tracking-wide">SUPPLIER MANAGEMENT</h3>
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <!-- Supplier Categories -->
+            <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
+                <a href="{{ route('admin.supplier-categories.index') }}" class="block text-decoration-none">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-lg metric-card">
+                                <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Supplier Categories</p>
+                            <p class="text-lg font-semibold text-gray-900">Category Assignments</p>
+                            <p class="text-xs text-gray-500 mt-1">Manage supplier expertise</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Purchase Orders -->
+            <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
+                <a href="{{ route('admin.purchase-orders.index') }}" class="block text-decoration-none">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-lg success-card">
+                                <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Purchase Orders</p>
+                            <p class="text-lg font-semibold text-gray-900">Procurement</p>
+                            <p class="text-xs text-gray-500 mt-1">Supplier ordering</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Supplier Payments -->
+            <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
+                <a href="{{ route('admin.supplier-payments.index') }}" class="block text-decoration-none">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-lg warning-card">
+                                <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H6.75a.75.75 0 01.75.75v.375m3 0V6a.75.75 0 01.75-.75h.375c.621 0 1.125.504 1.125 1.125v.75h.75a.75.75 0 01.75.75v.375c0 .621-.504 1.125-1.125 1.125H12a.75.75 0 01-.75-.75v-.75h-.75V6a.75.75 0 01.75-.75h.375c.621 0 1.125.504 1.125 1.125V6h.75a.75.75 0 01.75.75v.375c0 .621-.504 1.125-1.125 1.125H15a.75.75 0 01-.75-.75V6.75a.75.75 0 01.75-.75h.75v-.75A.75.75 0 0116.5 5h.75a.75.75 0 01.75.75v.75h.375c.621 0 1.125.504 1.125 1.125V8.25a.75.75 0 01-.75.75H18a.75.75 0 01-.75-.75v-.375a.75.75 0 01.75-.75h.375V6h-.75a.75.75 0 01-.75-.75V5.25c0-.621.504-1.125 1.125-1.125H18v-.75c0-.414.336-.75.75-.75h.75c.414 0 .75.336.75.75v9a.75.75 0 01-.75.75h-.75a.75.75 0 01-.75-.75v-.75H18a.75.75 0 01-.75-.75v-.375a.75.75 0 01.75-.75h.375v-.75H18a.75.75 0 01-.75-.75V9a.75.75 0 01.75-.75h.75V8.25a.75.75 0 01-.75-.75H18V6.75a.75.75 0 01-.75-.75V6h-.375a.75.75 0 01-.75-.75V4.5z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Supplier Payments</p>
+                            <p class="text-lg font-semibold text-gray-900">Payment Processing</p>
+                            <p class="text-xs text-gray-500 mt-1">Financial management</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Product Inquiries -->
+            <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
+                <a href="{{ route('admin.inquiries.index') }}" class="block text-decoration-none">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-lg danger-card">
+                                <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Product Inquiries</p>
+                            <p class="text-lg font-semibold text-gray-900">Supplier Requests</p>
+                            <p class="text-xs text-gray-500 mt-1">Customer inquiries</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- Operations Section -->
     <div class="mb-8">
         <h3 class="text-lg font-semibold text-gray-500 mb-4 tracking-wide">OPERATIONS</h3>

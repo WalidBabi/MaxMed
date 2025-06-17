@@ -481,12 +481,21 @@
                             <input type="email" id="email" name="email" class="form-control" required>
                         </div>
                         <div class="form-group" style="transition: all 0.4s ease;">
+                            <label class="form-label" for="phone">Phone (Optional)</label>
+                            <input type="tel" id="phone" name="phone" class="form-control" placeholder="+971 50 123 4567">
+                        </div>
+                        <div class="form-group" style="transition: all 0.4s ease;">
+                            <label class="form-label" for="company">Company (Optional)</label>
+                            <input type="text" id="company" name="company" class="form-control" placeholder="Your company name">
+                        </div>
+                        <div class="form-group" style="transition: all 0.4s ease;">
                             <label class="form-label" for="subject">Subject</label>
                             <select id="subject" name="subject" class="form-select" required>
                                 <option value="">Select a subject</option>
-                                <option value="sales">Sales Inquiry</option>
-                                <option value="support">Technical Support</option>
-                                <option value="service">Service Request</option>
+                                <option value="sales inquiry">Sales Inquiry</option>
+                                <option value="technical support">Technical Support</option>
+                                <option value="service request">Service Request</option>
+                                <option value="partnership">Partnership</option>
                                 <option value="other">Other</option>
                             </select>
                         </div>
@@ -496,12 +505,17 @@
                         </div>
 
                         <!-- Hidden field for recipient email -->
-                        <input type="hidden" name="recipient" value="sales@maxmedme.com">
+                        <input type="hidden" name="recipient" value="{{ app()->environment('production') ? 'sales@maxmedme.com' : 'wbabi@localhost.com' }}">
                         
-                        {{-- reCAPTCHA v2 --}}
+                        {{-- reCAPTCHA v2 - Only show in production --}}
+                        @if(app()->environment('production'))
                         <div class="form-group" style="transition: all 0.4s ease;">
                            <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
                         </div>
+                        @else
+                        {{-- Hidden field for development environment --}}
+                        <input type="hidden" name="g-recaptcha-response" value="dev-bypass">
+                        @endif
                         
                         <button type="submit" class="submit-btn" style="transition: all 0.4s ease;"
                                 x-bind:disabled="submitting">
@@ -615,7 +629,9 @@
     });
 </script>
 
-{{-- Add reCAPTCHA script --}}
+{{-- Add reCAPTCHA script only in production --}}
+@if(app()->environment('production'))
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+@endif
 
 @endsection 

@@ -113,6 +113,104 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the supplier category assignments
+     */
+    public function supplierCategories()
+    {
+        return $this->hasMany(SupplierCategory::class, 'supplier_id');
+    }
+
+    /**
+     * Get the active supplier category assignments
+     */
+    public function activeSupplierCategories()
+    {
+        return $this->hasMany(SupplierCategory::class, 'supplier_id')
+                    ->where('status', 'active');
+    }
+
+    /**
+     * Get the categories this supplier is assigned to
+     */
+    public function assignedCategories()
+    {
+        return $this->belongsToMany(Category::class, 'supplier_categories', 'supplier_id', 'category_id')
+                    ->withPivot([
+                        'id', 'status', 'minimum_order_value', 'lead_time_days', 'notes', 
+                        'commission_rate', 'avg_response_time_hours', 'quotation_win_rate',
+                        'total_quotations', 'won_quotations', 'avg_customer_rating',
+                        'assigned_by', 'assigned_at', 'last_quotation_at', 'created_at', 'updated_at'
+                    ])
+                    ->withTimestamps();
+    }
+
+    /**
+     * Get the active categories this supplier is assigned to
+     */
+    public function activeAssignedCategories()
+    {
+        return $this->assignedCategories()->wherePivot('status', 'active');
+    }
+
+    /**
+     * Get supplier products
+     */
+    public function supplierProducts()
+    {
+        return $this->hasMany(Product::class, 'supplier_id');
+    }
+
+    /**
+     * Check if user is a supplier
+     */
+    public function isSupplier(): bool
+    {
+        return $this->role && $this->role->name === 'supplier';
+    }
+
+    /**
+     * Check if supplier is assigned to a specific category
+     */
+    public function isAssignedToCategory($categoryId): bool
+    {
+        return $this->activeSupplierCategories()
+                    ->where('category_id', $categoryId)
+                    ->exists();
+    }
+
+    /**
+     * Get supplier performance metrics for a category
+     */
+    public function getCategoryPerformance($categoryId)
+    {
+        return $this->supplierCategories()
+                    ->where('category_id', $categoryId)
+                    ->first();
+    }
+
+    /**
+     * Get overall supplier performance score
+     */
+    public function getOverallPerformanceScoreAttribute(): float
+    {
+        $assignments = $this->activeSupplierCategories;
+        
+        if ($assignments->isEmpty()) {
+            return 0.0;
+        }
+
+        $totalScore = $assignments->sum(function ($assignment) {
+            $winRateScore = $assignment->quotation_win_rate;
+            $responseTimeScore = max(0, 100 - ($assignment->avg_response_time_hours / 48 * 100));
+            $ratingScore = ($assignment->avg_customer_rating / 5) * 100;
+            
+            return ($winRateScore + $responseTimeScore + $ratingScore) / 3;
+        });
+
+        return $totalScore / $assignments->count();
+    }
+
+    /**
      * Get the profile photo URL
      *
      * @return string|null

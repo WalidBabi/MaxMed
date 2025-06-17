@@ -5,28 +5,309 @@
 @section('meta_robots', 'noindex, follow')
 
 @section('content')
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+<style>
+    /* Enhanced Quotation Form Styling */
+    .quotation-hero {
+        position: relative;
+        background: linear-gradient(135deg, #171e60 0%, #0a5694 100%);
+        color: white;
+        padding: 4rem 0;
+        overflow: hidden;
+    }
+    
+    .quotation-hero::before {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: rgba(10, 86, 148, 0.3);
+        filter: blur(80px);
+    }
+    
+    .quotation-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -80px;
+        left: -80px;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: rgba(10, 86, 148, 0.2);
+        filter: blur(80px);
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 10;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        position: relative;
+        z-index: 10;
+    }
+    
+    .quotation-section {
+        padding: 4rem 0;
+        background-color: #f8f9fa;
+        min-height: 80vh;
+    }
+    
+    .quotation-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        transition: all 0.4s ease;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .quotation-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, #171e60 0%, #0a5694 100%);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+    
+    .card-header h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0;
+    }
+    
+    .product-info {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .product-name {
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+    
+    .product-sku {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+    
+    /* Form Styling */
+    .form-section {
+        padding: 2rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 1rem 1.25rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        background-color: #f8fafc;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-family: inherit;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #0a5694;
+        box-shadow: 0 0 0 3px rgba(10, 86, 148, 0.15);
+        background-color: white;
+        transform: translateY(-1px);
+    }
+    
+    .form-control::placeholder {
+        color: #94a3b8;
+        font-style: italic;
+    }
+    
+    .textarea-control {
+        min-height: 120px;
+        resize: vertical;
+        font-family: inherit;
+    }
+    
+    .size-display {
+        background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+        border: 2px solid #0a5694;
+        border-radius: 8px;
+        padding: 1rem;
+        color: #0a5694;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    
+    .size-display i {
+        margin-right: 0.5rem;
+        color: #0a5694;
+    }
+    
+    /* Submit Button */
+    .submit-btn {
+        width: 100%;
+        padding: 1.25rem 2rem;
+        background: linear-gradient(135deg, #171e60 0%, #0a5694 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(23, 30, 96, 0.4);
+    }
+    
+    .submit-btn:active {
+        transform: translateY(-1px);
+    }
+    
+    .submit-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .submit-btn:hover::before {
+        left: 100%;
+    }
+    
+    /* Alert Styling */
+    .alert {
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid;
+        font-weight: 500;
+    }
+    
+    .alert-success {
+        background-color: #d1fae5;
+        border-left-color: #10b981;
+        color: #065f46;
+    }
+    
+    .alert-danger {
+        background-color: #fee2e2;
+        border-left-color: #ef4444;
+        color: #b91c1c;
+    }
+    
+    .alert-info {
+        background-color: #dbeafe;
+        border-left-color: #3b82f6;
+        color: #1e40af;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+        
+        .quotation-section {
+            padding: 2rem 0;
+        }
+        
+        .card-header,
+        .form-section {
+            padding: 1.5rem;
+        }
+        
+        .form-control {
+            font-size: 16px; /* Prevents zoom on iOS */
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="quotation-hero">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+        <h1 class="hero-title">Request Quotation</h1>
+        <p class="hero-subtitle">Get competitive pricing for premium medical equipment</p>
+    </div>
+</div>
+
+<!-- Quotation Section -->
+<div class="quotation-section">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="quotation-card">
+            <!-- Card Header -->
+            <div class="card-header">
+                <h2>Quotation Request</h2>
+                <div class="product-info">
+                    <div class="product-name">{{ $product->name }}</div>
+                    @if($product->sku)
+                        <div class="product-sku">SKU: {{ $product->sku }}</div>
+                    @endif
+                </div>
+            </div>
+            
+            <!-- Form Section -->
+            <div class="form-section">
             <!-- Success and Error Messages -->
             @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle mr-2"></i>
                 {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             @endif
 
             @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle mr-2"></i>
                 {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             @endif
 
             <!-- Display validation errors -->
             @if ($errors->any())
-            <div class="alert alert-danger mb-4">
-                <ul class="mb-0">
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    <strong>Please correct the following errors:</strong>
+                    <ul class="mt-2 mb-0">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -34,63 +315,191 @@
             </div>
             @endif
 
-            <div class="card">
-                <div class="card-header">
-                    <h4>Request Quotation for {{ $product->name }}</h4>
+                <!-- Size Selection Display -->
+                @if(request('size'))
+                <div class="size-display">
+                    <i class="fas fa-ruler-combined"></i>
+                    <strong>Selected Size:</strong> {{ request('size') }}
                 </div>
-                <div class="card-body">
+                @endif
+
+                <!-- Quotation Form -->
                     <form action="{{ route('quotation.store') }}" method="POST" id="quotationForm">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                         <input type="hidden" name="user_id" value="{{ auth()->check() ? auth()->id() : 0 }}">
                         <input type="hidden" name="size" value="{{ request('size') }}" id="size-input">
 
-                        @if(request('size'))
-                        <div class="mb-3">
-                            <div class="alert alert-info">
-                                <strong>Selected Size:</strong> {{ request('size') }}
+                    <!-- Contact Information Section -->
+                    @if(!auth()->check())
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                        <h3 class="text-lg font-medium text-blue-900 mb-4">
+                            <i class="fas fa-user mr-2"></i>Contact Information
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="form-group">
+                                <label for="contact_name" class="form-label">
+                                    <i class="fas fa-user mr-2"></i>Full Name
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="contact_name" 
+                                       name="contact_name" 
+                                       required 
+                                       value="{{ old('contact_name') }}"
+                                       placeholder="Your full name">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="contact_email" class="form-label">
+                                    <i class="fas fa-envelope mr-2"></i>Email Address
+                                </label>
+                                <input type="email" 
+                                       class="form-control" 
+                                       id="contact_email" 
+                                       name="contact_email" 
+                                       required 
+                                       value="{{ old('contact_email') }}"
+                                       placeholder="your.email@company.com">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="contact_phone" class="form-label">
+                                    <i class="fas fa-phone mr-2"></i>Phone Number
+                                </label>
+                                <input type="tel" 
+                                       class="form-control" 
+                                       id="contact_phone" 
+                                       name="contact_phone" 
+                                       value="{{ old('contact_phone') }}"
+                                       placeholder="+971 50 123 4567">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="contact_company" class="form-label">
+                                    <i class="fas fa-building mr-2"></i>Company Name
+                                </label>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="contact_company" 
+                                       name="contact_company" 
+                                       value="{{ old('contact_company') }}"
+                                       placeholder="Your company name">
+                            </div>
                             </div>
                         </div>
                         @endif
 
-                        <div class="mb-3">
-                            <label for="quantity" class="form-label">Quantity Required</label>
-                            <input type="number" class="form-control" id="quantity" name="quantity" required min="1">
+                    <!-- Product & Quantity Information -->
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">
+                            <i class="fas fa-box mr-2"></i>Product Requirements
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="form-group">
+                                <label for="quantity" class="form-label">
+                                    <i class="fas fa-hashtag mr-2"></i>Quantity Required
+                                </label>
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="quantity" 
+                                       name="quantity" 
+                                       required 
+                                       min="1"
+                                       value="{{ old('quantity', 1) }}"
+                                       placeholder="Enter quantity needed">
                         </div>
 
-                        <div class="mb-3">
-                            <label for="requirements" class="form-label">Specific Requirements</label>
-                            <textarea class="form-control" id="requirements" name="requirements" rows="3" 
-                                    placeholder="Any specific requirements or customizations?"></textarea>
+                            <div class="form-group">
+                                <label for="delivery_timeline" class="form-label">
+                                    <i class="fas fa-clock mr-2"></i>Delivery Timeline
+                                </label>
+                                <select class="form-control" id="delivery_timeline" name="delivery_timeline">
+                                    <option value="">Select timeline</option>
+                                    <option value="urgent" {{ old('delivery_timeline') == 'urgent' ? 'selected' : '' }}>Urgent (1-2 weeks)</option>
+                                    <option value="standard" {{ old('delivery_timeline') == 'standard' ? 'selected' : '' }}>Standard (3-4 weeks)</option>
+                                    <option value="flexible" {{ old('delivery_timeline') == 'flexible' ? 'selected' : '' }}>Flexible (1-2 months)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="requirements" class="form-label">
+                            <i class="fas fa-list-ul mr-2"></i>Specific Requirements
+                        </label>
+                        <textarea class="form-control textarea-control" 
+                                  id="requirements" 
+                                  name="requirements" 
+                                  rows="4"
+                                  placeholder="Please specify any technical requirements, certifications needed, or customizations...">{{ old('requirements') }}</textarea>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="notes" class="form-label">Additional Notes</label>
-                            <textarea class="form-control" id="notes" name="notes" rows="3"
-                                    placeholder="Any additional information or questions?"></textarea>
+                    <div class="form-group">
+                        <label for="notes" class="form-label">
+                            <i class="fas fa-sticky-note mr-2"></i>Additional Notes
+                        </label>
+                        <textarea class="form-control textarea-control" 
+                                  id="notes" 
+                                  name="notes" 
+                                  rows="3"
+                                  placeholder="Any additional information, questions, or special requests...">{{ old('notes') }}</textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Submit Quote Request</button>
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        Submit Quote Request
+                    </button>
                     </form>
-
-                    <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        const form = document.getElementById('quotationForm');
-                        
-                        form.addEventListener('submit', function(e) {
-                            try {
-                                console.log('Form submitted');
-                                // Continue with normal form submission
-                            } catch (error) {
-                                console.error('Error during form submission:', error);
-                                alert('Error submitting form: ' + error.message);
-                            }
-                        });
-                    });
-                    </script>
-                </div>
             </div>
         </div>
     </div>
 </div>
+
+                    <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const form = document.getElementById('quotationForm');
+    const submitBtn = document.getElementById('submitBtn');
+                        
+    // Add loading state to submit button
+                        form.addEventListener('submit', function(e) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Submitting Request...';
+        
+        // Re-enable button after 5 seconds in case of issues
+        setTimeout(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Submit Quote Request';
+        }, 5000);
+    });
+    
+    // Auto-resize textareas
+    const textareas = document.querySelectorAll('textarea');
+    textareas.forEach(textarea => {
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    });
+    
+    // Add floating label effect
+    const inputs = document.querySelectorAll('.form-control');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.parentElement.classList.remove('focused');
+            }
+        });
+        
+        // Check if input has value on page load
+        if (input.value) {
+            input.parentElement.classList.add('focused');
+                            }
+                        });
+                    });
+                    </script>
 @endsection
