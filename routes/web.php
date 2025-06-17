@@ -42,6 +42,7 @@ Route::get('/privacy-policy', function() {
 })->name('privacy.policy');
 Route::get('/about', fn() => view('about'))->name('about');
 Route::get('/contact', fn() => view('contact'))->name('contact');
+Route::post('/contact', [\App\Http\Controllers\ContactController::class, 'submit'])->name('contact.submit');
 
 // Partners Route Group - Moved to the partners prefix group below
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -83,15 +84,34 @@ Route::middleware('auth')->group(function () {
     });
 
     // CRM Routes
-    Route::prefix('crm')->name('crm.')->group(function () {
-        Route::get('/', [CrmController::class, 'dashboard'])->name('dashboard');
-        Route::get('/reports', [CrmController::class, 'reports'])->name('reports');
-        
-        // Lead Management
-        Route::resource('leads', CrmLeadController::class);
-        Route::post('leads/{lead}/activity', [CrmLeadController::class, 'addActivity'])->name('leads.activity.add');
-        Route::post('leads/{lead}/convert', [CrmLeadController::class, 'convert'])->name('leads.convert');
-    });
+    Route::prefix('crm')->name('crm.')->middleware(['web', 'auth'])->group(function () {
+    Route::get('/', [CrmController::class, 'dashboard'])->name('dashboard');
+    Route::get('/reports', [CrmController::class, 'reports'])->name('reports');
+    
+    // Contact Submissions Management (CRM)
+    Route::resource('contact-submissions', \App\Http\Controllers\Crm\ContactSubmissionController::class)->only(['index', 'show'])
+        ->parameters(['contact-submissions' => 'submission']);
+    Route::post('contact-submissions/{submission}/convert-to-lead', [\App\Http\Controllers\Crm\ContactSubmissionController::class, 'convertToLead'])->name('contact-submissions.convert-to-lead');
+    Route::post('contact-submissions/{submission}/convert-to-inquiry', [\App\Http\Controllers\Crm\ContactSubmissionController::class, 'convertToInquiry'])->name('contact-submissions.convert-to-inquiry');
+    Route::put('contact-submissions/{submission}/status', [\App\Http\Controllers\Crm\ContactSubmissionController::class, 'updateStatus'])->name('contact-submissions.status.update');
+    Route::post('contact-submissions/{submission}/notes', [\App\Http\Controllers\Crm\ContactSubmissionController::class, 'addNotes'])->name('contact-submissions.add-notes');
+    Route::post('contact-submissions/bulk-action', [\App\Http\Controllers\Crm\ContactSubmissionController::class, 'bulkAction'])->name('contact-submissions.bulk-action');
+    
+    // Quotation Requests Management (CRM)
+    Route::resource('quotation-requests', \App\Http\Controllers\Crm\QuotationRequestController::class)->only(['index', 'show']);
+    Route::post('quotation-requests/{quotationRequest}/convert-to-lead', [\App\Http\Controllers\Crm\QuotationRequestController::class, 'convertToLead'])->name('quotation-requests.convert-to-lead');
+    Route::put('quotation-requests/{quotationRequest}/status', [\App\Http\Controllers\Crm\QuotationRequestController::class, 'updateStatus'])->name('quotation-requests.status.update');
+    Route::post('quotation-requests/{quotationRequest}/notes', [\App\Http\Controllers\Crm\QuotationRequestController::class, 'addNotes'])->name('quotation-requests.add-notes');
+    Route::post('quotation-requests/bulk-action', [\App\Http\Controllers\Crm\QuotationRequestController::class, 'bulkAction'])->name('quotation-requests.bulk-action');
+    
+    // Lead Management
+    Route::resource('leads', CrmLeadController::class);
+    Route::post('leads/{lead}/activity', [CrmLeadController::class, 'addActivity'])->name('leads.activity.add');
+    Route::post('leads/{lead}/convert', [CrmLeadController::class, 'convert'])->name('leads.convert');
+    Route::post('leads/{lead}/convert-to-deal', [CrmLeadController::class, 'convertToDeal'])->name('leads.convert-to-deal');
+    Route::post('leads/{lead}/create-quotation-request', [CrmLeadController::class, 'createQuotationRequest'])->name('leads.create-quotation-request');
+    Route::patch('leads/{lead}/status', [CrmLeadController::class, 'updateStatus'])->name('leads.update-status');
+});
 
     // Admin Routes
     Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(function () {
@@ -173,6 +193,21 @@ Route::middleware('auth')->group(function () {
         Route::post('supplier-payments/{supplierPayment}/mark-completed', [\App\Http\Controllers\Admin\SupplierPaymentController::class, 'markAsCompleted'])->name('supplier-payments.mark-completed');
         Route::post('supplier-payments/{supplierPayment}/mark-failed', [\App\Http\Controllers\Admin\SupplierPaymentController::class, 'markAsFailed'])->name('supplier-payments.mark-failed');
         
+        // Supplier Category Management
+        Route::resource('supplier-categories', \App\Http\Controllers\Admin\SupplierCategoryController::class);
+        Route::post('supplier-categories/bulk-status', [\App\Http\Controllers\Admin\SupplierCategoryController::class, 'bulkUpdateStatus'])->name('supplier-categories.bulk-status');
+        Route::get('supplier-categories/export', [\App\Http\Controllers\Admin\SupplierCategoryController::class, 'export'])->name('supplier-categories.export');
+        Route::get('api/suppliers-by-category', [\App\Http\Controllers\Admin\SupplierCategoryController::class, 'getSuppliersByCategory'])->name('api.suppliers-by-category');
+        
+        // Inquiry Management
+        Route::resource('inquiries', \App\Http\Controllers\Admin\InquiryController::class);
+        Route::post('inquiries/{inquiry}/forward-to-supplier', [\App\Http\Controllers\Admin\InquiryController::class, 'forwardToSupplier'])->name('inquiries.forward-to-supplier');
+        Route::put('inquiries/{inquiry}/status', [\App\Http\Controllers\Admin\InquiryController::class, 'updateStatus'])->name('inquiries.status.update');
+        Route::post('inquiries/{inquiry}/generate-quote', [\App\Http\Controllers\Admin\InquiryController::class, 'generateQuote'])->name('inquiries.generate-quote');
+        Route::delete('inquiries/{inquiry}/cancel', [\App\Http\Controllers\Admin\InquiryController::class, 'cancel'])->name('inquiries.cancel');
+        
+
+        
         // Test route for debugging
         Route::post('quotes/test-store', function(\Illuminate\Http\Request $request) {
             \Log::info('Test store route hit', [
@@ -199,6 +234,19 @@ Route::middleware('auth')->group(function () {
         Route::get('/orders/{order}/download-packing-list', [\App\Http\Controllers\Supplier\OrderController::class, 'downloadPackingList'])->name('orders.download-packing-list');
         Route::get('/orders/{order}/download-commercial-invoice', [\App\Http\Controllers\Supplier\OrderController::class, 'downloadCommercialInvoice'])->name('orders.download-commercial-invoice');
         Route::post('/orders/{order}/update-status', [\App\Http\Controllers\Supplier\OrderController::class, 'updateStatus'])->name('orders.update-status');
+        
+        // Supplier Inquiry Management Routes
+        Route::get('/inquiries', [\App\Http\Controllers\Supplier\InquiryController::class, 'index'])->name('inquiries.index');
+        
+        // Supplier Category Management Routes
+        Route::get('/categories', [\App\Http\Controllers\Supplier\CategoryController::class, 'index'])->name('categories.index');
+        Route::get('/categories/{category}', [\App\Http\Controllers\Supplier\CategoryController::class, 'show'])->name('categories.show');
+        Route::post('/categories/request-assignment', [\App\Http\Controllers\Supplier\CategoryController::class, 'requestAssignment'])->name('categories.request-assignment');
+        Route::get('/inquiries/{inquiry}', [\App\Http\Controllers\Supplier\InquiryController::class, 'show'])->name('inquiries.show');
+        Route::post('/inquiries/{inquiry}/not-available', [\App\Http\Controllers\Supplier\InquiryController::class, 'respondNotAvailable'])->name('inquiries.not-available');
+        Route::get('/inquiries/{inquiry}/quotation', [\App\Http\Controllers\Supplier\InquiryController::class, 'quotationForm'])->name('inquiries.quotation-form');
+        Route::post('/inquiries/{inquiry}/quotation', [\App\Http\Controllers\Supplier\InquiryController::class, 'storeQuotation'])->name('inquiries.store-quotation');
+        Route::post('/quotations/{quotation}/submit', [\App\Http\Controllers\Supplier\InquiryController::class, 'submitQuotation'])->name('quotations.submit');
     });
 
     // Orders Routes
@@ -232,7 +280,8 @@ Route::get('/test-mail', function () {
             'shipping_phone' => '1234567890',
         ]);
 
-        Mail::to('sales@maxmedme.com')->send(new App\Mail\OrderPlaced($order));
+        $salesEmail = app()->environment('production') ? 'sales@maxmedme.com' : 'wbabi@localhost.com';
+        Mail::to($salesEmail)->send(new App\Mail\OrderPlaced($order));
 
         return 'Test email sent! Check logs for details.';
     } catch (\Exception $e) {
@@ -249,15 +298,17 @@ Route::get('/test-invoice-email', function () {
             return 'No invoice found to test with';
         }
 
+        $salesEmail = app()->environment('production') ? 'sales@maxmedme.com' : 'wbabi@localhost.com';
+        
         $emailData = [
             'to_email' => 'test@example.com',
-            'cc_emails' => ['sales@maxmedme.com'],
+            'cc_emails' => [$salesEmail],
             'subject' => 'Test Invoice ' . $invoice->invoice_number,
             'message' => 'This is a test email'
         ];
 
         Mail::to('test@example.com')
-            ->cc(['sales@maxmedme.com'])
+            ->cc([$salesEmail])
             ->send(new \App\Mail\InvoiceEmail($invoice, $emailData));
 
         return 'Test invoice email sent! Check logs and email for details.';

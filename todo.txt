@@ -1,33 +1,40 @@
 1- #do a crone job to clean up expired reservations
 php artisan reservations:cleanup 
 2- email when payment is successful and order is placed to sales@maxmedme.com
-
 # On your production server
 sudo chmod -R 755 storage/
 sudo chmod -R 777 storage/logs/
 sudo chmod -R 777 storage/framework/sessions/
-
-
 Max AI 
-
 design business card sales specialist QR code
 catalog send to companies 
-
 medlab and email HBLC 
 by country Heinz herenz
-
-
-
 linux
-
 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
-
-
-
-
-
 indexed pages
-
-
 register for universities
 catalog
+
+Todo Fixes:
+1-Login and register activity Emails button, logo, •	Time: Mon, Jun 16, 2025 12:36 AM UTC make it in dubai Time
+2-the style show.blade.php of a user profile
+3-notification after delivery
+4-I am beginner to crm so why dont we start developing 
+BEGINNER LEVEL FEATURES
+🔄 Basic Automation & Workflows
+Email Templates & Sequences: Automated welcome emails, follow-up sequences for leads, quote reminders
+Lead Scoring System: Simple point-based scoring (email opened +5, website visit +3, etc.)
+Task Management: Basic to-do lists for sales reps with due dates and priorities
+Customer Status Tracking: Visual pipeline stages (New → Contacted → Qualified → Proposal → Closed)
+Basic Reporting Dashboard: Sales metrics, lead conversion rates, monthly revenue charts
+📊 Enhanced Data Management
+Customer Tags & Categories: Segment customers by industry, size, purchase history
+Product Wishlist/Favorites: Let customers save products for later consideration
+Basic Document Storage: Upload contracts, certificates, technical specs per customer
+Activity Timeline: Simple chronological view of all customer interactions
+Duplicate Detection: Identify and merge duplicate customer records
+5- migrate relevant crm sections to it 
+6- emails styling
+
+qatar foundation , sidra hospital or medicine , weil cornell qatar university,hamad bin khalifa university, 

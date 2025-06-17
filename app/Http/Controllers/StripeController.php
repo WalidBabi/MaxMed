@@ -119,7 +119,8 @@ class StripeController extends Controller
 
             // Try to send email notification, but don't fail if it doesn't work
             try {
-                Mail::to('sales@maxmedme.com')
+                $salesEmail = app()->environment('production') ? 'sales@maxmedme.com' : 'wbabi@localhost.com';
+                Mail::to($salesEmail)
                     ->send(new OrderPlaced($order));
             } catch (\Exception $mailException) {
                 Log::warning('Failed to send order confirmation email: ' . $mailException->getMessage());

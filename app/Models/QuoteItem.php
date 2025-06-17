@@ -11,6 +11,7 @@ class QuoteItem extends Model
         'quote_id',
         'product_id',
         'item_details',
+        'size',
         'quantity',
         'rate',
         'discount',

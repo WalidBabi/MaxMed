@@ -170,6 +170,7 @@
                                     <tr>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-10">Drag</th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Details</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Size</th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Quantity</th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-28">Rate</th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-28">Discount</th>
@@ -410,6 +411,7 @@ function addItem(itemData = null) {
     
     const data = itemData || {
         item_details: '',
+        size: '',
         quantity: 1.00,
         rate: 0.00,
         discount: 0,
@@ -441,6 +443,8 @@ function addItem(itemData = null) {
                                  data-name="{{ $product->name }}"
                                  data-description="{{ $product->description }}"
                                  data-price="{{ $product->price_aed ?? $product->price }}"
+                                 data-has-sizes="{{ $product->has_size_options ? 'true' : 'false' }}"
+                                 data-sizes="{{ $product->has_size_options && $product->size_options ? implode(',', json_decode($product->size_options)) : '' }}"
                                  data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
                                 <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
                                 @if($product->description)
@@ -455,6 +459,11 @@ function addItem(itemData = null) {
                     <div class="p-3 text-sm text-gray-500 text-center dropdown-no-results hidden">No products found</div>
                 </div>
             </div>
+        </td>
+        <td class="px-3 py-4">
+            <select name="items[${itemCounter}][size]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 size-select" disabled>
+                <option value="">${data.size || 'N/A'}</option>
+            </select>
         </td>
         <td class="px-3 py-4">
             <input type="number" step="0.01" name="items[${itemCounter}][quantity]" value="${data.quantity}" required
@@ -681,12 +690,33 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         const productId = item.dataset.id;
         const productName = item.dataset.name;
         const productPrice = item.dataset.price;
+        const hasSizes = item.dataset.hasSizes === 'true';
+        const sizesData = item.dataset.sizes;
+        
+        // Get the size select for this row
+        const sizeSelect = searchInput.closest('tr').querySelector('.size-select');
         
         // Set values
         searchInput.value = productName;
         productIdInput.value = productId;
         itemDetailsHidden.value = productName;
         rateInput.value = productPrice || 0;
+        
+        // Handle size options
+        if (hasSizes && sizesData) {
+            const sizes = sizesData.split(',');
+            sizeSelect.innerHTML = '<option value="">Select Size</option>';
+            sizes.forEach(size => {
+                const option = document.createElement('option');
+                option.value = size.trim();
+                option.textContent = size.trim();
+                sizeSelect.appendChild(option);
+            });
+            sizeSelect.disabled = false;
+        } else {
+            sizeSelect.innerHTML = '<option value="">N/A</option>';
+            sizeSelect.disabled = true;
+        }
         
         // Hide dropdown
         dropdownList.classList.add('hidden');

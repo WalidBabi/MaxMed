@@ -3,25 +3,195 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class QuotationRequest extends Model
 {
     protected $fillable = [
         'product_id',
         'user_id',
+        'lead_id',
         'quantity',
         'size',
         'requirements',
         'notes',
+        'delivery_timeline',
+        'status',
+        'supplier_id',
+        'forwarded_at',
+        'supplier_responded_at',
+        'internal_notes',
+        'supplier_response',
+        'supplier_notes',
+        'generated_quote_id',
     ];
 
-    public function product()
+    protected $casts = [
+        'forwarded_at' => 'datetime',
+        'supplier_responded_at' => 'datetime',
+    ];
+
+    /**
+     * Get the product for this quotation request
+     */
+    public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
     }
 
-    public function user()
+    /**
+     * Get the customer user for this quotation request
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the supplier assigned to this request
+     */
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'supplier_id');
+    }
+
+    /**
+     * Get the generated quote for this request
+     */
+    public function generatedQuote(): BelongsTo
+    {
+        return $this->belongsTo(Quote::class, 'generated_quote_id');
+    }
+
+    /**
+     * Get the supplier quotations for this request
+     */
+    public function supplierQuotations(): HasMany
+    {
+        return $this->hasMany(SupplierQuotation::class);
+    }
+
+    /**
+     * Get the latest supplier quotation
+     */
+    public function latestSupplierQuotation(): HasOne
+    {
+        return $this->hasOne(SupplierQuotation::class)->latest();
+    }
+
+    /**
+     * Get the related contact submission (if this quotation was created from one)
+     */
+    public function relatedContactSubmission(): BelongsTo
+    {
+        return $this->belongsTo(ContactSubmission::class, 'id', 'converted_to_inquiry_id');
+    }
+
+    /**
+     * Get formatted status for display
+     */
+    public function getFormattedStatusAttribute(): string
+    {
+        return match($this->status) {
+            'pending' => 'Pending',
+            'forwarded' => 'Forwarded to Supplier',
+            'supplier_responded' => 'Supplier Responded',
+            'quote_created' => 'Quote Created',
+            'completed' => 'Completed',
+            'cancelled' => 'Cancelled',
+            'converted_to_lead' => 'Converted to Lead',
+            default => ucfirst($this->status),
+        };
+    }
+
+    /**
+     * Get status badge CSS class
+     */
+    public function getStatusBadgeClassAttribute(): string
+    {
+        return match($this->status) {
+            'pending' => 'bg-yellow-100 text-yellow-800',
+            'forwarded' => 'bg-blue-100 text-blue-800',
+            'supplier_responded' => 'bg-purple-100 text-purple-800',
+            'quote_created' => 'bg-indigo-100 text-indigo-800',
+            'completed' => 'bg-green-100 text-green-800',
+            'cancelled' => 'bg-red-100 text-red-800',
+            'converted_to_lead' => 'bg-emerald-100 text-emerald-800',
+            default => 'bg-gray-100 text-gray-800',
+        };
+    }
+
+    /**
+     * Check if the request is pending
+     */
+    public function isPending(): bool
+    {
+        return $this->status === 'pending';
+    }
+
+    /**
+     * Check if the request has been forwarded
+     */
+    public function isForwarded(): bool
+    {
+        return in_array($this->status, ['forwarded', 'supplier_responded', 'quote_created', 'completed']);
+    }
+
+    /**
+     * Check if supplier has responded
+     */
+    public function hasSupplierResponse(): bool
+    {
+        return $this->supplier_response !== 'pending';
+    }
+
+
+
+    /**
+     * Get supplier response badge class
+     */
+    public function getSupplierResponseBadgeClassAttribute(): string
+    {
+        return match($this->supplier_response) {
+            'pending' => 'bg-yellow-100 text-yellow-800',
+            'available' => 'bg-green-100 text-green-800',
+            'not_available' => 'bg-red-100 text-red-800',
+            default => 'bg-gray-100 text-gray-800'
+        };
+    }
+
+    /**
+     * Scope to get requests by status
+     */
+    public function scopeByStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
+    /**
+     * Scope to get requests for a specific supplier
+     */
+    public function scopeForSupplier($query, $supplierId)
+    {
+        return $query->where('supplier_id', $supplierId);
+    }
+
+    /**
+     * Scope to get pending requests
+     */
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
+
+    /**
+     * Scope to get forwarded requests awaiting supplier response
+     */
+    public function scopeAwaitingSupplierResponse($query)
+    {
+        return $query->where('status', 'forwarded')
+                    ->where('supplier_response', 'pending');
     }
 }
