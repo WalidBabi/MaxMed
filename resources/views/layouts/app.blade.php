@@ -521,6 +521,9 @@
 
         @stack('head')
         
+        <!-- Text Protection CSS -->
+        <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+        
         <!-- Defer non-critical JS -->
         <script defer src="https://www.googletagmanager.com/gtag/js?id=G-5JRSRT4MLZ"></script>
         <script>
@@ -532,7 +535,7 @@
             });
         </script>
     </head>
-    <body class="font-sans antialiased bg-gray-50 relative">
+    <body class="font-sans antialiased bg-gray-50 relative no-select-content">
         <!-- Page transition overlay -->
         <div id="page-transition-overlay">
             <div class="lab-loader">
@@ -702,6 +705,9 @@
         <!-- Google One Tap Script -->
         <script src="https://accounts.google.com/gsi/client" async defer></script>
         <script src="{{ asset('js/google-one-tap.js') }}"></script>
+        
+        <!-- Text Protection Script -->
+        <script src="{{ asset('js/text-protection.js') }}"></script>
         
         <!-- Footer -->
         @include('layouts.footer')

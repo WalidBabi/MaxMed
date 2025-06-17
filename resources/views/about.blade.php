@@ -656,9 +656,9 @@
 
 <!-- Hero Section -->
 <section class="hero-section" style="background-image: url('{{ asset('Images/maxmed building.png') }}');">
-    <div class="hero-content">
-        <h1 class="hero-title">Empowering Excellence in Diagnostics and Medical Innovation</h1>
-        <p class="hero-subtitle">Your trusted partner for premium diagnostic supplies, laboratory equipment, and cutting-edge medical solutions across the Middle East, Africa, and global markets.</p>
+    <div class="hero-content no-select-content">
+        <h1 class="hero-title no-select-heading">Empowering Excellence in Diagnostics and Medical Innovation</h1>
+        <p class="hero-subtitle no-select-brand">Your trusted partner for premium diagnostic supplies, laboratory equipment, and cutting-edge medical solutions across the Middle East, Africa, and global markets.</p>
     </div>
 </section>
 
@@ -666,13 +666,13 @@
 <section class="about-section">
     <div class="section-container">
         <div class="section-header">
-            <h2 class="section-title">Who We Are</h2>
-            <p class="section-subtitle">Based in Dubai, MaxMed is your trusted partner for premium diagnostic RDTs, laboratory equipment, and cutting-edge medical supplies serving the Middle East, Africa, and international markets.</p>
+            <h2 class="section-title no-select-heading">Who We Are</h2>
+            <p class="section-subtitle no-select-brand">Based in Dubai, MaxMed is your trusted partner for premium diagnostic RDTs, laboratory equipment, and cutting-edge medical supplies serving the Middle East, Africa, and international markets.</p>
         </div>
         
         <div class="who-we-are">
-            <div class="who-we-are-content">
-                <h3>Your Partner in Medical Excellence</h3>
+            <div class="who-we-are-content no-select-content">
+                <h3 class="no-select-heading">Your Partner in Medical Excellence</h3>
                 <p>At MaxMed Scientific, we collaborate with global leaders to deliver excellence, ensuring every product meets rigorous quality standards. Our commitment to innovation and reliability has positioned us as a leading medical and laboratory equipment supplier serving clients across the Middle East, Africa, and beyond.</p>
                 
                 <div class="highlight-box">

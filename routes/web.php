@@ -368,9 +368,6 @@ Route::get('/search/suggestions', [SearchController::class, 'suggestions'])->nam
 // QR Code Route
 Route::get('/qr-code', [QRCodeController::class, 'generate'])->name('qr.code');
 
-// Contact Form Route
-Route::post('/contact/submit', [ContactController::class, 'submit'])->name('contact.submit');
-
 // Legacy URL redirects for 404 pages in Google Search Console
 Route::get('/education%26-training-tools', function() {
     return redirect('/products', 301);
