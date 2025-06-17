@@ -5,13 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\SeoService;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class HomeController extends Controller
 {
+    protected $seoService;
+
+    public function __construct(SeoService $seoService)
+    {
+        $this->seoService = $seoService;
+    }
+
     public function index()
     {
+        // Generate SEO meta data
+        $seoData = $this->seoService->generateHomeMeta();
+        
         $categories = Category::all();
         
         // Get featured products based on multiple criteria
@@ -29,6 +40,6 @@ class HomeController extends Controller
             ->orderBy('name')
             ->get();
         
-        return view('welcome', compact('categories', 'featuredProducts', 'featuredBrands'));
+        return view('welcome', compact('categories', 'featuredProducts', 'featuredBrands', 'seoData'));
     }
 }

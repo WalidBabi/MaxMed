@@ -46,7 +46,14 @@ Route::post('/contact', [\App\Http\Controllers\ContactController::class, 'submit
 
 // Partners Route Group - Moved to the partners prefix group below
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/product/{product}', [ProductController::class, 'show'])->name('product.show');
+Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('product.show');
+
+// Backward compatibility redirect: old ID-based URLs to new slug-based URLs
+Route::get('/product/{id}', function($id) {
+    $product = \App\Models\Product::findOrFail($id);
+    return redirect()->route('product.show', $product->slug, 301);
+})->where('id', '[0-9]+')->name('product.show.old');
+
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
 Route::get('/check-availability/{product}/{quantity}', [ProductController::class, 'checkAvailability'])->name('check.availability');

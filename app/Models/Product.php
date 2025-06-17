@@ -9,6 +9,7 @@ class Product extends Model
     protected $fillable = [
         'sku',
         'name', 
+        'slug',
         'description', 
         'price', 
         'price_aed', 
@@ -124,6 +125,78 @@ class Product extends Model
     }
 
     /**
+     * Get the route key name for URL binding
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    /**
+     * Generate a SEO-friendly slug
+     */
+    public function generateSlug()
+    {
+        $text = trim($this->name . ' ' . ($this->sku ?? ''));
+        
+        // Add brand name for better SEO
+        if ($this->brand_id) {
+            $brand = \App\Models\Brand::find($this->brand_id);
+            if ($brand && !stripos($text, $brand->name)) {
+                $text .= ' ' . $brand->name;
+            }
+        }
+
+        // Add location for local SEO
+        $text .= ' dubai uae';
+
+        // Clean and create SEO-friendly slug
+        $slug = \Illuminate\Support\Str::lower($text);
+        $slug = preg_replace('/[^a-z0-9\s-]/', '', $slug);
+        $slug = preg_replace('/\s+/', '-', $slug);
+        $slug = preg_replace('/-+/', '-', $slug);
+        $slug = trim($slug, '-');
+
+        // Limit length
+        if (strlen($slug) > 100) {
+            $slug = substr($slug, 0, 100);
+            $slug = rtrim($slug, '-');
+        }
+
+        return $this->ensureUniqueSlug($slug);
+    }
+
+    /**
+     * Ensure slug is unique
+     */
+    private function ensureUniqueSlug($baseSlug)
+    {
+        $slug = $baseSlug;
+        $counter = 1;
+
+        while (true) {
+            $existing = static::where('slug', $slug);
+            if ($this->exists) {
+                $existing = $existing->where('id', '!=', $this->id);
+            }
+            
+            if (!$existing->exists()) {
+                return $slug;
+            }
+
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+
+            if ($counter > 100) {
+                $slug = $baseSlug . '-' . time();
+                break;
+            }
+        }
+
+        return $slug;
+    }
+
+    /**
      * Boot the model and set up event listeners
      */
     protected static function boot()
@@ -134,6 +207,18 @@ class Product extends Model
         static::creating(function ($product) {
             if (empty($product->sku)) {
                 $product->sku = static::generateSku(null, $product->brand_id);
+            }
+            
+            // Auto-generate slug when creating a new product (if not provided)
+            if (empty($product->slug)) {
+                $product->slug = $product->generateSlug();
+            }
+        });
+
+        // Auto-update slug when updating a product name or brand
+        static::updating(function ($product) {
+            if ($product->isDirty(['name', 'sku', 'brand_id']) && empty($product->getOriginal('slug'))) {
+                $product->slug = $product->generateSlug();
             }
         });
     }

@@ -1,10 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'MaxMed - Premium Medical & Laboratory Equipment Supplier in Middle East & Africa')
+@section('title', $seoData['title'] ?? 'MaxMed UAE - Premium Laboratory & Medical Equipment Supplier in Dubai')
 
-@section('meta_description', 'MaxMed provides high-quality medical equipment, laboratory supplies, and diagnostic tools across the Middle East, Africa, and global markets. Explore our premium products and innovative solutions.')
+@section('meta_description', $seoData['meta_description'] ?? 'Leading supplier of laboratory equipment, medical instruments, and diagnostic tools in Dubai, UAE. Contact MaxMed at +971 55 460 2500 for premium quality equipment.')
 
-@section('meta_keywords', 'medical equipment supplier, laboratory equipment Middle East, diagnostic supplies Africa, premium lab equipment, healthcare solutions international, medical technology, laboratory analysis tools, scientific instruments, hospital supplies Middle East, diagnostic equipment Africa')
+@section('meta_keywords', $seoData['meta_keywords'] ?? 'laboratory equipment Dubai, medical equipment UAE, MaxMed, scientific instruments, diagnostic tools')
+
+@section('og_title', $seoData['og_title'] ?? $seoData['title'] ?? 'MaxMed UAE - Premium Laboratory & Medical Equipment Supplier')
+
+@section('og_description', $seoData['og_description'] ?? $seoData['meta_description'] ?? 'Leading supplier of laboratory equipment and medical instruments in Dubai, UAE.')
 
 @push('head')
     <meta name="google-signin-client_id" content="{{ config('services.google.client_id') }}">

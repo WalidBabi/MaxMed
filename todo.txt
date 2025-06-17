@@ -37,4 +37,3 @@ Duplicate Detection: Identify and merge duplicate customer records
 5- migrate relevant crm sections to it 
 6- emails styling
 
-qatar foundation , sidra hospital or medicine , weil cornell qatar university,hamad bin khalifa university, 

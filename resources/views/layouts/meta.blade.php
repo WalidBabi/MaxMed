@@ -101,4 +101,7 @@
 
 <!-- Preconnect to External Resources -->
 <link rel="preconnect" href="https://fonts.bunny.net">
-<link rel="preconnect" href="https://cdn.tailwindcss.com"> 
+<link rel="preconnect" href="https://cdn.tailwindcss.com">
+
+<!-- Schema Markup -->
+@include('components.schema-markup') 
