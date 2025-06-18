@@ -36,6 +36,7 @@ Activity Timeline: Simple chronological view of all customer interactions
 Duplicate Detection: Identify and merge duplicate customer records
 5- migrate relevant crm sections to it 
 6- emails styling
+7- UTC time •	Time: Wed, Jun 18, 2025 6:47 AM
 
 # Generate sitemaps (run weekly)
 php artisan sitemap:generate
@@ -45,3 +46,5 @@ php artisan seo:audit
 
 # Optimize images (run after adding content)
 php artisan images:optimize
+
+I am having a hard time starting marketing to get leads. mainly I started email marketing but I want to make a system for automated emails and automated followups . please brainstorm how we can do that and brainstorm other idead

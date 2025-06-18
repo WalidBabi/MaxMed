@@ -115,6 +115,16 @@
                         </a>
                     </li>
 
+                    <!-- Feedback Management -->
+                    <li>
+                        <a href="{{ route('admin.feedback.index') }}" class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold {{ request()->routeIs('admin.feedback.*') ? 'sidebar-active' : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50' }}">
+                            <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.76 1.24 3.25 2.91 3.54v2.13a.75.75 0 001.02.69L8.16 14.1c.26-.08.53-.1.8-.1h5.42c.47 0 .93-.06 1.36-.17 1.01-.26 1.76-1.15 1.76-2.25V8.46C17.5 6.7 16.26 5.25 14.59 5.25H5.91C4.24 5.25 3 6.7 3 8.46v3.12z" />
+                            </svg>
+                            Feedback
+                        </a>
+                    </li>
+
                     <!-- User Management -->
                     <li x-data="{ open: {{ request()->routeIs('admin.users.*', 'admin.roles.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="group flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm leading-6 font-semibold text-gray-700 hover:text-indigo-600 hover:bg-gray-50">

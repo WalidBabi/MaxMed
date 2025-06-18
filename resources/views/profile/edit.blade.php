@@ -90,6 +90,7 @@
                             </span>
                             @endif
                         </div>
+                        <input type="hidden" name="email" value="{{ $user->email }}">
                         <p class="mt-2 text-sm text-gray-500">Contact support to change your email address</p>
                     </div>
 
@@ -105,12 +106,25 @@
                         <div id="photo-preview" class="mt-3 hidden">
                             <img id="preview-image" class="h-20 w-20 rounded-full object-cover border-2 border-gray-200" alt="Preview">
                         </div>
+                        
+                        <!-- Debug info -->
+                        <div id="debug-info" class="mt-2 text-xs text-gray-500"></div>
                     </div>
                 </div>
 
                 <div class="flex items-center justify-end mt-6">
                     @if (session('status') === 'profile-updated')
                     <p class="text-sm text-green-600 mr-4">Saved successfully.</p>
+                    @endif
+
+                    @if ($errors->any())
+                    <div class="text-sm text-red-600 mr-4">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
                     @endif
 
                     <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
@@ -260,19 +274,71 @@
     function previewImage(input) {
         const previewDiv = document.getElementById('photo-preview');
         const previewImage = document.getElementById('preview-image');
+        const debugInfo = document.getElementById('debug-info');
 
         if (input.files && input.files[0]) {
-            const reader = new FileReader();
+            const file = input.files[0];
+            console.log('File selected:', file.name, file.size, file.type);
+            
+            debugInfo.innerHTML = `Selected: ${file.name} (${(file.size / 1024).toFixed(1)}KB, ${file.type})`;
+            
+            // Check file size (2MB limit)
+            if (file.size > 2048 * 1024) {
+                alert('File is too large. Please choose a file smaller than 2MB.');
+                input.value = '';
+                previewDiv.classList.add('hidden');
+                debugInfo.innerHTML = 'Error: File too large';
+                return;
+            }
+            
+            // Check file type
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file.');
+                input.value = '';
+                previewDiv.classList.add('hidden');
+                debugInfo.innerHTML = 'Error: Not an image file';
+                return;
+            }
 
+            const reader = new FileReader();
             reader.onload = function(e) {
                 previewImage.src = e.target.result;
                 previewDiv.classList.remove('hidden');
+                debugInfo.innerHTML += ' - Preview loaded';
             }
-
-            reader.readAsDataURL(input.files[0]);
+            reader.readAsDataURL(file);
         } else {
             previewDiv.classList.add('hidden');
+            debugInfo.innerHTML = '';
         }
     }
+
+    // Add form submission debugging and validation
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form[action*="profile.update"]');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                console.log('Form being submitted...');
+                const formData = new FormData(form);
+                console.log('Form data:');
+                for (let [key, value] of formData.entries()) {
+                    console.log(key, value);
+                }
+                
+                // Check if file is selected
+                const fileInput = document.getElementById('profile_photo');
+                if (fileInput && fileInput.files.length > 0) {
+                    console.log('File selected:', fileInput.files[0].name, fileInput.files[0].size, fileInput.files[0].type);
+                }
+                
+                // Show loading state
+                const submitButton = form.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = 'Saving...';
+                }
+            });
+        }
+    });
 </script>
 @endsection
