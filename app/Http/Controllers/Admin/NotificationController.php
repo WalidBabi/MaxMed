@@ -137,16 +137,43 @@ class NotificationController extends Controller
     {
         $lastTimestamp = request()->input('last_timestamp', '1970-01-01 00:00:00');
         
-        $newNotifications = Auth::user()->unreadNotifications()
-            ->where('created_at', '>', $lastTimestamp)
-            ->orderBy('created_at', 'desc')
-            ->get();
+        try {
+            $newNotifications = Auth::user()->unreadNotifications()
+                ->where('created_at', '>', $lastTimestamp)
+                ->orderBy('created_at', 'desc')
+                ->get();
 
-        return response()->json([
-            'has_new' => $newNotifications->count() > 0,
-            'notifications' => $newNotifications,
-            'count' => Auth::user()->unreadNotifications()->count(),
-            'latest_timestamp' => $newNotifications->first()->created_at ?? $lastTimestamp
-        ]);
+            $allUnreadCount = Auth::user()->unreadNotifications()->count();
+            $latestTimestamp = $newNotifications->isNotEmpty() ? 
+                $newNotifications->first()->created_at->toISOString() : 
+                $lastTimestamp;
+
+            \Log::info('Admin checkNew response:', [
+                'has_new' => $newNotifications->count() > 0,
+                'new_notifications_count' => $newNotifications->count(),
+                'total_unread_count' => $allUnreadCount,
+                'latest_timestamp' => $latestTimestamp,
+                'user_id' => Auth::id()
+            ]);
+
+            return response()->json([
+                'has_new' => $newNotifications->count() > 0,
+                'notifications' => $newNotifications,
+                'count' => $allUnreadCount,
+                'latest_timestamp' => $latestTimestamp
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error in Admin checkNew:', [
+                'error' => $e->getMessage(),
+                'user_id' => Auth::id()
+            ]);
+            
+            return response()->json([
+                'has_new' => false,
+                'notifications' => [],
+                'count' => 0,
+                'latest_timestamp' => $lastTimestamp
+            ], 500);
+        }
     }
 } 

@@ -125,14 +125,15 @@ class MarketingContactController extends Controller
         $contact->load(['contactLists', 'campaigns', 'emailLogs']);
         
         // Get campaign statistics for this contact
-        $campaignStats = $contact->campaigns()
-                                ->selectRaw('
-                                    COUNT(*) as total_campaigns,
-                                    SUM(CASE WHEN campaign_contacts.opened_at IS NOT NULL THEN 1 ELSE 0 END) as opened_campaigns,
-                                    SUM(campaign_contacts.open_count) as total_opens,
-                                    SUM(campaign_contacts.click_count) as total_clicks
-                                ')
-                                ->first();
+        $campaignStats = \DB::table('campaign_contacts')
+                            ->where('marketing_contact_id', $contact->id)
+                            ->selectRaw('
+                                COUNT(*) as total_campaigns,
+                                SUM(CASE WHEN opened_at IS NOT NULL THEN 1 ELSE 0 END) as opened_campaigns,
+                                SUM(open_count) as total_opens,
+                                SUM(click_count) as total_clicks
+                            ')
+                            ->first();
 
         return view('crm.marketing.contacts.show', compact('contact', 'campaignStats'));
     }

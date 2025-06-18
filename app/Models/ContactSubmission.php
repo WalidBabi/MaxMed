@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Log;
+use App\Notifications\ContactSubmissionNotification;
 
 class ContactSubmission extends Model
 {
@@ -28,6 +31,44 @@ class ContactSubmission extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    /**
+     * Boot the model
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        
+        // Send notification when a new contact submission is created
+        static::created(function ($submission) {
+            $submission->sendNewSubmissionNotification();
+        });
+    }
+
+    /**
+     * Send notification to admin/CRM users about new contact submission
+     */
+    public function sendNewSubmissionNotification()
+    {
+        try {
+            // Get all admin users and CRM users
+            $users = User::where(function($query) {
+                $query->where('is_admin', true)
+                      ->orWhereHas('role', function($roleQuery) {
+                          $roleQuery->whereIn('name', ['admin', 'crm']);
+                      });
+            })
+            ->whereNotNull('email')
+            ->get();
+
+            if ($users->count() > 0) {
+                Notification::send($users, new ContactSubmissionNotification($this));
+                Log::info('Contact submission notification sent to ' . $users->count() . ' user(s) for submission: ' . $this->id);
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to send contact submission notification: ' . $e->getMessage());
+        }
+    }
 
     /**
      * Get the quotation request this was converted to
