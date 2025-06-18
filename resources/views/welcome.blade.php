@@ -917,7 +917,7 @@
     <!-- Content -->
     <div class="hero-content">
         <div class="text-center px-4">
-            <h2 class="hero-title">Lab And Medical Solutions</h2>
+            <h1 class="hero-title">Lab And Medical Solutions</h1>
             <p class="hero-subtitle">Providing cutting-edge medical Laboratory equipment for modern laboratories</p>
             <a href="{{ route('products.index') }}" class="hero-btn inline-block">
                 Explore Products

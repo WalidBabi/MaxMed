@@ -59,7 +59,7 @@ class GenerateComprehensiveSitemap extends Command
         $sitemap = $this->createSitemapHeader();
         
         foreach ($urls as $url) {
-            $fullUrl = url($url['url']);
+            $fullUrl = 'https://maxmedme.com' . $url['url'];
             $lastmod = Carbon::now()->toAtomString();
             
             $sitemap .= "    <url>\n";
@@ -224,7 +224,7 @@ class GenerateComprehensiveSitemap extends Command
         $index .= "<sitemapindex xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n";
         
         foreach ($sitemaps as $sitemap) {
-            $url = url($sitemap);
+            $url = 'https://maxmedme.com/' . $sitemap;
             $lastmod = Carbon::now()->toAtomString();
             
             $index .= "    <sitemap>\n";

@@ -26,7 +26,7 @@ class GenerateSeoSitemap extends Command
     {
         $this->info('🗺️ Generating SEO-optimized sitemaps for MaxMed...');
         
-        $this->baseUrl = rtrim(config('app.url'), '/');
+        $this->baseUrl = rtrim('https://maxmedme.com', '/');
         $this->outputDir = $this->option('output');
         
         $includeImages = $this->option('include-images') === 'true';
@@ -89,14 +89,13 @@ class GenerateSeoSitemap extends Command
         $this->info('🔬 Generating product sitemap...');
         
         $products = Product::with(['category', 'images', 'brand'])
-                          ->where('status', 'active')
                           ->orderBy('updated_at', 'desc')
                           ->get();
 
         $urls = [];
         foreach ($products as $product) {
             $url = [
-                'loc' => $this->baseUrl . '/product/' . $product->id,
+                'loc' => $this->baseUrl . '/products/' . $product->slug,
                 'lastmod' => $product->updated_at->format('c'),
                 'priority' => '0.8',
                 'changefreq' => 'weekly'
@@ -152,7 +151,7 @@ class GenerateSeoSitemap extends Command
         $urls = [];
         foreach ($categories as $category) {
             $url = [
-                'loc' => $this->baseUrl . '/categories/' . $category->id,
+                'loc' => $this->baseUrl . '/categories/' . $category->slug,
                 'lastmod' => $category->updated_at->format('c'),
                 'priority' => '0.7',
                 'changefreq' => 'weekly'
@@ -203,8 +202,7 @@ class GenerateSeoSitemap extends Command
     {
         $this->info('📰 Generating news sitemap...');
         
-        $news = News::where('status', 'published')
-                   ->where('created_at', '>=', now()->subDays(730)) // Last 2 years for news
+        $news = News::where('created_at', '>=', now()->subDays(730)) // Last 2 years for news
                    ->orderBy('created_at', 'desc')
                    ->get();
 
