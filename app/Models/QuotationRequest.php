@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Log;
+use App\Notifications\QuotationRequestNotification;
 
 class QuotationRequest extends Model
 {
@@ -32,6 +35,44 @@ class QuotationRequest extends Model
         'forwarded_at' => 'datetime',
         'supplier_responded_at' => 'datetime',
     ];
+
+    /**
+     * Boot the model
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        
+        // Send notification when a new quotation request is created
+        static::created(function ($quotationRequest) {
+            $quotationRequest->sendNewQuotationNotification();
+        });
+    }
+
+    /**
+     * Send notification to admin/CRM users about new quotation request
+     */
+    public function sendNewQuotationNotification()
+    {
+        try {
+            // Get all admin users and CRM users
+            $users = User::where(function($query) {
+                $query->where('is_admin', true)
+                      ->orWhereHas('role', function($roleQuery) {
+                          $roleQuery->whereIn('name', ['admin', 'crm']);
+                      });
+            })
+            ->whereNotNull('email')
+            ->get();
+
+            if ($users->count() > 0) {
+                Notification::send($users, new QuotationRequestNotification($this));
+                Log::info('Quotation request notification sent to ' . $users->count() . ' user(s) for request: ' . $this->id);
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to send quotation request notification: ' . $e->getMessage());
+        }
+    }
 
     /**
      * Get the product for this quotation request
@@ -146,8 +187,6 @@ class QuotationRequest extends Model
     {
         return $this->supplier_response !== 'pending';
     }
-
-
 
     /**
      * Get supplier response badge class

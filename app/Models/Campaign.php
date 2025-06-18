@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class Campaign extends Model
 {
@@ -213,22 +214,25 @@ class Campaign extends Model
 
     public function updateStatistics(): void
     {
-        $stats = $this->contacts()->selectRaw('
-            COUNT(*) as total,
-            SUM(CASE WHEN campaign_contacts.status = "sent" THEN 1 ELSE 0 END) as sent,
-            SUM(CASE WHEN campaign_contacts.status = "delivered" THEN 1 ELSE 0 END) as delivered,
-            SUM(CASE WHEN campaign_contacts.opened_at IS NOT NULL THEN 1 ELSE 0 END) as opened,
-            SUM(CASE WHEN campaign_contacts.clicked_at IS NOT NULL THEN 1 ELSE 0 END) as clicked,
-            SUM(CASE WHEN campaign_contacts.status = "bounced" THEN 1 ELSE 0 END) as bounced
-        ')->first();
+        $stats = DB::table('campaign_contacts')
+            ->where('campaign_id', $this->id)
+            ->selectRaw('
+                COUNT(*) as total,
+                SUM(CASE WHEN status = "sent" THEN 1 ELSE 0 END) as sent,
+                SUM(CASE WHEN status = "delivered" THEN 1 ELSE 0 END) as delivered,
+                SUM(CASE WHEN opened_at IS NOT NULL THEN 1 ELSE 0 END) as opened,
+                SUM(CASE WHEN clicked_at IS NOT NULL THEN 1 ELSE 0 END) as clicked,
+                SUM(CASE WHEN status = "bounced" THEN 1 ELSE 0 END) as bounced
+            ')
+            ->first();
 
         $this->update([
-            'total_recipients' => $stats->total,
-            'sent_count' => $stats->sent,
-            'delivered_count' => $stats->delivered,
-            'opened_count' => $stats->opened,
-            'clicked_count' => $stats->clicked,
-            'bounced_count' => $stats->bounced,
+            'total_recipients' => $stats->total ?? 0,
+            'sent_count' => $stats->sent ?? 0,
+            'delivered_count' => $stats->delivered ?? 0,
+            'opened_count' => $stats->opened ?? 0,
+            'clicked_count' => $stats->clicked ?? 0,
+            'bounced_count' => $stats->bounced ?? 0,
         ]);
     }
 
