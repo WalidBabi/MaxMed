@@ -90,10 +90,12 @@
         <!-- Footer Bottom -->
         <div class="border-t border-gray-700 mt-10 pt-6">
             <div class="flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-400 text-sm">
-                    &copy; {{ date('Y') }} MaxMed Scientific & Laboratory Equipment Trading Co L.L.C - All Rights Reserved.
-                </p>
-                <span>Designed by Max AI</span>
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
+                    <p class="text-gray-400 text-sm">
+                        &copy; {{ date('Y') }} MaxMed Scientific & Laboratory Equipment Trading Co L.L.C - All Rights Reserved.
+                    </p>
+                    <span class="text-gray-400 text-sm">Designed by Max AI</span>
+                </div>
                 
                    
             
