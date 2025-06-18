@@ -467,6 +467,54 @@
             }" x-init="initForm()">
                 <div class="contact-card p-8">
                     <h2 class="contact-form-title">Send us a Message</h2>
+                    
+                    {{-- Success Message --}}
+                    @if(session('success'))
+                        <div class="success-message">
+                            <div class="success-icon">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                {{ session('success') }}
+                            </div>
+                        </div>
+                    @endif
+
+                    {{-- Error Message --}}
+                    @if(session('error'))
+                        <div class="error-message">
+                            <div class="error-icon">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                {{ session('error') }}
+                            </div>
+                        </div>
+                    @endif
+
+                    {{-- Validation Errors --}}
+                    @if($errors->any())
+                        <div class="error-message">
+                            <div class="error-icon">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <strong>Please fix the following errors:</strong>
+                                <ul>
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    @endif
+                    
                     <form action="{{ route('contact.submit') }}" method="POST" x-data="{ submitting: false }" @submit.prevent="
                         submitting = true;
                         $event.target.submit();
@@ -474,34 +522,34 @@
                         @csrf
                         <div class="form-group" style="transition: all 0.4s ease;">
                             <label class="form-label" for="name">Name</label>
-                            <input type="text" id="name" name="name" class="form-control" required>
+                            <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" required>
                         </div>
                         <div class="form-group" style="transition: all 0.4s ease;">
                             <label class="form-label" for="email">Email</label>
-                            <input type="email" id="email" name="email" class="form-control" required>
+                            <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}" required>
                         </div>
                         <div class="form-group" style="transition: all 0.4s ease;">
                             <label class="form-label" for="phone">Phone (Optional)</label>
-                            <input type="tel" id="phone" name="phone" class="form-control" placeholder="+971 50 123 4567">
+                            <input type="tel" id="phone" name="phone" class="form-control" value="{{ old('phone') }}" placeholder="+971 50 123 4567">
                         </div>
                         <div class="form-group" style="transition: all 0.4s ease;">
                             <label class="form-label" for="company">Company (Optional)</label>
-                            <input type="text" id="company" name="company" class="form-control" placeholder="Your company name">
+                            <input type="text" id="company" name="company" class="form-control" value="{{ old('company') }}" placeholder="Your company name">
                         </div>
                         <div class="form-group" style="transition: all 0.4s ease;">
                             <label class="form-label" for="subject">Subject</label>
                             <select id="subject" name="subject" class="form-select" required>
                                 <option value="">Select a subject</option>
-                                <option value="sales inquiry">Sales Inquiry</option>
-                                <option value="technical support">Technical Support</option>
-                                <option value="service request">Service Request</option>
-                                <option value="partnership">Partnership</option>
-                                <option value="other">Other</option>
+                                <option value="sales inquiry" {{ old('subject') == 'sales inquiry' ? 'selected' : '' }}>Sales Inquiry</option>
+                                <option value="technical support" {{ old('subject') == 'technical support' ? 'selected' : '' }}>Technical Support</option>
+                                <option value="service request" {{ old('subject') == 'service request' ? 'selected' : '' }}>Service Request</option>
+                                <option value="partnership" {{ old('subject') == 'partnership' ? 'selected' : '' }}>Partnership</option>
+                                <option value="other" {{ old('subject') == 'other' ? 'selected' : '' }}>Other</option>
                             </select>
                         </div>
                         <div class="form-group" style="transition: all 0.4s ease;">
                             <label class="form-label" for="message">Message</label>
-                            <textarea id="message" name="message" class="form-control textarea-control" required></textarea>
+                            <textarea id="message" name="message" class="form-control textarea-control" required>{{ old('message') }}</textarea>
                         </div>
 
                         <!-- Hidden field for recipient email -->
@@ -626,6 +674,30 @@
                 }, 100 + (index * 150));
             });
         }, 100);
+
+        // Auto-hide success message after 8 seconds
+        const successMessage = document.querySelector('.success-message');
+        if (successMessage) {
+            setTimeout(() => {
+                successMessage.style.transition = 'opacity 0.5s ease';
+                successMessage.style.opacity = '0';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 500);
+            }, 8000);
+        }
+
+        // Auto-hide error message after 10 seconds
+        const errorMessage = document.querySelector('.error-message');
+        if (errorMessage) {
+            setTimeout(() => {
+                errorMessage.style.transition = 'opacity 0.5s ease';
+                errorMessage.style.opacity = '0';
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 500);
+            }, 10000);
+        }
     });
 </script>
 

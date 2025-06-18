@@ -83,7 +83,7 @@
                  'is_sales_inquiry' => $contactSubmission->isSalesInquiry()
              ]);
 
-             return redirect()->back()->with('success', 'Thank you for your message! We\'ll get back to you soon.');
+             return redirect()->back()->with('success', 'Thank you, ' . $validated['name'] . '! Your message has been sent successfully. We\'ll get back to you within 24 hours.');
          } catch (\Exception $e) {
              Log::error('Failed to process contact form submission: ' . $e->getMessage());
              Log::error('Contact form error details: ', [
