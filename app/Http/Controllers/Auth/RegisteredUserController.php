@@ -69,6 +69,9 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        // Set a session flag to show orders hint
+        session()->put('show_orders_hint', true);
+
         return redirect(route('dashboard', absolute: false));
     }
 }

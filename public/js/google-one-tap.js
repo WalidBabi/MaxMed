@@ -38,28 +38,43 @@ function initializeOneTap() {
     const container = document.getElementById('google-one-tap-container');
     if (!container) return;
 
+    // Check if we're in development mode
+    const isDevelopment = window.location.hostname === 'localhost' || 
+                         window.location.hostname === '127.0.0.1' ||
+                         window.location.hostname.includes('localhost');
+
     // Make sure the Google API is loaded
     if (!window.google || !window.google.accounts || !window.google.accounts.id) {
         console.error('Google One Tap API not loaded');
         return;
     }
 
-    // Configure Google One Tap
-    window.google.accounts.id.initialize({
+    // Configure Google One Tap with development-friendly settings
+    const config = {
         client_id: document.querySelector('#g_id_onload').dataset.client_id,
         callback: handleCredentialResponse,
         context: 'signin',
         ux_mode: 'popup',
         itp_support: true
-    });
+    };
+
+    // In development, add additional configuration
+    if (isDevelopment) {
+        config.auto_select = false;
+        config.cancel_on_tap_outside = false;
+        config.auto_prompt = false;
+        console.log('🚀 Google One Tap: Development mode detected');
+    }
+
+    window.google.accounts.id.initialize(config);
     
     // Show the One Tap UI
     window.google.accounts.id.prompt((notification) => {
         if (notification.isNotDisplayed()) {
-            console.log('One Tap prompt was not displayed');
+            console.log('One Tap prompt was not displayed:', notification.getNotDisplayedReason());
             container.style.display = 'block';
         } else if (notification.isSkippedMoment()) {
-            console.log('One Tap prompt was skipped');
+            console.log('One Tap prompt was skipped:', notification.getSkippedReason());
             container.style.display = 'block';
         } else {
             container.style.display = 'block';
