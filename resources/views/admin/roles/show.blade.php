@@ -100,11 +100,11 @@
                     <div class="border-t border-gray-200 pt-4 space-y-2 text-sm text-gray-600">
                         <div class="flex justify-between">
                             <span class="font-medium">Created:</span>
-                            <span>{{ $role->created_at->format('M d, Y \a\t H:i') }}</span>
+                            <span>{{ $role->created_at ? $role->created_at->format('M d, Y \a\t H:i') : 'N/A' }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="font-medium">Last Updated:</span>
-                            <span>{{ $role->updated_at->format('M d, Y \a\t H:i') }}</span>
+                            <span>{{ $role->updated_at ? $role->updated_at->format('M d, Y \a\t H:i') : 'N/A' }}</span>
                         </div>
                     </div>
                 </div>
