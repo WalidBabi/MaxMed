@@ -37,3 +37,11 @@ Duplicate Detection: Identify and merge duplicate customer records
 5- migrate relevant crm sections to it 
 6- emails styling
 
+# Generate sitemaps (run weekly)
+php artisan sitemap:generate
+submit to google search console : https://maxmedme.com/sitemap.xml
+# Run SEO audit (run monthly) 
+php artisan seo:audit
+
+# Optimize images (run after adding content)
+php artisan images:optimize
