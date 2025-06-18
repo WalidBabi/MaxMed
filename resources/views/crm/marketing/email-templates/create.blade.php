@@ -223,28 +223,28 @@
         
         // Open preview in new window
         const previewWindow = window.open('', '_blank', 'width=800,height=600');
-        previewWindow.document.write(`
-            <html>
-                <head>
-                    <title>Email Preview: ${previewSubject}</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; margin: 20px; }
-                        .preview-header { background: #f3f4f6; padding: 10px; margin-bottom: 20px; border-radius: 4px; }
-                        .preview-header h3 { margin: 0; color: #374151; }
-                        .preview-content { border: 1px solid #d1d5db; }
-                    </style>
-                </head>
-                <body>
-                    <div class="preview-header">
-                        <h3>Subject: ${previewSubject}</h3>
-                        <p style="margin: 5px 0 0 0; color: #6b7280; font-size: 14px;">This is a preview with sample data</p>
-                    </div>
-                    <div class="preview-content">
-                        ${previewContent}
-                    </div>
-                </body>
-            </html>
-        `);
+        previewWindow.document.write(
+            '<html>' +
+            '<head>' +
+            '<title>Email Preview: ' + previewSubject + '</title>' +
+            '<style>' +
+            'body { font-family: Arial, sans-serif; margin: 20px; }' +
+            '.preview-header { background: #f3f4f6; padding: 10px; margin-bottom: 20px; border-radius: 4px; }' +
+            '.preview-header h3 { margin: 0; color: #374151; }' +
+            '.preview-content { border: 1px solid #d1d5db; }' +
+            '</style>' +
+            '</head>' +
+            '<body>' +
+            '<div class="preview-header">' +
+            '<h3>Subject: ' + previewSubject + '</h3>' +
+            '<p style="margin: 5px 0 0 0; color: #6b7280; font-size: 14px;">This is a preview with sample data</p>' +
+            '</div>' +
+            '<div class="preview-content">' +
+            previewContent +
+            '</div>' +
+            '</body>' +
+            '</html>'
+        );
         previewWindow.document.close();
     }
 
