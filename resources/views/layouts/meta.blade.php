@@ -9,6 +9,11 @@
 <meta name="contact:phone" content="+971 55 460 2500">
 <meta name="contact:email" content="sales@maxmedme.com">
 
+<!-- RSS Feed Links for Content Discovery -->
+<link rel="alternate" type="application/rss+xml" title="MaxMed UAE - Latest Updates" href="{{ url('/rss/feed.xml') }}">
+<link rel="alternate" type="application/rss+xml" title="MaxMed UAE - Latest News" href="{{ url('/rss/news.xml') }}">
+<link rel="alternate" type="application/rss+xml" title="MaxMed UAE - Latest Products" href="{{ url('/rss/products.xml') }}">
+
 <!-- Hreflang for International SEO -->
 <link rel="alternate" hreflang="en" href="{{ url()->current() }}">
 <link rel="alternate" hreflang="en-ae" href="{{ url()->current() }}">

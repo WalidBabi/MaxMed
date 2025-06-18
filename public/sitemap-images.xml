@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+    <url>
+        <loc>http://localhost</loc>
+        <image:image>
+            <image:loc>http://localhost/Images/about.png</image:loc>
+            <image:title>MaxMed UAE - Laboratory Equipment Supplier</image:title>
+        </image:image>
+    </url>
+    <url>
+        <loc>http://localhost/about</loc>
+        <image:image>
+            <image:loc>http://localhost/Images/bacteria.jpg</image:loc>
+            <image:title>About MaxMed UAE</image:title>
+        </image:image>
+    </url>
+</urlset>

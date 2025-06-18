@@ -78,4 +78,13 @@ Allow: /*.gif$
 Allow: /*.webp$
 Allow: /*.avif$
 
+# RSS Feeds
+Allow: /rss/
+
+# Sitemaps
 Sitemap: https://maxmedme.com/sitemap.xml
+
+# RSS Feeds for Content Discovery
+# RSS: https://maxmedme.com/rss/feed.xml
+# RSS: https://maxmedme.com/rss/news.xml  
+# RSS: https://maxmedme.com/rss/products.xml
