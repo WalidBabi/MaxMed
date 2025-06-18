@@ -18,7 +18,7 @@
             value="View & Manage"
             :icon="'<x-icons name=\"users\" class=\"h-8 w-8\" />'"
             subtitle="Customer database"
-            href="{{ route('admin.customers.index') }}"
+            href="{{ route('crm.customers.index') }}"
             color="blue"
         />
 

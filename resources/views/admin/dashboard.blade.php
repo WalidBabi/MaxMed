@@ -28,7 +28,7 @@
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <!-- Customers -->
             <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-                <a href="{{ route('admin.customers.index') }}" class="block text-decoration-none">
+                <a href="{{ route('crm.customers.index') }}" class="block text-decoration-none">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
                             <div class="flex h-12 w-12 items-center justify-center rounded-lg metric-card">
