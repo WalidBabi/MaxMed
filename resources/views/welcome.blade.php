@@ -12,14 +12,17 @@
 
 @push('head')
     <meta name="google-signin-client_id" content="{{ config('services.google.client_id') }}">
+    <meta name="app-environment" content="{{ app()->environment() }}">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
         // Global variable to track Google API ready state
         window.googleAPILoaded = false;
+        window.isDevelopment = "{{ app()->environment() }}" === "local";
         
         // Function to be called when Google API is loaded
         function onGoogleAPILoaded() {
             window.googleAPILoaded = true;
+            console.log('🚀 Google API loaded in ' + ("{{ app()->environment() }}" === "local" ? 'DEVELOPMENT' : 'PRODUCTION') + ' mode');
             // If we have a pending initialize function, call it
             if (window.pendingGoogleInit) {
                 window.pendingGoogleInit();
@@ -1368,7 +1371,6 @@
                 
                 // Set up the One Tap UI
                 try {
-
                     // Configure Google One Tap
                     window.google.accounts.id.initialize({
                         client_id: '{{ config('services.google.client_id') }}',

@@ -28,6 +28,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
         
+        // Set a session flag to show orders hint
+        $request->session()->put('show_orders_hint', true);
+        
         $user = Auth::user();
         
         if ($user->is_admin == 1) {

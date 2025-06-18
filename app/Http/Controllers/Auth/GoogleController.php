@@ -30,6 +30,9 @@ class GoogleController extends Controller
             $user = $this->findOrCreateUser($googleUser);
             Auth::login($user);
 
+            // Set a session flag to show orders hint
+            session()->put('show_orders_hint', true);
+
             return redirect()->intended(route('dashboard', absolute: false));
 
         } catch (\Exception $e) {
@@ -40,6 +43,15 @@ class GoogleController extends Controller
     public function handleOneTap(Request $request)
     {
         try {
+            // Add development logging
+            if (app()->environment('local')) {
+                Log::info('Google One Tap attempt in development', [
+                    'request_data' => $request->all(),
+                    'user_agent' => $request->userAgent(),
+                    'ip' => $request->ip()
+                ]);
+            }
+            
             // Verify CSRF token
             $request->validate([
                 'g_csrf_token' => 'required|string',
@@ -74,6 +86,9 @@ class GoogleController extends Controller
             
             $user = $this->findOrCreateUser($googleUser);
             Auth::login($user);
+            
+            // Set a session flag to show orders hint
+            session()->put('show_orders_hint', true);
             
             return response()->json([
                 'redirect' => route('dashboard')

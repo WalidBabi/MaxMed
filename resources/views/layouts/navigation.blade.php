@@ -214,7 +214,15 @@
                                 @if(Auth::user()->hasPermission('supplier.products.view'))
                                 <a href="{{ route('supplier.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Supplier Dashboard</a>
                                 @endif
-                                <a href="{{ route('orders.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Orders</a>
+                                <a href="{{ route('orders.index') }}" class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 group">
+                                    <div class="flex items-center">
+                                        <svg class="h-4 w-4 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                        </svg>
+                                        My Orders
+                                    </div>
+                                   
+                                </a>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Log Out</button>
@@ -563,7 +571,15 @@
                 @if(Auth::user()->hasPermission('supplier.products.view'))
                 <a href="{{ route('supplier.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Supplier Dashboard</a>
                 @endif
-                <a href="{{ route('orders.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">My Orders</a>
+                <a href="{{ route('orders.index') }}" class="flex items-center justify-between px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 group">
+                    <div class="flex items-center">
+                        <svg class="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                        </svg>
+                        My Orders
+                    </div>
+                    
+                </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Log Out</button>
@@ -586,6 +602,57 @@
     </div>
 </div>
 
+<!-- Orders Hint Tooltip -->
+@auth
+<div id="ordersHintTooltip" class="hidden fixed top-16 right-4 bg-blue-600 text-white rounded-lg shadow-xl w-64 z-50 p-3 text-xs">
+    <div class="relative">
+        <!-- Arrow pointing to user dropdown -->
+        <div class="absolute -top-2 right-6 w-3 h-3 bg-blue-600 transform rotate-45"></div>
+        
+        <!-- Close button -->
+        <button id="closeOrdersHint" class="absolute top-1 right-1 text-blue-200 hover:text-white focus:outline-none">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        
+        <!-- Content -->
+        <div class="pr-4">
+            <p class="text-blue-100 leading-snug">
+                💡 Click your name above to find <strong>"My Orders"</strong> and track your purchases!
+            </p>
+            <button id="gotItBtn" class="mt-2 bg-white text-blue-600 px-2 py-1 rounded text-xs font-medium hover:bg-blue-50 transition-colors">
+                Got it!
+            </button>
+        </div>
+    </div>
+</div>
+@endauth
+
+<style>
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+</style>
+
 <script>
     // Function to show cart notification (defined globally)
     function showCartNotification(message) {
@@ -605,6 +672,41 @@
         setTimeout(function() {
             notification.classList.add('hidden');
         }, 3000);
+    }
+
+    // Function to show orders hint tooltip (one-time only)
+    function showOrdersHint() {
+        const tooltip = document.getElementById('ordersHintTooltip');
+        if (!tooltip) return;
+
+        // Check if hint has been shown before for this user
+        const userId = '{{ Auth::id() }}';
+        const hintShown = localStorage.getItem('ordersHintShown_' + userId);
+        if (hintShown === 'true') return;
+        
+        // For testing: uncomment the line below to reset the hint for all users
+        // localStorage.removeItem('ordersHintShown_' + userId);
+
+        // Show tooltip after a short delay
+        setTimeout(() => {
+            tooltip.classList.remove('hidden');
+            tooltip.style.animation = 'slideInRight 0.3s ease-out';
+        }, 2000);
+
+        // Set up close functionality
+        const closeBtn = document.getElementById('closeOrdersHint');
+        const gotItBtn = document.getElementById('gotItBtn');
+
+        function hideHint() {
+            tooltip.style.animation = 'slideOutRight 0.3s ease-in';
+            setTimeout(() => {
+                tooltip.classList.add('hidden');
+            }, 300);
+            localStorage.setItem('ordersHintShown_' + userId, 'true');
+        }
+
+        if (closeBtn) closeBtn.addEventListener('click', hideHint);
+        if (gotItBtn) gotItBtn.addEventListener('click', hideHint);
     }
 </script>
 
@@ -646,6 +748,9 @@
             }
         });
         
+        // Show orders hint for authenticated users
+        showOrdersHint();
+
         // Search autocomplete functionality
         const setupSearchAutocomplete = (inputId, suggestionsId) => {
             const searchInput = document.getElementById(inputId);
@@ -752,3 +857,18 @@
         setupSearchAutocomplete('mobile-search-input', 'mobile-search-suggestions');
     });
 </script>
+
+{{-- Orders hint script for authenticated users --}}
+@auth
+@if(session('show_orders_hint'))
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        showOrdersHint();
+    });
+</script>
+@php
+    // Clear the session flag after showing
+    session()->forget('show_orders_hint');
+@endphp
+@endif
+@endauth
