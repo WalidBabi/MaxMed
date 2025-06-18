@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -57,25 +58,53 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $user->fill($request->validated());
+        
+        // Debug logging
+        Log::info('Profile update request', [
+            'user_id' => $user->id,
+            'has_file' => $request->hasFile('profile_photo'),
+            'request_data' => $request->except(['profile_photo']),
+        ]);
+        
+        // Validate and update basic information
+        $validated = $request->validated();
+        $user->fill($request->except(['profile_photo']));
 
         // Handle profile photo upload
         if ($request->hasFile('profile_photo')) {
-            // Delete old photo if exists
-            if ($user->profile_photo) {
-                Storage::disk('public')->delete($user->profile_photo);
+            try {
+                // Validate file
+                $file = $request->file('profile_photo');
+                Log::info('Profile photo upload attempt', [
+                    'file_name' => $file->getClientOriginalName(),
+                    'file_size' => $file->getSize(),
+                    'file_type' => $file->getMimeType(),
+                    'is_valid' => $file->isValid(),
+                ]);
+                
+                if ($file->isValid()) {
+                    // Delete old photo if exists
+                    if ($user->profile_photo) {
+                        Storage::disk('public')->delete($user->profile_photo);
+                        Log::info('Deleted old profile photo', ['path' => $user->profile_photo]);
+                    }
+
+                    // Store new photo
+                    $path = $file->store('profile-photos', 'public');
+                    $user->profile_photo = $path;
+                    Log::info('Stored new profile photo', ['path' => $path]);
+                } else {
+                    Log::error('Profile photo file is not valid');
+                    return Redirect::route('profile.edit')->withErrors(['profile_photo' => 'The uploaded file is not valid.']);
+                }
+            } catch (\Exception $e) {
+                Log::error('Profile photo upload failed', ['error' => $e->getMessage()]);
+                return Redirect::route('profile.edit')->withErrors(['profile_photo' => 'Failed to upload profile photo. Please try again.']);
             }
-
-            // Store new photo
-            $path = $request->file('profile_photo')->store('profile-photos', 'public');
-            $user->profile_photo = $path;
-        }
-
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
         }
 
         $user->save();
+        Log::info('Profile updated successfully', ['user_id' => $user->id]);
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

@@ -43,6 +43,12 @@ class Order extends Model
         // Automatic workflow triggers
         static::updated(function ($order) {
             $order->handleWorkflowAutomation();
+            $order->sendStatusChangeNotification();
+        });
+        
+        // Send notification when order is created
+        static::created(function ($order) {
+            $order->sendOrderPlacedNotification();
         });
     }
 
@@ -323,5 +329,60 @@ class Order extends Model
     public function proformaInvoice()
     {
         return $this->hasOne(Invoice::class, 'order_id', 'id')->where('type', 'proforma');
+    }
+
+    /**
+     * Send notification when order is placed
+     */
+    public function sendOrderPlacedNotification()
+    {
+        try {
+            // Get all admin users
+            $admins = \App\Models\User::where(function($query) {
+                $query->where('is_admin', true)
+                      ->orWhereHas('role', function($roleQuery) {
+                          $roleQuery->where('name', 'admin');
+                      });
+            })
+            ->whereNotNull('email')
+            ->get();
+
+            if ($admins->count() > 0) {
+                \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\OrderNotification($this, 'placed'));
+                \Illuminate\Support\Facades\Log::info('Order placed notification sent to ' . $admins->count() . ' admin(s) for order: ' . $this->order_number);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send order placed notification: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Send notification when order status changes
+     */
+    public function sendStatusChangeNotification()
+    {
+        // Only send notification if status actually changed
+        if (!$this->wasChanged('status')) {
+            return;
+        }
+
+        try {
+            // Get all admin users
+            $admins = \App\Models\User::where(function($query) {
+                $query->where('is_admin', true)
+                      ->orWhereHas('role', function($roleQuery) {
+                          $roleQuery->where('name', 'admin');
+                      });
+            })
+            ->whereNotNull('email')
+            ->get();
+
+            if ($admins->count() > 0) {
+                \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\OrderNotification($this, 'status_changed'));
+                \Illuminate\Support\Facades\Log::info('Order status change notification sent to ' . $admins->count() . ' admin(s) for order: ' . $this->order_number . ' (new status: ' . $this->status . ')');
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send order status change notification: ' . $e->getMessage());
+        }
     }
 } 

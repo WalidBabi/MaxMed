@@ -32,7 +32,7 @@ class SystemFeedbackController extends Controller
             'priority' => 'required|in:low,medium,high',
         ]);
 
-        SystemFeedback::create([
+        $systemFeedback = SystemFeedback::create([
             'user_id' => Auth::id(),
             'type' => $validated['type'],
             'title' => $validated['title'],
@@ -40,6 +40,28 @@ class SystemFeedbackController extends Controller
             'priority' => $validated['priority'],
             'status' => 'pending',
         ]);
+
+        // Send notification to all admin users
+        try {
+            // Get all admin users with the is_admin flag or admin role
+            $admins = \App\Models\User::where(function($query) {
+                $query->where('is_admin', true)
+                      ->orWhereHas('role', function($roleQuery) {
+                          $roleQuery->where('name', 'admin');
+                      });
+            })
+            ->whereNotNull('email')
+            ->get();
+
+            if ($admins->count() > 0) {
+                \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\SystemFeedbackNotification($systemFeedback));
+                \Illuminate\Support\Facades\Log::info('System feedback notification sent to ' . $admins->count() . ' admin(s) for feedback ID: ' . $systemFeedback->id);
+            } else {
+                \Illuminate\Support\Facades\Log::warning('No admin users found to send system feedback notification for feedback ID: ' . $systemFeedback->id);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send system feedback notification: ' . $e->getMessage());
+        }
 
         return redirect()->route('supplier.feedback.index')
                         ->with('success', 'Thank you for your feedback! We will review it and get back to you.');

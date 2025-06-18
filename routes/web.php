@@ -137,7 +137,7 @@ Route::middleware('auth')->group(function () {
 });
 
     // Admin Routes
-    Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(function () {
+    Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', 'admin'])->group(function () {
         Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
 
         // News Management
@@ -229,6 +229,20 @@ Route::middleware('auth')->group(function () {
         Route::post('inquiries/{inquiry}/generate-quote', [\App\Http\Controllers\Admin\InquiryController::class, 'generateQuote'])->name('inquiries.generate-quote');
         Route::delete('inquiries/{inquiry}/cancel', [\App\Http\Controllers\Admin\InquiryController::class, 'cancel'])->name('inquiries.cancel');
         
+        // Feedback Management
+        Route::resource('feedback', \App\Http\Controllers\Admin\FeedbackController::class)->only(['index', 'show', 'update']);
+        Route::get('feedback/stats', [\App\Http\Controllers\Admin\FeedbackController::class, 'stats'])->name('feedback.stats');
+        Route::get('feedback/system/{systemFeedback}', [\App\Http\Controllers\Admin\FeedbackController::class, 'showSystem'])->name('feedback.show-system');
+        Route::put('feedback/system/{systemFeedback}', [\App\Http\Controllers\Admin\FeedbackController::class, 'updateSystem'])->name('feedback.update-system');
+        
+        // Notifications Management
+        Route::get('notifications', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('notifications.index');
+        Route::post('notifications/{id}/read', [\App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
+        Route::post('notifications/mark-all-read', [\App\Http\Controllers\Admin\NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+        Route::get('notifications/count', [\App\Http\Controllers\Admin\NotificationController::class, 'count'])->name('notifications.count');
+        Route::get('notifications/stream', [\App\Http\Controllers\Admin\NotificationController::class, 'stream'])->name('notifications.stream');
+        Route::get('notifications/check-new', [\App\Http\Controllers\Admin\NotificationController::class, 'checkNew'])->name('notifications.check-new');
+        
 
         
         // Test route for debugging
@@ -287,6 +301,43 @@ Route::prefix('delivery')->name('delivery.')->group(function () {
     Route::post('/signature/{tracking}', [\App\Http\Controllers\DeliveryController::class, 'processSignature'])->name('process-signature');
     Route::get('/receipt/{tracking}', [\App\Http\Controllers\DeliveryController::class, 'downloadReceipt'])->name('receipt');
 });
+
+
+
+// Debug Notifications Route
+Route::get('/debug-notifications', function () {
+    $currentUser = Auth::user();
+    if (!$currentUser) {
+        return "❌ Not logged in";
+    }
+    
+    $isAdmin = $currentUser->is_admin;
+    $notifications = $currentUser->notifications()->orderBy('created_at', 'desc')->limit(5)->get();
+    $unreadCount = $currentUser->unreadNotifications()->count();
+    
+    $output = "🔍 Debug Notification System\n\n";
+    $output .= "Current User: {$currentUser->name} (ID: {$currentUser->id})\n";
+    $output .= "Is Admin: " . ($isAdmin ? "✅ YES" : "❌ NO") . "\n";
+    $output .= "Total Notifications: {$notifications->count()}\n";
+    $output .= "Unread Notifications: {$unreadCount}\n\n";
+    
+    if ($notifications->count() > 0) {
+        $output .= "📋 Recent Notifications:\n";
+        foreach ($notifications as $notification) {
+            $message = $notification->data['message'] ?? 'No message';
+            $read = $notification->read_at ? 'Read' : 'Unread';
+            $output .= "- {$message} ({$read}, {$notification->created_at})\n";
+        }
+    } else {
+        $output .= "❌ No notifications found for this user\n";
+    }
+    
+    // Check all notifications in the database
+    $allNotifications = DB::table('notifications')->count();
+    $output .= "\n🗄️ Total notifications in database: {$allNotifications}\n";
+    
+    return "<pre>{$output}</pre>";
+})->middleware('auth')->name('debug.notifications');
 
 // Test Mail Route
 Route::get('/test-mail', function () {
