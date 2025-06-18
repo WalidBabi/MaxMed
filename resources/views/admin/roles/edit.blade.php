@@ -179,11 +179,11 @@
                         <div class="space-y-4 text-sm">
                             <div>
                                 <p class="font-medium text-gray-900">Created:</p>
-                                <p class="text-gray-600">{{ $role->created_at->format('M d, Y \a\t H:i') }}</p>
+                                <p class="text-gray-600">{{ $role->created_at ? $role->created_at->format('M d, Y \a\t H:i') : 'N/A' }}</p>
                             </div>
                             <div>
                                 <p class="font-medium text-gray-900">Last Updated:</p>
-                                <p class="text-gray-600">{{ $role->updated_at->format('M d, Y \a\t H:i') }}</p>
+                                <p class="text-gray-600">{{ $role->updated_at ? $role->updated_at->format('M d, Y \a\t H:i') : 'N/A' }}</p>
                             </div>
                             <div>
                                 <p class="font-medium text-gray-900">Users Assigned:</p>

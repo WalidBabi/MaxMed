@@ -111,6 +111,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [CrmController::class, 'dashboard'])->name('dashboard');
     Route::get('/reports', [CrmController::class, 'reports'])->name('reports');
     
+    // CRM Notifications
+    Route::get('notifications', [\App\Http\Controllers\Crm\NotificationController::class, 'index']);
+    Route::get('notifications/check-new', [\App\Http\Controllers\Crm\NotificationController::class, 'checkNew']);
+    Route::post('notifications/{id}/read', [\App\Http\Controllers\Crm\NotificationController::class, 'markAsRead']);
+    Route::post('notifications/mark-all-read', [\App\Http\Controllers\Crm\NotificationController::class, 'markAllAsRead']);
+    Route::get('notifications/count', [\App\Http\Controllers\Crm\NotificationController::class, 'count']);
+    
     // Contact Submissions Management (CRM)
     Route::resource('contact-submissions', \App\Http\Controllers\Crm\ContactSubmissionController::class)->only(['index', 'show'])
         ->parameters(['contact-submissions' => 'submission']);
@@ -134,6 +141,47 @@ Route::middleware('auth')->group(function () {
     Route::post('leads/{lead}/convert-to-deal', [CrmLeadController::class, 'convertToDeal'])->name('leads.convert-to-deal');
     Route::post('leads/{lead}/create-quotation-request', [CrmLeadController::class, 'createQuotationRequest'])->name('leads.create-quotation-request');
     Route::patch('leads/{lead}/status', [CrmLeadController::class, 'updateStatus'])->name('leads.update-status');
+    
+    // Customer Management
+    Route::resource('customers', \App\Http\Controllers\Crm\CustomerController::class);
+    Route::get('customers/{id}/details', [\App\Http\Controllers\Crm\CustomerController::class, 'getCustomerDetails'])->name('customers.details');
+    Route::get('customers/by-name/{name}', [\App\Http\Controllers\Crm\CustomerController::class, 'getByName'])->name('customers.by-name');
+    
+    // Marketing System Routes
+    Route::prefix('marketing')->name('marketing.')->group(function () {
+        // Marketing Dashboard
+        Route::get('/', [\App\Http\Controllers\Crm\MarketingController::class, 'dashboard'])->name('dashboard');
+        
+        // Marketing Contacts
+        Route::resource('contacts', \App\Http\Controllers\Crm\MarketingContactController::class);
+        Route::post('contacts/import', [\App\Http\Controllers\Crm\MarketingContactController::class, 'import'])->name('contacts.import');
+        Route::get('contacts/export', [\App\Http\Controllers\Crm\MarketingContactController::class, 'export'])->name('contacts.export');
+        Route::patch('contacts/{contact}/unsubscribe', [\App\Http\Controllers\Crm\MarketingContactController::class, 'unsubscribe'])->name('contacts.unsubscribe');
+        Route::patch('contacts/{contact}/resubscribe', [\App\Http\Controllers\Crm\MarketingContactController::class, 'resubscribe'])->name('contacts.resubscribe');
+        
+        // Contact Lists
+        Route::resource('contact-lists', \App\Http\Controllers\Crm\ContactListController::class);
+        Route::post('contact-lists/{contactList}/refresh', [\App\Http\Controllers\Crm\ContactListController::class, 'refresh'])->name('contact-lists.refresh');
+        
+        // Email Templates
+        Route::resource('email-templates', \App\Http\Controllers\Crm\EmailTemplateController::class);
+        Route::post('email-templates/{emailTemplate}/clone', [\App\Http\Controllers\Crm\EmailTemplateController::class, 'clone'])->name('email-templates.clone');
+        Route::get('email-templates/{emailTemplate}/preview', [\App\Http\Controllers\Crm\EmailTemplateController::class, 'preview'])->name('email-templates.preview');
+        
+        // Campaigns
+        Route::resource('campaigns', \App\Http\Controllers\Crm\CampaignController::class);
+        Route::post('campaigns/{campaign}/duplicate', [\App\Http\Controllers\Crm\CampaignController::class, 'duplicate'])->name('campaigns.duplicate');
+        Route::get('campaigns/{campaign}/preview', [\App\Http\Controllers\Crm\CampaignController::class, 'preview'])->name('campaigns.preview');
+        Route::post('campaigns/{campaign}/schedule', [\App\Http\Controllers\Crm\CampaignController::class, 'schedule'])->name('campaigns.schedule');
+        Route::patch('campaigns/{campaign}/pause', [\App\Http\Controllers\Crm\CampaignController::class, 'pause'])->name('campaigns.pause');
+        Route::patch('campaigns/{campaign}/resume', [\App\Http\Controllers\Crm\CampaignController::class, 'resume'])->name('campaigns.resume');
+        Route::patch('campaigns/{campaign}/cancel', [\App\Http\Controllers\Crm\CampaignController::class, 'cancel'])->name('campaigns.cancel');
+        
+        // Analytics
+        Route::get('analytics', [\App\Http\Controllers\Crm\MarketingAnalyticsController::class, 'index'])->name('analytics.index');
+        Route::get('analytics/campaigns', [\App\Http\Controllers\Crm\MarketingAnalyticsController::class, 'campaigns'])->name('analytics.campaigns');
+        Route::get('analytics/contacts', [\App\Http\Controllers\Crm\MarketingAnalyticsController::class, 'contacts'])->name('analytics.contacts');
+    });
 });
 
     // Admin Routes
@@ -173,10 +221,7 @@ Route::middleware('auth')->group(function () {
         // Add link to deliveries in the admin sidebar
         Route::get('deliveries', [\App\Http\Controllers\Admin\DeliveryController::class, 'index'])->name('deliveries.index');
         
-        // Customer Management
-                    Route::resource('customers', \App\Http\Controllers\Admin\CustomerController::class);
-            Route::get('customers/{id}/details', [\App\Http\Controllers\Admin\CustomerController::class, 'getCustomerDetails'])->name('customers.details');
-        Route::get('customers/by-name/{name}', [\App\Http\Controllers\Admin\CustomerController::class, 'getByName'])->name('customers.by-name');
+        // Customer Management moved to CRM Portal
         
         // Role Management
         Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class);
@@ -258,7 +303,14 @@ Route::middleware('auth')->group(function () {
 
     // Supplier Routes
     Route::prefix('supplier')->name('supplier.')->middleware(['auth'])->group(function () {
-        Route::get('/dashboard', [\App\Http\Controllers\Supplier\DashboardController::class, 'index'])->name('dashboard');
+        // Supplier Notifications
+        Route::get('notifications', [\App\Http\Controllers\Supplier\NotificationController::class, 'index']);
+        Route::get('notifications/check-new', [\App\Http\Controllers\Supplier\NotificationController::class, 'checkNew']);
+        Route::post('notifications/{id}/read', [\App\Http\Controllers\Supplier\NotificationController::class, 'markAsRead']);
+        Route::post('notifications/mark-all-read', [\App\Http\Controllers\Supplier\NotificationController::class, 'markAllAsRead']);
+        Route::get('notifications/count', [\App\Http\Controllers\Supplier\NotificationController::class, 'count']);
+        
+        Route::get('/', [\App\Http\Controllers\Supplier\DashboardController::class, 'index'])->name('dashboard');
         Route::resource('products', \App\Http\Controllers\Supplier\ProductController::class);
         Route::resource('feedback', \App\Http\Controllers\Supplier\SystemFeedbackController::class);
         

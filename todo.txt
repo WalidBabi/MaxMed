@@ -37,7 +37,7 @@ Duplicate Detection: Identify and merge duplicate customer records
 5- migrate relevant crm sections to it 
 6- emails styling
 7- UTC time •	Time: Wed, Jun 18, 2025 6:47 AM
-
+8- make recaptcha for registering spam emails
 # Generate sitemaps (run weekly)
 php artisan sitemap:generate
 submit to google search console : https://maxmedme.com/sitemap.xml
