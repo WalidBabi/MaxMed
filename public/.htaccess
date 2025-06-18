@@ -5,46 +5,227 @@
 
     RewriteEngine On
 
+    # Handle Angular and Vue.js History API fallback
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} ^/admin
+    RewriteRule ^(.*)$ /index.php [QSA,L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Handle X-XSRF-Token Header
-    RewriteCond %{HTTP:x-xsrf-token} .
-    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
-
-    # Redirect Trailing Slashes If Not A Folder...
+    # Redirect Trailing Slashes If Not A Folder
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
-    # Send Requests To Front Controller...
-    RewriteCond %{REQUEST_FILENAME} !-d
+    # Send Requests To Front Controller
     RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ index.php [L]
 </IfModule>
 
-# Ensure proper content type and character set headers
+# ===============================
+# SEO & PERFORMANCE OPTIMIZATIONS
+# ===============================
+
+# Force HTTPS (SSL/TLS) for better SEO
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Redirect www to non-www for canonical URLs
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+# ===============================
+# GZIP COMPRESSION
+# ===============================
+<IfModule mod_deflate.c>
+    # Compress HTML, CSS, JavaScript, Text, XML and fonts
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
+    AddOutputFilterByType DEFLATE application/x-font
+    AddOutputFilterByType DEFLATE application/x-font-opentype
+    AddOutputFilterByType DEFLATE application/x-font-otf
+    AddOutputFilterByType DEFLATE application/x-font-truetype
+    AddOutputFilterByType DEFLATE application/x-font-ttf
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE font/opentype
+    AddOutputFilterByType DEFLATE font/otf
+    AddOutputFilterByType DEFLATE font/ttf
+    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE image/x-icon
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/xml
+
+    # Remove browser bugs (only needed for really old browsers)
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+    Header append Vary User-Agent
+</IfModule>
+
+# ===============================
+# BROWSER CACHING FOR SPEED
+# ===============================
+<IfModule mod_expires.c>
+    ExpiresActive on
+
+    # Images
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/avif "access plus 1 month"
+
+    # CSS and JavaScript
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+
+    # Fonts
+    ExpiresByType application/x-font-ttf "access plus 1 year"
+    ExpiresByType font/opentype "access plus 1 year"
+    ExpiresByType application/x-font-woff "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+    ExpiresByType application/x-font-otf "access plus 1 year"
+
+    # HTML and XML
+    ExpiresByType text/html "access plus 1 day"
+    ExpiresByType text/xml "access plus 1 day"
+    ExpiresByType application/xml "access plus 1 day"
+    ExpiresByType application/rss+xml "access plus 1 day"
+
+    # Favicon
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType image/vnd.microsoft.icon "access plus 1 year"
+</IfModule>
+
+# ===============================
+# SECURITY HEADERS
+# ===============================
 <IfModule mod_headers.c>
-    # Ensure HTML is served as text/html with UTF-8 charset
-    AddType 'text/html; charset=UTF-8' .html .htm .php
+    # X-Content-Type-Options
+    Header always set X-Content-Type-Options "nosniff"
     
-    # Force correct content types
-    <FilesMatch "\.(html|htm|php)$">
-        Header set Content-Type "text/html; charset=UTF-8"
-    </FilesMatch>
+    # X-Frame-Options
+    Header always set X-Frame-Options "SAMEORIGIN"
     
-    <FilesMatch "\.css$">
-        Header set Content-Type "text/css; charset=UTF-8"
-    </FilesMatch>
+    # X-XSS-Protection
+    Header always set X-XSS-Protection "1; mode=block"
     
-    <FilesMatch "\.js$">
-        Header set Content-Type "application/javascript; charset=UTF-8"
-    </FilesMatch>
+    # Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
     
-    # Ensure no caching of HTML content that might strip doctype
-    <FilesMatch "\.(html|htm|php)$">
-        Header set Cache-Control "private, no-cache, no-store, must-revalidate"
-        Header set Pragma "no-cache"
+    # Permissions Policy
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    
+    # Remove Server signature
+    Header unset Server
+    Header always unset X-Powered-By
+    
+    # Content Security Policy for better security
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:; frame-src https://accounts.google.com;"
+</IfModule>
+
+# ===============================
+# MIME TYPES FOR NEW FORMATS
+# ===============================
+<IfModule mod_mime.c>
+    # WebP images
+    AddType image/webp .webp
+    
+    # AVIF images
+    AddType image/avif .avif
+    
+    # Web fonts
+    AddType application/font-woff2 .woff2
+    AddType application/font-woff .woff
+    
+    # JSON-LD for structured data
+    AddType application/ld+json .jsonld
+</IfModule>
+
+# ===============================
+# BLOCK MALICIOUS REQUESTS
+# ===============================
+<IfModule mod_rewrite.c>
+    # Block common exploit attempts
+    RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} GLOBALS(=|[|%[0-9A-Z]{0,2}) [OR]
+    RewriteCond %{QUERY_STRING} _REQUEST(=|[|%[0-9A-Z]{0,2}) [OR]
+    RewriteCond %{QUERY_STRING} proc/self/environ [OR]
+    RewriteCond %{QUERY_STRING} mosConfig_[a-zA-Z_]{1,21}(=|%3D) [OR]
+    RewriteCond %{QUERY_STRING} base64_(en|de)code[^(]*\([^)]*\) [OR]
+    RewriteCond %{QUERY_STRING} ^.*(\[|\]|\(|\)|<|>|ê|"|;|\?|\*|=$).* [NC]
+    RewriteRule ^(.*)$ - [F,L]
+</IfModule>
+
+# ===============================
+# SITEMAP OPTIMIZATION
+# ===============================
+<IfModule mod_rewrite.c>
+    # Ensure sitemap.xml is accessible
+    RewriteRule ^sitemap\.xml$ sitemap.xml [L]
+    RewriteRule ^sitemap-(.+)\.xml$ sitemap-$1.xml [L]
+</IfModule>
+
+# ===============================
+# FILE PROTECTION
+# ===============================
+<Files ".env">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "composer.json">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "composer.lock">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "package.json">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# ===============================
+# PERFORMANCE OPTIMIZATIONS
+# ===============================
+
+# ETags for better caching
+<IfModule mod_headers.c>
+    # Enable ETags
+    FileETag MTime Size
+    
+    # Vary: Accept-Encoding header
+    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|webp|avif)$">
+        Header append Vary: Accept-Encoding
     </FilesMatch>
+</IfModule>
+
+# ===============================
+# REDIRECTS FOR COMMON ISSUES
+# ===============================
+<IfModule mod_rewrite.c>
+    # Redirect index.php to root
+    RewriteCond %{THE_REQUEST} /index\.php[?\s] [NC]
+    RewriteRule ^index\.php$ / [R=301,L]
+    
+    # Remove trailing slash from non-directory requests
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^([^/]+)/$ /$1 [R=301,L]
 </IfModule>

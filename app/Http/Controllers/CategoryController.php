@@ -53,18 +53,16 @@ class CategoryController extends Controller
         return view('categories.products', compact('category', 'products'));
     }
 
-    public function showSubcategory(Request $request, Category $category, Category $subcategory)
+    public function showSubcategory(Request $request, $category_slug, $subcategory_slug)
     {
         // Check if URL is www version and redirect to non-www
         if (strpos($request->getHost(), 'www.') === 0) {
             return redirect()->to('https://maxmedme.com' . $request->getRequestUri(), 301);
         }
         
-        // Validate that subcategory belongs to the parent category
-        if ($subcategory->parent_id != $category->id) {
-            return Redirect::route('products.index')
-                ->with('warning', 'The requested subcategory does not exist in this category.');
-        }
+        // Find categories by slug
+        $category = Category::where('slug', $category_slug)->firstOrFail();
+        $subcategory = Category::where('slug', $subcategory_slug)->where('parent_id', $category->id)->firstOrFail();
         
         // Check if this subcategory has content
         $hasContent = $subcategory->subcategories->isNotEmpty() || 
@@ -94,18 +92,17 @@ class CategoryController extends Controller
         return view('categories.products', compact('subcategory', 'products'));
     }
 
-    public function showSubSubcategory(Request $request, Category $category, Category $subcategory, Category $subsubcategory)
+    public function showSubSubcategory(Request $request, $category_slug, $subcategory_slug, $subsubcategory_slug)
     {
         // Check if URL is www version and redirect to non-www
         if (strpos($request->getHost(), 'www.') === 0) {
             return redirect()->to('https://maxmedme.com' . $request->getRequestUri(), 301);
         }
         
-        // Validate hierarchy
-        if ($subcategory->parent_id != $category->id || $subsubcategory->parent_id != $subcategory->id) {
-            return Redirect::route('products.index')
-                ->with('warning', 'The requested category path is invalid.');
-        }
+        // Find categories by slug
+        $category = Category::where('slug', $category_slug)->firstOrFail();
+        $subcategory = Category::where('slug', $subcategory_slug)->where('parent_id', $category->id)->firstOrFail();
+        $subsubcategory = Category::where('slug', $subsubcategory_slug)->where('parent_id', $subcategory->id)->firstOrFail();
         
         // Check if this subsubcategory has content
         $hasContent = $subsubcategory->subcategories->isNotEmpty() || 
@@ -136,20 +133,18 @@ class CategoryController extends Controller
         return view('categories.products', compact('subsubcategory', 'products'));
     }
 
-    public function showSubSubSubcategory(Request $request, Category $category, Category $subcategory, Category $subsubcategory, Category $subsubsubcategory)
+    public function showSubSubSubcategory(Request $request, $category_slug, $subcategory_slug, $subsubcategory_slug, $subsubsubcategory_slug)
     {
         // Check if URL is www version and redirect to non-www
         if (strpos($request->getHost(), 'www.') === 0) {
             return redirect()->to('https://maxmedme.com' . $request->getRequestUri(), 301);
         }
         
-        // Validate hierarchy
-        if ($subcategory->parent_id != $category->id || 
-            $subsubcategory->parent_id != $subcategory->id ||
-            $subsubsubcategory->parent_id != $subsubcategory->id) {
-            return Redirect::route('products.index')
-                ->with('warning', 'The requested category path is invalid.');
-        }
+        // Find categories by slug
+        $category = Category::where('slug', $category_slug)->firstOrFail();
+        $subcategory = Category::where('slug', $subcategory_slug)->where('parent_id', $category->id)->firstOrFail();
+        $subsubcategory = Category::where('slug', $subsubcategory_slug)->where('parent_id', $subcategory->id)->firstOrFail();
+        $subsubsubcategory = Category::where('slug', $subsubsubcategory_slug)->where('parent_id', $subsubcategory->id)->firstOrFail();
         
         // Check if this subsubsubcategory has content
         $hasContent = Product::where('category_id', $subsubsubcategory->id)->exists();

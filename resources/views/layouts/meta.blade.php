@@ -9,6 +9,16 @@
 <meta name="contact:phone" content="+971 55 460 2500">
 <meta name="contact:email" content="sales@maxmedme.com">
 
+<!-- Hreflang for International SEO -->
+<link rel="alternate" hreflang="en" href="{{ url()->current() }}">
+<link rel="alternate" hreflang="en-ae" href="{{ url()->current() }}">
+<link rel="alternate" hreflang="en-sa" href="{{ url()->current() }}">
+<link rel="alternate" hreflang="en-qa" href="{{ url()->current() }}">
+<link rel="alternate" hreflang="en-kw" href="{{ url()->current() }}">
+<link rel="alternate" hreflang="en-om" href="{{ url()->current() }}">
+<link rel="alternate" hreflang="en-bh" href="{{ url()->current() }}">
+<link rel="alternate" hreflang="x-default" href="{{ url()->current() }}">
+
 <!-- Favicon -->
 <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('img/favicon/favicon-96x96.png') }}">
 <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon/favicon-32x32.png') }}">
@@ -26,9 +36,39 @@
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="{{ url()->current() }}">
-<meta property="og:title" content="@yield('title', 'MaxMed UAE - Premium Laboratory & Medical Equipment Supplier in Dubai')">
-<meta property="og:description" content="@yield('meta_description')">
-<meta property="og:image" content="@yield('og_image', asset('Images/banner2.jpeg'))">
+<meta property="og:title" content="@yield('og_title', 'MaxMed UAE - Premium Laboratory & Medical Equipment Supplier in Dubai')">
+<meta property="og:description" content="@yield('og_description', 'Leading supplier of laboratory equipment and medical supplies in Dubai, UAE. Contact us at +971 55 460 2500.')">
+@php
+    $ogImage = null;
+    // Dynamic OG image for products
+    if (request()->route() && request()->route()->getName() === 'product.show') {
+        $product = request()->route('product');
+        if ($product && is_object($product) && method_exists($product, 'image_url')) {
+            $ogImage = $product->image_url;
+        }
+    }
+    // Dynamic OG image for categories
+    elseif (request()->route() && strpos(request()->route()->getName(), 'categories.') === 0) {
+        $category = request()->route('category');
+        if ($category && is_object($category) && method_exists($category, 'image_url')) {
+            $ogImage = $category->image_url;
+        }
+    }
+    // Dynamic OG image for news
+    elseif (request()->route() && request()->route()->getName() === 'news.show') {
+        $news = request()->route('news');
+        if ($news && is_object($news) && method_exists($news, 'image_url')) {
+            $ogImage = $news->image_url;
+        }
+    }
+    // Fallback to banner image
+    if (!$ogImage) {
+        $ogImage = asset('Images/banner2.jpeg');
+    }
+@endphp
+<meta property="og:image" content="{{ $ogImage }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="MaxMed UAE">
 <meta property="og:phone_number" content="+971 55 460 2500">
@@ -39,7 +79,18 @@
 <meta name="twitter:url" content="{{ url()->current() }}">
 <meta name="twitter:title" content="@yield('title')">
 <meta name="twitter:description" content="@yield('meta_description')">
-<meta name="twitter:image" content="@yield('og_image', asset('Images/banner2.jpeg'))">
+<meta name="twitter:image" content="{{ $ogImage }}">
+
+<!-- Additional SEO Meta Tags -->
+<meta name="geo.region" content="AE-DU">
+<meta name="geo.placename" content="Dubai">
+<meta name="geo.position" content="25.2048;55.2708">
+<meta name="ICBM" content="25.2048, 55.2708">
+
+<!-- Business Information -->
+<meta name="business:hours" content="Monday-Friday 09:00-18:00">
+<meta name="business:hours:day" content="monday tuesday wednesday thursday friday">
+<meta name="business:hours:time" content="09:00-18:00">
 
 <!-- Canonical URL with proper domain consistency -->
 @php

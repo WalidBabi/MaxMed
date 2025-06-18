@@ -6,9 +6,17 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use App\Models\Category;
+use App\Services\SeoService;
 
 class ProductController extends Controller
 {
+    protected $seoService;
+
+    public function __construct(SeoService $seoService)
+    {
+        $this->seoService = $seoService;
+    }
+
     /**
      * Display a listing of the products.
      *
@@ -184,8 +192,20 @@ class ProductController extends Controller
             return redirect()->to('https://maxmedme.com/product/' . $product->id, 301);
         }
         
-        // Pass the single product to the view
-        return view('products.show', compact('product'));
+        // Generate SEO data
+        $seoData = $this->seoService->generateProductMeta($product);
+        
+        // Generate breadcrumbs
+        $breadcrumbs = $this->seoService->generateProductBreadcrumbs($product);
+        
+        // Generate FAQs for the product
+        $faqs = $this->seoService->getPageFAQs('product', $product);
+        
+        // Get related products for internal linking
+        $relatedProducts = $this->seoService->getRelatedProducts($product);
+        
+        // Pass data to the view
+        return view('products.show', compact('product', 'seoData', 'breadcrumbs', 'faqs', 'relatedProducts'));
     }
     
     public function checkAvailability(Request $request, Product $product, int $quantity): JsonResponse

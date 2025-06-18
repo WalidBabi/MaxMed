@@ -1,5 +1,12 @@
 @extends('layouts.app')
 
+@section('title', $seoData['title'] ?? $product->name . ' | MaxMed UAE')
+@section('meta_description', $seoData['meta_description'] ?? 'Premium ' . $product->name . ' available at MaxMed UAE. Contact +971 55 460 2500 for pricing and availability.')
+@section('meta_keywords', $seoData['meta_keywords'] ?? 'laboratory equipment, medical supplies, UAE, Dubai')
+@section('og_title', $seoData['og_title'] ?? $seoData['title'] ?? $product->name)
+@section('og_description', $seoData['og_description'] ?? $seoData['meta_description'])
+@section('og_image', $product->image_url ?? asset('Images/banner2.jpeg'))
+
 @section('content')
 <div class="container-fluid py-4">
     <style>

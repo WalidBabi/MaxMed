@@ -343,22 +343,32 @@ Route::middleware(['auth'])->group(function () {
 Route::prefix('categories')->name('categories.')->group(function () {
     Route::get('/', [CategoryController::class, 'index'])->name('index');
     
-    // Add middleware to check if category exists
-    Route::get('/{category}', [CategoryController::class, 'show'])->name('show')
-        ->where('category', '[0-9]+'); // Ensure only numeric IDs are accepted
+    // Updated to use slug binding instead of numeric IDs
+    Route::get('/{category:slug}', [CategoryController::class, 'show'])->name('show');
     
-    Route::get('/{category}/{subcategory}', [CategoryController::class, 'showSubcategory'])->name('subcategory.show')
-        ->where(['category' => '[0-9]+', 'subcategory' => '[0-9]+']); // Validate both IDs
+    // Use explicit binding without automatic nested resolution
+    Route::get('/{category_slug}/{subcategory_slug}', [CategoryController::class, 'showSubcategory'])
+        ->name('subcategory.show')
+        ->where(['category_slug' => '[a-z0-9\-]+', 'subcategory_slug' => '[a-z0-9\-]+']);
     
-    Route::get('/{category}/{subcategory}/{subsubcategory}', [CategoryController::class, 'showSubSubcategory'])->name('subsubcategory.show')
-        ->where(['category' => '[0-9]+', 'subcategory' => '[0-9]+', 'subsubcategory' => '[0-9]+']); // Validate all IDs
+    Route::get('/{category_slug}/{subcategory_slug}/{subsubcategory_slug}', [CategoryController::class, 'showSubSubcategory'])
+        ->name('subsubcategory.show')
+        ->where(['category_slug' => '[a-z0-9\-]+', 'subcategory_slug' => '[a-z0-9\-]+', 'subsubcategory_slug' => '[a-z0-9\-]+']);
         
-    Route::get('/{category}/{subcategory}/{subsubcategory}/subcategories', [CategoryController::class, 'showSubSubcategory'])->name('subsubcategory.subsubcategories')
-        ->where(['category' => '[0-9]+', 'subcategory' => '[0-9]+', 'subsubcategory' => '[0-9]+']); // For showing the subsubcategories view
+    Route::get('/{category_slug}/{subcategory_slug}/{subsubcategory_slug}/subcategories', [CategoryController::class, 'showSubSubcategory'])
+        ->name('subsubcategory.subsubcategories')
+        ->where(['category_slug' => '[a-z0-9\-]+', 'subcategory_slug' => '[a-z0-9\-]+', 'subsubcategory_slug' => '[a-z0-9\-]+']);
         
-    Route::get('/{category}/{subcategory}/{subsubcategory}/{subsubsubcategory}', [CategoryController::class, 'showSubSubSubcategory'])->name('subsubsubcategory.show')
-        ->where(['category' => '[0-9]+', 'subcategory' => '[0-9]+', 'subsubcategory' => '[0-9]+', 'subsubsubcategory' => '[0-9]+']); // Validate all IDs
+    Route::get('/{category_slug}/{subcategory_slug}/{subsubcategory_slug}/{subsubsubcategory_slug}', [CategoryController::class, 'showSubSubSubcategory'])
+        ->name('subsubsubcategory.show')
+        ->where(['category_slug' => '[a-z0-9\-]+', 'subcategory_slug' => '[a-z0-9\-]+', 'subsubcategory_slug' => '[a-z0-9\-]+', 'subsubsubcategory_slug' => '[a-z0-9\-]+']);
 });
+
+// Backward compatibility redirects: old ID-based category URLs to new slug-based URLs
+Route::get('/categories/{id}', function($id) {
+    $category = \App\Models\Category::findOrFail($id);
+    return redirect()->route('categories.show', $category->slug, 301);
+})->where('id', '[0-9]+')->name('categories.show.old');
 
 // Partners Routes
 Route::prefix('partners')->name('partners.')->group(function () {
