@@ -91,23 +91,23 @@
                             <p class="font-medium text-gray-900 mb-2">Contact Variables:</p>
                             <div class="space-y-1 text-gray-600">
                                 <div class="flex justify-between">
-                                    <code class="text-xs bg-gray-100 px-1 rounded">{{first_name}}</code>
+                                    <code class="text-xs bg-gray-100 px-1 rounded">@{{first_name}}</code>
                                     <span class="text-xs">First name</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <code class="text-xs bg-gray-100 px-1 rounded">{{last_name}}</code>
+                                    <code class="text-xs bg-gray-100 px-1 rounded">@{{last_name}}</code>
                                     <span class="text-xs">Last name</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <code class="text-xs bg-gray-100 px-1 rounded">{{email}}</code>
+                                    <code class="text-xs bg-gray-100 px-1 rounded">@{{email}}</code>
                                     <span class="text-xs">Email address</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <code class="text-xs bg-gray-100 px-1 rounded">{{company}}</code>
+                                    <code class="text-xs bg-gray-100 px-1 rounded">@{{company}}</code>
                                     <span class="text-xs">Company name</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <code class="text-xs bg-gray-100 px-1 rounded">{{job_title}}</code>
+                                    <code class="text-xs bg-gray-100 px-1 rounded">@{{job_title}}</code>
                                     <span class="text-xs">Job title</span>
                                 </div>
                             </div>
@@ -117,15 +117,15 @@
                             <p class="font-medium text-gray-900 mb-2">System Variables:</p>
                             <div class="space-y-1 text-gray-600">
                                 <div class="flex justify-between">
-                                    <code class="text-xs bg-gray-100 px-1 rounded">{{company_name}}</code>
+                                    <code class="text-xs bg-gray-100 px-1 rounded">@{{company_name}}</code>
                                     <span class="text-xs">Your company</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <code class="text-xs bg-gray-100 px-1 rounded">{{current_date}}</code>
+                                    <code class="text-xs bg-gray-100 px-1 rounded">@{{current_date}}</code>
                                     <span class="text-xs">Today's date</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <code class="text-xs bg-gray-100 px-1 rounded">{{unsubscribe_url}}</code>
+                                    <code class="text-xs bg-gray-100 px-1 rounded">@{{unsubscribe_url}}</code>
                                     <span class="text-xs">Unsubscribe link</span>
                                 </div>
                             </div>
@@ -216,7 +216,7 @@
         
         // Replace variables with sample data
         Object.keys(sampleData).forEach(key => {
-            const regex = new RegExp(`{{${key}}}`, 'g');
+            const regex = new RegExp('{{' + key + '}}', 'g');
             previewContent = previewContent.replace(regex, sampleData[key]);
             previewSubject = previewSubject.replace(regex, sampleData[key]);
         });
