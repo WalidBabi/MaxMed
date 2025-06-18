@@ -406,7 +406,7 @@
                                         <a href="{{ route('product.show', $product) }}" class="btn-action btn-view">
                                             <i class="fas fa-eye"></i> View
                                         </a>
-                                        <a href="{{ route('quotation.form', ['product' => $product->id]) }}" class="btn-action btn-quote">
+                                        <a href="{{ route('quotation.form', ['product' => $product->slug]) }}" class="btn-action btn-quote">
                                             <i class="fas fa-file-invoice"></i> Quote
                                         </a>
                                     </div>

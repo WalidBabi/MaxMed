@@ -176,7 +176,7 @@ class QuotationController extends Controller
             }
 
             // Redirect with correct parameter name
-            return redirect()->route('quotation.confirmation', ['product' => $product->id])
+            return redirect()->route('quotation.confirmation', ['product' => $product->slug])
                             ->with('success', 'Your quotation request has been sent successfully!');
         } catch (\Exception $e) {
             Log::error('Failed to process quotation request: ' . $e->getMessage());

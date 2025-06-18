@@ -495,7 +495,7 @@
             <!-- Action Section -->
             <div class="section-card">
                 <div class="card-body action-section">
-                    <a href="{{ route('quotation.form', ['product' => $product->id]) }}" class="btn btn-quotation" id="quotation-btn">
+                    <a href="{{ route('quotation.form', ['product' => $product->slug]) }}" class="btn btn-quotation" id="quotation-btn">
                         <i class="fas fa-file-invoice"></i> Request Quotation
                     </a>
                     
