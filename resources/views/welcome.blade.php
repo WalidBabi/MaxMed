@@ -1311,7 +1311,6 @@
 
 
 {{-- Footer is included in app.blade.php --}}
-@endsection
 
 <!-- Add JavaScript for Biology Particles -->
 <script>
@@ -1702,3 +1701,54 @@
         }
     });
 </script>
+
+<!-- FAQ Section -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+            <p class="text-lg text-gray-600">Get answers to common questions about MaxMed UAE laboratory equipment</p>
+        </div>
+        
+        <div class="max-w-3xl mx-auto" itemscope itemtype="https://schema.org/FAQPage">
+            @php
+                $faqs = app(\App\Services\SeoService::class)->getPageFAQs('home');
+            @endphp
+            
+            @foreach($faqs as $index => $faq)
+            <div class="mb-6 bg-white rounded-lg shadow-sm border border-gray-200" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                <button class="w-full px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-[#171e60] rounded-lg" 
+                        onclick="toggleFAQ({{ $index }})" 
+                        itemprop="name">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-semibold text-gray-900">{{ $faq['question'] }}</h3>
+                        <svg class="w-5 h-5 text-gray-500 transform transition-transform duration-200" id="faq-icon-{{ $index }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </button>
+                <div class="px-6 pb-4 hidden" id="faq-content-{{ $index }}" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+                    <p class="text-gray-600" itemprop="text">{{ $faq['answer'] }}</p>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+<script>
+function toggleFAQ(index) {
+    const content = document.getElementById(`faq-content-${index}`);
+    const icon = document.getElementById(`faq-icon-${index}`);
+    
+    if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        icon.style.transform = 'rotate(180deg)';
+    } else {
+        content.classList.add('hidden');
+        icon.style.transform = 'rotate(0deg)';
+    }
+}
+</script>
+
+@endsection
