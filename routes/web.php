@@ -71,11 +71,27 @@ Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.
 
 // Quotation routes for viewing - Move outside auth for SEO
 Route::prefix('quotation')->name('quotation.')->group(function () {
-    Route::get('/{product}', [QuotationController::class, 'redirect'])->name('redirect');
-    Route::get('/{product}/form', [QuotationController::class, 'form'])->name('form');
+    Route::get('/{product:slug}', [QuotationController::class, 'redirect'])->name('redirect');
+    Route::get('/{product:slug}/form', [QuotationController::class, 'form'])->name('form');
     Route::post('/store', [QuotationController::class, 'store'])->name('store');
-    Route::get('/confirmation/{product}', [QuotationController::class, 'confirmation'])->name('confirmation');
+    Route::get('/confirmation/{product:slug}', [QuotationController::class, 'confirmation'])->name('confirmation');
 });
+
+// Backward compatibility redirects: old ID-based quotation URLs to new slug-based URLs
+Route::get('/quotation/{id}', function($id) {
+    $product = \App\Models\Product::findOrFail($id);
+    return redirect()->route('quotation.redirect', $product->slug, 301);
+})->where('id', '[0-9]+')->name('quotation.redirect.old');
+
+Route::get('/quotation/{id}/form', function($id) {
+    $product = \App\Models\Product::findOrFail($id);
+    return redirect()->route('quotation.form', $product->slug, 301);
+})->where('id', '[0-9]+')->name('quotation.form.old');
+
+Route::get('/quotation/confirmation/{id}', function($id) {
+    $product = \App\Models\Product::findOrFail($id);
+    return redirect()->route('quotation.confirmation', $product->slug, 301);
+})->where('id', '[0-9]+')->name('quotation.confirmation.old');
 
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
@@ -87,7 +103,7 @@ Route::middleware('auth')->group(function () {
 
     // Quotation Routes that need authentication
     Route::prefix('quotation')->name('quotation.')->group(function () {
-        Route::get('/request/{product}', [QuotationController::class, 'request'])->name('request');
+        Route::get('/request/{product:slug}', [QuotationController::class, 'request'])->name('request');
     });
 
     // CRM Routes
