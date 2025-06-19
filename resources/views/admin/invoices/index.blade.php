@@ -188,7 +188,7 @@
                         @foreach($invoices as $invoice)
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ $invoice->invoice_date->format('M d, Y') }}
+                                    {{ formatDubaiDate($invoice->invoice_date, 'M d, Y') }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
@@ -221,7 +221,7 @@
                                     </div>
                                     @if($invoice->due_date)
                                         <div class="text-xs text-gray-500">
-                                            Due: {{ $invoice->due_date->format('M d, Y') }}
+                                            Due: {{ formatDubaiDate($invoice->due_date, 'M d, Y') }}
                                         </div>
                                     @endif
                                 </td>

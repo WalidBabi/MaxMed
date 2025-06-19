@@ -88,7 +88,7 @@
                         @endif
                         <div class="p-6">
                             <div class="flex items-center mb-2">
-                                <span class="text-sm text-gray-500">{{ $item->created_at->format('F d, Y') }}</span>
+                                <span class="text-sm text-gray-500">{{ formatDubaiDate($item->created_at, 'F d, Y') }}</span>
                                 <!-- Assuming you might have a category field -->
                                 @if(isset($item->category))
                                 <span class="ml-2 px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded-full">{{ $item->category }}</span>

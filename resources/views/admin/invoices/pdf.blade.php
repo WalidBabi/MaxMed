@@ -546,11 +546,11 @@
                 <table class="meta-table">
                     <tr>
                         <td class="label">Invoice Date:</td>
-                        <td class="value">{{ $invoice->invoice_date->format('d M Y') }}</td>
+                        <td class="value">{{ formatDubaiDate($invoice->invoice_date, 'd M Y') }}</td>
                     </tr>
                     <tr>
                         <td class="label">Due Date:</td>
-                        <td class="value">{{ $invoice->due_date->format('d M Y') }}</td>
+                        <td class="value">{{ formatDubaiDate($invoice->due_date, 'd M Y') }}</td>
                     </tr>
                     <tr>
                         <td class="label">Payment Terms:</td>
@@ -728,7 +728,7 @@
 
         <!-- FOOTER -->
         <div class="footer">
-            <p><strong>{{ $invoice->type === 'proforma' ? 'Proforma Invoice' : 'Invoice' }} Generated:</strong> {{ now()->format('d M Y \a\t H:i') }}</p>
+            <p><strong>{{ $invoice->type === 'proforma' ? 'Proforma Invoice' : 'Invoice' }} Generated:</strong> {{ nowDubai('d M Y \a\t H:i') }}</p>
             <p>Invoice ID: {{ $invoice->invoice_number }}</p>
         </div>
     </div>

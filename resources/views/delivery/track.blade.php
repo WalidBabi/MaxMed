@@ -114,7 +114,7 @@
                                 @if($delivery->shipped_at)
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Shipped Date</label>
-                                        <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-md">{{ $delivery->shipped_at->format('M d, Y H:i') }}</p>
+                                        <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-md">{{ formatDubaiDate($delivery->shipped_at, 'M d, Y H:i') }}</p>
                                     </div>
                                 @endif
                             </div>
@@ -166,7 +166,7 @@
                                     <div class="ml-4 min-w-0 flex-1">
                                         <p class="text-sm font-medium text-gray-900">Processing</p>
                                         @if($delivery->processed_by_supplier_at)
-                                            <p class="text-sm text-gray-500">{{ $delivery->processed_by_supplier_at->format('M d, Y H:i') }}</p>
+                                            <p class="text-sm text-gray-500">{{ formatDubaiDate($delivery->processed_by_supplier_at, 'M d, Y H:i') }}</p>
                                         @else
                                             <p class="text-sm text-gray-500">Pending</p>
                                         @endif
@@ -192,7 +192,7 @@
                                     <div class="ml-4 min-w-0 flex-1">
                                         <p class="text-sm font-medium text-gray-900">In Transit</p>
                                         @if($delivery->shipped_at)
-                                            <p class="text-sm text-gray-500">{{ $delivery->shipped_at->format('M d, Y H:i') }}</p>
+                                            <p class="text-sm text-gray-500">{{ formatDubaiDate($delivery->shipped_at, 'M d, Y H:i') }}</p>
                                         @else
                                             <p class="text-sm text-gray-500">Pending</p>
                                         @endif
@@ -218,7 +218,7 @@
                                     <div class="ml-4 min-w-0 flex-1">
                                         <p class="text-sm font-medium text-gray-900">Delivered</p>
                                         @if($delivery->delivered_at)
-                                            <p class="text-sm text-gray-500">{{ $delivery->delivered_at->format('M d, Y H:i') }}</p>
+                                            <p class="text-sm text-gray-500">{{ formatDubaiDate($delivery->delivered_at, 'M d, Y H:i') }}</p>
                                         @else
                                             <p class="text-sm text-gray-500">Pending</p>
                                         @endif
@@ -264,7 +264,7 @@
                                     <h3 class="text-lg font-medium text-green-900">Delivery Complete!</h3>
                                     <p class="text-green-700 mt-2">Your order has been successfully delivered and signed for.</p>
                                     @if($delivery->signed_at)
-                                        <p class="text-sm text-green-600 mt-1">Signed on {{ $delivery->signed_at->format('M d, Y \a\t H:i') }}</p>
+                                        <p class="text-sm text-green-600 mt-1">Signed on {{ formatDubaiDate($delivery->signed_at, 'M d, Y \a\t H:i') }}</p>
                                     @endif
                                     <div class="mt-4">
                                         <a href="{{ route('delivery.receipt', $delivery->tracking_number) }}" 

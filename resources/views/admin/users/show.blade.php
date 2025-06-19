@@ -64,8 +64,8 @@
 
                     <div class="small text-muted">
                         <p><strong>User ID:</strong> {{ $user->id }}</p>
-                        <p><strong>Joined:</strong> {{ $user->created_at->format('M d, Y \a\t H:i') }}</p>
-                        <p class="mb-0"><strong>Last Updated:</strong> {{ $user->updated_at->format('M d, Y \a\t H:i') }}</p>
+                        <p><strong>Joined:</strong> {{ formatDubaiDate($user->created_at, 'M d, Y \a\t H:i') }}</p>
+                        <p class="mb-0"><strong>Last Updated:</strong> {{ formatDubaiDate($user->updated_at, 'M d, Y \a\t H:i') }}</p>
                     </div>
                 </div>
             </div>
@@ -185,11 +185,11 @@
                             <small class="text-muted">Orders Placed</small>
                         </div>
                         <div class="col-md-4">
-                            <h6 class="mb-0">{{ $user->created_at->diffForHumans() }}</h6>
+                            <h6 class="mb-0">{{ formatDubaiDateForHumans($user->created_at) }}</h6>
                             <small class="text-muted">Member Since</small>
                         </div>
                         <div class="col-md-4">
-                            <h6 class="mb-0">{{ $user->updated_at->diffForHumans() }}</h6>
+                            <h6 class="mb-0">{{ formatDubaiDateForHumans($user->updated_at) }}</h6>
                             <small class="text-muted">Last Updated</small>
                         </div>
                     </div>

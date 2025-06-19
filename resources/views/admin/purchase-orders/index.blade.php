@@ -101,7 +101,7 @@
                                     <div class="flex items-center">
                                         <div>
                                             <div class="text-sm font-medium text-gray-900">{{ $po->po_number }}</div>
-                                            <div class="text-sm text-gray-500">{{ $po->po_date->format('M d, Y') }}</div>
+                                            <div class="text-sm text-gray-500">{{ formatDubaiDate($po->po_date, 'M d, Y') }}</div>
                                         </div>
                                     </div>
                                 </td>
@@ -138,9 +138,9 @@
                                 </td>
                                 
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $po->created_at->format('M d, Y') }}
+                                    {{ formatDubaiDate($po->created_at, 'M d, Y') }}
                                     <br>
-                                    <span class="text-xs">{{ $po->created_at->format('H:i') }}</span>
+                                    <span class="text-xs">{{ formatDubaiDate($po->created_at, 'H:i') }}</span>
                                 </td>
                                 
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

@@ -150,7 +150,7 @@
                                                     <p class="text-sm text-gray-500">{{ $activity->lead->full_name ?? 'Unknown Lead' }}</p>
                                                 </div>
                                                 <div class="whitespace-nowrap text-right text-sm text-gray-500">
-                                                    <time datetime="{{ $activity->created_at }}">{{ $activity->created_at->diffForHumans() }}</time>
+                                                    <time datetime="{{ $activity->created_at }}">{{ formatDubaiDateForHumans($activity->created_at) }}</time>
                                                 </div>
                                             </div>
                                         </div>

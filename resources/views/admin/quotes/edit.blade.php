@@ -363,11 +363,11 @@
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="font-medium text-gray-900">Created:</span>
-                                <span>{{ $quote->created_at->format('d M Y') }}</span>
+                                <span>{{ formatDubaiDate($quote->created_at, 'd M Y') }}</span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="font-medium text-gray-900">Expires:</span>
-                                <span>{{ $quote->expiry_date->format('d M Y') }}</span>
+                                <span>{{ formatDubaiDate($quote->expiry_date, 'd M Y') }}</span>
                             </div>
                         </div>
                     </div>

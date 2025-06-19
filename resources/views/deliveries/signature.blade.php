@@ -22,7 +22,7 @@
                                 <p class="mb-1"><strong>Order #:</strong> {{ $delivery->order_id }}</p>
                             </div>
                             <div class="col-md-6">
-                                <p class="mb-1"><strong>Date:</strong> {{ now()->format('M d, Y') }}</p>
+                                <p class="mb-1"><strong>Date:</strong> {{ nowDubai('M d, Y') }}</p>
                                 <p class="mb-1"><strong>Status:</strong> 
                                     <span class="badge bg-info">{{ ucfirst(str_replace('_', ' ', $delivery->status)) }}</span>
                                 </p>

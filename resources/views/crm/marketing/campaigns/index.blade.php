@@ -165,7 +165,7 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                {{ $campaign->created_at->format('M d, Y') }}
+                                                {{ formatDubaiDate($campaign->created_at, 'M d, Y') }}
                                                 <br><small class="text-muted">{{ $campaign->creator->name }}</small>
                                             </td>
                                             <td>
@@ -288,7 +288,7 @@
                     <div class="form-group">
                         <label for="scheduled_at{{ $campaign->id }}">Schedule Date & Time</label>
                         <input type="datetime-local" name="scheduled_at" id="scheduled_at{{ $campaign->id }}" 
-                               class="form-control" required min="{{ now()->format('Y-m-d\TH:i') }}">
+                               class="form-control" required min="{{ nowDubai('Y-m-d\TH:i') }}">
                     </div>
                 </div>
                 <div class="modal-footer">

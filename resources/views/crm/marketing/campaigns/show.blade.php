@@ -150,18 +150,18 @@
                                 </tr>
                                 <tr>
                                     <td><strong>Created:</strong></td>
-                                    <td>{{ $campaign->created_at->format('M d, Y H:i') }}</td>
+                                    <td>{{ formatDubaiDate($campaign->created_at, 'M d, Y H:i') }}</td>
                                 </tr>
                                 @if($campaign->scheduled_at)
                                 <tr>
                                     <td><strong>Scheduled:</strong></td>
-                                    <td>{{ $campaign->scheduled_at->format('M d, Y H:i') }}</td>
+                                    <td>{{ formatDubaiDate($campaign->scheduled_at, 'M d, Y H:i') }}</td>
                                 </tr>
                                 @endif
                                 @if($campaign->sent_at)
                                 <tr>
                                     <td><strong>Sent:</strong></td>
-                                    <td>{{ $campaign->sent_at->format('M d, Y H:i') }}</td>
+                                    <td>{{ formatDubaiDate($campaign->sent_at, 'M d, Y H:i') }}</td>
                                 </tr>
                                 @endif
                             </table>
@@ -210,7 +210,7 @@
                             @endif
                         </div>
                         <div class="text-muted small">
-                            {{ $log->created_at->diffForHumans() }}
+                            {{ formatDubaiDateForHumans($log->created_at) }}
                         </div>
                     </div>
                     @endforeach
@@ -293,7 +293,7 @@
                     <div class="form-group">
                         <label for="scheduled_at">Schedule Date & Time</label>
                         <input type="datetime-local" name="scheduled_at" id="scheduled_at" 
-                               class="form-control" required min="{{ now()->format('Y-m-d\TH:i') }}">
+                               class="form-control" required min="{{ nowDubai('Y-m-d\TH:i') }}">
                     </div>
                 </div>
                 <div class="modal-footer">

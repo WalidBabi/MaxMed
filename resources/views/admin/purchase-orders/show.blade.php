@@ -9,7 +9,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900">Purchase Order #{{ $purchaseOrder->po_number }}</h1>
-                <p class="text-gray-600 mt-2">Created {{ $purchaseOrder->created_at->format('M d, Y \a\t H:i') }}</p>
+                <p class="text-gray-600 mt-2">Created {{ formatDubaiDate($purchaseOrder->created_at, 'M d, Y \a\t H:i') }}</p>
             </div>
             <div class="flex items-center space-x-3">
                 @if($purchaseOrder->status === 'draft')
@@ -96,7 +96,7 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">PO Date</label>
-                            <p class="text-lg font-semibold text-gray-900">{{ $purchaseOrder->po_date->format('M d, Y') }}</p>
+                            <p class="text-lg font-semibold text-gray-900">{{ formatDubaiDate($purchaseOrder->po_date, 'M d, Y') }}</p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Customer Order</label>
@@ -220,7 +220,7 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-gray-500">
-                                            {{ $payment->payment_date->format('M d, Y') }}
+                                            {{ formatDubaiDate($payment->payment_date, 'M d, Y') }}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -286,7 +286,7 @@
                                         </div>
                                         <div class="min-w-0 flex-1">
                                             <p class="text-sm text-gray-500">Created</p>
-                                            <p class="text-xs text-gray-400">{{ $purchaseOrder->created_at->format('M d, Y H:i') }}</p>
+                                            <p class="text-xs text-gray-400">{{ formatDubaiDate($purchaseOrder->created_at, 'M d, Y H:i') }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -304,7 +304,7 @@
                                             </div>
                                             <div class="min-w-0 flex-1">
                                                 <p class="text-sm text-gray-500">Sent to Supplier</p>
-                                                <p class="text-xs text-gray-400">{{ $purchaseOrder->sent_to_supplier_at->format('M d, Y H:i') }}</p>
+                                                <p class="text-xs text-gray-400">{{ formatDubaiDate($purchaseOrder->sent_to_supplier_at, 'M d, Y H:i') }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -322,7 +322,7 @@
                                             </div>
                                             <div class="min-w-0 flex-1">
                                                 <p class="text-sm text-gray-500">Acknowledged by Supplier</p>
-                                                <p class="text-xs text-gray-400">{{ $purchaseOrder->acknowledged_at->format('M d, Y H:i') }}</p>
+                                                <p class="text-xs text-gray-400">{{ formatDubaiDate($purchaseOrder->acknowledged_at, 'M d, Y H:i') }}</p>
                                             </div>
                                         </div>
                                     </div>

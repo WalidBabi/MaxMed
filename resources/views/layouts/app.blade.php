@@ -589,6 +589,9 @@
                 @yield('content')
             </main>
 
+        <!-- Dubai Date Formatting -->
+        <script src="{{ asset('js/dubai-date.js') }}"></script>
+        
         @stack('scripts')
 
         <!-- Defer non-essential JS -->

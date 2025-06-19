@@ -222,11 +222,11 @@
                         </div>
                         <div>
                             <dt class="text-xs font-medium text-gray-500">Created</dt>
-                            <dd class="text-sm text-gray-900">{{ $product->created_at->format('M d, Y \a\t H:i') }}</dd>
+                            <dd class="text-sm text-gray-900">{{ formatDubaiDate($product->created_at, 'M d, Y \a\t H:i') }}</dd>
                         </div>
                         <div>
                             <dt class="text-xs font-medium text-gray-500">Last Updated</dt>
-                            <dd class="text-sm text-gray-900">{{ $product->updated_at->format('M d, Y \a\t H:i') }}</dd>
+                            <dd class="text-sm text-gray-900">{{ formatDubaiDate($product->updated_at, 'M d, Y \a\t H:i') }}</dd>
                         </div>
                     </dl>
                 </div>

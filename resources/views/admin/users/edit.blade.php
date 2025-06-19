@@ -177,11 +177,11 @@
                             </div>
                             <div>
                                 <p class="font-medium text-gray-900">Joined:</p>
-                                <p class="text-gray-600">{{ $user->created_at->format('M d, Y \a\t H:i') }}</p>
+                                <p class="text-gray-600">{{ formatDubaiDate($user->created_at, 'M d, Y \a\t H:i') }}</p>
                             </div>
                             <div>
                                 <p class="font-medium text-gray-900">Last Updated:</p>
-                                <p class="text-gray-600">{{ $user->updated_at->format('M d, Y \a\t H:i') }}</p>
+                                <p class="text-gray-600">{{ formatDubaiDate($user->updated_at, 'M d, Y \a\t H:i') }}</p>
                             </div>
                             <div>
                                 <p class="font-medium text-gray-900">Current Role:</p>

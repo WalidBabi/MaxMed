@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use App\Traits\DubaiDateFormat;
 
 class Order extends Model
 {
+    use DubaiDateFormat;
+    
     protected $fillable = [
         'user_id',
         'customer_id',

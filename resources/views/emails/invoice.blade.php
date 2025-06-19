@@ -136,11 +136,11 @@
                                         <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">Invoice Date</td>
-                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ $invoice->invoice_date->format('M j, Y') }}</td>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ formatDubaiDate($invoice->invoice_date, 'M j, Y') }}</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">Due Date</td>
-                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ $invoice->due_date->format('M j, Y') }}</td>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ formatDubaiDate($invoice->due_date, 'M j, Y') }}</td>
                                             </tr>
                                             @if($invoice->reference_number)
                                             <tr>

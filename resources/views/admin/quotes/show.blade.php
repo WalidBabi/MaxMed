@@ -94,11 +94,11 @@
                         @endif
                         <div>
                             <label class="block text-sm font-medium text-gray-500 mb-1">Quote Date</label>
-                            <p class="text-sm text-gray-900">{{ $quote->quote_date->format('M d, Y') }}</p>
+                            <p class="text-sm text-gray-900">{{ formatDubaiDate($quote->quote_date, 'M d, Y') }}</p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500 mb-1">Expiry Date</label>
-                            <p class="text-sm text-gray-900">{{ $quote->expiry_date->format('M d, Y') }}</p>
+                            <p class="text-sm text-gray-900">{{ formatDubaiDate($quote->expiry_date, 'M d, Y') }}</p>
                         </div>
                         @if($quote->salesperson)
                         <div>
@@ -114,7 +114,7 @@
                         @endif
                         <div>
                             <label class="block text-sm font-medium text-gray-500 mb-1">Created Date</label>
-                            <p class="text-sm text-gray-900">{{ $quote->created_at->format('M d, Y H:i') }}</p>
+                            <p class="text-sm text-gray-900">{{ formatDubaiDate($quote->created_at, 'M d, Y H:i') }}</p>
                         </div>
                         @if($quote->subject)
                         <div class="md:col-span-2">
@@ -313,7 +313,7 @@
                                                     <span class="font-medium text-gray-900">Quote Created</span>
                                                 </div>
                                                 <p class="mt-0.5 text-xs text-gray-500">
-                                                    {{ $quote->created_at->format('M d, Y \a\t H:i') }}
+                                                    {{ formatDubaiDate($quote->created_at, 'M d, Y \a\t H:i') }}
                                                 </p>
                                             </div>
                                             <div class="mt-2 text-sm text-gray-700">
@@ -340,7 +340,7 @@
                                                     <span class="font-medium text-gray-900">Quote Updated</span>
                                                 </div>
                                                 <p class="mt-0.5 text-xs text-gray-500">
-                                                    {{ $quote->updated_at->format('M d, Y \a\t H:i') }}
+                                                    {{ formatDubaiDate($quote->updated_at, 'M d, Y \a\t H:i') }}
                                                 </p>
                                             </div>
                                             <div class="mt-2 text-sm text-gray-700">

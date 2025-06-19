@@ -35,7 +35,8 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             <div class="bg-white p-4 rounded-lg shadow-sm">
                                 <p class="text-gray-500 text-sm uppercase tracking-wide">Date Placed</p>
-                                <p class="font-semibold text-gray-900 mt-1">{{ $order->created_at->format('M d, Y') }}</p>
+                                <p class="font-semibold text-gray-900 mt-1">{{ formatDubaiDate($order->created_at, 'M d, Y') }}</p>
+                                <p class="text-xs text-gray-500">{{ formatDubaiDate($order->created_at, 'H:i') }} Dubai Time</p>
                             </div>
                             <div class="bg-white p-4 rounded-lg shadow-sm">
                                 <p class="text-gray-500 text-sm uppercase tracking-wide">Status</p>
@@ -132,8 +133,8 @@
                                     <div class="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
                                         <div class="flex justify-between items-start">
                                             <div>
-                                                <div class="flex items-center">
-                                                    <span class="text-sm text-gray-500">{{ $feedback->created_at->format('M d, Y H:i') }}</span>
+                                                                                            <div class="flex items-center">
+                                                <span class="text-sm text-gray-500">{{ formatDubaiDate($feedback->created_at, 'M d, Y H:i') }} Dubai Time</span>
                                                     <span class="ml-2 px-2 py-1 text-xs rounded-full
                                                         @if($feedback->rating >= 4) bg-green-100 text-green-800
                                                         @elseif($feedback->rating >= 3) bg-blue-100 text-blue-800

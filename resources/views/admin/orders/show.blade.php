@@ -47,7 +47,7 @@
                         </div>
                         <div>
                             <dt class="text-sm font-medium text-gray-500">Order Date</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ $order->created_at->format('M d, Y \a\t H:i') }}</dd>
+                            <dd class="mt-1 text-sm text-gray-900">{{ formatDubaiDate($order->created_at, 'M d, Y \a\t H:i') }}</dd>
                         </div>
                         <div>
                             <dt class="text-sm font-medium text-gray-500">Order ID</dt>

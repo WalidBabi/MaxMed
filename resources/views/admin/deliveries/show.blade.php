@@ -103,14 +103,14 @@
                             @if($delivery->shipped_at)
                                 <div>
                                     <span class="text-sm font-medium text-gray-500">Shipped At</span>
-                                    <div class="mt-1 text-gray-900">{{ $delivery->shipped_at->format('M d, Y H:i') }}</div>
+                                    <div class="mt-1 text-gray-900">{{ formatDubaiDate($delivery->shipped_at, 'M d, Y H:i') }}</div>
                                 </div>
                             @endif
 
                             @if($delivery->delivered_at)
                                 <div>
                                     <span class="text-sm font-medium text-gray-500">Delivered At</span>
-                                    <div class="mt-1 text-gray-900">{{ $delivery->delivered_at->format('M d, Y H:i') }}</div>
+                                    <div class="mt-1 text-gray-900">{{ formatDubaiDate($delivery->delivered_at, 'M d, Y H:i') }}</div>
                                 </div>
                             @endif
                         </div>

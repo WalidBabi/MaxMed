@@ -123,9 +123,9 @@
                                 </td>
                                 
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $payment->payment_date->format('M d, Y') }}
+                                    {{ formatDubaiDate($payment->payment_date, 'M d, Y') }}
                                     <br>
-                                    <span class="text-xs">{{ $payment->created_at->format('H:i') }}</span>
+                                    <span class="text-xs">{{ formatDubaiDate($payment->created_at, 'H:i') }}</span>
                                 </td>
                                 
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

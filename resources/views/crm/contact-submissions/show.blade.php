@@ -89,7 +89,7 @@
                             </div>
                             @if($submission->responded_at)
                             <div>
-                                <span class="font-medium">Responded:</span> {{ $submission->responded_at->format('M j, Y g:i A') }}
+                                <span class="font-medium">Responded:</span> {{ formatDubaiDate($submission->responded_at, 'M j, Y g:i A') }}
                             </div>
                             @endif
                         </div>
