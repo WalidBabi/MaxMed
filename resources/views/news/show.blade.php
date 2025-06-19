@@ -16,7 +16,7 @@
                 <h1 class="mb-3">{{ $news->title }}</h1>
                 
                 <div class="text-muted mb-4">
-                    <small>Published on {{ $news->created_at->format('F d, Y') }}</small>
+                    <small>Published on {{ formatDubaiDate($news->created_at, 'F d, Y') }}</small>
                 </div>
                 
                 @if($news->image_url)

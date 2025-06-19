@@ -29,7 +29,7 @@
             </p>
 
             <div class="mt-8 pt-6 border-t border-gray-200">
-                <p>Last updated: {{ now()->format('F d, Y') }}</p>
+                <p>Last updated: {{ nowDubai('F d, Y') }}</p>
             </div>
         </div>
     </div>

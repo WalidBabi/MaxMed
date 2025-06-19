@@ -238,7 +238,7 @@
                                     </td>
                                     <td>
                                         <div class="small">
-                                            <div>{{ $assignment->created_at->format('M j, Y') }}</div>
+                                            <div>{{ formatDubaiDate($assignment->created_at, 'M j, Y') }}</div>
                                             @if($assignment->assignedBy)
                                                 <div class="text-muted">by {{ $assignment->assignedBy->name }}</div>
                                             @endif

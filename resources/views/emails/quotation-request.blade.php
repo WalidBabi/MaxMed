@@ -185,7 +185,7 @@
                                             @endif
                                             <tr>
                                                 <td style="padding: 12px 0; font-weight: 600; color: #92400E; font-size: 15px;">Request Date</td>
-                                                <td style="padding: 12px 0; color: #1A202C; font-weight: 500; font-size: 15px;">{{ now()->format('M j, Y \a\t g:i A T') }}</td>
+                                                <td style="padding: 12px 0; color: #1A202C; font-weight: 500; font-size: 15px;">{{ nowDubai('M j, Y \a\t g:i A T') }}</td>
                                             </tr>
                                         </table>
                                     </td>
@@ -362,8 +362,8 @@
 
                             <!-- Submission Details -->
                             <div style="margin: 30px 0; padding: 20px; background-color: #F7FAFC; border-radius: 8px; border: 1px solid #E2E8F0;">
-                                <p style="margin: 0 0 10px 0; color: #4A5568; font-size: 14px;"><strong>Request ID:</strong> #{{ $product->id }}-{{ now()->format('YmdHis') }}</p>
-                                <p style="margin: 0 0 10px 0; color: #4A5568; font-size: 14px;"><strong>Submission Time:</strong> {{ now()->format('M j, Y \a\t g:i A T') }}</p>
+                                <p style="margin: 0 0 10px 0; color: #4A5568; font-size: 14px;"><strong>Request ID:</strong> #{{ $product->id }}-{{ nowDubai('YmdHis') }}</p>
+                                <p style="margin: 0 0 10px 0; color: #4A5568; font-size: 14px;"><strong>Submission Time:</strong> {{ nowDubai('M j, Y \a\t g:i A T') }}</p>
                                 <p style="margin: 0 0 10px 0; color: #4A5568; font-size: 14px;"><strong>Source:</strong> Website Quotation Form</p>
                                 <p style="margin: 0; color: #4A5568; font-size: 14px;"><strong>IP Address:</strong> {{ request()->ip() }}</p>
     </div>

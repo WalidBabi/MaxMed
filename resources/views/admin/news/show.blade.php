@@ -88,11 +88,11 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Created</label>
-                    <p class="mt-1 text-sm text-gray-900">{{ $news->created_at->format('F j, Y \a\t g:i A') }}</p>
+                    <p class="mt-1 text-sm text-gray-900">{{ formatDubaiDate($news->created_at, 'F j, Y \a\t g:i A') }}</p>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Last Updated</label>
-                    <p class="mt-1 text-sm text-gray-900">{{ $news->updated_at->format('F j, Y \a\t g:i A') }}</p>
+                    <p class="mt-1 text-sm text-gray-900">{{ formatDubaiDate($news->updated_at, 'F j, Y \a\t g:i A') }}</p>
                 </div>
             </div>
         </div>

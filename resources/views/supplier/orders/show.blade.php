@@ -65,7 +65,7 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Created At</label>
-                            <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-md">{{ $order->created_at->format('M d, Y H:i') }}</p>
+                            <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-md">{{ formatDubaiDate($order->created_at, 'M d, Y H:i') }}</p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Order Status</label>
@@ -364,12 +364,12 @@
                     <div class="border-t pt-4 mt-6">
                         <h4 class="text-sm font-medium text-gray-900 mb-3">Timeline</h4>
                         <div class="space-y-2 text-xs text-gray-600">
-                            <div>Created: {{ $order->created_at->format('M d, Y H:i') }}</div>
+                            <div>Created: {{ formatDubaiDate($order->created_at, 'M d, Y H:i') }}</div>
                             @if($delivery->processed_by_supplier_at)
-                                <div>Processing: {{ $delivery->processed_by_supplier_at->format('M d, Y H:i') }}</div>
+                                <div>Processing: {{ formatDubaiDate($delivery->processed_by_supplier_at, 'M d, Y H:i') }}</div>
                             @endif
                             @if($delivery->status === 'in_transit')
-                                <div>Shipped to MaxMed: {{ $delivery->updated_at->format('M d, Y H:i') }}</div>
+                                <div>Shipped to MaxMed: {{ formatDubaiDate($delivery->updated_at, 'M d, Y H:i') }}</div>
                             @endif
                         </div>
                     </div>

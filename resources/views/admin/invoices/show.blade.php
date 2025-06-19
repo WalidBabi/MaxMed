@@ -82,11 +82,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-500 mb-1">Invoice Date</label>
-                            <p class="text-sm font-semibold text-gray-900">{{ $invoice->invoice_date->format('M d, Y') }}</p>
+                            <p class="text-sm font-semibold text-gray-900">{{ formatDubaiDate($invoice->invoice_date, 'M d, Y') }}</p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500 mb-1">Due Date</label>
-                            <p class="text-sm font-semibold text-gray-900">{{ $invoice->due_date->format('M d, Y') }}</p>
+                            <p class="text-sm font-semibold text-gray-900">{{ formatDubaiDate($invoice->due_date, 'M d, Y') }}</p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500 mb-1">Payment Terms</label>
@@ -231,7 +231,7 @@
                                 @foreach($invoice->payments as $payment)
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $payment->payment_number }}</td>
-                                        <td class="px-6 py-4 text-sm text-gray-900">{{ $payment->payment_date->format('M d, Y') }}</td>
+                                        <td class="px-6 py-4 text-sm text-gray-900">{{ formatDubaiDate($payment->payment_date, 'M d, Y') }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-900">{{ ucfirst($payment->payment_method) }}</td>
                                         <td class="px-6 py-4 text-right text-sm font-medium text-gray-900">{{ number_format($payment->amount, 2) }} {{ $invoice->currency }}</td>
                                         <td class="px-6 py-4 text-sm">
@@ -552,7 +552,7 @@
                                                     <span class="font-medium text-gray-900">Invoice Created</span>
                                                 </div>
                                                 <p class="mt-0.5 text-xs text-gray-500">
-                                                    {{ $invoice->created_at->format('M d, Y \a\t H:i') }}
+                                                    {{ formatDubaiDate($invoice->created_at, 'M d, Y \a\t H:i') }}
                                                 </p>
                                             </div>
                                             <div class="mt-2 text-sm text-gray-700">
@@ -579,7 +579,7 @@
                                                     <span class="font-medium text-gray-900">Invoice Updated</span>
                                                 </div>
                                                 <p class="mt-0.5 text-xs text-gray-500">
-                                                    {{ $invoice->updated_at->format('M d, Y \a\t H:i') }}
+                                                    {{ formatDubaiDate($invoice->updated_at, 'M d, Y \a\t H:i') }}
                                                 </p>
                                             </div>
                                             <div class="mt-2 text-sm text-gray-700">

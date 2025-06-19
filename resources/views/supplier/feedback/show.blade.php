@@ -39,7 +39,7 @@
                         <div class="col-md-6">
                             <div class="d-flex align-items-center text-muted">
                                 <i class="fas fa-calendar-alt me-2"></i>
-                                <span>Submitted on {{ $feedback->created_at->format('F j, Y \a\t g:i A') }}</span>
+                                <span>Submitted on {{ formatDubaiDate($feedback->created_at, 'F j, Y \a\t g:i A') }}</span>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -96,7 +96,7 @@
                                 <div class="timeline-marker"></div>
                                 <div class="timeline-content">
                                     <h6 class="mb-1">Submitted</h6>
-                                    <p class="text-muted small mb-0">{{ $feedback->created_at->format('M j, Y g:i A') }}</p>
+                                    <p class="text-muted small mb-0">{{ formatDubaiDate($feedback->created_at, 'M j, Y g:i A') }}</p>
                                 </div>
                             </div>
                             
@@ -106,7 +106,7 @@
                                     <h6 class="mb-1">Under Review</h6>
                                     <p class="text-muted small mb-0">
                                         @if($feedback->status !== 'pending')
-                                            {{ $feedback->updated_at->format('M j, Y g:i A') }}
+                                            {{ formatDubaiDate($feedback->updated_at, 'M j, Y g:i A') }}
                                         @else
                                             Pending review
                                         @endif
@@ -128,7 +128,7 @@
                                     </h6>
                                     <p class="text-muted small mb-0">
                                         @if($feedback->status === 'completed' || $feedback->status === 'rejected')
-                                            {{ $feedback->updated_at->format('M j, Y g:i A') }}
+                                            {{ formatDubaiDate($feedback->updated_at, 'M j, Y g:i A') }}
                                         @else
                                             Pending completion
                                         @endif

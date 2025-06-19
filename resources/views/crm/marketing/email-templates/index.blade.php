@@ -187,7 +187,7 @@
 
                                 <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
                                     <span>Used {{ $template->campaigns_count ?? 0 }} times</span>
-                                    <span>{{ $template->updated_at->diffForHumans() }}</span>
+                                    <span>{{ formatDubaiDateForHumans($template->updated_at) }}</span>
                                 </div>
                             </div>
                         </div>

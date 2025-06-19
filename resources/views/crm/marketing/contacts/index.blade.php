@@ -178,7 +178,7 @@
                                     {{ $contact->campaigns_count ?? 0 }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $contact->updated_at->diffForHumans() }}
+                                    {{ formatDubaiDateForHumans($contact->updated_at) }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex items-center space-x-2">

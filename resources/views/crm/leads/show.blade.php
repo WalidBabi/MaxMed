@@ -120,7 +120,7 @@
                                 <div>
                                     <label for="activity_date" class="block text-sm font-medium text-gray-700 mb-1">Activity Date</label>
                                     <input type="datetime-local" name="activity_date" id="activity_date" 
-                                           value="{{ now()->format('Y-m-d\TH:i') }}"
+                                           value="{{ nowDubai('Y-m-d\TH:i') }}"
                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                 </div>
                                 <div id="dueDateField" class="hidden">
@@ -402,7 +402,7 @@
                                     <div>
                                         <p class="text-sm font-medium text-gray-900">{{ $quotationRequest->product->name }}</p>
                                         <p class="text-xs text-gray-500">Qty: {{ $quotationRequest->quantity }} {{ $quotationRequest->size ? '• Size: ' . $quotationRequest->size : '' }}</p>
-                                        <p class="text-xs text-gray-400">{{ $quotationRequest->created_at->format('M j, Y') }}</p>
+                                        <p class="text-xs text-gray-400">{{ formatDubaiDate($quotationRequest->created_at, 'M j, Y') }}</p>
                                     </div>
                                     <div class="text-right">
                                         <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $quotationRequest->status_badge_class }}">

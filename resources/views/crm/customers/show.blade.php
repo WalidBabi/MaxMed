@@ -182,16 +182,16 @@
                     <div class="grid grid-cols-1 gap-3 text-sm">
                         <div class="flex justify-between">
                             <span class="text-gray-500">Member Since</span>
-                            <span class="text-gray-900">{{ $customer->created_at->format('M d, Y') }}</span>
+                            <span class="text-gray-900">{{ formatDubaiDate($customer->created_at, 'M d, Y') }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-500">Last Updated</span>
-                            <span class="text-gray-900">{{ $customer->updated_at->format('M d, Y') }}</span>
+                            <span class="text-gray-900">{{ formatDubaiDate($customer->updated_at, 'M d, Y') }}</span>
                         </div>
                         @if($customer->deleted_at)
                         <div class="flex justify-between">
                             <span class="text-gray-500">Soft Deleted</span>
-                            <span class="text-red-600">{{ $customer->deleted_at->format('M d, Y') }}</span>
+                            <span class="text-red-600">{{ formatDubaiDate($customer->deleted_at, 'M d, Y') }}</span>
                         </div>
                         @endif
                     </div>
@@ -403,7 +403,7 @@
                                             </div>
                                             <div class="text-sm text-gray-900 font-medium">AED{{ number_format($order->total_amount, 2) }}</div>
                                         </div>
-                                        <div class="text-xs text-gray-500 mb-2">{{ $order->created_at->format('M d, Y') }}</div>
+                                        <div class="text-xs text-gray-500 mb-2">{{ formatDubaiDate($order->created_at, 'M d, Y') }}</div>
                                         @if($order->orderItems->count() > 0)
                                             <div class="text-xs text-gray-600">
                                                 {{ $order->orderItems->count() }} item(s): {{ $order->orderItems->take(2)->pluck('product.name')->implode(', ') }}{{ $order->orderItems->count() > 2 ? '...' : '' }}
@@ -464,7 +464,7 @@
                                                     </div>
                                                     <div class="text-sm text-gray-900 font-medium">AED{{ number_format($quote->total_amount, 2) }}</div>
                                                 </div>
-                                                <div class="text-xs text-gray-500 mb-1">{{ $quote->quote_date->format('M d, Y') }}</div>
+                                                <div class="text-xs text-gray-500 mb-1">{{ formatDubaiDate($quote->quote_date, 'M d, Y') }}</div>
                                                 @if($quote->subject)
                                                     <div class="text-xs text-gray-600 mb-2">{{ Str::limit($quote->subject, 50) }}</div>
                                                 @endif
@@ -509,9 +509,9 @@
                                                     </div>
                                                     <div class="text-sm text-gray-900 font-medium">AED{{ number_format($invoice->total_amount, 2) }}</div>
                                                 </div>
-                                                <div class="text-xs text-gray-500 mb-1">{{ $invoice->invoice_date->format('M d, Y') }}</div>
+                                                <div class="text-xs text-gray-500 mb-1">{{ formatDubaiDate($invoice->invoice_date, 'M d, Y') }}</div>
                                                 @if($invoice->due_date)
-                                                    <div class="text-xs text-gray-600 mb-2">Due: {{ $invoice->due_date->format('M d, Y') }}</div>
+                                                    <div class="text-xs text-gray-600 mb-2">Due: {{ formatDubaiDate($invoice->due_date, 'M d, Y') }}</div>
                                                 @endif
                                                 <div class="flex justify-end">
                                                     <a href="{{ route('admin.invoices.show', $invoice) }}" class="text-xs text-indigo-600 hover:text-indigo-800">View Invoice →</a>

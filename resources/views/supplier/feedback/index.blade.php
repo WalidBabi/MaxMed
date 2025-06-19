@@ -62,7 +62,7 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="text-muted">{{ $item->created_at->format('M d, Y') }}</span>
+                                        <span class="text-muted">{{ formatDubaiDate($item->created_at, 'M d, Y') }}</span>
                                     </td>
                                     <td>
                                         <a href="{{ route('supplier.feedback.show', $item) }}" 

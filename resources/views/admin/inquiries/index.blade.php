@@ -123,8 +123,8 @@
                         </td>
                         
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ $inquiry->created_at->format('M j, Y') }}
-                            <div class="text-xs text-gray-400">{{ $inquiry->created_at->format('g:i A') }}</div>
+                            {{ formatDubaiDate($inquiry->created_at, 'M j, Y') }}
+                            <div class="text-xs text-gray-400">{{ formatDubaiDate($inquiry->created_at, 'g:i A') }}</div>
                         </td>
                         
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">

@@ -131,7 +131,7 @@
                             <h4 class="text-sm font-medium text-blue-900 mb-2">Current Response</h4>
                             <p class="text-blue-800 whitespace-pre-wrap">{{ $feedback->admin_response }}</p>
                             @if($feedback->responded_at)
-                                <p class="text-xs text-blue-600 mt-2">Responded on {{ $feedback->responded_at->format('F j, Y \a\t g:i A') }}</p>
+                                <p class="text-xs text-blue-600 mt-2">Responded on {{ formatDubaiDate($feedback->responded_at, 'F j, Y \a\t g:i A') }}</p>
                             @endif
                         </div>
                     @endif
@@ -277,7 +277,7 @@
                                                     <p class="text-sm text-gray-500">Admin response provided</p>
                                                 </div>
                                                 <div class="text-right text-sm whitespace-nowrap text-gray-500">
-                                                    {{ $feedback->responded_at->format('M j, Y g:i A') }}
+                                                    {{ formatDubaiDate($feedback->responded_at, 'M j, Y g:i A') }}
                                                 </div>
                                             </div>
                                         </div>

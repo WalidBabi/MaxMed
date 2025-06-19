@@ -277,7 +277,7 @@
                         <strong>Total Products:</strong> {{ $supplier->supplierProducts->count() }}
                     </div>
                     <div class="mb-3">
-                        <strong>Member Since:</strong> {{ $supplier->created_at->format('M j, Y') }}
+                        <strong>Member Since:</strong> {{ formatDubaiDate($supplier->created_at, 'M j, Y') }}
                     </div>
                 </div>
             </div>

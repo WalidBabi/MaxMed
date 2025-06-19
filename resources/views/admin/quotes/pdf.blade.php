@@ -486,11 +486,11 @@
                 <table class="meta-table">
                     <tr>
                         <td class="label">Quote Date:</td>
-                        <td class="value">{{ $quote->quote_date->format('d M Y') }}</td>
+                        <td class="value">{{ formatDubaiDate($quote->quote_date, 'd M Y') }}</td>
                     </tr>
                     <tr>
                         <td class="label">Expiry Date:</td>
-                        <td class="value">{{ $quote->expiry_date->format('d M Y') }}</td>
+                        <td class="value">{{ formatDubaiDate($quote->expiry_date, 'd M Y') }}</td>
                     </tr>
                     @if($quote->reference_number)
                     <tr>
@@ -583,8 +583,8 @@
 
         <!-- FOOTER -->
         <div class="footer">
-            <p><strong>Quote Valid Until:</strong> {{ $quote->expiry_date->format('d M Y') }}</p>
-            <p>Generated on {{ now()->format('d M Y \a\t H:i') }}</p>
+            <p><strong>Quote Valid Until:</strong> {{ formatDubaiDate($quote->expiry_date, 'd M Y') }}</p>
+            <p>Generated on {{ nowDubai('d M Y \a\t H:i') }}</p>
         </div>
         </div>
 </body>

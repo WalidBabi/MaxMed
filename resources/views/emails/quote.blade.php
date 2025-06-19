@@ -119,11 +119,11 @@
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">Quote Date</td>
-                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ $quote->quote_date->format('M j, Y') }}</td>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ formatDubaiDate($quote->quote_date, 'M j, Y') }}</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">Valid Until</td>
-                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ $quote->expiry_date->format('M j, Y') }}</td>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ formatDubaiDate($quote->expiry_date, 'M j, Y') }}</td>
                                             </tr>
                                             @if($quote->reference_number)
                                             <tr>
@@ -192,7 +192,7 @@
                                 <tr>
                                     <td style="padding: 20px; text-align: center;">
                                         <div style="color: #D97706; font-weight: 600; font-size: 15px;">
-                                            ⏰ This quote expires on {{ $quote->expiry_date->format('M j, Y') }}
+                                            ⏰ This quote expires on {{ formatDubaiDate($quote->expiry_date, 'M j, Y') }}
                                         </div>
                                     </td>
                                 </tr>

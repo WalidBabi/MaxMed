@@ -467,7 +467,7 @@
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="font-medium text-gray-900">Created:</span>
-                                <span>{{ $invoice->created_at->format('d M Y') }}</span>
+                                <span>{{ formatDubaiDate($invoice->created_at, 'd M Y') }}</span>
                             </div>
                             @if($invoice->payments()->exists())
                             <div class="flex justify-between items-center">
