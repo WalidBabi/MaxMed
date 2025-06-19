@@ -3,6 +3,29 @@
 @section('title', 'Marketing Contacts')
 
 @section('content')
+    <!-- Import Errors -->
+    @if(session('import_errors'))
+        <div class="mb-6 rounded-md bg-yellow-50 p-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-yellow-800">Import completed with some errors:</h3>
+                    <div class="mt-2 text-sm text-yellow-700">
+                        <ul class="list-disc pl-5 space-y-1">
+                            @foreach(session('import_errors') as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <!-- Header -->
     <div class="mb-8">
         <div class="flex items-center justify-between">
@@ -11,12 +34,18 @@
                 <p class="text-gray-600 mt-2">Manage your marketing contact database and segmentation</p>
             </div>
             <div class="flex items-center space-x-3">
-                <button type="button" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                <button type="button" onclick="openImportModal()" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                     <svg class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clip-rule="evenodd" />
                     </svg>
                     Import Contacts
                 </button>
+                <a href="{{ route('crm.marketing.contacts.export', request()->query()) }}" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                    <svg class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04L10.75 5.612V16.25A.75.75 0 0110 17z" clip-rule="evenodd" />
+                    </svg>
+                    Export Data
+                </a>
                 <a href="{{ route('crm.marketing.contacts.create') }}" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
                     <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
@@ -93,8 +122,9 @@
         </div>
         
         @if(isset($contacts) && $contacts->count() > 0)
-            <div class="overflow-hidden">
-                <table class="min-w-full divide-y divide-gray-200">
+            <div class="overflow-x-auto overflow-y-hidden contacts-table-container" style="scrollbar-width: thin; scrollbar-color: #d1d5db #f9fafb;">
+                <div class="inline-block min-w-full align-middle">
+                    <table class="min-w-full divide-y divide-gray-200 contacts-table" style="min-width: 800px;">
                     <thead class="bg-gray-50">
                         <tr>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -198,7 +228,8 @@
                             </tr>
                         @endforeach
                     </tbody>
-                </table>
+                    </table>
+                </div>
             </div>
 
             <!-- Pagination -->
@@ -253,4 +284,178 @@
             </div>
         @endif
     </div>
-@endsection 
+
+    <!-- Import Modal -->
+    <div id="importModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">Import Contacts</h3>
+                    <button type="button" onclick="closeImportModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <form action="{{ route('crm.marketing.contacts.import') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                    @csrf
+                    <input type="hidden" name="step" value="preview">
+                    
+                    <div>
+                        <label for="file" class="block text-sm font-medium text-gray-700 mb-2">
+                            CSV File
+                        </label>
+                        <input type="file" 
+                               name="file" 
+                               id="file" 
+                               accept=".csv,.txt,.xlsx"
+                               required
+                               class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                        <p class="mt-1 text-xs text-gray-500">Supported formats: CSV, TXT, XLSX (Max: 10MB)</p>
+                    </div>
+
+                    <div>
+                        <label for="contact_list_id" class="block text-sm font-medium text-gray-700 mb-2">
+                            Contact List (Optional)
+                        </label>
+                        <select name="contact_list_id" id="contact_list_id" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <option value="">Select a contact list...</option>
+                            @if(isset($contactLists))
+                                @foreach($contactLists as $list)
+                                    <option value="{{ $list->id }}">{{ $list->name }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                        <p class="mt-1 text-xs text-gray-500">Contacts will be added to the selected list</p>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-200 rounded-md p-3">
+                        <h4 class="text-sm font-medium text-blue-800 mb-2">Smart Column Detection:</h4>
+                        <ul class="text-xs text-blue-700 space-y-1">
+                            <li>• Our system will automatically detect and map your CSV columns</li>
+                            <li>• Works with various column names (e.g., "First Name", "fname", "first_name")</li>
+                            <li>• You can review and adjust mappings before importing</li>
+                            <li>• Email column is required and will be automatically detected</li>
+                        </ul>
+                        <div class="mt-2">
+                            <button type="button" onclick="downloadTemplate()" class="text-xs text-blue-600 hover:text-blue-800 font-medium">
+                                📥 Download CSV Template
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" onclick="closeImportModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700">
+                            <svg class="-ml-0.5 mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Preview & Map Columns
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@push('styles')
+<style>
+/* Custom scrollbar for the contacts table */
+.contacts-table-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.contacts-table-container::-webkit-scrollbar-track {
+    background: #f9fafb;
+    border-radius: 4px;
+}
+
+.contacts-table-container::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+}
+
+.contacts-table-container::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+/* Ensure table columns have proper min-widths */
+.contacts-table th:nth-child(1), 
+.contacts-table td:nth-child(1) {
+    min-width: 250px; /* Contact info */
+}
+
+.contacts-table th:nth-child(2), 
+.contacts-table td:nth-child(2) {
+    min-width: 200px; /* Company */
+}
+
+.contacts-table th:nth-child(3), 
+.contacts-table td:nth-child(3) {
+    min-width: 120px; /* Industry */
+}
+
+.contacts-table th:nth-child(4), 
+.contacts-table td:nth-child(4) {
+    min-width: 100px; /* Status */
+}
+
+.contacts-table th:nth-child(5), 
+.contacts-table td:nth-child(5) {
+    min-width: 100px; /* Campaigns */
+}
+
+.contacts-table th:nth-child(6), 
+.contacts-table td:nth-child(6) {
+    min-width: 140px; /* Last Activity */
+}
+
+.contacts-table th:nth-child(7), 
+.contacts-table td:nth-child(7) {
+    min-width: 80px; /* Actions */
+}
+</style>
+@endpush
+
+@push('scripts')
+<script>
+function openImportModal() {
+    document.getElementById('importModal').classList.remove('hidden');
+}
+
+function closeImportModal() {
+    document.getElementById('importModal').classList.add('hidden');
+}
+
+// Close modal when clicking outside
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('importModal');
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeImportModal();
+        }
+    });
+});
+
+// Download CSV template
+function downloadTemplate() {
+    const csvContent = "first_name,last_name,email,phone,company,job_title,industry,country,city,notes\nJohn,Doe,john.doe@example.com,+1234567890,Example Corp,Manager,Healthcare,USA,New York,Sample contact\nJane,Smith,jane.smith@example.com,+0987654321,Tech Inc,Developer,Technology,Canada,Toronto,Another sample";
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'contacts_template.csv');
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+</script>
+@endpush 

@@ -122,15 +122,32 @@
                                 <label for="industry" class="block text-sm font-medium text-gray-700">Industry</label>
                                 <select name="industry" id="industry" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('industry') border-red-300 @enderror">
                                     <option value="">Select Industry</option>
-                                    <option value="healthcare" {{ old('industry') == 'healthcare' ? 'selected' : '' }}>Healthcare</option>
-                                    <option value="laboratory" {{ old('industry') == 'laboratory' ? 'selected' : '' }}>Laboratory</option>
-                                    <option value="research" {{ old('industry') == 'research' ? 'selected' : '' }}>Research</option>
-                                    <option value="academic" {{ old('industry') == 'academic' ? 'selected' : '' }}>Academic</option>
-                                    <option value="pharmaceutical" {{ old('industry') == 'pharmaceutical' ? 'selected' : '' }}>Pharmaceutical</option>
-                                    <option value="biotechnology" {{ old('industry') == 'biotechnology' ? 'selected' : '' }}>Biotechnology</option>
-                                    <option value="hospital" {{ old('industry') == 'hospital' ? 'selected' : '' }}>Hospital</option>
-                                    <option value="clinic" {{ old('industry') == 'clinic' ? 'selected' : '' }}>Clinic</option>
-                                    <option value="other" {{ old('industry') == 'other' ? 'selected' : '' }}>Other</option>
+                                    @php
+                                        $currentIndustry = old('industry');
+                                        $predefinedIndustries = [
+                                            'healthcare' => 'Healthcare',
+                                            'laboratory' => 'Laboratory',
+                                            'research' => 'Research',
+                                            'academic' => 'Academic',
+                                            'pharmaceutical' => 'Pharmaceutical',
+                                            'biotechnology' => 'Biotechnology',
+                                            'hospital' => 'Hospital',
+                                            'clinic' => 'Clinic',
+                                            'medical_devices' => 'Medical Devices',
+                                            'diagnostics' => 'Diagnostics',
+                                            'manufacturing' => 'Manufacturing',
+                                            'technology' => 'Technology',
+                                            'education' => 'Education',
+                                            'government' => 'Government',
+                                            'other' => 'Other'
+                                        ];
+                                    @endphp
+                                    
+                                    @foreach($predefinedIndustries as $value => $label)
+                                        <option value="{{ $value }}" {{ $currentIndustry == $value ? 'selected' : '' }}>
+                                            {{ $label }}
+                                        </option>
+                                    @endforeach
                                 </select>
                                 @error('industry')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

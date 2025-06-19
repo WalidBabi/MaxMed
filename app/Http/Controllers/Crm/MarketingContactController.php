@@ -207,10 +207,23 @@ class MarketingContactController extends Controller
 
     public function import(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'file' => 'required|file|mimes:csv,txt,xlsx',
-            'contact_list_id' => 'nullable|exists:contact_lists,id',
-        ]);
+        $step = $request->get('step', 'preview');
+        
+        // Different validation rules based on step
+        if ($step === 'preview') {
+            $validator = Validator::make($request->all(), [
+                'file' => 'required|file|mimes:csv,txt,xlsx',
+                'contact_list_id' => 'nullable|exists:contact_lists,id',
+                'step' => 'nullable|string|in:preview,confirm',
+            ]);
+        } else {
+            $validator = Validator::make($request->all(), [
+                'contact_list_id' => 'nullable|exists:contact_lists,id',
+                'step' => 'required|string|in:preview,confirm',
+                'column_mappings' => 'required|array',
+                'column_mappings.email' => 'required|integer|min:0', // Email mapping is required
+            ]);
+        }
 
         if ($validator->fails()) {
             return redirect()->back()
@@ -218,7 +231,29 @@ class MarketingContactController extends Controller
         }
 
         $file = $request->file('file');
-        $contacts = $this->parseContactFile($file);
+        
+        if ($step === 'preview') {
+            return $this->showImportPreview($file, $request->get('contact_list_id'));
+        }
+        
+        if ($step === 'confirm') {
+            return $this->processImportWithMappings($file, $request->get('column_mappings', []), $request->get('contact_list_id'));
+        }
+        
+        // Fallback to old behavior if no step specified
+        try {
+            $contacts = $this->parseContactFile($file);
+        } catch (\Exception $e) {
+            return redirect()->back()
+                           ->with('error', 'Failed to parse CSV file: ' . $e->getMessage())
+                           ->withInput();
+        }
+        
+        if (empty($contacts)) {
+            return redirect()->back()
+                           ->with('error', 'No valid contacts found in the CSV file. Please check your file format and ensure at least one row has a valid email address.')
+                           ->withInput();
+        }
         
         $imported = 0;
         $errors = [];
@@ -260,6 +295,324 @@ class MarketingContactController extends Controller
         return redirect()->route('crm.marketing.contacts.index')
                         ->with('success', $message)
                         ->with('import_errors', $errors);
+    }
+
+    private function showImportPreview($file, $contactListId = null)
+    {
+        try {
+            $previewData = $this->parseFileForPreview($file);
+        } catch (\Exception $e) {
+            return redirect()->back()
+                           ->with('error', 'Failed to parse CSV file: ' . $e->getMessage())
+                           ->withInput();
+        }
+
+        if (empty($previewData['headers'])) {
+            return redirect()->back()
+                           ->with('error', 'No headers found in the CSV file.')
+                           ->withInput();
+        }
+
+        // Store file temporarily in session for the next step
+        $tempFileName = 'import_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $tempPath = storage_path('app/temp/' . $tempFileName);
+        
+        // Ensure temp directory exists
+        if (!file_exists(dirname($tempPath))) {
+            mkdir(dirname($tempPath), 0755, true);
+        }
+        
+        $file->move(dirname($tempPath), basename($tempPath));
+        session(['import_temp_file' => $tempFileName]);
+
+        $detectedMappings = $this->detectColumnMappings($previewData['headers']);
+        $contactLists = ContactList::active()->get();
+
+        return view('crm.marketing.contacts.import-preview', compact(
+            'previewData', 
+            'detectedMappings', 
+            'contactListId',
+            'contactLists'
+        ));
+    }
+
+    private function processImportWithMappings($file, $columnMappings, $contactListId = null)
+    {
+        // Get temp file from session if file is null
+        if (!$file && session('import_temp_file')) {
+            $tempFileName = session('import_temp_file');
+            $tempPath = storage_path('app/temp/' . $tempFileName);
+            
+            if (file_exists($tempPath)) {
+                $file = new \Illuminate\Http\UploadedFile(
+                    $tempPath,
+                    $tempFileName,
+                    mime_content_type($tempPath),
+                    null,
+                    true // test mode - don't validate
+                );
+            } else {
+                return redirect()->back()
+                               ->with('error', 'Temporary file not found. Please upload the file again.')
+                               ->withInput();
+            }
+        }
+        
+        try {
+            $contacts = $this->parseContactFileWithMappings($file, $columnMappings);
+        } catch (\Exception $e) {
+            return redirect()->back()
+                           ->with('error', 'Failed to parse CSV file: ' . $e->getMessage())
+                           ->withInput();
+        }
+        
+        if (empty($contacts)) {
+            return redirect()->back()
+                           ->with('error', 'No valid contacts found in the CSV file. Please check your mappings and ensure at least one row has a valid email address.')
+                           ->withInput();
+        }
+        
+        $imported = 0;
+        $errors = [];
+
+        foreach ($contacts as $index => $contactData) {
+            try {
+                // Validate email is present and valid
+                if (empty($contactData['email']) || !filter_var($contactData['email'], FILTER_VALIDATE_EMAIL)) {
+                    $errors[] = "Row " . ($index + 2) . ": Invalid or missing email address";
+                    continue;
+                }
+
+                // Check for duplicate email
+                $existingContact = MarketingContact::where('email', $contactData['email'])->first();
+                if ($existingContact) {
+                    $errors[] = "Row " . ($index + 2) . ": Contact with email '{$contactData['email']}' already exists";
+                    continue;
+                }
+
+                $contact = MarketingContact::create([
+                    'first_name' => $contactData['first_name'] ?? '',
+                    'last_name' => $contactData['last_name'] ?? '',
+                    'email' => $contactData['email'],
+                    'phone' => $contactData['phone'] ?? null,
+                    'company' => $contactData['company'] ?? null,
+                    'job_title' => $contactData['job_title'] ?? null,
+                    'industry' => $contactData['industry'] ?? null,
+                    'country' => $contactData['country'] ?? null,
+                    'city' => $contactData['city'] ?? null,
+                    'notes' => $contactData['notes'] ?? null,
+                    'source' => 'import',
+                    'status' => 'active',
+                    'subscribed_at' => now(),
+                ]);
+
+                if ($contactListId) {
+                    $contact->contactLists()->attach($contactListId, [
+                        'added_at' => now()
+                    ]);
+                }
+
+                $imported++;
+            } catch (\Exception $e) {
+                $errors[] = "Row " . ($index + 2) . ": " . $e->getMessage();
+            }
+        }
+
+        $message = "Successfully imported {$imported} contacts.";
+        if (!empty($errors)) {
+            $message .= " " . count($errors) . " errors occurred.";
+        }
+
+        // Clean up temporary file
+        if (session('import_temp_file')) {
+            $tempPath = storage_path('app/temp/' . session('import_temp_file'));
+            if (file_exists($tempPath)) {
+                unlink($tempPath);
+            }
+            session()->forget('import_temp_file');
+        }
+
+        return redirect()->route('crm.marketing.contacts.index')
+                        ->with('success', $message)
+                        ->with('import_errors', $errors);
+    }
+
+    private function parseFileForPreview($file)
+    {
+        $headers = [];
+        $sampleRows = [];
+        $path = $file->getPathname();
+        
+        if (($handle = fopen($path, 'r')) !== false) {
+            // Read headers
+            $headers = fgetcsv($handle);
+            
+            if ($headers === false || empty($headers)) {
+                fclose($handle);
+                throw new \Exception('Invalid CSV file: No headers found');
+            }
+            
+            // Clean headers but keep original mapping
+            $originalHeaders = $headers;
+            $headers = array_map('trim', $headers);
+            
+            // Read first 5 rows as sample
+            $rowCount = 0;
+            while (($data = fgetcsv($handle)) !== false && $rowCount < 5) {
+                if (!empty(array_filter($data, function($value) {
+                    return trim($value) !== '';
+                }))) {
+                    // Ensure data array matches header count
+                    $dataCount = count($data);
+                    $headerCount = count($headers);
+                    
+                    if ($dataCount < $headerCount) {
+                        $data = array_pad($data, $headerCount, '');
+                    } elseif ($dataCount > $headerCount) {
+                        $data = array_slice($data, 0, $headerCount);
+                    }
+                    
+                    $sampleRows[] = array_combine($headers, $data);
+                    $rowCount++;
+                }
+            }
+            fclose($handle);
+        }
+
+        return [
+            'headers' => $headers,
+            'originalHeaders' => $originalHeaders,
+            'sampleRows' => $sampleRows,
+            'totalPreviewRows' => $rowCount
+        ];
+    }
+
+    private function detectColumnMappings($headers)
+    {
+        $dbColumns = [
+            'first_name' => ['first_name', 'firstname', 'first name', 'fname', 'given_name', 'given name'],
+            'last_name' => ['last_name', 'lastname', 'last name', 'lname', 'surname', 'family_name', 'family name'],
+            'email' => ['email', 'email_address', 'email address', 'e-mail', 'e_mail', 'mail'],
+            'phone' => ['phone', 'phone_number', 'phone number', 'telephone', 'tel', 'mobile', 'cell'],
+            'company' => ['company', 'organization', 'organisation', 'business', 'firm', 'corp'],
+            'job_title' => ['job_title', 'job title', 'title', 'position', 'role', 'designation'],
+            'industry' => ['industry', 'sector', 'field', 'domain', 'business_type', 'business type'],
+            'country' => ['country', 'nation', 'location'],
+            'city' => ['city', 'town', 'locality', 'place'],
+            'notes' => ['notes', 'comments', 'remarks', 'description', 'memo'],
+        ];
+
+        $mappings = [];
+        $usedHeaders = [];
+
+        foreach ($dbColumns as $dbColumn => $patterns) {
+            $bestMatch = null;
+            $bestScore = 0;
+
+            foreach ($headers as $index => $header) {
+                if (in_array($index, $usedHeaders)) {
+                    continue;
+                }
+
+                $headerLower = strtolower(trim($header));
+                $headerNormalized = str_replace([' ', '_', '-'], ['_', '_', '_'], $headerLower);
+
+                foreach ($patterns as $pattern) {
+                    $patternLower = strtolower($pattern);
+                    $patternNormalized = str_replace([' ', '_', '-'], ['_', '_', '_'], $patternLower);
+
+                    // Exact match
+                    if ($headerNormalized === $patternNormalized) {
+                        $bestMatch = $index;
+                        $bestScore = 100;
+                        break 2;
+                    }
+
+                    // Contains match
+                    if (strpos($headerNormalized, $patternNormalized) !== false || strpos($patternNormalized, $headerNormalized) !== false) {
+                        $score = 80;
+                        if ($score > $bestScore) {
+                            $bestMatch = $index;
+                            $bestScore = $score;
+                        }
+                    }
+
+                    // Similarity match
+                    $similarity = 0;
+                    similar_text($headerNormalized, $patternNormalized, $similarity);
+                    if ($similarity > 70 && $similarity > $bestScore) {
+                        $bestMatch = $index;
+                        $bestScore = $similarity;
+                    }
+                }
+            }
+
+            if ($bestMatch !== null && $bestScore > 60) {
+                $mappings[$dbColumn] = $bestMatch;
+                $usedHeaders[] = $bestMatch;
+            }
+        }
+
+        return $mappings;
+    }
+
+    private function parseContactFileWithMappings($file, $columnMappings)
+    {
+        $contacts = [];
+        $path = $file->getPathname();
+        
+        if (($handle = fopen($path, 'r')) !== false) {
+            $headers = fgetcsv($handle);
+            
+            if ($headers === false || empty($headers)) {
+                fclose($handle);
+                throw new \Exception('Invalid CSV file: No headers found');
+            }
+            
+            $rowNumber = 1; // Header is row 1, so data starts at row 2
+
+            while (($data = fgetcsv($handle)) !== false) {
+                $rowNumber++;
+                
+                // Skip empty rows
+                if (empty(array_filter($data, function($value) {
+                    return trim($value) !== '';
+                }))) {
+                    continue;
+                }
+                
+                // Ensure data array matches header count
+                $dataCount = count($data);
+                $headerCount = count($headers);
+                
+                if ($dataCount < $headerCount) {
+                    $data = array_pad($data, $headerCount, '');
+                } elseif ($dataCount > $headerCount) {
+                    $data = array_slice($data, 0, $headerCount);
+                }
+                
+                try {
+                    $contactData = [];
+                    
+                    // Apply column mappings
+                    foreach ($columnMappings as $dbColumn => $csvColumnIndex) {
+                        if (isset($data[$csvColumnIndex])) {
+                            $contactData[$dbColumn] = trim($data[$csvColumnIndex]);
+                        }
+                    }
+                    
+                    // Only add if we have at least an email
+                    if (!empty($contactData['email'])) {
+                        $contacts[] = $contactData;
+                    }
+                } catch (\Exception $e) {
+                    \Log::warning("Failed to parse CSV row {$rowNumber}: " . $e->getMessage());
+                }
+            }
+            fclose($handle);
+        }
+
+        return $contacts;
     }
 
     public function export(Request $request)
@@ -347,17 +700,54 @@ class MarketingContactController extends Controller
         
         if (($handle = fopen($path, 'r')) !== false) {
             $headers = fgetcsv($handle);
+            
+            if ($headers === false || empty($headers)) {
+                fclose($handle);
+                throw new \Exception('Invalid CSV file: No headers found');
+            }
+            
+            // Clean headers
             $headers = array_map('strtolower', $headers);
             $headers = array_map(function($header) {
                 return str_replace(' ', '_', trim($header));
             }, $headers);
+            
+            $headerCount = count($headers);
+            $rowNumber = 1; // Header is row 1, so data starts at row 2
 
             while (($data = fgetcsv($handle)) !== false) {
-                $contactData = array_combine($headers, $data);
+                $rowNumber++;
                 
-                // Validate required email field
-                if (!empty($contactData['email']) && filter_var($contactData['email'], FILTER_VALIDATE_EMAIL)) {
-                    $contacts[] = $contactData;
+                // Skip empty rows
+                if (empty(array_filter($data, function($value) {
+                    return trim($value) !== '';
+                }))) {
+                    continue;
+                }
+                
+                $dataCount = count($data);
+                
+                // Handle mismatched column counts
+                if ($dataCount !== $headerCount) {
+                    // If fewer columns in data, pad with empty strings
+                    if ($dataCount < $headerCount) {
+                        $data = array_pad($data, $headerCount, '');
+                    } else {
+                        // If more columns in data, truncate to match headers
+                        $data = array_slice($data, 0, $headerCount);
+                    }
+                }
+                
+                try {
+                    $contactData = array_combine($headers, $data);
+                    
+                    // Validate required email field
+                    if (!empty($contactData['email']) && filter_var($contactData['email'], FILTER_VALIDATE_EMAIL)) {
+                        $contacts[] = $contactData;
+                    }
+                } catch (\Exception $e) {
+                    // Log parsing error but continue processing
+                    \Log::warning("Failed to parse CSV row {$rowNumber}: " . $e->getMessage());
                 }
             }
             fclose($handle);

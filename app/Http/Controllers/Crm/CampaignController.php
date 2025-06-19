@@ -463,4 +463,76 @@ class CampaignController extends Controller
 
         return collect($timeline)->sortBy('date')->values()->toArray();
     }
+
+    public function export(Request $request)
+    {
+        $query = Campaign::with(['creator']);
+
+        // Apply same filters as index
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('type')) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('subject', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $campaigns = $query->get();
+
+        $filename = 'email_campaigns_' . date('Y-m-d_H-i-s') . '.csv';
+        
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+
+        $callback = function() use ($campaigns) {
+            $file = fopen('php://output', 'w');
+            
+            // Add CSV headers
+            fputcsv($file, [
+                'Campaign Name', 'Subject', 'Type', 'Status', 'Total Recipients', 
+                'Sent Count', 'Delivered Count', 'Opened Count', 'Clicked Count', 
+                'Bounced Count', 'Unsubscribed Count', 'Open Rate (%)', 'Click Rate (%)', 
+                'Bounce Rate (%)', 'Unsubscribe Rate (%)', 'Scheduled At', 'Sent At', 
+                'Created By', 'Created At'
+            ]);
+
+            foreach ($campaigns as $campaign) {
+                fputcsv($file, [
+                    $campaign->name,
+                    $campaign->subject,
+                    ucfirst(str_replace('_', ' ', $campaign->type)),
+                    ucfirst($campaign->status),
+                    $campaign->total_recipients ?? 0,
+                    $campaign->sent_count ?? 0,
+                    $campaign->delivered_count ?? 0,
+                    $campaign->opened_count ?? 0,
+                    $campaign->clicked_count ?? 0,
+                    $campaign->bounced_count ?? 0,
+                    $campaign->unsubscribed_count ?? 0,
+                    number_format($campaign->open_rate ?? 0, 2),
+                    number_format($campaign->click_rate ?? 0, 2),
+                    number_format($campaign->bounce_rate ?? 0, 2),
+                    number_format($campaign->unsubscribe_rate ?? 0, 2),
+                    $campaign->scheduled_at?->format('Y-m-d H:i:s'),
+                    $campaign->sent_at?->format('Y-m-d H:i:s'),
+                    $campaign->creator?->name ?? 'Unknown',
+                    $campaign->created_at->format('Y-m-d H:i:s'),
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
 } 
