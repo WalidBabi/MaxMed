@@ -314,8 +314,8 @@ function notificationDropdown() {
         },
         
         connectToRealTimeNotifications() {
-            // Use frequent polling for real-time notifications (every 3 seconds)
-            this.startRealTimePolling();
+            // Real-time notifications disabled - notifications will only load when manually clicked
+            console.log('Real-time notifications disabled');
         },
         
         startRealTimePolling() {
@@ -330,11 +330,21 @@ function notificationDropdown() {
         
         async checkForNewNotifications() {
             try {
+                // Check if CSRF token exists
+                const csrfToken = document.querySelector('meta[name="csrf-token"]');
+                if (!csrfToken) {
+                    console.warn('CSRF token not found, skipping notification check');
+                    return;
+                }
+
                 const response = await fetch(`/admin/notifications/check-new?last_timestamp=${encodeURIComponent(this.latestTimestamp)}`, {
+                    method: 'GET',
                     headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Content-Type': 'application/json'
-                    }
+                        'X-CSRF-TOKEN': csrfToken.getAttribute('content'),
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'same-origin'
                 });
                 
                 if (response.ok) {
@@ -370,6 +380,8 @@ function notificationDropdown() {
                             this.notifications = this.notifications.slice(0, 20);
                         }
                     }
+                } else {
+                    console.warn('Notification check failed with status:', response.status);
                 }
             } catch (error) {
                 console.error('Error checking for new notifications:', error);
