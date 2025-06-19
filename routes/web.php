@@ -170,6 +170,7 @@ Route::middleware('auth')->group(function () {
         
         // Campaigns
         Route::resource('campaigns', \App\Http\Controllers\Crm\CampaignController::class);
+        Route::get('campaigns/export', [\App\Http\Controllers\Crm\CampaignController::class, 'export'])->name('campaigns.export');
         Route::post('campaigns/{campaign}/duplicate', [\App\Http\Controllers\Crm\CampaignController::class, 'duplicate'])->name('campaigns.duplicate');
         Route::get('campaigns/{campaign}/preview', [\App\Http\Controllers\Crm\CampaignController::class, 'preview'])->name('campaigns.preview');
         Route::post('campaigns/{campaign}/schedule', [\App\Http\Controllers\Crm\CampaignController::class, 'schedule'])->name('campaigns.schedule');
