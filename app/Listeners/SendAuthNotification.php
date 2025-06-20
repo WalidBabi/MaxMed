@@ -28,11 +28,11 @@ class SendAuthNotification
             // Create a unique cache key for this user's login notification
             $cacheKey = 'login_notification_sent_' . $event->user->id;
             
-            // Check if we've already sent a notification for this user in the last 5 minutes
-            if (Cache::has($cacheKey)) {
-                Log::info('Login notification skipped for user ' . $event->user->id . ' - cooldown period active');
-                return;
-            }
+            // Cooldown disabled - will send notification for every login
+            // if (Cache::has($cacheKey)) {
+            //     Log::info('Login notification skipped for user ' . $event->user->id . ' - cooldown period active');
+            //     return;
+            // }
             
             // Use configured admin email if available, otherwise fallback to database admin
             $adminEmail = config('mail.admin_email');
@@ -63,8 +63,8 @@ class SendAuthNotification
             // Send the notification
             Notification::send($admin, new AuthNotification($event->user, 'login', $method));
             
-            // Set cache flag to prevent duplicate notifications for 5 minutes
-            Cache::put($cacheKey, true, now()->addMinutes(5));
+            // Set cache flag to prevent duplicate notifications for 1 minute
+            Cache::put($cacheKey, true, now()->addMinutes(1));
             
             Log::info('Login notification sent for user ' . $event->user->id . ' via ' . $method);
             

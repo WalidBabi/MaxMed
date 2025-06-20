@@ -21,11 +21,18 @@ class AdminMiddleware
             'user_id' => auth()->id(),
             'is_admin' => auth()->check() ? auth()->user()->isAdmin() : false,
             'route' => $request->route()->getName(),
-            'method' => $request->method()
+            'method' => $request->method(),
+            'url' => $request->url()
         ]);
 
         if (!auth()->check()) {
             \Log::warning('AdminMiddleware: User not authenticated, redirecting to login');
+            
+            // Don't store API endpoints or notification checks as intended URL
+            if (!$this->shouldStoreIntendedUrl($request)) {
+                return redirect()->route('login');
+            }
+            
             return redirect()->route('login');
         }
 
@@ -36,5 +43,38 @@ class AdminMiddleware
 
         \Log::info('AdminMiddleware: Access granted');
         return $next($request);
+    }
+    
+    /**
+     * Determine if we should store the current URL as intended URL
+     */
+    private function shouldStoreIntendedUrl(Request $request): bool
+    {
+        $url = $request->url();
+        $path = $request->path();
+        
+        // Don't store these URLs as intended URLs
+        $excludePatterns = [
+            '/notifications/check-new',
+            '/notifications/count',
+            '/notifications/stream',
+            '/api/',
+            '.json',
+            '.xml',
+            '.txt'
+        ];
+        
+        foreach ($excludePatterns as $pattern) {
+            if (str_contains($url, $pattern) || str_contains($path, $pattern)) {
+                return false;
+            }
+        }
+        
+        // Don't store AJAX requests
+        if ($request->ajax() || $request->wantsJson()) {
+            return false;
+        }
+        
+        return true;
     }
 } 

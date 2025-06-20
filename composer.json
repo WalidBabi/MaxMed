@@ -17,6 +17,7 @@
         "laravel/framework": "^11.31",
         "laravel/socialite": "^5.21",
         "laravel/tinker": "^2.9",
+        "predis/predis": "*",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-sitemap": "^7.3",
         "stripe/stripe-php": "^16.5"

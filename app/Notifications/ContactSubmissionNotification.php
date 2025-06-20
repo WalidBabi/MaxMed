@@ -3,10 +3,11 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ContactSubmissionNotification extends Notification
+class ContactSubmissionNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -18,6 +19,10 @@ class ContactSubmissionNotification extends Notification
     public function __construct($submission)
     {
         $this->submission = $submission;
+        
+        // Set queue configuration for better performance
+        $this->onQueue('notifications');
+        $this->delay(now()->addSeconds(3)); // Small delay to avoid burst
     }
 
     /**

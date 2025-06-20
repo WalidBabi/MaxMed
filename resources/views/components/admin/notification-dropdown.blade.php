@@ -132,10 +132,14 @@ function notificationDropdown() {
         audioElement: null,
         useGeneratedSound: false,
         
+        // Track notifications that have already played sound to prevent infinite replay
+        soundPlayedForNotifications: new Set(),
+        
         init() {
             this.loadNotifications(false); // false = don't play sound on initial load
             this.initializeAudio();
-            this.connectToRealTimeNotifications();
+            // DISABLED: Real-time notifications are disabled for admin
+            // this.connectToRealTimeNotifications();
         },
         
         initializeAudio() {
@@ -316,87 +320,29 @@ function notificationDropdown() {
         connectToRealTimeNotifications() {
             // Real-time notifications disabled - notifications will only load when manually clicked
             console.log('Real-time notifications disabled');
+            // DO NOT start polling or enable real-time notifications
         },
         
         startRealTimePolling() {
-            // Track the latest notification timestamp to avoid duplicates
-            this.latestTimestamp = '1970-01-01T00:00:00Z';
-            
-            // Poll every 3 seconds for new notifications
-            setInterval(async () => {
-                await this.checkForNewNotifications();
-            }, 3000);
+            // DISABLED: Real-time polling is disabled for admin notifications
+            console.log('Real-time polling disabled for admin notifications');
+            // DO NOT poll for notifications automatically
         },
         
         async checkForNewNotifications() {
-            try {
-                // Check if CSRF token exists
-                const csrfToken = document.querySelector('meta[name="csrf-token"]');
-                if (!csrfToken) {
-                    console.warn('CSRF token not found, skipping notification check');
-                    return;
-                }
-
-                const response = await fetch(`/admin/notifications/check-new?last_timestamp=${encodeURIComponent(this.latestTimestamp)}`, {
-                    method: 'GET',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken.getAttribute('content'),
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    credentials: 'same-origin'
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    
-                    if (data.has_new && data.notifications.length > 0) {
-                        console.log('🔔 Real-time: New notifications detected, playing sound');
-                        
-                        // Add new notifications to the beginning of the list
-                        data.notifications.reverse().forEach(notification => {
-                            this.notifications.unshift(notification);
-                        });
-                        
-                        // Update count and latest timestamp
-                        this.notificationCount = data.count;
-                        this.latestTimestamp = data.latest_timestamp;
-                        
-                        // Queue notification sound for each new notification
-                        data.notifications.forEach(() => {
-                            this.queueNotificationSound();
-                        });
-                        
-                        // Show browser notification for the first new notification
-                        if (data.notifications.length > 0) {
-                            this.showBrowserNotification(data.notifications[0]);
-                        }
-                        
-                        // Animate the bell icon
-                        this.animateBellIcon();
-                        
-                        // Keep only the latest 20 notifications in the UI
-                        if (this.notifications.length > 20) {
-                            this.notifications = this.notifications.slice(0, 20);
-                        }
-                    }
-                } else {
-                    console.warn('Notification check failed with status:', response.status);
-                }
-            } catch (error) {
-                console.error('Error checking for new notifications:', error);
-            }
+            // DISABLED: This function should not be called for admin notifications
+            console.log('Automatic notification checking disabled for admin notifications');
         },
         
         fallbackToPolling() {
+            // DISABLED: Do not fallback to polling for admin notifications
+            console.log('Polling fallback disabled for admin notifications');
             // Close EventSource if it exists
             if (this.eventSource) {
                 this.eventSource.close();
                 this.eventSource = null;
             }
-            
-            // Use the same real-time polling approach
-            this.startRealTimePolling();
+            // DO NOT start polling
         },
         
         showBrowserNotification(notification) {
@@ -430,7 +376,7 @@ function notificationDropdown() {
         toggleDropdown() {
             this.isOpen = !this.isOpen;
             if (this.isOpen) {
-                this.loadNotifications(false); // false = don't play sound for manual loading
+                this.loadNotifications(true); // true = allow sound for new notifications
             }
         },
         
@@ -450,28 +396,46 @@ function notificationDropdown() {
                 if (response.ok) {
                     const data = await response.json();
                     const previousCount = this.notificationCount;
+                    const previousNotifications = this.notifications;
                     this.notifications = data.notifications || [];
                     this.notificationCount = data.unread_count || 0;
                     
-                    // Set initial latest notification timestamp for real-time polling
+                    // Set initial latest notification timestamp
                     if (this.notifications.length > 0 && this.latestTimestamp === '1970-01-01T00:00:00Z') {
                         this.latestTimestamp = this.notifications[0].created_at;
                     }
                     
-                    // Only play sound if explicitly allowed AND we have NEW notifications AND not first load
-                    if (playSound && !this.isFirstLoad && this.notificationCount > previousCount && previousCount >= 0) {
-                        console.log('🔔 New notifications detected via polling, queueing sounds');
-                        const newNotificationsCount = this.notificationCount - previousCount;
-                        // Queue one sound for each new notification
-                        for (let i = 0; i < newNotificationsCount; i++) {
-                            this.queueNotificationSound();
+                    // Play sound for truly new notifications (not already seen)
+                    if (playSound && !this.isFirstLoad) {
+                        const newNotifications = this.notifications.filter(notification => 
+                            !this.soundPlayedForNotifications.has(notification.id) && 
+                            !notification.read_at // Only unread notifications
+                        );
+                        
+                        if (newNotifications.length > 0) {
+                            console.log(`🔔 ${newNotifications.length} new notifications detected, playing sounds`);
+                            
+                            // Mark these notifications as having had their sound played
+                            newNotifications.forEach(notification => {
+                                this.soundPlayedForNotifications.add(notification.id);
+                                this.queueNotificationSound();
+                            });
+                            
+                            // Show browser notification for the first new notification
+                            this.showBrowserNotification(newNotifications[0]);
+                            
+                            // Animate the bell icon
+                            this.animateBellIcon();
                         }
-                        this.animateBellIcon();
                     }
                     
                     // Mark first load as complete
                     if (this.isFirstLoad) {
                         this.isFirstLoad = false;
+                        // Add all current notification IDs to the "already played" set on first load
+                        this.notifications.forEach(notification => {
+                            this.soundPlayedForNotifications.add(notification.id);
+                        });
                     }
                     
                     // Request notification permission on first load
@@ -515,6 +479,9 @@ function notificationDropdown() {
                         this.notificationCount = Math.max(0, this.notificationCount - 1);
                     }
                     
+                    // Keep the notification in the sound tracking set (don't remove it)
+                    // This prevents the same notification from playing sound again if refreshed
+                    
                     if (url) {
                         this.closeDropdown();
                         setTimeout(() => {
@@ -541,6 +508,8 @@ function notificationDropdown() {
                     // Mark all notifications as read
                     this.notifications.forEach(notification => {
                         notification.read_at = new Date().toISOString();
+                        // Ensure all notifications are tracked as having played sound
+                        this.soundPlayedForNotifications.add(notification.id);
                     });
                     this.notificationCount = 0;
                 }
@@ -620,9 +589,10 @@ function notificationDropdown() {
                 this.audioElement.pause();
                 this.audioElement = null;
             }
-            // Clear audio queue
+            // Clear audio queue and tracking sets
             this.audioQueue = [];
             this.isPlayingAudio = false;
+            this.soundPlayedForNotifications.clear();
         }
     }
 }

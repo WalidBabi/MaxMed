@@ -43,6 +43,36 @@ return [
             'after_commit' => false,
         ],
 
+        // Separate queue for emails to control processing rate
+        'emails' => [
+            'driver' => 'database',
+            'connection' => env('DB_QUEUE_CONNECTION'),
+            'table' => env('DB_QUEUE_TABLE', 'jobs'),
+            'queue' => 'emails',
+            'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 300),
+            'after_commit' => false,
+        ],
+
+        // Separate queue for notifications
+        'notifications' => [
+            'driver' => 'database',
+            'connection' => env('DB_QUEUE_CONNECTION'),
+            'table' => env('DB_QUEUE_TABLE', 'jobs'),
+            'queue' => 'notifications',
+            'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 300),
+            'after_commit' => false,
+        ],
+
+        // Separate queue for campaigns (bulk emails)
+        'campaigns' => [
+            'driver' => 'database',
+            'connection' => env('DB_QUEUE_CONNECTION'),
+            'table' => env('DB_QUEUE_TABLE', 'jobs'),
+            'queue' => 'campaigns',
+            'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 600),
+            'after_commit' => false,
+        ],
+
         'beanstalkd' => [
             'driver' => 'beanstalkd',
             'host' => env('BEANSTALKD_QUEUE_HOST', 'localhost'),

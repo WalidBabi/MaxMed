@@ -3,11 +3,13 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class AuthNotification extends Notification
+class AuthNotification extends Notification implements ShouldQueue
 {
+    use Queueable;
 
     public $type;
     public $user;
@@ -21,6 +23,10 @@ class AuthNotification extends Notification
         $this->user = $user;
         $this->type = $type;
         $this->method = $method;
+        
+        // Set queue configuration for better performance
+        $this->onQueue('notifications');
+        $this->delay(now()->addSeconds(5)); // Small delay to avoid burst
     }
 
     /**

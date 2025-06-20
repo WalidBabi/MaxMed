@@ -58,11 +58,40 @@
                     <div class="text-sm text-gray-600 mb-4">
                         <strong>Subject:</strong> {{ $emailTemplate->subject }}
                     </div>
-                    <div class="prose max-w-none">
-                        {!! $emailTemplate->html_content !!}
+                    <div class="relative">
+                        <iframe id="email-preview" class="w-full h-96 border border-gray-300 rounded-md" sandbox="allow-same-origin" data-content="{{ htmlspecialchars($emailTemplate->html_content, ENT_QUOTES, 'UTF-8') }}"></iframe>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <button onclick="showRawHtml()" class="text-sm text-indigo-600 hover:text-indigo-800">View Raw HTML</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-@endsection 
+@endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const iframe = document.getElementById('email-preview');
+    
+    // Set content via data attribute
+    const htmlContent = iframe.getAttribute('data-content');
+    
+    // Create a safe HTML document for the iframe
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open();
+    doc.write(htmlContent);
+    doc.close();
+});
+
+function showRawHtml() {
+    const iframe = document.getElementById('email-preview');
+    const htmlContent = iframe.getAttribute('data-content');
+    const newWindow = window.open('', '_blank', 'width=800,height=600');
+    newWindow.document.open();
+    newWindow.document.write('<html><head><title>Raw HTML Content</title><style>body{font-family:monospace;margin:20px;white-space:pre-wrap;}</style></head><body>' + htmlContent.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</body></html>');
+    newWindow.document.close();
+}
+</script>
+@endpush 

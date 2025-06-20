@@ -3,10 +3,11 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ContactFormMail extends Mailable
+class ContactFormMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -21,6 +22,10 @@ class ContactFormMail extends Mailable
     public function __construct($data)
     {
         $this->data = $data;
+        
+        // Set queue configuration for better performance
+        $this->onQueue('emails');
+        $this->delay(now()->addSeconds(2)); // Small delay to avoid burst
     }
 
     /**

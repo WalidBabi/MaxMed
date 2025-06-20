@@ -189,6 +189,19 @@
                                     <span>Used {{ $template->campaigns_count ?? 0 }} times</span>
                                     <span>{{ formatDubaiDateForHumans($template->updated_at) }}</span>
                                 </div>
+                                
+                                <!-- Additional Preview Button (always visible) -->
+                                <div class="mt-3 flex justify-center">
+                                    <button type="button" 
+                                            onclick="previewTemplate({{ $template->id }})"
+                                            class="inline-flex items-center px-3 py-1 border border-gray-300 text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                        <svg class="-ml-0.5 mr-1 h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
+                                            <path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                        </svg>
+                                        Preview Template
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     @endforeach
@@ -285,6 +298,27 @@
 
 @push('scripts')
 <script>
+    // Test function to debug preview functionality
+    function testPreview() {
+        console.log('Testing preview functionality...');
+        console.log('Modal element exists:', !!document.getElementById('preview-modal'));
+        console.log('CSRF token exists:', !!document.querySelector('meta[name="csrf-token"]'));
+        
+        // Test with template ID 1
+        previewTemplate(1);
+    }
+    
+    // Add test button temporarily
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Page loaded, adding test button...');
+        const testBtn = document.createElement('button');
+        testBtn.innerHTML = 'Test Preview (Template 1)';
+        testBtn.onclick = testPreview;
+        testBtn.style.cssText = 'position:fixed;top:10px;right:10px;z-index:9999;background:red;color:white;padding:10px;border:none;cursor:pointer;';
+        document.body.appendChild(testBtn);
+    });
+</script>
+<script>
     function toggleDropdown(templateId) {
         const dropdown = document.getElementById(`dropdown-${templateId}`);
         const allDropdowns = document.querySelectorAll('[id^="dropdown-"]');
@@ -301,17 +335,89 @@
     }
 
     function previewTemplate(templateId) {
-        // Show modal
-        document.getElementById('preview-modal').classList.remove('hidden');
+        console.log('Preview button clicked for template ID:', templateId);
         
-        // Load preview content (you would make an AJAX call here)
+        // Show modal
+        const modal = document.getElementById('preview-modal');
+        console.log('Modal element:', modal);
+        modal.classList.remove('hidden');
+        
+        // Load preview content
         const previewContent = document.getElementById('preview-content');
         previewContent.innerHTML = '<div class="p-8 text-center"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div><p class="mt-2 text-gray-500">Loading preview...</p></div>';
         
-        // Simulate loading (replace with actual AJAX call)
-        setTimeout(() => {
-            previewContent.innerHTML = '<div class="p-4"><p class="text-gray-700">Preview content would be loaded here via AJAX.</p></div>';
-        }, 1000);
+        // Make AJAX call to get preview
+        const url = `/crm/marketing/email-templates/${templateId}/preview`;
+        console.log('Fetching URL:', url);
+        
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Display preview content
+            previewContent.innerHTML = `
+                <div class="p-6">
+                    <div class="mb-4 p-3 bg-gray-50 border-l-4 border-indigo-500">
+                        <h4 class="font-medium text-gray-900">Subject Line:</h4>
+                        <p class="text-gray-700 mt-1">${data.subject}</p>
+                    </div>
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <div class="bg-gray-50 px-4 py-2 border-b border-gray-200">
+                            <h4 class="font-medium text-gray-900">HTML Preview:</h4>
+                        </div>
+                        <div class="p-4">
+                            <iframe srcdoc="${data.html_content.replace(/"/g, '&quot;')}" 
+                                    class="w-full h-96 border-0" 
+                                    sandbox="allow-same-origin">
+                            </iframe>
+                        </div>
+                    </div>
+                    ${data.text_content ? `
+                        <div class="mt-4 border border-gray-200 rounded-lg overflow-hidden">
+                            <div class="bg-gray-50 px-4 py-2 border-b border-gray-200">
+                                <h4 class="font-medium text-gray-900">Plain Text Version:</h4>
+                            </div>
+                            <div class="p-4 bg-gray-50">
+                                <pre class="whitespace-pre-wrap text-sm text-gray-700 font-mono">${data.text_content}</pre>
+                            </div>
+                        </div>
+                    ` : ''}
+                    <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-500">
+                        <p class="text-sm text-blue-700">
+                            <strong>Note:</strong> This preview uses sample data. Actual emails will use real contact information.
+                        </p>
+                    </div>
+                </div>
+            `;
+        })
+        .catch(error => {
+            console.error('Error loading preview:', error);
+            previewContent.innerHTML = `
+                <div class="p-6 text-center">
+                    <div class="text-red-500 mb-2">
+                        <svg class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Preview Error</h3>
+                    <p class="text-gray-600">Unable to load preview. Please try again.</p>
+                    <button onclick="previewTemplate(${templateId})" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                        Retry
+                    </button>
+                </div>
+            `;
+        });
     }
 
     function closePreview() {
@@ -339,9 +445,18 @@
             const allDropdowns = document.querySelectorAll('[id^="dropdown-"]');
             allDropdowns.forEach(d => d.classList.add('hidden'));
         }
+    });
+    
     // Close modal when clicking outside
-    document.getElementById('deleteModal').addEventListener('click', function(e) {
-        if (e.target === this) {
+    document.addEventListener('click', function(e) {
+        const previewModal = document.getElementById('preview-modal');
+        const deleteModal = document.getElementById('delete-modal');
+        
+        if (e.target === previewModal) {
+            closePreview();
+        }
+        
+        if (e.target === deleteModal) {
             closeDeleteModal();
         }
     });

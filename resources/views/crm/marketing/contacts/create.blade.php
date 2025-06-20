@@ -313,7 +313,7 @@
                                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                            {{ in_array($list->id, old('contact_lists', [])) ? 'checked' : '' }}>
                                     <span class="ml-2 text-sm text-gray-700">{{ $list->name }}</span>
-                                    <span class="ml-auto text-xs text-gray-500">{{ $list->contacts_count ?? 0 }}</span>
+                                    <span class="ml-auto text-xs text-gray-500">{{ $list->getContactsCount() }}</span>
                                 </label>
                             @endforeach
                         @else

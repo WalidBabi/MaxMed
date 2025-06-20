@@ -60,16 +60,19 @@ class EmailTemplate extends Model
 
     public function renderHtmlContent(array $data = []): string
     {
-        return $this->replaceVariables($this->html_content, $data);
+        return $this->replaceVariables($this->html_content ?: '', $data);
     }
 
     public function renderTextContent(array $data = []): string
     {
-        if (!$this->text_content) {
-            return strip_tags($this->renderHtmlContent($data));
-        }
-        
+        // Always use text content since we're now focusing on plain text emails
         return $this->replaceVariables($this->text_content, $data);
+    }
+
+    public function renderContent(array $data = []): string
+    {
+        // Primary content is now text content
+        return $this->renderTextContent($data);
     }
 
     protected function replaceVariables(string $content, array $data): string
@@ -80,7 +83,7 @@ class EmailTemplate extends Model
         }
 
         // Handle contact-specific variables
-        if (isset($data['contact']) && $data['contact'] instanceof MarketingContact) {
+        if (isset($data['contact']) && $data['contact'] instanceof \App\Models\MarketingContact) {
             $contact = $data['contact'];
             
             $contactData = [
@@ -142,8 +145,8 @@ class EmailTemplate extends Model
         return static::create([
             'name' => $newName,
             'subject' => $this->subject,
-            'html_content' => $this->html_content,
-            'text_content' => $this->text_content,
+            'html_content' => $this->html_content ?: '',
+            'text_content' => $this->text_content ?: '',
             'variables' => $this->variables,
             'category' => $this->category,
             'is_active' => false, // New template starts as inactive

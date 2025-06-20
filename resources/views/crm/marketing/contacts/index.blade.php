@@ -212,17 +212,22 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex items-center space-x-2">
-                                        <a href="{{ route('crm.marketing.contacts.show', $contact) }}" class="text-indigo-600 hover:text-indigo-900">
+                                        <a href="{{ route('crm.marketing.contacts.show', $contact) }}" class="text-indigo-600 hover:text-indigo-900" title="View Contact">
                                             <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                                 <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
                                                 <path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
                                             </svg>
                                         </a>
-                                        <a href="{{ route('crm.marketing.contacts.edit', $contact) }}" class="text-gray-600 hover:text-gray-900">
+                                        <a href="{{ route('crm.marketing.contacts.edit', $contact) }}" class="text-gray-600 hover:text-gray-900" title="Edit Contact">
                                             <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                                 <path d="M2.695 14.763l-1.262 3.154a.5.5 0 00.65.65l3.155-1.262a4 4 0 001.343-.885L17.5 5.5a2.121 2.121 0 00-3-3L3.58 13.42a4 4 0 00-.885 1.343z" />
                                             </svg>
                                         </a>
+                                        <button onclick="confirmDelete('{{ $contact->id }}', '{{ $contact->full_name }}', '{{ $contact->email }}')" class="text-red-600 hover:text-red-900" title="Delete Contact">
+                                            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -421,6 +426,39 @@
 </style>
 @endpush
 
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                    <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                    </svg>
+                </div>
+                <div class="mt-3 text-center">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Delete Contact</h3>
+                    <div class="mt-2 px-7 py-3">
+                        <p class="text-sm text-gray-500">
+                            Are you sure you want to delete <strong id="deleteContactName"></strong> (<span id="deleteContactEmail"></span>)? This action cannot be undone.
+                        </p>
+                    </div>
+                    <div class="items-center px-4 py-3">
+                        <form id="deleteContactForm" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md w-auto mr-2 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                                Cancel
+                            </button>
+                            <button type="submit" class="px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md w-auto hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @push('scripts')
 <script>
 function openImportModal() {
@@ -431,12 +469,31 @@ function closeImportModal() {
     document.getElementById('importModal').classList.add('hidden');
 }
 
+function confirmDelete(contactId, contactName, contactEmail) {
+    document.getElementById('deleteContactName').textContent = contactName;
+    document.getElementById('deleteContactEmail').textContent = contactEmail;
+    document.getElementById('deleteContactForm').action = `/crm/marketing/contacts/${contactId}`;
+    document.getElementById('deleteModal').classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
+}
+
 // Close modal when clicking outside
 document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('importModal');
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
+    const importModal = document.getElementById('importModal');
+    const deleteModal = document.getElementById('deleteModal');
+    
+    importModal.addEventListener('click', function(e) {
+        if (e.target === importModal) {
             closeImportModal();
+        }
+    });
+    
+    deleteModal.addEventListener('click', function(e) {
+        if (e.target === deleteModal) {
+            closeDeleteModal();
         }
     });
 });
@@ -445,7 +502,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function downloadTemplate() {
     const csvContent = "first_name,last_name,email,phone,company,job_title,industry,country,city,notes\nJohn,Doe,john.doe@example.com,+1234567890,Example Corp,Manager,Healthcare,USA,New York,Sample contact\nJane,Smith,jane.smith@example.com,+0987654321,Tech Inc,Developer,Technology,Canada,Toronto,Another sample";
     
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob([csvContent], { type: 'text/csv;charset-utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     

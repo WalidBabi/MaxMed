@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('subject');
-            $table->longText('html_content');
+            $table->longText('html_content')->nullable();
             $table->longText('text_content')->nullable();
             $table->json('variables')->nullable(); // Available template variables
             $table->string('category')->nullable();

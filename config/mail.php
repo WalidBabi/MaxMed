@@ -79,6 +79,12 @@ return [
             'transport' => 'array',
         ],
 
+        // Development mailer - saves emails to log file instead of sending
+        'file' => [
+            'transport' => 'log',
+            'channel' => 'single',
+        ],
+
         'failover' => [
             'transport' => 'failover',
             'mailers' => [
