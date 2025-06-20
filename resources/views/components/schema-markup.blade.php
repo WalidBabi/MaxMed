@@ -86,6 +86,17 @@ $organization = [
                 "value": "0",
                 "currency": "AED"
             },
+            "shippingDestination": [
+                {
+                    "@type": "DefinedRegion",
+                    "addressCountry": "AE",
+                    "addressRegion": ["Dubai", "Abu Dhabi", "Sharjah", "Ajman", "Ras Al Khaimah", "Fujairah", "Umm Al Quwain"]
+                },
+                {
+                    "@type": "DefinedRegion",
+                    "addressCountry": ["SA", "QA", "KW", "OM", "BH"]
+                }
+            ],
             "deliveryTime": {
                 "@type": "ShippingDeliveryTime",
                 "handlingTime": {
@@ -101,6 +112,14 @@ $organization = [
                     "unitCode": "DAY"
                 }
             }
+        },
+        "hasMerchantReturnPolicy": {
+            "@type": "MerchantReturnPolicy",
+            "applicableCountry": "AE",
+            "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+            "merchantReturnDays": 30,
+            "returnMethod": "https://schema.org/ReturnByMail",
+            "returnFees": "https://schema.org/FreeReturn"
         }
     },
     "aggregateRating": {
