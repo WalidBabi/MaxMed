@@ -496,6 +496,13 @@ document.addEventListener('DOMContentLoaded', function() {
             closeDeleteModal();
         }
     });
+    
+    // Handle redirect after contact update
+    @if(session('redirect_to_contact'))
+        setTimeout(function() {
+            window.location.href = '/crm/marketing/contacts/{{ session('redirect_to_contact') }}';
+        }, 100);
+    @endif
 });
 
 // Download CSV template

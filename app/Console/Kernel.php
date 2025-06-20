@@ -17,6 +17,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('reservations:cleanup')->everyMinute();
         $schedule->command('sitemap:generate')->daily();
         $schedule->command('campaigns:send-scheduled')->everyMinute();
+        
+        // Process email and notification queues every minute
+        $schedule->command('queue:work --queue=notifications,emails --stop-when-empty --tries=3')->everyMinute();
     }
 
     /**

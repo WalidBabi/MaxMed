@@ -3,11 +3,12 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\Order;
 
-class OrderNotification extends Notification
+class OrderNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -21,6 +22,11 @@ class OrderNotification extends Notification
     {
         $this->order = $order;
         $this->type = $type;
+        
+        // Use Redis notifications queue
+        $this->onConnection('redis');
+        $this->onQueue('notifications');
+        $this->delay(now()->addSeconds(2));
     }
 
     /**

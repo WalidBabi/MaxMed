@@ -99,13 +99,22 @@
                     @enderror
                 </div>
 
-                <div>
-                    <label for="text_content" class="block text-sm font-medium text-gray-700">Email Content</label>
-                    <textarea name="text_content" id="text_content" rows="12" placeholder="Dear @{{first_name}},
+                <div id="text-content-section">
+                    <label for="text_content" class="block text-sm font-medium text-gray-700">Email Content *</label>
+                    <div class="mt-1 mb-2">
+                        <p class="text-sm text-gray-600">✨ <strong>HTML is automatically generated</strong> from your text content for better tracking and formatting.</p>
+                        <p class="text-sm text-gray-500">Use variables like {!! '{{' !!}first_name{!! '}}' !!}, {!! '{{' !!}company_name{!! '}}' !!}, {!! '{{' !!}job_title{!! '}}' !!} to personalize your message.</p>
+                    </div>
+                    <textarea name="text_content" id="text_content" rows="12" placeholder="Dear {!! '{{' !!}first_name{!! '}}' !!},
 
 I hope this email finds you well. My name is Walid, and I am reaching out on behalf of MaxMed, a trusted provider of advanced scientific solutions tailored to life science and research professionals.
 
-Use variables like @{{first_name}}, @{{company}}, @{{job_title}} to personalize your message.
+We specialize in:
+- Laboratory Equipment
+- Medical Consumables  
+- Analytical Chemistry Tools
+
+I would love to discuss how we can support your research and laboratory needs.
 
 Best regards,
 Walid Babi"
@@ -114,14 +123,23 @@ Walid Babi"
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-                
-                <div>
-                    <label for="html_content" class="block text-sm font-medium text-gray-700">HTML Content (Optional)</label>
-                    <textarea name="html_content" id="html_content" rows="6" placeholder="Leave empty to send plain text only"
-                              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('html_content') border-red-300 @enderror">{{ old('html_content') }}</textarea>
-                    @error('html_content')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+
+                <div id="template-info-section" class="hidden">
+                    <div class="p-4 bg-blue-50 border border-blue-200 rounded-md">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-blue-800">Email Template Selected</h3>
+                                <div class="mt-2 text-sm text-blue-700">
+                                    <p>The content from your selected email template will be used for this campaign. HTML is automatically generated from the template for better tracking and formatting.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -245,6 +263,11 @@ Walid Babi"
         
         const sendOptionRadios = document.querySelectorAll('input[name="send_option"]');
         const scheduleSection = document.getElementById('schedule-section');
+        
+        const emailTemplateSelect = document.getElementById('email_template_id');
+        const textContentSection = document.getElementById('text-content-section');
+        const templateInfoSection = document.getElementById('template-info-section');
+        const textContentField = document.getElementById('text_content');
 
         function toggleContactLists() {
             const selectedType = document.querySelector('input[name="recipient_type"]:checked').value;
@@ -264,6 +287,23 @@ Walid Babi"
             }
         }
 
+        function toggleTextContent() {
+            const selectedTemplate = emailTemplateSelect.value;
+            if (selectedTemplate) {
+                // Template selected - hide text content field and show info
+                textContentSection.classList.add('hidden');
+                templateInfoSection.classList.remove('hidden');
+                // Remove required attribute when template is selected
+                textContentField.removeAttribute('required');
+            } else {
+                // No template - show text content field and hide info
+                textContentSection.classList.remove('hidden');
+                templateInfoSection.classList.add('hidden');
+                // Add required attribute when no template is selected
+                textContentField.setAttribute('required', 'required');
+            }
+        }
+
         recipientTypeRadios.forEach(radio => {
             radio.addEventListener('change', toggleContactLists);
         });
@@ -272,9 +312,12 @@ Walid Babi"
             radio.addEventListener('change', toggleSchedule);
         });
 
+        emailTemplateSelect.addEventListener('change', toggleTextContent);
+
         // Initialize visibility
         toggleContactLists();
         toggleSchedule();
+        toggleTextContent();
     });
 </script>
 @endpush 

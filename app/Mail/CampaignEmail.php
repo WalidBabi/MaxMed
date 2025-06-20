@@ -19,36 +19,39 @@ class CampaignEmail extends Mailable
     public $contact;
 
     public function __construct(
-        string $subject,
-        string $textContent,
         Campaign $campaign,
         MarketingContact $contact,
-        string $htmlContent = null
+        string $subject,
+        array $emailContent
     ) {
-        $this->subject = $subject;
-        $this->htmlContent = $htmlContent;
-        $this->textContent = $textContent;
         $this->campaign = $campaign;
         $this->contact = $contact;
+        $this->subject = $subject;
+        $this->htmlContent = $emailContent['html'] ?? null;
+        $this->textContent = $emailContent['text'] ?? '';
     }
 
     public function build()
     {
+        // Generate unsubscribe URL with campaign tracking
+        $unsubscribeUrl = route('email.track.unsubscribe', [
+            'token' => base64_encode($this->contact->id . '|' . $this->contact->email . '|' . $this->campaign->id)
+        ]);
+
         $mail = $this->subject($this->subject)
                      ->text('emails.campaign-text', [
                          'content' => $this->textContent,
                          'contact' => $this->contact,
-                         'campaign' => $this->campaign
+                         'campaign' => $this->campaign,
+                         'unsubscribe_url' => $unsubscribeUrl
                      ])
                      ->with([
                          'contact' => $this->contact,
                          'campaign' => $this->campaign,
-                         'unsubscribe_url' => route('marketing.unsubscribe', [
-                             'token' => base64_encode($this->contact->id . '|' . $this->contact->email . '|' . time())
-                         ])
+                         'unsubscribe_url' => $unsubscribeUrl
                      ]);
 
-        // Only add HTML content if it exists
+        // Use the HTML content that already has tracking applied
         if ($this->htmlContent) {
             $mail->html($this->htmlContent);
         }

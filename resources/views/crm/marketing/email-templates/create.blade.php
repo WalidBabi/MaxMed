@@ -23,7 +23,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Main Form -->
         <div class="lg:col-span-2">
-            <form action="{{ route('crm.marketing.email-templates.store') }}" method="POST" class="space-y-8">
+            <form action="{{ route('crm.marketing.email-templates.store') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
                 @csrf
 
                 <div class="bg-white shadow rounded-lg p-6 mb-6">
@@ -51,6 +51,17 @@
                         <label for="subject" class="block text-sm font-medium text-gray-700">Email Subject</label>
                         <input type="text" name="subject" id="subject" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
+                    
+                    <div class="mt-6">
+                        <label for="banner_image" class="block text-sm font-medium text-gray-700">Company Banner Image</label>
+                        <div class="mt-1 mb-2">
+                            <p class="text-sm text-gray-500">Upload a banner image that will appear at the top of your emails. Recommended size: 600x150px</p>
+                        </div>
+                        <input type="file" name="banner_image" id="banner_image" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                        @error('banner_image')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="bg-white shadow rounded-lg p-6 mb-6">
@@ -58,23 +69,24 @@
                     
                     <div class="mb-6">
                         <label for="text_content" class="block text-sm font-medium text-gray-700">Email Content</label>
+                        <div class="mt-1 mb-2">
+                            <p class="text-sm text-gray-600">✨ <strong>HTML is automatically generated</strong> from your text content for better tracking and formatting.</p>
+                            <p class="text-sm text-gray-500">📧 Email addresses, websites, and phone numbers will automatically become trackable links.</p>
+                            <p class="text-sm text-gray-500">Use variables like &#123;&#123;first_name&#125;&#125;, &#123;&#123;company&#125;&#125;, &#123;&#123;job_title&#125;&#125; to personalize your message.</p>
+                        </div>
                         <textarea name="text_content" id="text_content" rows="15" placeholder="Dear &#123;&#123;first_name&#125;&#125;,
 
 I hope this email finds you well. My name is Walid, and I am reaching out on behalf of MaxMed, a trusted provider of advanced scientific solutions tailored to life science and research professionals.
 
-Use variables like &#123;&#123;first_name&#125;&#125;, &#123;&#123;company&#125;&#125;, &#123;&#123;job_title&#125;&#125; to personalize your message.
+For inquiries, please contact us at:
+📧 info@maxmed.ae
+🌐 www.maxmed.ae  
+📞 +971 55 4602500
 
 Best regards,
-Walid Babi" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+Walid Babi
+MaxMed Team" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
                         @error('text_content')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    
-                    <div>
-                        <label for="html_content" class="block text-sm font-medium text-gray-700">HTML Content (Optional - for email clients that support HTML)</label>
-                        <textarea name="html_content" id="html_content" rows="8" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm font-mono" placeholder="Leave empty to send plain text only"></textarea>
-                        @error('html_content')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>

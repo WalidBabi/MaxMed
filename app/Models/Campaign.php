@@ -231,13 +231,77 @@ class Campaign extends Model
             ')
             ->first();
 
+        // Also get sent count from email_logs to capture emails that were sent but then marked as delivered
+        $sentFromLogs = DB::table('email_logs')
+            ->where('campaign_id', $this->id)
+            ->whereNotNull('sent_at')
+            ->count();
+
+        // Get delivered count from email_logs (more accurate than campaign_contacts)
+        $deliveredFromLogs = DB::table('email_logs')
+            ->where('campaign_id', $this->id)
+            ->where('status', 'delivered')
+            ->count();
+
+        // Get unsubscribed count from marketing_contacts
+        $unsubscribedCount = DB::table('campaign_contacts')
+            ->join('marketing_contacts', 'campaign_contacts.marketing_contact_id', '=', 'marketing_contacts.id')
+            ->where('campaign_contacts.campaign_id', $this->id)
+            ->where('marketing_contacts.status', 'unsubscribed')
+            ->count();
+
+        // Also check bounced emails from email_logs table for more accurate bounced count
+        $bouncedFromLogs = DB::table('email_logs')
+            ->where('campaign_id', $this->id)
+            ->where('status', 'bounced')
+            ->count();
+
+        // Use the higher bounced count (from campaign_contacts or email_logs)
+        $finalBouncedCount = max($stats->bounced ?? 0, $bouncedFromLogs);
+
+        // Use email_logs data for sent/delivered counts as it's more accurate
+        $finalSentCount = max($stats->sent ?? 0, $sentFromLogs);
+        $finalDeliveredCount = max($stats->delivered ?? 0, $deliveredFromLogs);
+
+        $previousStats = [
+            'total_recipients' => $this->total_recipients,
+            'sent_count' => $this->sent_count,
+            'delivered_count' => $this->delivered_count,
+            'opened_count' => $this->opened_count,
+            'clicked_count' => $this->clicked_count,
+            'bounced_count' => $this->bounced_count,
+            'unsubscribed_count' => $this->unsubscribed_count,
+        ];
+
         $this->update([
             'total_recipients' => $stats->total ?? 0,
-            'sent_count' => $stats->sent ?? 0,
-            'delivered_count' => $stats->delivered ?? 0,
+            'sent_count' => $finalSentCount,
+            'delivered_count' => $finalDeliveredCount,
             'opened_count' => $stats->opened ?? 0,
             'clicked_count' => $stats->clicked ?? 0,
-            'bounced_count' => $stats->bounced ?? 0,
+            'bounced_count' => $finalBouncedCount,
+            'unsubscribed_count' => $unsubscribedCount,
+        ]);
+
+        // Log statistics changes for debugging
+        \Log::debug('Campaign statistics updated', [
+            'campaign_id' => $this->id,
+            'previous' => $previousStats,
+            'current' => [
+                'total_recipients' => $this->total_recipients,
+                'sent_count' => $this->sent_count,
+                'delivered_count' => $this->delivered_count,
+                'opened_count' => $this->opened_count,
+                'clicked_count' => $this->clicked_count,
+                'bounced_count' => $this->bounced_count,
+                'unsubscribed_count' => $this->unsubscribed_count,
+            ],
+            'source_data' => [
+                'campaign_contacts_sent' => $stats->sent ?? 0,
+                'email_logs_sent' => $sentFromLogs,
+                'campaign_contacts_delivered' => $stats->delivered ?? 0,
+                'email_logs_delivered' => $deliveredFromLogs,
+            ]
         ]);
     }
 

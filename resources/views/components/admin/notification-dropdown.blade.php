@@ -11,7 +11,7 @@
         <!-- Notification badge -->
         <span x-show="notificationCount > 0" 
               x-text="notificationCount" 
-              class="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full min-w-[1.25rem] w-5 h-5"></span>
+              class="absolute top-0 right-0 inline-flex items-center justify-center text-xs font-bold leading-none text-white transform translate-x-1/3 -translate-y-1/3 bg-red-600 rounded-full min-w-[1.25rem] w-5 h-5"></span>
     </button>
     
     <!-- Dropdown panel - Increased width for better content display -->
@@ -111,6 +111,15 @@
             </template>
         </div>
         
+        <!-- Footer -->
+        <div class="px-6 py-3 border-t border-gray-100 bg-gray-50 rounded-b-xl">
+            <div class="flex justify-center items-center">
+                <a href="#" class="text-sm text-indigo-600 hover:text-indigo-500 font-medium">View all notifications</a>
+            </div>
+            <div class="mt-2 text-center">
+                <span class="text-xs text-gray-500">Real-time updates every 3s • Click bell to enable audio</span>
+            </div>
+        </div>
 
     </div>
 </div>
@@ -138,8 +147,11 @@ function notificationDropdown() {
         init() {
             this.loadNotifications(false); // false = don't play sound on initial load
             this.initializeAudio();
-            // DISABLED: Real-time notifications are disabled for admin
-            // this.connectToRealTimeNotifications();
+            this.startRealTimePolling(); // Enable real-time notifications for admin
+            this.requestNotificationPermission();
+            
+            // Add this component to global scope for manual triggering
+            window.adminNotificationComponent = this;
         },
         
         initializeAudio() {
@@ -317,32 +329,96 @@ function notificationDropdown() {
             }
         },
         
-        connectToRealTimeNotifications() {
-            // Real-time notifications disabled - notifications will only load when manually clicked
-            console.log('Real-time notifications disabled');
-            // DO NOT start polling or enable real-time notifications
+        requestNotificationPermission() {
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
         },
         
         startRealTimePolling() {
-            // DISABLED: Real-time polling is disabled for admin notifications
-            console.log('Real-time polling disabled for admin notifications');
-            // DO NOT poll for notifications automatically
+            console.log('Starting real-time polling every 3 seconds for admin notifications');
+            
+            // Initial check after 1 second
+            setTimeout(() => {
+                this.checkForNewNotifications();
+            }, 1000);
+            
+            // Then check every 3 seconds
+            setInterval(() => {
+                console.log('Polling for admin notifications...');
+                this.checkForNewNotifications();
+            }, 3000);
         },
         
         async checkForNewNotifications() {
-            // DISABLED: This function should not be called for admin notifications
-            console.log('Automatic notification checking disabled for admin notifications');
-        },
-        
-        fallbackToPolling() {
-            // DISABLED: Do not fallback to polling for admin notifications
-            console.log('Polling fallback disabled for admin notifications');
-            // Close EventSource if it exists
-            if (this.eventSource) {
-                this.eventSource.close();
-                this.eventSource = null;
+            try {
+                const response = await fetch(`/admin/notifications/check-new?last_timestamp=${encodeURIComponent(this.latestTimestamp)}`, {
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Admin notification check response:', data);
+                    
+                    if (data.has_new && data.notifications.length > 0) {
+                        console.log('New admin notifications found:', data.notifications.length);
+                        
+                        // Filter out notifications that have already played sound
+                        const reallyNewNotifications = data.notifications.filter(notification => 
+                            !this.soundPlayedForNotifications.has(notification.id)
+                        );
+                        
+                        console.log('Really new admin notifications:', reallyNewNotifications.length);
+                        
+                        if (reallyNewNotifications.length > 0) {
+                            // Add new notifications to the beginning of the list
+                            data.notifications.reverse().forEach(notification => {
+                                this.notifications.unshift(notification);
+                            });
+                            
+                            // Update count and latest timestamp
+                            this.notificationCount = data.count || this.notificationCount + reallyNewNotifications.length;
+                            this.latestTimestamp = data.latest_timestamp;
+                            
+                            console.log('Updated admin notification count:', this.notificationCount);
+                            
+                            // Play sound for each new notification
+                            reallyNewNotifications.forEach(notification => {
+                                this.soundPlayedForNotifications.add(notification.id);
+                                console.log('Playing sound for admin notification:', notification.id);
+                                this.queueNotificationSound();
+                            });
+                            
+                            // Show browser notification for the first new notification
+                            if (reallyNewNotifications.length > 0) {
+                                this.showBrowserNotification(reallyNewNotifications[0]);
+                            }
+                            
+                            // Animate the bell icon
+                            this.animateBellIcon();
+                            
+                            // Keep only the latest 20 notifications in the UI
+                            if (this.notifications.length > 20) {
+                                this.notifications = this.notifications.slice(0, 20);
+                            }
+                        }
+                    }
+                    
+                    // Always update the count even if no new notifications
+                    if (data.count !== undefined) {
+                        const newCount = data.count || 0;
+                        if (newCount !== this.notificationCount) {
+                            console.log('Updating admin count from', this.notificationCount, 'to', newCount);
+                            this.notificationCount = newCount;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking for new admin notifications:', error);
             }
-            // DO NOT start polling
         },
         
         showBrowserNotification(notification) {

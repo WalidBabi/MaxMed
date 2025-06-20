@@ -190,18 +190,7 @@
                                     <span>{{ formatDubaiDateForHumans($template->updated_at) }}</span>
                                 </div>
                                 
-                                <!-- Additional Preview Button (always visible) -->
-                                <div class="mt-3 flex justify-center">
-                                    <button type="button" 
-                                            onclick="previewTemplate({{ $template->id }})"
-                                            class="inline-flex items-center px-3 py-1 border border-gray-300 text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                        <svg class="-ml-0.5 mr-1 h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
-                                            <path fill-rule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
-                                        </svg>
-                                        Preview Template
-                                    </button>
-                                </div>
+
                             </div>
                         </div>
                     @endforeach
@@ -298,27 +287,6 @@
 
 @push('scripts')
 <script>
-    // Test function to debug preview functionality
-    function testPreview() {
-        console.log('Testing preview functionality...');
-        console.log('Modal element exists:', !!document.getElementById('preview-modal'));
-        console.log('CSRF token exists:', !!document.querySelector('meta[name="csrf-token"]'));
-        
-        // Test with template ID 1
-        previewTemplate(1);
-    }
-    
-    // Add test button temporarily
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('Page loaded, adding test button...');
-        const testBtn = document.createElement('button');
-        testBtn.innerHTML = 'Test Preview (Template 1)';
-        testBtn.onclick = testPreview;
-        testBtn.style.cssText = 'position:fixed;top:10px;right:10px;z-index:9999;background:red;color:white;padding:10px;border:none;cursor:pointer;';
-        document.body.appendChild(testBtn);
-    });
-</script>
-<script>
     function toggleDropdown(templateId) {
         const dropdown = document.getElementById(`dropdown-${templateId}`);
         const allDropdowns = document.querySelectorAll('[id^="dropdown-"]');
@@ -377,8 +345,7 @@
                             <h4 class="font-medium text-gray-900">HTML Preview:</h4>
                         </div>
                         <div class="p-4">
-                            <iframe srcdoc="${data.html_content.replace(/"/g, '&quot;')}" 
-                                    class="w-full h-96 border-0" 
+                            <iframe id="preview-iframe-${templateId}" class="w-full h-96 border-0" 
                                     sandbox="allow-same-origin">
                             </iframe>
                         </div>
@@ -400,6 +367,17 @@
                     </div>
                 </div>
             `;
+            
+            // Load HTML content into iframe
+            setTimeout(() => {
+                const iframe = document.getElementById(`preview-iframe-${templateId}`);
+                if (iframe && data.html_content) {
+                    const doc = iframe.contentDocument || iframe.contentWindow.document;
+                    doc.open();
+                    doc.write(data.html_content);
+                    doc.close();
+                }
+            }, 100);
         })
         .catch(error => {
             console.error('Error loading preview:', error);

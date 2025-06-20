@@ -89,7 +89,7 @@
             </div>
         </div>
 
-        <!-- This Month Opens -->
+        <!-- Email Performance -->
         <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
             <div class="flex items-center">
                 <div class="flex-shrink-0">
@@ -100,10 +100,10 @@
                     </div>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">This Month Opens</p>
-                    <p class="text-3xl font-bold text-gray-900">{{ number_format($data['monthly_opens'] ?? 0) }}</p>
+                    <p class="text-sm font-medium text-gray-600">Email Opens (30d)</p>
+                    <p class="text-3xl font-bold text-gray-900">{{ number_format($data['email_stats']['opened_emails'] ?? 0) }}</p>
                     <div class="flex items-center mt-1">
-                        <span class="text-sm text-purple-600">Email engagement</span>
+                        <span class="text-sm text-purple-600">{{ $data['email_stats']['open_rate'] ?? 0 }}% open rate</span>
                     </div>
                 </div>
             </div>
@@ -179,6 +179,106 @@
             </div>
         </div>
     </div>
+
+    <!-- Email Performance Metrics -->
+    @if(($data['email_stats']['total_emails'] ?? 0) > 0)
+    <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-8">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Email Performance (Last 30 Days)</h3>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                <!-- Total Emails Sent -->
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-gray-900">{{ number_format($data['email_stats']['sent_emails'] ?? 0) }}</div>
+                    <div class="text-sm text-gray-600">Emails Sent</div>
+                </div>
+                
+                <!-- Delivery Rate -->
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-green-600">{{ $data['email_stats']['delivery_rate'] ?? 0 }}%</div>
+                    <div class="text-sm text-gray-600">Delivery Rate</div>
+                    <div class="text-xs text-gray-500">{{ number_format($data['email_stats']['delivered_emails'] ?? 0) }} delivered</div>
+                </div>
+                
+                <!-- Open Rate -->
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-blue-600">{{ $data['email_stats']['open_rate'] ?? 0 }}%</div>
+                    <div class="text-sm text-gray-600">Open Rate</div>
+                    <div class="text-xs text-gray-500">{{ number_format($data['email_stats']['opened_emails'] ?? 0) }} opened</div>
+                </div>
+                
+                <!-- Click Rate -->
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-purple-600">{{ $data['email_stats']['click_rate'] ?? 0 }}%</div>
+                    <div class="text-sm text-gray-600">Click Rate</div>
+                    <div class="text-xs text-gray-500">{{ number_format($data['email_stats']['clicked_emails'] ?? 0) }} clicked</div>
+                </div>
+            </div>
+            
+            @if(($data['email_stats']['bounced_emails'] ?? 0) > 0)
+            <div class="mt-6 pt-6 border-t border-gray-200">
+                <div class="flex items-center justify-center text-red-600">
+                    <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                    </svg>
+                    <span class="text-sm font-medium">{{ number_format($data['email_stats']['bounced_emails'] ?? 0) }} emails bounced</span>
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+    @endif
+
+    <!-- Recent Activities -->
+    @if(!empty($data['recent_activities']))
+    <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-8">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Recent Activities</h3>
+        </div>
+        <div class="p-6">
+            <div class="space-y-4">
+                @foreach($data['recent_activities'] as $activity)
+                <div class="flex items-start space-x-3">
+                    <div class="flex-shrink-0">
+                        @if($activity['type'] === 'campaign')
+                            <div class="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
+                                <svg class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                                </svg>
+                            </div>
+                        @else
+                            <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                                <svg class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                                </svg>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-gray-900">{{ $activity['title'] }}</p>
+                        <p class="text-sm text-gray-500">{{ $activity['description'] }}</p>
+                        <p class="text-xs text-gray-400 mt-1">
+                            {{ formatDubaiDate(\Carbon\Carbon::parse($activity['date']), 'M j, Y g:i A') }} by {{ $activity['user'] }}
+                        </p>
+                    </div>
+                    <div class="flex-shrink-0">
+                        @if($activity['status'] === 'sent')
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">{{ ucfirst($activity['status']) }}</span>
+                        @elseif($activity['status'] === 'active')
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">{{ ucfirst($activity['status']) }}</span>
+                        @elseif($activity['status'] === 'draft')
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">{{ ucfirst($activity['status']) }}</span>
+                        @else
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">{{ ucfirst($activity['status']) }}</span>
+                        @endif
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+    @endif
 
     <!-- Content Section -->
     <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">

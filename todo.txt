@@ -48,3 +48,17 @@ php artisan seo:audit
 php artisan images:optimize
 
 I am having a hard time starting marketing to get leads. mainly I started email marketing but I want to make a system for automated emails and automated followups . please brainstorm how we can do that and brainstorm other idead
+
+php artisan queue:work --queue=notifications,emails --tries=3 --timeout=30 --daemon
+
+A/B testing campagins
+
+
+todo in porduction every now and then:
+php artisan migrate
+php artisan optimize
+npm run build
+php artisan route:clear
+php artisan config:clear
+php artisan view:clear
+php artisan optimize:clear

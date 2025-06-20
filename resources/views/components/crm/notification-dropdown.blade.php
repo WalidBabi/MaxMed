@@ -2,7 +2,7 @@
 <div class="relative" x-data="crmNotificationDropdown()">
     <button type="button" 
             class="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500 relative" 
-            @click="toggleDropdown()"
+            @click="toggleDropdown(); enableAudio()"
             x-ref="dropdownButton">
         <span class="sr-only">View notifications</span>
         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -11,7 +11,7 @@
         <!-- Notification badge -->
         <span x-show="notificationCount > 0" 
               x-text="notificationCount" 
-              class="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full min-w-[1.25rem] w-5 h-5"></span>
+              class="absolute top-0 right-0 inline-flex items-center justify-center text-xs font-bold leading-none text-white transform translate-x-1/3 -translate-y-1/3 bg-red-600 rounded-full min-w-[1.25rem] w-5 h-5"></span>
     </button>
     
     <!-- Dropdown panel -->
@@ -102,9 +102,11 @@
         
         <!-- Footer -->
         <div class="px-6 py-3 border-t border-gray-100 bg-gray-50 rounded-b-xl">
-            <div class="flex justify-between items-center">
+            <div class="flex justify-center items-center">
                 <a href="#" class="text-sm text-indigo-600 hover:text-indigo-500 font-medium">View all notifications</a>
-                <span class="text-xs text-gray-500">Real-time updates</span>
+            </div>
+            <div class="mt-2 text-center">
+                <span class="text-xs text-gray-500">Real-time updates every 3s • Click bell to enable audio</span>
             </div>
         </div>
     </div>
@@ -126,32 +128,57 @@ function crmNotificationDropdown() {
         isPlayingAudio: false,
         maxConcurrentSounds: 3,
         
+        // Track notifications that have already played sound to prevent infinite replay
+        soundPlayedForNotifications: new Set(),
+        
         init() {
+            console.log('Initializing CRM notification dropdown'); // Debug log
             this.initializeAudio();
             this.loadNotifications(false); // false = don't play sound on initial load
             this.startRealTimePolling();
             this.requestNotificationPermission();
+            
+            // Add this component to global scope for manual triggering
+            window.crmNotificationComponent = this;
         },
         
         async initializeAudio() {
+            console.log('Initializing audio system...'); // Debug log
+            
             try {
+                // Always use HTML5 audio for better compatibility
+                this.initializeFallbackAudio();
+                
+                // Also try Web Audio API as backup
                 this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 
                 // Load notification sound
                 const response = await fetch('/audio/notification.mp3');
                 const arrayBuffer = await response.arrayBuffer();
                 this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+                
+                console.log('Web Audio API initialized successfully'); // Debug log
             } catch (error) {
-                console.warn('Audio initialization failed:', error);
-                // Fallback to HTML5 audio
-                this.initializeFallbackAudio();
+                console.warn('Web Audio API initialization failed:', error);
+                // HTML5 audio fallback is already initialized
             }
         },
         
         initializeFallbackAudio() {
+            console.log('Initializing HTML5 audio fallback...'); // Debug log
+            
             this.audioElement = new Audio('/audio/notification.mp3');
             this.audioElement.preload = 'auto';
             this.audioElement.volume = 0.6;
+            
+            // Test if audio can be loaded
+            this.audioElement.addEventListener('canplaythrough', () => {
+                console.log('Audio file loaded successfully'); // Debug log
+            });
+            
+            this.audioElement.addEventListener('error', (e) => {
+                console.error('Audio loading error:', e); // Debug log
+            });
         },
         
         queueNotificationSound() {
@@ -170,8 +197,11 @@ function crmNotificationDropdown() {
             this.audioQueue.shift(); // Remove from queue
             
             try {
+                console.log('Attempting to play notification sound...'); // Debug log
+                
                 if (this.audioContext && this.audioBuffer) {
                     // Use Web Audio API
+                    console.log('Using Web Audio API'); // Debug log
                     const source = this.audioContext.createBufferSource();
                     source.buffer = this.audioBuffer;
                     source.connect(this.audioContext.destination);
@@ -184,13 +214,43 @@ function crmNotificationDropdown() {
                     }, 800);
                 } else if (this.audioElement) {
                     // Fallback to HTML5 audio
+                    console.log('Using HTML5 audio fallback'); // Debug log
                     this.audioElement.currentTime = 0;
-                    await this.audioElement.play();
+                    const playPromise = this.audioElement.play();
+                    
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            console.log('Sound played successfully'); // Debug log
+                        }).catch(error => {
+                            console.warn('Audio play failed:', error);
+                        });
+                    }
+                    
                     this.audioElement.onended = () => {
                         this.isPlayingAudio = false;
                         this.playNextSound(); // Play next in queue
                     };
+                    
+                    // Fallback in case onended doesn't fire
+                    setTimeout(() => {
+                        this.isPlayingAudio = false;
+                        this.playNextSound();
+                    }, 1000);
                 } else {
+                    console.warn('No audio context or element available'); // Debug log
+                    // Try to create a simple audio element as last resort
+                    const audio = new Audio('/audio/notification.mp3');
+                    audio.volume = 0.6;
+                    const playPromise = audio.play();
+                    
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            console.log('Fallback audio played successfully'); // Debug log
+                        }).catch(error => {
+                            console.warn('Fallback audio play failed:', error);
+                        });
+                    }
+                    
                     this.isPlayingAudio = false;
                 }
             } catch (error) {
@@ -207,11 +267,18 @@ function crmNotificationDropdown() {
         },
         
         startRealTimePolling() {
+            console.log('Starting real-time polling every 3 seconds'); // Debug log
+            
+            // Initial check after 1 second
+            setTimeout(() => {
+                this.checkForNewNotifications();
+            }, 1000);
+            
+            // Then check every 3 seconds
             setInterval(() => {
-                if (!this.isOpen) {
-                    this.checkForNewNotifications();
-                }
-            }, 30000); // Check every 30 seconds
+                console.log('Polling for notifications...'); // Debug log
+                this.checkForNewNotifications();
+            }, 3000); // Check every 3 seconds for more responsive notifications
         },
         
         async checkForNewNotifications() {
@@ -225,33 +292,58 @@ function crmNotificationDropdown() {
                 
                 if (response.ok) {
                     const data = await response.json();
+                    console.log('Notification check response:', data); // Debug log
                     
                     if (data.has_new && data.notifications.length > 0) {
-                        // Add new notifications to the beginning of the list
-                        data.notifications.reverse().forEach(notification => {
-                            this.notifications.unshift(notification);
-                        });
+                        console.log('New notifications found:', data.notifications.length); // Debug log
                         
-                        // Update count and latest timestamp
-                        this.notificationCount = data.count;
-                        this.latestTimestamp = data.latest_timestamp;
+                        // Filter out notifications that have already played sound
+                        const reallyNewNotifications = data.notifications.filter(notification => 
+                            !this.soundPlayedForNotifications.has(notification.id)
+                        );
                         
-                        // Queue notification sound for each new notification
-                        data.notifications.forEach(() => {
-                            this.queueNotificationSound();
-                        });
+                        console.log('Really new notifications:', reallyNewNotifications.length); // Debug log
                         
-                        // Show browser notification for the first new notification
-                        if (data.notifications.length > 0) {
-                            this.showBrowserNotification(data.notifications[0]);
+                        if (reallyNewNotifications.length > 0) {
+                            // Add new notifications to the beginning of the list
+                            data.notifications.reverse().forEach(notification => {
+                                this.notifications.unshift(notification);
+                            });
+                            
+                            // Update count and latest timestamp - Force count update from server
+                            this.notificationCount = data.count || data.unread_count || this.notificationCount + reallyNewNotifications.length;
+                            this.latestTimestamp = data.latest_timestamp;
+                            
+                            console.log('Updated notification count:', this.notificationCount); // Debug log
+                            
+                            // Force sound to play for each new notification
+                            reallyNewNotifications.forEach(notification => {
+                                this.soundPlayedForNotifications.add(notification.id);
+                                console.log('Playing sound for notification:', notification.id); // Debug log
+                                this.queueNotificationSound();
+                            });
+                            
+                            // Show browser notification for the first new notification
+                            if (reallyNewNotifications.length > 0) {
+                                this.showBrowserNotification(reallyNewNotifications[0]);
+                            }
+                            
+                            // Animate the bell icon
+                            this.animateBellIcon();
+                            
+                            // Keep only the latest 20 notifications in the UI
+                            if (this.notifications.length > 20) {
+                                this.notifications = this.notifications.slice(0, 20);
+                            }
                         }
-                        
-                        // Animate the bell icon
-                        this.animateBellIcon();
-                        
-                        // Keep only the latest 20 notifications in the UI
-                        if (this.notifications.length > 20) {
-                            this.notifications = this.notifications.slice(0, 20);
+                    }
+                    
+                    // Always update the count even if no new notifications (for consistency)
+                    if (data.count !== undefined || data.unread_count !== undefined) {
+                        const newCount = data.count || data.unread_count || 0;
+                        if (newCount !== this.notificationCount) {
+                            console.log('Updating count from', this.notificationCount, 'to', newCount); // Debug log
+                            this.notificationCount = newCount;
                         }
                     }
                 }
@@ -288,6 +380,31 @@ function crmNotificationDropdown() {
             }
         },
         
+        enableAudio() {
+            // Enable audio context on user interaction (required by browsers)
+            if (this.audioContext && this.audioContext.state === 'suspended') {
+                this.audioContext.resume().then(() => {
+                    console.log('Audio context enabled via user interaction'); // Debug log
+                });
+            }
+            
+            // Test play audio to enable it
+            if (this.audioElement) {
+                this.audioElement.muted = true;
+                const testPlay = this.audioElement.play();
+                if (testPlay !== undefined) {
+                    testPlay.then(() => {
+                        this.audioElement.pause();
+                        this.audioElement.currentTime = 0;
+                        this.audioElement.muted = false;
+                        console.log('Audio enabled for future notifications'); // Debug log
+                    }).catch(() => {
+                        console.log('Audio test failed, but may work later'); // Debug log
+                    });
+                }
+            }
+        },
+
         toggleDropdown() {
             this.isOpen = !this.isOpen;
             if (this.isOpen) {
@@ -332,6 +449,10 @@ function crmNotificationDropdown() {
                     // Mark first load as complete
                     if (this.isFirstLoad) {
                         this.isFirstLoad = false;
+                        // Add all current notification IDs to the "already played" set on first load
+                        this.notifications.forEach(notification => {
+                            this.soundPlayedForNotifications.add(notification.id);
+                        });
                     }
                 }
             } catch (error) {
@@ -357,10 +478,13 @@ function crmNotificationDropdown() {
                         this.notificationCount = Math.max(0, this.notificationCount - 1);
                     }
                     
-                    // Navigate to the URL if provided
-                    if (url) {
-                        window.location.href = url;
-                    }
+                                    // Navigate to the URL if provided
+                if (url) {
+                    window.location.href = url;
+                }
+                
+                // Remove from sound tracking since it's been clicked/read
+                this.soundPlayedForNotifications.delete(notificationId);
                 }
             } catch (error) {
                 console.error('Error marking notification as read:', error);
@@ -378,11 +502,14 @@ function crmNotificationDropdown() {
                 });
                 
                 if (response.ok) {
-                    // Mark all notifications as read
-                    this.notifications.forEach(notification => {
-                        notification.read_at = new Date().toISOString();
-                    });
-                    this.notificationCount = 0;
+                                    // Mark all notifications as read
+                this.notifications.forEach(notification => {
+                    notification.read_at = new Date().toISOString();
+                });
+                this.notificationCount = 0;
+                
+                // Clear all sound tracking since all are now read
+                this.soundPlayedForNotifications.clear();
                 }
             } catch (error) {
                 console.error('Error marking all notifications as read:', error);
@@ -447,9 +574,10 @@ function crmNotificationDropdown() {
                 this.audioElement.pause();
                 this.audioElement = null;
             }
-            // Clear audio queue
+            // Clear audio queue and tracking sets
             this.audioQueue = [];
             this.isPlayingAudio = false;
+            this.soundPlayedForNotifications.clear();
         }
     }
 }

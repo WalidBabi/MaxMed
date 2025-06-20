@@ -98,49 +98,87 @@ class EmailLog extends Model
 
     public function markAsOpened(string $ipAddress = null, string $userAgent = null): void
     {
-        $this->update([
-            'opened_at' => now(),
-            'ip_address' => $ipAddress,
-            'user_agent' => $userAgent,
-        ]);
+        // Only update if not already opened
+        if (!$this->opened_at) {
+            $this->update([
+                'opened_at' => now(),
+                'ip_address' => $ipAddress,
+                'user_agent' => $userAgent,
+            ]);
 
-        // Update campaign contact pivot table
-        if ($this->campaign_id) {
-            $campaignContact = $this->campaign
-                                    ->contacts()
-                                    ->where('marketing_contact_id', $this->marketing_contact_id)
-                                    ->first();
-            
-            if ($campaignContact && !$campaignContact->pivot->opened_at) {
-                $campaignContact->pivot->update([
-                    'opened_at' => now(),
-                    'open_count' => $campaignContact->pivot->open_count + 1,
-                ]);
+            // Update campaign contact pivot table
+            if ($this->campaign_id) {
+                $campaignContact = $this->campaign
+                                        ->contacts()
+                                        ->where('marketing_contact_id', $this->marketing_contact_id)
+                                        ->first();
+                
+                if ($campaignContact && !$campaignContact->pivot->opened_at) {
+                    $campaignContact->pivot->update([
+                        'opened_at' => now(),
+                        'open_count' => $campaignContact->pivot->open_count + 1,
+                    ]);
+                }
+            }
+
+            // Update campaign statistics
+            if ($this->campaign) {
+                $this->campaign->updateStatistics();
             }
         }
     }
 
     public function markAsClicked(string $ipAddress = null, string $userAgent = null): void
     {
+        // Always update clicked_at (can click multiple times)
         $this->update([
             'clicked_at' => now(),
             'ip_address' => $ipAddress,
             'user_agent' => $userAgent,
         ]);
 
+        // Mark as opened if not already opened
+        if (!$this->opened_at) {
+            $this->markAsOpened($ipAddress, $userAgent);
+        }
+
         // Update campaign contact pivot table
-        if ($this->campaign_id) {
-            $campaignContact = $this->campaign
-                                    ->contacts()
-                                    ->where('marketing_contact_id', $this->marketing_contact_id)
-                                    ->first();
-            
-            if ($campaignContact) {
-                $campaignContact->pivot->update([
-                    'clicked_at' => now(),
-                    'click_count' => $campaignContact->pivot->click_count + 1,
-                ]);
+        if ($this->campaign_id && $this->marketing_contact_id) {
+            $campaign = $this->campaign;
+            if ($campaign) {
+                $campaignContact = $campaign->contacts()
+                                        ->where('marketing_contact_id', $this->marketing_contact_id)
+                                        ->first();
+                
+                if ($campaignContact) {
+                    $currentClickCount = $campaignContact->pivot->click_count ?? 0;
+                    $updates = ['click_count' => $currentClickCount + 1];
+                    
+                    // Only update clicked_at once for first click
+                    if (!$campaignContact->pivot->clicked_at) {
+                        $updates['clicked_at'] = now();
+                    }
+                    
+                    $campaignContact->pivot->update($updates);
+                    
+                    \Log::info('Campaign contact pivot updated', [
+                        'campaign_id' => $this->campaign_id,
+                        'contact_id' => $this->marketing_contact_id,
+                        'click_count' => $currentClickCount + 1,
+                        'clicked_at' => $updates['clicked_at'] ?? 'already set'
+                    ]);
+                }
             }
+        }
+
+        // Update campaign statistics
+        if ($this->campaign) {
+            $this->campaign->updateStatistics();
+            \Log::info('Campaign statistics updated after click', [
+                'campaign_id' => $this->campaign_id,
+                'email_log_id' => $this->id,
+                'clicked_count' => $this->campaign->clicked_count
+            ]);
         }
     }
 
@@ -152,18 +190,36 @@ class EmailLog extends Model
         ]);
 
         // Update campaign contact pivot table
-        if ($this->campaign_id) {
-            $campaignContact = $this->campaign
-                                    ->contacts()
-                                    ->where('marketing_contact_id', $this->marketing_contact_id)
-                                    ->first();
-            
-            if ($campaignContact) {
-                $campaignContact->pivot->update([
-                    'status' => 'bounced',
-                    'bounce_reason' => $reason,
-                ]);
+        if ($this->campaign_id && $this->marketing_contact_id) {
+            $campaign = $this->campaign;
+            if ($campaign) {
+                $campaignContact = $campaign->contacts()
+                                        ->where('marketing_contact_id', $this->marketing_contact_id)
+                                        ->first();
+                
+                if ($campaignContact) {
+                    $campaignContact->pivot->update([
+                        'status' => 'bounced',
+                        'bounce_reason' => $reason,
+                    ]);
+                    
+                    \Log::info('Campaign contact marked as bounced', [
+                        'campaign_id' => $this->campaign_id,
+                        'contact_id' => $this->marketing_contact_id,
+                        'bounce_reason' => $reason
+                    ]);
+                }
             }
+        }
+
+        // Update campaign statistics
+        if ($this->campaign) {
+            $this->campaign->updateStatistics();
+            \Log::info('Campaign statistics updated after bounce', [
+                'campaign_id' => $this->campaign_id,
+                'email_log_id' => $this->id,
+                'bounced_count' => $this->campaign->bounced_count
+            ]);
         }
     }
 

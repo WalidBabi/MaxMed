@@ -27,6 +27,7 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\CrmController;
 use App\Http\Controllers\CrmLeadController;
 use App\Http\Controllers\MarketingController;
+use Illuminate\Support\Facades\DB;
 
 // Cookie Consent Routes
 // Route::post('/cookie-consent', [CookieConsentController::class, 'store'])->name('cookie.consent');
@@ -47,6 +48,54 @@ Route::post('/contact', [\App\Http\Controllers\ContactController::class, 'submit
 
 // Marketing Unsubscribe Route (public)
 Route::get('/marketing/unsubscribe/{token}', [\App\Http\Controllers\MarketingController::class, 'unsubscribe'])->name('marketing.unsubscribe');
+
+// Email Tracking Routes (public, no authentication required)
+Route::get('/email/track/open/{trackingId}', [\App\Http\Controllers\EmailTrackingController::class, 'trackOpen'])->name('email.track.open');
+Route::get('/email/track/click/{trackingId}', [\App\Http\Controllers\EmailTrackingController::class, 'trackClick'])->name('email.track.click');
+Route::get('/email/unsubscribe/{token}', [\App\Http\Controllers\EmailTrackingController::class, 'trackUnsubscribe'])->name('email.track.unsubscribe');
+
+// Debug route for testing tracking
+Route::get('/debug/campaign/{campaignId}', function($campaignId) {
+    $campaign = \App\Models\Campaign::with(['contacts', 'emailLogs'])->find($campaignId);
+    
+    if (!$campaign) {
+        return response()->json(['error' => 'Campaign not found'], 404);
+    }
+    
+    $contact = $campaign->contacts()->first();
+    $emailLog = $campaign->emailLogs()->first();
+    
+    if (!$contact || !$emailLog) {
+        return response()->json(['error' => 'No contact or email log found'], 404);
+    }
+    
+    $trackingService = new \App\Services\EmailTrackingService();
+    
+    return response()->json([
+        'campaign' => [
+            'id' => $campaign->id,
+            'name' => $campaign->name,
+            'statistics' => [
+                'recipients' => $campaign->total_recipients,
+                'sent' => $campaign->sent_count,
+                'delivered' => $campaign->delivered_count,
+                'opens' => $campaign->opened_count,
+                'clicks' => $campaign->clicked_count
+            ]
+        ],
+        'tracking_urls' => [
+            'open' => $trackingService->generateTrackingPixelUrl($campaign, $contact, $emailLog),
+            'click' => $trackingService->generateClickTrackingUrl($campaign, $contact, $emailLog, 'https://example.com'),
+            'unsubscribe' => $trackingService->generateUnsubscribeUrl($contact, $campaign)
+        ],
+        'email_log' => [
+            'id' => $emailLog->id,
+            'status' => $emailLog->status,
+            'opened_at' => $emailLog->opened_at,
+            'clicked_at' => $emailLog->clicked_at
+        ]
+    ]);
+})->name('debug.campaign');
 
 // Partners Route Group - Moved to the partners prefix group below
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -177,6 +226,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('campaigns/export', [\App\Http\Controllers\Crm\CampaignController::class, 'export'])->name('campaigns.export');
         Route::post('campaigns/{campaign}/duplicate', [\App\Http\Controllers\Crm\CampaignController::class, 'duplicate'])->name('campaigns.duplicate');
         Route::get('campaigns/{campaign}/preview', [\App\Http\Controllers\Crm\CampaignController::class, 'preview'])->name('campaigns.preview');
+        Route::get('campaigns/{campaign}/statistics', [\App\Http\Controllers\Crm\CampaignController::class, 'getStatistics'])->name('campaigns.statistics');
         Route::post('campaigns/{campaign}/schedule', [\App\Http\Controllers\Crm\CampaignController::class, 'schedule'])->name('campaigns.schedule');
         Route::post('campaigns/{campaign}/send', [\App\Http\Controllers\Crm\CampaignController::class, 'send'])->name('campaigns.send');
         Route::patch('campaigns/{campaign}/pause', [\App\Http\Controllers\Crm\CampaignController::class, 'pause'])->name('campaigns.pause');
@@ -840,5 +890,57 @@ Route::get('/debug/delivery/{delivery}/proforma', function(\App\Models\Delivery 
     
     return response()->json($debug, 200, [], JSON_PRETTY_PRINT);
 })->name('debug.delivery.proforma');
+
+// Test notification system
+Route::get('/test-notification', function () {
+    if (!app()->environment('production')) {
+        // Create a test contact submission to trigger notifications
+        $submission = App\Models\ContactSubmission::create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'subject' => 'Test Notification',
+            'message' => 'This is a test notification to verify the system works.',
+            'status' => 'new',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Test notification triggered',
+            'submission_id' => $submission->id
+        ]);
+    }
+    
+    return response()->json(['error' => 'Only available in development'], 403);
+})->name('test.notification');
+
+// Public notification status endpoint (no auth required)
+Route::get('/api/notification-status', function () {
+    try {
+        // Count recent contact submissions and quotation requests
+        $recentSubmissions = App\Models\ContactSubmission::where('created_at', '>', now()->subHours(24))->count();
+        $recentQuotations = App\Models\QuotationRequest::where('created_at', '>', now()->subHours(24))->count();
+        
+        // Count total unread notifications in system
+        $totalNotifications = DB::table('notifications')
+            ->whereNull('read_at')
+            ->where('created_at', '>', now()->subHours(24))
+            ->count();
+        
+        return response()->json([
+            'success' => true,
+            'recent_submissions' => $recentSubmissions,
+            'recent_quotations' => $recentQuotations,
+            'total_notifications' => $totalNotifications,
+            'timestamp' => now()->toISOString(),
+            'has_activity' => ($recentSubmissions + $recentQuotations + $totalNotifications) > 0
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'error' => 'Unable to fetch notification status',
+            'timestamp' => now()->toISOString()
+        ]);
+    }
+})->name('api.notification.status');
 
 require __DIR__ . '/auth.php';

@@ -13,14 +13,23 @@ class NotificationController extends Controller
      */
     public function index()
     {
+        // Exclude contact, quotation, and campaign notifications from admin bell
+        $excludedTypes = [
+            'App\\Notifications\\ContactSubmissionNotification',
+            'App\\Notifications\\CampaignStatusNotification', 
+            'App\\Notifications\\FeedbackNotification',
+            'App\\Notifications\\QuotationRequestNotification'
+        ];
+
         $notifications = Auth::user()->unreadNotifications()
+            ->whereNotIn('type', $excludedTypes)
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
 
         return response()->json([
             'notifications' => $notifications,
-            'unread_count' => Auth::user()->unreadNotifications()->count()
+            'unread_count' => Auth::user()->unreadNotifications()->whereNotIn('type', $excludedTypes)->count()
         ]);
     }
 
@@ -54,8 +63,16 @@ class NotificationController extends Controller
      */
     public function count()
     {
+        // Exclude contact, quotation, and campaign notifications from admin bell
+        $excludedTypes = [
+            'App\\Notifications\\ContactSubmissionNotification',
+            'App\\Notifications\\CampaignStatusNotification', 
+            'App\\Notifications\\FeedbackNotification',
+            'App\\Notifications\\QuotationRequestNotification'
+        ];
+
         return response()->json([
-            'count' => Auth::user()->unreadNotifications()->count()
+            'count' => Auth::user()->unreadNotifications()->whereNotIn('type', $excludedTypes)->count()
         ]);
     }
 
@@ -90,7 +107,16 @@ class NotificationController extends Controller
             while (true) {
                 // Check for new notifications every 2 seconds
                 if (time() - $lastCheck >= 2) {
+                    // Exclude contact, quotation, and campaign notifications from admin bell
+                    $excludedTypes = [
+                        'App\\Notifications\\ContactSubmissionNotification',
+                        'App\\Notifications\\CampaignStatusNotification', 
+                        'App\\Notifications\\FeedbackNotification',
+                        'App\\Notifications\\QuotationRequestNotification'
+                    ];
+
                     $newNotifications = Auth::user()->unreadNotifications()
+                        ->whereNotIn('type', $excludedTypes)
                         ->where('created_at', '>', now()->subMinutes(5)) // Only check recent notifications
                         ->orderBy('created_at', 'desc')
                         ->get();
@@ -100,7 +126,7 @@ class NotificationController extends Controller
                             $eventData = [
                                 'type' => 'new_notification',
                                 'notification' => $notification,
-                                'count' => Auth::user()->unreadNotifications()->count()
+                                'count' => Auth::user()->unreadNotifications()->whereNotIn('type', $excludedTypes)->count()
                             ];
 
                             echo "id: {$notification->id}\n";
@@ -137,13 +163,22 @@ class NotificationController extends Controller
     {
         $lastTimestamp = request()->input('last_timestamp', '1970-01-01 00:00:00');
         
+        // Exclude contact, quotation, and campaign notifications from admin bell
+        $excludedTypes = [
+            'App\\Notifications\\ContactSubmissionNotification',
+            'App\\Notifications\\CampaignStatusNotification', 
+            'App\\Notifications\\FeedbackNotification',
+            'App\\Notifications\\QuotationRequestNotification'
+        ];
+        
         try {
             $newNotifications = Auth::user()->unreadNotifications()
+                ->whereNotIn('type', $excludedTypes)
                 ->where('created_at', '>', $lastTimestamp)
                 ->orderBy('created_at', 'desc')
                 ->get();
 
-            $allUnreadCount = Auth::user()->unreadNotifications()->count();
+            $allUnreadCount = Auth::user()->unreadNotifications()->whereNotIn('type', $excludedTypes)->count();
             $latestTimestamp = $newNotifications->isNotEmpty() ? 
                 $newNotifications->first()->created_at->toISOString() : 
                 $lastTimestamp;

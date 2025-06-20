@@ -19,6 +19,11 @@ class FeedbackNotification extends Notification
     public function __construct(Feedback $feedback)
     {
         $this->feedback = $feedback;
+        
+        // Use Redis notifications queue
+        $this->onConnection('redis');
+        $this->onQueue('notifications');
+        $this->delay(now()->addSeconds(2));
     }
 
     /**
