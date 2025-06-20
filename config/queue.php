@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('QUEUE_CONNECTION', 'database'),
+    'default' => env('QUEUE_CONNECTION', 'sync'),
 
     /*
     |--------------------------------------------------------------------------
@@ -43,7 +43,7 @@ return [
             'after_commit' => false,
         ],
 
-        // Separate queue for emails to control processing rate
+        // Database queue for emails - high priority, dedicated processing  
         'emails' => [
             'driver' => 'database',
             'connection' => env('DB_QUEUE_CONNECTION'),
@@ -53,23 +53,33 @@ return [
             'after_commit' => false,
         ],
 
-        // Separate queue for notifications
+        // Database queue for notifications - real-time processing
         'notifications' => [
             'driver' => 'database',
             'connection' => env('DB_QUEUE_CONNECTION'),
             'table' => env('DB_QUEUE_TABLE', 'jobs'),
             'queue' => 'notifications',
-            'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 300),
+            'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 120),
             'after_commit' => false,
         ],
 
-        // Separate queue for campaigns (bulk emails)
+        // Database queue for campaigns - bulk processing with longer timeout
         'campaigns' => [
             'driver' => 'database',
             'connection' => env('DB_QUEUE_CONNECTION'),
             'table' => env('DB_QUEUE_TABLE', 'jobs'),
             'queue' => 'campaigns',
             'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 600),
+            'after_commit' => false,
+        ],
+
+        // Database queue for real-time features
+        'realtime' => [
+            'driver' => 'database',
+            'connection' => env('DB_QUEUE_CONNECTION'),
+            'table' => env('DB_QUEUE_TABLE', 'jobs'),
+            'queue' => 'realtime',
+            'retry_after' => (int) env('DB_QUEUE_RETRY_AFTER', 60),
             'after_commit' => false,
         ],
 

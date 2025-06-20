@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- Header -->
-    <div class="mb-8">
+    <div class="mb-8" data-campaign-id="{{ $campaign->id }}">
         <div class="flex items-center justify-between">
             <div>
                 <a href="{{ route('crm.marketing.campaigns.index') }}" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 mb-4">
@@ -48,25 +48,25 @@
                     <div class="grid grid-cols-2 gap-6 sm:grid-cols-4">
                         <div class="card-hover overflow-hidden rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 px-4 py-6 ring-1 ring-blue-200/50">
                             <div class="text-center">
-                                <p class="text-3xl font-bold text-blue-700">{{ number_format($campaign->total_recipients) }}</p>
+                                <p class="text-3xl font-bold text-blue-700" data-stat="total-recipients">{{ number_format($campaign->total_recipients) }}</p>
                                 <p class="text-sm font-medium text-blue-600 mt-1">Recipients</p>
                             </div>
                         </div>
                         <div class="card-hover overflow-hidden rounded-xl bg-gradient-to-br from-green-50 to-green-100 px-4 py-6 ring-1 ring-green-200/50">
                             <div class="text-center">
-                                <p class="text-3xl font-bold text-green-700">{{ number_format($campaign->sent_count) }}</p>
+                                <p class="text-3xl font-bold text-green-700" data-stat="sent-count">{{ number_format($campaign->sent_count) }}</p>
                                 <p class="text-sm font-medium text-green-600 mt-1">Sent</p>
                             </div>
                         </div>
                         <div class="card-hover overflow-hidden rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 px-4 py-6 ring-1 ring-emerald-200/50">
                             <div class="text-center">
-                                <p class="text-3xl font-bold text-emerald-700">{{ number_format($campaign->delivered_count) }}</p>
+                                <p class="text-3xl font-bold text-emerald-700" data-stat="delivered-count">{{ number_format($campaign->delivered_count) }}</p>
                                 <p class="text-sm font-medium text-emerald-600 mt-1">Delivered</p>
                             </div>
                         </div>
                         <div class="card-hover overflow-hidden rounded-xl bg-gradient-to-br from-yellow-50 to-yellow-100 px-4 py-6 ring-1 ring-yellow-200/50">
                             <div class="text-center">
-                                <p class="text-3xl font-bold text-yellow-700">{{ $campaign->delivery_rate }}%</p>
+                                <p class="text-3xl font-bold text-yellow-700" data-stat="delivery-rate">{{ $campaign->delivery_rate }}%</p>
                                 <p class="text-sm font-medium text-yellow-600 mt-1">Delivery Rate</p>
                             </div>
                         </div>
@@ -75,26 +75,26 @@
                     <div class="grid grid-cols-2 gap-6 sm:grid-cols-4 mt-6">
                         <div class="card-hover overflow-hidden rounded-xl bg-gradient-to-br from-indigo-50 to-indigo-100 px-4 py-6 ring-1 ring-indigo-200/50">
                             <div class="text-center">
-                                <p class="text-3xl font-bold text-indigo-700">{{ number_format($campaign->opened_count) }}</p>
-                                <p class="text-sm font-medium text-indigo-600 mt-1">Opens ({{ $campaign->open_rate }}%)</p>
+                                <p class="text-3xl font-bold text-indigo-700" data-stat="opened-count">{{ number_format($campaign->opened_count) }}</p>
+                                <p class="text-sm font-medium text-indigo-600 mt-1">Opens (<span data-stat="open-rate">{{ $campaign->open_rate }}</span>)</p>
                             </div>
                         </div>
                         <div class="card-hover overflow-hidden rounded-xl bg-gradient-to-br from-purple-50 to-purple-100 px-4 py-6 ring-1 ring-purple-200/50">
                             <div class="text-center">
-                                <p class="text-3xl font-bold text-purple-700">{{ number_format($campaign->clicked_count) }}</p>
-                                <p class="text-sm font-medium text-purple-600 mt-1">Clicks ({{ $campaign->click_rate }}%)</p>
+                                <p class="text-3xl font-bold text-purple-700" data-stat="clicked-count">{{ number_format($campaign->clicked_count) }}</p>
+                                <p class="text-sm font-medium text-purple-600 mt-1">Clicks (<span data-stat="click-rate">{{ $campaign->click_rate }}</span>)</p>
                             </div>
                         </div>
                         <div class="card-hover overflow-hidden rounded-xl bg-gradient-to-br from-red-50 to-red-100 px-4 py-6 ring-1 ring-red-200/50">
                             <div class="text-center">
-                                <p class="text-3xl font-bold text-red-700">{{ number_format($campaign->bounced_count) }}</p>
-                                <p class="text-sm font-medium text-red-600 mt-1">Bounced ({{ $campaign->bounce_rate }}%)</p>
+                                <p class="text-3xl font-bold text-red-700" data-stat="bounced-count">{{ number_format($campaign->bounced_count) }}</p>
+                                <p class="text-sm font-medium text-red-600 mt-1">Bounced (<span data-stat="bounce-rate">{{ $campaign->bounce_rate }}</span>)</p>
                             </div>
                         </div>
                         <div class="card-hover overflow-hidden rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 px-4 py-6 ring-1 ring-gray-200/50">
                             <div class="text-center">
-                                <p class="text-3xl font-bold text-gray-700">{{ number_format($campaign->unsubscribed_count) }}</p>
-                                <p class="text-sm font-medium text-gray-600 mt-1">Unsubscribed ({{ $campaign->unsubscribe_rate }}%)</p>
+                                <p class="text-3xl font-bold text-gray-700" data-stat="unsubscribed-count">{{ number_format($campaign->unsubscribed_count) }}</p>
+                                <p class="text-sm font-medium text-gray-600 mt-1">Unsubscribed (<span data-stat="unsubscribe-rate">{{ $campaign->unsubscribe_rate }}</span>)</p>
                             </div>
                         </div>
                     </div>
@@ -129,7 +129,7 @@
                         <div class="space-y-4">
                             <div class="flex items-center justify-between py-2">
                                 <span class="text-sm font-medium text-gray-600">Creator:</span>
-                                <span class="text-sm text-gray-900">{{ $campaign->creator->name }}</span>
+                                <span class="text-sm text-gray-900">{{ $campaign->creator ? $campaign->creator->name : 'Unknown' }}</span>
                             </div>
                             <div class="flex items-center justify-between py-2">
                                 <span class="text-sm font-medium text-gray-600">Created:</span>
@@ -274,38 +274,51 @@
             <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-900">Statistics</h3>
+                    <div class="flex items-center space-x-2 mt-2">
+                        <button data-trigger-stats-update class="inline-flex items-center text-xs text-blue-600 hover:text-blue-500">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                            Refresh
+                        </button>
+                        <span class="text-xs text-gray-500" data-last-updated>Auto-updating every 30s</span>
+                    </div>
                 </div>
                 <div class="p-6 space-y-4">
                     <div class="flex items-center justify-between">
                         <span class="text-sm font-medium text-gray-600">Total Recipients</span>
-                        <span class="text-sm font-bold text-gray-900">{{ number_format($campaign->total_recipients) }}</span>
+                        <span class="text-sm font-bold text-gray-900" data-sidebar-stat="total-recipients">{{ number_format($campaign->total_recipients) }}</span>
                     </div>
                     <div class="flex items-center justify-between">
                         <span class="text-sm font-medium text-gray-600">Successfully Sent</span>
-                        <span class="text-sm font-bold text-green-600">{{ number_format($campaign->sent_count) }}</span>
+                        <span class="text-sm font-bold text-green-600" data-sidebar-stat="sent-count">{{ number_format($campaign->sent_count) }}</span>
                     </div>
                     <div class="flex items-center justify-between">
                         <span class="text-sm font-medium text-gray-600">Delivery Rate</span>
-                        <span class="text-sm font-bold text-blue-600">{{ $campaign->delivery_rate }}%</span>
+                        <span class="text-sm font-bold text-blue-600" data-sidebar-stat="delivery-rate">{{ $campaign->delivery_rate }}</span>
                     </div>
                     <div class="flex items-center justify-between">
                         <span class="text-sm font-medium text-gray-600">Open Rate</span>
-                        <span class="text-sm font-bold text-purple-600">{{ $campaign->open_rate }}%</span>
+                        <span class="text-sm font-bold text-purple-600" data-sidebar-stat="open-rate">{{ $campaign->open_rate }}</span>
                     </div>
                     <div class="flex items-center justify-between">
                         <span class="text-sm font-medium text-gray-600">Click Through Rate</span>
-                        <span class="text-sm font-bold text-indigo-600">{{ $campaign->click_rate }}%</span>
+                        <span class="text-sm font-bold text-indigo-600" data-sidebar-stat="click-rate">{{ $campaign->click_rate }}</span>
                     </div>
                     <div class="flex items-center justify-between">
                         <span class="text-sm font-medium text-gray-600">Bounce Rate</span>
-                        <span class="text-sm font-bold text-red-600">{{ $campaign->bounce_rate }}%</span>
+                        <span class="text-sm font-bold text-red-600" data-sidebar-stat="bounce-rate">{{ $campaign->bounce_rate }}</span>
                     </div>
                     <div class="flex items-center justify-between">
                         <span class="text-sm font-medium text-gray-600">Unsubscribe Rate</span>
-                        <span class="text-sm font-bold text-gray-600">{{ $campaign->unsubscribe_rate }}%</span>
+                        <span class="text-sm font-bold text-gray-600" data-sidebar-stat="unsubscribe-rate">{{ $campaign->unsubscribe_rate }}</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-@endsection 
+@endsection
+
+@push('scripts')
+<script src="{{ asset('js/campaign-stats-updater.js') }}"></script>
+@endpush 

@@ -51,7 +51,9 @@ class ContactSubmission extends Model
     public function sendNewSubmissionNotification()
     {
         try {
-            // Get all admin users and CRM users
+            Log::info('Attempting to send contact submission notification for submission: ' . $this->id);
+            
+            // Find all admin and CRM users in database
             $users = User::where(function($query) {
                 $query->where('is_admin', true)
                       ->orWhereHas('role', function($roleQuery) {
@@ -61,12 +63,29 @@ class ContactSubmission extends Model
             ->whereNotNull('email')
             ->get();
 
+            Log::info('Found ' . $users->count() . ' admin/CRM users for notification');
+
             if ($users->count() > 0) {
                 Notification::send($users, new ContactSubmissionNotification($this));
                 Log::info('Contact submission notification sent to ' . $users->count() . ' user(s) for submission: ' . $this->id);
+                
+                // Log each user that received the notification
+                foreach ($users as $user) {
+                    Log::info('Notification sent to user: ' . $user->email . ' (ID: ' . $user->id . ')');
+                }
+            } else {
+                Log::warning('No admin/CRM users found for contact submission notification');
+                
+                // Try to find ANY users for debugging
+                $allUsers = User::all();
+                Log::info('Total users in database: ' . $allUsers->count());
+                foreach ($allUsers as $user) {
+                    Log::info('User found: ' . $user->email . ' (is_admin: ' . ($user->is_admin ? 'true' : 'false') . ', role: ' . ($user->role ? $user->role->name : 'none') . ')');
+                }
             }
         } catch (\Exception $e) {
             Log::error('Failed to send contact submission notification: ' . $e->getMessage());
+            Log::error('Exception details: ' . $e->getTraceAsString());
         }
     }
 

@@ -20,7 +20,7 @@
         </div>
     </div>
 
-    <form action="{{ route('crm.marketing.email-templates.update', $emailTemplate) }}" method="POST">
+    <form action="{{ route('crm.marketing.email-templates.update', $emailTemplate) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         
@@ -60,6 +60,23 @@
             </div>
 
             <div class="mt-6">
+                <label for="banner_image" class="block text-sm font-medium text-gray-700">Company Banner Image</label>
+                <div class="mt-1 mb-2">
+                    <p class="text-sm text-gray-500">Upload a banner image that will appear at the top of your emails. Recommended size: 600x150px</p>
+                    @if($emailTemplate->banner_image)
+                        <div class="mt-2">
+                            <p class="text-sm text-green-600">Current banner: {{ basename($emailTemplate->banner_image) }}</p>
+                            <img src="{{ asset('storage/' . $emailTemplate->banner_image) }}" alt="Current banner" class="mt-1 h-20 rounded border">
+                        </div>
+                    @endif
+                </div>
+                <input type="file" name="banner_image" id="banner_image" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                @error('banner_image')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="mt-6">
                 <div class="flex items-center">
                     <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', $emailTemplate->is_active) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                     <label for="is_active" class="ml-2 text-sm text-gray-700">
@@ -74,32 +91,30 @@
             
             <div class="mb-6">
                 <label for="text_content" class="block text-sm font-medium text-gray-700">Email Content</label>
+                <div class="mt-1 mb-2">
+                    <p class="text-sm text-gray-600">✨ <strong>HTML is automatically generated</strong> from your text content for better tracking and formatting.</p>
+                    <p class="text-sm text-gray-500">📧 Email addresses, websites, and phone numbers will automatically become trackable links.</p>
+                    <p class="text-sm text-gray-500">Use variables like &#123;&#123;first_name&#125;&#125;, &#123;&#123;company&#125;&#125;, &#123;&#123;job_title&#125;&#125; to personalize your message.</p>
+                </div>
                 <textarea name="text_content" id="text_content" rows="15" placeholder="Dear &#123;&#123;first_name&#125;&#125;,
 
 I hope this email finds you well. My name is Walid, and I am reaching out on behalf of MaxMed, a trusted provider of advanced scientific solutions tailored to life science and research professionals.
 
-Use variables like &#123;&#123;first_name&#125;&#125;, &#123;&#123;company&#125;&#125;, &#123;&#123;job_title&#125;&#125; to personalize your message.
+For inquiries, please contact us at:
+📧 info@maxmed.ae
+🌐 www.maxmed.ae  
+📞 +971 55 4602500
 
 Best regards,
-Walid Babi" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('text_content', $emailTemplate->text_content) }}</textarea>
+Walid Babi
+MaxMed Team" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('text_content', $emailTemplate->text_content) }}</textarea>
                 @error('text_content')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-            </div>
-            
-            <div>
-                <label for="html_content" class="block text-sm font-medium text-gray-700">HTML Content (Optional - for email clients that support HTML)</label>
-                <textarea name="html_content" id="html_content" rows="8" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm font-mono" placeholder="Leave empty to send plain text only">{{ old('html_content', $emailTemplate->html_content) }}</textarea>
-                @error('html_content')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
         </div>
 
-        <div class="flex justify-between">
-            <button type="button" onclick="previewTemplate()" class="bg-gray-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                Preview Template
-            </button>
+        <div class="flex justify-end">
             <div class="flex space-x-3">
                 <a href="{{ route('crm.marketing.email-templates.show', $emailTemplate) }}" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Cancel
@@ -112,74 +127,4 @@ Walid Babi" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:
     </form>
 @endsection
 
-@push('scripts')
-<script>
-    function previewTemplate() {
-        const textContent = document.getElementById('text_content').value;
-        const htmlContent = document.getElementById('html_content').value;
-        const subject = document.getElementById('subject').value;
-        
-        if (!textContent.trim()) {
-            alert('Please enter some email content first.');
-            return;
-        }
-        
-        // Create preview with sample data
-        const sampleData = {
-            'first_name': 'John',
-            'last_name': 'Doe',
-            'email': 'john.doe@example.com',
-            'company': 'MaxMed Solutions',
-            'job_title': 'Laboratory Manager',
-            'company_name': 'MaxMed',
-            'current_date': new Date().toLocaleDateString(),
-            'current_year': new Date().getFullYear(),
-            'unsubscribe_url': '#unsubscribe',
-            'company_address': '123 Business Street, City, State 12345'
-        };
-        
-        let previewTextContent = textContent;
-        let previewHtmlContent = htmlContent;
-        let previewSubject = subject;
-        
-        // Replace variables with sample data
-        Object.keys(sampleData).forEach(key => {
-            const regex = new RegExp('{{' + key + '}}', 'g');
-            previewTextContent = previewTextContent.replace(regex, sampleData[key]);
-            if (previewHtmlContent) {
-                previewHtmlContent = previewHtmlContent.replace(regex, sampleData[key]);
-            }
-            previewSubject = previewSubject.replace(regex, sampleData[key]);
-        });
-        
-        // Open preview in new window
-        const previewWindow = window.open('', '_blank', 'width=800,height=600');
-        previewWindow.document.write(
-            '<html>' +
-            '<head>' +
-            '<title>Email Preview: ' + previewSubject + '</title>' +
-            '<style>' +
-            'body { font-family: Arial, sans-serif; margin: 20px; }' +
-            '.preview-header { background: #f3f4f6; padding: 10px; margin-bottom: 20px; border-radius: 4px; }' +
-            '.preview-header h3 { margin: 0; color: #374151; }' +
-            '.preview-content { border: 1px solid #d1d5db; padding: 20px; }' +
-            '.text-content { white-space: pre-wrap; font-family: monospace; background: #f9f9f9; padding: 15px; border-radius: 5px; }' +
-            '</style>' +
-            '</head>' +
-            '<body>' +
-            '<div class="preview-header">' +
-            '<h3>Subject: ' + previewSubject + '</h3>' +
-            '<p style="margin: 5px 0 0 0; color: #6b7280; font-size: 14px;">This is a preview with sample data</p>' +
-            '</div>' +
-            '<div class="preview-content">' +
-            '<h4>Plain Text Content:</h4>' +
-            '<div class="text-content">' + previewTextContent + '</div>' +
-            (previewHtmlContent ? '<h4 style="margin-top: 20px;">HTML Content:</h4><div>' + previewHtmlContent + '</div>' : '') +
-            '</div>' +
-            '</body>' +
-            '</html>'
-        );
-        previewWindow.document.close();
-    }
-</script>
-@endpush 
+ 

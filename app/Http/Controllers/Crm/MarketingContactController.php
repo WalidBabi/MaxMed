@@ -135,7 +135,14 @@ class MarketingContactController extends Controller
                             ')
                             ->first();
 
-        return view('crm.marketing.contacts.show', compact('contact', 'campaignStats'));
+        // Add debug headers to ensure proper content type
+        $response = response()->view('crm.marketing.contacts.show', compact('contact', 'campaignStats'));
+        $response->header('Content-Type', 'text/html; charset=utf-8');
+        $response->header('Cache-Control', 'no-cache, no-store, must-revalidate');
+        $response->header('Pragma', 'no-cache');
+        $response->header('Expires', '0');
+        
+        return $response;
     }
 
     public function edit(MarketingContact $contact)
@@ -163,7 +170,7 @@ class MarketingContactController extends Controller
             'contact_lists' => 'nullable|array',
             'contact_lists.*' => 'exists:contact_lists,id',
             'custom_fields' => 'nullable|array',
-            'status' => 'required|in:active,unsubscribed,bounced,complained',
+            'status' => 'required|in:active,inactive,unsubscribed,bounced,complained',
         ]);
 
         if ($validator->fails()) {
@@ -193,8 +200,11 @@ class MarketingContactController extends Controller
             $contact->contactLists()->sync($request->contact_lists ?: []);
         }
 
-        return redirect()->route('crm.marketing.contacts.show', $contact)
-                        ->with('success', 'Contact updated successfully.');
+        // Redirect to index first, then JavaScript will redirect to show page
+        // This avoids the browser content-type interpretation issue
+        return redirect()->route('crm.marketing.contacts.index')
+                        ->with('success', 'Contact updated successfully.')
+                        ->with('redirect_to_contact', $contact->id);
     }
 
     public function destroy(MarketingContact $contact)

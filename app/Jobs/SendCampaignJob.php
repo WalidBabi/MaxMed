@@ -148,6 +148,80 @@ class SendCampaignJob implements ShouldQueue
             'status' => 'pending'
         ]);
 
+        // Update campaign contact pivot status
+        $this->campaign->contacts()
+                      ->updateExistingPivot($contact->id, [
+                          'status' => 'pending',
+                          'sent_at' => null,
+                          'delivered_at' => null,
+                      ]);
+
+        try {
+            // Build email content (HTML or text) with tracking
+            $emailContent = $this->buildEmailContentWithTracking($contact, $emailLog);
+            
+            // Send the email using Laravel's Mail facade
+            Mail::to($contact->email)->send(new CampaignEmail(
+                $this->campaign,
+                $contact,
+                $subject,
+                $emailContent
+            ));
+
+            // Mark as sent in email log
+            $emailLog->markAsSent();
+            
+            // Update campaign contact pivot to sent status
+            $this->campaign->contacts()
+                          ->updateExistingPivot($contact->id, [
+                              'status' => 'sent',
+                              'sent_at' => now(),
+                          ]);
+
+            // Update campaign statistics to capture sent count
+            $this->campaign->updateStatistics();
+
+            // For development: Auto-mark as delivered since we don't have delivery webhooks
+            // In production, this would be updated via webhooks from your email provider
+            $emailLog->markAsDelivered();
+            
+            // Update campaign contact pivot to delivered (keeping sent_at timestamp)
+            $this->campaign->contacts()
+                          ->updateExistingPivot($contact->id, [
+                              'status' => 'delivered',
+                              'delivered_at' => now(),
+                          ]);
+
+            Log::info("Campaign email sent successfully", [
+                'campaign_id' => $this->campaign->id,
+                'contact_id' => $contact->id,
+                'email' => $contact->email
+            ]);
+
+            return true;
+
+        } catch (\Exception $e) {
+            // Mark as failed
+            $emailLog->markAsFailed($e->getMessage());
+            
+            $this->campaign->contacts()
+                          ->updateExistingPivot($contact->id, [
+                              'status' => 'failed'
+                          ]);
+
+            Log::error("Failed to send campaign email", [
+                'campaign_id' => $this->campaign->id,
+                'contact_id' => $contact->id,
+                'email' => $contact->email,
+                'error' => $e->getMessage()
+            ]);
+
+            return false;
+        }
+    }
+
+    private function buildEmailContentWithTracking(MarketingContact $contact, EmailLog $emailLog): array
+    {
         // Prepare personalization data
         $data = [
             'contact' => $contact,
@@ -162,7 +236,6 @@ class SendCampaignJob implements ShouldQueue
         if ($this->campaign->emailTemplate) {
             $htmlContent = $this->campaign->emailTemplate->renderHtmlContent($data);
             $textContent = $this->campaign->emailTemplate->renderTextContent($data);
-            $subject = $this->campaign->emailTemplate->renderSubject($data);
         } else {
             $template = new EmailTemplate([
                 'subject' => $this->campaign->subject,
@@ -171,36 +244,132 @@ class SendCampaignJob implements ShouldQueue
             ]);
             $htmlContent = $template->renderHtmlContent($data);
             $textContent = $template->renderTextContent($data);
-            $subject = $template->renderSubject($data);
         }
 
-        // Send the email
-        Mail::to($contact->email)->send(new CampaignEmail(
-            $subject,
-            $textContent,
-            $this->campaign,
-            $contact,
-            $htmlContent
-        ));
+        // Auto-generate HTML from text if no HTML content exists
+        if (empty($htmlContent) && !empty($textContent)) {
+            $bannerImage = $this->campaign->emailTemplate?->banner_image;
+            $htmlContent = $this->generateHtmlFromText($textContent, $data, $bannerImage);
+        }
 
-        // Mark as sent in both email log and campaign contact pivot
-        $emailLog->markAsSent();
-        
-        $this->campaign->contacts()->updateExistingPivot($contact->id, [
-            'status' => 'sent',
-            'sent_at' => now()
-        ]);
+        // Add tracking to HTML content
+        if ($htmlContent) {
+            $trackingService = new \App\Services\EmailTrackingService();
+            $htmlContent = $trackingService->processHtmlContentForTracking(
+                $htmlContent, 
+                $this->campaign, 
+                $contact, 
+                $emailLog
+            );
+        }
 
-        Log::info("Email sent successfully", [
-            'campaign_id' => $this->campaign->id,
-            'contact_id' => $contact->id,
-            'email' => $contact->email
-        ]);
+        return [
+            'html' => $htmlContent,
+            'text' => $textContent,
+        ];
+    }
+    
+    private function buildEmailContent(MarketingContact $contact): array
+    {
+        // Prepare personalization data
+        $data = [
+            'contact' => $contact,
+            'campaign' => $this->campaign,
+            'company_name' => config('app.name'),
+            'current_date' => now()->format('Y-m-d'),
+            'current_year' => now()->year,
+            'unsubscribe_url' => route('marketing.unsubscribe', ['token' => $this->generateUnsubscribeToken($contact)]),
+        ];
+
+        // Render email content
+        if ($this->campaign->emailTemplate) {
+            $htmlContent = $this->campaign->emailTemplate->renderHtmlContent($data);
+            $textContent = $this->campaign->emailTemplate->renderTextContent($data);
+        } else {
+            $template = new EmailTemplate([
+                'subject' => $this->campaign->subject,
+                'html_content' => $this->campaign->html_content,
+                'text_content' => $this->campaign->text_content,
+            ]);
+            $htmlContent = $template->renderHtmlContent($data);
+            $textContent = $template->renderTextContent($data);
+        }
+
+        return [
+            'html' => $htmlContent,
+            'text' => $textContent,
+        ];
     }
 
     private function generateUnsubscribeToken(MarketingContact $contact): string
     {
         return base64_encode($contact->id . '|' . $contact->email . '|' . time());
+    }
+
+    /**
+     * Generate basic HTML from text content for tracking purposes
+     */
+    private function generateHtmlFromText(string $textContent, array $data, string $bannerImage = null): string
+    {
+        // Apply personalization to text content
+        $processedText = $textContent;
+        foreach ($data as $key => $value) {
+            if (is_string($value)) {
+                $processedText = str_replace('{{' . $key . '}}', $value, $processedText);
+            }
+        }
+
+        // Convert text to basic HTML
+        $htmlContent = '<html><body>';
+        
+        // Add banner image if provided
+        if ($bannerImage) {
+            $bannerUrl = asset('storage/' . $bannerImage);
+            $htmlContent .= '<div style="text-align: center; margin-bottom: 30px;"><img src="' . $bannerUrl . '" alt="Company Banner" style="max-width: 100%; height: auto; border-radius: 8px;"></div>';
+        }
+        
+        // Convert line breaks to paragraphs
+        $paragraphs = explode("\n\n", $processedText);
+        foreach ($paragraphs as $paragraph) {
+            $paragraph = trim($paragraph);
+            if (!empty($paragraph)) {
+                // Auto-convert emails to trackable mailto links
+                $paragraph = preg_replace(
+                    '/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/',
+                    '<a href="mailto:$1">$1</a>',
+                    $paragraph
+                );
+                
+                // Auto-convert websites to trackable links
+                $paragraph = preg_replace(
+                    '/(?<!\w)(?:https?:\/\/)?(?:www\.)?([a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?)\b/i',
+                    '<a href="https://$1">$1</a>',
+                    $paragraph
+                );
+                
+                // Auto-convert phone numbers to trackable tel links
+                $paragraph = preg_replace(
+                    '/(\+?[\d\s\-\(\)]{10,})/',
+                    '<a href="tel:$1">$1</a>',
+                    $paragraph
+                );
+                
+                // Convert single line breaks to <br> tags
+                $paragraph = nl2br($paragraph);
+                $htmlContent .= '<p>' . $paragraph . '</p>';
+            }
+        }
+        
+        // Add unsubscribe link
+        if (isset($data['unsubscribe_url'])) {
+            $htmlContent .= '<hr><p style="font-size: 12px; color: #666;">';
+            $htmlContent .= '<a href="' . $data['unsubscribe_url'] . '">Unsubscribe from these emails</a>';
+            $htmlContent .= '</p>';
+        }
+        
+        $htmlContent .= '</body></html>';
+        
+        return $htmlContent;
     }
 
     public function failed(\Exception $exception)

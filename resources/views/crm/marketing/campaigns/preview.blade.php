@@ -35,7 +35,7 @@
                     <div class="flex items-center justify-between">
                         <h3 class="text-lg font-semibold text-gray-900">Email Preview</h3>
                         <div class="flex items-center space-x-2">
-                            <button id="desktop-view" class="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 active">
+                            <button id="desktop-view" class="px-3 py-1 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700">
                                 Desktop
                             </button>
                             <button id="mobile-view" class="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
@@ -56,6 +56,7 @@
                 <!-- Email Content Preview -->
                 <div class="p-6">
                     <div id="email-preview-container" class="transition-all duration-300">
+                        <!-- Desktop Preview -->
                         <div id="desktop-preview" class="border border-gray-200 rounded-lg overflow-hidden">
                             <div class="bg-gray-100 px-4 py-2 border-b border-gray-200">
                                 <div class="flex items-center space-x-2">
@@ -65,15 +66,20 @@
                                     <span class="text-xs text-gray-600 ml-4">{{ $sampleContact->email ?? 'sample@email.com' }}</span>
                                 </div>
                             </div>
-                            <div class="bg-white min-h-96">
-                                <iframe id="email-frame" 
-                                        srcdoc="{{ htmlspecialchars($htmlContent) }}" 
-                                        class="w-full h-96 border-0 transition-all duration-300"
-                                        style="min-height: 600px;">
-                                </iframe>
+                            <div class="bg-white" style="min-height: 600px;">
+                                <div id="desktop-email-content" class="p-4" style="min-height: 600px;">
+                                    <!-- Content will be loaded here -->
+                                    <div class="flex items-center justify-center h-full">
+                                        <div class="text-center">
+                                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+                                            <p class="text-gray-500">Loading preview...</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         
+                        <!-- Mobile Preview -->
                         <div id="mobile-preview" class="hidden mx-auto" style="max-width: 375px;">
                             <div class="border border-gray-200 rounded-2xl overflow-hidden shadow-lg">
                                 <div class="bg-gray-100 px-4 py-2 border-b border-gray-200">
@@ -81,11 +87,16 @@
                                         <span class="text-xs text-gray-600">{{ $sampleContact->email ?? 'sample@email.com' }}</span>
                                     </div>
                                 </div>
-                                <div class="bg-white">
-                                    <iframe srcdoc="{{ htmlspecialchars($htmlContent) }}" 
-                                            class="w-full border-0"
-                                            style="height: 600px;">
-                                    </iframe>
+                                <div class="bg-white" style="height: 600px; overflow-y: auto;">
+                                    <div id="mobile-email-content" class="p-4">
+                                        <!-- Content will be loaded here -->
+                                        <div class="flex items-center justify-center h-full">
+                                            <div class="text-center">
+                                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+                                                <p class="text-gray-500">Loading preview...</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -177,19 +188,77 @@
         </div>
     </div>
 
+    <!-- Hidden HTML Content for JavaScript -->
+    <div id="html-content" style="display: none;">{!! $htmlContent !!}</div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const desktopBtn = document.getElementById('desktop-view');
             const mobileBtn = document.getElementById('mobile-view');
             const desktopPreview = document.getElementById('desktop-preview');
             const mobilePreview = document.getElementById('mobile-preview');
+            
+            // Get the HTML content
+            const htmlContentDiv = document.getElementById('html-content');
+            const htmlContent = htmlContentDiv ? htmlContentDiv.innerHTML : '<p>No content available for preview.</p>';
+            
+            // Load HTML content into preview containers
+            function loadEmailContent() {
+                const desktopContent = document.getElementById('desktop-email-content');
+                const mobileContent = document.getElementById('mobile-email-content');
+                
+                if (desktopContent) {
+                    try {
+                        desktopContent.innerHTML = htmlContent;
+                        
+                        // Style adjustments for desktop preview
+                        const style = document.createElement('style');
+                        style.textContent = `
+                            #desktop-email-content {
+                                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                                line-height: 1.6;
+                                color: #333;
+                            }
+                        `;
+                        document.head.appendChild(style);
+                    } catch (error) {
+                        console.error('Error loading desktop content:', error);
+                        desktopContent.innerHTML = '<div class="text-center text-red-600 p-8"><p>Error loading preview content</p></div>';
+                    }
+                }
+                
+                if (mobileContent) {
+                    try {
+                        mobileContent.innerHTML = htmlContent;
+                        
+                        // Style adjustments for mobile preview
+                        const mobileCss = `
+                            <style>
+                                body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+                                table { width: 100% !important; max-width: 100% !important; }
+                                td, th { font-size: 14px !important; }
+                                img { max-width: 100% !important; height: auto !important; }
+                                .container { width: 100% !important; max-width: 100% !important; padding: 10px !important; }
+                            </style>
+                        `;
+                        mobileContent.innerHTML = mobileCss + htmlContent;
+                    } catch (error) {
+                        console.error('Error loading mobile content:', error);
+                        mobileContent.innerHTML = '<div class="text-center text-red-600 p-8"><p>Error loading preview content</p></div>';
+                    }
+                }
+            }
+            
+            // Load content
+            loadEmailContent();
 
+            // Desktop/Mobile toggle functionality
             desktopBtn.addEventListener('click', function() {
                 // Update button states
-                desktopBtn.classList.add('bg-gray-100');
-                desktopBtn.classList.remove('bg-white', 'border', 'border-gray-300');
-                mobileBtn.classList.remove('bg-gray-100');
-                mobileBtn.classList.add('bg-white', 'border', 'border-gray-300');
+                desktopBtn.classList.remove('bg-white', 'border', 'border-gray-300', 'text-gray-700');
+                desktopBtn.classList.add('bg-indigo-600', 'text-white');
+                mobileBtn.classList.remove('bg-indigo-600', 'text-white');
+                mobileBtn.classList.add('bg-white', 'border', 'border-gray-300', 'text-gray-700');
 
                 // Show/hide previews
                 desktopPreview.classList.remove('hidden');
@@ -198,10 +267,10 @@
 
             mobileBtn.addEventListener('click', function() {
                 // Update button states
-                mobileBtn.classList.add('bg-gray-100');
-                mobileBtn.classList.remove('bg-white', 'border', 'border-gray-300');
-                desktopBtn.classList.remove('bg-gray-100');
-                desktopBtn.classList.add('bg-white', 'border', 'border-gray-300');
+                mobileBtn.classList.remove('bg-white', 'border', 'border-gray-300', 'text-gray-700');
+                mobileBtn.classList.add('bg-indigo-600', 'text-white');
+                desktopBtn.classList.remove('bg-indigo-600', 'text-white');
+                desktopBtn.classList.add('bg-white', 'border', 'border-gray-300', 'text-gray-700');
 
                 // Show/hide previews
                 mobilePreview.classList.remove('hidden');

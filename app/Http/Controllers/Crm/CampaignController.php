@@ -56,15 +56,28 @@ class CampaignController extends Controller
 
     public function store(Request $request)
     {
+        // Debug: Log the incoming request
+        \Log::info('Campaign store request received', [
+            'user_id' => auth()->id(),
+            'data' => $request->all()
+        ]);
+
+        // Handle scheduling - combine date and time if provided
+        $scheduledAt = null;
+        if ($request->send_option === 'schedule' && $request->scheduled_date && $request->scheduled_time) {
+            $scheduledAt = $request->scheduled_date . ' ' . $request->scheduled_time;
+        }
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'subject' => 'nullable|string|max:255',
-            'html_content' => 'nullable|string',
-            'text_content' => 'nullable|string',
+            'text_content' => 'required_without:email_template_id|nullable|string|min:10',
             'email_template_id' => 'nullable|exists:email_templates,id',
             'type' => 'required|in:one_time,recurring,drip',
-            'scheduled_at' => 'nullable|date|after:now',
+            'send_option' => 'required|in:draft,now,schedule',
+            'scheduled_date' => 'required_if:send_option,schedule|nullable|date|after:today',
+            'scheduled_time' => 'required_if:send_option,schedule|nullable',
             'recipient_type' => 'required|in:all,lists,custom',
             'contact_lists' => 'required_if:recipient_type,lists|array',
             'contact_lists.*' => 'exists:contact_lists,id',
@@ -72,29 +85,79 @@ class CampaignController extends Controller
         ]);
 
         if ($validator->fails()) {
+            \Log::info('Campaign validation failed', [
+                'errors' => $validator->errors()->toArray(),
+                'input' => $request->all()
+            ]);
             return redirect()->back()
                            ->withErrors($validator)
                            ->withInput();
         }
 
-        $campaign = Campaign::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'subject' => $request->subject,
-            'html_content' => $request->html_content,
-            'text_content' => $request->text_content,
-            'email_template_id' => $request->email_template_id,
-            'type' => $request->type,
-            'status' => $request->filled('scheduled_at') ? 'scheduled' : 'draft',
-            'scheduled_at' => $request->scheduled_at,
-            'recipients_criteria' => $this->buildRecipientsCriteria($request),
-            'created_by' => auth()->id(),
-        ]);
+        \Log::info('Campaign validation passed, proceeding with creation');
 
-        // Add recipients
-        $this->attachRecipients($campaign, $request);
+        // Generate HTML content from text content if no template is selected
+        $htmlContent = null;
+        if (!$request->email_template_id && $request->text_content) {
+            $htmlContent = $this->generateHtmlFromText($request->text_content);
+        }
 
-        $message = $campaign->isScheduled() ? 'Campaign scheduled successfully.' : 'Campaign created successfully.';
+        // Determine campaign status based on send option
+        $status = 'draft';
+        if ($request->send_option === 'schedule') {
+            $status = 'scheduled';
+        } elseif ($request->send_option === 'now') {
+            $status = 'draft'; // Will be sent immediately after creation
+        }
+
+        try {
+            $campaign = Campaign::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'subject' => $request->subject,
+                'text_content' => $request->text_content,
+                'html_content' => $htmlContent,
+                'email_template_id' => $request->email_template_id,
+                'type' => $request->type,
+                'status' => $status,
+                'scheduled_at' => $scheduledAt,
+                'recipients_criteria' => $this->buildRecipientsCriteria($request),
+                'created_by' => auth()->id(),
+            ]);
+            
+            \Log::info('Campaign created successfully', ['campaign_id' => $campaign->id]);
+
+            // Add recipients
+            $this->attachRecipients($campaign, $request);
+            
+            \Log::info('Recipients attached successfully', ['campaign_id' => $campaign->id]);
+
+        } catch (\Exception $e) {
+            \Log::error('Campaign creation failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'input' => $request->all()
+            ]);
+            
+            return redirect()->back()
+                           ->with('error', 'Failed to create campaign: ' . $e->getMessage())
+                           ->withInput();
+        }
+
+        // Handle immediate sending
+        if ($request->send_option === 'now') {
+            try {
+                $campaign->markAsSending();
+                \App\Jobs\SendCampaignJob::dispatch($campaign);
+                $message = 'Campaign is being sent. You will be notified when complete.';
+            } catch (\Exception $e) {
+                \Log::error('Campaign send error: ' . $e->getMessage());
+                $campaign->update(['status' => 'draft']);
+                $message = 'Campaign created successfully, but failed to start sending. You can send it manually.';
+            }
+        } else {
+            $message = $campaign->isScheduled() ? 'Campaign scheduled successfully.' : 'Campaign created successfully.';
+        }
         
         return redirect()->route('crm.marketing.campaigns.show', $campaign)
                         ->with('success', $message);
@@ -200,8 +263,8 @@ class CampaignController extends Controller
             'name' => $campaign->name . ' (Copy)',
             'description' => $campaign->description,
             'subject' => $campaign->subject,
-            'html_content' => $campaign->html_content,
             'text_content' => $campaign->text_content,
+            'html_content' => $campaign->html_content,
             'email_template_id' => $campaign->email_template_id,
             'type' => $campaign->type,
             'status' => 'draft',
@@ -332,16 +395,26 @@ class CampaignController extends Controller
             'unsubscribe_url' => route('marketing.unsubscribe', ['token' => 'sample-token']),
         ];
 
+        // Render email content based on whether template is used or not
         if ($campaign->emailTemplate) {
+            // Use the email template
             $htmlContent = $campaign->emailTemplate->renderHtmlContent($data);
             $subject = $campaign->emailTemplate->renderSubject($data);
         } else {
-            $template = new EmailTemplate([
-                'subject' => $campaign->subject,
-                'html_content' => $campaign->html_content,
-            ]);
-            $htmlContent = $template->renderHtmlContent($data);
-            $subject = $template->renderSubject($data);
+            // Use campaign content directly
+            $subject = $this->replaceVariables($campaign->subject ?: 'No Subject', $data);
+            
+            if ($campaign->html_content) {
+                // Use existing HTML content
+                $htmlContent = $this->replaceVariables($campaign->html_content, $data);
+            } elseif ($campaign->text_content) {
+                // Generate HTML from text content
+                $processedText = $this->replaceVariables($campaign->text_content, $data);
+                $bannerImage = $campaign->emailTemplate?->banner_image;
+                $htmlContent = $this->generateHtmlFromText($processedText, $bannerImage);
+            } else {
+                $htmlContent = '<p>No content available for preview.</p>';
+            }
         }
 
         return view('crm.marketing.campaigns.preview', compact(
@@ -350,6 +423,53 @@ class CampaignController extends Controller
             'subject',
             'sampleContact'
         ));
+    }
+
+    /**
+     * Replace variables in content with actual data
+     */
+    private function replaceVariables(string $content, array $data): string
+    {
+        // Replace variables in the format {{variable_name}}
+        foreach ($data as $key => $value) {
+            if (is_string($value) || is_numeric($value)) {
+                $content = str_replace('{{' . $key . '}}', $value, $content);
+            }
+        }
+
+        // Handle contact-specific variables
+        if (isset($data['contact']) && $data['contact'] instanceof \App\Models\MarketingContact) {
+            $contact = $data['contact'];
+            
+            $contactData = [
+                'first_name' => $contact->first_name,
+                'last_name' => $contact->last_name,
+                'full_name' => $contact->full_name,
+                'email' => $contact->email,
+                'phone' => $contact->phone,
+                'company' => $contact->company,
+                'job_title' => $contact->job_title,
+                'industry' => $contact->industry,
+                'country' => $contact->country,
+                'city' => $contact->city,
+            ];
+
+            foreach ($contactData as $key => $value) {
+                $content = str_replace('{{' . $key . '}}', $value ?: '', $content);
+            }
+
+            // Handle custom fields
+            if ($contact->custom_fields) {
+                foreach ($contact->custom_fields as $key => $value) {
+                    $content = str_replace('{{custom_' . $key . '}}', $value, $content);
+                }
+            }
+        }
+
+        // Remove any remaining unreplaced variables
+        $content = preg_replace('/\{\{([^}]+)\}\}/', '', $content);
+
+        return $content;
     }
 
     private function buildRecipientsCriteria(Request $request): array
@@ -570,5 +690,186 @@ class CampaignController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    public function getStatistics(Campaign $campaign)
+    {
+        // Update statistics first
+        $campaign->updateStatistics();
+        
+        // Return fresh statistics as JSON
+        return response()->json([
+            'success' => true,
+            'statistics' => [
+                'total_recipients' => $campaign->total_recipients,
+                'sent_count' => $campaign->sent_count,
+                'delivered_count' => $campaign->delivered_count,
+                'opened_count' => $campaign->opened_count,
+                'clicked_count' => $campaign->clicked_count,
+                'bounced_count' => $campaign->bounced_count,
+                'unsubscribed_count' => $campaign->unsubscribed_count,
+                'delivery_rate' => $campaign->delivery_rate,
+                'open_rate' => $campaign->open_rate,
+                'click_rate' => $campaign->click_rate,
+                'bounce_rate' => $campaign->bounce_rate,
+                'unsubscribe_rate' => $campaign->unsubscribe_rate,
+            ],
+            'updated_at' => now()->toISOString()
+        ]);
+    }
+
+    /**
+     * Generate professional HTML from text content
+     */
+    private function generateHtmlFromText(string $textContent, string $bannerImage = null): string
+    {
+        // Create a professional email template
+        $htmlContent = '<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Preview</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        p {
+            margin: 0 0 16px 0;
+        }
+        .header {
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .signature {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+        .signature-name {
+            font-weight: bold;
+            color: #1a365d;
+        }
+        .signature-title {
+            color: #2d3748;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        .company-info {
+            color: #4a5568;
+            line-height: 1.5;
+        }
+        .contact-info a {
+            color: #3182ce;
+            text-decoration: none;
+        }
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+        .banner-section {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .footer {
+            border-top: 1px solid #e9ecef;
+            padding-top: 20px;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #6c757d;
+            text-align: center;
+        }
+        .unsubscribe-link {
+            color: #6c757d;
+            text-decoration: none;
+        }
+        .unsubscribe-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1 style="margin: 0; color: #2c3e50; font-size: 24px;">' . config('app.name', 'MaxMed') . '</h1>
+        </div>
+        <div class="content">';
+        
+        // Convert line breaks to paragraphs
+        $paragraphs = explode("\n\n", $textContent);
+        foreach ($paragraphs as $paragraph) {
+            $paragraph = trim($paragraph);
+            if (!empty($paragraph)) {
+                // Auto-convert emails to trackable mailto links
+                $paragraph = preg_replace(
+                    '/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/',
+                    '<a href="mailto:$1">$1</a>',
+                    $paragraph
+                );
+                
+                // Auto-convert websites to trackable links (but not emails that might look like domains)
+                $paragraph = preg_replace(
+                    '/(?<!\w)(?:https?:\/\/)?(?:www\.)?([a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?)\b/i',
+                    '<a href="https://$1">$1</a>',
+                    $paragraph
+                );
+                
+                // Auto-convert phone numbers to trackable tel links
+                $paragraph = preg_replace(
+                    '/(\+?[\d\s\-\(\)]{10,})/',
+                    '<a href="tel:$1">$1</a>',
+                    $paragraph
+                );
+                
+                // Convert single line breaks to <br> tags
+                $paragraph = nl2br($paragraph);
+                $htmlContent .= '<p>' . $paragraph . '</p>';
+            }
+        }
+        
+        $htmlContent .= '
+        </div>
+        
+        <!-- Signature Section -->
+        <div class="signature">
+            <div class="signature-name">Walid Babi</div>
+            <div class="signature-title">Sales Specialist</div>
+            <br>
+            <div class="company-info">
+                <strong>MaxMed Scientific and Laboratory Equipment Trading CO.LLC</strong><br>
+                Dubai, P.O Box 448945 | Tel: <a href="tel:+971554602500">+971 55 4602500</a><br>
+                United Arab Emirates<br>
+                <div class="contact-info">
+                    <a href="mailto:wbabi@maxmedme.com">wbabi@maxmedme.com</a> | 
+                    <a href="https://www.maxmedme.com" target="_blank">www.maxmedme.com</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Banner Section -->
+        ' . ($bannerImage ? '<div class="banner-section"><img src="' . asset('storage/' . $bannerImage) . '" alt="Company Banner" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"></div>' : '') . '
+        
+        <div class="footer">
+            <p><a href="{{unsubscribe_url}}" class="unsubscribe-link">Unsubscribe from this list</a></p>
+        </div>
+    </div>
+</body>
+</html>';
+        
+        return $htmlContent;
     }
 } 

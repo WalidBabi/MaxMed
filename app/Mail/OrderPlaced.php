@@ -3,11 +3,12 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Order;
 
-class OrderPlaced extends Mailable
+class OrderPlaced extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -16,6 +17,11 @@ class OrderPlaced extends Mailable
     public function __construct(Order $order)
     {
         $this->order = $order;
+        
+        // Use Redis emails queue
+        $this->onConnection('redis');
+        $this->onQueue('emails');
+        $this->delay(now()->addSeconds(1));
     }
 
     public function build()

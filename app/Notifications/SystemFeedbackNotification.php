@@ -3,11 +3,12 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\SystemFeedback;
 
-class SystemFeedbackNotification extends Notification
+class SystemFeedbackNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -19,6 +20,11 @@ class SystemFeedbackNotification extends Notification
     public function __construct(SystemFeedback $systemFeedback)
     {
         $this->systemFeedback = $systemFeedback;
+        
+        // Use Redis notifications queue
+        $this->onConnection('redis');
+        $this->onQueue('notifications');
+        $this->delay(now()->addSeconds(3));
     }
 
     /**

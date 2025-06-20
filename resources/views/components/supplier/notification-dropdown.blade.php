@@ -126,6 +126,9 @@ function supplierNotificationDropdown() {
         isPlayingAudio: false,
         maxConcurrentSounds: 3,
         
+        // Track notifications that have already played sound to prevent infinite replay
+        soundPlayedForNotifications: new Set(),
+        
         init() {
             this.initializeAudio();
             this.loadNotifications(false); // false = don't play sound on initial load
@@ -211,7 +214,7 @@ function supplierNotificationDropdown() {
                 if (!this.isOpen) {
                     this.checkForNewNotifications();
                 }
-            }, 30000); // Check every 30 seconds
+            }, 3000); // Check every 3 seconds for more responsive notifications
         },
         
         async checkForNewNotifications() {
@@ -227,31 +230,39 @@ function supplierNotificationDropdown() {
                     const data = await response.json();
                     
                     if (data.has_new && data.notifications.length > 0) {
-                        // Add new notifications to the beginning of the list
-                        data.notifications.reverse().forEach(notification => {
-                            this.notifications.unshift(notification);
-                        });
+                        // Filter out notifications that have already played sound
+                        const reallyNewNotifications = data.notifications.filter(notification => 
+                            !this.soundPlayedForNotifications.has(notification.id)
+                        );
                         
-                        // Update count and latest timestamp
-                        this.notificationCount = data.count;
-                        this.latestTimestamp = data.latest_timestamp;
-                        
-                        // Queue notification sound for each new notification
-                        data.notifications.forEach(() => {
-                            this.queueNotificationSound();
-                        });
-                        
-                        // Show browser notification for the first new notification
-                        if (data.notifications.length > 0) {
-                            this.showBrowserNotification(data.notifications[0]);
-                        }
-                        
-                        // Animate the bell icon
-                        this.animateBellIcon();
-                        
-                        // Keep only the latest 20 notifications in the UI
-                        if (this.notifications.length > 20) {
-                            this.notifications = this.notifications.slice(0, 20);
+                        if (reallyNewNotifications.length > 0) {
+                            // Add new notifications to the beginning of the list
+                            data.notifications.reverse().forEach(notification => {
+                                this.notifications.unshift(notification);
+                            });
+                            
+                            // Update count and latest timestamp
+                            this.notificationCount = data.count;
+                            this.latestTimestamp = data.latest_timestamp;
+                            
+                            // Queue notification sound ONLY for notifications that haven't played yet
+                            reallyNewNotifications.forEach(notification => {
+                                this.soundPlayedForNotifications.add(notification.id);
+                                this.queueNotificationSound();
+                            });
+                            
+                            // Show browser notification for the first new notification
+                            if (reallyNewNotifications.length > 0) {
+                                this.showBrowserNotification(reallyNewNotifications[0]);
+                            }
+                            
+                            // Animate the bell icon
+                            this.animateBellIcon();
+                            
+                            // Keep only the latest 20 notifications in the UI
+                            if (this.notifications.length > 20) {
+                                this.notifications = this.notifications.slice(0, 20);
+                            }
                         }
                     }
                 }
@@ -332,6 +343,10 @@ function supplierNotificationDropdown() {
                     // Mark first load as complete
                     if (this.isFirstLoad) {
                         this.isFirstLoad = false;
+                        // Add all current notification IDs to the "already played" set on first load
+                        this.notifications.forEach(notification => {
+                            this.soundPlayedForNotifications.add(notification.id);
+                        });
                     }
                 }
             } catch (error) {
@@ -361,6 +376,9 @@ function supplierNotificationDropdown() {
                     if (url) {
                         window.location.href = url;
                     }
+                    
+                    // Remove from sound tracking since it's been clicked/read
+                    this.soundPlayedForNotifications.delete(notificationId);
                 }
             } catch (error) {
                 console.error('Error marking notification as read:', error);
@@ -383,6 +401,9 @@ function supplierNotificationDropdown() {
                         notification.read_at = new Date().toISOString();
                     });
                     this.notificationCount = 0;
+                    
+                    // Clear all sound tracking since all are now read
+                    this.soundPlayedForNotifications.clear();
                 }
             } catch (error) {
                 console.error('Error marking all notifications as read:', error);
@@ -447,9 +468,10 @@ function supplierNotificationDropdown() {
                 this.audioElement.pause();
                 this.audioElement = null;
             }
-            // Clear audio queue
+            // Clear audio queue and tracking sets
             this.audioQueue = [];
             this.isPlayingAudio = false;
+            this.soundPlayedForNotifications.clear();
         }
     }
 }

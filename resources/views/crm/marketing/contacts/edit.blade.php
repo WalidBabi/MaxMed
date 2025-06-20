@@ -83,6 +83,7 @@
                                 <option value="inactive" {{ old('status', $contact->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
                                 <option value="unsubscribed" {{ old('status', $contact->status) == 'unsubscribed' ? 'selected' : '' }}>Unsubscribed</option>
                                 <option value="bounced" {{ old('status', $contact->status) == 'bounced' ? 'selected' : '' }}>Bounced</option>
+                                <option value="complained" {{ old('status', $contact->status) == 'complained' ? 'selected' : '' }}>Complained</option>
                             </select>
                             @error('status')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification System Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        
+        .test-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        
+        .test-button:hover {
+            background-color: #45a049;
+        }
+        
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .error {
+            border-left-color: #f44336;
+            background-color: #ffebee;
+        }
+        
+        .success {
+            border-left-color: #4CAF50;
+            background-color: #e8f5e9;
+        }
+        
+        .info {
+            border-left-color: #2196F3;
+            background-color: #e3f2fd;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔔 Notification System Test</h1>
+        
+        <p>This page tests the notification system to ensure it works properly after form submissions.</p>
+        
+        <div class="test-buttons">
+            <button class="test-button" onclick="testNotificationTrigger()">🔔 Test Notification Trigger</button>
+            <button class="test-button" onclick="testAudioNotification()">🔊 Test Audio System</button>
+            <button class="test-button" onclick="createTestSubmission()">📝 Create Test Contact Submission</button>
+            <button class="test-button" onclick="checkNotificationAPI()">🔍 Check Notification API</button>
+        </div>
+        
+        <div id="results" class="results" style="display: none;">
+            <h3>Test Results:</h3>
+            <div id="output"></div>
+        </div>
+    </div>
+
+    <script>
+        function showResults(message, type = 'info') {
+            const resultsDiv = document.getElementById('results');
+            const outputDiv = document.getElementById('output');
+            
+            resultsDiv.style.display = 'block';
+            resultsDiv.className = `results ${type}`;
+            outputDiv.innerHTML += `<p><strong>[${new Date().toLocaleTimeString()}]</strong> ${message}</p>`;
+            
+            // Auto-scroll to bottom
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+        
+        function testNotificationTrigger() {
+            showResults('Testing notification trigger function...', 'info');
+            
+            if (typeof window.triggerNotificationCheck === 'function') {
+                window.triggerNotificationCheck();
+                showResults('✅ Notification trigger function called successfully!', 'success');
+            } else {
+                showResults('❌ Notification trigger function not found. Loading script...', 'error');
+                
+                // Try to load the script
+                const script = document.createElement('script');
+                script.src = '/js/notification-trigger.js';
+                script.onload = () => {
+                    showResults('✅ Notification script loaded. Trying again...', 'info');
+                    if (typeof window.triggerNotificationCheck === 'function') {
+                        window.triggerNotificationCheck();
+                        showResults('✅ Notification trigger function called successfully!', 'success');
+                    } else {
+                        showResults('❌ Still cannot find notification trigger function.', 'error');
+                    }
+                };
+                script.onerror = () => {
+                    showResults('❌ Failed to load notification script.', 'error');
+                };
+                document.head.appendChild(script);
+            }
+        }
+        
+        function testAudioNotification() {
+            showResults('Testing audio notification system...', 'info');
+            
+            if (typeof window.playNotificationSound === 'function') {
+                window.playNotificationSound();
+                showResults('✅ Audio notification function called successfully!', 'success');
+            } else {
+                showResults('❌ Audio notification function not found. Testing direct audio...', 'error');
+                
+                // Test direct audio
+                const audio = new Audio('/audio/notification.mp3');
+                audio.volume = 0.6;
+                
+                const playPromise = audio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        showResults('✅ Direct audio test played successfully!', 'success');
+                    }).catch(error => {
+                        showResults(`❌ Direct audio test failed: ${error.message}`, 'error');
+                    });
+                }
+            }
+        }
+        
+        async function createTestSubmission() {
+            showResults('Creating test contact submission...', 'info');
+            
+            try {
+                const response = await fetch('/test-notification');
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResults(`✅ Test submission created successfully! ID: ${data.submission_id}`, 'success');
+                    showResults('⏳ Waiting 3 seconds then triggering notification check...', 'info');
+                    
+                    setTimeout(() => {
+                        testNotificationTrigger();
+                    }, 3000);
+                } else {
+                    showResults(`❌ Failed to create test submission: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showResults(`❌ Error creating test submission: ${error.message}`, 'error');
+            }
+        }
+        
+        async function checkNotificationAPI() {
+            showResults('Checking notification API endpoints...', 'info');
+            
+            const endpoints = [
+                '/admin/notifications',
+                '/admin/notifications/check-new',
+                '/crm/notifications',
+                '/crm/notifications/check-new'
+            ];
+            
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(endpoint);
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        showResults(`✅ ${endpoint}: Working (${data.notifications ? data.notifications.length : 0} notifications, ${data.unread_count || data.count || 0} unread)`, 'success');
+                    } else {
+                        showResults(`❌ ${endpoint}: Failed (${response.status}: ${response.statusText})`, 'error');
+                    }
+                } catch (error) {
+                    showResults(`❌ ${endpoint}: Error - ${error.message}`, 'error');
+                }
+            }
+        }
+        
+        // Auto-load the notification script
+        window.addEventListener('DOMContentLoaded', function() {
+            showResults('🚀 Notification test page loaded. Ready for testing!', 'info');
+            
+            // Try to load notification trigger script
+            const script = document.createElement('script');
+            script.src = '/js/notification-trigger.js';
+            script.onload = () => {
+                showResults('✅ Notification trigger script loaded successfully!', 'success');
+            };
+            script.onerror = () => {
+                showResults('⚠️ Could not load notification trigger script. Some tests may not work.', 'error');
+            };
+            document.head.appendChild(script);
+        });
+    </script>
+</body>
+</html> 

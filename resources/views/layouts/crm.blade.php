@@ -12,11 +12,105 @@
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
     
     <!-- Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <!-- Notification trigger script for immediate sound feedback -->
+    <script>
+        // Notification trigger for immediate feedback after form submissions
+        window.triggerNotificationCheck = function() {
+            console.log('Manual notification check triggered'); // Debug log
+            
+            // Try to trigger CRM notification check
+            const crmNotificationComponents = document.querySelectorAll('[x-data*="crmNotificationDropdown"]');
+            console.log('Found CRM notification components:', crmNotificationComponents.length); // Debug log
+            
+            crmNotificationComponents.forEach(element => {
+                const alpineData = element._x_dataStack && element._x_dataStack[0];
+                if (alpineData && alpineData.checkForNewNotifications) {
+                    console.log('Triggering CRM notification check'); // Debug log
+                    alpineData.checkForNewNotifications();
+                }
+            });
+            
+            // Try to trigger supplier notification check
+            const supplierNotificationComponents = document.querySelectorAll('[x-data*="supplierNotificationDropdown"]');
+            console.log('Found supplier notification components:', supplierNotificationComponents.length); // Debug log
+            
+            supplierNotificationComponents.forEach(element => {
+                const alpineData = element._x_dataStack && element._x_dataStack[0];
+                if (alpineData && alpineData.checkForNewNotifications) {
+                    console.log('Triggering supplier notification check'); // Debug log
+                    alpineData.checkForNewNotifications();
+                }
+            });
+            
+            // Try to trigger admin notification check too
+            const adminNotificationComponents = document.querySelectorAll('[x-data*="adminNotificationDropdown"]');
+            console.log('Found admin notification components:', adminNotificationComponents.length); // Debug log
+            
+            adminNotificationComponents.forEach(element => {
+                const alpineData = element._x_dataStack && element._x_dataStack[0];
+                if (alpineData && alpineData.checkForNewNotifications) {
+                    console.log('Triggering admin notification check'); // Debug log
+                    alpineData.checkForNewNotifications();
+                }
+            });
+        };
+
+        // Also expose a function to play notification sound manually
+        window.playNotificationSound = function() {
+            console.log('Manual sound test triggered'); // Debug log
+            
+            // Create a simple audio element and play the notification sound
+            const audio = new Audio('/audio/notification.mp3');
+            audio.volume = 0.6;
+            
+            // Try to enable audio context if needed (for browsers that require user interaction)
+            if (window.AudioContext && AudioContext.prototype.resume) {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume().then(() => {
+                        console.log('Audio context resumed'); // Debug log
+                    });
+                }
+            }
+            
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    console.log('Manual sound test played successfully'); // Debug log
+                }).catch(error => {
+                    console.warn('Could not play notification sound:', error);
+                    console.log('This might be due to browser autoplay restrictions. Try clicking on the page first.'); // Debug log
+                });
+            }
+            
+            // Also try to trigger the notification components to play their sounds
+            if (window.crmNotificationComponent && window.crmNotificationComponent.queueNotificationSound) {
+                console.log('Triggering CRM component sound via global reference'); // Debug log
+                window.crmNotificationComponent.queueNotificationSound();
+            }
+            
+            const crmComponents = document.querySelectorAll('[x-data*="crmNotificationDropdown"]');
+            crmComponents.forEach(element => {
+                const alpineData = element._x_dataStack && element._x_dataStack[0];
+                if (alpineData && alpineData.queueNotificationSound) {
+                    console.log('Triggering CRM component sound'); // Debug log
+                    alpineData.queueNotificationSound();
+                }
+            });
+        };
+
+        // Auto-trigger notification check on page load for immediate feedback
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait 2 seconds after page load to check for new notifications
+            setTimeout(window.triggerNotificationCheck, 2000);
+        });
+    </script>
     
     <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

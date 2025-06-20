@@ -71,9 +71,9 @@ class EmailTemplateController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'subject' => 'nullable|string|max:255',
-            'html_content' => 'nullable|string',
-            'text_content' => 'nullable|string',
+            'text_content' => 'required|string',
             'category' => 'required|in:newsletter,promotional,welcome,transactional,announcement',
+            'banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB max
             'is_active' => 'boolean',
         ]);
 
@@ -83,12 +83,18 @@ class EmailTemplateController extends Controller
                            ->withInput();
         }
 
+        $bannerImagePath = null;
+        if ($request->hasFile('banner_image')) {
+            $bannerImagePath = $request->file('banner_image')->store('email-banners', 'public');
+        }
+
         $template = EmailTemplate::create([
             'name' => $request->name,
             'subject' => $request->subject,
-            'html_content' => $request->html_content ?: '',
+            'html_content' => '', // HTML will be auto-generated from text
             'text_content' => $request->text_content,
             'category' => $request->category,
+            'banner_image' => $bannerImagePath,
             'is_active' => $request->boolean('is_active', false),
             'created_by' => auth()->id(),
         ]);
@@ -129,9 +135,9 @@ class EmailTemplateController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'subject' => 'nullable|string|max:255',
-            'html_content' => 'nullable|string',
-            'text_content' => 'nullable|string',
+            'text_content' => 'required|string',
             'category' => 'required|in:newsletter,promotional,welcome,transactional,announcement',
+            'banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120', // 5MB max
             'is_active' => 'boolean',
         ]);
 
@@ -141,14 +147,26 @@ class EmailTemplateController extends Controller
                            ->withInput();
         }
 
-        $emailTemplate->update([
+        $updateData = [
             'name' => $request->name,
             'subject' => $request->subject,
-            'html_content' => $request->html_content ?: '',
+            'html_content' => '', // HTML will be auto-generated from text
             'text_content' => $request->text_content,
             'category' => $request->category,
             'is_active' => $request->boolean('is_active', $emailTemplate->is_active),
-        ]);
+        ];
+
+        // Handle banner image upload
+        if ($request->hasFile('banner_image')) {
+            // Delete old banner image if exists
+            if ($emailTemplate->banner_image && Storage::disk('public')->exists($emailTemplate->banner_image)) {
+                Storage::disk('public')->delete($emailTemplate->banner_image);
+            }
+            
+            $updateData['banner_image'] = $request->file('banner_image')->store('email-banners', 'public');
+        }
+
+        $emailTemplate->update($updateData);
 
         return redirect()->route('crm.marketing.email-templates.show', $emailTemplate)
                         ->with('success', 'Email template updated successfully.');
