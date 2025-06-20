@@ -1712,16 +1712,15 @@
             <p class="text-lg text-gray-600">Get answers to common questions about MaxMed UAE laboratory equipment</p>
         </div>
         
-        <div class="max-w-3xl mx-auto" itemscope itemtype="https://schema.org/FAQPage">
+        <div class="max-w-3xl mx-auto">
             @php
                 $faqs = app(\App\Services\SeoService::class)->getPageFAQs('home');
             @endphp
             
             @foreach($faqs as $index => $faq)
-            <div class="mb-6 bg-white rounded-lg shadow-sm border border-gray-200" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+            <div class="mb-6 bg-white rounded-lg shadow-sm border border-gray-200">
                 <button class="w-full px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-[#171e60] rounded-lg" 
-                        onclick="toggleFAQ({{ $index }})" 
-                        itemprop="name">
+                        onclick="toggleFAQ({{ $index }})">
                     <div class="flex justify-between items-center">
                         <h3 class="font-semibold text-gray-900">{{ $faq['question'] }}</h3>
                         <svg class="w-5 h-5 text-gray-500 transform transition-transform duration-200" id="faq-icon-{{ $index }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1729,8 +1728,8 @@
                         </svg>
                     </div>
                 </button>
-                <div class="px-6 pb-4 hidden" id="faq-content-{{ $index }}" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
-                    <p class="text-gray-600" itemprop="text">{{ $faq['answer'] }}</p>
+                <div class="px-6 pb-4 hidden" id="faq-content-{{ $index }}">
+                    <p class="text-gray-600">{{ $faq['answer'] }}</p>
                 </div>
             </div>
             @endforeach

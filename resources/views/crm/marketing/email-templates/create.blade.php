@@ -49,7 +49,7 @@
                     
                     <div class="mt-6">
                         <label for="subject" class="block text-sm font-medium text-gray-700">Email Subject</label>
-                        <input type="text" name="subject" id="subject" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <input type="text" name="subject" id="subject" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
                 </div>
 
@@ -57,23 +57,41 @@
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Email Content</h3>
                     
                     <div class="mb-6">
-                        <label for="html_content" class="block text-sm font-medium text-gray-700">HTML Content</label>
-                        <textarea name="html_content" id="html_content" rows="15" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm font-mono"></textarea>
+                        <label for="text_content" class="block text-sm font-medium text-gray-700">Email Content</label>
+                        <textarea name="text_content" id="text_content" rows="15" placeholder="Dear &#123;&#123;first_name&#125;&#125;,
+
+I hope this email finds you well. My name is Walid, and I am reaching out on behalf of MaxMed, a trusted provider of advanced scientific solutions tailored to life science and research professionals.
+
+Use variables like &#123;&#123;first_name&#125;&#125;, &#123;&#123;company&#125;&#125;, &#123;&#123;job_title&#125;&#125; to personalize your message.
+
+Best regards,
+Walid Babi" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                        @error('text_content')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
                     
                     <div>
-                        <label for="text_content" class="block text-sm font-medium text-gray-700">Plain Text Content (Optional)</label>
-                        <textarea name="text_content" id="text_content" rows="10" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                        <label for="html_content" class="block text-sm font-medium text-gray-700">HTML Content (Optional - for email clients that support HTML)</label>
+                        <textarea name="html_content" id="html_content" rows="8" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm font-mono" placeholder="Leave empty to send plain text only"></textarea>
+                        @error('html_content')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 
-                <div class="flex justify-end">
-                    <a href="{{ route('crm.marketing.email-templates.index') }}" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-3">
-                        Cancel
-                    </a>
-                    <button type="submit" class="bg-indigo-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Create Template
+                <div class="flex justify-between">
+                    <button type="button" onclick="previewTemplate()" class="bg-gray-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                        Preview Template
                     </button>
+                    <div class="flex space-x-3">
+                        <a href="{{ route('crm.marketing.email-templates.index') }}" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Cancel
+                        </a>
+                        <button type="submit" class="bg-indigo-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Create Template
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -91,23 +109,23 @@
                             <p class="font-medium text-gray-900 mb-2">Contact Variables:</p>
                             <div class="space-y-1 text-gray-600">
                                 <div class="flex justify-between">
-                                    <code class="text-xs bg-gray-100 px-1 rounded">@{{first_name}}</code>
+                                    <code class="text-xs bg-gray-100 px-1 rounded">&#123;&#123;first_name&#125;&#125;</code>
                                     <span class="text-xs">First name</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <code class="text-xs bg-gray-100 px-1 rounded">@{{last_name}}</code>
+                                    <code class="text-xs bg-gray-100 px-1 rounded">&#123;&#123;last_name&#125;&#125;</code>
                                     <span class="text-xs">Last name</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <code class="text-xs bg-gray-100 px-1 rounded">@{{email}}</code>
+                                    <code class="text-xs bg-gray-100 px-1 rounded">&#123;&#123;email&#125;&#125;</code>
                                     <span class="text-xs">Email address</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <code class="text-xs bg-gray-100 px-1 rounded">@{{company}}</code>
+                                    <code class="text-xs bg-gray-100 px-1 rounded">&#123;&#123;company&#125;&#125;</code>
                                     <span class="text-xs">Company name</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <code class="text-xs bg-gray-100 px-1 rounded">@{{job_title}}</code>
+                                    <code class="text-xs bg-gray-100 px-1 rounded">&#123;&#123;job_title&#125;&#125;</code>
                                     <span class="text-xs">Job title</span>
                                 </div>
                             </div>
@@ -117,15 +135,15 @@
                             <p class="font-medium text-gray-900 mb-2">System Variables:</p>
                             <div class="space-y-1 text-gray-600">
                                 <div class="flex justify-between">
-                                    <code class="text-xs bg-gray-100 px-1 rounded">@{{company_name}}</code>
+                                    <code class="text-xs bg-gray-100 px-1 rounded">&#123;&#123;company_name&#125;&#125;</code>
                                     <span class="text-xs">Your company</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <code class="text-xs bg-gray-100 px-1 rounded">@{{current_date}}</code>
+                                    <code class="text-xs bg-gray-100 px-1 rounded">&#123;&#123;current_date&#125;&#125;</code>
                                     <span class="text-xs">Today's date</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <code class="text-xs bg-gray-100 px-1 rounded">@{{unsubscribe_url}}</code>
+                                    <code class="text-xs bg-gray-100 px-1 rounded">&#123;&#123;unsubscribe_url&#125;&#125;</code>
                                     <span class="text-xs">Unsubscribe link</span>
                                 </div>
                             </div>
@@ -150,11 +168,11 @@
                             <div class="mt-2 text-sm text-indigo-700">
                                 <ul class="space-y-1">
                                     <li>• Use clear, descriptive template names</li>
-                                    <li>• Include personalization variables</li>
-                                    <li>• Test on different email clients</li>
+                                    <li>• Include personalization variables like &#123;&#123;first_name&#125;&#125;</li>
+                                    <li>• Focus on plain text for maximum compatibility</li>
                                     <li>• Always include unsubscribe links</li>
-                                    <li>• Keep HTML simple for compatibility</li>
-                                    <li>• Provide plain text alternatives</li>
+                                    <li>• Keep content clear and professional</li>
+                                    <li>• Test with sample data before sending</li>
                                 </ul>
                             </div>
                         </div>
@@ -189,11 +207,12 @@
     }
 
     function previewTemplate() {
+        const textContent = document.getElementById('text_content').value;
         const htmlContent = document.getElementById('html_content').value;
         const subject = document.getElementById('subject').value;
         
-        if (!htmlContent.trim()) {
-            alert('Please enter some HTML content first.');
+        if (!textContent.trim()) {
+            alert('Please enter some email content first.');
             return;
         }
         
@@ -211,13 +230,17 @@
             'company_address': '123 Business Street, City, State 12345'
         };
         
-        let previewContent = htmlContent;
+        let previewTextContent = textContent;
+        let previewHtmlContent = htmlContent;
         let previewSubject = subject;
         
         // Replace variables with sample data
         Object.keys(sampleData).forEach(key => {
             const regex = new RegExp('{{' + key + '}}', 'g');
-            previewContent = previewContent.replace(regex, sampleData[key]);
+            previewTextContent = previewTextContent.replace(regex, sampleData[key]);
+            if (previewHtmlContent) {
+                previewHtmlContent = previewHtmlContent.replace(regex, sampleData[key]);
+            }
             previewSubject = previewSubject.replace(regex, sampleData[key]);
         });
         
@@ -231,7 +254,8 @@
             'body { font-family: Arial, sans-serif; margin: 20px; }' +
             '.preview-header { background: #f3f4f6; padding: 10px; margin-bottom: 20px; border-radius: 4px; }' +
             '.preview-header h3 { margin: 0; color: #374151; }' +
-            '.preview-content { border: 1px solid #d1d5db; }' +
+            '.preview-content { border: 1px solid #d1d5db; padding: 20px; }' +
+            '.text-content { white-space: pre-wrap; font-family: monospace; background: #f9f9f9; padding: 15px; border-radius: 5px; }' +
             '</style>' +
             '</head>' +
             '<body>' +
@@ -240,7 +264,9 @@
             '<p style="margin: 5px 0 0 0; color: #6b7280; font-size: 14px;">This is a preview with sample data</p>' +
             '</div>' +
             '<div class="preview-content">' +
-            previewContent +
+            '<h4>Plain Text Content:</h4>' +
+            '<div class="text-content">' + previewTextContent + '</div>' +
+            (previewHtmlContent ? '<h4 style="margin-top: 20px;">HTML Content:</h4><div>' + previewHtmlContent + '</div>' : '') +
             '</div>' +
             '</body>' +
             '</html>'

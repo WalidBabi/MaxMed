@@ -70,8 +70,8 @@ class EmailTemplateController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'subject' => 'required|string|max:255',
-            'html_content' => 'required|string',
+            'subject' => 'nullable|string|max:255',
+            'html_content' => 'nullable|string',
             'text_content' => 'nullable|string',
             'category' => 'required|in:newsletter,promotional,welcome,transactional,announcement',
             'is_active' => 'boolean',
@@ -86,7 +86,7 @@ class EmailTemplateController extends Controller
         $template = EmailTemplate::create([
             'name' => $request->name,
             'subject' => $request->subject,
-            'html_content' => $request->html_content,
+            'html_content' => $request->html_content ?: '',
             'text_content' => $request->text_content,
             'category' => $request->category,
             'is_active' => $request->boolean('is_active', false),
@@ -128,8 +128,8 @@ class EmailTemplateController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'subject' => 'required|string|max:255',
-            'html_content' => 'required|string',
+            'subject' => 'nullable|string|max:255',
+            'html_content' => 'nullable|string',
             'text_content' => 'nullable|string',
             'category' => 'required|in:newsletter,promotional,welcome,transactional,announcement',
             'is_active' => 'boolean',
@@ -144,7 +144,7 @@ class EmailTemplateController extends Controller
         $emailTemplate->update([
             'name' => $request->name,
             'subject' => $request->subject,
-            'html_content' => $request->html_content,
+            'html_content' => $request->html_content ?: '',
             'text_content' => $request->text_content,
             'category' => $request->category,
             'is_active' => $request->boolean('is_active', $emailTemplate->is_active),
@@ -188,7 +188,7 @@ class EmailTemplateController extends Controller
                         ->with('success', 'Email template cloned successfully.');
     }
 
-    public function preview(EmailTemplate $emailTemplate)
+    public function preview(Request $request, EmailTemplate $emailTemplate)
     {
         // Sample data for preview
         $sampleData = [
@@ -284,8 +284,8 @@ class EmailTemplateController extends Controller
             $template = EmailTemplate::create([
                 'name' => $name,
                 'subject' => $data['subject'],
-                'html_content' => $data['html_content'],
-                'text_content' => $data['text_content'] ?? null,
+                'html_content' => $data['html_content'] ?: '',
+                'text_content' => $data['text_content'] ?? '',
                 'category' => $data['category'] ?? 'newsletter',
                 'variables' => $data['variables'] ?? [],
                 'is_active' => false, // Start as inactive

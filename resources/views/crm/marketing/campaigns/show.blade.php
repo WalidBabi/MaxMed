@@ -236,6 +236,18 @@
                         Preview Campaign
                     </a>
                     
+                    @if($campaign->isDraft() || $campaign->isScheduled())
+                        <form action="{{ route('crm.marketing.campaigns.send', $campaign) }}" method="POST" onsubmit="return confirm('Are you sure you want to send this campaign now? This action cannot be undone.')">
+                            @csrf
+                            <button type="submit" class="w-full inline-flex items-center justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 mb-3">
+                                <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M3.105 2.289a.75.75 0 00-.826.95l1.414 4.925A1.5 1.5 0 005.135 9.25h6.115a.75.75 0 010 1.5H5.135a1.5 1.5 0 00-1.442 1.086l-1.414 4.926a.75.75 0 00.826.95 28.896 28.896 0 0015.293-7.154.75.75 0 000-1.115A28.896 28.896 0 003.105 2.289z" />
+                                </svg>
+                                Send Campaign Now
+                            </button>
+                        </form>
+                    @endif
+
                     @if($campaign->isDraft())
                         <a href="{{ route('crm.marketing.campaigns.edit', $campaign) }}" class="w-full inline-flex items-center justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
                             <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

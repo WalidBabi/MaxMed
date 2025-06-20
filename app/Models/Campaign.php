@@ -123,47 +123,52 @@ class Campaign extends Model
     // Statistics calculations
     public function getOpenRateAttribute(): float
     {
-        if ($this->delivered_count === 0) {
+        if (empty($this->delivered_count) || $this->delivered_count <= 0) {
             return 0;
         }
         
-        return round(($this->opened_count / $this->delivered_count) * 100, 2);
+        $opened = $this->opened_count ?? 0;
+        return round(($opened / $this->delivered_count) * 100, 2);
     }
 
     public function getClickRateAttribute(): float
     {
-        if ($this->delivered_count === 0) {
+        if (empty($this->delivered_count) || $this->delivered_count <= 0) {
             return 0;
         }
         
-        return round(($this->clicked_count / $this->delivered_count) * 100, 2);
+        $clicked = $this->clicked_count ?? 0;
+        return round(($clicked / $this->delivered_count) * 100, 2);
     }
 
     public function getBounceRateAttribute(): float
     {
-        if ($this->total_recipients === 0) {
+        if (empty($this->total_recipients) || $this->total_recipients <= 0) {
             return 0;
         }
         
-        return round(($this->bounced_count / $this->total_recipients) * 100, 2);
+        $bounced = $this->bounced_count ?? 0;
+        return round(($bounced / $this->total_recipients) * 100, 2);
     }
 
     public function getUnsubscribeRateAttribute(): float
     {
-        if ($this->delivered_count === 0) {
+        if (empty($this->delivered_count) || $this->delivered_count <= 0) {
             return 0;
         }
         
-        return round(($this->unsubscribed_count / $this->delivered_count) * 100, 2);
+        $unsubscribed = $this->unsubscribed_count ?? 0;
+        return round(($unsubscribed / $this->delivered_count) * 100, 2);
     }
 
     public function getDeliveryRateAttribute(): float
     {
-        if ($this->total_recipients === 0) {
+        if (empty($this->total_recipients) || $this->total_recipients <= 0) {
             return 0;
         }
         
-        return round(($this->delivered_count / $this->total_recipients) * 100, 2);
+        $delivered = $this->delivered_count ?? 0;
+        return round(($delivered / $this->total_recipients) * 100, 2);
     }
 
     // Campaign actions

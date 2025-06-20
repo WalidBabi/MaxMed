@@ -26,6 +26,7 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\CrmController;
 use App\Http\Controllers\CrmLeadController;
+use App\Http\Controllers\MarketingController;
 
 // Cookie Consent Routes
 // Route::post('/cookie-consent', [CookieConsentController::class, 'store'])->name('cookie.consent');
@@ -43,6 +44,9 @@ Route::get('/privacy-policy', function() {
 Route::get('/about', fn() => view('about'))->name('about');
 Route::get('/contact', fn() => view('contact'))->name('contact');
 Route::post('/contact', [\App\Http\Controllers\ContactController::class, 'submit'])->name('contact.submit');
+
+// Marketing Unsubscribe Route (public)
+Route::get('/marketing/unsubscribe/{token}', [\App\Http\Controllers\MarketingController::class, 'unsubscribe'])->name('marketing.unsubscribe');
 
 // Partners Route Group - Moved to the partners prefix group below
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -94,7 +98,7 @@ Route::get('/quotation/confirmation/{id}', function($id) {
 })->where('id', '[0-9]+')->name('quotation.confirmation.old');
 
 // Authenticated Routes
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
 
     // Stripe Routes
@@ -174,6 +178,7 @@ Route::middleware('auth')->group(function () {
         Route::post('campaigns/{campaign}/duplicate', [\App\Http\Controllers\Crm\CampaignController::class, 'duplicate'])->name('campaigns.duplicate');
         Route::get('campaigns/{campaign}/preview', [\App\Http\Controllers\Crm\CampaignController::class, 'preview'])->name('campaigns.preview');
         Route::post('campaigns/{campaign}/schedule', [\App\Http\Controllers\Crm\CampaignController::class, 'schedule'])->name('campaigns.schedule');
+        Route::post('campaigns/{campaign}/send', [\App\Http\Controllers\Crm\CampaignController::class, 'send'])->name('campaigns.send');
         Route::patch('campaigns/{campaign}/pause', [\App\Http\Controllers\Crm\CampaignController::class, 'pause'])->name('campaigns.pause');
         Route::patch('campaigns/{campaign}/resume', [\App\Http\Controllers\Crm\CampaignController::class, 'resume'])->name('campaigns.resume');
         Route::patch('campaigns/{campaign}/cancel', [\App\Http\Controllers\Crm\CampaignController::class, 'cancel'])->name('campaigns.cancel');

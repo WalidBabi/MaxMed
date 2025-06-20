@@ -73,8 +73,8 @@
             </div>
             <div class="p-6 space-y-6">
                 <div>
-                    <label for="subject" class="block text-sm font-medium text-gray-700">Email Subject *</label>
-                    <input type="text" name="subject" id="subject" required
+                    <label for="subject" class="block text-sm font-medium text-gray-700">Email Subject</label>
+                    <input type="text" name="subject" id="subject"
                            value="{{ old('subject') }}"
                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('subject') border-red-300 @enderror">
                     @error('subject')
@@ -100,8 +100,24 @@
                 </div>
 
                 <div>
-                    <label for="html_content" class="block text-sm font-medium text-gray-700">Email Content *</label>
-                    <textarea name="html_content" id="html_content" rows="12" required
+                    <label for="text_content" class="block text-sm font-medium text-gray-700">Email Content</label>
+                    <textarea name="text_content" id="text_content" rows="12" placeholder="Dear @{{first_name}},
+
+I hope this email finds you well. My name is Walid, and I am reaching out on behalf of MaxMed, a trusted provider of advanced scientific solutions tailored to life science and research professionals.
+
+Use variables like @{{first_name}}, @{{company}}, @{{job_title}} to personalize your message.
+
+Best regards,
+Walid Babi"
+                              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('text_content') border-red-300 @enderror">{{ old('text_content') }}</textarea>
+                    @error('text_content')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+                
+                <div>
+                    <label for="html_content" class="block text-sm font-medium text-gray-700">HTML Content (Optional)</label>
+                    <textarea name="html_content" id="html_content" rows="6" placeholder="Leave empty to send plain text only"
                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('html_content') border-red-300 @enderror">{{ old('html_content') }}</textarea>
                     @error('html_content')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -144,7 +160,7 @@
                                     <input type="checkbox" name="contact_lists[]" value="{{ $list->id }}"
                                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                            {{ in_array($list->id, old('contact_lists', [])) ? 'checked' : '' }}>
-                                    <span class="ml-2 text-sm text-gray-700">{{ $list->name }} ({{ $list->contacts_count ?? 0 }} contacts)</span>
+                                    <span class="ml-2 text-sm text-gray-700">{{ $list->name }} ({{ $list->getContactsCount() }} contacts)</span>
                                 </label>
                             @endforeach
                         @else

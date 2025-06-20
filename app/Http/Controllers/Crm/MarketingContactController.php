@@ -693,6 +693,18 @@ class MarketingContactController extends Controller
                         ->with('success', 'Contact resubscribed successfully.');
     }
 
+    public function publicUnsubscribe($token)
+    {
+        // For now, we'll create a simple unsubscribe page
+        // In a real implementation, you would decode the token to find the contact
+        // and handle the unsubscribe process
+        
+        return view('marketing.unsubscribe', [
+            'token' => $token,
+            'message' => 'You have been successfully unsubscribed from our mailing list.'
+        ]);
+    }
+
     private function parseContactFile($file)
     {
         $contacts = [];

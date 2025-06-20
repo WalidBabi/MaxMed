@@ -59,8 +59,8 @@ class CampaignController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'subject' => 'required|string|max:255',
-            'html_content' => 'required|string',
+            'subject' => 'nullable|string|max:255',
+            'html_content' => 'nullable|string',
             'text_content' => 'nullable|string',
             'email_template_id' => 'nullable|exists:email_templates,id',
             'type' => 'required|in:one_time,recurring,drip',
@@ -151,12 +151,7 @@ class CampaignController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'subject' => 'required|string|max:255',
-            'html_content' => 'required|string',
-            'text_content' => 'nullable|string',
-            'email_template_id' => 'nullable|exists:email_templates,id',
-            'type' => 'required|in:one_time,recurring,drip',
+            'subject' => 'nullable|string|max:255',
             'scheduled_at' => 'nullable|date|after:now',
             'recipient_type' => 'required|in:all,lists,custom',
             'contact_lists' => 'required_if:recipient_type,lists|array',
@@ -172,12 +167,7 @@ class CampaignController extends Controller
 
         $campaign->update([
             'name' => $request->name,
-            'description' => $request->description,
             'subject' => $request->subject,
-            'html_content' => $request->html_content,
-            'text_content' => $request->text_content,
-            'email_template_id' => $request->email_template_id,
-            'type' => $request->type,
             'status' => $request->filled('scheduled_at') ? 'scheduled' : 'draft',
             'scheduled_at' => $request->scheduled_at,
             'recipients_criteria' => $this->buildRecipientsCriteria($request),
@@ -289,6 +279,34 @@ class CampaignController extends Controller
                         ->with('success', 'Campaign cancelled successfully.');
     }
 
+    public function send(Campaign $campaign)
+    {
+        if (!$campaign->isDraft() && !$campaign->isScheduled()) {
+            return redirect()->back()
+                           ->with('error', 'Only draft or scheduled campaigns can be sent.');
+        }
+
+        if ($campaign->total_recipients == 0) {
+            return redirect()->back()
+                           ->with('error', 'Campaign has no recipients. Please add contacts before sending.');
+        }
+
+        try {
+            // Mark campaign as sending
+            $campaign->markAsSending();
+
+            // Dispatch the campaign sending job
+            \App\Jobs\SendCampaignJob::dispatch($campaign);
+
+            return redirect()->back()
+                           ->with('success', 'Campaign is being sent. You will be notified when complete.');
+        } catch (\Exception $e) {
+            \Log::error('Campaign send error: ' . $e->getMessage());
+            return redirect()->back()
+                           ->with('error', 'Failed to start sending campaign. Please try again.');
+        }
+    }
+
     public function preview(Campaign $campaign)
     {
         $sampleContact = MarketingContact::active()->first();
@@ -363,11 +381,29 @@ class CampaignController extends Controller
                 
             case 'lists':
                 if ($request->filled('contact_lists')) {
-                    $contacts = MarketingContact::active()
-                                              ->whereHas('contactLists', function ($q) use ($request) {
-                                                  $q->whereIn('contact_lists.id', $request->contact_lists);
-                                              })
-                                              ->get();
+                    // Get the contact lists
+                    $contactLists = ContactList::whereIn('id', $request->contact_lists)->get();
+                    $allContactIds = collect();
+                    
+                    foreach ($contactLists as $contactList) {
+                        if ($contactList->isDynamic()) {
+                            // For dynamic lists, get contacts based on criteria
+                            $dynamicContactIds = $contactList->getDynamicContacts()
+                                                            ->where('status', 'active')
+                                                            ->pluck('id');
+                            $allContactIds = $allContactIds->merge($dynamicContactIds);
+                        } else {
+                            // For static lists, get contacts from the pivot table
+                            $staticContactIds = $contactList->activeContacts()->pluck('marketing_contacts.id');
+                            $allContactIds = $allContactIds->merge($staticContactIds);
+                        }
+                    }
+                    
+                    // Remove duplicates and get the actual contact models
+                    $uniqueContactIds = $allContactIds->unique()->values();
+                    if ($uniqueContactIds->isNotEmpty()) {
+                        $contacts = MarketingContact::active()->whereIn('id', $uniqueContactIds)->get();
+                    }
                 }
                 break;
                 

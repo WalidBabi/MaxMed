@@ -7,6 +7,28 @@
 @section('meta_keywords', 'laboratory equipment Dubai, analytical instruments UAE, clinical laboratory equipment, research lab supplies, lab glassware, scientific equipment Dubai, laboratory consumables UAE')
 
 @section('content')
+@php
+    // Set up FAQs for this page to generate proper JSON-LD schema
+    $faqs = [
+        [
+            'question' => 'What types of laboratory equipment does MaxMed UAE offer?',
+            'answer' => 'MaxMed UAE offers a comprehensive range of laboratory equipment including analytical instruments, clinical diagnostic tools, research equipment, laboratory glassware, and consumables. Our products are sourced from leading manufacturers and meet international quality standards.'
+        ],
+        [
+            'question' => 'Do you provide installation and maintenance services for laboratory equipment?',
+            'answer' => 'Yes, MaxMed UAE provides complete installation, training, and maintenance services for all laboratory equipment. Our certified technicians ensure proper setup and ongoing support throughout the equipment lifecycle.'
+        ],
+        [
+            'question' => 'What is the warranty coverage for laboratory equipment?',
+            'answer' => 'All laboratory equipment comes with comprehensive warranty coverage that varies by manufacturer. We provide detailed warranty information for each product and offer extended warranty options and maintenance contracts.'
+        ],
+        [
+            'question' => 'How can I request a quotation for laboratory equipment?',
+            'answer' => 'You can request a quotation by calling +971 55 460 2500, emailing sales@maxmedme.com, or using our online quotation form. Our team will provide detailed pricing and specifications for your requirements.'
+        ]
+    ];
+@endphp
+
 <div class="container my-5">
     <div class="row sidebar-content-container justify-content-center">
         <div class="col-md-3 sidebar-column transition-all duration-300">
@@ -43,21 +65,21 @@
             <div class="faq-section mt-5">
                 <h2>Laboratory Equipment FAQs</h2>
                 
-                <div class="accordion" id="labEquipmentFAQ" itemscope itemtype="https://schema.org/FAQPage">
-                    <div class="accordion-item" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
-                        <h3 class="accordion-header" itemprop="name">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                What types of laboratory equipment does MaxMed UAE offer?
+                <div class="accordion" id="labEquipmentFAQ">
+                    @foreach($faqs as $index => $faq)
+                    <div class="accordion-item">
+                        <h3 class="accordion-header">
+                            <button class="accordion-button{{ $index === 0 ? '' : ' collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ $index + 1 }}">
+                                {{ $faq['question'] }}
                             </button>
                         </h3>
-                        <div id="faq1" class="accordion-collapse collapse show" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-                            <div class="accordion-body" itemprop="text">
-                                MaxMed UAE offers a comprehensive range of laboratory equipment including analytical instruments, clinical diagnostic tools, research equipment, laboratory glassware, and consumables. Our products are sourced from leading manufacturers and meet international quality standards.
+                        <div id="faq{{ $index + 1 }}" class="accordion-collapse collapse{{ $index === 0 ? ' show' : '' }}">
+                            <div class="accordion-body">
+                                {{ $faq['answer'] }}
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Add more FAQ items with schema markup -->
+                    @endforeach
                 </div>
             </div>
             
