@@ -308,6 +308,20 @@
                         </div>
                     </div>
 
+                    <!-- Dynamic Specifications Section -->
+                    <div class="border-b border-gray-200 pb-8">
+                        <h3 class="text-lg font-medium text-indigo-600 mb-6 flex items-center">
+                            <i class="fas fa-cogs mr-2"></i>Product Specifications
+                        </h3>
+                        
+                        <div class="mb-4">
+                            <p class="text-sm text-gray-600 mb-4">Select a category above to see relevant specification fields for this product type.</p>
+                            <div id="specifications-container" class="space-y-6">
+                                <!-- Specifications will be loaded here dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Submit Button -->
                     <div class="flex justify-end">
                         <button type="submit" class="inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -377,6 +391,114 @@ Speed range
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Category change handler for dynamic specifications
+        const categorySelect = document.getElementById('category_id');
+        const specificationsContainer = document.getElementById('specifications-container');
+        
+        if (categorySelect && specificationsContainer) {
+            categorySelect.addEventListener('change', function() {
+                const categoryId = this.value;
+                if (categoryId) {
+                    loadSpecifications(categoryId);
+                } else {
+                    specificationsContainer.innerHTML = '<p class="text-sm text-gray-500">Select a category to see specification fields.</p>';
+                }
+            });
+        }
+
+        // Function to load specifications based on category
+        function loadSpecifications(categoryId) {
+            fetch(`/admin/api/category-specifications/${categoryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.templates) {
+                        renderSpecifications(data.templates);
+                    } else {
+                        specificationsContainer.innerHTML = '<p class="text-sm text-gray-500">No specifications available for this category.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading specifications:', error);
+                    specificationsContainer.innerHTML = '<p class="text-sm text-red-500">Error loading specifications. Please try again.</p>';
+                });
+        }
+
+        // Function to render specification fields
+        function renderSpecifications(templates) {
+            let html = '';
+            
+            Object.entries(templates).forEach(([categoryName, specs]) => {
+                html += `
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h4 class="text-md font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-list-ul mr-2 text-indigo-600"></i>
+                            ${categoryName}
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                `;
+                
+                specs.forEach(spec => {
+                    const fieldName = `specifications[${spec.key}]`;
+                    const fieldId = `spec_${spec.key}`;
+                    const required = spec.required ? 'required' : '';
+                    const requiredMark = spec.required ? '<span class="text-red-500">*</span>' : '';
+                    
+                    html += `
+                        <div>
+                            <label for="${fieldId}" class="block text-sm font-medium text-gray-700 mb-2">
+                                ${spec.name} ${requiredMark}
+                                ${spec.unit ? `<span class="text-gray-500 text-xs">(${spec.unit})</span>` : ''}
+                            </label>
+                    `;
+                    
+                    if (spec.type === 'select') {
+                        html += `
+                            <select name="${fieldName}" id="${fieldId}" ${required}
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="">Select ${spec.name}</option>
+                        `;
+                        spec.options.forEach(option => {
+                            html += `<option value="${option}">${option}</option>`;
+                        });
+                        html += `</select>`;
+                    } else if (spec.type === 'textarea') {
+                        html += `
+                            <textarea name="${fieldName}" id="${fieldId}" ${required}
+                                      class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                      rows="3" placeholder="Enter ${spec.name.toLowerCase()}">${spec.unit ? '' : ''}</textarea>
+                        `;
+                    } else if (spec.type === 'boolean') {
+                        html += `
+                            <div class="flex items-center">
+                                <input type="checkbox" name="${fieldName}" id="${fieldId}" value="1" ${required}
+                                       class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                <label for="${fieldId}" class="ml-2 block text-sm text-gray-900">
+                                    Yes
+                                </label>
+                            </div>
+                        `;
+                    } else {
+                        const inputType = spec.type === 'decimal' ? 'number' : spec.type;
+                        const step = spec.type === 'decimal' ? 'step="0.01"' : '';
+                        html += `
+                            <input type="${inputType}" name="${fieldName}" id="${fieldId}" ${required} ${step}
+                                   class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                   placeholder="Enter ${spec.name.toLowerCase()}">
+                        `;
+                    }
+                    
+                    html += `</div>`;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+            
+            specificationsContainer.innerHTML = html;
+        }
+
         // Parameters template insertion
         const insertTemplateBtn = document.getElementById('insertParametersTemplate');
         const descriptionTextarea = document.getElementById('description');

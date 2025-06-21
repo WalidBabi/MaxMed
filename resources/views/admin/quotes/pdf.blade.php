@@ -521,25 +521,33 @@
             <table class="items-table">
                 <thead>
                     <tr>
-                        <th style="width: 50%;">Item Description</th>
-                        <th style="width: 12%;" class="text-right">Qty</th>
+                        <th style="width: 45%;">Item Description</th>
+                        <th style="width: 10%;" class="text-right">Qty</th>
                         <th style="width: 15%;" class="text-right">Rate (AED)</th>
                         <th style="width: 10%;" class="text-right">Discount</th>
-                        <th style="width: 13%;" class="text-right">Amount (AED)</th>
+                        <th style="width: 10%;" class="text-center">Specs</th>
+                        <th style="width: 10%;" class="text-right">Amount (AED)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($quote->items as $item)
+                    @forelse($quote->items as $index => $item)
                     <tr>
                         <td class="item-description">{{ $item->item_details }}</td>
                         <td class="text-right">{{ number_format($item->quantity, 0) }}</td>
                         <td class="text-right">{{ number_format($item->rate, 2) }}</td>
                         <td class="text-right">{{ number_format($item->discount, 1) }}%</td>
+                        <td class="text-center">
+                            @if($item->product && $item->product->specifications->count() > 0)
+                                <span style="font-size: 9px; color: var(--text-secondary);">See Note [{{ $index + 1 }}]</span>
+                            @else
+                                <span style="font-size: 9px; color: var(--text-muted);">-</span>
+                            @endif
+                        </td>
                         <td class="text-right">{{ number_format($item->amount, 2) }}</td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="text-center" style="padding: 30px; color: var(--text-muted); font-style: italic;">
+                        <td colspan="6" class="text-center" style="padding: 30px; color: var(--text-muted); font-style: italic;">
                             No items added to this quote
                         </td>
                     </tr>
@@ -580,6 +588,53 @@
         </div>
         @endif
 
+        <!-- PRODUCT SPECIFICATIONS APPENDIX -->
+        @php
+            $itemsWithSpecs = $quote->items->filter(function($item) {
+                return $item->product && $item->product->specifications->count() > 0;
+            });
+        @endphp
+        
+        @if($itemsWithSpecs->count() > 0)
+        <div class="content-section" style="margin-top: 40px; page-break-before: auto;">
+            <div class="content-title">Product Specifications</div>
+            <div class="specs-content">
+                @foreach($quote->items as $index => $item)
+                    @if($item->product && $item->product->specifications->count() > 0)
+                        <div class="spec-item" style="margin-bottom: 20px; padding: 15px; background-color: var(--light-gray); border-radius: 8px; border-left: 3px solid var(--primary-color);">
+                            <div class="spec-product-name" style="font-weight: 600; color: var(--text-primary); margin-bottom: 8px; font-size: 12px;">
+                                [{{ $index + 1 }}] {{ $item->item_details }}
+                            </div>
+                            <div class="spec-details" style="font-size: 10px; color: var(--text-secondary);">
+                                @foreach($item->product->specifications->groupBy('category') as $category => $specs)
+                                    @if($category)
+                                        <div class="spec-category" style="margin-bottom: 8px;">
+                                            <div class="spec-category-name" style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px; text-transform: uppercase; font-size: 9px; letter-spacing: 0.5px;">
+                                                {{ $category }}
+                                            </div>
+                                            @foreach($specs as $spec)
+                                                <div class="spec-row" style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                                                    <span class="spec-key" style="font-weight: 500;">{{ $spec->display_name ?: $spec->specification_key }}:</span>
+                                                    <span class="spec-value" style="font-weight: 600;">{{ $spec->formatted_value }}</span>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        @foreach($specs as $spec)
+                                            <div class="spec-row" style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                                                <span class="spec-key" style="font-weight: 500;">{{ $spec->display_name ?: $spec->specification_key }}:</span>
+                                                <span class="spec-value" style="font-weight: 600;">{{ $spec->formatted_value }}</span>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+        @endif
 
         <!-- FOOTER -->
         <div class="footer">

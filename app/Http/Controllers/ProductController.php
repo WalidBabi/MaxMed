@@ -192,6 +192,9 @@ class ProductController extends Controller
             return redirect()->to('https://maxmedme.com/product/' . $product->id, 301);
         }
         
+        // Load product with relationships including specifications
+        $product->load(['category', 'brand', 'inventory', 'images', 'specifications']);
+        
         // Generate SEO data
         $seoData = $this->seoService->generateProductMeta($product);
         

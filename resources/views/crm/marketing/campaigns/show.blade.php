@@ -101,6 +101,108 @@
                 </div>
             </div>
 
+            <!-- A/B Testing Results -->
+            @if($campaign->isAbTest())
+            <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-8">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-900">🧪 A/B Testing Results</h3>
+                        @if($campaign->hasWinner())
+                            <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                                Winner Selected
+                            </span>
+                        @else
+                            <span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">
+                                Test Running
+                            </span>
+                        @endif
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                        <!-- Variant A -->
+                        <div class="relative {{ $campaign->ab_test_winner === 'variant_a' ? 'ring-2 ring-green-500' : '' }} rounded-lg border border-gray-200 p-4">
+                            @if($campaign->ab_test_winner === 'variant_a')
+                                <div class="absolute -top-3 left-4 inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
+                                    🏆 Winner
+                                </div>
+                            @endif
+                            <div class="text-center">
+                                <h4 class="text-lg font-semibold text-gray-900 mb-2">Variant A</h4>
+                                <p class="text-sm text-gray-600 mb-4">"{{ $campaign->subject }}"</p>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-2xl font-bold text-indigo-600">{{ $campaign->getVariantOpenRate('variant_a') }}%</p>
+                                        <p class="text-xs text-gray-500">Open Rate</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-2xl font-bold text-purple-600">{{ $campaign->getVariantClickRate('variant_a') }}%</p>
+                                        <p class="text-xs text-gray-500">Click Rate</p>
+                                    </div>
+                                </div>
+                                <div class="mt-3 text-xs text-gray-500">
+                                    {{ $campaign->ab_test_split_percentage }}% of traffic
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Variant B -->
+                        <div class="relative {{ $campaign->ab_test_winner === 'variant_b' ? 'ring-2 ring-green-500' : '' }} rounded-lg border border-gray-200 p-4">
+                            @if($campaign->ab_test_winner === 'variant_b')
+                                <div class="absolute -top-3 left-4 inline-flex items-center rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
+                                    🏆 Winner
+                                </div>
+                            @endif
+                            <div class="text-center">
+                                <h4 class="text-lg font-semibold text-gray-900 mb-2">Variant B</h4>
+                                <p class="text-sm text-gray-600 mb-4">"{{ $campaign->subject_variant_b }}"</p>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-2xl font-bold text-indigo-600">{{ $campaign->getVariantOpenRate('variant_b') }}%</p>
+                                        <p class="text-xs text-gray-500">Open Rate</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-2xl font-bold text-purple-600">{{ $campaign->getVariantClickRate('variant_b') }}%</p>
+                                        <p class="text-xs text-gray-500">Click Rate</p>
+                                    </div>
+                                </div>
+                                <div class="mt-3 text-xs text-gray-500">
+                                    {{ 100 - $campaign->ab_test_split_percentage }}% of traffic
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if(!$campaign->hasWinner() && $campaign->isSent())
+                        <div class="mt-6 pt-6 border-t border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-900">Select Winner</h4>
+                                    <p class="text-sm text-gray-500">Choose the winning variant to conclude the test</p>
+                                </div>
+                                <div class="flex space-x-3">
+                                    <form action="{{ route('crm.marketing.campaigns.select-winner', $campaign) }}" method="POST" class="inline">
+                                        @csrf
+                                        <input type="hidden" name="winner" value="variant_a">
+                                        <button type="submit" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                                            Select A
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('crm.marketing.campaigns.select-winner', $campaign) }}" method="POST" class="inline">
+                                        @csrf
+                                        <input type="hidden" name="winner" value="variant_b">
+                                        <button type="submit" class="inline-flex items-center rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-500">
+                                            Select B
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+            @endif
+
             <!-- Campaign Details -->
             <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-8">
                 <div class="px-6 py-4 border-b border-gray-200">

@@ -72,9 +72,34 @@ class CampaignController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'subject' => 'nullable|string|max:255',
+            'subject_variant_b' => 'required_if:ab_test_type,subject_line|string|max:255',
             'text_content' => 'required_without:email_template_id|nullable|string|min:10',
             'email_template_id' => 'nullable|exists:email_templates,id',
             'type' => 'required|in:one_time,recurring,drip',
+            'is_ab_test' => 'boolean',
+            'ab_test_type' => 'required_if:is_ab_test,1|in:subject_line,cta,template,send_time',
+            'ab_test_split_percentage' => 'required_if:is_ab_test,1|integer|min:10|max:90',
+            
+            // CTA variant fields
+            'cta_text_variant_a' => 'required_if:ab_test_type,cta|string|max:255',
+            'cta_url_variant_a' => 'required_if:ab_test_type,cta|url',
+            'cta_color_variant_a' => 'required_if:ab_test_type,cta|in:indigo,green,orange,red,purple',
+            'cta_text_variant_b' => 'required_if:ab_test_type,cta|string|max:255',
+            'cta_url_variant_b' => 'required_if:ab_test_type,cta|url',
+            'cta_color_variant_b' => 'required_if:ab_test_type,cta|in:indigo,green,orange,red,purple',
+            
+            // Template variant fields
+            'email_template_variant_a_id' => 'required_if:ab_test_type,template|exists:email_templates,id',
+            'text_content_variant_a' => 'nullable|string',
+            'email_template_variant_b_id' => 'required_if:ab_test_type,template|exists:email_templates,id',
+            'text_content_variant_b' => 'nullable|string',
+            
+            // Send time variant fields
+            'scheduled_date_variant_a' => 'required_if:ab_test_type,send_time|date|after:today',
+            'scheduled_time_variant_a' => 'required_if:ab_test_type,send_time',
+            'scheduled_date_variant_b' => 'required_if:ab_test_type,send_time|date|after:today',
+            'scheduled_time_variant_b' => 'required_if:ab_test_type,send_time',
+            
             'send_option' => 'required|in:draft,now,schedule',
             'scheduled_date' => 'required_if:send_option,schedule|nullable|date|after:today',
             'scheduled_time' => 'required_if:send_option,schedule|nullable',
@@ -111,14 +136,25 @@ class CampaignController extends Controller
         }
 
         try {
+            // Prepare variant data based on A/B test type
+            $variantData = [];
+            if ($request->boolean('is_ab_test')) {
+                $variantData = $this->buildVariantData($request);
+            }
+            
             $campaign = Campaign::create([
                 'name' => $request->name,
                 'description' => $request->description,
                 'subject' => $request->subject,
+                'subject_variant_b' => $request->subject_variant_b,
                 'text_content' => $request->text_content,
                 'html_content' => $htmlContent,
                 'email_template_id' => $request->email_template_id,
                 'type' => $request->type,
+                'is_ab_test' => $request->boolean('is_ab_test'),
+                'ab_test_type' => $request->is_ab_test ? $request->ab_test_type : null,
+                'ab_test_split_percentage' => $request->is_ab_test ? $request->ab_test_split_percentage : null,
+                'ab_test_variant_data' => !empty($variantData) ? json_encode($variantData) : null,
                 'status' => $status,
                 'scheduled_at' => $scheduledAt,
                 'recipients_criteria' => $this->buildRecipientsCriteria($request),
@@ -169,6 +205,11 @@ class CampaignController extends Controller
         
         // Update statistics
         $campaign->updateStatistics();
+        
+        // Update A/B test results if this is an A/B test campaign
+        if ($campaign->isAbTest()) {
+            $campaign->updateAbTestResults();
+        }
         
         // Get recent email logs
         $recentLogs = $campaign->emailLogs()
@@ -367,6 +408,50 @@ class CampaignController extends Controller
             \Log::error('Campaign send error: ' . $e->getMessage());
             return redirect()->back()
                            ->with('error', 'Failed to start sending campaign. Please try again.');
+        }
+    }
+
+    public function selectWinner(Request $request, Campaign $campaign)
+    {
+        // Validate that this is an A/B test campaign
+        if (!$campaign->isAbTest()) {
+            return redirect()->back()
+                           ->with('error', 'This action is only available for A/B test campaigns.');
+        }
+
+        // Validate that the campaign has been sent
+        if (!$campaign->isSent()) {
+            return redirect()->back()
+                           ->with('error', 'Cannot select winner for a campaign that has not been sent yet.');
+        }
+
+        // Validate that a winner hasn't already been selected
+        if ($campaign->hasWinner()) {
+            return redirect()->back()
+                           ->with('error', 'A winner has already been selected for this campaign.');
+        }
+
+        // Validate the winner selection
+        $request->validate([
+            'winner' => 'required|in:variant_a,variant_b'
+        ]);
+
+        try {
+            // Update A/B test results before selecting winner
+            $campaign->updateAbTestResults();
+            
+            // Select the winner
+            $campaign->selectWinner($request->winner);
+
+            $winnerLabel = $request->winner === 'variant_a' ? 'Variant A' : 'Variant B';
+            
+            return redirect()->back()
+                           ->with('success', "Winner selected successfully! {$winnerLabel} has been chosen as the winning variant.");
+                           
+        } catch (\Exception $e) {
+            \Log::error('Failed to select campaign winner: ' . $e->getMessage());
+            return redirect()->back()
+                           ->with('error', 'Failed to select winner. Please try again.');
         }
     }
 
@@ -871,5 +956,70 @@ class CampaignController extends Controller
 </html>';
         
         return $htmlContent;
+    }
+
+    /**
+     * Build variant data for A/B testing based on test type
+     */
+    private function buildVariantData(Request $request): array
+    {
+        $data = [];
+        
+        switch ($request->ab_test_type) {
+            case 'subject_line':
+                // Subject line data is already handled by the subject and subject_variant_b fields
+                break;
+                
+            case 'cta':
+                $data = [
+                    'variant_a' => [
+                        'cta_text' => $request->cta_text_variant_a,
+                        'cta_url' => $request->cta_url_variant_a,
+                        'cta_color' => $request->cta_color_variant_a,
+                    ],
+                    'variant_b' => [
+                        'cta_text' => $request->cta_text_variant_b,
+                        'cta_url' => $request->cta_url_variant_b,
+                        'cta_color' => $request->cta_color_variant_b,
+                    ]
+                ];
+                break;
+                
+            case 'template':
+                $data = [
+                    'variant_a' => [
+                        'email_template_id' => $request->email_template_variant_a_id,
+                        'text_content' => $request->text_content_variant_a,
+                    ],
+                    'variant_b' => [
+                        'email_template_id' => $request->email_template_variant_b_id,
+                        'text_content' => $request->text_content_variant_b,
+                    ]
+                ];
+                break;
+                
+            case 'send_time':
+                $scheduledAtA = null;
+                if ($request->scheduled_date_variant_a && $request->scheduled_time_variant_a) {
+                    $scheduledAtA = $request->scheduled_date_variant_a . ' ' . $request->scheduled_time_variant_a;
+                }
+                
+                $scheduledAtB = null;
+                if ($request->scheduled_date_variant_b && $request->scheduled_time_variant_b) {
+                    $scheduledAtB = $request->scheduled_date_variant_b . ' ' . $request->scheduled_time_variant_b;
+                }
+                
+                $data = [
+                    'variant_a' => [
+                        'scheduled_at' => $scheduledAtA,
+                    ],
+                    'variant_b' => [
+                        'scheduled_at' => $scheduledAtB,
+                    ]
+                ];
+                break;
+        }
+        
+        return $data;
     }
 } 

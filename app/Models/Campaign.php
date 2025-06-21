@@ -17,11 +17,27 @@ class Campaign extends Model
         'name',
         'description',
         'subject',
+        'subject_variant_b',
         'html_content',
         'text_content',
         'email_template_id',
+        // New A/B testing fields
+        'cta_text_variant_b',
+        'cta_url_variant_b',
+        'cta_color_variant_b',
+        'email_template_variant_b_id',
+        'html_content_variant_b',
+        'text_content_variant_b',
+        'scheduled_at_variant_b',
+        'ab_test_variant_data',
         'type',
         'status',
+        'is_ab_test',
+        'ab_test_type',
+        'ab_test_split_percentage',
+        'ab_test_winner_selected_at',
+        'ab_test_winner',
+        'ab_test_results',
         'scheduled_at',
         'sent_at',
         'recipients_criteria',
@@ -37,8 +53,13 @@ class Campaign extends Model
 
     protected $casts = [
         'recipients_criteria' => 'array',
+        'ab_test_results' => 'array',
+        'ab_test_variant_data' => 'array',
         'scheduled_at' => 'datetime',
         'sent_at' => 'datetime',
+        'ab_test_winner_selected_at' => 'datetime',
+        'is_ab_test' => 'boolean',
+        'ab_test_split_percentage' => 'integer',
     ];
 
     public function creator(): BelongsTo
@@ -63,7 +84,8 @@ class Campaign extends Model
                         'open_count',
                         'click_count',
                         'bounce_reason',
-                        'personalization_data'
+                        'personalization_data',
+                        'ab_test_variant'
                     ])
                     ->withTimestamps();
     }
@@ -118,6 +140,253 @@ class Campaign extends Model
     public function isDrip(): bool
     {
         return $this->type === 'drip';
+    }
+
+    // A/B Testing methods
+    public function isAbTest(): bool
+    {
+        return $this->is_ab_test === true;
+    }
+
+    public function isSubjectLineTest(): bool
+    {
+        return $this->isAbTest() && $this->ab_test_type === 'subject_line';
+    }
+
+    public function isCtaTest(): bool
+    {
+        return $this->isAbTest() && $this->ab_test_type === 'cta';
+    }
+
+    public function isTemplateTest(): bool
+    {
+        return $this->isAbTest() && $this->ab_test_type === 'template';
+    }
+
+    public function isSendTimeTest(): bool
+    {
+        return $this->isAbTest() && $this->ab_test_type === 'send_time';
+    }
+
+    public function hasWinner(): bool
+    {
+        return !empty($this->ab_test_winner);
+    }
+
+    public function getWinningSubject(): string
+    {
+        if (!$this->isSubjectLineTest()) {
+            return $this->subject;
+        }
+
+        if ($this->ab_test_winner === 'variant_b') {
+            return $this->subject_variant_b ?? $this->subject;
+        }
+
+        return $this->subject;
+    }
+
+    public function getContentForVariant(string $variant): array
+    {
+        $content = [
+            'subject' => $this->subject,
+            'html_content' => $this->html_content,
+            'text_content' => $this->text_content,
+            'email_template_id' => $this->email_template_id,
+            'cta_text' => null,
+            'cta_url' => null,
+            'cta_color' => 'indigo',
+            'scheduled_at' => $this->scheduled_at,
+        ];
+
+        if ($variant === 'variant_b' && $this->isAbTest()) {
+            switch ($this->ab_test_type) {
+                case 'subject_line':
+                    $content['subject'] = $this->subject_variant_b ?? $this->subject;
+                    break;
+                
+                case 'cta':
+                    $content['cta_text'] = $this->cta_text_variant_b;
+                    $content['cta_url'] = $this->cta_url_variant_b;
+                    $content['cta_color'] = $this->cta_color_variant_b ?? 'indigo';
+                    break;
+                
+                case 'template':
+                    $content['email_template_id'] = $this->email_template_variant_b_id ?? $this->email_template_id;
+                    $content['html_content'] = $this->html_content_variant_b ?? $this->html_content;
+                    $content['text_content'] = $this->text_content_variant_b ?? $this->text_content;
+                    break;
+                
+                case 'send_time':
+                    $content['scheduled_at'] = $this->scheduled_at_variant_b ?? $this->scheduled_at;
+                    break;
+            }
+        }
+
+        return $content;
+    }
+
+    public function getCtaForVariant(string $variant): array
+    {
+        $cta = [
+            'text' => 'Learn More',
+            'url' => config('app.url'),
+            'color' => 'indigo',
+        ];
+
+        if ($variant === 'variant_b' && $this->isCtaTest()) {
+            $cta['text'] = $this->cta_text_variant_b ?? $cta['text'];
+            $cta['url'] = $this->cta_url_variant_b ?? $cta['url'];
+            $cta['color'] = $this->cta_color_variant_b ?? $cta['color'];
+        }
+
+        return $cta;
+    }
+
+    public function selectWinner(string $winner): void
+    {
+        if (!in_array($winner, ['variant_a', 'variant_b'])) {
+            throw new \InvalidArgumentException('Winner must be either "variant_a" or "variant_b"');
+        }
+
+        $this->update([
+            'ab_test_winner' => $winner,
+            'ab_test_winner_selected_at' => now(),
+        ]);
+    }
+
+    public function getAbTestResults(): array
+    {
+        if (!$this->isAbTest()) {
+            return [];
+        }
+
+        return $this->ab_test_results ?? [];
+    }
+
+    public function getVariantOpenRate(string $variant): float
+    {
+        if (!$this->isAbTest()) {
+            return 0;
+        }
+
+        $results = $this->getAbTestResults();
+        if (!isset($results[$variant])) {
+            return 0;
+        }
+
+        $data = $results[$variant];
+        if (empty($data['delivered_count']) || $data['delivered_count'] <= 0) {
+            return 0;
+        }
+
+        return round(($data['opened_count'] / $data['delivered_count']) * 100, 1);
+    }
+
+    public function getVariantClickRate(string $variant): float
+    {
+        if (!$this->isAbTest()) {
+            return 0;
+        }
+
+        $results = $this->getAbTestResults();
+        if (!isset($results[$variant])) {
+            return 0;
+        }
+
+        $data = $results[$variant];
+        if (empty($data['opened_count']) || $data['opened_count'] <= 0) {
+            return 0;
+        }
+
+        return round(($data['clicked_count'] / $data['opened_count']) * 100, 1);
+    }
+
+    public function updateAbTestResults(): void
+    {
+        if (!$this->isAbTest()) {
+            return;
+        }
+
+        // Fix missing A/B test variant assignments for existing campaigns
+        $this->fixMissingAbTestVariants();
+
+        // Calculate variant statistics from campaign contacts using direct DB queries
+        $variantAResults = \DB::table('campaign_contacts')
+            ->where('campaign_id', $this->id)
+            ->where('ab_test_variant', 'variant_a')
+            ->selectRaw('
+                COUNT(*) as sent_count,
+                SUM(CASE WHEN delivered_at IS NOT NULL THEN 1 ELSE 0 END) as delivered_count,
+                SUM(CASE WHEN opened_at IS NOT NULL THEN 1 ELSE 0 END) as opened_count,
+                SUM(CASE WHEN clicked_at IS NOT NULL THEN 1 ELSE 0 END) as clicked_count
+            ')
+            ->first();
+
+        $variantBResults = \DB::table('campaign_contacts')
+            ->where('campaign_id', $this->id)
+            ->where('ab_test_variant', 'variant_b')
+            ->selectRaw('
+                COUNT(*) as sent_count,
+                SUM(CASE WHEN delivered_at IS NOT NULL THEN 1 ELSE 0 END) as delivered_count,
+                SUM(CASE WHEN opened_at IS NOT NULL THEN 1 ELSE 0 END) as opened_count,
+                SUM(CASE WHEN clicked_at IS NOT NULL THEN 1 ELSE 0 END) as clicked_count
+            ')
+            ->first();
+
+        $results = [
+            'variant_a' => [
+                'sent_count' => $variantAResults ? ($variantAResults->sent_count ?? 0) : 0,
+                'delivered_count' => $variantAResults ? ($variantAResults->delivered_count ?? 0) : 0,
+                'opened_count' => $variantAResults ? ($variantAResults->opened_count ?? 0) : 0,
+                'clicked_count' => $variantAResults ? ($variantAResults->clicked_count ?? 0) : 0,
+            ],
+            'variant_b' => [
+                'sent_count' => $variantBResults ? ($variantBResults->sent_count ?? 0) : 0,
+                'delivered_count' => $variantBResults ? ($variantBResults->delivered_count ?? 0) : 0,
+                'opened_count' => $variantBResults ? ($variantBResults->opened_count ?? 0) : 0,
+                'clicked_count' => $variantBResults ? ($variantBResults->clicked_count ?? 0) : 0,
+            ],
+        ];
+
+        $this->update(['ab_test_results' => $results]);
+    }
+
+    /**
+     * Fix missing A/B test variant assignments for existing campaigns
+     */
+    private function fixMissingAbTestVariants(): void
+    {
+        if (!$this->isAbTest()) {
+            return;
+        }
+
+        // Check if any contacts are missing variant assignments
+        $contactsWithoutVariants = $this->contacts()
+            ->whereNull('campaign_contacts.ab_test_variant')
+            ->get();
+
+        if ($contactsWithoutVariants->isEmpty()) {
+            return; // All contacts already have variants assigned
+        }
+
+        \Log::info('Fixing missing A/B test variants for campaign', [
+            'campaign_id' => $this->id,
+            'contacts_without_variants' => $contactsWithoutVariants->count()
+        ]);
+
+        // Assign variants to contacts without assignments
+        $splitPercentage = $this->ab_test_split_percentage ?? 50;
+        $totalContacts = $contactsWithoutVariants->count();
+        $variantASampleSize = (int) ceil(($splitPercentage / 100) * $totalContacts);
+
+        $contactsWithoutVariants->each(function ($contact, $index) use ($variantASampleSize) {
+            $variant = $index < $variantASampleSize ? 'variant_a' : 'variant_b';
+            
+            $this->contacts()->updateExistingPivot($contact->id, [
+                'ab_test_variant' => $variant
+            ]);
+        });
     }
 
     // Statistics calculations

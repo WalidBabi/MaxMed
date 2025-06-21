@@ -136,6 +136,93 @@
                                 </div>
                             </div>
 
+                            <!-- Dynamic Specifications Section -->
+                            <div class="col-12 mt-4">
+                                <h5 class="mb-3 text-primary">
+                                    <i class="fas fa-cogs me-2"></i>Product Specifications
+                                </h5>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <p class="text-muted mb-3">Product specifications based on the selected category.</p>
+                                    <div id="specifications-container" class="space-y-4">
+                                        @if(isset($templates) && !empty($templates))
+                                            @foreach($templates as $categoryName => $specs)
+                                                <div class="card border-0 shadow-sm mb-4">
+                                                    <div class="card-header bg-light">
+                                                        <h6 class="mb-0 text-primary">
+                                                            <i class="fas fa-list-ul me-2"></i>{{ $categoryName }}
+                                                        </h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row g-3">
+                                                            @foreach($specs as $spec)
+                                                                @php
+                                                                    $fieldName = "specifications[{$spec['key']}]";
+                                                                    $fieldId = "spec_{$spec['key']}";
+                                                                    $currentValue = $existingSpecs[$spec['key']]->specification_value ?? '';
+                                                                    $required = $spec['required'] ? 'required' : '';
+                                                                    $requiredMark = $spec['required'] ? '<span class="text-danger">*</span>' : '';
+                                                                @endphp
+                                                                
+                                                                <div class="col-md-6">
+                                                                    <label for="{{ $fieldId }}" class="form-label fw-medium">
+                                                                        {!! $spec['name'] . ' ' . $requiredMark !!}
+                                                                        @if($spec['unit'])
+                                                                            <span class="text-muted small">({{ $spec['unit'] }})</span>
+                                                                        @endif
+                                                                    </label>
+                                                                    
+                                                                    @if($spec['type'] === 'select')
+                                                                        <select name="{{ $fieldName }}" id="{{ $fieldId }}" {{ $required }}
+                                                                                class="form-select rounded-input">
+                                                                            <option value="">Select {{ $spec['name'] }}</option>
+                                                                            @foreach($spec['options'] as $option)
+                                                                                <option value="{{ $option }}" {{ $currentValue == $option ? 'selected' : '' }}>
+                                                                                    {{ $option }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    @elseif($spec['type'] === 'textarea')
+                                                                        <textarea name="{{ $fieldName }}" id="{{ $fieldId }}" {{ $required }}
+                                                                                  class="form-control rounded-input"
+                                                                                  rows="3" placeholder="Enter {{ strtolower($spec['name']) }}">{{ $currentValue }}</textarea>
+                                                                    @elseif($spec['type'] === 'boolean')
+                                                                        <div class="form-check">
+                                                                            <input type="checkbox" name="{{ $fieldName }}" id="{{ $fieldId }}" value="1" {{ $required }}
+                                                                                   {{ $currentValue == '1' || $currentValue == 'Yes' ? 'checked' : '' }}
+                                                                                   class="form-check-input">
+                                                                            <label for="{{ $fieldId }}" class="form-check-label">
+                                                                                Yes
+                                                                            </label>
+                                                                        </div>
+                                                                    @else
+                                                                        @php
+                                                                            $inputType = $spec['type'] === 'decimal' ? 'number' : $spec['type'];
+                                                                            $step = $spec['type'] === 'decimal' ? 'step="0.01"' : '';
+                                                                        @endphp
+                                                                        <input type="{{ $inputType }}" name="{{ $fieldName }}" id="{{ $fieldId }}" {{ $required }} {{ $step }}
+                                                                               value="{{ $currentValue }}"
+                                                                               class="form-control rounded-input"
+                                                                               placeholder="Enter {{ strtolower($spec['name']) }}">
+                                                                    @endif
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            <div class="alert alert-info rounded-input">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                No specifications available for this category.
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Current Images Display -->
                             @if($product->images->count() > 0)
                                 <div class="col-12 mt-4">
@@ -291,6 +378,117 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Category change handler for dynamic specifications
+    const categorySelect = document.getElementById('category_id');
+    const specificationsContainer = document.getElementById('specifications-container');
+    
+    if (categorySelect && specificationsContainer) {
+        categorySelect.addEventListener('change', function() {
+            const categoryId = this.value;
+            if (categoryId) {
+                loadSpecifications(categoryId);
+            } else {
+                specificationsContainer.innerHTML = '<div class="alert alert-info rounded-input"><i class="fas fa-info-circle me-2"></i>Select a category to see specification fields.</div>';
+            }
+        });
+    }
+
+    // Function to load specifications based on category
+    function loadSpecifications(categoryId) {
+        fetch(`/supplier/api/category-specifications/${categoryId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.templates) {
+                    renderSpecifications(data.templates);
+                } else {
+                    specificationsContainer.innerHTML = '<div class="alert alert-info rounded-input"><i class="fas fa-info-circle me-2"></i>No specifications available for this category.</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading specifications:', error);
+                specificationsContainer.innerHTML = '<div class="alert alert-danger rounded-input"><i class="fas fa-exclamation-triangle me-2"></i>Error loading specifications. Please try again.</div>';
+            });
+    }
+
+    // Function to render specification fields
+    function renderSpecifications(templates) {
+        let html = '';
+        
+        Object.entries(templates).forEach(([categoryName, specs]) => {
+            html += `
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0 text-primary">
+                            <i class="fas fa-list-ul me-2"></i>${categoryName}
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+            `;
+            
+            specs.forEach(spec => {
+                const fieldName = `specifications[${spec.key}]`;
+                const fieldId = `spec_${spec.key}`;
+                const required = spec.required ? 'required' : '';
+                const requiredMark = spec.required ? '<span class="text-danger">*</span>' : '';
+                
+                html += `
+                    <div class="col-md-6">
+                        <label for="${fieldId}" class="form-label fw-medium">
+                            ${spec.name} ${requiredMark}
+                            ${spec.unit ? `<span class="text-muted small">(${spec.unit})</span>` : ''}
+                        </label>
+                `;
+                
+                if (spec.type === 'select') {
+                    html += `
+                        <select name="${fieldName}" id="${fieldId}" ${required}
+                                class="form-select rounded-input">
+                            <option value="">Select ${spec.name}</option>
+                    `;
+                    spec.options.forEach(option => {
+                        html += `<option value="${option}">${option}</option>`;
+                    });
+                    html += `</select>`;
+                } else if (spec.type === 'textarea') {
+                    html += `
+                        <textarea name="${fieldName}" id="${fieldId}" ${required}
+                                  class="form-control rounded-input"
+                                  rows="3" placeholder="Enter ${spec.name.toLowerCase()}"></textarea>
+                    `;
+                } else if (spec.type === 'boolean') {
+                    html += `
+                        <div class="form-check">
+                            <input type="checkbox" name="${fieldName}" id="${fieldId}" value="1" ${required}
+                                   class="form-check-input">
+                            <label for="${fieldId}" class="form-check-label">
+                                Yes
+                            </label>
+                        </div>
+                    `;
+                } else {
+                    const inputType = spec.type === 'decimal' ? 'number' : spec.type;
+                    const step = spec.type === 'decimal' ? 'step="0.01"' : '';
+                    html += `
+                        <input type="${inputType}" name="${fieldName}" id="${fieldId}" ${required} ${step}
+                               class="form-control rounded-input"
+                               placeholder="Enter ${spec.name.toLowerCase()}">
+                    `;
+                }
+                
+                html += `</div>`;
+            });
+            
+            html += `
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        specificationsContainer.innerHTML = html;
+    }
+
     // Size options functionality
     const hasSizeOptions = document.getElementById('has_size_options');
     const sizeOptionsContainer = document.getElementById('size-options-container');

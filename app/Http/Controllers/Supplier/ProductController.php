@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Brand;
+use App\Services\ProductSpecificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +14,12 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
+    protected $specificationService;
+
+    public function __construct(ProductSpecificationService $specificationService)
+    {
+        $this->specificationService = $specificationService;
+    }
 
     /**
      * Display a listing of supplier's products.
@@ -37,7 +44,10 @@ class ProductController extends Controller
         }
 
         $products = $query->latest()->paginate(12);
-        $categories = Category::all();
+        
+        // Only show categories that the supplier is assigned to
+        $assignedCategoryIds = Auth::user()->activeAssignedCategories->pluck('id');
+        $categories = Category::whereIn('id', $assignedCategoryIds)->get();
 
         return view('supplier.products.index', compact('products', 'categories'));
     }
@@ -51,7 +61,10 @@ class ProductController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $categories = Category::all();
+        // Only show categories that the supplier is assigned to
+        $assignedCategoryIds = Auth::user()->activeAssignedCategories->pluck('id');
+        $categories = Category::whereIn('id', $assignedCategoryIds)->get();
+        
         // Get or create "Yooning" brand
         $yooningBrand = Brand::firstOrCreate(['name' => 'Yooning']);
         
@@ -77,7 +90,9 @@ class ProductController extends Controller
             'pdf_file' => 'nullable|file|mimes:pdf|max:10000',
             'has_size_options' => 'nullable|boolean',
             'size_options' => 'nullable|array',
-            'size_options.*' => 'nullable|string|max:50'
+            'size_options.*' => 'nullable|string|max:50',
+            'specifications' => 'nullable|array',
+            'specifications.*' => 'nullable|string'
         ]);
 
         DB::transaction(function () use ($validated, $request) {
@@ -152,6 +167,12 @@ class ProductController extends Controller
                     ]);
                 }
             }
+
+            // Handle specifications if provided
+            if ($request->filled('specifications')) {
+                $specificationsData = $this->transformSpecificationsData($request->specifications, $product->category_id);
+                $this->specificationService->saveProductSpecifications($product->id, $specificationsData);
+            }
         });
 
         return redirect()->route('supplier.products.index')
@@ -172,10 +193,19 @@ class ProductController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $categories = Category::all();
+        // Only show categories that the supplier is assigned to
+        $assignedCategoryIds = Auth::user()->activeAssignedCategories->pluck('id');
+        $categories = Category::whereIn('id', $assignedCategoryIds)->get();
+        
         $yooningBrand = Brand::firstOrCreate(['name' => 'Yooning']);
         
-        return view('supplier.products.edit', compact('product', 'categories', 'yooningBrand'));
+        // Get existing specifications
+        $existingSpecs = $this->specificationService->getExistingSpecifications($product->id);
+        
+        // Get category-specific templates
+        $templates = $this->specificationService->getCategorySpecificationTemplates($product->category_id);
+        
+        return view('supplier.products.edit', compact('product', 'categories', 'yooningBrand', 'existingSpecs', 'templates'));
     }
 
     /**
@@ -205,7 +235,9 @@ class ProductController extends Controller
             'delete_pdf' => 'nullable|boolean',
             'has_size_options' => 'nullable|boolean',
             'size_options' => 'nullable|array',
-            'size_options.*' => 'nullable|string|max:50'
+            'size_options.*' => 'nullable|string|max:50',
+            'specifications' => 'nullable|array',
+            'specifications.*' => 'nullable|string'
         ]);
 
         DB::transaction(function () use ($validated, $request, $product) {
@@ -303,6 +335,12 @@ class ProductController extends Controller
                     ]);
                 }
             }
+
+            // Handle specifications if provided
+            if ($request->filled('specifications')) {
+                $specificationsData = $this->transformSpecificationsData($request->specifications, $product->category_id);
+                $this->specificationService->saveProductSpecifications($product->id, $specificationsData);
+            }
         });
 
         return redirect()->route('supplier.products.index')
@@ -352,5 +390,93 @@ class ProductController extends Controller
 
         return redirect()->route('supplier.products.index')
             ->with('success', 'Product deleted successfully.');
+    }
+
+    /**
+     * Transform specifications form data to the format expected by the service
+     */
+    private function transformSpecificationsData(array $formSpecifications, int $categoryId): array
+    {
+        $templates = $this->specificationService->getCategorySpecificationTemplates($categoryId);
+        $transformedSpecs = [];
+        
+        // Flatten the grouped templates into a single array for easier lookup
+        $flatTemplates = [];
+        foreach ($templates as $categoryName => $categorySpecs) {
+            foreach ($categorySpecs as $spec) {
+                $flatTemplates[] = $spec;
+            }
+        }
+        
+        foreach ($formSpecifications as $key => $value) {
+            if (empty($value)) continue;
+            
+            // Find the template for this specification key
+            $template = null;
+            foreach ($flatTemplates as $spec) {
+                if ($spec['key'] === $key) {
+                    $template = $spec;
+                    break;
+                }
+            }
+            
+            if ($template) {
+                $transformedSpecs[] = [
+                    'specification_key' => $key,
+                    'specification_value' => $value,
+                    'unit' => $template['unit'] ?? null,
+                    'category' => $template['category'] ?? 'General',
+                    'display_name' => $template['name'] ?? $key,
+                    'description' => $template['description'] ?? null,
+                    'sort_order' => $template['sort_order'] ?? 0,
+                    'is_filterable' => $template['is_filterable'] ?? false,
+                    'is_searchable' => $template['is_searchable'] ?? false,
+                    'show_on_listing' => $template['show_on_listing'] ?? false,
+                    'show_on_detail' => $template['show_on_detail'] ?? true,
+                ];
+            } else {
+                // Fallback for custom specifications not in templates
+                $transformedSpecs[] = [
+                    'specification_key' => $key,
+                    'specification_value' => $value,
+                    'unit' => null,
+                    'category' => 'General',
+                    'display_name' => ucwords(str_replace('_', ' ', $key)),
+                    'description' => null,
+                    'sort_order' => 0,
+                    'is_filterable' => false,
+                    'is_searchable' => false,
+                    'show_on_listing' => false,
+                    'show_on_detail' => true,
+                ];
+            }
+        }
+        
+        return $transformedSpecs;
+    }
+
+    /**
+     * Get category specifications for API
+     */
+    public function getCategorySpecifications($categoryId)
+    {
+        try {
+            \Log::info("Supplier API: Requesting specifications for category ID: {$categoryId}");
+            
+            $templates = $this->specificationService->getCategorySpecificationTemplates($categoryId);
+            
+            \Log::info("Supplier API: Found " . count($templates) . " template groups for category ID: {$categoryId}");
+            
+            return response()->json([
+                'success' => true,
+                'templates' => $templates
+            ]);
+        } catch (\Exception $e) {
+            \Log::error("Supplier API: Error loading specifications for category ID {$categoryId}: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error loading specifications'
+            ], 500);
+        }
     }
 } 

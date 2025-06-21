@@ -592,15 +592,16 @@
             <table class="items-table">
                 <thead>
                     <tr>
-                        <th style="width: 40%;">Item Description</th>
-                        <th style="width: 15%;" class="text-center">Quantity</th>
+                        <th style="width: 35%;">Item Description</th>
+                        <th style="width: 12%;" class="text-center">Quantity</th>
                         <th style="width: 15%;" class="text-right">Unit Price</th>
                         <th style="width: 10%;" class="text-center">Discount</th>
+                        <th style="width: 8%;" class="text-center">Specs</th>
                         <th style="width: 20%;" class="text-right">Line Total</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($invoice->items as $item)
+                    @foreach($invoice->items as $index => $item)
                     <tr>
                         <td class="item-description">
                             {{ $item->item_description }}
@@ -616,6 +617,13 @@
                         </td>
                         <td class="text-right">{{ number_format($item->unit_price, 2) }}</td>
                         <td class="text-center">{{ number_format($item->discount_percentage, 2) }}%</td>
+                        <td class="text-center">
+                            @if($item->product && $item->product->specifications->count() > 0)
+                                <span style="font-size: 9px; color: var(--text-secondary);">See Note [{{ $index + 1 }}]</span>
+                            @else
+                                <span style="font-size: 9px; color: var(--text-muted);">-</span>
+                            @endif
+                        </td>
                         <td class="text-right">{{ number_format($item->line_total, 2) }}</td>
                     </tr>
                     @endforeach
@@ -723,6 +731,54 @@
         <div class="content-section">
             <div class="content-title">Notes</div>
             <div class="content-text">{{ $invoice->notes }}</div>
+        </div>
+        @endif
+
+        <!-- PRODUCT SPECIFICATIONS APPENDIX -->
+        @php
+            $itemsWithSpecs = $invoice->items->filter(function($item) {
+                return $item->product && $item->product->specifications->count() > 0;
+            });
+        @endphp
+        
+        @if($itemsWithSpecs->count() > 0)
+        <div class="content-section" style="margin-top: 40px; page-break-before: auto;">
+            <div class="content-title">Product Specifications</div>
+            <div class="specs-content">
+                @foreach($invoice->items as $index => $item)
+                    @if($item->product && $item->product->specifications->count() > 0)
+                        <div class="spec-item" style="margin-bottom: 20px; padding: 15px; background-color: var(--light-gray); border-radius: 8px; border-left: 3px solid var(--primary-color);">
+                            <div class="spec-product-name" style="font-weight: 600; color: var(--text-primary); margin-bottom: 8px; font-size: 12px;">
+                                [{{ $index + 1 }}] {{ $item->item_description }}
+                            </div>
+                            <div class="spec-details" style="font-size: 10px; color: var(--text-secondary);">
+                                @foreach($item->product->specifications->groupBy('category') as $category => $specs)
+                                    @if($category)
+                                        <div class="spec-category" style="margin-bottom: 8px;">
+                                            <div class="spec-category-name" style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px; text-transform: uppercase; font-size: 9px; letter-spacing: 0.5px;">
+                                                {{ $category }}
+                                            </div>
+                                            @foreach($specs as $spec)
+                                                <div class="spec-row" style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                                                    <span class="spec-key" style="font-weight: 500;">{{ $spec->display_name ?: $spec->specification_key }}:</span>
+                                                    <span class="spec-value" style="font-weight: 600;">{{ $spec->formatted_value }}</span>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        @foreach($specs as $spec)
+                                            <div class="spec-row" style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                                                <span class="spec-key" style="font-weight: 500;">{{ $spec->display_name ?: $spec->specification_key }}:</span>
+                                                <span class="spec-value" style="font-weight: 600;">{{ $spec->formatted_value }}</span>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
         </div>
         @endif
 

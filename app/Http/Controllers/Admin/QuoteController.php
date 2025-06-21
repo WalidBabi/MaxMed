@@ -147,7 +147,7 @@ class QuoteController extends Controller
      */
     public function show(Quote $quote)
     {
-        $quote->load('items', 'creator');
+        $quote->load(['items.product.specifications', 'creator']);
         return view('admin.quotes.show', compact('quote'));
     }
 
@@ -374,7 +374,7 @@ class QuoteController extends Controller
      */
     public function generatePdf(Quote $quote)
     {
-        $quote->load('items');
+        $quote->load(['items.product.specifications']);
         
         $pdf = Pdf::loadView('admin.quotes.pdf', compact('quote'));
         

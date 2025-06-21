@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
+use App\Services\ProductSpecificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -12,6 +13,13 @@ use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
+    protected $specificationService;
+
+    public function __construct(ProductSpecificationService $specificationService)
+    {
+        $this->specificationService = $specificationService;
+    }
+
     public function index(Request $request)
     {
         $query = Product::with(['category', 'inventory', 'brand', 'images']);
@@ -104,7 +112,9 @@ class ProductController extends Controller
             'pdf_file' => 'nullable|file|mimes:pdf|max:10000',
             'has_size_options' => 'nullable|boolean',
             'size_options' => 'nullable|array',
-            'size_options.*' => 'nullable|string|max:50'
+            'size_options.*' => 'nullable|string|max:50',
+            'specifications' => 'nullable|array',
+            'specifications.*' => 'nullable|string'
         ]);
 
         DB::transaction(function () use ($request, $validated) {
@@ -126,6 +136,12 @@ class ProductController extends Controller
             $product->inventory()->create([
                 'quantity' => $validated['stock']
             ]);
+
+            // Handle specifications if provided
+            if ($request->filled('specifications')) {
+                $specificationsData = $this->transformSpecificationsData($request->specifications, $product->category_id);
+                $this->specificationService->saveProductSpecifications($product->id, $specificationsData);
+            }
 
             // Handle primary image
             if ($request->hasFile('image')) {
@@ -188,7 +204,14 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::all();
-        return view('admin.products.edit', compact('product', 'categories'));
+        
+        // Get existing specifications
+        $existingSpecs = $this->specificationService->getExistingSpecifications($product->id);
+        
+        // Get category-specific templates
+        $templates = $this->specificationService->getCategorySpecificationTemplates($product->category_id);
+        
+        return view('admin.products.edit', compact('product', 'categories', 'existingSpecs', 'templates'));
     }
 
     public function update(Request $request, Product $product)
@@ -210,7 +233,9 @@ class ProductController extends Controller
             'delete_pdf' => 'nullable|boolean',
             'has_size_options' => 'nullable|boolean',
             'size_options' => 'nullable|array',
-            'size_options.*' => 'nullable|string|max:50'
+            'size_options.*' => 'nullable|string|max:50',
+            'specifications' => 'nullable|array',
+            'specifications.*' => 'nullable|string'
         ]);
 
         try {
@@ -239,6 +264,12 @@ class ProductController extends Controller
                 $product->inventory->update([
                     'quantity' => $validated['inventory_quantity']
                 ]);
+
+                // Handle specifications if provided
+                if ($request->filled('specifications')) {
+                    $specificationsData = $this->transformSpecificationsData($request->specifications, $product->category_id);
+                    $this->specificationService->saveProductSpecifications($product->id, $specificationsData);
+                }
 
                 // Handle primary image upload if provided
                 if ($request->hasFile('image')) {
@@ -457,40 +488,116 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        // Delete all product images
-        foreach ($product->images as $image) {
-            // Extract the relative path from the image_path
-            if (Storage::disk('public')->exists($image->image_path)) {
-                Storage::disk('public')->delete($image->image_path);
-            } 
-            // If image_path contains full URL
-            else if (str_contains($image->image_url, 'storage/')) {
-                $relativePath = str_replace(asset('storage/'), '', $image->image_url);
-                if (Storage::disk('public')->exists($relativePath)) {
-                    Storage::disk('public')->delete($relativePath);
+        try {
+            // Delete associated images from storage
+            foreach ($product->images as $image) {
+                if (Storage::disk('public')->exists($image->image_path)) {
+                    Storage::disk('public')->delete($image->image_path);
                 }
+            }
+            
+            // Delete PDF file if exists
+            if ($product->pdf_file && Storage::disk('public')->exists($product->pdf_file)) {
+                Storage::disk('public')->delete($product->pdf_file);
+            }
+            
+            // Delete the product (this will cascade delete related records)
+            $product->delete();
+            
+            return redirect()->route('admin.products.index')
+                ->with('success', 'Product deleted successfully');
+        } catch (\Exception $e) {
+            Log::error('Error deleting product: ' . $e->getMessage());
+            return redirect()->route('admin.products.index')
+                ->with('error', 'Error deleting product. Please try again.');
+        }
+    }
+
+    /**
+     * Transform specifications form data to the format expected by the service
+     */
+    private function transformSpecificationsData(array $formSpecifications, int $categoryId): array
+    {
+        $templates = $this->specificationService->getCategorySpecificationTemplates($categoryId);
+        $transformedSpecs = [];
+        
+        // Flatten the grouped templates into a single array for easier lookup
+        $flatTemplates = [];
+        foreach ($templates as $categoryName => $categorySpecs) {
+            foreach ($categorySpecs as $spec) {
+                $flatTemplates[] = $spec;
             }
         }
         
-        // Delete the image records
-        $product->images()->delete();
-
-        // Delete the main image if it exists
-        if ($product->image_url && Storage::disk('public')->exists(str_replace(asset('storage/'), '', $product->image_url))) {
-            Storage::disk('public')->delete(str_replace(asset('storage/'), '', $product->image_url));
+        foreach ($formSpecifications as $key => $value) {
+            if (empty($value)) continue;
+            
+            // Find the template for this specification key
+            $template = null;
+            foreach ($flatTemplates as $spec) {
+                if ($spec['key'] === $key) {
+                    $template = $spec;
+                    break;
+                }
+            }
+            
+            if ($template) {
+                $transformedSpecs[] = [
+                    'specification_key' => $key,
+                    'specification_value' => $value,
+                    'unit' => $template['unit'] ?? null,
+                    'category' => $template['category'] ?? 'General',
+                    'display_name' => $template['display_name'] ?? $key,
+                    'description' => $template['description'] ?? null,
+                    'sort_order' => $template['sort_order'] ?? 0,
+                    'is_filterable' => $template['is_filterable'] ?? false,
+                    'is_searchable' => $template['is_searchable'] ?? false,
+                    'show_on_listing' => $template['show_on_listing'] ?? false,
+                    'show_on_detail' => $template['show_on_detail'] ?? true,
+                ];
+            } else {
+                // Fallback for custom specifications not in templates
+                $transformedSpecs[] = [
+                    'specification_key' => $key,
+                    'specification_value' => $value,
+                    'unit' => null,
+                    'category' => 'General',
+                    'display_name' => ucwords(str_replace('_', ' ', $key)),
+                    'description' => null,
+                    'sort_order' => 0,
+                    'is_filterable' => false,
+                    'is_searchable' => false,
+                    'show_on_listing' => false,
+                    'show_on_detail' => true,
+                ];
+            }
         }
+        
+        return $transformedSpecs;
+    }
 
-        // Delete the PDF file if it exists
-        if ($product->pdf_file && Storage::disk('public')->exists($product->pdf_file)) {
-            Storage::disk('public')->delete($product->pdf_file);
+    /**
+     * Get category specifications for API
+     */
+    public function getCategorySpecifications($categoryId)
+    {
+        try {
+            \Log::info("Admin API: Requesting specifications for category ID: {$categoryId}");
+            
+            $templates = $this->specificationService->getCategorySpecificationTemplates($categoryId);
+            
+            \Log::info("Admin API: Found " . count($templates) . " template groups for category ID: {$categoryId}");
+            
+            return response()->json([
+                'success' => true,
+                'templates' => $templates
+            ]);
+        } catch (\Exception $e) {
+            \Log::error("Admin API: Error loading specifications for category ID {$categoryId}: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error loading specifications'
+            ], 500);
         }
-
-        // Delete the inventory record
-        $product->inventory()->delete();
-
-        $product->delete();
-
-        return redirect()->route('admin.products.index')
-            ->with('success', 'Product deleted successfully');
     }
 }

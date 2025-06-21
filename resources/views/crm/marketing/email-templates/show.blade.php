@@ -56,13 +56,23 @@
                 <h3 class="text-lg font-medium text-gray-900 mb-4">Template Preview</h3>
                 <div class="border border-gray-200 rounded-lg p-4">
                     <div class="text-sm text-gray-600 mb-4">
-                        <strong>Subject:</strong> {{ $emailTemplate->subject }}
+                        <strong>Subject:</strong> {{ $previewData['subject'] }}
                     </div>
                     <div class="relative">
-                        <iframe id="email-preview" class="w-full h-96 border border-gray-300 rounded-md" sandbox="allow-same-origin" data-content="{{ htmlspecialchars($emailTemplate->html_content, ENT_QUOTES, 'UTF-8') }}"></iframe>
+                        <iframe id="email-preview" class="w-full h-96 border border-gray-300 rounded-md" sandbox="allow-same-origin" data-content="{{ htmlspecialchars($previewData['html_content'], ENT_QUOTES, 'UTF-8') }}"></iframe>
                     </div>
+                    @if($previewData['text_content'])
+                        <div class="mt-4 border-t border-gray-200 pt-4">
+                            <h4 class="text-sm font-medium text-gray-900 mb-2">Plain Text Version:</h4>
+                            <div class="bg-gray-50 p-3 rounded-md text-sm text-gray-700 font-mono whitespace-pre-wrap max-h-32 overflow-y-auto">{{ $previewData['text_content'] }}</div>
+                        </div>
+                    @endif
                     <div class="mt-4 text-center">
-                        <button onclick="showRawHtml()" class="text-sm text-indigo-600 hover:text-indigo-800">View Raw HTML</button>
+                        <button onclick="showRawHtml()" class="text-sm text-indigo-600 hover:text-indigo-800 mr-4">View Raw HTML</button>
+                        <button onclick="previewInNewWindow()" class="text-sm text-indigo-600 hover:text-indigo-800">Open in New Window</button>
+                    </div>
+                    <div class="mt-2 text-center">
+                        <p class="text-xs text-gray-500">Preview uses sample data for demonstration purposes</p>
                     </div>
                 </div>
             </div>
@@ -78,19 +88,48 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set content via data attribute
     const htmlContent = iframe.getAttribute('data-content');
     
-    // Create a safe HTML document for the iframe
-    const doc = iframe.contentDocument || iframe.contentWindow.document;
-    doc.open();
-    doc.write(htmlContent);
-    doc.close();
+    if (htmlContent && htmlContent.trim()) {
+        // Create a safe HTML document for the iframe
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        doc.open();
+        doc.write(htmlContent);
+        doc.close();
+    } else {
+        // Show a message if no content is available
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        doc.open();
+        doc.write('<html><body style="font-family: Arial, sans-serif; padding: 40px; text-align: center; color: #666;"><h3>No Content Available</h3><p>This template does not have any content to preview.</p></body></html>');
+        doc.close();
+    }
 });
 
 function showRawHtml() {
     const iframe = document.getElementById('email-preview');
     const htmlContent = iframe.getAttribute('data-content');
+    
+    if (!htmlContent || !htmlContent.trim()) {
+        alert('No HTML content available to display.');
+        return;
+    }
+    
     const newWindow = window.open('', '_blank', 'width=800,height=600');
     newWindow.document.open();
-    newWindow.document.write('<html><head><title>Raw HTML Content</title><style>body{font-family:monospace;margin:20px;white-space:pre-wrap;}</style></head><body>' + htmlContent.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</body></html>');
+    newWindow.document.write('<html><head><title>Raw HTML Content</title><style>body{font-family:monospace;margin:20px;white-space:pre-wrap;word-wrap:break-word;}</style></head><body>' + htmlContent.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</body></html>');
+    newWindow.document.close();
+}
+
+function previewInNewWindow() {
+    const iframe = document.getElementById('email-preview');
+    const htmlContent = iframe.getAttribute('data-content');
+    
+    if (!htmlContent || !htmlContent.trim()) {
+        alert('No content available to preview.');
+        return;
+    }
+    
+    const newWindow = window.open('', '_blank', 'width=800,height=600');
+    newWindow.document.open();
+    newWindow.document.write(htmlContent);
     newWindow.document.close();
 }
 </script>

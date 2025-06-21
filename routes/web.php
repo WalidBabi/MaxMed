@@ -229,6 +229,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('campaigns/{campaign}/statistics', [\App\Http\Controllers\Crm\CampaignController::class, 'getStatistics'])->name('campaigns.statistics');
         Route::post('campaigns/{campaign}/schedule', [\App\Http\Controllers\Crm\CampaignController::class, 'schedule'])->name('campaigns.schedule');
         Route::post('campaigns/{campaign}/send', [\App\Http\Controllers\Crm\CampaignController::class, 'send'])->name('campaigns.send');
+        Route::post('campaigns/{campaign}/select-winner', [\App\Http\Controllers\Crm\CampaignController::class, 'selectWinner'])->name('campaigns.select-winner');
         Route::patch('campaigns/{campaign}/pause', [\App\Http\Controllers\Crm\CampaignController::class, 'pause'])->name('campaigns.pause');
         Route::patch('campaigns/{campaign}/resume', [\App\Http\Controllers\Crm\CampaignController::class, 'resume'])->name('campaigns.resume');
         Route::patch('campaigns/{campaign}/cancel', [\App\Http\Controllers\Crm\CampaignController::class, 'cancel'])->name('campaigns.cancel');
@@ -249,6 +250,16 @@ Route::middleware(['auth'])->group(function () {
 
         // Product Management
         Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
+        
+        // Product Specifications Management
+        Route::get('product-specifications', [App\Http\Controllers\Admin\ProductSpecificationController::class, 'index'])->name('product-specifications.index');
+        Route::get('products/{product}/specifications', [App\Http\Controllers\Admin\ProductSpecificationController::class, 'show'])->name('product-specifications.show');
+        Route::get('products/{product}/specifications/create', [App\Http\Controllers\Admin\ProductSpecificationController::class, 'create'])->name('product-specifications.create');
+        Route::post('products/{product}/specifications', [App\Http\Controllers\Admin\ProductSpecificationController::class, 'store'])->name('product-specifications.store');
+        Route::get('products/{product}/specifications/{specification}/edit', [App\Http\Controllers\Admin\ProductSpecificationController::class, 'edit'])->name('product-specifications.edit');
+        Route::put('products/{product}/specifications/{specification}', [App\Http\Controllers\Admin\ProductSpecificationController::class, 'update'])->name('product-specifications.update');
+        Route::delete('products/{product}/specifications/{specification}', [App\Http\Controllers\Admin\ProductSpecificationController::class, 'destroy'])->name('product-specifications.destroy');
+        Route::post('products/{product}/specifications/bulk', [App\Http\Controllers\Admin\ProductSpecificationController::class, 'bulkCreate'])->name('product-specifications.bulk-create');
 
         // Order Management
         Route::prefix('orders')->name('orders.')->group(function () {
@@ -318,10 +329,12 @@ Route::middleware(['auth'])->group(function () {
         Route::post('supplier-payments/{supplierPayment}/mark-failed', [\App\Http\Controllers\Admin\SupplierPaymentController::class, 'markAsFailed'])->name('supplier-payments.mark-failed');
         
         // Supplier Category Management
-        Route::resource('supplier-categories', \App\Http\Controllers\Admin\SupplierCategoryController::class);
-        Route::post('supplier-categories/bulk-status', [\App\Http\Controllers\Admin\SupplierCategoryController::class, 'bulkUpdateStatus'])->name('supplier-categories.bulk-status');
+        Route::get('supplier-categories', [\App\Http\Controllers\Admin\SupplierCategoryController::class, 'index'])->name('supplier-categories.index');
+        Route::get('supplier-categories/{supplier}/edit', [\App\Http\Controllers\Admin\SupplierCategoryController::class, 'edit'])->name('supplier-categories.edit');
+        Route::put('supplier-categories/{supplier}', [\App\Http\Controllers\Admin\SupplierCategoryController::class, 'update'])->name('supplier-categories.update');
+        Route::post('supplier-categories/bulk-assign', [\App\Http\Controllers\Admin\SupplierCategoryController::class, 'bulkAssign'])->name('supplier-categories.bulk-assign');
         Route::get('supplier-categories/export', [\App\Http\Controllers\Admin\SupplierCategoryController::class, 'export'])->name('supplier-categories.export');
-        Route::get('api/suppliers-by-category', [\App\Http\Controllers\Admin\SupplierCategoryController::class, 'getSuppliersByCategory'])->name('api.suppliers-by-category');
+        Route::get('supplier-categories/stats', [\App\Http\Controllers\Admin\SupplierCategoryController::class, 'getStats'])->name('supplier-categories.stats');
         
         // Inquiry Management
         Route::resource('inquiries', \App\Http\Controllers\Admin\InquiryController::class);
@@ -367,8 +380,24 @@ Route::middleware(['auth'])->group(function () {
         Route::get('notifications/count', [\App\Http\Controllers\Supplier\NotificationController::class, 'count']);
         
         Route::get('/', [\App\Http\Controllers\Supplier\DashboardController::class, 'index'])->name('dashboard');
+        
+        // Supplier Products (temporarily disabled category permissions for debugging)
         Route::resource('products', \App\Http\Controllers\Supplier\ProductController::class);
+        
         Route::resource('feedback', \App\Http\Controllers\Supplier\SystemFeedbackController::class);
+        
+        // Supplier Product Specifications (temporarily disabled category permissions for debugging)
+        Route::get('/product-specifications', [\App\Http\Controllers\Supplier\ProductSpecificationController::class, 'index'])->name('product-specifications.index');
+        Route::get('/products/{product}/specifications', [\App\Http\Controllers\Supplier\ProductSpecificationController::class, 'show'])->name('product-specifications.show');
+        Route::get('/products/{product}/specifications/edit', [\App\Http\Controllers\Supplier\ProductSpecificationController::class, 'edit'])->name('product-specifications.edit');
+        Route::put('/products/{product}/specifications', [\App\Http\Controllers\Supplier\ProductSpecificationController::class, 'update'])->name('product-specifications.update');
+        Route::delete('/products/{product}/specifications/{specification}', [\App\Http\Controllers\Supplier\ProductSpecificationController::class, 'destroySpecification'])->name('product-specifications.destroy');
+        Route::post('/products/{product}/specifications/bulk-import', [\App\Http\Controllers\Supplier\ProductSpecificationController::class, 'bulkImport'])->name('product-specifications.bulk-import');
+        
+        // Supplier API routes
+        Route::prefix('api')->name('api.')->group(function () {
+            Route::get('/category-specifications/{category}', [\App\Http\Controllers\Supplier\ProductController::class, 'getCategorySpecifications'])->name('category-specifications');
+        });
         
         // Supplier Order Management Routes
         Route::get('/orders', [\App\Http\Controllers\Supplier\OrderController::class, 'index'])->name('orders.index');
@@ -385,7 +414,7 @@ Route::middleware(['auth'])->group(function () {
         
         // Supplier Category Management Routes
         Route::get('/categories', [\App\Http\Controllers\Supplier\CategoryController::class, 'index'])->name('categories.index');
-        Route::get('/categories/{category}', [\App\Http\Controllers\Supplier\CategoryController::class, 'show'])->name('categories.show');
+        Route::get('/categories/{category}', [\App\Http\Controllers\Supplier\CategoryController::class, 'show'])->name('categories.show')->where('category', '[0-9]+');
         Route::post('/categories/request-assignment', [\App\Http\Controllers\Supplier\CategoryController::class, 'requestAssignment'])->name('categories.request-assignment');
         Route::get('/inquiries/{inquiry}', [\App\Http\Controllers\Supplier\InquiryController::class, 'show'])->name('inquiries.show');
         Route::post('/inquiries/{inquiry}/not-available', [\App\Http\Controllers\Supplier\InquiryController::class, 'respondNotAvailable'])->name('inquiries.not-available');
@@ -942,5 +971,42 @@ Route::get('/api/notification-status', function () {
         ]);
     }
 })->name('api.notification.status');
+
+// Test route for category specifications
+Route::get('/test-specifications/{categoryId}', function($categoryId) {
+    $service = new \App\Services\ProductSpecificationService();
+    $templates = $service->getCategorySpecificationTemplates($categoryId);
+    
+    return response()->json([
+        'category_id' => $categoryId,
+        'templates' => $templates,
+        'template_count' => count($templates)
+    ]);
+})->name('test.specifications');
+
+// Simple test route for category specifications
+Route::get('/test-specs/{categoryId}', function($categoryId) {
+    try {
+        $service = new \App\Services\ProductSpecificationService();
+        $templates = $service->getCategorySpecificationTemplates($categoryId);
+        
+        return response()->json([
+            'category_id' => $categoryId,
+            'templates' => $templates,
+            'template_count' => count($templates),
+            'success' => true
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+            'success' => false
+        ], 500);
+    }
+})->name('test.specs');
+
+// Admin API routes
+Route::prefix('admin/api')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/category-specifications/{category}', [App\Http\Controllers\Admin\ProductController::class, 'getCategorySpecifications'])->name('category-specifications');
+});
 
 require __DIR__ . '/auth.php';

@@ -251,7 +251,7 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        $invoice->load(['items', 'quote', 'order', 'delivery', 'payments', 'creator', 'parentInvoice', 'childInvoices']);
+        $invoice->load(['items.product.specifications', 'quote', 'order', 'delivery', 'payments', 'creator', 'parentInvoice', 'childInvoices']);
         return view('admin.invoices.show', compact('invoice'));
     }
 
@@ -537,7 +537,7 @@ class InvoiceController extends Controller
      */
     public function generatePdf(Invoice $invoice)
     {
-        $invoice->load('items');
+        $invoice->load(['items.product.specifications']);
         
         $pdf = Pdf::loadView('admin.invoices.pdf', compact('invoice'));
         
