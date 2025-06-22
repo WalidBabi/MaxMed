@@ -116,6 +116,7 @@ class InvoiceController extends Controller
                 'notes' => $quote->customer_notes,
                 'sub_total' => $quote->sub_total,
                 'total_amount' => $quote->total_amount,
+                'currency' => 'AED',
                 'payment_terms' => 'advance_50', // Default to 50% advance
                 'status' => 'draft',
                 'is_proforma' => true,
@@ -210,6 +211,7 @@ class InvoiceController extends Controller
                 'notes' => $request->notes,
                 'payment_terms' => $request->payment_terms,
                 'advance_percentage' => $request->advance_percentage,
+                'currency' => 'AED',
                 'is_proforma' => $request->type === 'proforma',
                 'requires_advance_payment' => in_array($request->payment_terms, ['advance_50', 'advance_100', 'custom']),
                 'reference_number' => $request->reference_number,
@@ -251,7 +253,7 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        $invoice->load(['items', 'quote', 'order', 'delivery', 'payments', 'creator', 'parentInvoice', 'childInvoices']);
+        $invoice->load(['items.product.specifications', 'quote', 'order', 'delivery', 'payments', 'creator', 'parentInvoice', 'childInvoices']);
         return view('admin.invoices.show', compact('invoice'));
     }
 
@@ -415,6 +417,7 @@ class InvoiceController extends Controller
             $payment = Payment::create([
                 'invoice_id' => $invoice->id,
                 'amount' => $request->amount,
+                'currency' => 'AED',
                 'payment_method' => $request->payment_method,
                 'payment_date' => $request->payment_date,
                 'transaction_reference' => $request->transaction_reference,
@@ -537,7 +540,7 @@ class InvoiceController extends Controller
      */
     public function generatePdf(Invoice $invoice)
     {
-        $invoice->load('items');
+        $invoice->load(['items.product.specifications']);
         
         $pdf = Pdf::loadView('admin.invoices.pdf', compact('invoice'));
         

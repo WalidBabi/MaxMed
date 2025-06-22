@@ -62,6 +62,21 @@ class Product extends Model
         return $this->belongsTo(User::class, 'supplier_id');
     }
 
+    public function specifications()
+    {
+        return $this->hasMany(ProductSpecification::class);
+    }
+
+    public function getSpecificationsByCategory()
+    {
+        return $this->specifications()
+            ->where('show_on_detail', true)
+            ->orderBy('category', 'asc')
+            ->orderBy('sort_order', 'asc')
+            ->get()
+            ->groupBy('category');
+    }
+
     public function inStock()
     {
         // If no inventory record exists, you could default to 0 or handle it otherwise.

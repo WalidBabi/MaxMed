@@ -17,7 +17,25 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::with('role');
+        $tab = $request->get('tab', 'all');
+        
+        // Base query with relationships
+        $query = User::with(['role', 'activeAssignedCategories', 'products']);
+
+        // Tab filtering
+        switch ($tab) {
+            case 'suppliers':
+                $query->whereHas('role', function($q) {
+                    $q->where('name', 'supplier');
+                });
+                break;
+            case 'admins':
+                $query->where('is_admin', true);
+                break;
+            default:
+                // All users - no additional filtering
+                break;
+        }
 
         // Search functionality
         if ($request->filled('search')) {
@@ -28,8 +46,8 @@ class UserController extends Controller
             });
         }
 
-        // Role filter
-        if ($request->filled('role')) {
+        // Role filter (only apply if not in specific tab)
+        if ($request->filled('role') && $tab === 'all') {
             if ($request->role === 'admin') {
                 $query->where('is_admin', true);
             } elseif ($request->role === 'no_role') {
@@ -73,7 +91,14 @@ class UserController extends Controller
         // Get roles for the filter dropdown
         $roles = Role::where('is_active', true)->get();
         
-        return view('admin.users.index', compact('users', 'roles'));
+        // Get counts for tab badges
+        $supplierCount = User::whereHas('role', function($q) {
+            $q->where('name', 'supplier');
+        })->count();
+        
+        $adminCount = User::where('is_admin', true)->count();
+        
+        return view('admin.users.index', compact('users', 'roles', 'supplierCount', 'adminCount'));
     }
 
     /**

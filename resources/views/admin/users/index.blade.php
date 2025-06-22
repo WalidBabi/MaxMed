@@ -22,6 +22,29 @@
         </div>
     </div>
 
+    <!-- Tabs Navigation -->
+    <div class="mb-8">
+        <div class="border-b border-gray-200">
+            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                <a href="{{ route('admin.users.index') }}" 
+                   class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm {{ !request('tab') || request('tab') == 'all' ? 'border-indigo-500 text-indigo-600' : '' }}">
+                    All Users
+                    <span class="bg-gray-100 text-gray-900 ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium md:inline-block">{{ $users->total() }}</span>
+                </a>
+                <a href="{{ route('admin.users.index', ['tab' => 'suppliers']) }}" 
+                   class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm {{ request('tab') == 'suppliers' ? 'border-indigo-500 text-indigo-600' : '' }}">
+                    Suppliers
+                    <span class="bg-blue-100 text-blue-900 ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium md:inline-block">{{ $supplierCount ?? 0 }}</span>
+                </a>
+                <a href="{{ route('admin.users.index', ['tab' => 'admins']) }}" 
+                   class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm {{ request('tab') == 'admins' ? 'border-indigo-500 text-indigo-600' : '' }}">
+                    Admins
+                    <span class="bg-yellow-100 text-yellow-900 ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium md:inline-block">{{ $adminCount ?? 0 }}</span>
+                </a>
+            </nav>
+        </div>
+    </div>
+
     <!-- Search Section -->
     <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-8">
         <div class="px-6 py-4 border-b border-gray-200">
@@ -100,7 +123,28 @@
     <!-- Users Table -->
     <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
         <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-900">All Users</h3>
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900">
+                    @if(request('tab') == 'suppliers')
+                        Suppliers Management
+                    @elseif(request('tab') == 'admins')
+                        Administrators
+                    @else
+                        All Users
+                    @endif
+                </h3>
+                @if(request('tab') == 'suppliers')
+                    <div class="flex items-center space-x-2">
+                        <a href="{{ route('admin.supplier-categories.index') }}" class="inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500">
+                            <svg class="-ml-0.5 mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" />
+                            </svg>
+                            Manage Categories
+                        </a>
+                    </div>
+                @endif
+            </div>
         </div>
         
         <div class="overflow-hidden">
@@ -111,7 +155,12 @@
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                @if(request('tab') == 'suppliers')
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned Categories</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Products</th>
+                                @else
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                @endif
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
                                 <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
@@ -140,15 +189,41 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">{{ $user->email }}</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($user->is_admin)
-                                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800">Super Admin</span>
-                                        @elseif($user->role)
-                                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800">{{ $user->role->display_name }}</span>
-                                        @else
-                                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-800">No Role</span>
-                                        @endif
-                                    </td>
+                                    @if(request('tab') == 'suppliers')
+                                        <td class="px-6 py-4">
+                                            @if($user->activeAssignedCategories && $user->activeAssignedCategories->count() > 0)
+                                                <div class="flex flex-wrap gap-1">
+                                                    @foreach($user->activeAssignedCategories as $category)
+                                                        <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800">
+                                                            {{ $category->name }}
+                                                        </span>
+                                                    @endforeach
+                                                </div>
+                                            @else
+                                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-red-100 text-red-800">
+                                                    No Categories Assigned
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ $user->products()->count() }} products</div>
+                                            @if($user->products()->count() > 0)
+                                                <div class="text-xs text-gray-500">
+                                                    Latest: {{ $user->products()->latest()->first()->created_at->format('M d, Y') }}
+                                                </div>
+                                            @endif
+                                        </td>
+                                    @else
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            @if($user->is_admin)
+                                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800">Super Admin</span>
+                                            @elseif($user->role)
+                                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800">{{ $user->role->display_name }}</span>
+                                            @else
+                                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-800">No Role</span>
+                                            @endif
+                                        </td>
+                                    @endif
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800">Active</span>
                                     </td>
@@ -157,6 +232,13 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="flex items-center justify-end space-x-2">
+                                            @if(request('tab') == 'suppliers' && $user->isSupplier())
+                                                <a href="{{ route('admin.supplier-categories.edit', $user) }}" class="text-blue-600 hover:text-blue-900" title="Manage Categories">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                                    </svg>
+                                                </a>
+                                            @endif
                                             <a href="{{ route('admin.users.show', $user) }}" class="text-indigo-600 hover:text-indigo-900" title="View User">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>

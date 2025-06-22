@@ -58,6 +58,11 @@ class SendCampaignJob implements ShouldQueue
             $totalSent = 0;
             $totalFailed = 0;
 
+            // For A/B testing, assign variants to contacts first
+            if ($this->campaign->isAbTest()) {
+                $this->assignAbTestVariants($contacts);
+            }
+
             // Process contacts in batches with memory optimization
             $contacts->chunk($this->batchSize)->each(function ($batch) use (&$totalSent, &$totalFailed) {
                 foreach ($batch as $contact) {
@@ -126,8 +131,8 @@ class SendCampaignJob implements ShouldQueue
 
     private function sendEmailToContact(MarketingContact $contact)
     {
-        // Prepare subject first
-        $subject = $this->campaign->subject;
+        // Prepare subject first - handle A/B testing
+        $subject = $this->getSubjectForContact($contact);
         
         // If campaign doesn't have subject, get it from template or use default
         if (empty($subject)) {
@@ -381,5 +386,83 @@ class SendCampaignJob implements ShouldQueue
 
         // Revert campaign status
         $this->campaign->update(['status' => 'draft']);
+    }
+
+    /**
+     * Assign A/B test variants to contacts
+     */
+    private function assignAbTestVariants($contacts)
+    {
+        if (!$this->campaign->isAbTest()) {
+            return;
+        }
+
+        Log::info("Assigning A/B test variants", [
+            'campaign_id' => $this->campaign->id,
+            'total_contacts' => $contacts->count(),
+            'split_percentage' => $this->campaign->ab_test_split_percentage
+        ]);
+
+        $contacts->each(function ($contact, $index) {
+            // Determine variant based on split percentage
+            $splitPercentage = $this->campaign->ab_test_split_percentage;
+            $totalContacts = $this->campaign->total_recipients;
+            $variantASampleSize = (int) ceil(($splitPercentage / 100) * $totalContacts);
+            
+            // Assign variant A to first X contacts, variant B to the rest
+            $variant = $index < $variantASampleSize ? 'variant_a' : 'variant_b';
+            
+            // Update the pivot table with the variant assignment
+            $this->campaign->contacts()->updateExistingPivot($contact->id, [
+                'ab_test_variant' => $variant
+            ]);
+
+            Log::debug("Assigned A/B test variant", [
+                'campaign_id' => $this->campaign->id,
+                'contact_id' => $contact->id,
+                'contact_index' => $index,
+                'variant' => $variant
+            ]);
+        });
+    }
+
+    /**
+     * Get the appropriate subject line for a contact based on A/B testing
+     */
+    private function getSubjectForContact(MarketingContact $contact): string
+    {
+        if (!$this->campaign->isAbTest()) {
+            return $this->campaign->subject;
+        }
+
+        // Get the assigned variant for this contact
+        $pivotData = $this->campaign->contacts()
+            ->where('marketing_contacts.id', $contact->id)
+            ->first();
+
+        if (!$pivotData || !$pivotData->pivot->ab_test_variant) {
+            // Fallback to variant A if no assignment found
+            return $this->campaign->subject;
+        }
+
+        $variant = $pivotData->pivot->ab_test_variant;
+        
+        if ($variant === 'variant_b') {
+            $subject = $this->campaign->subject_variant_b ?? $this->campaign->subject;
+            Log::debug("Using variant B subject", [
+                'campaign_id' => $this->campaign->id,
+                'contact_id' => $contact->id,
+                'subject' => $subject
+            ]);
+            return $subject;
+        }
+
+        // Default to variant A
+        Log::debug("Using variant A subject", [
+            'campaign_id' => $this->campaign->id,
+            'contact_id' => $contact->id,
+            'subject' => $this->campaign->subject
+        ]);
+        return $this->campaign->subject;
     }
 } 

@@ -43,12 +43,8 @@ class EmailTemplateController extends Controller
         $sortDirection = $request->get('direction', 'desc');
         $query->orderBy($sortField, $sortDirection);
 
-        $templates = $query->paginate(25)->withQueryString();
-
-        // Add campaigns count to each template
-        foreach ($templates as $template) {
-            $template->campaigns_count = $template->campaigns()->count();
-        }
+        // Load campaigns count efficiently for all templates
+        $templates = $query->withCount('campaigns')->paginate(25)->withQueryString();
 
         return view('crm.marketing.email-templates.index', compact('templates'));
     }
@@ -95,7 +91,7 @@ class EmailTemplateController extends Controller
             'text_content' => $request->text_content,
             'category' => $request->category,
             'banner_image' => $bannerImagePath,
-            'is_active' => $request->boolean('is_active', false),
+            'is_active' => $request->boolean('is_active', true), // Default to active
             'created_by' => auth()->id(),
         ]);
 
@@ -105,16 +101,43 @@ class EmailTemplateController extends Controller
 
     public function show(EmailTemplate $emailTemplate)
     {
-        $emailTemplate->load(['creator', 'campaigns']);
+        $emailTemplate->load(['creator', 'campaigns' => function ($query) {
+            $query->latest();
+        }]);
         
-        // Get usage statistics
+        // Get usage statistics efficiently using the loaded campaigns
         $usageStats = [
-            'total_campaigns' => $emailTemplate->campaigns()->count(),
-            'sent_campaigns' => $emailTemplate->campaigns()->where('status', 'sent')->count(),
-            'last_used' => $emailTemplate->campaigns()->latest()->first()?->created_at,
+            'total_campaigns' => $emailTemplate->campaigns->count(),
+            'sent_campaigns' => $emailTemplate->campaigns->where('status', 'sent')->count(),
+            'last_used' => $emailTemplate->campaigns->first()?->created_at,
         ];
 
-        return view('crm.marketing.email-templates.show', compact('emailTemplate', 'usageStats'));
+        // Generate preview content with sample data
+        $sampleData = [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'full_name' => 'John Doe',
+            'email' => 'john.doe@example.com',
+            'phone' => '+1 (555) 123-4567',
+            'company' => 'MaxMed Solutions',
+            'job_title' => 'Laboratory Manager',
+            'industry' => 'Healthcare',
+            'country' => 'United States',
+            'city' => 'New York',
+            'unsubscribe_url' => route('marketing.unsubscribe', ['token' => 'sample-token']),
+            'company_name' => config('app.name', 'MaxMed'),
+            'company_address' => '123 Business Street, City, State 12345',
+            'current_date' => now()->format('F j, Y'),
+            'current_year' => now()->year,
+        ];
+
+        $previewData = [
+            'subject' => $emailTemplate->renderSubject($sampleData),
+            'html_content' => $emailTemplate->renderHtmlContent($sampleData),
+            'text_content' => $emailTemplate->renderTextContent($sampleData),
+        ];
+
+        return view('crm.marketing.email-templates.show', compact('emailTemplate', 'usageStats', 'previewData'));
     }
 
     public function edit(EmailTemplate $emailTemplate)

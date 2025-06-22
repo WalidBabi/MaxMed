@@ -146,18 +146,59 @@
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
                                         <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Rate (AED)</th>
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Discount</th>
+                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Specs</th>
                                         <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount (AED)</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    @foreach($quote->items as $item)
+                                    @foreach($quote->items as $index => $item)
                                         <tr class="hover:bg-gray-50">
                                             <td class="px-6 py-4 text-sm text-gray-900">{{ $item->item_details }}</td>
                                             <td class="px-6 py-4 text-center text-sm text-gray-900">{{ number_format($item->quantity, 2) }}</td>
                                             <td class="px-6 py-4 text-right text-sm text-gray-900">{{ number_format($item->rate, 2) }}</td>
                                             <td class="px-6 py-4 text-center text-sm text-gray-900">{{ number_format($item->discount, 2) }}%</td>
+                                            <td class="px-6 py-4 text-center text-sm text-gray-900">
+                                                @if($item->product && $item->product->specifications->count() > 0)
+                                                    <button 
+                                                        onclick="toggleSpecs({{ $index }})" 
+                                                        class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                                                    >
+                                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                        </svg>
+                                                        {{ $item->product->specifications->count() }} specs
+                                                    </button>
+                                                @else
+                                                    <span class="text-gray-400">-</span>
+                                                @endif
+                                            </td>
                                             <td class="px-6 py-4 text-right text-sm font-medium text-gray-900">{{ number_format($item->amount, 2) }}</td>
                                         </tr>
+                                        @if($item->product && $item->product->specifications->count() > 0)
+                                            <tr id="specs-row-{{ $index }}" class="hidden">
+                                                <td colspan="6" class="px-6 py-4 bg-gray-50">
+                                                    <div class="specs-content">
+                                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                                            @foreach($item->product->specifications->groupBy('category') as $category => $specs)
+                                                                <div class="spec-category">
+                                                                    @if($category)
+                                                                        <h4 class="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-2">{{ $category }}</h4>
+                                                                    @endif
+                                                                    <div class="space-y-1">
+                                                                        @foreach($specs as $spec)
+                                                                            <div class="flex justify-between text-xs">
+                                                                                <span class="text-gray-600 font-medium">{{ $spec->display_name ?: $spec->specification_key }}:</span>
+                                                                                <span class="text-gray-900 font-semibold">{{ $spec->formatted_value }}</span>
+                                                                            </div>
+                                                                        @endforeach
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
@@ -358,4 +399,13 @@
         </div>
     </div>
 </div>
+
+<script>
+function toggleSpecs(index) {
+    const specsRow = document.getElementById(`specs-row-${index}`);
+    if (specsRow) {
+        specsRow.classList.toggle('hidden');
+    }
+}
+</script>
 @endsection 

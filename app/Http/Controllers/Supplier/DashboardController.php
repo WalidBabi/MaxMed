@@ -35,6 +35,22 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // Get supplier's assigned categories with performance data
+        $assignedCategories = $user->activeSupplierCategories()
+            ->with('category')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Calculate overall performance metrics
+        $performanceMetrics = [
+            'total_categories' => $assignedCategories->count(),
+            'avg_win_rate' => $assignedCategories->avg('quotation_win_rate') ?? 0,
+            'avg_response_time' => $assignedCategories->avg('avg_response_time_hours') ?? 24,
+            'avg_rating' => $assignedCategories->avg('avg_customer_rating') ?? 5.0,
+            'total_quotations' => $assignedCategories->sum('total_quotations'),
+            'won_quotations' => $assignedCategories->sum('won_quotations'),
+        ];
+
         // Order statistics (without customer/pricing info)
         $orderStats = [
             'pending' => \App\Models\Order::whereHas('delivery', function($q) { 
@@ -65,6 +81,8 @@ class DashboardController extends Controller
             'totalProducts',
             'activeProducts',
             'recentProducts',
+            'assignedCategories',
+            'performanceMetrics',
             'orderStats',
             'recentOrders'
         ));

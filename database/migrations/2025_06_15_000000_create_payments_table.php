@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('payment_number')->unique(); // PAY-000001
             $table->enum('payment_method', ['bank_transfer', 'credit_card', 'check', 'cash', 'online', 'other'])->default('bank_transfer');
             $table->decimal('amount', 10, 2);
-            $table->string('currency', 3)->default('USD');
+            $table->string('currency', 3)->default('AED');
             $table->date('payment_date');
             $table->string('transaction_reference')->nullable();
             $table->text('payment_notes')->nullable();

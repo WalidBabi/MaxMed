@@ -277,6 +277,92 @@
             </div>
         </div>
 
+        <!-- Dynamic Specifications Section -->
+        <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <svg class="h-5 w-5 text-orange-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Product Specifications
+                </h3>
+            </div>
+            <div class="p-6">
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600 mb-4">Product specifications based on the selected category.</p>
+                    <div id="specifications-container" class="space-y-6">
+                        @if(isset($templates) && !empty($templates))
+                            @foreach($templates as $categoryName => $specs)
+                                <div class="bg-gray-50 rounded-lg p-6">
+                                    <h4 class="text-md font-semibold text-gray-800 mb-4 flex items-center">
+                                        <i class="fas fa-list-ul mr-2 text-indigo-600"></i>
+                                        {{ $categoryName }}
+                                    </h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        @foreach($specs as $spec)
+                                            @php
+                                                $fieldName = "specifications[{$spec['key']}]";
+                                                $fieldId = "spec_{$spec['key']}";
+                                                $currentValue = $existingSpecs[$spec['key']]->specification_value ?? '';
+                                                $required = $spec['required'] ? 'required' : '';
+                                                $requiredMark = $spec['required'] ? '<span class="text-red-500">*</span>' : '';
+                                            @endphp
+                                            
+                                            <div>
+                                                <label for="{{ $fieldId }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                                    {!! $spec['name'] . ' ' . $requiredMark !!}
+                                                    @if($spec['unit'])
+                                                        <span class="text-gray-500 text-xs">({{ $spec['unit'] }})</span>
+                                                    @endif
+                                                </label>
+                                                
+                                                @if($spec['type'] === 'select')
+                                                    <select name="{{ $fieldName }}" id="{{ $fieldId }}" {{ $required }}
+                                                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                                        <option value="">Select {{ $spec['name'] }}</option>
+                                                        @foreach($spec['options'] as $option)
+                                                            <option value="{{ $option }}" {{ $currentValue == $option ? 'selected' : '' }}>
+                                                                {{ $option }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                @elseif($spec['type'] === 'textarea')
+                                                    <textarea name="{{ $fieldName }}" id="{{ $fieldId }}" {{ $required }}
+                                                              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                              rows="3" placeholder="Enter {{ strtolower($spec['name']) }}">{{ $currentValue }}</textarea>
+                                                @elseif($spec['type'] === 'boolean')
+                                                    <div class="flex items-center">
+                                                        <input type="checkbox" name="{{ $fieldName }}" id="{{ $fieldId }}" value="1" {{ $required }}
+                                                               {{ $currentValue == '1' || $currentValue == 'Yes' ? 'checked' : '' }}
+                                                               class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                                        <label for="{{ $fieldId }}" class="ml-2 block text-sm text-gray-900">
+                                                            Yes
+                                                        </label>
+                                                    </div>
+                                                @else
+                                                    @php
+                                                        $inputType = $spec['type'] === 'decimal' ? 'number' : $spec['type'];
+                                                        $step = $spec['type'] === 'decimal' ? 'step="0.01"' : '';
+                                                    @endphp
+                                                    <input type="{{ $inputType }}" name="{{ $fieldName }}" id="{{ $fieldId }}" {{ $required }} {{ $step }}
+                                                           value="{{ $currentValue }}"
+                                                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                                           placeholder="Enter {{ strtolower($spec['name']) }}">
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <p class="text-sm text-gray-500">No specifications available for this category.</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Form Actions -->
         <div class="flex items-center justify-end gap-x-6 pt-6">
             <a href="{{ route('admin.products.index') }}" class="text-sm font-semibold leading-6 text-gray-900">Cancel</a>
@@ -289,6 +375,114 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Category change handler for dynamic specifications
+        const categorySelect = document.getElementById('category_id');
+        const specificationsContainer = document.getElementById('specifications-container');
+        
+        if (categorySelect && specificationsContainer) {
+            categorySelect.addEventListener('change', function() {
+                const categoryId = this.value;
+                if (categoryId) {
+                    loadSpecifications(categoryId);
+                } else {
+                    specificationsContainer.innerHTML = '<p class="text-sm text-gray-500">Select a category to see specification fields.</p>';
+                }
+            });
+        }
+
+        // Function to load specifications based on category
+        function loadSpecifications(categoryId) {
+            fetch(`/admin/api/category-specifications/${categoryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.templates) {
+                        renderSpecifications(data.templates);
+                    } else {
+                        specificationsContainer.innerHTML = '<p class="text-sm text-gray-500">No specifications available for this category.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading specifications:', error);
+                    specificationsContainer.innerHTML = '<p class="text-sm text-red-500">Error loading specifications. Please try again.</p>';
+                });
+        }
+
+        // Function to render specification fields
+        function renderSpecifications(templates) {
+            let html = '';
+            
+            Object.entries(templates).forEach(([categoryName, specs]) => {
+                html += `
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h4 class="text-md font-semibold text-gray-800 mb-4 flex items-center">
+                            <i class="fas fa-list-ul mr-2 text-indigo-600"></i>
+                            ${categoryName}
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                `;
+                
+                specs.forEach(spec => {
+                    const fieldName = `specifications[${spec.key}]`;
+                    const fieldId = `spec_${spec.key}`;
+                    const required = spec.required ? 'required' : '';
+                    const requiredMark = spec.required ? '<span class="text-red-500">*</span>' : '';
+                    
+                    html += `
+                        <div>
+                            <label for="${fieldId}" class="block text-sm font-medium text-gray-700 mb-2">
+                                ${spec.name} ${requiredMark}
+                                ${spec.unit ? `<span class="text-gray-500 text-xs">(${spec.unit})</span>` : ''}
+                            </label>
+                    `;
+                    
+                    if (spec.type === 'select') {
+                        html += `
+                            <select name="${fieldName}" id="${fieldId}" ${required}
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="">Select ${spec.name}</option>
+                        `;
+                        spec.options.forEach(option => {
+                            html += `<option value="${option}">${option}</option>`;
+                        });
+                        html += `</select>`;
+                    } else if (spec.type === 'textarea') {
+                        html += `
+                            <textarea name="${fieldName}" id="${fieldId}" ${required}
+                                      class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                      rows="3" placeholder="Enter ${spec.name.toLowerCase()}"></textarea>
+                        `;
+                    } else if (spec.type === 'boolean') {
+                        html += `
+                            <div class="flex items-center">
+                                <input type="checkbox" name="${fieldName}" id="${fieldId}" value="1" ${required}
+                                       class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                <label for="${fieldId}" class="ml-2 block text-sm text-gray-900">
+                                    Yes
+                                </label>
+                            </div>
+                        `;
+                    } else {
+                        const inputType = spec.type === 'decimal' ? 'number' : spec.type;
+                        const step = spec.type === 'decimal' ? 'step="0.01"' : '';
+                        html += `
+                            <input type="${inputType}" name="${fieldName}" id="${fieldId}" ${required} ${step}
+                                   class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                   placeholder="Enter ${spec.name.toLowerCase()}">
+                        `;
+                    }
+                    
+                    html += `</div>`;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+            
+            specificationsContainer.innerHTML = html;
+        }
+
         // Size options functionality
         const hasSizeOptionsCheckbox = document.getElementById('has_size_options');
         const sizeOptionsContainer = document.getElementById('size_options_container');

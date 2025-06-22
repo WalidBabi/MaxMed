@@ -9,142 +9,197 @@
 @endpush
 
 @section('content')
-    <!-- Header -->
-    <div class="mb-8">
-        <div class="flex items-center justify-between">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900">Create New Quote</h1>
-                <p class="text-gray-600 mt-2">Create a new quote for customers</p>
-            </div>
-            <div class="flex items-center space-x-3">
-                <a href="{{ route('admin.quotes.index') }}" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                    <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
-                    </svg>
-                    Back to Quotes
-                </a>
-            </div>
-        </div>
-    </div>
-
-    @if($errors->any())
-        <div class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
-            <div class="flex">
-                <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                    </svg>
+    <!-- Full Width Container -->
+    <div class="-mx-4 sm:-mx-6 lg:-mx-8">
+        <!-- Header -->
+        <div class="mb-8 px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Create New Quote</h1>
+                    <p class="text-gray-600 mt-2">Create a new quote for customers</p>
                 </div>
-                <div class="ml-3">
-                    <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
-                    <div class="mt-2 text-sm text-red-700">
-                        <ul class="list-disc pl-5 space-y-1">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
+                <div class="flex items-center space-x-3">
+                    <a href="{{ route('admin.quotes.index') }}" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                        <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                        </svg>
+                        Back to Quotes
+                    </a>
                 </div>
             </div>
         </div>
-    @endif
 
-    <form id="quoteForm" action="{{ route('admin.quotes.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-2 space-y-8">
-                <!-- Basic Information -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                        <div class="flex items-center">
-                            <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        @if($errors->any())
+            <div class="px-4 sm:px-6 lg:px-8 mb-6">
+                <div class="bg-red-50 border border-red-200 rounded-md p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
                             </svg>
-                            <h3 class="text-lg font-semibold text-gray-900">Quote Information</h3>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+                            <div class="mt-2 text-sm text-red-700">
+                                <ul class="list-disc pl-5 space-y-1">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label for="customer_id" class="block text-sm font-medium text-gray-700 mb-2">Customer <span class="text-red-500">*</span></label>
-                                <select id="customer_id" name="customer_id" required 
-                                        class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('customer_id') border-red-300 @enderror">
-                                    <option value="">Select a customer</option>
-                                    @foreach($customers as $customer)
-                                        <option value="{{ $customer->id }}" {{ old('customer_id') == $customer->id ? 'selected' : '' }}>
-                                            {{ $customer->name }}{{ $customer->company_name ? ' - ' . $customer->company_name : '' }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('customer_id')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
+                </div>
+            </div>
+        @endif
 
-                            <div>
-                                <label for="quote_number" class="block text-sm font-medium text-gray-700 mb-2">Quote Number</label>
-                                <input type="text" id="quote_number" 
-                                       value="{{ \App\Models\Quote::generateQuoteNumber() }}" readonly
-                                       class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-500">
-                                <p class="mt-1 text-sm text-gray-500">Auto-generated</p>
-                            </div>
+        <form id="quoteForm" action="{{ route('admin.quotes.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
 
-                            <div>
-                                <label for="reference_number" class="block text-sm font-medium text-gray-700 mb-2">Reference Number</label>
-                                <input type="text" id="reference_number" name="reference_number" 
-                                       value="{{ old('reference_number') }}"
-                                       class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('reference_number') border-red-300 @enderror">
-                                @error('reference_number')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 px-4 sm:px-6 lg:px-8">
+                <div class="lg:col-span-3 space-y-8">
+                    <!-- Basic Information -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <h3 class="text-lg font-semibold text-gray-900">Quote Information</h3>
                             </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="customer_id" class="block text-sm font-medium text-gray-700 mb-2">Customer <span class="text-red-500">*</span></label>
+                                    <select id="customer_id" name="customer_id" required 
+                                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('customer_id') border-red-300 @enderror">
+                                        <option value="">Select a customer</option>
+                                        @foreach($customers as $customer)
+                                            <option value="{{ $customer->id }}" {{ old('customer_id') == $customer->id ? 'selected' : '' }}>
+                                                {{ $customer->name }}{{ $customer->company_name ? ' - ' . $customer->company_name : '' }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('customer_id')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
 
-                            <div>
-                                <label for="quote_date" class="block text-sm font-medium text-gray-700 mb-2">Quote Date <span class="text-red-500">*</span></label>
-                                <input type="date" id="quote_date" name="quote_date" 
-                                       value="{{ old('quote_date', date('Y-m-d')) }}" required
-                                       class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('quote_date') border-red-300 @enderror">
-                                @error('quote_date')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
+                                <div>
+                                    <label for="quote_number" class="block text-sm font-medium text-gray-700 mb-2">Quote Number</label>
+                                    <input type="text" id="quote_number" 
+                                           value="{{ \App\Models\Quote::generateQuoteNumber() }}" readonly
+                                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-500">
+                                    <p class="mt-1 text-sm text-gray-500">Auto-generated</p>
+                                </div>
 
-                            <div>
-                                <label for="expiry_date" class="block text-sm font-medium text-gray-700 mb-2">Expiry Date <span class="text-red-500">*</span></label>
-                                <input type="date" id="expiry_date" name="expiry_date" 
-                                       value="{{ old('expiry_date', date('Y-m-d', strtotime('+30 days'))) }}" required
-                                       class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('expiry_date') border-red-300 @enderror">
-                                @error('expiry_date')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
+                                <div>
+                                    <label for="reference_number" class="block text-sm font-medium text-gray-700 mb-2">Reference Number</label>
+                                    <input type="text" id="reference_number" name="reference_number" 
+                                           value="{{ old('reference_number') }}"
+                                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('reference_number') border-red-300 @enderror">
+                                    @error('reference_number')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
 
-                            <div>
-                                <label for="salesperson" class="block text-sm font-medium text-gray-700 mb-2">Salesperson</label>
-                                <input type="text" id="salesperson" name="salesperson" 
-                                       value="{{ old('salesperson') }}"
-                                       class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('salesperson') border-red-300 @enderror">
-                                @error('salesperson')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
+                                <div>
+                                    <label for="quote_date" class="block text-sm font-medium text-gray-700 mb-2">Quote Date <span class="text-red-500">*</span></label>
+                                    <input type="date" id="quote_date" name="quote_date" 
+                                           value="{{ old('quote_date', date('Y-m-d')) }}" required
+                                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('quote_date') border-red-300 @enderror">
+                                    @error('quote_date')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
 
-                            <div class="md:col-span-2">
-                                <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
-                                <input type="text" id="subject" name="subject" 
-                                       value="{{ old('subject') }}"
-                                       placeholder="Let your customer know what this Quote is for"
-                                       class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('subject') border-red-300 @enderror">
-                                @error('subject')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+                                <div>
+                                    <label for="expiry_date" class="block text-sm font-medium text-gray-700 mb-2">Expiry Date <span class="text-red-500">*</span></label>
+                                    <input type="date" id="expiry_date" name="expiry_date" 
+                                           value="{{ old('expiry_date', date('Y-m-d', strtotime('+30 days'))) }}" required
+                                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('expiry_date') border-red-300 @enderror">
+                                    @error('expiry_date')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div>
+                                    <label for="salesperson" class="block text-sm font-medium text-gray-700 mb-2">Salesperson</label>
+                                    <input type="text" id="salesperson" name="salesperson" 
+                                           value="{{ old('salesperson') }}"
+                                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('salesperson') border-red-300 @enderror">
+                                    @error('salesperson')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="md:col-span-2">
+                                    <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                                    <input type="text" id="subject" name="subject" 
+                                           value="{{ old('subject') }}"
+                                           placeholder="Let your customer know what this Quote is for"
+                                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('subject') border-red-300 @enderror">
+                                    @error('subject')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Item Table -->
+                <!-- Sidebar -->
+                <div class="space-y-8">
+                    <!-- Status and Actions -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                                <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                Actions
+                            </h3>
+                        </div>
+                        <div class="p-6">
+                            <input type="hidden" name="status" value="draft">
+                            
+                            <div class="space-y-3">
+                                <button type="submit" onclick="return validateForm()" class="w-full inline-flex justify-center items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                                    <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+                                    </svg>
+                                    Save Quote
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Tips -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                                <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                </svg>
+                                Quick Tips
+                            </h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="text-sm text-gray-600 space-y-2">
+                                <p><span class="font-medium text-gray-900">Customer:</span> Select from existing customers list</p>
+                                <p><span class="font-medium text-gray-900">Quote Date:</span> Defaults to today's date</p>
+                                <p><span class="font-medium text-gray-900">Expiry Date:</span> Defaults to 30 days from quote date</p>
+                                <p><span class="font-medium text-gray-900">Items:</span> Add at least one item to create the quote</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item Table - Full Width -->
+            <div class="w-full px-4 sm:px-6 lg:px-8 mb-8">
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                     <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
                         <h3 class="text-lg font-semibold text-gray-900 flex items-center">
@@ -161,17 +216,18 @@
                         </button>
                     </div>
                     <div class="p-6">
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200 items-table">
+                        <div class="overflow-x-auto w-full">
+                            <table class="w-full divide-y divide-gray-200 items-table">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-10">Drag</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Details</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Quantity</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-28">Rate</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-28">Discount</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-28">Amount</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Action</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 60px;">Drag</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 300px;">Item Details</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 200px;">Specifications</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Quantity</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Rate</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Discount</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Amount</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 80px;">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="itemsTable" class="bg-white divide-y divide-gray-200">
@@ -198,122 +254,79 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Customer Notes -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                            <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2z"></path>
-                            </svg>
-                            Customer Notes
-                        </h3>
-                    </div>
-                    <div class="p-6">
-                        <textarea id="customer_notes" name="customer_notes" rows="3"
-                                  placeholder="Looking forward for your business."
-                                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('customer_notes') border-red-300 @enderror">{{ old('customer_notes', 'Looking forward for your business.') }}</textarea>
-                        @error('customer_notes')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-
-                <!-- Terms & Conditions -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                            <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                            Terms & Conditions
-                        </h3>
-                    </div>
-                    <div class="p-6">
-                        <textarea id="terms_conditions" name="terms_conditions" rows="4"
-                                  placeholder="Enter the terms and conditions of your business to be displayed in your transaction"
-                                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('terms_conditions') border-red-300 @enderror">{{ old('terms_conditions') }}</textarea>
-                        @error('terms_conditions')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-
-                <!-- Attachments -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                            <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-                            </svg>
-                            Attach File(s) to Quote
-                        </h3>
-                    </div>
-                    <div class="p-6">
-                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-300 transition-colors">
-                            <input type="file" id="attachments" name="attachments[]" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" class="hidden">
-                            <label for="attachments" class="cursor-pointer block">
-                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                                </svg>
-                                <p class="mt-2 text-sm font-medium text-gray-900">Click to upload files or drag and drop</p>
-                                <p class="mt-1 text-xs text-gray-500">You can upload a maximum of 5 files, 10MB each</p>
-                            </label>
-                        </div>
-                        <div id="fileList" class="mt-3"></div>
-                    </div>
-                </div>
             </div>
 
-            <!-- Sidebar -->
-            <div class="space-y-8">
-                <!-- Status and Actions -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                            <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            </svg>
-                            Actions
-                        </h3>
-                    </div>
-                    <div class="p-6">
-                        <input type="hidden" name="status" value="draft">
-                        
-                        <div class="space-y-3">
-                            <button type="submit" onclick="return validateForm()" class="w-full inline-flex justify-center items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
-                                <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+            <!-- Bottom Sections - Back to Grid Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 px-4 sm:px-6 lg:px-8">
+                <div class="lg:col-span-3 space-y-8">
+                    <!-- Customer Notes -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                                <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
-                                Save Quote
-                            </button>
+                                Customer Notes
+                            </h3>
+                        </div>
+                        <div class="p-6">
+                            <textarea id="customer_notes" name="customer_notes" rows="3"
+                                      placeholder="Looking forward for your business."
+                                      class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('customer_notes') border-red-300 @enderror">{{ old('customer_notes', 'Looking forward for your business.') }}</textarea>
+                            @error('customer_notes')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
-                </div>
 
-                <!-- Quick Tips -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                            <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-                            </svg>
-                            Quick Tips
-                        </h3>
+                    <!-- Terms & Conditions -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                                <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Terms & Conditions
+                            </h3>
+                        </div>
+                        <div class="p-6">
+                            <textarea id="terms_conditions" name="terms_conditions" rows="4"
+                                      placeholder="Enter the terms and conditions of your business to be displayed in your transaction"
+                                      class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('terms_conditions') border-red-300 @enderror">{{ old('terms_conditions') }}</textarea>
+                            @error('terms_conditions')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
-                    <div class="p-6">
-                        <div class="text-sm text-gray-600 space-y-2">
-                            <p><span class="font-medium text-gray-900">Customer:</span> Select from existing customers list</p>
-                            <p><span class="font-medium text-gray-900">Quote Date:</span> Defaults to today's date</p>
-                            <p><span class="font-medium text-gray-900">Expiry Date:</span> Defaults to 30 days from quote date</p>
-                            <p><span class="font-medium text-gray-900">Items:</span> Add at least one item to create the quote</p>
+
+                    <!-- Attachments -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                                <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                                </svg>
+                                Attach File(s) to Quote
+                            </h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-300 transition-colors">
+                                <input type="file" id="attachments" name="attachments[]" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" class="hidden">
+                                <label for="attachments" class="cursor-pointer block">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                    <p class="mt-2 text-sm font-medium text-gray-900">Click to upload files or drag and drop</p>
+                                    <p class="mt-1 text-xs text-gray-500">You can upload a maximum of 5 files, 10MB each</p>
+                                </label>
+                            </div>
+                            <div id="fileList" class="mt-3"></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 @endsection
 
 @push('styles')
@@ -333,26 +346,80 @@
         box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
     }
     
-    /* Fixed table layout for consistent column widths */
+    /* Table Layout Styles */
     .items-table {
         table-layout: fixed;
         width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
     }
     
     .items-table th,
     .items-table td {
-        overflow: hidden;
-        text-overflow: ellipsis;
+        padding: 12px 8px;
+        vertical-align: top;
+        border-bottom: 1px solid #e5e7eb;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
     
+    .items-table th {
+        background-color: #f9fafb;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        color: #6b7280;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    
+    .items-table td {
+        background-color: #ffffff;
+    }
+    
+    .items-table tr:hover td {
+        background-color: #f9fafb;
+    }
+    
+    /* Column Widths */
+    .items-table th:nth-child(1),
+    .items-table td:nth-child(1) { width: 60px; } /* Drag */
+    
+    .items-table th:nth-child(2),
+    .items-table td:nth-child(2) { width: 300px; } /* Item Details */
+    
+    .items-table th:nth-child(3),
+    .items-table td:nth-child(3) { width: 200px; } /* Specifications */
+    
+    .items-table th:nth-child(4),
+    .items-table td:nth-child(4) { width: 120px; } /* Quantity */
+    
+    .items-table th:nth-child(5),
+    .items-table td:nth-child(5) { width: 120px; } /* Rate */
+    
+    .items-table th:nth-child(6),
+    .items-table td:nth-child(6) { width: 120px; } /* Discount */
+    
+    .items-table th:nth-child(7),
+    .items-table td:nth-child(7) { width: 120px; } /* Amount */
+    
+    .items-table th:nth-child(8),
+    .items-table td:nth-child(8) { width: 80px; } /* Action */
+    
+    /* Input Styles */
     .items-table input,
     .items-table select {
-        min-width: 100px;
+     
+        min-width: 0;
+        box-sizing: border-box;
     }
     
     /* Custom Dropdown Styles */
     .product-dropdown-container {
         position: relative;
+        width: 100%;
     }
     
     .product-dropdown-list {
@@ -366,8 +433,59 @@
         max-height: 300px;
         overflow-y: auto;
         background: white;
-        z-index: 9999;
+        z-index: 999999;
         margin-top: 4px;
+        min-width: 280px;
+    }
+    
+    /* Specifications Dropdown Styles */
+    .specifications-dropdown-container {
+        position: relative;
+        width: 100%;
+    }
+    
+    .specifications-dropdown-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        max-height: 200px;
+        overflow-y: auto;
+        background: white;
+        z-index: 999999;
+        margin-top: 4px;
+        min-width: 180px;
+    }
+    
+    /* Specifications Checkbox Styles */
+    .specifications-dropdown-list .spec-checkbox,
+    .specifications-dropdown-list .select-all-checkbox {
+        accent-color: #6366f1;
+    }
+    
+    .specifications-dropdown-list .spec-checkbox:checked,
+    .specifications-dropdown-list .select-all-checkbox:checked {
+        background-color: #6366f1;
+        border-color: #6366f1;
+    }
+    
+    .specifications-dropdown-list .spec-checkbox:focus,
+    .specifications-dropdown-list .select-all-checkbox:focus {
+        ring: 2px;
+        ring-color: #6366f1;
+        ring-offset: 2px;
+    }
+    
+    /* Select All section styling */
+    .specifications-dropdown-list .bg-indigo-50 {
+        background-color: #eef2ff;
+    }
+    
+    .specifications-dropdown-list .bg-indigo-50:hover {
+        background-color: #e0e7ff;
     }
     
     /* Ensure table cells don't interfere with dropdown positioning */
@@ -381,12 +499,37 @@
     }
     
     .items-table .product-dropdown-list {
-        z-index: 9999;
+        z-index: 999999;
+    }
+    
+    .items-table .specifications-dropdown-container {
+        z-index: 10;
+    }
+    
+    .items-table .specifications-dropdown-list {
+        z-index: 999999;
+    }
+    
+    /* Force dropdown to appear above everything */
+    .product-dropdown-list:not(.hidden) {
+        position: absolute !important;
+        z-index: 999999 !important;
+    }
+    
+    .specifications-dropdown-list:not(.hidden) {
+        position: absolute !important;
+        z-index: 999999 !important;
     }
     
     .dropdown-item {
         transition: background-color 0.15s ease-in-out;
         cursor: pointer;
+        padding: 8px 12px;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    
+    .dropdown-item:last-child {
+        border-bottom: none;
     }
     
     .dropdown-item:hover {
@@ -407,6 +550,70 @@
     
     .hidden {
         display: none;
+    }
+    
+    /* Table Container Styles */
+    .overflow-x-auto {
+        overflow-x: auto;
+        overflow-y: visible;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        background: white;
+    }
+    
+    /* Additional fixes for table overflow */
+    .overflow-x-auto {
+        overflow: visible;
+    }
+    
+    /* Ensure the table container doesn't clip the dropdown */
+    .items-table {
+        overflow: visible;
+    }
+    
+    .items-table tbody {
+        overflow: visible;
+    }
+    
+    .items-table tr {
+        overflow: visible;
+    }
+    
+    /* Scrollbar Styles */
+    .overflow-x-auto::-webkit-scrollbar {
+        height: 8px;
+    }
+    
+    .overflow-x-auto::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 4px;
+    }
+    
+    .overflow-x-auto::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+    
+    .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+    
+    /* Amount Display */
+    .amount-display {
+        font-weight: 600;
+        color: #374151;
+    }
+    
+    /* Action Button */
+    .items-table .action-button {
+        padding: 4px;
+        border-radius: 50%;
+        transition: all 0.2s ease-in-out;
+    }
+    
+    .items-table .action-button:hover {
+        background-color: #fef2f2;
+        transform: scale(1.1);
     }
 </style>
 @endpush
@@ -445,6 +652,7 @@ function addItem() {
                                  data-name="{{ $product->name }}"
                                  data-description="{{ $product->description }}"
                                  data-price="{{ $product->price_aed ?? $product->price }}"
+                                 data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
                                  data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
                                 <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
                                 @if($product->description)
@@ -457,6 +665,21 @@ function addItem() {
                         @endforeach
                     </div>
                     <div class="p-3 text-sm text-gray-500 text-center dropdown-no-results hidden">No products found</div>
+                </div>
+            </div>
+        </td>
+        <td class="px-3 py-4">
+            <div class="relative specifications-dropdown-container">
+                <input type="text" 
+                       class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 specifications-search-input" 
+                       placeholder="Select specifications..." 
+                       autocomplete="off"
+                       readonly>
+                <input type="hidden" name="items[${itemCounter}][specifications]" class="specifications-hidden">
+                
+                <!-- Specifications Dropdown List -->
+                <div class="specifications-dropdown-list hidden">
+                    <div class="p-2 text-sm text-gray-500">No specifications available</div>
                 </div>
             </div>
         </td>
@@ -479,7 +702,7 @@ function addItem() {
             <span class="amount-display font-medium text-gray-900">0.00</span>
         </td>
         <td class="px-3 py-4 text-center">
-            <button type="button" onclick="removeItem(this)" class="inline-flex items-center p-1 border border-transparent rounded-full text-red-600 hover:bg-red-50">
+            <button type="button" onclick="removeItem(this)" class="inline-flex items-center p-1 border border-transparent rounded-full text-red-600 hover:bg-red-50 action-button">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
@@ -500,13 +723,37 @@ function addItem() {
     const dropdownList = row.querySelector('.product-dropdown-list');
     const dropdownItems = row.querySelector('.dropdown-items');
     const dropdownNoResults = row.querySelector('.dropdown-no-results');
+    const specificationsInput = row.querySelector('.specifications-search-input');
+    const specificationsHidden = row.querySelector('.specifications-hidden');
+    const specificationsDropdown = row.querySelector('.specifications-dropdown-list');
     
     [quantityInput, rateInput, discountInput].forEach(input => {
         input.addEventListener('input', calculateRowAmount);
     });
     
     // Initialize custom dropdown functionality
-    initializeCustomDropdown(productSearchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput);
+    initializeCustomDropdown(productSearchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput, specificationsInput, specificationsHidden, specificationsDropdown);
+    
+    // Add specifications dropdown functionality
+    specificationsInput.addEventListener('click', function() {
+        if (specificationsHidden.value && specificationsHidden.value !== '[]') {
+            specificationsDropdown.classList.toggle('hidden');
+        }
+    });
+    
+    // Hide specifications dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!specificationsInput.contains(e.target) && !specificationsDropdown.contains(e.target)) {
+            specificationsDropdown.classList.add('hidden');
+        }
+    });
+    
+    // Prevent dropdown from closing when clicking on checkboxes
+    specificationsDropdown.addEventListener('click', function(e) {
+        if (e.target.type === 'checkbox' || e.target.tagName === 'LABEL') {
+            e.stopPropagation();
+        }
+    });
     
     calculateTotals();
 }
@@ -593,7 +840,7 @@ function validateForm() {
 }
 
 // Initialize custom dropdown functionality
-function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput) {
+function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput, specificationsInput, specificationsHidden, specificationsDropdown) {
     const allDropdownItems = dropdownItems.querySelectorAll('.dropdown-item');
     let selectedIndex = -1;
     
@@ -685,6 +932,7 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         const productId = item.dataset.id;
         const productName = item.dataset.name;
         const productPrice = item.dataset.price;
+        const specifications = item.dataset.specifications;
         
         // Set values
         searchInput.value = productName;
@@ -692,12 +940,93 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         itemDetailsHidden.value = productName;
         rateInput.value = productPrice || 0;
         
+        // Handle specifications
+        if (specifications && specifications !== '[]') {
+            try {
+                const specsArray = JSON.parse(specifications);
+                if (specsArray.length > 0) {
+                    specificationsInput.value = 'Click to select specifications...';
+                    specificationsHidden.value = JSON.stringify(specsArray);
+                    
+                    // Update specifications dropdown content with checkboxes
+                    specificationsDropdown.innerHTML = '';
+                    specsArray.forEach((spec, index) => {
+                        const specDiv = document.createElement('div');
+                        specDiv.className = 'p-3 text-sm text-gray-700 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 cursor-pointer flex items-center';
+                        specDiv.innerHTML = `
+                            <input type="checkbox" id="spec_${itemCounter}_${index}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox" data-spec="${spec}">
+                            <label for="spec_${itemCounter}_${index}" class="flex-1 cursor-pointer">${spec}</label>
+                        `;
+                        specificationsDropdown.appendChild(specDiv);
+                    });
+                    
+                    // Add "Select All" option
+                    const selectAllDiv = document.createElement('div');
+                    selectAllDiv.className = 'p-3 text-sm font-medium text-indigo-600 border-b border-gray-200 bg-indigo-50 hover:bg-indigo-100 cursor-pointer';
+                    selectAllDiv.innerHTML = `
+                        <input type="checkbox" id="select_all_${itemCounter}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded select-all-checkbox">
+                        <label for="select_all_${itemCounter}" class="cursor-pointer">Select All</label>
+                    `;
+                    specificationsDropdown.insertBefore(selectAllDiv, specificationsDropdown.firstChild);
+                    
+                    // Add event listeners for checkboxes
+                    const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox');
+                    const selectAllCheckbox = specificationsDropdown.querySelector('.select-all-checkbox');
+                    
+                    // Select All functionality
+                    selectAllCheckbox.addEventListener('change', function() {
+                        checkboxes.forEach(checkbox => {
+                            checkbox.checked = this.checked;
+                        });
+                        updateSelectedSpecifications();
+                    });
+                    
+                    // Individual checkbox functionality
+                    checkboxes.forEach(checkbox => {
+                        checkbox.addEventListener('change', function() {
+                            updateSelectedSpecifications();
+                            // Update select all checkbox
+                            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                            const someChecked = Array.from(checkboxes).some(cb => cb.checked);
+                            selectAllCheckbox.checked = allChecked;
+                            selectAllCheckbox.indeterminate = someChecked && !allChecked;
+                        });
+                    });
+                } else {
+                    specificationsInput.value = '';
+                    specificationsHidden.value = '';
+                    specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
+                }
+            } catch (e) {
+                specificationsInput.value = '';
+                specificationsHidden.value = '';
+                specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
+            }
+        } else {
+            specificationsInput.value = '';
+            specificationsHidden.value = '';
+            specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
+        }
+        
         // Hide dropdown
         dropdownList.classList.add('hidden');
         selectedIndex = -1;
         
         // Trigger calculation
         calculateRowAmount({ target: rateInput });
+    }
+    
+    function updateSelectedSpecifications() {
+        const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox:checked');
+        const selectedSpecs = Array.from(checkboxes).map(cb => cb.dataset.spec);
+        
+        if (selectedSpecs.length > 0) {
+            specificationsInput.value = selectedSpecs.join(', ');
+            specificationsHidden.value = JSON.stringify(selectedSpecs);
+        } else {
+            specificationsInput.value = 'Click to select specifications...';
+            specificationsHidden.value = '';
+        }
     }
     
     // Clear selection function
@@ -709,6 +1038,9 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
                 searchInput.value = '';
                 itemDetailsHidden.value = '';
                 rateInput.value = 0;
+                specificationsInput.value = '';
+                specificationsHidden.value = '';
+                specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
                 calculateRowAmount({ target: rateInput });
             }
         }, 200);

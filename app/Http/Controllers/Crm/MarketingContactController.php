@@ -48,7 +48,8 @@ class MarketingContactController extends Controller
         $sortDirection = $request->get('direction', 'desc');
         $query->orderBy($sortField, $sortDirection);
 
-        $contacts = $query->paginate(25)->withQueryString();
+        // Load campaigns count for each contact
+        $contacts = $query->withCount('campaigns')->paginate(25)->withQueryString();
 
         // Get filter options
         $industries = MarketingContact::distinct()->pluck('industry')->filter();

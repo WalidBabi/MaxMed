@@ -13,6 +13,9 @@ class PurchaseOrder extends Model
         'po_number',
         'order_id',
         'delivery_id',
+        'supplier_id',
+        'quotation_request_id',
+        'supplier_quotation_id',
         'supplier_name',
         'supplier_address',
         'supplier_email',
@@ -157,6 +160,30 @@ class PurchaseOrder extends Model
     public function updater(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * Get the supplier user
+     */
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'supplier_id');
+    }
+
+    /**
+     * Get the original quotation request
+     */
+    public function quotationRequest(): BelongsTo
+    {
+        return $this->belongsTo(QuotationRequest::class);
+    }
+
+    /**
+     * Get the supplier quotation that was accepted
+     */
+    public function supplierQuotation(): BelongsTo
+    {
+        return $this->belongsTo(SupplierQuotation::class);
     }
 
     /**

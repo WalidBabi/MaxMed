@@ -149,13 +149,24 @@ class User extends Authenticatable
      */
     public function activeAssignedCategories()
     {
-        return $this->assignedCategories()->wherePivot('status', 'active');
+        return $this->belongsToMany(Category::class, 'supplier_categories', 'supplier_id', 'category_id')
+                    ->wherePivot('status', 'active')
+                    ->withPivot(['status', 'assigned_at'])
+                    ->withTimestamps();
     }
 
     /**
      * Get supplier products
      */
     public function supplierProducts()
+    {
+        return $this->hasMany(Product::class, 'supplier_id');
+    }
+
+    /**
+     * Get products (alias for supplierProducts for consistency)
+     */
+    public function products()
     {
         return $this->hasMany(Product::class, 'supplier_id');
     }
@@ -173,8 +184,9 @@ class User extends Authenticatable
      */
     public function isAssignedToCategory($categoryId): bool
     {
-        return $this->activeSupplierCategories()
+        return $this->supplierCategories()
                     ->where('category_id', $categoryId)
+                    ->where('status', 'active')
                     ->exists();
     }
 
@@ -231,5 +243,13 @@ class User extends Authenticatable
     public function getProfileDisplayAttribute()
     {
         return strtoupper(substr($this->name ?? 'U', 0, 2));
+    }
+
+    /**
+     * Get the supplier information (for supplier users)
+     */
+    public function supplierInformation()
+    {
+        return $this->hasOne(SupplierInformation::class);
     }
 }

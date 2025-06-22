@@ -608,6 +608,9 @@
                 </div>
             </div>
             @endif
+
+            <!-- Enhanced Product Specifications -->
+            <x-product-specifications :product="$product" />
         </div>
     </div>
 

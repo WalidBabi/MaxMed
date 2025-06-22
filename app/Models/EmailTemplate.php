@@ -161,7 +161,7 @@ class EmailTemplate extends Model
             'text_content' => $this->text_content ?: '',
             'variables' => $this->variables,
             'category' => $this->category,
-            'is_active' => false, // New template starts as inactive
+            'is_active' => true, // New template starts as active
             'created_by' => auth()->id(),
         ]);
     }
