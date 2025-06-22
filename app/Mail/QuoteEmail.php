@@ -46,7 +46,7 @@ class QuoteEmail extends Mailable
         }
 
         // Generate and attach PDF
-        $pdf = Pdf::loadView('admin.quotes.pdf', ['quote' => $this->quote]);
+        $pdf = Pdf::loadView('admin.quotes.pdf', ['quote' => $this->quote, 'customer' => $this->customer]);
         $email->attachData(
             $pdf->output(),
             $this->quote->quote_number . '.pdf',

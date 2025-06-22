@@ -79,7 +79,7 @@
                                             @foreach($customers as $customer)
                                                 <option value="{{ $customer->name }}" 
                                                         {{ old('customer_name', $quote->customer_name) == $customer->name ? 'selected' : '' }}>
-                                                    {{ $customer->name }}
+                                                    {{ $customer->name }}{{ $customer->company_name ? ' - ' . $customer->company_name : '' }}
                                                 </option>
                                             @endforeach
                                         @endif
