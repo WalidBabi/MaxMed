@@ -210,7 +210,7 @@
                                         @if($invoice->payment_terms !== 'on_delivery')
                                         <div style="display: inline-block; background-color: #F59E0B; color: #FFFFFF; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">💳 PAYMENT REQUIRED</div>
                                         @else
-                                        <div style="display: inline-block; background-color: #3B82F6; color: #FFFFFF; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">📦 DELIVERY INFORMATION</div>
+                                        <div style="display: inline-block; background-color: #3B82F6; color: #FFFFFF; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">💳 PAYMENT ON DELIVERY</div>
                                         @endif
                                         <h4 style="color: #92400E; margin: 0 0 12px 0; font-size: 18px; font-weight: 600;">Payment Information</h4>
                                         <p style="margin: 0 0 15px 0; color: #451A03; line-height: 1.6;">
