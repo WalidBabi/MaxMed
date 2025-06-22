@@ -2,99 +2,274 @@
 
 @push('styles')
 <style>
-/* Fixed table layout for consistent column widths */
-.items-table {
-    table-layout: fixed;
-    width: 100%;
-}
+    /* Table Layout Styles */
+    .items-table {
+        table-layout: fixed;
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    
+    .items-table th,
+    .items-table td {
+        padding: 12px 8px;
+        vertical-align: top;
+        border-bottom: 1px solid #e5e7eb;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    .items-table th {
+        background-color: #f9fafb;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        color: #6b7280;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    
+    .items-table td {
+        background-color: #ffffff;
+    }
+    
+    .items-table tr:hover td {
+        background-color: #f9fafb;
+    }
+    
+    /* Column Widths */
+    .items-table th:nth-child(1),
+    .items-table td:nth-child(1) { width: 60px; } /* Drag */
+    
+    .items-table th:nth-child(2),
+    .items-table td:nth-child(2) { width: 300px; } /* Item Details */
+    
+    .items-table th:nth-child(3),
+    .items-table td:nth-child(3) { width: 200px; } /* Specifications */
+    
+    .items-table th:nth-child(4),
+    .items-table td:nth-child(4) { width: 120px; } /* Quantity */
+    
+    .items-table th:nth-child(5),
+    .items-table td:nth-child(5) { width: 120px; } /* Rate */
+    
+    .items-table th:nth-child(6),
+    .items-table td:nth-child(6) { width: 120px; } /* Discount */
+    
+    .items-table th:nth-child(7),
+    .items-table td:nth-child(7) { width: 120px; } /* Amount */
+    
+    .items-table th:nth-child(8),
+    .items-table td:nth-child(8) { width: 80px; } /* Action */
+    
+    /* Input Styles */
+    .items-table input,
+    .items-table select {
+        min-width: 0;
+        box-sizing: border-box;
+    }
+    
+    /* Custom Dropdown Styles */
+    .product-dropdown-container {
+        position: relative;
+        width: 100%;
+    }
+    
+    .product-dropdown-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        max-height: 300px;
+        overflow-y: auto;
+        background: white;
+        z-index: 999999;
+        margin-top: 4px;
+        min-width: 280px;
+    }
 
-.items-table th,
-.items-table td {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.items-table input,
-.items-table select {
-    min-width: 100px;
-}
-
-/* Item row styling */
-.item-row {
-    cursor: grab;
-    transition: all 0.3s ease;
-}
-
-.item-row:active {
-    cursor: grabbing;
-}
-
-.item-row:hover {
-    background-color: #f9fafb;
-}
-
-.drag-handle {
-    cursor: grab;
-}
-
-/* Custom Dropdown Styles */
-.product-dropdown-container {
-    position: relative;
-}
-
-.product-dropdown-list {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    border: 1px solid #d1d5db;
-    border-radius: 0.375rem;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    max-height: 300px;
-    overflow-y: auto;
-    background: white;
-    z-index: 9999;
-    margin-top: 4px;
-}
-
-/* Ensure table cells don't interfere with dropdown positioning */
-.items-table td {
-    position: relative;
-    z-index: 1;
-}
-
-.items-table .product-dropdown-container {
-    z-index: 10;
-}
-
-.items-table .product-dropdown-list {
-    z-index: 9999;
-}
-
-.dropdown-item {
-    transition: background-color 0.15s ease-in-out;
-    cursor: pointer;
-}
-
-.dropdown-item:hover {
-    background-color: #f8fafc;
-}
-
-.dropdown-item.bg-indigo-50 {
-    background-color: #eef2ff;
-}
-
-.product-search-input {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z'/%3e%3c/svg%3e");
-    background-position: right 0.5rem center;
-    background-repeat: no-repeat;
-    background-size: 1.5em 1.5em;
-    padding-right: 2.5rem;
-}
-
-.hidden {
-    display: none;
-}
+    /* Specifications Dropdown Styles */
+    .specifications-dropdown-container {
+        position: relative;
+        width: 100%;
+    }
+    
+    .specifications-dropdown-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        max-height: 200px;
+        overflow-y: auto;
+        background: white;
+        z-index: 999999;
+        margin-top: 4px;
+        min-width: 180px;
+    }
+    
+    /* Specifications Checkbox Styles */
+    .specifications-dropdown-list .spec-checkbox,
+    .specifications-dropdown-list .select-all-checkbox {
+        accent-color: #6366f1;
+    }
+    
+    .specifications-dropdown-list .spec-checkbox:checked,
+    .specifications-dropdown-list .select-all-checkbox:checked {
+        background-color: #6366f1;
+        border-color: #6366f1;
+    }
+    
+    .specifications-dropdown-list .spec-checkbox:focus,
+    .specifications-dropdown-list .select-all-checkbox:focus {
+        ring: 2px;
+        ring-color: #6366f1;
+        ring-offset: 2px;
+    }
+    
+    /* Select All section styling */
+    .specifications-dropdown-list .bg-indigo-50 {
+        background-color: #eef2ff;
+    }
+    
+    .specifications-dropdown-list .bg-indigo-50:hover {
+        background-color: #e0e7ff;
+    }
+    
+    /* Ensure table cells don't interfere with dropdown positioning */
+    .items-table td {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .items-table .product-dropdown-container {
+        z-index: 10;
+    }
+    
+    .items-table .product-dropdown-list {
+        z-index: 999999;
+    }
+    
+    .items-table .specifications-dropdown-container {
+        z-index: 10;
+    }
+    
+    .items-table .specifications-dropdown-list {
+        z-index: 999999;
+    }
+    
+    /* Force dropdown to appear above everything */
+    .product-dropdown-list:not(.hidden) {
+        position: absolute !important;
+        z-index: 999999 !important;
+    }
+    
+    .specifications-dropdown-list:not(.hidden) {
+        position: absolute !important;
+        z-index: 999999 !important;
+    }
+    
+    .dropdown-item {
+        transition: background-color 0.15s ease-in-out;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    
+    .dropdown-item:last-child {
+        border-bottom: none;
+    }
+    
+    .dropdown-item:hover {
+        background-color: #f8fafc;
+    }
+    
+    .dropdown-item.bg-indigo-50 {
+        background-color: #eef2ff;
+    }
+    
+    .product-search-input {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+    }
+    
+    .hidden {
+        display: none;
+    }
+    
+    /* Table Container Styles */
+    .overflow-x-auto {
+        overflow-x: auto;
+        overflow-y: visible;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        background: white;
+    }
+    
+    /* Additional fixes for table overflow */
+    .overflow-x-auto {
+        overflow: visible;
+    }
+    
+    /* Ensure the table container doesn't clip the dropdown */
+    .items-table {
+        overflow: visible;
+    }
+    
+    .items-table tbody {
+        overflow: visible;
+    }
+    
+    .items-table tr {
+        overflow: visible;
+    }
+    
+    /* Scrollbar Styles */
+    .overflow-x-auto::-webkit-scrollbar {
+        height: 8px;
+    }
+    
+    .overflow-x-auto::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 4px;
+    }
+    
+    .overflow-x-auto::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+    
+    .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+    
+    /* Amount Display */
+    .amount-display {
+        font-weight: 600;
+        color: #374151;
+    }
+    
+    /* Action Button */
+    .items-table .action-button {
+        padding: 4px;
+        border-radius: 50%;
+        transition: all 0.2s ease-in-out;
+    }
+    
+    .items-table .action-button:hover {
+        background-color: #fef2f2;
+        transform: scale(1.1);
+    }
 </style>
 @endpush
 
@@ -266,6 +441,7 @@
                                     <tr>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-10">Drag</th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Details</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Specifications</th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Quantity</th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-28">Rate</th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-28">Discount</th>
@@ -303,6 +479,7 @@
                                                                              data-name="{{ $product->name }}"
                                                                              data-description="{{ $product->description }}"
                                                                              data-price="{{ $product->price_aed ?? $product->price }}"
+                                                                             data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
                                                                              data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
                                                                             <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
                                                                             @if($product->description)
@@ -316,6 +493,21 @@
                                                                 @endif
                                                             </div>
                                                             <div class="p-3 text-sm text-gray-500 text-center dropdown-no-results hidden">No products found</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="px-3 py-4">
+                                                    <div class="relative specifications-dropdown-container">
+                                                        <input type="text" 
+                                                               class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 specifications-search-input" 
+                                                               placeholder="Select specifications..." 
+                                                               autocomplete="off"
+                                                               readonly>
+                                                        <input type="hidden" name="items[{{ $index }}][specifications]" class="specifications-hidden" value="{{ $item->specifications }}">
+                                                        
+                                                        <!-- Specifications Dropdown List -->
+                                                        <div class="specifications-dropdown-list hidden">
+                                                            <div class="p-2 text-sm text-gray-500">No specifications available</div>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -571,6 +763,7 @@ function addItem() {
                                      data-name="{{ $product->name }}"
                                      data-description="{{ $product->description }}"
                                      data-price="{{ $product->price_aed ?? $product->price }}"
+                                     data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
                                      data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
                                     <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
                                     @if($product->description)
@@ -584,6 +777,21 @@ function addItem() {
                         @endif
                     </div>
                     <div class="p-3 text-sm text-gray-500 text-center dropdown-no-results hidden">No products found</div>
+                </div>
+            </div>
+        </td>
+        <td class="px-3 py-4">
+            <div class="relative specifications-dropdown-container">
+                <input type="text" 
+                       class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 specifications-search-input" 
+                       placeholder="Select specifications..." 
+                       autocomplete="off"
+                       readonly>
+                <input type="hidden" name="items[${itemCounter}][specifications]" class="specifications-hidden">
+                
+                <!-- Specifications Dropdown List -->
+                <div class="specifications-dropdown-list hidden">
+                    <div class="p-2 text-sm text-gray-500">No specifications available</div>
                 </div>
             </div>
         </td>
@@ -627,13 +835,37 @@ function addItem() {
     const dropdownList = row.querySelector('.product-dropdown-list');
     const dropdownItems = row.querySelector('.dropdown-items');
     const dropdownNoResults = row.querySelector('.dropdown-no-results');
+    const specificationsInput = row.querySelector('.specifications-search-input');
+    const specificationsHidden = row.querySelector('.specifications-hidden');
+    const specificationsDropdown = row.querySelector('.specifications-dropdown-list');
     
     [quantityInput, rateInput, discountInput].forEach(input => {
         input.addEventListener('input', calculateRowAmount);
     });
     
     // Initialize custom dropdown functionality
-    initializeCustomDropdown(productSearchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput);
+    initializeCustomDropdown(productSearchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput, specificationsInput, specificationsHidden, specificationsDropdown);
+    
+    // Add specifications dropdown functionality
+    specificationsInput.addEventListener('click', function() {
+        if (specificationsHidden.value && specificationsHidden.value !== '[]') {
+            specificationsDropdown.classList.toggle('hidden');
+        }
+    });
+    
+    // Hide specifications dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!specificationsInput.contains(e.target) && !specificationsDropdown.contains(e.target)) {
+            specificationsDropdown.classList.add('hidden');
+        }
+    });
+    
+    // Prevent dropdown from closing when clicking on checkboxes
+    specificationsDropdown.addEventListener('click', function(e) {
+        if (e.target.type === 'checkbox' || e.target.tagName === 'LABEL') {
+            e.stopPropagation();
+        }
+    });
     
     calculateTotals();
 }
@@ -709,7 +941,7 @@ function validateForm() {
 }
 
 // Initialize custom dropdown functionality
-function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput) {
+function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput, specificationsInput, specificationsHidden, specificationsDropdown) {
     const allDropdownItems = dropdownItems.querySelectorAll('.dropdown-item');
     let selectedIndex = -1;
     
@@ -801,6 +1033,7 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         const productId = item.dataset.id;
         const productName = item.dataset.name;
         const productPrice = item.dataset.price;
+        const specifications = item.dataset.specifications;
         
         // Set values
         searchInput.value = productName;
@@ -808,12 +1041,93 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         itemDetailsHidden.value = productName;
         rateInput.value = productPrice || 0;
         
+        // Handle specifications
+        if (specifications && specifications !== '[]') {
+            try {
+                const specsArray = JSON.parse(specifications);
+                if (specsArray.length > 0) {
+                    specificationsInput.value = 'Click to select specifications...';
+                    specificationsHidden.value = JSON.stringify(specsArray);
+                    
+                    // Update specifications dropdown content with checkboxes
+                    specificationsDropdown.innerHTML = '';
+                    specsArray.forEach((spec, index) => {
+                        const specDiv = document.createElement('div');
+                        specDiv.className = 'p-3 text-sm text-gray-700 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 cursor-pointer flex items-center';
+                        specDiv.innerHTML = `
+                            <input type="checkbox" id="spec_${itemCounter}_${index}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox" data-spec="${spec}">
+                            <label for="spec_${itemCounter}_${index}" class="flex-1 cursor-pointer">${spec}</label>
+                        `;
+                        specificationsDropdown.appendChild(specDiv);
+                    });
+                    
+                    // Add "Select All" option
+                    const selectAllDiv = document.createElement('div');
+                    selectAllDiv.className = 'p-3 text-sm font-medium text-indigo-600 border-b border-gray-200 bg-indigo-50 hover:bg-indigo-100 cursor-pointer';
+                    selectAllDiv.innerHTML = `
+                        <input type="checkbox" id="select_all_${itemCounter}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded select-all-checkbox">
+                        <label for="select_all_${itemCounter}" class="cursor-pointer">Select All</label>
+                    `;
+                    specificationsDropdown.insertBefore(selectAllDiv, specificationsDropdown.firstChild);
+                    
+                    // Add event listeners for checkboxes
+                    const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox');
+                    const selectAllCheckbox = specificationsDropdown.querySelector('.select-all-checkbox');
+                    
+                    // Select All functionality
+                    selectAllCheckbox.addEventListener('change', function() {
+                        checkboxes.forEach(checkbox => {
+                            checkbox.checked = this.checked;
+                        });
+                        updateSelectedSpecifications();
+                    });
+                    
+                    // Individual checkbox functionality
+                    checkboxes.forEach(checkbox => {
+                        checkbox.addEventListener('change', function() {
+                            updateSelectedSpecifications();
+                            // Update select all checkbox
+                            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                            const someChecked = Array.from(checkboxes).some(cb => cb.checked);
+                            selectAllCheckbox.checked = allChecked;
+                            selectAllCheckbox.indeterminate = someChecked && !allChecked;
+                        });
+                    });
+                } else {
+                    specificationsInput.value = '';
+                    specificationsHidden.value = '';
+                    specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
+                }
+            } catch (e) {
+                specificationsInput.value = '';
+                specificationsHidden.value = '';
+                specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
+            }
+        } else {
+            specificationsInput.value = '';
+            specificationsHidden.value = '';
+            specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
+        }
+        
         // Hide dropdown
         dropdownList.classList.add('hidden');
         selectedIndex = -1;
         
         // Trigger calculation
         calculateRowAmount({ target: rateInput });
+    }
+    
+    function updateSelectedSpecifications() {
+        const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox:checked');
+        const selectedSpecs = Array.from(checkboxes).map(cb => cb.dataset.spec);
+        
+        if (selectedSpecs.length > 0) {
+            specificationsInput.value = selectedSpecs.join(', ');
+            specificationsHidden.value = JSON.stringify(selectedSpecs);
+        } else {
+            specificationsInput.value = 'Click to select specifications...';
+            specificationsHidden.value = '';
+        }
     }
     
     // Clear selection function
@@ -825,6 +1139,9 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
                 searchInput.value = '';
                 itemDetailsHidden.value = '';
                 rateInput.value = 0;
+                specificationsInput.value = '';
+                specificationsHidden.value = '';
+                specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
                 calculateRowAmount({ target: rateInput });
             }
         }, 200);
@@ -854,7 +1171,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Initialize custom dropdown functionality
         if (productSearchInput) {
-            initializeCustomDropdown(productSearchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput);
+            const specificationsInput = row.querySelector('.specifications-search-input');
+            const specificationsHidden = row.querySelector('.specifications-hidden');
+            const specificationsDropdown = row.querySelector('.specifications-dropdown-list');
+            initializeCustomDropdown(productSearchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput, specificationsInput, specificationsHidden, specificationsDropdown);
         }
     });
     

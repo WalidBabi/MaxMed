@@ -35,10 +35,10 @@
         body {
             font-family: 'Arial', 'Helvetica', sans-serif;
             color: var(--text-primary);
-            font-size: 11px;
-            line-height: 1.5;
+            font-size: 10px;
+            line-height: 1.4;
             background-color: white;
-            padding: 30px 40px;
+            padding: 25px 35px;
         }
 
         /* MAIN CONTAINER */
@@ -49,9 +49,9 @@
 
         /* HEADER SECTION */
         .header-wrapper {
-            border-bottom: 3px solid var(--primary-color);
-            padding-bottom: 35px;
-            margin-bottom: 40px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 25px;
+            margin-bottom: 30px;
             position: relative;
         }
 
@@ -64,30 +64,30 @@
 
         .company-section {
             width: 60%;
-            padding-top: 10px;
+            padding-top: 8px;
         }
 
         .company-logo {
-            margin-bottom: 18px;
+            margin-bottom: 15px;
         }
 
         .company-logo img {
-            height: 60px;
-            max-width: 280px;
+            height: 50px;
+            max-width: 250px;
             object-fit: contain;
         }
 
         .company-details {
-            font-size: 10px;
-            line-height: 1.7;
+            font-size: 9px;
+            line-height: 1.6;
             color: var(--text-secondary);
         }
 
         .company-name {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .document-title-section {
@@ -100,17 +100,17 @@
         }
 
         .document-title {
-            font-size: 36px;
+            font-size: 32px;
             font-weight: 800;
             color: var(--primary-color);
             letter-spacing: -0.8px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             text-transform: uppercase;
             line-height: 1.1;
         }
 
         .document-number {
-            font-size: 18px;
+            font-size: 16px;
             color: var(--text-secondary);
             font-weight: 700;
             letter-spacing: 0.5px;
@@ -120,9 +120,9 @@
         .meta-wrapper {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 35px;
-            gap: 35px;
-            margin-top: 10px;
+            margin-bottom: 25px;
+            gap: 25px;
+            margin-top: 8px;
         }
 
         .client-section {
@@ -131,26 +131,26 @@
 
         .client-info {
             background-color: var(--light-gray);
-            border-radius: 10px;
-            padding: 25px;
-            border-left: 4px solid var(--primary-color);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 3px solid var(--primary-color);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         .section-heading {
-            font-size: 11px;
+            font-size: 10px;
             text-transform: uppercase;
-            letter-spacing: 1.2px;
+            letter-spacing: 1px;
             color: var(--text-secondary);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             font-weight: 700;
         }
 
         .client-name {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             color: var(--text-primary);
-            line-height: 1.4;
+            line-height: 1.3;
         }
 
         .meta-section {
@@ -161,13 +161,13 @@
             width: 100%;
             border-collapse: collapse;
             background-color: var(--light-gray);
-            border-radius: 10px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         .meta-table td {
-            padding: 12px 18px;
+            padding: 10px 15px;
             vertical-align: top;
             border-bottom: 1px solid var(--border-color);
         }
@@ -180,53 +180,55 @@
             font-weight: 600;
             color: var(--text-secondary);
             width: 45%;
-            font-size: 10px;
+            font-size: 9px;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 0.6px;
         }
 
         .meta-table .value {
             color: var(--text-primary);
             font-weight: 600;
-            font-size: 11px;
+            font-size: 10px;
         }
 
         /* SUBJECT SECTION */
         .subject-section {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             background-color: var(--primary-light);
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary-color);
         }
 
         .subject-title {
-            font-size: 11px;
+            font-size: 10px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             color: var(--primary-color);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 700;
         }
 
         .subject-content {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-primary);
             font-weight: 500;
         }
 
         /* ITEMS TABLE */
         .items-section {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .items-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 11px;
-            border-radius: 8px;
+            font-size: 10px;
+            border-radius: 6px;
             overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+            table-layout: fixed;
+            border-spacing: 0;
         }
 
         .items-table thead {
@@ -235,12 +237,24 @@
         }
 
         .items-table th {
-            padding: 15px 12px;
+            padding: 12px 10px;
             text-transform: uppercase;
-            font-size: 9px;
-            letter-spacing: 0.5px;
+            font-size: 8px;
+            letter-spacing: 0.4px;
             font-weight: 700;
             text-align: left;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            box-sizing: border-box;
+        }
+
+        .items-table th.text-right {
+            text-align: right;
+        }
+
+        .items-table th.text-center {
+            text-align: center;
         }
 
         .items-table tbody tr {
@@ -257,13 +271,37 @@
         }
 
         .items-table td {
-            padding: 15px 12px;
+            padding: 12px 10px;
             vertical-align: top;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            border-right: 1px solid var(--border-color);
+            box-sizing: border-box;
+        }
+
+        .items-table td.text-right {
+            text-align: right;
+        }
+
+        .items-table td.text-center {
+            text-align: center;
+        }
+
+        .items-table td:last-child,
+        .items-table th:last-child {
+            border-right: none;
         }
 
         .item-description {
             font-weight: 500;
             color: var(--text-primary);
+        }
+
+        .specifications {
+            font-size: 9px;
+            color: var(--text-secondary);
+            line-height: 1.3;
+            vertical-align: top;
         }
 
         .text-right {
@@ -276,17 +314,22 @@
 
         /* TOTALS SECTION - RIGHT ALIGNED */
         .totals-wrapper {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            margin-top: 20px;
             display: flex;
             justify-content: flex-end;
+            width: 100%;
+            margin-left: auto;
         }
 
         .totals-section {
-            width: 350px;
+            width: 320px;
             background-color: var(--light-gray);
-            border-radius: 8px;
-            padding: 20px;
+            border-radius: 6px;
+            padding: 15px;
             border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-left: auto;
         }
 
         .totals-table {
@@ -303,111 +346,111 @@
         }
 
         .totals-table td {
-            padding: 10px 0;
+            padding: 8px 0;
         }
 
         .total-label {
             font-weight: 600;
             color: var(--text-secondary);
             text-align: left;
-            font-size: 11px;
+            font-size: 10px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.4px;
         }
 
         .total-amount {
             font-weight: 600;
             color: var(--text-primary);
             text-align: right;
-            width: 120px;
-            font-size: 12px;
+            width: 110px;
+            font-size: 11px;
         }
 
         .grand-total {
             background-color: var(--primary-color);
             color: white;
-            border-radius: 6px;
+            border-radius: 4px;
         }
 
         .grand-total td {
-            padding: 15px 12px;
+            padding: 12px 10px;
         }
 
         .grand-total .total-label {
             color: white;
             font-weight: 700;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .grand-total .total-amount {
             color: white;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         /* CONTENT SECTIONS */
         .content-section {
-            margin-bottom: 25px;
-            padding: 20px;
+            margin-bottom: 20px;
+            padding: 15px;
             background-color: var(--light-gray);
-            border-radius: 8px;
-            border-left: 4px solid var(--accent-color);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-color);
         }
 
         .content-title {
-            font-size: 11px;
+            font-size: 10px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             color: var(--text-secondary);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             font-weight: 700;
         }
 
         .content-text {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-primary);
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         /* BANKING SECTION */
         .banking-section {
-            margin-bottom: 30px;
-            padding: 20px;
+            margin-bottom: 25px;
+            padding: 15px;
             background-color: var(--light-gray);
-            border-radius: 8px;
-            border-left: 4px solid var(--success-color);
+            border-radius: 6px;
+            border-left: 3px solid var(--success-color);
         }
 
         .banking-title {
-            font-size: 11px;
+            font-size: 10px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             color: var(--text-secondary);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             font-weight: 700;
         }
 
         .banking-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 12px;
         }
 
         .banking-item {
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         .banking-label {
-            font-size: 9px;
+            font-size: 8px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.4px;
             color: var(--text-secondary);
-            margin-bottom: 3px;
+            margin-bottom: 2px;
             font-weight: 600;
         }
 
         .banking-value {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-primary);
             font-weight: 600;
             font-family: 'Courier New', monospace;
@@ -419,16 +462,16 @@
 
         /* FOOTER */
         .footer {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 2px solid var(--border-color);
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
             text-align: center;
             color: var(--text-muted);
-            font-size: 10px;
+            font-size: 9px;
         }
 
         .footer p {
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
 
         .footer strong {
@@ -521,28 +564,48 @@
             <table class="items-table">
                 <thead>
                     <tr>
-                        <th style="width: 45%;">Item Description</th>
+                        <th style="width: 40%;">Item Description</th>
+                        <th style="width: 20%;">Specifications</th>
                         <th style="width: 10%;" class="text-right">Qty</th>
                         <th style="width: 15%;" class="text-right">Rate (AED)</th>
                         <th style="width: 10%;" class="text-right">Discount</th>
-                        <th style="width: 10%;" class="text-center">Specs</th>
-                        <th style="width: 10%;" class="text-right">Amount (AED)</th>
+                        <th style="width: 15%;" class="text-right">Amount (AED)</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($quote->items as $index => $item)
                     <tr>
                         <td class="item-description">{{ $item->item_details }}</td>
-                        <td class="text-right">{{ number_format($item->quantity, 0) }}</td>
-                        <td class="text-right">{{ number_format($item->rate, 2) }}</td>
-                        <td class="text-right">{{ number_format($item->discount, 1) }}%</td>
-                        <td class="text-center">
-                            @if($item->product && $item->product->specifications->count() > 0)
-                                <span style="font-size: 9px; color: var(--text-secondary);">See Note [{{ $index + 1 }}]</span>
+                        <td class="specifications">
+                            @if($item->specifications && !empty(trim($item->specifications)))
+                                @php
+                                    $selectedSpecs = [];
+                                    try {
+                                        if (is_string($item->specifications) && (str_starts_with($item->specifications, '[') && str_ends_with($item->specifications, ']'))) {
+                                            $selectedSpecs = json_decode($item->specifications, true);
+                                        } else {
+                                            $selectedSpecs = explode(',', $item->specifications);
+                                            $selectedSpecs = array_map('trim', $selectedSpecs);
+                                        }
+                                    } catch (Exception $e) {
+                                        $selectedSpecs = [$item->specifications];
+                                    }
+                                @endphp
+                                
+                                @if(count($selectedSpecs) > 0)
+                                    <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
+                                        @foreach($selectedSpecs as $spec)
+                                            <div style="margin-bottom: 2px;">{{ $spec }}</div>
+                                        @endforeach
+                                    </div>
+                                @endif
                             @else
                                 <span style="font-size: 9px; color: var(--text-muted);">-</span>
                             @endif
                         </td>
+                        <td class="text-right">{{ number_format($item->quantity, 0) }}</td>
+                        <td class="text-right">{{ number_format($item->rate, 2) }}</td>
+                        <td class="text-right">{{ number_format($item->discount, 1) }}%</td>
                         <td class="text-right">{{ number_format($item->amount, 2) }}</td>
                     </tr>
                     @empty
@@ -554,21 +617,21 @@
                     @endforelse
                 </tbody>
             </table>
-        </div>
 
-        <!-- TOTALS - RIGHT ALIGNED -->
-        <div class="totals-wrapper">
-        <div class="totals-section">
-            <table class="totals-table">
-                <tr>
-                    <td class="total-label">Subtotal:</td>
-                        <td class="total-amount">AED {{ number_format($quote->sub_total, 2) }}</td>
-                </tr>
-                <tr class="grand-total">
-                        <td class="total-label">Total Amount:</td>
-                        <td class="total-amount">AED {{ number_format($quote->total_amount, 2) }}</td>
-                </tr>
-            </table>
+            <!-- TOTALS - RIGHT ALIGNED -->
+            <div class="totals-wrapper">
+                <div class="totals-section">
+                    <table class="totals-table">
+                        <tr>
+                            <td class="total-label">Subtotal:</td>
+                            <td class="total-amount">AED {{ number_format($quote->sub_total, 2) }}</td>
+                        </tr>
+                        <tr class="grand-total">
+                            <td class="total-label">Total Amount:</td>
+                            <td class="total-amount">AED {{ number_format($quote->total_amount, 2) }}</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -585,54 +648,6 @@
         <div class="content-section">
             <div class="content-title">Terms & Conditions</div>
             <div class="content-text">{{ $quote->terms_conditions }}</div>
-        </div>
-        @endif
-
-        <!-- PRODUCT SPECIFICATIONS APPENDIX -->
-        @php
-            $itemsWithSpecs = $quote->items->filter(function($item) {
-                return $item->product && $item->product->specifications->count() > 0;
-            });
-        @endphp
-        
-        @if($itemsWithSpecs->count() > 0)
-        <div class="content-section" style="margin-top: 40px; page-break-before: auto;">
-            <div class="content-title">Product Specifications</div>
-            <div class="specs-content">
-                @foreach($quote->items as $index => $item)
-                    @if($item->product && $item->product->specifications->count() > 0)
-                        <div class="spec-item" style="margin-bottom: 20px; padding: 15px; background-color: var(--light-gray); border-radius: 8px; border-left: 3px solid var(--primary-color);">
-                            <div class="spec-product-name" style="font-weight: 600; color: var(--text-primary); margin-bottom: 8px; font-size: 12px;">
-                                [{{ $index + 1 }}] {{ $item->item_details }}
-                            </div>
-                            <div class="spec-details" style="font-size: 10px; color: var(--text-secondary);">
-                                @foreach($item->product->specifications->groupBy('category') as $category => $specs)
-                                    @if($category)
-                                        <div class="spec-category" style="margin-bottom: 8px;">
-                                            <div class="spec-category-name" style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px; text-transform: uppercase; font-size: 9px; letter-spacing: 0.5px;">
-                                                {{ $category }}
-                                            </div>
-                                            @foreach($specs as $spec)
-                                                <div class="spec-row" style="display: flex; justify-content: space-between; margin-bottom: 2px;">
-                                                    <span class="spec-key" style="font-weight: 500;">{{ $spec->display_name ?: $spec->specification_key }}:</span>
-                                                    <span class="spec-value" style="font-weight: 600;">{{ $spec->formatted_value }}</span>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    @else
-                                        @foreach($specs as $spec)
-                                            <div class="spec-row" style="display: flex; justify-content: space-between; margin-bottom: 2px;">
-                                                <span class="spec-key" style="font-weight: 500;">{{ $spec->display_name ?: $spec->specification_key }}:</span>
-                                                <span class="spec-value" style="font-weight: 600;">{{ $spec->formatted_value }}</span>
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-                @endforeach
-            </div>
         </div>
         @endif
 

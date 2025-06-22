@@ -9,6 +9,9 @@ use App\Models\User;
 use App\Models\Product;
 use App\Models\Quote;
 use App\Models\QuoteItem;
+use App\Models\Order;
+use App\Models\PurchaseOrder;
+use App\Models\PurchaseOrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -211,11 +214,11 @@ class InquiryController extends Controller
             DB::commit();
 
             return redirect()->route('admin.quotes.show', $quote)
-                ->with('success', 'Customer quote generated successfully.');
+                ->with('success', 'Customer quote generated successfully! Review and send to customer.');
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('Error generating customer quote: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to generate customer quote.');
+            Log::error('Error generating quote from supplier quotation: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to generate quote.');
         }
     }
 
@@ -257,5 +260,79 @@ class InquiryController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Inquiry cancelled successfully.');
+    }
+
+    /**
+     * Create purchase order from supplier quotation (after customer accepts quote)
+     */
+    public function createPurchaseOrder(Request $request, QuotationRequest $inquiry)
+    {
+        $validated = $request->validate([
+            'supplier_quotation_id' => 'required|exists:supplier_quotations,id',
+            'customer_order_id' => 'required|exists:orders,id',
+            'notes' => 'nullable|string',
+        ]);
+
+        $supplierQuotation = SupplierQuotation::with(['supplier', 'supplier.supplierInformation'])->find($validated['supplier_quotation_id']);
+        $order = Order::find($validated['customer_order_id']);
+        
+        DB::beginTransaction();
+        try {
+            // Get supplier information or use basic user info
+            $supplier = $supplierQuotation->supplier;
+            $supplierInfo = $supplier->supplierInformation;
+            
+            // Create purchase order with supplier information (NO CUSTOMER INFO)
+            $po = PurchaseOrder::create([
+                'order_id' => $order->id,
+                'supplier_id' => $supplier->id,
+                'quotation_request_id' => $inquiry->id,
+                'supplier_quotation_id' => $supplierQuotation->id,
+                'po_date' => now(),
+                'delivery_date_requested' => now()->addDays($supplierQuotation->lead_time_days ?? 7),
+                
+                // Supplier information (not customer info)
+                'supplier_name' => $supplierInfo ? $supplierInfo->company_name : $supplier->name,
+                'supplier_email' => $supplierInfo ? $supplierInfo->primary_contact_email : $supplier->email,
+                'supplier_phone' => $supplierInfo ? $supplierInfo->primary_contact_phone : null,
+                'supplier_address' => $supplierInfo ? $supplierInfo->formatted_address : null,
+                
+                // Order details without customer identification
+                'description' => "Purchase Order for Product: {$supplierQuotation->product->name}",
+                'terms_conditions' => $supplierQuotation->terms_conditions,
+                'notes' => $validated['notes'] ?? "Lead time: {$supplierQuotation->lead_time_days} days",
+                'currency' => $supplierQuotation->currency,
+                'created_by' => auth()->id(),
+            ]);
+
+            // Create PO item based on supplier quotation (no customer details)
+            PurchaseOrderItem::create([
+                'purchase_order_id' => $po->id,
+                'product_id' => $supplierQuotation->product_id,
+                'item_description' => $supplierQuotation->description ?? $supplierQuotation->product->name,
+                'quantity' => $inquiry->quantity,
+                'unit_price' => $supplierQuotation->unit_price,
+                'line_total' => $supplierQuotation->unit_price * $inquiry->quantity,
+                'specifications' => json_encode($supplierQuotation->specifications ?? []),
+                'size' => $supplierQuotation->size,
+                'sort_order' => 1
+            ]);
+
+            $po->calculateTotals();
+
+            // Update quotation request
+            $inquiry->update([
+                'status' => 'completed',
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('admin.purchase-orders.show', $po)
+                ->with('success', 'Purchase order created and ready to send to supplier (customer information protected).');
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Error creating purchase order from supplier quotation: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to create purchase order.');
+        }
     }
 } 

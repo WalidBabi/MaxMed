@@ -338,10 +338,10 @@ Route::middleware(['auth'])->group(function () {
         
         // Inquiry Management
         Route::resource('inquiries', \App\Http\Controllers\Admin\InquiryController::class);
-        Route::post('inquiries/{inquiry}/forward-to-supplier', [\App\Http\Controllers\Admin\InquiryController::class, 'forwardToSupplier'])->name('inquiries.forward-to-supplier');
+        Route::post('inquiries/{inquiry}/forward', [\App\Http\Controllers\Admin\InquiryController::class, 'forwardToSupplier'])->name('inquiries.forward');
         Route::put('inquiries/{inquiry}/status', [\App\Http\Controllers\Admin\InquiryController::class, 'updateStatus'])->name('inquiries.status.update');
         Route::post('inquiries/{inquiry}/generate-quote', [\App\Http\Controllers\Admin\InquiryController::class, 'generateQuote'])->name('inquiries.generate-quote');
-        Route::delete('inquiries/{inquiry}/cancel', [\App\Http\Controllers\Admin\InquiryController::class, 'cancel'])->name('inquiries.cancel');
+        Route::post('inquiries/{inquiry}/create-purchase-order', [\App\Http\Controllers\Admin\InquiryController::class, 'createPurchaseOrder'])->name('inquiries.create-purchase-order');
         
         // Feedback Management
         Route::resource('feedback', \App\Http\Controllers\Admin\FeedbackController::class)->only(['index', 'show', 'update']);

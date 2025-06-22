@@ -37,7 +37,7 @@ return new class extends Migration
             $table->decimal('tax_amount', 10, 2)->default(0);
             $table->decimal('discount_amount', 10, 2)->default(0);
             $table->decimal('total_amount', 10, 2)->default(0);
-            $table->string('currency', 3)->default('USD');
+            $table->string('currency', 3)->default('AED');
             
             // Payment Information
             $table->enum('payment_status', ['pending', 'partial', 'paid', 'overdue', 'cancelled'])->default('pending');

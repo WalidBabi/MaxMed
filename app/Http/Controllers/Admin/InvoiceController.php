@@ -116,6 +116,7 @@ class InvoiceController extends Controller
                 'notes' => $quote->customer_notes,
                 'sub_total' => $quote->sub_total,
                 'total_amount' => $quote->total_amount,
+                'currency' => 'AED',
                 'payment_terms' => 'advance_50', // Default to 50% advance
                 'status' => 'draft',
                 'is_proforma' => true,
@@ -210,6 +211,7 @@ class InvoiceController extends Controller
                 'notes' => $request->notes,
                 'payment_terms' => $request->payment_terms,
                 'advance_percentage' => $request->advance_percentage,
+                'currency' => 'AED',
                 'is_proforma' => $request->type === 'proforma',
                 'requires_advance_payment' => in_array($request->payment_terms, ['advance_50', 'advance_100', 'custom']),
                 'reference_number' => $request->reference_number,
@@ -415,6 +417,7 @@ class InvoiceController extends Controller
             $payment = Payment::create([
                 'invoice_id' => $invoice->id,
                 'amount' => $request->amount,
+                'currency' => 'AED',
                 'payment_method' => $request->payment_method,
                 'payment_date' => $request->payment_date,
                 'transaction_reference' => $request->transaction_reference,

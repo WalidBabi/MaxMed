@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\PurchaseOrder;
 use App\Models\Order;
 use App\Models\SupplierPayment;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -51,12 +52,17 @@ class PurchaseOrderController extends Controller
             ->latest()
             ->get();
 
+        // Get suppliers (users with supplier role) with their information
+        $suppliers = User::where('role', 'supplier')
+            ->with('supplierInformation')
+            ->get();
+
         $selectedOrder = null;
         if ($request->has('order_id')) {
             $selectedOrder = Order::with(['items.product'])->find($request->order_id);
         }
 
-        return view('admin.purchase-orders.create', compact('availableOrders', 'selectedOrder'));
+        return view('admin.purchase-orders.create', compact('availableOrders', 'selectedOrder', 'suppliers'));
     }
 
     /**
@@ -64,16 +70,31 @@ class PurchaseOrderController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validationRules = [
             'order_id' => 'required|exists:orders,id',
-            'supplier_name' => 'required|string|max:255',
-            'supplier_email' => 'nullable|email|max:255',
-            'supplier_phone' => 'nullable|string|max:50',
-            'delivery_date_requested' => 'required|date|after:today',
+            'supplier_type' => 'required|in:existing,new',
+            'delivery_date_requested' => 'required|date|after:today',  
             'description' => 'nullable|string',
             'terms_conditions' => 'nullable|string',
             'notes' => 'nullable|string',
-        ]);
+            'currency' => 'required|in:AED,USD,EUR,GBP',
+            'sub_total' => 'required|numeric|min:0',
+            'tax_amount' => 'nullable|numeric|min:0',
+            'shipping_cost' => 'nullable|numeric|min:0',
+            'total_amount' => 'required|numeric|min:0',
+        ];
+
+        // Add conditional validation based on supplier type
+        if ($request->supplier_type === 'existing') {
+            $validationRules['supplier_id'] = 'required|exists:users,id';
+        } else {
+            $validationRules['supplier_name'] = 'required|string|max:255';
+            $validationRules['supplier_email'] = 'nullable|email|max:255';
+            $validationRules['supplier_phone'] = 'nullable|string|max:50';
+            $validationRules['supplier_address'] = 'nullable|string';
+        }
+
+        $request->validate($validationRules);
 
         try {
             DB::beginTransaction();
@@ -85,25 +106,47 @@ class PurchaseOrderController extends Controller
                 return redirect()->back()->with('error', 'Purchase order already exists for this order.');
             }
 
+            // Create basic PO from order
             $po = PurchaseOrder::createFromOrder($order);
             
-            // Update with form data
-            $po->update([
-                'supplier_name' => $request->supplier_name,
-                'supplier_email' => $request->supplier_email,
-                'supplier_phone' => $request->supplier_phone,
+            // Prepare supplier data based on selection type
+            $supplierData = [
                 'delivery_date_requested' => $request->delivery_date_requested,
                 'description' => $request->description,
                 'terms_conditions' => $request->terms_conditions,
                 'notes' => $request->notes,
+                'currency' => $request->currency,
+                'sub_total' => $request->sub_total,
+                'tax_amount' => $request->tax_amount ?? 0,
+                'shipping_cost' => $request->shipping_cost ?? 0,
+                'total_amount' => $request->total_amount,
                 'updated_by' => Auth::id()
-            ]);
+            ];
+
+            if ($request->supplier_type === 'existing') {
+                // Get supplier information from database
+                $supplier = User::with('supplierInformation')->findOrFail($request->supplier_id);
+                $supplierData['supplier_id'] = $supplier->id;
+                $supplierData['supplier_name'] = $supplier->supplierInformation->company_name ?? $supplier->name;
+                $supplierData['supplier_email'] = $supplier->email;
+                $supplierData['supplier_phone'] = $supplier->supplierInformation->phone_primary ?? '';
+                $supplierData['supplier_address'] = $supplier->supplierInformation->business_address ?? '';
+            } else {
+                // Use manually entered supplier information (no customer info included)
+                $supplierData['supplier_name'] = $request->supplier_name;
+                $supplierData['supplier_email'] = $request->supplier_email;
+                $supplierData['supplier_phone'] = $request->supplier_phone;
+                $supplierData['supplier_address'] = $request->supplier_address;
+            }
+
+            // Update PO with supplier data (no customer information included)
+            $po->update($supplierData);
 
             DB::commit();
 
             return redirect()
                 ->route('admin.purchase-orders.show', $po)
-                ->with('success', 'Purchase order created successfully.');
+                ->with('success', 'Purchase order created successfully without customer information disclosure.');
 
         } catch (\Exception $e) {
             DB::rollBack();

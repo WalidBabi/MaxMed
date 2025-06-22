@@ -37,7 +37,7 @@
                         <option value="">Select a customer order</option>
                         @foreach($availableOrders as $order)
                             <option value="{{ $order->id }}" {{ old('order_id') == $order->id ? 'selected' : '' }}>
-                                {{ $order->order_number }} - {{ $order->getCustomerName() }} ({{ $order->currency }} {{ number_format($order->total_amount, 2) }})
+                                {{ $order->order_number }} - {{ $order->currency }} {{ number_format($order->total_amount, 2) }}
                             </option>
                         @endforeach
                     </select>
@@ -60,52 +60,99 @@
             <div class="border-t border-gray-200 pt-6">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">Supplier Information</h3>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="supplier_name" class="block text-sm font-medium text-gray-700 mb-2">Supplier Name *</label>
-                        <input type="text" id="supplier_name" name="supplier_name" value="{{ old('supplier_name', 'MaxMed Supplier') }}" required
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                        @error('supplier_name')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="supplier_email" class="block text-sm font-medium text-gray-700 mb-2">Supplier Email</label>
-                        <input type="email" id="supplier_email" name="supplier_email" value="{{ old('supplier_email') }}"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                        @error('supplier_email')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="supplier_phone" class="block text-sm font-medium text-gray-700 mb-2">Supplier Phone</label>
-                        <input type="text" id="supplier_phone" name="supplier_phone" value="{{ old('supplier_phone') }}"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                        @error('supplier_phone')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="delivery_date_requested" class="block text-sm font-medium text-gray-700 mb-2">Requested Delivery Date</label>
-                        <input type="date" id="delivery_date_requested" name="delivery_date_requested" value="{{ old('delivery_date_requested') }}"
-                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                        @error('delivery_date_requested')
-                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                        @enderror
+                <!-- Supplier Selection -->
+                <div class="mb-6">
+                    <label for="supplier_selection" class="block text-sm font-medium text-gray-700 mb-2">Supplier Selection</label>
+                    <div class="flex items-center space-x-4">
+                        <label class="flex items-center">
+                            <input type="radio" name="supplier_type" value="existing" id="existing_supplier" 
+                                   class="mr-2 text-indigo-600 focus:ring-indigo-500 border-gray-300" 
+                                   {{ old('supplier_type', 'existing') == 'existing' ? 'checked' : '' }}>
+                            <span class="text-sm text-gray-700">Select Existing Supplier</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="supplier_type" value="new" id="new_supplier" 
+                                   class="mr-2 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                                   {{ old('supplier_type') == 'new' ? 'checked' : '' }}>
+                            <span class="text-sm text-gray-700">Enter New Supplier</span>
+                        </label>
                     </div>
                 </div>
 
-                <div class="mt-4">
-                    <label for="supplier_address" class="block text-sm font-medium text-gray-700 mb-2">Supplier Address</label>
-                    <textarea id="supplier_address" name="supplier_address" rows="3"
-                              placeholder="Enter supplier address"
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">{{ old('supplier_address') }}</textarea>
-                    @error('supplier_address')
+                <!-- Existing Supplier Selection -->
+                <div id="existing_supplier_section" class="mb-6">
+                    <label for="supplier_id" class="block text-sm font-medium text-gray-700 mb-2">Select Supplier</label>
+                    <select id="supplier_id" name="supplier_id"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Choose a registered supplier</option>
+                        @foreach($suppliers as $supplier)
+                            <option value="{{ $supplier->id }}" 
+                                    data-company="{{ $supplier->supplierInformation->company_name ?? $supplier->name }}"
+                                    data-email="{{ $supplier->email }}"
+                                    data-phone="{{ $supplier->supplierInformation->phone_primary ?? '' }}"
+                                    data-address="{{ $supplier->supplierInformation->business_address ?? '' }}"
+                                    {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>
+                                {{ $supplier->supplierInformation->company_name ?? $supplier->name }} 
+                                @if($supplier->supplierInformation)
+                                    ({{ $supplier->supplierInformation->city ?? '' }})
+                                @endif
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('supplier_id')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
+                </div>
+
+                <!-- Manual Supplier Entry -->
+                <div id="manual_supplier_section">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="supplier_name" class="block text-sm font-medium text-gray-700 mb-2">Supplier Name *</label>
+                            <input type="text" id="supplier_name" name="supplier_name" value="{{ old('supplier_name') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            @error('supplier_name')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="supplier_email" class="block text-sm font-medium text-gray-700 mb-2">Supplier Email</label>
+                            <input type="email" id="supplier_email" name="supplier_email" value="{{ old('supplier_email') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            @error('supplier_email')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="supplier_phone" class="block text-sm font-medium text-gray-700 mb-2">Supplier Phone</label>
+                            <input type="text" id="supplier_phone" name="supplier_phone" value="{{ old('supplier_phone') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            @error('supplier_phone')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="delivery_date_requested" class="block text-sm font-medium text-gray-700 mb-2">Requested Delivery Date</label>
+                            <input type="date" id="delivery_date_requested" name="delivery_date_requested" value="{{ old('delivery_date_requested') }}"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            @error('delivery_date_requested')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="supplier_address" class="block text-sm font-medium text-gray-700 mb-2">Supplier Address</label>
+                        <textarea id="supplier_address" name="supplier_address" rows="3"
+                                  placeholder="Enter supplier address"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">{{ old('supplier_address') }}</textarea>
+                        @error('supplier_address')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
             </div>
 
@@ -118,7 +165,8 @@
                         <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">Currency *</label>
                         <select id="currency" name="currency" required
                                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                            <option value="USD" {{ old('currency', 'USD') == 'USD' ? 'selected' : '' }}>USD</option>
+                            <option value="AED" {{ old('currency', 'AED') == 'AED' ? 'selected' : '' }}>AED</option>
+                            <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>USD</option>
                             <option value="EUR" {{ old('currency') == 'EUR' ? 'selected' : '' }}>EUR</option>
                             <option value="GBP" {{ old('currency') == 'GBP' ? 'selected' : '' }}>GBP</option>
                         </select>
@@ -219,13 +267,75 @@
 </div>
 
 <script>
-// Auto-calculate total amount
+// Enhanced Purchase Order Form Functionality
 document.addEventListener('DOMContentLoaded', function() {
+    // Elements
+    const supplierTypeRadios = document.querySelectorAll('input[name="supplier_type"]');
+    const existingSupplierSection = document.getElementById('existing_supplier_section');
+    const manualSupplierSection = document.getElementById('manual_supplier_section');
+    const supplierSelect = document.getElementById('supplier_id');
+    const supplierNameField = document.getElementById('supplier_name');
+    const supplierEmailField = document.getElementById('supplier_email');
+    const supplierPhoneField = document.getElementById('supplier_phone');
+    const supplierAddressField = document.getElementById('supplier_address');
+    
+    // Financial calculation elements
     const subTotal = document.getElementById('sub_total');
     const taxAmount = document.getElementById('tax_amount');
     const shippingCost = document.getElementById('shipping_cost');
     const totalAmount = document.getElementById('total_amount');
 
+    // Initialize form state
+    function initializeSupplierSections() {
+        const selectedType = document.querySelector('input[name="supplier_type"]:checked').value;
+        
+        if (selectedType === 'existing') {
+            existingSupplierSection.style.display = 'block';
+            manualSupplierSection.style.display = 'none';
+            // Make supplier_id required, supplier_name not required
+            supplierSelect.setAttribute('required', 'required');
+            supplierNameField.removeAttribute('required');
+        } else {
+            existingSupplierSection.style.display = 'none';
+            manualSupplierSection.style.display = 'block';
+            // Make supplier_name required, supplier_id not required
+            supplierSelect.removeAttribute('required');
+            supplierNameField.setAttribute('required', 'required');
+        }
+    }
+
+    // Handle supplier type change
+    supplierTypeRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            initializeSupplierSections();
+            clearSupplierFields();
+        });
+    });
+
+    // Handle existing supplier selection
+    supplierSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        
+        if (selectedOption.value) {
+            // Auto-populate fields from selected supplier
+            supplierNameField.value = selectedOption.dataset.company || '';
+            supplierEmailField.value = selectedOption.dataset.email || '';
+            supplierPhoneField.value = selectedOption.dataset.phone || '';
+            supplierAddressField.value = selectedOption.dataset.address || '';
+        } else {
+            clearSupplierFields();
+        }
+    });
+
+    // Clear supplier fields
+    function clearSupplierFields() {
+        supplierNameField.value = '';
+        supplierEmailField.value = '';
+        supplierPhoneField.value = '';
+        supplierAddressField.value = '';
+    }
+
+    // Auto-calculate total amount
     function calculateTotal() {
         const sub = parseFloat(subTotal.value) || 0;
         const tax = parseFloat(taxAmount.value) || 0;
@@ -234,9 +344,33 @@ document.addEventListener('DOMContentLoaded', function() {
         totalAmount.value = (sub + tax + shipping).toFixed(2);
     }
 
-    subTotal.addEventListener('input', calculateTotal);
-    taxAmount.addEventListener('input', calculateTotal);
-    shippingCost.addEventListener('input', calculateTotal);
+    // Add event listeners for financial calculations
+    if (subTotal) subTotal.addEventListener('input', calculateTotal);
+    if (taxAmount) taxAmount.addEventListener('input', calculateTotal);
+    if (shippingCost) shippingCost.addEventListener('input', calculateTotal);
+
+    // Initialize on page load
+    initializeSupplierSections();
+    
+    // Form validation before submit
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const selectedType = document.querySelector('input[name="supplier_type"]:checked').value;
+        
+        if (selectedType === 'existing') {
+            if (!supplierSelect.value) {
+                e.preventDefault();
+                alert('Please select a supplier from the list or choose "Enter New Supplier"');
+                return false;
+            }
+        } else {
+            if (!supplierNameField.value.trim()) {
+                e.preventDefault();
+                alert('Please enter a supplier name');
+                supplierNameField.focus();
+                return false;
+            }
+        }
+    });
 });
 </script>
 @endsection 

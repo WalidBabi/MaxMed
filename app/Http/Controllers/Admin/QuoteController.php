@@ -44,7 +44,7 @@ class QuoteController extends Controller
             ->orderBy('name')
             ->get();
             
-        $products = \App\Models\Product::with(['brand', 'category'])
+        $products = \App\Models\Product::with(['brand', 'category', 'specifications'])
             ->select('id', 'name', 'description', 'price', 'price_aed', 'brand_id', 'category_id')
             ->orderBy('name')
             ->get();
@@ -86,6 +86,7 @@ class QuoteController extends Controller
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.item_details' => 'required|string',
+            'items.*.specifications' => 'nullable|string',
             'items.*.size' => 'nullable|string|max:50',
             'items.*.quantity' => 'required|numeric|min:0',
             'items.*.rate' => 'required|numeric|min:0',
@@ -128,6 +129,7 @@ class QuoteController extends Controller
                 'quote_id' => $quote->id,
                 'product_id' => $itemData['product_id'],
                 'item_details' => $itemData['item_details'],
+                'specifications' => $itemData['specifications'] ?? null,
                 'size' => $itemData['size'] ?? null,
                 'quantity' => $itemData['quantity'],
                 'rate' => $itemData['rate'],
@@ -162,7 +164,7 @@ class QuoteController extends Controller
             ->orderBy('name')
             ->get();
             
-        $products = \App\Models\Product::with(['brand', 'category'])
+        $products = \App\Models\Product::with(['brand', 'category', 'specifications'])
             ->select('id', 'name', 'description', 'price', 'price_aed', 'brand_id', 'category_id')
             ->orderBy('name')
             ->get();
@@ -247,6 +249,7 @@ class QuoteController extends Controller
                         'quote_id' => $quote->id,
                         'product_id' => $itemData['product_id'] ?? null,
                         'item_details' => $itemData['item_details'],
+                        'specifications' => $itemData['specifications'] ?? null,
                         'size' => $itemData['size'] ?? null,
                         'quantity' => $itemData['quantity'],
                         'rate' => $itemData['rate'],

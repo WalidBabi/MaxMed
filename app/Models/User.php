@@ -244,4 +244,12 @@ class User extends Authenticatable
     {
         return strtoupper(substr($this->name ?? 'U', 0, 2));
     }
+
+    /**
+     * Get the supplier information (for supplier users)
+     */
+    public function supplierInformation()
+    {
+        return $this->hasOne(SupplierInformation::class);
+    }
 }
