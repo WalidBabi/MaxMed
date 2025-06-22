@@ -243,7 +243,7 @@
         </div>
     </form>
 
-    <form id="delete-form" action="{{ route('admin.customers.destroy', $customer) }}" method="POST" class="hidden">
+    <form id="delete-form" action="{{ route('crm.customers.destroy', $customer) }}" method="POST" class="hidden">
         @csrf
         @method('DELETE')
     </form>
