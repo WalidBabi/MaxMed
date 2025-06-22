@@ -644,10 +644,45 @@
                        
                         </td>
                         <td style="font-size: 8px; line-height: 1.3; padding: 8px 4px;">
-                            @if($item->specifications && is_array($item->specifications) && count($item->specifications) > 0)
-                                @foreach($item->specifications as $spec)
-                                    <div style="margin-bottom: 2px; color: var(--text-secondary);">{{ $spec }}</div>
-                                @endforeach
+                            @php
+                                // Debug specifications
+                                $specs = $item->specifications;
+                                $specsType = gettype($specs);
+                                $specsValue = is_string($specs) ? $specs : json_encode($specs);
+                            @endphp
+                            
+                            <!-- DEBUG INFO -->
+                            <div style="font-size: 6px; color: red; margin-bottom: 4px;">
+                                DEBUG: Type: {{ $specsType }}, Value: {{ $specsValue ?? 'null' }}
+                            </div>
+                            
+                            @if($item->specifications)
+                                @if(is_array($item->specifications) && count($item->specifications) > 0)
+                                    @foreach($item->specifications as $spec)
+                                        <div style="margin-bottom: 2px; color: var(--text-secondary);">{{ $spec }}</div>
+                                    @endforeach
+                                @elseif(is_string($item->specifications) && !empty(trim($item->specifications)))
+                                    @php
+                                        try {
+                                            $decodedSpecs = json_decode($item->specifications, true);
+                                            if (is_array($decodedSpecs) && count($decodedSpecs) > 0) {
+                                                $specsToShow = $decodedSpecs;
+                                            } else {
+                                                $specsToShow = explode(',', $item->specifications);
+                                                $specsToShow = array_map('trim', $specsToShow);
+                                            }
+                                        } catch (Exception $e) {
+                                            $specsToShow = [$item->specifications];
+                                        }
+                                    @endphp
+                                    @foreach($specsToShow as $spec)
+                                        @if(!empty(trim($spec)))
+                                            <div style="margin-bottom: 2px; color: var(--text-secondary);">{{ $spec }}</div>
+                                        @endif
+                                    @endforeach
+                                @else
+                                    <span style="color: var(--text-muted);">-</span>
+                                @endif
                             @else
                                 <span style="color: var(--text-muted);">-</span>
                             @endif
