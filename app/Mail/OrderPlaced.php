@@ -18,8 +18,7 @@ class OrderPlaced extends Mailable implements ShouldQueue
     {
         $this->order = $order;
         
-        // Use Redis emails queue
-        $this->onConnection('redis');
+        // Use configured queue connection
         $this->onQueue('emails');
         $this->delay(now()->addSeconds(1));
     }

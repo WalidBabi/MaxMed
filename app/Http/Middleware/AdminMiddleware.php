@@ -15,15 +15,7 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Add logging to debug the issue
-        \Log::info('AdminMiddleware: Checking authentication', [
-            'authenticated' => auth()->check(),
-            'user_id' => auth()->id(),
-            'is_admin' => auth()->check() ? auth()->user()->isAdmin() : false,
-            'route' => $request->route()->getName(),
-            'method' => $request->method(),
-            'url' => $request->url()
-        ]);
+
 
         if (!auth()->check()) {
             \Log::warning('AdminMiddleware: User not authenticated, redirecting to login');
@@ -41,7 +33,7 @@ class AdminMiddleware
             abort(403, 'Unauthorized access to admin area.');
         }
 
-        \Log::info('AdminMiddleware: Access granted');
+
         return $next($request);
     }
     

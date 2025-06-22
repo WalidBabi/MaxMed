@@ -20,8 +20,7 @@ class FeedbackNotification extends Notification
     {
         $this->feedback = $feedback;
         
-        // Use Redis notifications queue
-        $this->onConnection('redis');
+        // Use configured queue connection
         $this->onQueue('notifications');
         $this->delay(now()->addSeconds(2));
     }

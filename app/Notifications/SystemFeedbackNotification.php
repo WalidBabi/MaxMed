@@ -21,8 +21,7 @@ class SystemFeedbackNotification extends Notification implements ShouldQueue
     {
         $this->systemFeedback = $systemFeedback;
         
-        // Use Redis notifications queue
-        $this->onConnection('redis');
+        // Use configured queue connection
         $this->onQueue('notifications');
         $this->delay(now()->addSeconds(3));
     }
