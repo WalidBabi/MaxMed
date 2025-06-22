@@ -23,8 +23,7 @@ class OrderNotification extends Notification implements ShouldQueue
         $this->order = $order;
         $this->type = $type;
         
-        // Use Redis notifications queue
-        $this->onConnection('redis');
+        // Use configured queue connection (defaults to sync/database)
         $this->onQueue('notifications');
         $this->delay(now()->addSeconds(2));
     }

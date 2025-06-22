@@ -183,13 +183,7 @@ class NotificationController extends Controller
                 $newNotifications->first()->created_at->toISOString() : 
                 $lastTimestamp;
 
-            \Log::info('Admin checkNew response:', [
-                'has_new' => $newNotifications->count() > 0,
-                'new_notifications_count' => $newNotifications->count(),
-                'total_unread_count' => $allUnreadCount,
-                'latest_timestamp' => $latestTimestamp,
-                'user_id' => Auth::id()
-            ]);
+
 
             return response()->json([
                 'has_new' => $newNotifications->count() > 0,
