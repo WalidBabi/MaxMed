@@ -644,18 +644,6 @@
                        
                         </td>
                         <td style="font-size: 8px; line-height: 1.3; padding: 8px 4px;">
-                            @php
-                                // Debug specifications
-                                $specs = $item->specifications;
-                                $specsType = gettype($specs);
-                                $specsValue = is_string($specs) ? $specs : json_encode($specs);
-                            @endphp
-                            
-                            <!-- DEBUG INFO -->
-                            <div style="font-size: 6px; color: red; margin-bottom: 4px;">
-                                DEBUG: Type: {{ $specsType }}, Value: {{ $specsValue ?? 'null' }}
-                            </div>
-                            
                             @if($item->specifications)
                                 @if(is_array($item->specifications) && count($item->specifications) > 0)
                                     @foreach($item->specifications as $spec)
