@@ -28,7 +28,8 @@ class InvoiceItem extends Model
         'discount_percentage' => 'decimal:2',
         'discount_amount' => 'decimal:2',
         'line_total' => 'decimal:2',
-        'sort_order' => 'integer'
+        'sort_order' => 'integer',
+        'specifications' => 'array'
     ];
 
     /**
