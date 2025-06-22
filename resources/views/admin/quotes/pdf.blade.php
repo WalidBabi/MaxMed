@@ -521,7 +521,14 @@
             <div class="client-section">
                 <div class="client-info">
                     <div class="section-heading">Bill To</div>
-                    <div class="client-name">{{ $quote->customer_name }}</div>
+                    <div class="client-name">
+                        {{ $quote->customer_name }}
+                        @if($customer && $customer->company_name)
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 3px; font-weight: 500;">
+                                {{ $customer->company_name }}
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
 

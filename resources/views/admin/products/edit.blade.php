@@ -312,7 +312,7 @@
                                             <div>
                                                 <label for="{{ $fieldId }}" class="block text-sm font-medium text-gray-700 mb-2">
                                                     {!! $spec['name'] . ' ' . $requiredMark !!}
-                                                    @if($spec['unit'])
+                                                    @if(isset($spec['unit']) && $spec['unit'])
                                                         <span class="text-gray-500 text-xs">({{ $spec['unit'] }})</span>
                                                     @endif
                                                 </label>

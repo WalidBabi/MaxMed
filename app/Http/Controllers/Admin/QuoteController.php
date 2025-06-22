@@ -379,7 +379,10 @@ class QuoteController extends Controller
     {
         $quote->load(['items.product.specifications']);
         
-        $pdf = Pdf::loadView('admin.quotes.pdf', compact('quote'));
+        // Get customer data to show company name in PDF
+        $customer = \App\Models\Customer::where('name', $quote->customer_name)->first();
+        
+        $pdf = Pdf::loadView('admin.quotes.pdf', compact('quote', 'customer'));
         
         return $pdf->download($quote->quote_number . '.pdf');
     }
