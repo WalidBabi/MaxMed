@@ -233,6 +233,72 @@
                                         <span class="text-gray-600">Required specimen for testing</span>
                                     </div>
                                 </div>
+                            @elseif(str_contains(strtolower($product->category->name ?? ''), 'foot test'))
+                                <div class="space-y-2">
+                                    <div class="flex items-start">
+                                        <span class="font-medium text-gray-700 mr-2">Tests per Kit:</span>
+                                        <span class="text-gray-600">Number of individual tests included</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <span class="font-medium text-gray-700 mr-2">Detection Time:</span>
+                                        <span class="text-gray-600">Time required to get results</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <span class="font-medium text-gray-700 mr-2">Target Pathogen:</span>
+                                        <span class="text-gray-600">Type of pathogen or substance detected (e.g., ALP, ATP)</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <span class="font-medium text-gray-700 mr-2">Sample Type:</span>
+                                        <span class="text-gray-600">Method of sample collection</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <span class="font-medium text-gray-700 mr-2">Application Surface:</span>
+                                        <span class="text-gray-600">Where the test can be applied (footwear, floors, etc.)</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <span class="font-medium text-gray-700 mr-2">Test Method:</span>
+                                        <span class="text-gray-600">Detection method used (enzymatic, colorimetric, etc.)</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <span class="font-medium text-gray-700 mr-2">HACCP Compliance:</span>
+                                        <span class="text-gray-600">Meets HACCP food safety requirements</span>
+                                    </div>
+                                </div>
+                            @elseif(str_contains(strtolower($product->category->name ?? ''), 'food test'))
+                                <div class="space-y-2">
+                                    <div class="flex items-start">
+                                        <span class="font-medium text-gray-700 mr-2">Tests per Kit:</span>
+                                        <span class="text-gray-600">Number of individual tests included</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <span class="font-medium text-gray-700 mr-2">Detection Time:</span>
+                                        <span class="text-gray-600">Time required to get results</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <span class="font-medium text-gray-700 mr-2">Target Pathogen/Analyte:</span>
+                                        <span class="text-gray-600">What the test detects (ALP, ATP, E. coli, Salmonella, etc.)</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <span class="font-medium text-gray-700 mr-2">Sample Type:</span>
+                                        <span class="text-gray-600">Method of sample collection (swab, direct contact, food sample)</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <span class="font-medium text-gray-700 mr-2">Application Surface:</span>
+                                        <span class="text-gray-600">Where to use (food contact surfaces, utensils, cutting boards, etc.)</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <span class="font-medium text-gray-700 mr-2">Test Method:</span>
+                                        <span class="text-gray-600">Detection technology (ATP bioluminescence, enzymatic, etc.)</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <span class="font-medium text-gray-700 mr-2">Food Safety Standards:</span>
+                                        <span class="text-gray-600">Compliance with FDA, USDA FSIS, BRC, SQF, etc.</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <span class="font-medium text-gray-700 mr-2">HACCP Compliance:</span>
+                                        <span class="text-gray-600">Meets HACCP food safety requirements</span>
+                                    </div>
+                                </div>
                             @elseif(str_contains(strtolower($product->category->name ?? ''), 'shaker'))
                                 <div class="space-y-2">
                                     <div class="flex items-start">
