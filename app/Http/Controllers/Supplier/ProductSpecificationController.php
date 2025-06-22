@@ -23,6 +23,10 @@ class ProductSpecificationController extends Controller
         // Define specification templates based on category
         if (str_contains($categoryName, 'rapid test') || str_contains($categoryName, 'test kit')) {
             return $this->getRapidTestSpecifications();
+        } elseif (str_contains($categoryName, 'foot test')) {
+            return $this->getRapidFootTestSpecifications();
+        } elseif (str_contains($categoryName, 'food test')) {
+            return $this->getRapidFoodTestSpecifications();
         } elseif (str_contains($categoryName, 'shaker') || str_contains($categoryName, 'mixer')) {
             return $this->getShakerMixerSpecifications();
         } elseif (str_contains($categoryName, 'centrifuge')) {
@@ -60,6 +64,71 @@ class ProductSpecificationController extends Controller
                 ['key' => 'fda_approval', 'name' => 'FDA Approval', 'unit' => '', 'type' => 'select', 'options' => ['Yes', 'No', 'Pending'], 'required' => false],
                 ['key' => 'iso_certification', 'name' => 'ISO Certification', 'unit' => '', 'type' => 'text', 'required' => false],
                 ['key' => 'clinical_studies', 'name' => 'Clinical Studies', 'unit' => '', 'type' => 'textarea', 'required' => false],
+            ]
+        ];
+    }
+
+    private function getRapidFootTestSpecifications()
+    {
+        return [
+            'Performance' => [
+                ['key' => 'tests_per_kit', 'name' => 'Tests per Kit', 'unit' => 'tests', 'type' => 'number', 'required' => true],
+                ['key' => 'detection_time', 'name' => 'Detection Time', 'unit' => 'minutes', 'type' => 'number', 'required' => true],
+                ['key' => 'sensitivity', 'name' => 'Sensitivity', 'unit' => '%', 'type' => 'decimal', 'required' => true],
+                ['key' => 'specificity', 'name' => 'Specificity', 'unit' => '%', 'type' => 'decimal', 'required' => true],
+                ['key' => 'target_pathogen', 'name' => 'Target Pathogen', 'unit' => '', 'type' => 'select', 'options' => ['ALP (Alkaline Phosphatase)', 'ATP (Adenosine Triphosphate)', 'Protein', 'Bacteria', 'Fungi', 'Multi-target'], 'required' => true],
+            ],
+            'Sample & Usage' => [
+                ['key' => 'sample_type', 'name' => 'Sample Type', 'unit' => '', 'type' => 'select', 'options' => ['Swab', 'Direct Contact', 'Surface Sample', 'Liquid Sample'], 'required' => true],
+                ['key' => 'sample_area', 'name' => 'Sample Area', 'unit' => 'cm²', 'type' => 'text', 'required' => false],
+                ['key' => 'application_surface', 'name' => 'Application Surface', 'unit' => '', 'type' => 'select', 'options' => ['Food Contact Surfaces', 'Equipment', 'Footwear', 'Floors', 'Hands/Gloves', 'All Surfaces'], 'required' => false],
+                ['key' => 'storage_temperature', 'name' => 'Storage Temperature', 'unit' => '°C', 'type' => 'text', 'required' => true],
+                ['key' => 'shelf_life', 'name' => 'Shelf Life', 'unit' => 'months', 'type' => 'number', 'required' => true],
+            ],
+            'Technical' => [
+                ['key' => 'test_method', 'name' => 'Test Method', 'unit' => '', 'type' => 'select', 'options' => ['Enzymatic', 'Immunochromatographic', 'Colorimetric', 'Fluorescent', 'Luminescent'], 'required' => false],
+                ['key' => 'reading_method', 'name' => 'Reading Method', 'unit' => '', 'type' => 'select', 'options' => ['Visual', 'Digital Reader', 'Fluorometer', 'Luminometer', 'Colorimeter'], 'required' => false],
+                ['key' => 'detection_limit', 'name' => 'Detection Limit', 'unit' => 'CFU/ml', 'type' => 'text', 'required' => false],
+                ['key' => 'validation_studies', 'name' => 'Validation Studies', 'unit' => '', 'type' => 'textarea', 'required' => false],
+            ],
+            'Regulatory' => [
+                ['key' => 'ce_marking', 'name' => 'CE Marking', 'unit' => '', 'type' => 'select', 'options' => ['Yes', 'No', 'Pending'], 'required' => false],
+                ['key' => 'fda_approval', 'name' => 'FDA Status', 'unit' => '', 'type' => 'select', 'options' => ['Approved', 'EUL', 'Pending', 'Not Required'], 'required' => false],
+                ['key' => 'iso_certification', 'name' => 'ISO Certification', 'unit' => '', 'type' => 'text', 'required' => false],
+                ['key' => 'haccp_compliance', 'name' => 'HACCP Compliance', 'unit' => '', 'type' => 'select', 'options' => ['Yes', 'No', 'Partial'], 'required' => false],
+            ]
+        ];
+    }
+
+    private function getRapidFoodTestSpecifications()
+    {
+        return [
+            'Performance' => [
+                ['key' => 'tests_per_kit', 'name' => 'Tests per Kit', 'unit' => 'tests', 'type' => 'number', 'required' => false],
+                ['key' => 'detection_time', 'name' => 'Detection Time', 'unit' => 'minutes', 'type' => 'number', 'required' => false],
+                ['key' => 'sensitivity', 'name' => 'Sensitivity', 'unit' => '%', 'type' => 'decimal', 'required' => false],
+                ['key' => 'specificity', 'name' => 'Specificity', 'unit' => '%', 'type' => 'decimal', 'required' => false],
+                ['key' => 'target_pathogen', 'name' => 'Target Pathogen/Analyte', 'unit' => '', 'type' => 'select', 'options' => ['ALP (Alkaline Phosphatase)', 'ATP (Adenosine Triphosphate)', 'Total Protein', 'E. coli', 'Salmonella', 'Listeria', 'Coliform', 'Multi-target'], 'required' => false],
+            ],
+            'Sample & Usage' => [
+                ['key' => 'sample_type', 'name' => 'Sample Type', 'unit' => '', 'type' => 'select', 'options' => ['Swab', 'Direct Contact', 'Surface Sample', 'Liquid Sample', 'Food Sample'], 'required' => false],
+                ['key' => 'sample_area', 'name' => 'Sample Area', 'unit' => 'cm²', 'type' => 'text', 'required' => false],
+                ['key' => 'application_surface', 'name' => 'Application Surface', 'unit' => '', 'type' => 'select', 'options' => ['Food Contact Surfaces', 'Processing Equipment', 'Utensils', 'Cutting Boards', 'Hands/Gloves', 'All Food Surfaces'], 'required' => false],
+                ['key' => 'storage_temperature', 'name' => 'Storage Temperature', 'unit' => '°C', 'type' => 'text', 'required' => false],
+                ['key' => 'shelf_life', 'name' => 'Shelf Life', 'unit' => 'months', 'type' => 'number', 'required' => false],
+            ],
+            'Technical' => [
+                ['key' => 'test_method', 'name' => 'Test Method', 'unit' => '', 'type' => 'select', 'options' => ['Enzymatic', 'Immunochromatographic', 'Colorimetric', 'Fluorescent', 'Luminescent', 'ATP Bioluminescence'], 'required' => false],
+                ['key' => 'reading_method', 'name' => 'Reading Method', 'unit' => '', 'type' => 'select', 'options' => ['Visual', 'Digital Reader', 'Fluorometer', 'Luminometer', 'Colorimeter', 'ATP Meter'], 'required' => false],
+                ['key' => 'detection_limit', 'name' => 'Detection Limit', 'unit' => 'CFU/ml or RLU', 'type' => 'text', 'required' => false],
+                ['key' => 'validation_studies', 'name' => 'Validation Studies', 'unit' => '', 'type' => 'textarea', 'required' => false],
+            ],
+            'Regulatory' => [
+                ['key' => 'ce_marking', 'name' => 'CE Marking', 'unit' => '', 'type' => 'select', 'options' => ['Yes', 'No', 'Pending'], 'required' => false],
+                ['key' => 'fda_approval', 'name' => 'FDA Status', 'unit' => '', 'type' => 'select', 'options' => ['Approved', 'GRAS', 'Pending', 'Not Required'], 'required' => false],
+                ['key' => 'iso_certification', 'name' => 'ISO Certification', 'unit' => '', 'type' => 'text', 'required' => false],
+                ['key' => 'haccp_compliance', 'name' => 'HACCP Compliance', 'unit' => '', 'type' => 'select', 'options' => ['Yes', 'No', 'Partial'], 'required' => false],
+                ['key' => 'food_safety_standards', 'name' => 'Food Safety Standards', 'unit' => '', 'type' => 'select', 'options' => ['USDA FSIS', 'FDA', 'BRC', 'SQF', 'IFS', 'FSSC 22000'], 'required' => false],
             ]
         ];
     }
