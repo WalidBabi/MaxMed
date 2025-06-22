@@ -56,6 +56,15 @@
             background-color: #FFFFFF;
         }
         
+        /* Logo styles */
+        .email-logo {
+            width: 380px;
+            height: 97px;
+            max-width: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+        
         /* Media queries for mobile (will be ignored by Outlook) */
         @media only screen and (max-width: 650px) {
             .email-container {
@@ -66,6 +75,10 @@
             }
             .mobile-text-center {
                 text-align: center !important;
+            }
+            .email-logo {
+                width: 280px !important;
+                height: 71px !important;
             }
         }
     </style>
@@ -78,14 +91,18 @@
                     
                     <!-- Modern Header Section -->
                     <tr>
-                        <td style="background-color: #667eea; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 50px 30px; text-align: center;">
+                        <td style="background-color: #FFFFFF; padding: 40px 30px; text-align: center; border-bottom: 2px solid #171e60;">
                             <!--[if gte mso 9]>
-                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #667eea;">
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #FFFFFF;">
                                 <tr>
-                                    <td style="padding: 50px 30px; text-align: center;">
+                                    <td style="padding: 40px 30px; text-align: center;">
                             <![endif]-->
-                                        <h1 style="margin: 0 0 8px 0; font-size: 32px; font-weight: 600; color: #FFFFFF; letter-spacing: -0.5px;">Quote {{ $quote->quote_number }}</h1>
-                                        <p style="margin: 0; font-size: 18px; color: rgba(255,255,255,0.9); font-weight: 300;">MaxMed Scientific & Laboratory Equipment</p>
+                                        <!-- MaxMed Logo -->
+                                        <div style="margin-bottom: 30px;">
+                                            <img src="{{ asset('Images/logo.png') }}" alt="MaxMed Logo" width="380" height="97" class="email-logo" style="width: 380px; height: 97px; max-width: 100%; display: block; margin: 0 auto;">
+                                        </div>
+                                        <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 600; color: #171e60; letter-spacing: -0.5px;">Quote {{ $quote->quote_number }}</h1>
+                                        <p style="margin: 0; font-size: 16px; color: #0a5694; font-weight: 400;">MaxMed Scientific & Laboratory Equipment</p>
                             <!--[if gte mso 9]>
                                     </td>
                                 </tr>
@@ -105,11 +122,11 @@
                             </div>
 
                             <!-- Quote Details Card -->
-                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #EDF2F7; background: linear-gradient(135deg, #EDF2F7 0%, #E2E8F0 100%); margin: 30px 0; border-radius: 8px; border-left: 4px solid #667eea; overflow: hidden;">
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #f8fafc; margin: 30px 0; border-radius: 8px; border-left: 4px solid #171e60; overflow: hidden;">
                                 <tr>
                                     <td style="padding: 25px;">
                                         <div style="margin-bottom: 20px;">
-                                            <h3 style="margin: 0; color: #667eea; font-size: 18px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Quote Details</h3>
+                                            <h3 style="margin: 0; color: #171e60; font-size: 18px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Quote Details</h3>
                                         </div>
                                         
                                         <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
@@ -165,11 +182,11 @@
                             </table>
 
                             <!-- Total Amount - Outlook Compatible -->
-                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #667eea; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 30px 0; border-radius: 12px; overflow: hidden;">
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #171e60; margin: 30px 0; border-radius: 12px; overflow: hidden;">
                                 <tr>
                                     <td style="padding: 30px; text-align: center;">
                                         <!--[if gte mso 9]>
-                                        <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #667eea;">
+                                        <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #171e60;">
                                             <tr>
                                                 <td style="padding: 30px; text-align: center;">
                                         <![endif]-->

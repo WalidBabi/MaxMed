@@ -56,6 +56,15 @@
             background-color: #FFFFFF;
         }
         
+        /* Logo styles */
+        .email-logo {
+            width: 380px;
+            height: 97px;
+            max-width: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+        
         /* Media queries for mobile (will be ignored by Outlook) */
         @media only screen and (max-width: 650px) {
             .email-container {
@@ -66,6 +75,10 @@
             }
             .mobile-text-center {
                 text-align: center !important;
+            }
+            .email-logo {
+                width: 280px !important;
+                height: 71px !important;
             }
         }
     </style>
@@ -78,16 +91,20 @@
                     
                     <!-- Modern Header Section -->
                     <tr>
-                        <td style="background-color: {{ $invoice->type === 'proforma' ? '#38B2AC' : '#48BB78' }}; background: linear-gradient(135deg, {{ $invoice->type === 'proforma' ? '#38B2AC 0%, #319795 100%' : '#48BB78 0%, #38A169 100%' }}); padding: 50px 30px; text-align: center;">
+                        <td style="background-color: #FFFFFF; padding: 40px 30px; text-align: center; border-bottom: 2px solid #171e60;">
                             <!--[if gte mso 9]>
-                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: {{ $invoice->type === 'proforma' ? '#38B2AC' : '#48BB78' }};">
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #FFFFFF;">
                                 <tr>
-                                    <td style="padding: 50px 30px; text-align: center;">
+                                    <td style="padding: 40px 30px; text-align: center;">
                             <![endif]-->
-                                        <h1 style="margin: 0 0 8px 0; font-size: 32px; font-weight: 600; color: #FFFFFF; letter-spacing: -0.5px;">
+                                        <!-- MaxMed Logo -->
+                                        <div style="margin-bottom: 30px;">
+                                            <img src="{{ asset('Images/logo.png') }}" alt="MaxMed Logo" width="380" height="97" class="email-logo" style="width: 380px; height: 97px; max-width: 100%; display: block; margin: 0 auto;">
+                                        </div>
+                                        <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 600; color: #171e60; letter-spacing: -0.5px;">
                                             {{ $invoice->type === 'proforma' ? '📋 Proforma Invoice' : '📄 Invoice' }}
                                         </h1>
-                                        <p style="margin: 0; font-size: 18px; color: rgba(255,255,255,0.9); font-weight: 300;">MaxMed Scientific & Laboratory Equipment</p>
+                                        <p style="margin: 0; font-size: 16px; color: #0a5694; font-weight: 400;">MaxMed Scientific & Laboratory Equipment</p>
                             <!--[if gte mso 9]>
                                     </td>
                                 </tr>
