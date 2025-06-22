@@ -321,6 +321,8 @@ class InvoiceController extends Controller
                     'quantity' => $itemData['quantity'],
                     'unit_price' => $itemData['unit_price'],
                     'discount_percentage' => $itemData['discount_percentage'] ?? 0,
+                    'unit_of_measure' => $itemData['unit_of_measure'] ?? null,
+                    'specifications' => $itemData['specifications'] ?? null,
                     'sort_order' => $index + 1
                 ]);
             }

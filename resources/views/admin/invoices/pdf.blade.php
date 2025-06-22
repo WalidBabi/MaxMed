@@ -644,17 +644,10 @@
                        
                         </td>
                         <td style="font-size: 8px; line-height: 1.3; padding: 8px 4px;">
-                            @if($item->specifications)
-                                @php
-                                    $selectedSpecs = is_string($item->specifications) ? json_decode($item->specifications, true) : $item->specifications;
-                                @endphp
-                                @if(is_array($selectedSpecs) && count($selectedSpecs) > 0)
-                                    @foreach($selectedSpecs as $spec)
-                                        <div style="margin-bottom: 2px; color: var(--text-secondary);">{{ $spec }}</div>
-                                    @endforeach
-                                @else
-                                    <span style="color: var(--text-muted);">-</span>
-                                @endif
+                            @if($item->specifications && is_array($item->specifications) && count($item->specifications) > 0)
+                                @foreach($item->specifications as $spec)
+                                    <div style="margin-bottom: 2px; color: var(--text-secondary);">{{ $spec }}</div>
+                                @endforeach
                             @else
                                 <span style="color: var(--text-muted);">-</span>
                             @endif
@@ -782,7 +775,7 @@
             $itemsWithUnselectedSpecs = $invoice->items->filter(function($item) {
                 return $item->product && 
                        $item->product->specifications->count() > 0 && 
-                       (!$item->specifications || (is_string($item->specifications) && json_decode($item->specifications, true) === null) || (is_array($item->specifications) && count($item->specifications) === 0));
+                       (!$item->specifications || !is_array($item->specifications) || count($item->specifications) === 0);
             });
         @endphp
         
@@ -793,7 +786,7 @@
                 @foreach($invoice->items as $index => $item)
                     @if($item->product && 
                         $item->product->specifications->count() > 0 && 
-                        (!$item->specifications || (is_string($item->specifications) && json_decode($item->specifications, true) === null) || (is_array($item->specifications) && count($item->specifications) === 0)))
+                        (!$item->specifications || !is_array($item->specifications) || count($item->specifications) === 0))
                         <div class="spec-item" style="margin-bottom: 20px; padding: 15px; background-color: var(--light-gray); border-radius: 8px; border-left: 3px solid var(--primary-color);">
                             <div class="spec-product-name" style="font-weight: 600; color: var(--text-primary); margin-bottom: 8px; font-size: 12px;">
                                 {{ $item->item_description }}
