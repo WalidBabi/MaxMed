@@ -770,57 +770,7 @@
         </div>
         @endif
 
-        <!-- PRODUCT SPECIFICATIONS APPENDIX - Only show if there are items with product specs but no selected specs -->
-        @php
-            $itemsWithUnselectedSpecs = $invoice->items->filter(function($item) {
-                return $item->product && 
-                       $item->product->specifications->count() > 0 && 
-                       (!$item->specifications || !is_array($item->specifications) || count($item->specifications) === 0);
-            });
-        @endphp
-        
-        @if($itemsWithUnselectedSpecs->count() > 0)
-        <div class="content-section" style="margin-top: 40px; page-break-before: auto;">
-            <div class="content-title">Additional Product Specifications</div>
-            <div class="specs-content">
-                @foreach($invoice->items as $index => $item)
-                    @if($item->product && 
-                        $item->product->specifications->count() > 0 && 
-                        (!$item->specifications || !is_array($item->specifications) || count($item->specifications) === 0))
-                        <div class="spec-item" style="margin-bottom: 20px; padding: 15px; background-color: var(--light-gray); border-radius: 8px; border-left: 3px solid var(--primary-color);">
-                            <div class="spec-product-name" style="font-weight: 600; color: var(--text-primary); margin-bottom: 8px; font-size: 12px;">
-                                {{ $item->item_description }}
-                            </div>
-                            <div class="spec-details" style="font-size: 10px; color: var(--text-secondary);">
-                                @foreach($item->product->specifications->groupBy('category') as $category => $specs)
-                                    @if($category)
-                                        <div class="spec-category" style="margin-bottom: 8px;">
-                                            <div class="spec-category-name" style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px; text-transform: uppercase; font-size: 9px; letter-spacing: 0.5px;">
-                                                {{ $category }}
-                                            </div>
-                                            @foreach($specs as $spec)
-                                                <div class="spec-row" style="display: flex; justify-content: space-between; margin-bottom: 2px;">
-                                                    <span class="spec-key" style="font-weight: 500;">{{ $spec->display_name ?: $spec->specification_key }}:</span>
-                                                    <span class="spec-value" style="font-weight: 600;">{{ $spec->formatted_value }}</span>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    @else
-                                        @foreach($specs as $spec)
-                                            <div class="spec-row" style="display: flex; justify-content: space-between; margin-bottom: 2px;">
-                                                <span class="spec-key" style="font-weight: 500;">{{ $spec->display_name ?: $spec->specification_key }}:</span>
-                                                <span class="spec-value" style="font-weight: 600;">{{ $spec->formatted_value }}</span>
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-                @endforeach
-            </div>
-        </div>
-        @endif
+
 
         <!-- FOOTER -->
         <div class="footer">
