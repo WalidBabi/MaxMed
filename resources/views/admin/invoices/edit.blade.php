@@ -1175,6 +1175,41 @@ document.addEventListener('DOMContentLoaded', function() {
             const specificationsHidden = row.querySelector('.specifications-hidden');
             const specificationsDropdown = row.querySelector('.specifications-dropdown-list');
             initializeCustomDropdown(productSearchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput, specificationsInput, specificationsHidden, specificationsDropdown);
+            
+            // Add specifications dropdown functionality for existing items
+            if (specificationsInput && specificationsDropdown) {
+                specificationsInput.addEventListener('click', function() {
+                    if (specificationsHidden.value && specificationsHidden.value !== '[]') {
+                        specificationsDropdown.classList.toggle('hidden');
+                    }
+                });
+                
+                // Prevent dropdown from closing when clicking on checkboxes
+                specificationsDropdown.addEventListener('click', function(e) {
+                    if (e.target.type === 'checkbox' || e.target.tagName === 'LABEL') {
+                        e.stopPropagation();
+                    }
+                });
+                
+                // Hide specifications dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!specificationsInput.contains(e.target) && !specificationsDropdown.contains(e.target)) {
+                        specificationsDropdown.classList.add('hidden');
+                    }
+                });
+                
+                // Initialize existing specifications if any
+                if (specificationsHidden.value && specificationsHidden.value !== '[]' && specificationsHidden.value !== '') {
+                    try {
+                        const selectedSpecs = JSON.parse(specificationsHidden.value);
+                        if (selectedSpecs && selectedSpecs.length > 0) {
+                            specificationsInput.value = selectedSpecs.join(', ');
+                        }
+                    } catch (e) {
+                        console.log('Error parsing existing specifications:', e);
+                    }
+                }
+            }
         }
     });
     
