@@ -29,10 +29,11 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'DejaVu Sans', 'Arial', 'Helvetica', sans-serif !important;
         }
 
         body {
-            font-family: 'Arial', 'Helvetica', sans-serif;
+            font-family: 'DejaVu Sans', 'Arial', 'Helvetica', sans-serif !important;
             color: var(--text-primary);
             font-size: 10px;
             line-height: 1.4;
