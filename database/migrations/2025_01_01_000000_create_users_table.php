@@ -11,16 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->boolean('is_admin')->default(false);
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('users')) {
+            Schema::create('users', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('email')->unique();
+                $table->timestamp('email_verified_at')->nullable();
+                $table->string('password');
+                $table->rememberToken();
+                $table->boolean('is_admin')->default(false);
+                $table->timestamps();
+            });
+        } else {
+            Schema::table('users', function (Blueprint $table) {
+                // Add any new columns here if needed
+                // Example:
+                // if (!Schema::hasColumn('users', 'is_admin')) {
+                //     $table->boolean('is_admin')->default(false);
+                // }
+            });
+        }
     }
 
     /**
@@ -28,6 +38,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        // Don't drop the table in production to preserve data
+        // Only drop columns that were added in this migration if any
     }
 };
