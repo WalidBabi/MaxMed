@@ -42,34 +42,6 @@ class SafeMigrations extends Command
             Schema::create(\'' . $tableName . '\', function (Blueprint $table) {
                 ' . $schemaContent . '
             });
-        } else {
-            Schema::table(\'' . $tableName . '\', function (Blueprint $table) {
-                // Check for missing columns
-                $columns = Schema::getColumnListing(\'' . $tableName . '\');
-                
-                // Add missing columns if they don\'t exist
-                if (!in_array(\'id\', $columns)) {
-                    $table->id();
-                }
-                
-                // Add other columns based on the original schema
-                foreach ([\'name\', \'email\', \'description\', \'status\', \'type\', \'created_at\', \'updated_at\'] as $column) {
-                    if (!in_array($column, $columns)) {
-                        switch ($column) {
-                            case \'created_at\':
-                            case \'updated_at\':
-                                if (!in_array($column, $columns)) {
-                                    $table->timestamp($column)->nullable();
-                                }
-                                break;
-                            default:
-                                if (!in_array($column, $columns)) {
-                                    $table->string($column)->nullable();
-                                }
-                        }
-                    }
-                }
-            });
         }
     }',
                         $content
