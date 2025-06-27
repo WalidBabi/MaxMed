@@ -53,6 +53,43 @@ class ProductController extends Controller
     }
 
     /**
+     * Show the specified product.
+     */
+    public function show(Product $product)
+    {
+        // Check if user owns this product
+        if ($product->supplier_id !== Auth::id()) {
+            abort(403, 'You can only view your own products.');
+        }
+
+        if (!Auth::user()->hasPermission('supplier.products.view')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Load product with relationships
+        $product->load([
+            'specifications' => function($query) {
+                $query->orderBy('category', 'asc')
+                      ->orderBy('sort_order', 'asc');
+            }, 
+            'category', 
+            'brand', 
+            'images' => function($query) {
+                $query->orderBy('sort_order', 'asc');
+            },
+            'inventory'
+        ]);
+        
+        // Group specifications by category
+        $specsByCategory = $product->specifications->groupBy('category');
+        
+        // Get category-specific templates for comparison
+        $templates = $this->specificationService->getCategorySpecificationTemplates($product->category_id);
+        
+        return view('supplier.products.show', compact('product', 'specsByCategory', 'templates'));
+    }
+
+    /**
      * Show the form for creating a new product.
      */
     public function create()
@@ -199,8 +236,9 @@ class ProductController extends Controller
         
         $yooningBrand = Brand::firstOrCreate(['name' => 'Yooning']);
         
-        // Get existing specifications
-        $existingSpecs = $this->specificationService->getExistingSpecifications($product->id);
+        // Get existing specifications and index them by specification_key for easy access
+        $existingSpecsCollection = $this->specificationService->getExistingSpecifications($product->id);
+        $existingSpecs = $existingSpecsCollection->keyBy('specification_key');
         
         // Get category-specific templates
         $templates = $this->specificationService->getCategorySpecificationTemplates($product->category_id);
@@ -424,7 +462,7 @@ class ProductController extends Controller
                 $transformedSpecs[] = [
                     'specification_key' => $key,
                     'specification_value' => $value,
-                    'unit' => $template['unit'] ?? null,
+                    'unit' => $template['unit'] ?? '',
                     'category' => $template['category'] ?? 'General',
                     'display_name' => $template['name'] ?? $key,
                     'description' => $template['description'] ?? null,

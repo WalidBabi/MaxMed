@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('quotation_requests', function (Blueprint $table) {
-            $table->string('delivery_timeline')->nullable()->after('notes');
+        Schema::table('products', function (Blueprint $table) {
+            $table->boolean('has_size_options')->default(false)->after('price_aed');
+            $table->json('size_options')->nullable()->after('has_size_options');
         });
     }
 
@@ -21,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('quotation_requests', function (Blueprint $table) {
-            $table->dropColumn('delivery_timeline');
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropColumn(['has_size_options', 'size_options']);
         });
     }
-};
+}; 

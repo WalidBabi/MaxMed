@@ -10,26 +10,23 @@ class InvoiceItem extends Model
     protected $fillable = [
         'invoice_id',
         'product_id',
-        'item_description',
+        'description',
         'size',
         'quantity',
         'unit_price',
-        'discount_percentage',
-        'discount_amount',
-        'line_total',
-        'unit_of_measure',
-        'specifications',
+        'subtotal',
+        'tax',
+        'total',
         'sort_order'
     ];
 
     protected $casts = [
         'quantity' => 'decimal:2',
         'unit_price' => 'decimal:2',
-        'discount_percentage' => 'decimal:2',
-        'discount_amount' => 'decimal:2',
-        'line_total' => 'decimal:2',
-        'sort_order' => 'integer',
-        'specifications' => 'array'
+        'subtotal' => 'decimal:2',
+        'tax' => 'decimal:2',
+        'total' => 'decimal:2',
+        'sort_order' => 'integer'
     ];
 
     /**
@@ -40,10 +37,8 @@ class InvoiceItem extends Model
         parent::boot();
         
         static::saving(function ($item) {
-            // Calculate line total
-            $subtotal = $item->quantity * $item->unit_price;
-            $discount = $item->discount_amount ?: ($subtotal * $item->discount_percentage / 100);
-            $item->line_total = $subtotal - $discount;
+            // Calculate total
+            $item->total = $item->subtotal;
         });
     }
 
@@ -63,13 +58,23 @@ class InvoiceItem extends Model
     /**
      * Accessors
      */
-    public function getFormattedLineTotalAttribute()
+    public function getFormattedTotalAttribute()
     {
-        return number_format($this->line_total, 2);
+        return number_format($this->total, 2);
     }
 
     public function getFormattedUnitPriceAttribute()
     {
         return number_format($this->unit_price, 2);
+    }
+
+    public function getFormattedLineTotalAttribute()
+    {
+        return number_format($this->total, 2);
+    }
+
+    public function getLineTotalAttribute()
+    {
+        return $this->total;
     }
 } 

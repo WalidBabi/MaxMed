@@ -83,7 +83,6 @@ class InvoiceController extends Controller
             ->get();
 
         $products = \App\Models\Product::with(['brand', 'category'])
-            ->select('id', 'name', 'description', 'price', 'price_aed', 'brand_id', 'category_id')
             ->orderBy('name')
             ->get();
 
@@ -139,12 +138,13 @@ class InvoiceController extends Controller
                 $invoiceItemData = [
                     'invoice_id' => $invoice->id,
                     'product_id' => $quoteItem->product_id, // Ensure product_id is transferred
-                    'item_description' => $quoteItem->item_details,
+                    'description' => $quoteItem->item_details,
+                    'size' => $quoteItem->size,
                     'quantity' => $quoteItem->quantity,
                     'unit_price' => $quoteItem->rate,
-                    'discount_percentage' => $quoteItem->discount,
-                    'discount_amount' => $discountAmount,
-                    'line_total' => $lineTotal,
+                    'subtotal' => $lineTotal,
+                    'tax' => 0,
+                    'total' => $lineTotal,
                     'sort_order' => $index + 1
                 ];
                 
@@ -190,10 +190,10 @@ class InvoiceController extends Controller
             'payment_terms' => 'required|in:advance_50,advance_100,on_delivery,net_30,custom',
             'advance_percentage' => 'nullable|numeric|min:0|max:100',
             'items' => 'required|array|min:1',
-            'items.*.item_description' => 'required|string',
+            'items.*.description' => 'required|string',
             'items.*.quantity' => 'required|numeric|min:0',
             'items.*.unit_price' => 'required|numeric|min:0',
-            'items.*.discount_percentage' => 'nullable|numeric|min:0|max:100'
+            'items.*.size' => 'nullable|string|max:100'
         ]);
 
         try {
@@ -221,15 +221,21 @@ class InvoiceController extends Controller
 
             // Create invoice items
             foreach ($request->items as $index => $itemData) {
+                // Calculate subtotal based on quantity and unit price
+                $quantity = $itemData['quantity'];
+                $unitPrice = $itemData['unit_price'];
+                $subtotal = $quantity * $unitPrice;
+                
                 InvoiceItem::create([
                     'invoice_id' => $invoice->id,
                     'product_id' => $itemData['product_id'] ?? null,
-                    'item_description' => $itemData['item_description'],
-                    'quantity' => $itemData['quantity'],
-                    'unit_price' => $itemData['unit_price'],
-                    'discount_percentage' => $itemData['discount_percentage'] ?? 0,
-                    'unit_of_measure' => $itemData['unit_of_measure'] ?? null,
-                    'specifications' => $itemData['specifications'] ?? null,
+                    'description' => $itemData['description'] ?? $itemData['item_description'] ?? '',
+                    'size' => $itemData['size'] ?? null,
+                    'quantity' => $quantity,
+                    'unit_price' => $unitPrice,
+                    'subtotal' => $subtotal,
+                    'tax' => $itemData['tax'] ?? 0,
+                    'total' => $subtotal + ($itemData['tax'] ?? 0),
                     'sort_order' => $index + 1
                 ]);
             }
@@ -270,7 +276,6 @@ class InvoiceController extends Controller
             ->get();
 
         $products = \App\Models\Product::with(['brand', 'category'])
-            ->select('id', 'name', 'description', 'price', 'price_aed', 'brand_id', 'category_id')
             ->orderBy('name')
             ->get();
 
@@ -314,15 +319,21 @@ class InvoiceController extends Controller
             $invoice->items()->delete();
 
             foreach ($request->items as $index => $itemData) {
+                // Calculate subtotal based on quantity and unit price
+                $quantity = $itemData['quantity'];
+                $unitPrice = $itemData['unit_price'];
+                $subtotal = $quantity * $unitPrice;
+                
                 InvoiceItem::create([
                     'invoice_id' => $invoice->id,
                     'product_id' => $itemData['product_id'] ?? null,
-                    'item_description' => $itemData['item_description'],
-                    'quantity' => $itemData['quantity'],
-                    'unit_price' => $itemData['unit_price'],
-                    'discount_percentage' => $itemData['discount_percentage'] ?? 0,
-                    'unit_of_measure' => $itemData['unit_of_measure'] ?? null,
-                    'specifications' => $itemData['specifications'] ?? null,
+                    'description' => $itemData['description'] ?? $itemData['item_description'] ?? '',
+                    'size' => $itemData['size'] ?? null,
+                    'quantity' => $quantity,
+                    'unit_price' => $unitPrice,
+                    'subtotal' => $subtotal,
+                    'tax' => $itemData['tax'] ?? 0,
+                    'total' => $subtotal + ($itemData['tax'] ?? 0),
                     'sort_order' => $index + 1
                 ]);
             }

@@ -22,10 +22,35 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id');
     }
 
+    // Alias for subcategories to maintain compatibility
+    public function children()
+    {
+        return $this->subcategories();
+    }
+
     // Get parent category
     public function parent()
     {
         return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    // Get suppliers assigned to this category
+    public function suppliers()
+    {
+        return $this->belongsToMany(User::class, 'supplier_categories', 'category_id', 'supplier_id')
+                    ->withPivot([
+                        'status', 'minimum_order_value', 'lead_time_days', 'notes',
+                        'commission_rate', 'avg_response_time_hours', 'quotation_win_rate',
+                        'total_quotations', 'won_quotations', 'avg_customer_rating',
+                        'assigned_by', 'assigned_at', 'last_quotation_at'
+                    ])
+                    ->withTimestamps();
+    }
+
+    // Get active suppliers for this category
+    public function activeSuppliers()
+    {
+        return $this->suppliers()->wherePivot('status', 'active');
     }
 
     // Check if category has subcategories

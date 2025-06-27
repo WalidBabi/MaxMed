@@ -38,23 +38,35 @@
                         </h3>
                     </div>
                     <div class="p-6">
-                        <label for="customer_id" class="block text-sm font-medium text-gray-700 mb-2">Select Customer <span class="text-red-500">*</span></label>
-                        <select name="customer_id" id="customer_id" required class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('customer_id') border-red-300 @enderror">
-                            <option value="">Choose a customer...</option>
-                            @foreach($customers as $customer)
-                                <option value="{{ $customer->id }}" {{ old('customer_id') == $customer->id ? 'selected' : '' }}>
-                                    {{ $customer->name }} 
-                                    @if($customer->email)
-                                        ({{ $customer->email }})
-                                    @elseif($customer->user && $customer->user->email)
-                                        ({{ $customer->user->email }})
-                                    @endif
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('customer_id')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
+                        <div class="mb-4">
+                            <label for="customer_id" class="block text-sm font-medium text-gray-700 mb-2">Select Customer *</label>
+                            <select name="customer_id" id="customer_id" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                <option value="">Select a customer</option>
+                                @foreach($customers as $customer)
+                                    <option value="{{ $customer->id }}" {{ old('customer_id') == $customer->id ? 'selected' : '' }}>
+                                        {{ $customer->name }} {{ $customer->company_name ? '(' . $customer->company_name . ')' : '' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('customer_id')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Add Quotation Requirement Option -->
+                        <div class="mt-6">
+                            <div class="flex items-center">
+                                <input type="checkbox" name="requires_quotation" id="requires_quotation" value="1" 
+                                    {{ old('requires_quotation') ? 'checked' : '' }}
+                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                <label for="requires_quotation" class="ml-2 block text-sm text-gray-900">
+                                    Require supplier quotations for this order
+                                </label>
+                            </div>
+                            <p class="mt-1 text-sm text-gray-500">
+                                Check this if you want suppliers to provide quotations before processing the order
+                            </p>
+                        </div>
                     </div>
                 </div>
 

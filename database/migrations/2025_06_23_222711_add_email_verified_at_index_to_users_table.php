@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('contact_submissions', function (Blueprint $table) {
-            $table->enum('lead_potential', ['hot', 'warm', 'cold'])->nullable()->after('status');
+        Schema::table('users', function (Blueprint $table) {
+            // Add composite index for efficient querying of unverified users
+            $table->index(['email_verified_at', 'created_at'], 'idx_users_email_verification_cleanup');
         });
     }
 
@@ -21,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('contact_submissions', function (Blueprint $table) {
-            $table->dropColumn('lead_potential');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropIndex('idx_users_email_verification_cleanup');
         });
     }
 };

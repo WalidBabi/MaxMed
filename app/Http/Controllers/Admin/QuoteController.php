@@ -45,7 +45,6 @@ class QuoteController extends Controller
             ->get();
             
         $products = \App\Models\Product::with(['brand', 'category', 'specifications'])
-            ->select('id', 'name', 'description', 'price', 'price_aed', 'brand_id', 'category_id')
             ->orderBy('name')
             ->get();
             
@@ -165,7 +164,6 @@ class QuoteController extends Controller
             ->get();
             
         $products = \App\Models\Product::with(['brand', 'category', 'specifications'])
-            ->select('id', 'name', 'description', 'price', 'price_aed', 'brand_id', 'category_id')
             ->orderBy('name')
             ->get();
             
@@ -430,19 +428,52 @@ class QuoteController extends Controller
      */
     public function convertToProforma(Quote $quote)
     {
+        Log::info('QuoteController convertToProforma: Starting conversion', [
+            'quote_id' => $quote->id,
+            'quote_status' => $quote->status,
+            'items_count' => $quote->items->count(),
+            'user_id' => Auth::id()
+        ]);
+
         // Check if quote can be converted
         if ($quote->status === 'invoiced') {
+            Log::warning('QuoteController convertToProforma: Quote already invoiced', ['quote_id' => $quote->id]);
             return redirect()->route('admin.quotes.index')
                 ->with('error', 'This quote has already been converted to an invoice.');
         }
 
+        // Check if quote has items
+        if ($quote->items->count() === 0) {
+            Log::warning('QuoteController convertToProforma: Quote has no items', ['quote_id' => $quote->id]);
+            return redirect()->route('admin.quotes.index')
+                ->with('error', 'Cannot convert quote to invoice. Quote has no items.');
+        }
+
         try {
+            Log::info('QuoteController convertToProforma: Beginning transaction', ['quote_id' => $quote->id]);
             DB::beginTransaction();
 
             // Find customer by name to get billing and shipping addresses
+            Log::info('QuoteController convertToProforma: Looking for customer', [
+                'quote_id' => $quote->id,
+                'customer_name' => $quote->customer_name,
+                'customer_name_length' => strlen($quote->customer_name)
+            ]);
+            
             $customer = Customer::where('name', $quote->customer_name)->first();
             
+            Log::info('QuoteController convertToProforma: Customer lookup result', [
+                'quote_id' => $quote->id,
+                'customer_found' => $customer ? true : false,
+                'customer_id' => $customer ? $customer->id : null,
+                'customer_name_from_db' => $customer ? $customer->name : null
+            ]);
+            
             if (!$customer) {
+                Log::error('QuoteController convertToProforma: Customer not found', [
+                    'quote_id' => $quote->id,
+                    'customer_name' => $quote->customer_name
+                ]);
                 return redirect()->route('admin.quotes.index')
                     ->with('error', 'Customer not found. Please ensure the customer exists in the system.');
             }
@@ -456,6 +487,7 @@ class QuoteController extends Controller
                 'type' => 'proforma',
                 'is_proforma' => true,
                 'quote_id' => $quote->id,
+                'customer_id' => $customer->id,
                 'customer_name' => $quote->customer_name,
                 'billing_address' => $billingAddress,
                 'shipping_address' => $shippingAddress,
@@ -464,7 +496,7 @@ class QuoteController extends Controller
                 'description' => $quote->subject,
                 'terms_conditions' => $quote->terms_conditions,
                 'notes' => $quote->customer_notes,
-                'sub_total' => $quote->sub_total,
+                'subtotal' => $quote->sub_total,
                 'tax_amount' => $quote->tax_amount ?? 0,
                 'discount_amount' => $quote->discount_amount ?? 0,
                 'total_amount' => $quote->total_amount,
@@ -483,12 +515,12 @@ class QuoteController extends Controller
                 $invoiceItemData = [
                     'invoice_id' => $invoice->id,
                     'product_id' => $quoteItem->product_id,
-                    'item_description' => $quoteItem->item_details,
+                    'description' => $quoteItem->item_details,
                     'size' => $quoteItem->size,
                     'quantity' => $quoteItem->quantity,
                     'unit_price' => $quoteItem->rate,
-                    'discount_percentage' => $quoteItem->discount,
-                    'line_total' => $quoteItem->amount,
+                    'subtotal' => $quoteItem->amount,
+                    'total' => $quoteItem->amount,
                     'sort_order' => $quoteItem->sort_order,
                 ];
                 
@@ -507,6 +539,12 @@ class QuoteController extends Controller
             $quote->update(['status' => 'invoiced']);
 
             DB::commit();
+            
+            Log::info('QuoteController convertToProforma: Conversion successful', [
+                'quote_id' => $quote->id,
+                'invoice_id' => $invoice->id,
+                'invoice_number' => $invoice->invoice_number
+            ]);
 
             return redirect()->route('admin.invoices.show', $invoice)
                 ->with('success', 'Quote has been successfully converted to proforma invoice: ' . $invoice->invoice_number);

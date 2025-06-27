@@ -304,7 +304,7 @@
                                             @php
                                                 $fieldName = "specifications[{$spec['key']}]";
                                                 $fieldId = "spec_{$spec['key']}";
-                                                $currentValue = $existingSpecs[$spec['key']]->specification_value ?? '';
+                                                $currentValue = old($fieldName, $existingSpecs->get($spec['key'])->specification_value ?? '');
                                                 $required = $spec['required'] ? 'required' : '';
                                                 $requiredMark = $spec['required'] ? '<span class="text-red-500">*</span>' : '';
                                             @endphp
