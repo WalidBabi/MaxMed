@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('supplier_inquiries', function (Blueprint $table) {
-            $table->unsignedBigInteger('product_category_id')->nullable()->after('product_id');
-            $table->foreign('product_category_id')->references('id')->on('categories')->onDelete('set null');
-        });
+        if (Schema::hasTable('categories')) {
+            Schema::table('supplier_inquiries', function (Blueprint $table) {
+                if (!Schema::hasColumn('supplier_inquiries', 'product_category_id')) {
+                    $table->unsignedBigInteger('product_category_id')->nullable()->after('product_id');
+                    $table->foreign('product_category_id')->references('id')->on('categories')->onDelete('set null');
+                }
+            });
+        }
     }
 
     /**
@@ -22,9 +26,13 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('supplier_inquiries', function (Blueprint $table) {
-            $table->dropForeign(['product_category_id']);
-            $table->dropColumn('product_category_id');
-        });
+        if (Schema::hasTable('supplier_inquiries')) {
+            Schema::table('supplier_inquiries', function (Blueprint $table) {
+                if (Schema::hasColumn('supplier_inquiries', 'product_category_id')) {
+                    $table->dropForeign(['product_category_id']);
+                    $table->dropColumn('product_category_id');
+                }
+            });
+        }
     }
 };
