@@ -6,9 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\SupplierCategory;
+use App\Notifications\SupplierCategoryApprovalNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 
 class SupplierCategoryController extends Controller
 {
@@ -19,7 +24,7 @@ class SupplierCategoryController extends Controller
     {
         $suppliers = User::whereHas('role', function($q) {
             $q->where('name', 'supplier');
-        })->with(['activeAssignedCategories', 'role'])->get();
+        })->with(['activeAssignedCategories', 'role', 'supplierInformation'])->get();
 
         $categories = Category::all();
 
@@ -37,6 +42,7 @@ class SupplierCategoryController extends Controller
                 ->with('error', 'Selected user is not a supplier.');
         }
 
+        $supplier->load('supplierInformation');
         $categories = Category::all();
         $assignedCategoryIds = $supplier->activeAssignedCategories->pluck('id')->toArray();
 
@@ -169,11 +175,11 @@ class SupplierCategoryController extends Controller
         foreach ($suppliers as $supplier) {
             $categories = $supplier->activeAssignedCategories->pluck('name')->join('; ');
             $latestAssignment = $supplier->supplierCategories()
-                ->where('is_active', true)
+                ->where('status', 'active')
                 ->latest('assigned_at')
                 ->first();
             
-            $assignmentDate = $latestAssignment ? $latestAssignment->assigned_at->format('Y-m-d H:i:s') : 'N/A';
+            $assignmentDate = $latestAssignment && $latestAssignment->assigned_at ? $latestAssignment->assigned_at->format('Y-m-d H:i:s') : 'N/A';
 
             $csvData[] = [
                 $supplier->name,
@@ -199,5 +205,75 @@ class SupplierCategoryController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Approve a pending category request
+     */
+    public function approve(User $supplier, SupplierCategory $category)
+    {
+        if ($category->supplier_id !== $supplier->id) {
+            return redirect()->back()->with('error', 'Invalid category assignment.');
+        }
+
+        $category->update([
+            'status' => SupplierCategory::STATUS_ACTIVE,
+            'approved_by' => auth()->id(),
+            'approved_at' => now(),
+        ]);
+
+        // Send approval notification to supplier
+        try {
+            $supplier->notify(new SupplierCategoryApprovalNotification(
+                category: $category->category,
+                supplierCategory: $category,
+                approvedBy: auth()->user(),
+                isApproved: true
+            ));
+        } catch (\Exception $e) {
+            Log::error('Failed to send category approval notification to supplier: ' . $supplier->email, [
+                'error' => $e->getMessage(),
+                'supplier_id' => $supplier->id,
+                'category_id' => $category->id
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Category approved successfully. An email notification has been sent to the supplier.');
+    }
+
+    /**
+     * Reject a pending category request
+     */
+    public function reject(User $supplier, SupplierCategory $category)
+    {
+        if ($category->supplier_id !== $supplier->id) {
+            return redirect()->back()->with('error', 'Invalid category assignment.');
+        }
+
+        // Store category info before deletion for email
+        $categoryInfo = $category->category;
+        $supplierEmail = $supplier->email;
+        $supplierName = $supplier->name;
+        $approvedBy = auth()->user();
+
+        $category->delete();
+
+        // Send rejection notification to supplier
+        try {
+            $supplier->notify(new SupplierCategoryApprovalNotification(
+                category: $categoryInfo,
+                supplierCategory: null,
+                approvedBy: $approvedBy,
+                isApproved: false
+            ));
+        } catch (\Exception $e) {
+            Log::error('Failed to send category rejection notification to supplier: ' . $supplierEmail, [
+                'error' => $e->getMessage(),
+                'supplier_id' => $supplier->id,
+                'category_id' => $categoryInfo->id
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Category request rejected. An email notification has been sent to the supplier.');
     }
 } 

@@ -25,47 +25,113 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Lead Information -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Main Content -->
             <div class="lg:col-span-2 space-y-6">
                 <!-- Contact Details -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
+                            <label class="block text-sm font-medium text-gray-500">First Name</label>
+                            <p class="mt-1 text-sm text-gray-900">{{ $lead->first_name }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Last Name</label>
+                            <p class="mt-1 text-sm text-gray-900">{{ $lead->last_name }}</p>
+                        </div>
+                        <div>
                             <label class="block text-sm font-medium text-gray-500">Email</label>
                             <p class="mt-1 text-sm text-gray-900">
                                 <a href="mailto:{{ $lead->email }}" class="text-blue-600 hover:text-blue-800">{{ $lead->email }}</a>
                             </p>
                         </div>
-                        @if($lead->phone)
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Mobile</label>
+                            <p class="mt-1 text-sm text-gray-900">
+                                @if($lead->mobile)
+                                    <a href="tel:{{ $lead->mobile }}" class="text-blue-600 hover:text-blue-800">{{ $lead->mobile }}</a>
+                                @else
+                                    -
+                                @endif
+                            </p>
+                        </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Phone</label>
                             <p class="mt-1 text-sm text-gray-900">
-                                <a href="tel:{{ $lead->phone }}" class="text-blue-600 hover:text-blue-800">{{ $lead->phone }}</a>
+                                @if($lead->phone)
+                                    <a href="tel:{{ $lead->phone }}" class="text-blue-600 hover:text-blue-800">{{ $lead->phone }}</a>
+                                @else
+                                    -
+                                @endif
                             </p>
                         </div>
-                        @endif
+                    </div>
+                </div>
+
+                <!-- Company Information -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Company Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-500">Company</label>
+                            <label class="block text-sm font-medium text-gray-500">Company Name</label>
                             <p class="mt-1 text-sm text-gray-900">{{ $lead->company_name }}</p>
                         </div>
-                        @if($lead->job_title)
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Job Title</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $lead->job_title }}</p>
+                            <p class="mt-1 text-sm text-gray-900">{{ $lead->job_title ?: '-' }}</p>
                         </div>
-                        @endif
                     </div>
                     @if($lead->company_address)
                     <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-500">Address</label>
+                        <label class="block text-sm font-medium text-gray-500">Company Address</label>
                         <p class="mt-1 text-sm text-gray-900">{{ $lead->company_address }}</p>
                     </div>
                     @endif
                 </div>
 
-                <!-- Activities -->
+                <!-- Lead Details -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Lead Details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Status</label>
+                            <span class="mt-1 inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-{{ $lead->status_color }}-100 text-{{ $lead->status_color }}-800">
+                                {{ ucfirst($lead->status) }}
+                            </span>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Priority</label>
+                            <span class="mt-1 inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-{{ $lead->priority_color }}-100 text-{{ $lead->priority_color }}-800">
+                                {{ ucfirst($lead->priority) }}
+                            </span>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Source</label>
+                            <p class="mt-1 text-sm text-gray-900">{{ ucfirst(str_replace('_', ' ', $lead->source)) }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Assigned To</label>
+                            <p class="mt-1 text-sm text-gray-900">{{ $lead->assignedUser->name }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Estimated Value</label>
+                            <p class="mt-1 text-sm text-gray-900">{{ $lead->estimated_value ? 'AED ' . number_format($lead->estimated_value, 2) : '-' }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-500">Expected Close Date</label>
+                            <p class="mt-1 text-sm text-gray-900">{{ $lead->expected_close_date ? $lead->expected_close_date->format('M j, Y') : '-' }}</p>
+                        </div>
+                    </div>
+                    @if($lead->notes)
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-500">Notes</label>
+                        <p class="mt-1 text-sm text-gray-900">{{ $lead->notes }}</p>
+                    </div>
+                    @endif
+                </div>
+
+                <!-- Activity Timeline -->
                 <div class="bg-white rounded-lg shadow">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <div class="flex justify-between items-center">
@@ -80,7 +146,7 @@
                         </div>
                     </div>
 
-                    <!-- Add Activity Form -->
+                    <!-- Activity Form -->
                     <div id="activityForm" class="hidden border-b border-gray-200 p-6">
                         <form action="{{ route('crm.leads.activity.add', $lead) }}" method="POST">
                             @csrf
@@ -105,80 +171,62 @@
                                         <option value="scheduled">Scheduled</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="mt-4">
-                                <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
-                                <input type="text" name="subject" id="subject" required placeholder="Brief description of the activity"
-                                       class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            </div>
-                            <div class="mt-4">
-                                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                                <textarea name="description" id="description" rows="3" placeholder="Detailed notes about the activity"
-                                          class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
-                            </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                <div class="col-span-2">
+                                    <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                                    <input type="text" name="subject" id="subject" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+                                <div class="col-span-2">
+                                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                    <textarea name="description" id="description" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+                                </div>
                                 <div>
-                                    <label for="activity_date" class="block text-sm font-medium text-gray-700 mb-1">Activity Date</label>
-                                    <input type="datetime-local" name="activity_date" id="activity_date" 
-                                           value="{{ nowDubai('Y-m-d\TH:i') }}"
-                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                </div>
-                                <div id="dueDateField" class="hidden">
-                                    <label for="due_date" class="block text-sm font-medium text-gray-700 mb-1">Due Date</label>
-                                    <input type="datetime-local" name="due_date" id="due_date"
-                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    <label for="activity_date" class="block text-sm font-medium text-gray-700 mb-1">Date & Time</label>
+                                    <input type="datetime-local" name="activity_date" id="activity_date" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                 </div>
                             </div>
-                            <div class="mt-4 flex justify-end space-x-3">
-                                <button type="button" onclick="toggleActivityForm()" 
-                                        class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                                    Cancel
-                                </button>
-                                <button type="submit" 
-                                        class="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                            <div class="mt-4 flex justify-end">
+                                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     Add Activity
                                 </button>
                             </div>
                         </form>
                     </div>
 
-                    <!-- Activity List -->
-                    <div class="p-6">
-                        @if($lead->activities->count() > 0)
-                            <div class="space-y-6">
-                                @foreach($lead->activities as $activity)
-                                    <div class="flex items-start space-x-3">
-                                        <div class="flex-shrink-0">
-                                            <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-{{ $activity->type_color }}-100">
-                                                <span class="text-{{ $activity->type_color }}-600 text-sm font-medium">
-                                                    {{ strtoupper(substr($activity->type, 0, 1)) }}
-                                                </span>
+                    <!-- Activities List -->
+                    <div class="divide-y divide-gray-200">
+                        @forelse($lead->activities as $activity)
+                            <div class="p-6">
+                                <div class="flex items-start space-x-3">
+                                    <div class="flex-shrink-0">
+                                        <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-{{ $activity->type_color }}-100">
+                                            <span class="text-{{ $activity->type_color }}-600 text-sm font-medium">
+                                                {{ strtoupper(substr($activity->type, 0, 1)) }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <p class="text-sm font-medium text-gray-900">{{ $activity->subject }}</p>
+                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-{{ $activity->status_color }}-100 text-{{ $activity->status_color }}-800">
+                                                {{ ucfirst($activity->status) }}
                                             </span>
                                         </div>
-                                        <div class="min-w-0 flex-1">
-                                            <div class="flex items-center justify-between">
-                                                <p class="text-sm font-medium text-gray-900">{{ $activity->subject }}</p>
-                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-{{ $activity->status_color }}-100 text-{{ $activity->status_color }}-800">
-                                                    {{ ucfirst($activity->status) }}
-                                                </span>
-                                            </div>
-                                            @if($activity->description)
-                                                <p class="mt-1 text-sm text-gray-600">{{ $activity->description }}</p>
-                                            @endif
-                                            <div class="mt-2 flex items-center text-xs text-gray-500">
-                                                <span class="font-medium text-{{ $activity->type_color }}-600 mr-2">{{ ucfirst(str_replace('_', ' ', $activity->type)) }}</span>
-                                                <span class="mr-2">•</span>
-                                                <span>{{ $activity->activity_date ? $activity->activity_date->format('M j, Y g:i A') : 'N/A' }}</span>
-                                                <span class="mr-2">•</span>
-                                                <span>{{ $activity->user->name }}</span>
-                                            </div>
+                                        @if($activity->description)
+                                            <p class="mt-1 text-sm text-gray-600">{{ $activity->description }}</p>
+                                        @endif
+                                        <div class="mt-2 flex items-center text-xs text-gray-500">
+                                            <span class="font-medium text-{{ $activity->type_color }}-600 mr-2">{{ ucfirst(str_replace('_', ' ', $activity->type)) }}</span>
+                                            <span class="mr-2">•</span>
+                                            <span>{{ $activity->activity_date ? $activity->activity_date->format('M j, Y g:i A') : 'N/A' }}</span>
                                         </div>
                                     </div>
-                                @endforeach
+                                </div>
                             </div>
-                        @else
-                            <p class="text-gray-500 text-center py-8">No activities recorded yet. Add your first activity above.</p>
-                        @endif
+                        @empty
+                            <div class="p-6 text-center text-gray-500">
+                                No activities recorded yet.
+                            </div>
+                        @endforelse
                     </div>
                 </div>
             </div>
@@ -212,7 +260,7 @@
                         @if($lead->estimated_value)
                         <div class="flex justify-between items-center">
                             <span class="text-sm font-medium text-gray-500">Est. Value</span>
-                            <span class="text-sm font-semibold text-gray-900">AED {{ number_format($lead->estimated_value, 0) }}</span>
+                            <span class="text-sm text-gray-900">AED {{ number_format($lead->estimated_value, 2) }}</span>
                         </div>
                         @endif
                     </div>
@@ -224,13 +272,13 @@
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
                             <span class="text-sm font-medium text-gray-500">Created</span>
-                                                            <span class="text-sm text-gray-900">{{ $lead->created_at ? $lead->created_at->format('M j, Y') : 'N/A' }}</span>
+                            <span class="text-sm text-gray-900">{{ $lead->created_at->format('M j, Y') }}</span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-sm font-medium text-gray-500">Last Contact</span>
                             <span class="text-sm text-gray-900">
                                 @if($lead->last_contacted_at)
-                                    {{ $lead->last_contacted_at ? $lead->last_contacted_at->format('M j, Y') : 'Never' }}
+                                    {{ $lead->last_contacted_at->format('M j, Y') }}
                                     @if($lead->isOverdue())
                                         <span class="text-red-600 ml-1">⚠️</span>
                                     @endif
@@ -242,7 +290,7 @@
                         @if($lead->expected_close_date)
                         <div class="flex justify-between items-center">
                             <span class="text-sm font-medium text-gray-500">Expected Close</span>
-                                                            <span class="text-sm text-gray-900">{{ $lead->expected_close_date ? $lead->expected_close_date->format('M j, Y') : 'Not set' }}</span>
+                            <span class="text-sm text-gray-900">{{ $lead->expected_close_date->format('M j, Y') }}</span>
                         </div>
                         @endif
                     </div>
@@ -320,115 +368,24 @@
                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                         <div class="flex items-start">
                             <div class="flex-shrink-0">
-                                <i class="fas fa-info-circle text-blue-600 text-lg"></i>
+                                <svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
                             </div>
                             <div class="ml-3">
-                                <h4 class="font-medium text-blue-900">Before Creating a Deal</h4>
-                                <p class="text-sm text-blue-700 mt-1">To provide accurate pricing, create a quotation request and forward it to suppliers first.</p>
+                                <p class="text-sm text-blue-700">
+                                    Create a quotation request to get pricing from our suppliers.
+                                </p>
                             </div>
                         </div>
                     </div>
-                    
-                    <button onclick="toggleQuotationForm()" 
-                            class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium">
-                        <i class="fas fa-paper-plane mr-2"></i>Create Quotation Request
-                    </button>
-                    
-                    <!-- Quotation Request Form -->
-                    <div id="quotationForm" class="hidden mt-4 border-t pt-4">
-                        <form action="{{ route('crm.leads.create-quotation-request', $lead) }}" method="POST">
-                            @csrf
-                            <div class="space-y-4">
-                                <div>
-                                    <label for="product_search" class="block text-sm font-medium text-gray-700 mb-1">Product</label>
-                                    <input type="text" id="product_search" placeholder="Search for products..." 
-                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                    <input type="hidden" name="product_id" id="selected_product_id" required>
-                                    <div id="product_results" class="hidden mt-2 border border-gray-300 rounded-md bg-white shadow-sm max-h-48 overflow-y-auto"></div>
-                                </div>
-                                
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
-                                        <input type="number" name="quantity" id="quantity" required min="1" value="1"
-                                               class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                    </div>
-                                    <div>
-                                        <label for="size" class="block text-sm font-medium text-gray-700 mb-1">Size (if applicable)</label>
-                                        <input type="text" name="size" id="size" 
-                                               class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                               placeholder="e.g., 100ml, Pack of 10">
-                                    </div>
-                                </div>
-                                
-                                <div>
-                                    <label for="requirements" class="block text-sm font-medium text-gray-700 mb-1">Requirements & Specifications</label>
-                                    <textarea name="requirements" id="requirements" rows="3"
-                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                              placeholder="Specific requirements, certifications needed, delivery timeline..."></textarea>
-                                </div>
-                                
-                                <div>
-                                    <label for="internal_notes" class="block text-sm font-medium text-gray-700 mb-1">Internal Notes</label>
-                                    <textarea name="internal_notes" id="internal_notes" rows="2"
-                                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                                              placeholder="Internal notes for suppliers...">Lead: {{ $lead->full_name }} ({{ $lead->company_name }})</textarea>
-                                </div>
-                                
-                                <div class="flex justify-end space-x-3">
-                                    <button type="button" onclick="toggleQuotationForm()" 
-                                            class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                                        Cancel
-                                    </button>
-                                    <button type="submit" 
-                                            class="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
-                                        Create & Forward to Suppliers
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                @endif
-
-                <!-- Active Quotation Requests -->
-                @if($lead->quotationRequests && $lead->quotationRequests->count() > 0)
-                <div class="bg-white rounded-lg shadow p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Quotation Requests</h3>
-                    <div class="space-y-3">
-                        @foreach($lead->quotationRequests as $quotationRequest)
-                            <div class="border border-gray-200 rounded-lg p-3">
-                                <div class="flex justify-between items-start">
-                                    <div>
-                                        <p class="text-sm font-medium text-gray-900">{{ $quotationRequest->product->name }}</p>
-                                        <p class="text-xs text-gray-500">Qty: {{ $quotationRequest->quantity }} {{ $quotationRequest->size ? '• Size: ' . $quotationRequest->size : '' }}</p>
-                                        <p class="text-xs text-gray-400">{{ formatDubaiDate($quotationRequest->created_at, 'M j, Y') }}</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $quotationRequest->status_badge_class }}">
-                                            {{ $quotationRequest->formatted_status }}
-                                    </span>
-                                        @if($quotationRequest->supplier_response === 'available')
-                                            <p class="text-xs text-green-600 mt-1">✓ Supplier responded</p>
-                                        @elseif($quotationRequest->supplier_response === 'not_available')
-                                            <p class="text-xs text-red-600 mt-1">✗ Not available</p>
-                                        @endif
-                                    </div>
-                                </div>
-                                
-                                <div class="mt-3 flex space-x-2">
-                                    <a href="{{ route('admin.inquiries.show', $quotationRequest) }}" 
-                                       class="text-xs text-blue-600 hover:text-blue-800">View Details</a>
-                                    
-                                    @if($quotationRequest->status === 'supplier_responded' && $quotationRequest->supplier_response === 'available')
-                                        <span class="text-gray-300">|</span>
-                                        <a href="{{ route('admin.inquiries.show', $quotationRequest) }}#generate-quote" 
-                                           class="text-xs text-green-600 hover:text-green-800">Generate Customer Quote</a>
-                                    @endif
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
+                    <a href="{{ route('crm.leads.create-quotation', $lead) }}" 
+                       class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Create Quotation Request
+                    </a>
                 </div>
                 @endif
             </div>
@@ -436,31 +393,18 @@
     </div>
 </div>
 
+@push('scripts')
 <script>
-function toggleActivityForm() {
-    const form = document.getElementById('activityForm');
-    form.classList.toggle('hidden');
-}
-
-function toggleDealForm() {
-    const form = document.getElementById('dealForm');
-    form.classList.toggle('hidden');
-}
-
-function toggleQuotationForm() {
-    const form = document.getElementById('quotationForm');
-    form.classList.toggle('hidden');
-}
-
-document.getElementById('status').addEventListener('change', function() {
-    const dueDateField = document.getElementById('dueDateField');
-    if (this.value === 'scheduled') {
-        dueDateField.classList.remove('hidden');
-        document.getElementById('due_date').required = true;
-    } else {
-        dueDateField.classList.add('hidden');
-        document.getElementById('due_date').required = false;
+    function toggleActivityForm() {
+        const form = document.getElementById('activityForm');
+        form.classList.toggle('hidden');
     }
-});
+
+    function toggleDealForm() {
+        const form = document.getElementById('dealForm');
+        form.classList.toggle('hidden');
+    }
 </script>
+@endpush
+
 @endsection 

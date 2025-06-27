@@ -1,4 +1,6 @@
-<x-guest-layout>
+@extends('layouts.guest')
+
+@section('content')
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -47,7 +49,6 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-
         <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
                 <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
@@ -60,4 +61,19 @@
             </x-primary-button>
         </div>
     </form>
-</x-guest-layout>
+
+    <div class="mt-6 text-center">
+        <p class="text-sm text-gray-600">
+            {{ __("Don't have an account?") }}
+            <a href="{{ route('register') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                {{ __('Register') }}
+            </a>
+        </p>
+        <p class="mt-2 text-sm text-gray-600">
+            {{ __('Are you a supplier?') }}
+            <a href="{{ route('supplier.register') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                {{ __('Register as Supplier') }}
+            </a>
+        </p>
+    </div>
+@endsection

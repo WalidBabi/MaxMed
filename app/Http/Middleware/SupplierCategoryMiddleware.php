@@ -22,7 +22,7 @@ class SupplierCategoryMiddleware
         $user = Auth::user();
 
         // Allow admins to bypass this middleware
-        if ($user && $user->is_admin) {
+        if ($user && $user->isAdmin()) {
             return $next($request);
         }
 

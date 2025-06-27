@@ -30,8 +30,6 @@ return new class extends Migration
             $table->unique(['campaign_id', 'marketing_contact_id'], 'campaign_contact_unique');
             $table->index(['campaign_id', 'status']);
             });
-        }
-    });
         } else {
             Schema::table('campaign_contacts', function (Blueprint $table) {
                 // Check and add any missing columns
@@ -57,9 +55,9 @@ return new class extends Migration
             $table->index([\'campaign_id\', \'status\']);';
                 
                 // Parse the schema content to find column definitions
-                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
+                preg_match_all('/\$table->([^;]+);/', $schemaContent, $columnMatches);
                 foreach ($columnMatches[1] as $columnDef) {
-                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
+                    if (preg_match('/^(\w+)\([\'"]([^\'"]+)[\'"]\)/', $columnDef, $colMatch)) {
                         $columnName = $colMatch[2];
                         if (!in_array($columnName, $columns)) {
                             $table->{$colMatch[1]}($columnName);
@@ -68,7 +66,6 @@ return new class extends Migration
                 }
             });
         }
-    });
     }
 
     public function down(): void

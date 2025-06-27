@@ -2,11 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SupplierCategory extends Model
 {
+    use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<string>
+     */
     protected $fillable = [
         'supplier_id',
         'category_id',
@@ -23,8 +31,15 @@ class SupplierCategory extends Model
         'assigned_by',
         'assigned_at',
         'last_quotation_at',
+        'approved_at',
+        'approved_by',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'minimum_order_value' => 'decimal:2',
         'commission_rate' => 'decimal:2',
@@ -33,6 +48,7 @@ class SupplierCategory extends Model
         'avg_customer_rating' => 'decimal:2',
         'assigned_at' => 'datetime',
         'last_quotation_at' => 'datetime',
+        'approved_at' => 'datetime',
     ];
 
     // Status constants
@@ -47,7 +63,7 @@ class SupplierCategory extends Model
     ];
 
     /**
-     * Get the supplier for this category assignment
+     * Get the supplier that owns the category assignment.
      */
     public function supplier(): BelongsTo
     {
@@ -55,11 +71,19 @@ class SupplierCategory extends Model
     }
 
     /**
-     * Get the category for this assignment
+     * Get the category that belongs to this assignment.
      */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Get the user who approved the category assignment.
+     */
+    public function approvedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
     }
 
     /**
@@ -116,7 +140,7 @@ class SupplierCategory extends Model
      */
     public function updateResponseTime(float $responseTimeHours): void
     {
-        // Simple moving average - can be enhanced with more sophisticated calculations
+        // Simple moving average
         $this->avg_response_time_hours = ($this->avg_response_time_hours + $responseTimeHours) / 2;
         $this->save();
     }
@@ -145,26 +169,32 @@ class SupplierCategory extends Model
         return $query->where('supplier_id', $supplierId);
     }
 
-    /**
-     * Scope to get high-performing suppliers
-     */
-    public function scopeHighPerforming($query, $minWinRate = 50.0, $maxResponseTime = 48.0)
+
+
+    // Relationships
+    public function suppliers()
     {
-        return $query->where('quotation_win_rate', '>=', $minWinRate)
-                    ->where('avg_response_time_hours', '<=', $maxResponseTime)
-                    ->where('status', self::STATUS_ACTIVE);
+        return $this->belongsToMany(User::class, 'supplier_category_type_user')
+            ->whereHas('roles', function($query) {
+                $query->where('name', 'supplier');
+            });
     }
 
-    /**
-     * Get formatted performance score
-     */
-    public function getPerformanceScoreAttribute(): float
+    public function activeSuppliers()
     {
-        // Simple performance score calculation
-        $winRateScore = $this->quotation_win_rate;
-        $responseTimeScore = max(0, 100 - ($this->avg_response_time_hours / 48 * 100)); // 48 hours = 0 score
-        $ratingScore = ($this->avg_customer_rating / 5) * 100;
-        
-        return ($winRateScore + $responseTimeScore + $ratingScore) / 3;
+        return $this->suppliers();
+    }
+
+    // Scopes
+    public function scopeWithSupplierCount($query)
+    {
+        return $query->withCount('suppliers');
+    }
+
+    public function scopeWithActiveSupplierCount($query)
+    {
+        return $query->withCount(['suppliers as active_suppliers_count' => function($query) {
+            $query->where('status', 'active');
+        }]);
     }
 } 

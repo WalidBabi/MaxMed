@@ -82,6 +82,7 @@ class QuoteController extends Controller
             'customer_notes' => 'nullable|string',
             'terms_conditions' => 'nullable|string',
             'status' => 'required|in:draft,sent,invoiced',
+            'currency' => 'required|string|in:AED,USD',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.item_details' => 'required|string',
@@ -106,6 +107,7 @@ class QuoteController extends Controller
             'customer_notes' => $request->customer_notes,
             'terms_conditions' => $request->terms_conditions,
             'status' => $request->status,
+            'currency' => $request->currency,
             'created_by' => Auth::id(),
         ]);
 
@@ -191,6 +193,7 @@ class QuoteController extends Controller
                 'customer_notes' => 'nullable|string',
                 'terms_conditions' => 'nullable|string',
                 'status' => 'required|in:draft,sent,invoiced',
+                'currency' => 'required|string|in:AED,USD',
                 'items' => 'required|array|min:1',
                 'items.*.product_id' => 'nullable|exists:products,id',
                 'items.*.item_details' => 'required|string',
@@ -216,6 +219,7 @@ class QuoteController extends Controller
                     'customer_notes' => $request->customer_notes,
                     'terms_conditions' => $request->terms_conditions,
                     'status' => $request->status,
+                    'currency' => $request->currency,
                 ]);
 
                 \Log::info('QuoteController update: Quote basic info updated');

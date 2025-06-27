@@ -476,19 +476,11 @@
         <!-- Preload LCP image -->
         <link rel="preload" as="image" fetchpriority="high" href="{{ asset('Images/optimized/banner-optimized.webp') }}" type="image/webp">
 
-        <!-- Deferred CSS -->
-        <link rel="stylesheet" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" media="print" onload="this.media='all'">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" media="print" onload="this.media='all'">
-        <link href="{{ asset('css/custom.css') }}" rel="stylesheet" media="print" onload="this.media='all'">
-        <link rel="stylesheet" href="{{ asset('css/mobile.css') }}" media="print" onload="this.media='all'">
-        
-        <!-- Fallbacks for browsers without JS -->
-        <noscript>
-            <link rel="stylesheet" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap">
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-            <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
-            <link rel="stylesheet" href="{{ asset('css/mobile.css') }}">
-        </noscript>
+        <!-- CSS Files -->
+        <link rel="stylesheet" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+        <link rel="stylesheet" href="{{ asset('css/mobile.css') }}">
 
         <!-- Vite assets with defer for JS -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -520,9 +512,6 @@
         </script>
 
         @stack('head')
-        
-        <!-- Text Protection CSS -->
-        <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
         
         <!-- Defer non-critical JS -->
         <script defer src="https://www.googletagmanager.com/gtag/js?id=G-5JRSRT4MLZ"></script>
@@ -819,5 +808,8 @@
         <!-- Footer -->
         @include('layouts.footer')
         @include('components.cookie-consent')
+
+        <!-- Scripts -->
+        <script src="{{ asset('js/back-button-protection.js') }}"></script>
     </body>
 </html>

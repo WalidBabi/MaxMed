@@ -50,14 +50,14 @@ class AuthenticatedSessionController extends Controller
             session()->forget('url.intended');
         }
         
-        if ($user->is_admin == 1) {
+        if ($user->isAdmin()) {
             return $shouldClearIntended ? 
                 redirect()->route('admin.dashboard') : 
                 redirect()->intended(route('admin.dashboard'));
         }
 
         // Check if user is a supplier
-        if ($user->role && $user->role->name === 'supplier') {
+        if ($user->isSupplier()) {
             return $shouldClearIntended ? 
                 redirect()->route('supplier.dashboard') : 
                 redirect()->intended(route('supplier.dashboard'));

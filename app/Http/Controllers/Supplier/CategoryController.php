@@ -38,14 +38,7 @@ class CategoryController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
 
-            // Calculate performance metrics
-            $performanceData = [
-                'overall_score' => $user->overall_performance_score,
-                'total_quotations' => $activeCategories->sum('total_quotations'),
-                'won_quotations' => $activeCategories->sum('won_quotations'),
-                'avg_response_time' => $activeCategories->avg('avg_response_time_hours'),
-                'avg_rating' => $activeCategories->avg('avg_customer_rating'),
-            ];
+            $performanceData = [];
         }
 
         return view('supplier.categories.index', compact('activeCategories', 'performanceData'));
@@ -93,36 +86,7 @@ class CategoryController extends Controller
         ));
     }
 
-    /**
-     * Get monthly performance data for charts
-     */
-    private function getMonthlyPerformance($supplierId, $categoryId)
-    {
-        $months = [];
-        for ($i = 5; $i >= 0; $i--) {
-            $date = now()->subMonths($i);
-            $startOfMonth = $date->copy()->startOfMonth();
-            $endOfMonth = $date->copy()->endOfMonth();
 
-            $quotations = \App\Models\QuotationRequest::where('supplier_id', $supplierId)
-                ->whereHas('product', function($q) use ($categoryId) {
-                    $q->where('category_id', $categoryId);
-                })
-                ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
-                ->get();
-
-            $months[] = [
-                'month' => $date->format('M Y'),
-                'total_quotations' => $quotations->count(),
-                'won_quotations' => $quotations->where('status', 'completed')->count(),
-                'win_rate' => $quotations->count() > 0 
-                    ? ($quotations->where('status', 'completed')->count() / $quotations->count()) * 100 
-                    : 0,
-            ];
-        }
-
-        return $months;
-    }
 
     /**
      * Request assignment to a new category

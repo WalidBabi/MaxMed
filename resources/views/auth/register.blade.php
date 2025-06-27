@@ -1,4 +1,11 @@
-<x-guest-layout>
+@extends('layouts.guest')
+
+@section('content')
+    <div class="text-center mb-6">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-2">Register as Customer</h2>
+        <p class="text-gray-600 mb-4">Are you a supplier? <a href="{{ route('supplier.register') }}" class="text-[#0064a8] hover:text-[#0052a3] font-semibold">Register as Supplier instead</a></p>
+    </div>
+
     <div class="mb-4 text-center">
         <a href="{{ route('login.google') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-50 focus:bg-gray-50 active:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-offset-2 transition ease-in-out duration-150 shadow-sm">
             <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -72,4 +79,4 @@
             </x-primary-button>
         </div>
     </form>
-</x-guest-layout>
+@endsection

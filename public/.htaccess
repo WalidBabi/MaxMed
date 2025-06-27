@@ -221,6 +221,10 @@ RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 # REDIRECTS FOR COMMON ISSUES
 # ===============================
 <IfModule mod_rewrite.c>
+    # Redirect old product URLs to new format
+    RewriteCond %{REQUEST_URI} ^/product/([0-9]+)$ [NC]
+    RewriteRule ^product/([0-9]+)$ /products/%{REQUEST_URI} [R=301,L]
+    
     # Redirect index.php to root
     RewriteCond %{THE_REQUEST} /index\.php[?\s] [NC]
     RewriteRule ^index\.php$ / [R=301,L]

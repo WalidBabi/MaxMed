@@ -134,6 +134,18 @@
                                     @enderror
                                 </div>
 
+                                <div>
+                                    <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">Currency Rate <span class="text-red-500">*</span></label>
+                                    <select id="currency" name="currency" required 
+                                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('currency') border-red-300 @enderror">
+                                        <option value="AED" {{ old('currency', 'AED') == 'AED' ? 'selected' : '' }}>AED (Dirham)</option>
+                                        <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>USD (Dollar)</option>
+                                    </select>
+                                    @error('currency')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
                                 <div class="md:col-span-2">
                                     <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
                                     <input type="text" id="subject" name="subject" 
@@ -245,7 +257,7 @@
                                     </div>
                                     <div class="border-t border-gray-200 pt-2">
                                         <div class="flex justify-between">
-                                            <span class="text-base font-semibold text-gray-900">Total (AED):</span>
+                                            <span class="text-base font-semibold text-gray-900">Total (<span id="totalCurrency">AED</span>):</span>
                                             <span id="totalAmount" class="text-base font-bold text-indigo-600">0.00</span>
                                         </div>
                                     </div>
@@ -652,6 +664,8 @@ function addItem() {
                                  data-name="{{ $product->name }}"
                                  data-description="{{ $product->description }}"
                                  data-price="{{ $product->price_aed ?? $product->price }}"
+                                 data-price-aed="{{ $product->price_aed ?? $product->price }}"
+                                 data-price-usd="{{ $product->price ?? 0 }}"
                                  data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
                                  data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                  data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
@@ -661,7 +675,10 @@ function addItem() {
                                     <div class="text-gray-600 text-xs mt-1">{{ Str::limit($product->description, 80) }}</div>
                                 @endif
                                 @if($product->price_aed ?? $product->price)
-                                    <div class="text-indigo-600 text-sm font-medium mt-1">AED {{ number_format($product->price_aed ?? $product->price, 2) }}</div>
+                                    <div class="text-indigo-600 text-sm font-medium mt-1">
+                                        <span class="price-display-aed">AED {{ number_format($product->price_aed ?? $product->price, 2) }}</span>
+                                        <span class="price-display-usd" style="display: none;">USD {{ number_format($product->price ?? 0, 2) }}</span>
+                                    </div>
                                 @endif
                             </div>
                         @endforeach
@@ -940,7 +957,8 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
     function selectProduct(item) {
         const productId = item.dataset.id;
         const productName = item.dataset.name;
-        const productPrice = item.dataset.price;
+        const currency = document.getElementById('currency').value;
+        const productPrice = currency === 'USD' ? item.dataset.priceUsd : item.dataset.priceAed;
         const specifications = item.dataset.specifications;
         
         // Set values
@@ -1113,6 +1131,47 @@ function populateSizeOptions(productId, sizeSelect) {
 // Initialize with one item
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('addItem').addEventListener('click', addItem);
+    
+    // Currency change handler
+    document.getElementById('currency').addEventListener('change', function() {
+        const selectedCurrency = this.value;
+        
+        // Update total currency display
+        document.getElementById('totalCurrency').textContent = selectedCurrency;
+        
+        // Update all product price displays in dropdown
+        const priceDisplaysAed = document.querySelectorAll('.price-display-aed');
+        const priceDisplaysUsd = document.querySelectorAll('.price-display-usd');
+        
+        if (selectedCurrency === 'USD') {
+            priceDisplaysAed.forEach(el => el.style.display = 'none');
+            priceDisplaysUsd.forEach(el => el.style.display = 'inline');
+        } else {
+            priceDisplaysAed.forEach(el => el.style.display = 'inline');
+            priceDisplaysUsd.forEach(el => el.style.display = 'none');
+        }
+        
+        // Update existing item rates based on selected currency
+        const itemRows = document.querySelectorAll('#itemsTable tr');
+        itemRows.forEach(row => {
+            const productIdInput = row.querySelector('input[name*="[product_id]"]');
+            const rateInput = row.querySelector('input[name*="[rate]"]');
+            
+            if (productIdInput && productIdInput.value && rateInput) {
+                // Find the product in dropdown to get price data
+                const productItem = document.querySelector(`[data-id="${productIdInput.value}"]`);
+                if (productItem) {
+                    const newPrice = selectedCurrency === 'USD' ? 
+                        productItem.dataset.priceUsd : 
+                        productItem.dataset.priceAed;
+                    rateInput.value = newPrice || 0;
+                    
+                    // Trigger recalculation
+                    calculateRowAmount({ target: rateInput });
+                }
+            }
+        });
+    });
     
     // Add initial default item
     addItem();

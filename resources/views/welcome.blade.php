@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title', $seoData['title'] ?? 'MaxMed UAE - Premium Laboratory & Medical Equipment Supplier in Dubai')
+@section('title', 'MaxMed UAE - Laboratory Equipment & Medical Supplies Dubai')
 
-@section('meta_description', $seoData['meta_description'] ?? 'Leading supplier of laboratory equipment, medical instruments, and diagnostic tools in Dubai, UAE. Contact MaxMed at +971 55 460 2500 for premium quality equipment.')
+@section('meta_description', '🔬 Leading lab equipment supplier in Dubai! PCR machines, centrifuges, fume hoods, autoclaves & more. ✅ Same-day quotes ☎️ +971 55 460 2500 🚚 Fast UAE delivery')
 
-@section('meta_keywords', $seoData['meta_keywords'] ?? 'laboratory equipment Dubai, medical equipment UAE, MaxMed, scientific instruments, diagnostic tools')
+@section('meta_keywords', 'laboratory equipment Dubai, medical equipment UAE, MaxMed, scientific instruments, diagnostic tools, fume hood suppliers UAE, dental consumables, PCR machine suppliers UAE, centrifuge suppliers, benchtop autoclave, lab consumables UAE, veterinary diagnostics UAE')
 
-@section('og_title', $seoData['og_title'] ?? $seoData['title'] ?? 'MaxMed UAE - Premium Laboratory & Medical Equipment Supplier')
+@section('og_title', 'MaxMed UAE - #1 Laboratory Equipment Supplier in Dubai')
 
-@section('og_description', $seoData['og_description'] ?? $seoData['meta_description'] ?? 'Leading supplier of laboratory equipment and medical instruments in Dubai, UAE.')
+@section('og_description', 'Leading lab equipment supplier in Dubai! PCR machines, centrifuges, fume hoods, autoclaves & more. Same-day quotes, fast UAE delivery.')
 
 @push('head')
     <meta name="google-signin-client_id" content="{{ config('services.google.client_id') }}">

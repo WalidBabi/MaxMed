@@ -15,11 +15,32 @@ class SeoService
         'scientific instruments', 'diagnostic tools', 'lab supplies'
     ];
 
-    // High-value keywords from our previous research
+    // High-value keywords from search console data
     private $primaryKeywords = [
         'laboratory equipment Dubai', 'lab instruments UAE', 'medical equipment supplier',
         'diagnostic equipment', 'scientific equipment', 'PCR equipment', 'microscopes',
-        'centrifuge machines', 'analytical instruments', 'rapid test kits'
+        'centrifuge machines', 'analytical instruments', 'rapid test kits',
+        'fume hood suppliers', 'dental consumables', 'veterinary diagnostics',
+        'point of care testing equipment', 'laboratory sterilization'
+    ];
+
+    // High-impression, low-CTR keywords from search console that need optimization
+    private $targetKeywords = [
+        'fume hood suppliers in uae',
+        'dental consumables',
+        'rapid veterinary diagnostics uae',
+        'point of care testing equipment',
+        'laboratory equipment sterilization',
+        'pcr machine suppliers uae',
+        'veterinary diagnostic kits available in dubai',
+        'lab consumables',
+        'dental supplies uae',
+        'chromatography clinical consumables',
+        'laboratory centrifuge suppliers',
+        'benchtop autoclave',
+        'medical testing equipment',
+        'laboratory refrigerator',
+        'veterinary biotech solutions uae'
     ];
 
     public function generateProductMeta(Product $product): array
@@ -73,15 +94,15 @@ class SeoService
     public function generateHomeMeta(): array
     {
         return [
-            'title' => 'MaxMed UAE - Premium Laboratory & Medical Equipment Supplier in Dubai',
-            'meta_description' => 'Leading supplier of laboratory equipment, medical instruments, and diagnostic tools in Dubai, UAE. Contact MaxMed at +971 55 460 2500 for PCR machines, microscopes, centrifuges, rapid test kits, and scientific equipment. Serving healthcare facilities across UAE.',
-            'meta_keywords' => implode(', ', array_merge($this->primaryKeywords, [
+            'title' => 'MaxMed UAE - Laboratory Equipment & Medical Supplies Dubai',
+            'meta_description' => '🔬 Leading lab equipment supplier in Dubai! PCR machines, centrifuges, fume hoods, autoclaves & more. ✅ Same-day quotes ☎️ +971 55 460 2500 🚚 Fast UAE delivery',
+            'meta_keywords' => implode(', ', array_merge($this->primaryKeywords, $this->targetKeywords, [
                 'MaxMed UAE', 'laboratory supplier Dubai', 'medical equipment UAE',
                 'PCR machine Dubai', 'centrifuge supplier', 'microscope UAE',
                 'diagnostic equipment Dubai', 'lab technology', '+971 55 460 2500'
             ])),
-            'og_title' => 'MaxMed UAE - Premium Laboratory & Medical Equipment Supplier',
-            'og_description' => 'Leading supplier of laboratory equipment and medical instruments in Dubai, UAE. Premium quality PCR machines, microscopes, centrifuges, and diagnostic tools.',
+            'og_title' => 'MaxMed UAE - #1 Laboratory Equipment Supplier in Dubai',
+            'og_description' => 'Leading lab equipment supplier in Dubai! PCR machines, centrifuges, fume hoods, autoclaves & more. Same-day quotes, fast UAE delivery.',
             'canonical_url' => url('/')
         ];
     }
@@ -242,12 +263,12 @@ class SeoService
     public function generateContactMeta(): array
     {
         return [
-            'title' => 'Contact MaxMed UAE - Laboratory Equipment Supplier | +971 55 460 2500',
-            'meta_description' => 'Contact MaxMed UAE for laboratory and medical equipment in Dubai. Call +971 55 460 2500 or email sales@maxmedme.com. Expert consultation, competitive pricing, and fast delivery across UAE.',
+            'title' => 'Contact MaxMed UAE - Lab Equipment Supplier | +971 55 460 2500',
+            'meta_description' => '📞 Contact MaxMed UAE for lab equipment quotes! Call +971 55 460 2500 or email sales@maxmedme.com ⚡ Fast response ✅ Expert consultation 🚚 UAE delivery',
             'meta_keywords' => implode(', ', array_merge($this->coreKeywords, [
                 'contact MaxMed', '+971 55 460 2500', 'sales@maxmedme.com',
                 'laboratory equipment contact', 'Dubai medical equipment supplier',
-                'UAE scientific equipment contact'
+                'UAE scientific equipment contact', 'lab equipment quote Dubai'
             ])),
             'canonical_url' => route('contact')
         ];
@@ -256,11 +277,12 @@ class SeoService
     public function generateAboutMeta(): array
     {
         return [
-            'title' => 'About MaxMed UAE - Leading Laboratory Equipment Supplier Since [Year]',
-            'meta_description' => 'Learn about MaxMed UAE, your trusted partner for laboratory and medical equipment in Dubai. Expert team, quality products, and exceptional service across the UAE. Contact us at +971 55 460 2500.',
+            'title' => 'About MaxMed UAE - Leading Lab Equipment Supplier Since 2010',
+            'meta_description' => '🏆 MaxMed UAE: 14+ years supplying premium lab equipment in Dubai. ✅ Trusted by 500+ labs ⭐ ISO certified suppliers 🔬 PCR, centrifuge, microscope experts',
             'meta_keywords' => implode(', ', array_merge($this->coreKeywords, [
                 'about MaxMed', 'company profile', 'laboratory equipment supplier UAE',
-                'medical equipment company Dubai', 'scientific equipment provider'
+                'medical equipment company Dubai', 'scientific equipment provider',
+                'lab equipment history Dubai', 'MaxMed experience'
             ])),
             'canonical_url' => route('about')
         ];
@@ -269,15 +291,15 @@ class SeoService
     public function generateIndustryMeta(): array
     {
         return [
-            'title' => 'Industries We Serve - Laboratory & Medical Equipment Solutions | MaxMed UAE',
-            'meta_description' => 'MaxMed UAE serves healthcare, research, education, and diagnostic industries with premium laboratory equipment. Solutions for hospitals, clinics, universities, and research facilities across UAE.',
+            'title' => 'Industries We Serve - Lab Equipment Solutions | MaxMed UAE',
+            'meta_description' => '🏥 MaxMed serves hospitals, clinics, universities & research labs in UAE. Complete lab equipment solutions ⚡ Expert consultation ☎️ +971 55 460 2500',
             'meta_keywords' => implode(', ', array_merge($this->primaryKeywords, [
                 'healthcare industry UAE', 'research facilities Dubai', 'university lab equipment',
                 'hospital supplies', 'clinic equipment', 'diagnostic centers', 'pharmaceutical industry',
                 'biotechnology equipment', 'academic research', 'industrial testing'
             ])),
             'og_title' => 'Industries We Serve - MaxMed UAE',
-            'og_description' => 'Comprehensive laboratory and medical equipment solutions for healthcare, research, and educational institutions across UAE.',
+            'og_description' => 'Complete lab equipment solutions for healthcare, research, and educational institutions across UAE.',
             'canonical_url' => route('industry.index')
         ];
     }
@@ -494,5 +516,45 @@ class SeoService
         }
 
         return $faqs;
+    }
+
+    /**
+     * Generate specific landing page content for high-impression keywords
+     */
+    public function generateSpecificKeywordMeta(string $keyword): array
+    {
+        $keywordMetas = [
+            'fume hood suppliers in uae' => [
+                'title' => 'Fume Hood Suppliers UAE - Laboratory Safety | MaxMed Dubai',
+                'meta_description' => '🔬 #1 Fume Hood Suppliers in UAE! Chemical, biological & radioisotope fume hoods ✅ CE certified ⚡ Installation included ☎️ +971 55 460 2500',
+                'keywords' => 'fume hood suppliers UAE, laboratory fume hoods Dubai, chemical fume hood, biological safety cabinet, lab ventilation UAE'
+            ],
+            'dental consumables' => [
+                'title' => 'Dental Consumables UAE - Dental Supplies Dubai | MaxMed',
+                'meta_description' => '🦷 Premium dental consumables UAE! Impression materials, dental burs, disposables & more ✅ Same-day delivery Dubai ☎️ +971 55 460 2500',
+                'keywords' => 'dental consumables UAE, dental supplies Dubai, dental materials, impression materials UAE, dental burs Dubai'
+            ],
+            'pcr machine suppliers uae' => [
+                'title' => 'PCR Machine Suppliers UAE - Real-Time PCR Dubai | MaxMed',
+                'meta_description' => '🧬 Top PCR machine suppliers UAE! Real-time PCR, thermal cyclers, qPCR systems ✅ Installation & training ⚡ Same-day quotes ☎️ +971 55 460 2500',
+                'keywords' => 'PCR machine suppliers UAE, real-time PCR Dubai, thermal cycler UAE, qPCR systems, molecular diagnostics UAE'
+            ],
+            'laboratory centrifuge suppliers' => [
+                'title' => 'Laboratory Centrifuge Suppliers UAE - Centrifuge Dubai | MaxMed',
+                'meta_description' => '🔬 Premium centrifuge suppliers UAE! Benchtop, floor-standing, refrigerated centrifuges ✅ Service & calibration ☎️ +971 55 460 2500',
+                'keywords' => 'laboratory centrifuge suppliers UAE, centrifuge Dubai, benchtop centrifuge, refrigerated centrifuge UAE'
+            ],
+            'benchtop autoclave' => [
+                'title' => 'Benchtop Autoclave UAE - Steam Sterilizer Dubai | MaxMed',
+                'meta_description' => '⚡ Benchtop autoclave UAE! Class B steam sterilizers, dental autoclaves ✅ Fast sterilization ⚡ Installation & training ☎️ +971 55 460 2500',
+                'keywords' => 'benchtop autoclave UAE, steam sterilizer Dubai, dental autoclave, Class B autoclave UAE'
+            ]
+        ];
+
+        return $keywordMetas[$keyword] ?? [
+            'title' => 'Laboratory Equipment UAE - ' . ucwords($keyword) . ' | MaxMed Dubai',
+            'meta_description' => "Premium " . $keyword . " available at MaxMed UAE. Contact +971 55 460 2500 for quotes and expert consultation.",
+            'keywords' => $keyword . ', laboratory equipment UAE, scientific instruments Dubai'
+        ];
     }
 } 

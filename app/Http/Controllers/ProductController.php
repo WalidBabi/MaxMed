@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use App\Models\Category;
 use App\Services\SeoService;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -189,26 +190,36 @@ class ProductController extends Controller
     {
         // Check if URL is www version and redirect to non-www
         if (strpos($request->getHost(), 'www.') === 0) {
-            return redirect()->to('https://maxmedme.com/product/' . $product->id, 301);
+            return redirect()->to('https://maxmedme.com' . $request->getRequestUri(), 301);
         }
-        
-        // Load product with relationships including specifications
-        $product->load(['category', 'brand', 'inventory', 'images', 'specifications']);
-        
+
+        // Load necessary relationships
+        $product->load(['category', 'brand', 'specifications' => function($query) {
+            $query->orderBy('category', 'asc')->orderBy('sort_order', 'asc');
+        }]);
+
+        // Group specifications by category
+        $specsByCategory = $product->specifications->groupBy('category');
+
         // Generate SEO data
-        $seoData = $this->seoService->generateProductMeta($product);
-        
-        // Generate breadcrumbs
-        $breadcrumbs = $this->seoService->generateProductBreadcrumbs($product);
-        
-        // Generate FAQs for the product
-        $faqs = $this->seoService->getPageFAQs('product', $product);
-        
-        // Get related products for internal linking
-        $relatedProducts = $this->seoService->getRelatedProducts($product);
-        
-        // Pass data to the view
-        return view('products.show', compact('product', 'seoData', 'breadcrumbs', 'faqs', 'relatedProducts'));
+        $seoData = [
+            'title' => "{$product->name} | MaxMed UAE",
+            'meta_description' => "Buy {$product->name} from MaxMed UAE. " . Str::limit(strip_tags($product->description), 150),
+            'meta_keywords' => implode(', ', [
+                $product->name,
+                $product->category ? $product->category->name : '',
+                $product->brand ? $product->brand->name : '',
+                'laboratory equipment',
+                'medical supplies',
+                'UAE',
+                'Dubai'
+            ]),
+            'og_title' => $product->name,
+            'og_description' => Str::limit(strip_tags($product->description), 200),
+            'og_image' => $product->image_url ?? asset('Images/banner2.jpeg')
+        ];
+
+        return view('products.show', compact('product', 'specsByCategory', 'seoData'));
     }
     
     public function checkAvailability(Request $request, Product $product, int $quantity): JsonResponse

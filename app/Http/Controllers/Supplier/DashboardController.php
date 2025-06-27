@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Supplier;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\QuotationRequest;
+use App\Models\PurchaseOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 
 class DashboardController extends Controller
 {
@@ -16,8 +19,8 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         
-        // Simple permission check for now - can be enhanced later
-        // TODO: Add proper permission checking once middleware is working
+        // Show 'Profile Under Review' only if there are pending categories
+        $isPendingApproval = $user->supplierCategories()->where('status', 'pending_approval')->exists();
         
         // Get supplier's products with related data
         $products = Product::with(['category', 'brand', 'inventory', 'images'])
@@ -40,16 +43,6 @@ class DashboardController extends Controller
             ->with('category')
             ->orderBy('created_at', 'desc')
             ->get();
-
-        // Calculate overall performance metrics
-        $performanceMetrics = [
-            'total_categories' => $assignedCategories->count(),
-            'avg_win_rate' => $assignedCategories->avg('quotation_win_rate') ?? 0,
-            'avg_response_time' => $assignedCategories->avg('avg_response_time_hours') ?? 24,
-            'avg_rating' => $assignedCategories->avg('avg_customer_rating') ?? 5.0,
-            'total_quotations' => $assignedCategories->sum('total_quotations'),
-            'won_quotations' => $assignedCategories->sum('won_quotations'),
-        ];
 
         // Order statistics (without customer/pricing info)
         $orderStats = [
@@ -77,14 +70,32 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // Badge counts for navigation
+        $pendingInquiriesCount = QuotationRequest::where('supplier_id', $user->id)
+            ->where('status', 'forwarded')
+            ->where('supplier_response', 'pending')
+            ->count();
+
+        $activeOrdersCount = \App\Models\Order::whereHas('delivery', function($q) {
+            $q->whereIn('status', ['pending', 'processing', 'in_transit']);
+        })->count();
+
+        // Share badge counts with all supplier views
+        View::share([
+            'pendingInquiriesCount' => $pendingInquiriesCount,
+            'activeOrdersCount' => $activeOrdersCount
+        ]);
+
         return view('supplier.dashboard', compact(
             'totalProducts',
             'activeProducts',
             'recentProducts',
             'assignedCategories',
-            'performanceMetrics',
             'orderStats',
-            'recentOrders'
+            'recentOrders',
+            'pendingInquiriesCount',
+            'activeOrdersCount',
+            'isPendingApproval'
         ));
     }
 } 

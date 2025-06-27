@@ -46,6 +46,15 @@
                         </div>
                         
                         <div>
+                            <label for="mobile" class="block text-sm font-medium text-gray-700 mb-1">Mobile</label>
+                            <input type="text" id="mobile" name="mobile" value="{{ old('mobile') }}"
+                                   class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            @error('mobile')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
                             <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
                             <input type="text" id="phone" name="phone" value="{{ old('phone') }}"
                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
@@ -102,6 +111,8 @@
                                 <option value="linkedin" {{ old('source') == 'linkedin' ? 'selected' : '' }}>LinkedIn</option>
                                 <option value="email" {{ old('source') == 'email' ? 'selected' : '' }}>Email Campaign</option>
                                 <option value="phone" {{ old('source') == 'phone' ? 'selected' : '' }}>Cold Call</option>
+                                <option value="whatsapp" {{ old('source') == 'whatsapp' ? 'selected' : '' }}>WhatsApp</option>
+                                <option value="on_site_visit" {{ old('source') == 'on_site_visit' ? 'selected' : '' }}>On-Site Visit</option>
                                 <option value="referral" {{ old('source') == 'referral' ? 'selected' : '' }}>Referral</option>
                                 <option value="trade_show" {{ old('source') == 'trade_show' ? 'selected' : '' }}>Trade Show</option>
                                 <option value="google_ads" {{ old('source') == 'google_ads' ? 'selected' : '' }}>Google Ads</option>
@@ -125,13 +136,13 @@
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
-                        
+
                         <div>
                             <label for="assigned_to" class="block text-sm font-medium text-gray-700 mb-1">Assign To *</label>
                             <select id="assigned_to" name="assigned_to" required
                                     class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                 <option value="">Select User</option>
-                                @foreach($users as $user)
+                                @foreach($users->where('role_id', 1) as $user)
                                     <option value="{{ $user->id }}" {{ old('assigned_to') == $user->id ? 'selected' : '' }}>
                                         {{ $user->name }}
                                     </option>
@@ -142,7 +153,7 @@
                             @enderror
                         </div>
                     </div>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                         <div>
                             <label for="estimated_value" class="block text-sm font-medium text-gray-700 mb-1">Estimated Value (AED)</label>

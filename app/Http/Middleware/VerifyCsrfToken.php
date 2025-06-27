@@ -22,4 +22,21 @@ class VerifyCsrfToken extends Middleware
 
 
     ];
+
+    protected function tokensMatch($request)
+    {
+        $token = $this->getTokenFromRequest($request);
+        $sessionToken = $request->session()->token();
+
+        \Log::debug('CSRF Token Check', [
+            'request_token' => $token,
+            'session_token' => $sessionToken,
+            'request_method' => $request->method(),
+            'request_url' => $request->url()
+        ]);
+
+        return is_string($sessionToken) &&
+               is_string($token) &&
+               hash_equals($sessionToken, $token);
+    }
 } 

@@ -574,9 +574,9 @@
                         <th style="width: 40%;">Item Description</th>
                         <th style="width: 20%;">Specifications</th>
                         <th style="width: 10%;" class="text-right">Qty</th>
-                        <th style="width: 15%;" class="text-right">Rate (AED)</th>
+                        <th style="width: 15%;" class="text-right">Rate ({{ $quote->currency ?? 'AED' }})</th>
                         <th style="width: 10%;" class="text-right">Discount</th>
-                        <th style="width: 15%;" class="text-right">Amount (AED)</th>
+                        <th style="width: 15%;" class="text-right">Amount ({{ $quote->currency ?? 'AED' }})</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -640,11 +640,11 @@
                     <table class="totals-table">
                         <tr>
                             <td class="total-label">Subtotal:</td>
-                            <td class="total-amount">AED {{ number_format($quote->sub_total, 2) }}</td>
+                            <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($quote->sub_total, 2) }}</td>
                         </tr>
                         <tr class="grand-total">
                             <td class="total-label">Total Amount:</td>
-                            <td class="total-amount">AED {{ number_format($quote->total_amount, 2) }}</td>
+                            <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($quote->total_amount, 2) }}</td>
                         </tr>
                     </table>
                 </div>

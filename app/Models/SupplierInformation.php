@@ -2,13 +2,34 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SupplierInformation extends Model
 {
+    use HasFactory;
+
+    /**
+     * Status constants
+     */
+    const STATUS_ACTIVE = 'active';
+    const STATUS_INACTIVE = 'inactive';
+    const STATUS_PENDING_APPROVAL = 'pending_approval';
+    const STATUS_SUSPENDED = 'suspended';
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     protected $table = 'supplier_information';
-    
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<string>
+     */
     protected $fillable = [
         'user_id',
         'company_name',
@@ -22,81 +43,34 @@ class SupplierInformation extends Model
         'country',
         'phone_primary',
         'phone_secondary',
-        'fax',
         'website',
+        'years_in_business',
+        'company_description',
         'primary_contact_name',
+        'primary_contact_position',
         'primary_contact_email',
         'primary_contact_phone',
-        'primary_contact_position',
-        'secondary_contact_name',
-        'secondary_contact_email',
-        'secondary_contact_phone',
-        'secondary_contact_position',
-        'bank_name',
-        'bank_branch',
-        'account_number',
-        'iban',
-        'swift_code',
-        'beneficiary_name',
-        'payment_terms_days',
-        'currency_preference',
-        'minimum_order_value',
-        'standard_lead_time_days',
-        'terms_conditions',
-        'certifications',
+        'documents',
         'specializations',
-        'company_description',
-        'years_in_business',
-        'number_of_employees',
-        'overall_rating',
-        'total_orders_fulfilled',
-        'on_time_delivery_rate',
-        'quality_rating',
-        'last_order_date',
-        'status',
-        'accepts_rush_orders',
-        'international_shipping',
-        'shipping_methods',
-        'trade_license_file',
-        'tax_certificate_file',
-        'company_profile_file',
-        'certification_files',
-        'created_by',
-        'updated_by',
-        'approved_at',
-        'approved_by',
-    ];
-
-    protected $casts = [
-        'certifications' => 'array',
-        'specializations' => 'array',
-        'shipping_methods' => 'array',
-        'certification_files' => 'array',
-        'minimum_order_value' => 'decimal:2',
-        'overall_rating' => 'decimal:2',
-        'on_time_delivery_rate' => 'decimal:2',
-        'quality_rating' => 'decimal:2',
-        'last_order_date' => 'datetime',
-        'approved_at' => 'datetime',
-        'accepts_rush_orders' => 'boolean',
-        'international_shipping' => 'boolean',
-    ];
-
-    // Status constants
-    const STATUS_ACTIVE = 'active';
-    const STATUS_INACTIVE = 'inactive';
-    const STATUS_PENDING_APPROVAL = 'pending_approval';
-    const STATUS_SUSPENDED = 'suspended';
-
-    public static $statuses = [
-        self::STATUS_ACTIVE => 'Active',
-        self::STATUS_INACTIVE => 'Inactive',
-        self::STATUS_PENDING_APPROVAL => 'Pending Approval',
-        self::STATUS_SUSPENDED => 'Suspended',
+        'onboarding_completed',
+        'onboarding_completed_at',
+        'status'
     ];
 
     /**
-     * Get the user/supplier
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'documents' => 'array',
+        'specializations' => 'array',
+        'onboarding_completed' => 'boolean',
+        'onboarding_completed_at' => 'datetime',
+    ];
+
+    /**
+     * Get the user that owns the supplier information.
      */
     public function user(): BelongsTo
     {
@@ -179,21 +153,6 @@ class SupplierInformation extends Model
             self::STATUS_SUSPENDED => 'bg-red-100 text-red-800',
             default => 'bg-gray-100 text-gray-800'
         };
-    }
-
-    /**
-     * Get performance score
-     */
-    public function getPerformanceScoreAttribute(): float
-    {
-        // Weighted performance calculation
-        $ratingWeight = 0.4;
-        $deliveryWeight = 0.3;
-        $qualityWeight = 0.3;
-        
-        return ($this->overall_rating * $ratingWeight) + 
-               (($this->on_time_delivery_rate / 100) * 5 * $deliveryWeight) + 
-               ($this->quality_rating * $qualityWeight);
     }
 
     /**

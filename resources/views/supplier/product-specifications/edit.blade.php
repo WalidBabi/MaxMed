@@ -110,7 +110,7 @@
                                         </label>
                                         
                                         @php
-                                            $currentValue = $existingSpecs[$spec['key']]->specification_value ?? '';
+                                            $currentValue = old('specifications.' . $spec['key']) ?? ($existingSpecs->get($spec['key'])->specification_value ?? '');
                                         @endphp
                                         
                                         @if($spec['type'] === 'select')

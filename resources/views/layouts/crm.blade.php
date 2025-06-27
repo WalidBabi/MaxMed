@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="user-role" content="{{ auth()->user()?->role?->name ?? '' }}">
+    <meta name="is-verification-redirect" content="{{ session('verification_redirect', false) }}">
     
     <title>@yield('title', 'MaxMed CRM') - Professional Customer Relationship Management</title>
     
@@ -21,7 +23,30 @@
     <script>
         // Notification trigger for immediate feedback after form submissions
         window.triggerNotificationCheck = function() {
-            console.log('Manual notification check triggered'); // Debug log
+            // Skip notification check if this is a verification redirect
+            if (document.querySelector('meta[name="is-verification-redirect"]')?.content === 'true') {
+                console.log('Skipping notification check - verification redirect detected');
+                return;
+            }
+            
+            // Get user role from meta tag
+            const userRole = document.querySelector('meta[name="user-role"]')?.content;
+            if (!userRole) {
+                console.log('No user role found, skipping notification check');
+                return;
+            }
+            
+            // Only check notifications if we're on the correct page for the user's role
+            const currentPath = window.location.pathname;
+            if (userRole === 'admin' && !currentPath.startsWith('/admin')) return;
+            if (userRole === 'crm' && !currentPath.startsWith('/crm')) return;
+            if (userRole === 'supplier' && !currentPath.startsWith('/supplier')) return;
+            
+            // Additional check to prevent notification checks during redirects
+            if (document.readyState !== 'complete') {
+                console.log('Page not fully loaded, deferring notification check');
+                return;
+            }
             
             // Try to trigger CRM notification check
             const crmNotificationComponents = document.querySelectorAll('[x-data*="crmNotificationDropdown"]');
@@ -107,8 +132,27 @@
 
         // Auto-trigger notification check on page load for immediate feedback
         document.addEventListener('DOMContentLoaded', function() {
-            // Wait 2 seconds after page load to check for new notifications
-            setTimeout(window.triggerNotificationCheck, 2000);
+            // Wait for complete page load and check if we should run notifications
+            window.addEventListener('load', function() {
+                // Skip immediate check if this is a verification redirect
+                if (document.querySelector('meta[name="is-verification-redirect"]')?.content === 'true') {
+                    console.log('Skipping initial notification check - verification redirect');
+                    return;
+                }
+                
+                // Only check notifications if we're on the appropriate page
+                const userRole = document.querySelector('meta[name="user-role"]')?.content;
+                const currentPath = window.location.pathname;
+                
+                if (
+                    (userRole === 'admin' && currentPath.startsWith('/admin')) ||
+                    (userRole === 'crm' && currentPath.startsWith('/crm')) ||
+                    (userRole === 'supplier' && currentPath.startsWith('/supplier'))
+                ) {
+                    // Wait 2 seconds after complete page load to check for new notifications
+                    setTimeout(window.triggerNotificationCheck, 2000);
+                }
+            });
         });
     </script>
     
