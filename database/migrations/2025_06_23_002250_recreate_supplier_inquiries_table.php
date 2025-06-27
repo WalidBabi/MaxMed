@@ -59,6 +59,8 @@ return new class extends Migration
                   ->on('products')
                   ->onDelete('set null');
             });
+        }
+    });
         } else {
             Schema::table('supplier_inquiries', function (Blueprint $table) {
                 // Check and add any missing columns

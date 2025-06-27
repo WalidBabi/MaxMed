@@ -16,6 +16,8 @@ return new class extends Migration
                 $table->id();
             $table->timestamps();
             });
+        }
+    });
         } else {
             Schema::table('rapid_test_specifications_seeder', function (Blueprint $table) {
                 // Check and add any missing columns

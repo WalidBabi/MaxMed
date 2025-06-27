@@ -108,6 +108,8 @@ return new class extends Migration
             $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
             $table->foreign('approved_by')->references('id')->on('users')->onDelete('set null');
             });
+        }
+    });
         } else {
             Schema::table('supplier_information', function (Blueprint $table) {
                 // Check and add any missing columns

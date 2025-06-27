@@ -36,6 +36,8 @@ return new class extends Migration
             $table->index('created_by');
             $table->index(['status', 'scheduled_at']);
             });
+        }
+    });
         } else {
             Schema::table('campaigns', function (Blueprint $table) {
                 // Check and add any missing columns

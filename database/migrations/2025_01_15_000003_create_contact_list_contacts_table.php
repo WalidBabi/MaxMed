@@ -20,6 +20,8 @@ return new class extends Migration
             
             $table->unique(['contact_list_id', 'marketing_contact_id'], 'contact_list_contact_unique');
             });
+        }
+    });
         } else {
             Schema::table('contact_list_contacts', function (Blueprint $table) {
                 // Check and add any missing columns

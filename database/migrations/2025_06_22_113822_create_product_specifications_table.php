@@ -33,6 +33,8 @@ return new class extends Migration
             $table->index(['specification_key', 'is_filterable'], 'product_specifications_specification_key_is_filterable_index');
             $table->index(['category', 'sort_order'], 'product_specifications_category_sort_order_index');
             });
+        }
+    });
         } else {
             Schema::table('product_specifications', function (Blueprint $table) {
                 // Check and add any missing columns

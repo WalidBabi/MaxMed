@@ -27,6 +27,8 @@ return new class extends Migration
             $table->index(['stage', 'expected_close_date']);
             $table->index(['assigned_to', 'stage']);
             });
+        }
+    });
         } else {
             Schema::table('crm_deals', function (Blueprint $table) {
                 // Check and add any missing columns

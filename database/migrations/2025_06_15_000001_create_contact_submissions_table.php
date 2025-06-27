@@ -28,6 +28,8 @@ return new class extends Migration
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
             });
+        }
+    });
         } else {
             Schema::table('quotes', function (Blueprint $table) {
                 // Check and add any missing columns

@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('transaction_id')->unique();
             $table->timestamps();
             });
+        }
+    });
         } else {
             Schema::table('transactions', function (Blueprint $table) {
                 // Check and add any missing columns

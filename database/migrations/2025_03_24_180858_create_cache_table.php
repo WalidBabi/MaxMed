@@ -17,6 +17,8 @@ return new class extends Migration
             $table->mediumText('value');
             $table->integer('expiration');
             });
+        }
+    });
         } else {
             Schema::table('cache', function (Blueprint $table) {
                 // Check and add any missing columns

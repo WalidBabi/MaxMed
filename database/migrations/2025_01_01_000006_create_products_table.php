@@ -22,6 +22,8 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id')->nullable()->index('products_category_id_foreign');
             $table->timestamps();
             });
+        }
+    });
         } else {
             Schema::table('products', function (Blueprint $table) {
                 // Check and add any missing columns

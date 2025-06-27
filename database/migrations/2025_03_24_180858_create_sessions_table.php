@@ -20,6 +20,8 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
             });
+        }
+    });
         } else {
             Schema::table('sessions', function (Blueprint $table) {
                 // Check and add any missing columns

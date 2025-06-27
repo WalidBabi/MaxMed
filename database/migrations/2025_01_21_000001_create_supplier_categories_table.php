@@ -43,6 +43,8 @@ return new class extends Migration
             // Unique constraint to prevent duplicate assignments
             $table->unique(['supplier_id', 'category_id']);
             });
+        }
+    });
         } else {
             Schema::table('supplier_categories', function (Blueprint $table) {
                 // Check and add any missing columns

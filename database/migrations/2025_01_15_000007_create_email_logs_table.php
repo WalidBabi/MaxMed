@@ -36,6 +36,8 @@ return new class extends Migration
             $table->index(['campaign_id', 'status']);
             $table->index('sent_at');
             });
+        }
+    });
         } else {
             Schema::table('email_logs', function (Blueprint $table) {
                 // Check and add any missing columns

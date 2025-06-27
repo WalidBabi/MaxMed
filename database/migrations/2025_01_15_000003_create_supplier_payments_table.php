@@ -44,6 +44,8 @@ return new class extends Migration
             
             $table->timestamps();
             });
+        }
+    });
         } else {
             Schema::table('supplier_payments', function (Blueprint $table) {
                 // Check and add any missing columns

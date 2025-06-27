@@ -30,6 +30,8 @@ return new class extends Migration
             $table->unique(['campaign_id', 'marketing_contact_id'], 'campaign_contact_unique');
             $table->index(['campaign_id', 'status']);
             });
+        }
+    });
         } else {
             Schema::table('campaign_contacts', function (Blueprint $table) {
                 // Check and add any missing columns

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('owner', 255);
             $table->integer('expiration');
             });
+        }
+    });
         } else {
             Schema::table('cache_locks', function (Blueprint $table) {
                 // Check and add any missing columns

@@ -26,6 +26,8 @@ return new class extends Migration
             $table->index(['user_id', 'status']);
             $table->index(['type', 'activity_date']);
             });
+        }
+    });
         } else {
             Schema::table('crm_activities', function (Blueprint $table) {
                 // Check and add any missing columns

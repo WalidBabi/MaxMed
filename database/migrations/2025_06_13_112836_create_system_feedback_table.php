@@ -23,6 +23,8 @@ return new class extends Migration
             $table->text('admin_response')->nullable();
             $table->timestamps();
             });
+        }
+    });
         } else {
             Schema::table('system_feedback', function (Blueprint $table) {
                 // Check and add any missing columns

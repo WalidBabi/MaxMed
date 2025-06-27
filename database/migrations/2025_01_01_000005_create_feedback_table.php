@@ -20,6 +20,8 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             });
+        }
+    });
         } else {
             Schema::table('feedback', function (Blueprint $table) {
                 // Check and add any missing columns

@@ -21,6 +21,8 @@ return new class extends Migration
             $table->longText('exception');
             $table->timestamp('failed_at')->useCurrent();
             });
+        }
+    });
         } else {
             Schema::table('failed_jobs', function (Blueprint $table) {
                 // Check and add any missing columns
