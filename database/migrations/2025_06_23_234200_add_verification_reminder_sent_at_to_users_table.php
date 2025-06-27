@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('quote_items', function (Blueprint $table) {
-            $table->text('specifications')->nullable()->after('item_details');
+        Schema::table('users', function (Blueprint $table) {
+            $table->timestamp('verification_reminder_sent_at')->nullable()->after('email_verified_at');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('quote_items', function (Blueprint $table) {
-            $table->dropColumn('specifications');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('verification_reminder_sent_at');
         });
     }
 };

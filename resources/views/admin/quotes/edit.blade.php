@@ -411,6 +411,7 @@
         const data = itemData || {
             item_details: '',
             specifications: '',
+            size: '',
             quantity: 1.00,
             rate: 0.00,
             discount: 0,
@@ -443,6 +444,8 @@
                                      data-description="{{ $product->description }}"
                                      data-price="{{ $product->price_aed ?? $product->price }}"
                                      data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
+                                     data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
+                                     data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
                                      data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
                                     <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
                                     @if($product->description)
@@ -467,6 +470,13 @@
                            readonly
                            value="${data.specifications || ''}">
                     <input type="hidden" name="items[${itemCounter}][specifications]" class="specifications-hidden" value="${data.specifications || ''}">
+                    
+                    <!-- Size Options Dropdown -->
+                    <div class="mt-2">
+                        <select name="items[${itemCounter}][size]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 size-options-select" data-selected-size="${data.size || ''}">
+                            <option value="">Select Size (if applicable)</option>
+                        </select>
+                    </div>
                     
                     <!-- Specifications Dropdown List -->
                     <div class="specifications-dropdown-list hidden">
@@ -731,6 +741,15 @@
             itemDetailsHidden.value = productName;
             rateInput.value = productPrice || 0;
             
+            // Populate size options
+            const row = searchInput.closest('tr');
+            const sizeSelect = row.querySelector('.size-options-select');
+            if (sizeSelect) {
+                const hasSizeOptions = item.dataset.hasSizeOptions === 'true';
+                const sizeOptions = item.dataset.sizeOptions ? JSON.parse(item.dataset.sizeOptions) : [];
+                populateSizeOptionsFromData(sizeSelect, hasSizeOptions, sizeOptions);
+            }
+            
             // Handle specifications
             if (specifications && specifications !== '[]') {
                 try {
@@ -851,6 +870,7 @@
                 addItem({
                     item_details: item.item_details || '',
                     specifications: item.specifications || '',
+                    size: item.size || '',
                     quantity: parseFloat(item.quantity) || 1.00,
                     rate: parseFloat(item.rate) || 0.00,
                     discount: parseFloat(item.discount) || 0,
@@ -874,6 +894,16 @@
                                 // Set the values
                                 searchInputs[rowIndex].value = productName;
                                 productIdInputs[rowIndex].value = dropdownItem.getAttribute('data-id');
+                                
+                                // Handle size - populate with saved value
+                                if (item.size && item.size !== '') {
+                                    const sizeSelect = searchInputs[rowIndex].closest('tr').querySelector('.size-options-select');
+                                    if (sizeSelect) {
+                                        const hasSizeOptions = dropdownItem.getAttribute('data-has-size-options') === 'true';
+                                        const sizeOptions = dropdownItem.getAttribute('data-size-options') ? JSON.parse(dropdownItem.getAttribute('data-size-options')) : [];
+                                        populateSizeOptionsFromData(sizeSelect, hasSizeOptions, sizeOptions, item.size);
+                                    }
+                                }
                                 
                                 // Handle specifications - populate with saved values
                                 if (item.specifications && item.specifications !== '') {
@@ -1075,7 +1105,91 @@
                 }
             }
         });
+
+        // Function to populate size options
+        function populateSizeOptions(productId, sizeSelect, selectedSize = '') {
+            if (!productId) {
+                sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
+                return;
+            }
+
+            const product = products.find(p => p.id == productId);
+            if (!product || !product.has_size_options || !product.size_options) {
+                sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
+                return;
+            }
+
+            let options = '<option value="">Select Size (if applicable)</option>';
+            product.size_options.forEach(size => {
+                options += `<option value="${size}" ${size === selectedSize ? 'selected' : ''}>${size}</option>`;
+            });
+            sizeSelect.innerHTML = options;
+        }
+
+        // Update size options when product is selected
+        document.addEventListener('change', function(e) {
+            if (e.target.matches('.product-select')) {
+                const row = e.target.closest('tr');
+                const sizeSelect = row.querySelector('.size-options-select');
+                populateSizeOptions(e.target.value, sizeSelect);
+            }
+        });
+
+        // Initialize size options for existing items
+        document.querySelectorAll('.product-select').forEach(select => {
+            const row = select.closest('tr');
+            const sizeSelect = row.querySelector('.size-options-select');
+            const selectedSize = sizeSelect.getAttribute('data-selected-size');
+            populateSizeOptions(select.value, sizeSelect, selectedSize);
+        });
+
+        // Add product data to window for access
+        const products = <?php echo json_encode($products->map(function($product) {
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'has_size_options' => $product->has_size_options,
+                'size_options' => $product->size_options
+            ];
+        })); ?>;
+        window.products = products;
     });
+
+    // Function to populate size options from data attributes
+    function populateSizeOptionsFromData(sizeSelect, hasSizeOptions, sizeOptions, selectedSize = '') {
+        if (!hasSizeOptions || !sizeOptions || sizeOptions.length === 0) {
+            sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
+            return;
+        }
+
+        let options = '<option value="">Select Size (if applicable)</option>';
+        sizeOptions.forEach(size => {
+            const isSelected = selectedSize === size ? 'selected' : '';
+            options += `<option value="${size}" ${isSelected}>${size}</option>`;
+        });
+        sizeSelect.innerHTML = options;
+    }
+
+    // Function to populate size options (kept for compatibility)
+    function populateSizeOptions(productId, sizeSelect, selectedSize = '') {
+        if (!productId) {
+            sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
+            return;
+        }
+
+        const product = products.find(p => p.id == productId);
+        if (!product || !product.has_size_options || !product.size_options) {
+            sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
+            return;
+        }
+
+        let options = '<option value="">Select Size (if applicable)</option>';
+        product.size_options.forEach(size => {
+            const isSelected = selectedSize === size ? 'selected' : '';
+            options += `<option value="${size}" ${isSelected}>${size}</option>`;
+        });
+        sizeSelect.innerHTML = options;
+    }
     </script>
 
     @push('styles')

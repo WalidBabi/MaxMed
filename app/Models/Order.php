@@ -3,13 +3,34 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Log;
 use App\Traits\DubaiDateFormat;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\OrderNotification;
+use App\Notifications\SupplierOrderNotification;
+use Illuminate\Support\Facades\DB;
+use App\Notifications\NewOrderSupplierNotification;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 class Order extends Model
 {
+    use HasFactory;
     use DubaiDateFormat;
     
+    protected $table = 'orders';
+
+    protected $observables = [
+        'creating',
+        'created',
+        'updating',
+        'updated'
+    ];
+
     protected $fillable = [
         'user_id',
         'customer_id',
@@ -21,7 +42,75 @@ class Order extends Model
         'shipping_state',
         'shipping_zipcode',
         'shipping_phone',
-        'notes'
+        'notes',
+        'requires_quotation',
+        'quotation_status'
+    ];
+
+    // Status constants - Comprehensive order lifecycle for supplier workflow and customer tracking
+    const STATUS_PENDING = 'pending';                           // Initial state
+    const STATUS_AWAITING_QUOTATIONS = 'awaiting_quotations';   // Supplier: Needs Quotation
+    const STATUS_QUOTATIONS_RECEIVED = 'quotations_received';   // Supplier: Pending Approval
+    const STATUS_APPROVED = 'approved';                         // Supplier: Approved - To Process
+    const STATUS_PROCESSING = 'processing';                     // Supplier: Processing order
+    const STATUS_PREPARED = 'prepared';                         // Customer: Order prepared for shipping
+    const STATUS_SHIPPED = 'shipped';                          // Customer: Package shipped
+    const STATUS_IN_TRANSIT = 'in_transit';                    // Customer: Out for delivery
+    const STATUS_DELIVERED = 'delivered';                      // Customer: Package delivered
+    const STATUS_COMPLETED = 'completed';                      // Order fully completed
+    const STATUS_CANCELLED = 'cancelled';                      // Order cancelled
+
+    // Quotation status constants
+    const QUOTATION_STATUS_PENDING = 'pending';
+    const QUOTATION_STATUS_PARTIAL = 'partial';
+    const QUOTATION_STATUS_COMPLETE = 'complete';
+    const QUOTATION_STATUS_APPROVED = 'approved';
+    const QUOTATION_STATUS_REJECTED = 'rejected';
+
+    // Add after the status constants
+    private const ALLOWED_STATUS_TRANSITIONS = [
+        self::STATUS_PENDING => [
+            self::STATUS_AWAITING_QUOTATIONS,   // For quotation orders
+            self::STATUS_PROCESSING,            // For direct orders
+            self::STATUS_CANCELLED
+        ],
+        self::STATUS_AWAITING_QUOTATIONS => [
+            self::STATUS_QUOTATIONS_RECEIVED,   // When quotations are submitted
+            self::STATUS_CANCELLED
+        ],
+        self::STATUS_QUOTATIONS_RECEIVED => [
+            self::STATUS_APPROVED,              // When quotation is approved
+            self::STATUS_AWAITING_QUOTATIONS,   // If need more quotations
+            self::STATUS_CANCELLED
+        ],
+        self::STATUS_APPROVED => [
+            self::STATUS_PROCESSING,            // Supplier starts processing
+            self::STATUS_CANCELLED
+        ],
+        self::STATUS_PROCESSING => [
+            self::STATUS_PREPARED,              // Order prepared for shipping
+            self::STATUS_CANCELLED
+        ],
+        self::STATUS_PREPARED => [
+            self::STATUS_SHIPPED,               // Package handed to carrier
+            self::STATUS_CANCELLED
+        ],
+        self::STATUS_SHIPPED => [
+            self::STATUS_IN_TRANSIT,            // Package in transit
+            self::STATUS_DELIVERED,             // Direct delivery (skip in_transit)
+            self::STATUS_CANCELLED
+        ],
+        self::STATUS_IN_TRANSIT => [
+            self::STATUS_DELIVERED,             // Package delivered to customer
+            self::STATUS_CANCELLED
+        ],
+        self::STATUS_DELIVERED => [
+            self::STATUS_COMPLETED              // Order fully completed
+        ]
+    ];
+
+    protected $casts = [
+        'requires_quotation' => 'boolean'
     ];
 
     /**
@@ -31,10 +120,30 @@ class Order extends Model
     {
         parent::boot();
         
-        // Generate order number when creating a new order
         static::creating(function ($order) {
             if (empty($order->order_number)) {
                 $order->order_number = static::generateOrderNumber();
+            }
+            
+            // Set default values for new orders that require quotation
+            if ($order->requires_quotation) {
+                $order->status = self::STATUS_AWAITING_QUOTATIONS;
+                $order->quotation_status = self::QUOTATION_STATUS_PENDING;
+            } else {
+                $order->status = self::STATUS_PENDING;
+            }
+        });
+
+        static::updating(function ($order) {
+            if ($order->isDirty('status')) {
+                $oldStatus = $order->getOriginal('status');
+                $newStatus = $order->status;
+                
+                if (!self::isValidStatusTransition($oldStatus, $newStatus)) {
+                    throw new \InvalidArgumentException(
+                        "Invalid status transition from {$oldStatus} to {$newStatus}"
+                    );
+                }
             }
         });
         
@@ -98,8 +207,7 @@ class Order extends Model
     }
 
     /**
-     * Automatically create delivery when order is created
-     * Status starts as 'pending' waiting for supplier to process it
+     * Automatically create delivery when order is in appropriate state
      */
     public function autoCreateDelivery()
     {
@@ -110,14 +218,27 @@ class Order extends Model
                 return;
             }
 
+            // Only create delivery for orders in processing state
+            if ($this->status !== self::STATUS_PROCESSING) {
+                Log::info("Order {$this->id} not ready for delivery creation. Current status: {$this->status}");
+                return;
+            }
+
+            // Ensure we have an approved quotation for orders requiring quotation
+            if ($this->requires_quotation && 
+                (!$this->approvedQuotation || $this->quotation_status !== self::QUOTATION_STATUS_APPROVED)) {
+                Log::info("Order {$this->id} requires approved quotation before delivery creation");
+                return;
+            }
+
             $delivery = Delivery::create([
                 'order_id' => $this->id,
-                'status' => 'pending', // Start as pending - waiting for supplier action
-                'carrier' => 'TBD', // Will be set by supplier
+                'status' => 'pending',
+                'carrier' => 'TBD',
                 'tracking_number' => 'TRK' . strtoupper(uniqid()),
                 'shipping_address' => $this->getFullShippingAddress(),
-                'billing_address' => $this->getFullShippingAddress(), // Use same for now
-                'shipping_cost' => 0, // Will be calculated by supplier
+                'billing_address' => $this->getFullShippingAddress(),
+                'shipping_cost' => 0,
                 'total_weight' => $this->calculateTotalWeight(),
                 'notes' => 'Auto-created delivery for order ' . $this->order_number,
             ]);
@@ -335,27 +456,149 @@ class Order extends Model
     }
 
     /**
+     * Get the supplier quotations for the order.
+     */
+    public function supplierQuotations()
+    {
+        return $this->hasMany(SupplierQuotation::class);
+    }
+
+    /**
+     * Get approved quotation
+     */
+    public function approvedQuotation()
+    {
+        return $this->supplierQuotations()
+            ->where('status', SupplierQuotation::STATUS_APPROVED)
+            ->first();
+    }
+
+    /**
+     * Check if all required suppliers have submitted quotations
+     */
+    public function hasAllQuotations(): bool
+    {
+        // Get unique categories from order items
+        $orderCategories = $this->items->pluck('product.category_id')->unique();
+        
+        // Get count of suppliers who have these categories
+        $totalSuppliersNeeded = User::whereHas('categories', function($query) use ($orderCategories) {
+            $query->whereIn('categories.id', $orderCategories);
+        })->count();
+
+        // Get count of quotations received
+        $quotationsReceived = $this->supplierQuotations()->count();
+
+        return $quotationsReceived >= $totalSuppliersNeeded;
+    }
+
+    /**
+     * Update quotation status based on supplier quotations
+     */
+    public function updateQuotationStatus(): void
+    {
+        // Start transaction to ensure atomic operations
+        DB::transaction(function () {
+            // Lock the order for update
+            $order = self::lockForUpdate()->find($this->id);
+            
+            if (!$order) {
+                throw new \RuntimeException("Order not found");
+            }
+
+            $quotations = $order->supplierQuotations;
+            $totalQuotations = $quotations->count();
+            $approvedQuotations = $quotations->where('status', SupplierQuotation::STATUS_APPROVED)->count();
+            $rejectedQuotations = $quotations->where('status', SupplierQuotation::STATUS_REJECTED)->count();
+            $pendingQuotations = $quotations->where('status', SupplierQuotation::STATUS_PENDING)->count();
+
+            // Determine new quotation status
+            $newQuotationStatus = match(true) {
+                $approvedQuotations > 0 => self::QUOTATION_STATUS_APPROVED,
+                $totalQuotations === 0 => self::QUOTATION_STATUS_PENDING,
+                $totalQuotations === $rejectedQuotations => self::QUOTATION_STATUS_REJECTED,
+                $pendingQuotations > 0 => self::QUOTATION_STATUS_PARTIAL,
+                default => self::QUOTATION_STATUS_COMPLETE
+            };
+
+            // Determine new order status
+            $newOrderStatus = match($newQuotationStatus) {
+                self::QUOTATION_STATUS_APPROVED => self::STATUS_PROCESSING,
+                self::QUOTATION_STATUS_REJECTED => self::STATUS_CANCELLED,
+                self::QUOTATION_STATUS_PARTIAL => self::STATUS_QUOTATIONS_RECEIVED, // Pending approval
+                self::QUOTATION_STATUS_COMPLETE => self::STATUS_QUOTATIONS_RECEIVED, // Pending approval
+                default => $order->status
+            };
+
+            // Update order status and quotation status
+            $order->update([
+                'status' => $newOrderStatus,
+                'quotation_status' => $newQuotationStatus
+            ]);
+
+            Log::info("Order {$order->order_number} status updated: {$order->status} -> {$newOrderStatus}, quotation_status: {$order->quotation_status} -> {$newQuotationStatus}");
+        });
+    }
+
+    /**
      * Send notification when order is placed
      */
     public function sendOrderPlacedNotification()
     {
         try {
-            // Get all admin users
-            $admins = \App\Models\User::where(function($query) {
+            // Get all admin users (excluding suppliers)
+            $admins = User::where(function($query) {
                 $query->where('is_admin', true)
                       ->orWhereHas('role', function($roleQuery) {
                           $roleQuery->where('name', 'admin');
                       });
             })
             ->whereNotNull('email')
+            ->whereDoesntHave('role', function($query) {
+                $query->where('name', 'supplier');
+            })
             ->get();
 
             if ($admins->count() > 0) {
-                \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\OrderNotification($this, 'placed'));
-                \Illuminate\Support\Facades\Log::info('Order placed notification sent to ' . $admins->count() . ' admin(s) for order: ' . $this->order_number);
+                Notification::send($admins, new OrderNotification($this, 'placed'));
+                Log::info('Order placed notification sent to admins');
             }
+
+            // Get unique categories from order items
+            $orderCategories = $this->items()
+                ->with('product.category')
+                ->get()
+                ->pluck('product.category_id')
+                ->unique()
+                ->filter();
+
+            if ($orderCategories->isEmpty()) {
+                Log::warning("No valid categories found for order {$this->id}");
+                return;
+            }
+
+            // Find suppliers with active assignments to these categories
+            $suppliers = User::whereHas('role', function($q) {
+                $q->where('name', 'supplier');
+            })
+            ->whereHas('supplierCategories', function($q) use ($orderCategories) {
+                $q->whereIn('category_id', $orderCategories)
+                  ->where('status', 'active');
+            })
+            ->get();
+
+            if ($suppliers->isEmpty()) {
+                Log::warning("No suppliers found for categories: " . $orderCategories->join(', '));
+                return;
+            }
+
+            foreach ($suppliers as $supplier) {
+                $supplier->notify(new NewOrderSupplierNotification($this));
+                Log::info("Order notification sent to supplier: {$supplier->id} for order: {$this->id}");
+            }
+
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Failed to send order placed notification: ' . $e->getMessage());
+            Log::error('Failed to send order notifications: ' . $e->getMessage());
         }
     }
 
@@ -378,6 +621,9 @@ class Order extends Model
                       });
             })
             ->whereNotNull('email')
+            ->whereDoesntHave('role', function($query) {
+                $query->where('name', 'supplier');
+            })
             ->get();
 
             if ($admins->count() > 0) {
@@ -387,5 +633,25 @@ class Order extends Model
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Failed to send order status change notification: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Check if a status transition is valid
+     */
+    public static function isValidStatusTransition(?string $from, string $to): bool
+    {
+        // Allow any initial status setting
+        if ($from === null) {
+            return true;
+        }
+
+        // If status isn't changing, it's valid
+        if ($from === $to) {
+            return true;
+        }
+
+        // Check if the transition is allowed
+        return isset(self::ALLOWED_STATUS_TRANSITIONS[$from]) &&
+            in_array($to, self::ALLOWED_STATUS_TRANSITIONS[$from]);
     }
 } 

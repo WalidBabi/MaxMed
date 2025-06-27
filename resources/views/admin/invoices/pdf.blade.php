@@ -668,10 +668,17 @@
                                             <div style="margin-bottom: 2px; color: var(--text-secondary);">{{ $spec }}</div>
                                         @endif
                                     @endforeach
-                                @else
-                                    <span style="color: var(--text-muted);">-</span>
                                 @endif
-                            @else
+                            @endif
+                            
+                            @if($item->size && !empty(trim($item->size)))
+                                <div style="margin-top: 3px; padding-top: 3px; border-top: 1px solid var(--border-color);">
+                                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1px; font-size: 8px;">Size:</div>
+                                    <div style="color: var(--text-secondary); font-size: 8px;">{{ $item->size }}</div>
+                                </div>
+                            @endif
+                            
+                            @if((!$item->specifications || (is_array($item->specifications) && count($item->specifications) == 0) || (is_string($item->specifications) && empty(trim($item->specifications)))) && (!$item->size || empty(trim($item->size))))
                                 <span style="color: var(--text-muted);">-</span>
                             @endif
                         </td>

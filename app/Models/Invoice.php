@@ -19,6 +19,7 @@ class Invoice extends Model
         'order_id',
         'delivery_id',
         'parent_invoice_id',
+        'customer_id',
         'customer_name',
         'billing_address',
         'shipping_address',
@@ -27,7 +28,7 @@ class Invoice extends Model
         'description',
         'terms_conditions',
         'notes',
-        'sub_total',
+        'subtotal',
         'tax_amount',
         'discount_amount',
         'total_amount',
@@ -182,10 +183,14 @@ class Invoice extends Model
      */
     public function calculateTotals()
     {
-        $subTotal = $this->items->sum('line_total');
+        $subTotal = $this->items->sum('subtotal');
+        $taxAmount = $this->items->sum('tax');
+        $total = $this->items->sum('total');
+        
         $this->update([
-            'sub_total' => $subTotal,
-            'total_amount' => $subTotal + $this->tax_amount - $this->discount_amount
+            'subtotal' => $subTotal,
+            'tax_amount' => $taxAmount,
+            'total_amount' => $total
         ]);
     }
 
@@ -351,13 +356,14 @@ class Invoice extends Model
             $newItem = $item->replicate();
             $newItem->invoice_id = $finalInvoice->id;
             
-            // If this is a partial amount final invoice, adjust line totals proportionally
+            // If this is a partial amount final invoice, adjust totals proportionally
             if ($finalInvoice->total_amount != $this->total_amount && $this->total_amount > 0) {
                 $ratio = $finalInvoice->total_amount / $this->total_amount;
-                $newItem->line_total = $item->line_total * $ratio;
+                $newItem->total = $item->total * $ratio;
+                $newItem->subtotal = $item->subtotal * $ratio;
                 $newItem->unit_price = $item->unit_price * $ratio;
                 
-                Log::info("Adjusted invoice item {$item->id} by ratio {$ratio}: new line total {$newItem->line_total}");
+                Log::info("Adjusted invoice item {$item->id} by ratio {$ratio}: new total {$newItem->total}");
             }
             
             $newItem->save();

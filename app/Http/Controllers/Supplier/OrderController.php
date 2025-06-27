@@ -5,10 +5,16 @@ namespace App\Http\Controllers\Supplier;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Delivery;
+use App\Models\SupplierQuotation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\NewQuotationNotification;
+use App\Models\PurchaseOrder;
 
 class OrderController extends Controller
 {
@@ -18,31 +24,192 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $status = $request->get('status', 'all');
+        $viewType = $request->get('view', 'pipeline'); // Default to pipeline view
         
-        // Get orders with their deliveries (no customer info)
-        $query = Order::with(['delivery', 'items.product'])
-            ->whereHas('delivery')
-            ->latest();
+        // Get supplier's active category IDs
+        $supplierCategoryIds = Auth::user()
+            ->supplierCategories()
+            ->where('status', 'active')
+            ->pluck('category_id');
 
-        // Filter by delivery status if specified
-        if ($status !== 'all') {
-            $query->whereHas('delivery', function($q) use ($status) {
-                $q->where('status', $status);
-            });
-        }
-
-        $orders = $query->paginate(15);
+        // Get orders based on status for pagination
+        $orders = $this->getOrdersForStatus($status, $supplierCategoryIds)->paginate(15);
         
         // Get status counts for tabs
         $statusCounts = [
-            'all' => Order::whereHas('delivery')->count(),
-            'pending' => Order::whereHas('delivery', function($q) { $q->where('status', 'pending'); })->count(),
-            'processing' => Order::whereHas('delivery', function($q) { $q->where('status', 'processing'); })->count(),
-            'in_transit' => Order::whereHas('delivery', function($q) { $q->where('status', 'in_transit'); })->count(),
-            'delivered' => Order::whereHas('delivery', function($q) { $q->where('status', 'delivered'); })->count(),
+            'all' => $this->getOrdersForStatus('all', $supplierCategoryIds)->count(),
+            'awaiting_quotations' => $this->getOrdersForStatus('awaiting_quotations', $supplierCategoryIds)->count(),
+            'quotations_received' => $this->getOrdersForStatus('quotations_received', $supplierCategoryIds)->count(),
+            'processing' => $this->getOrdersForStatus('processing', $supplierCategoryIds)->count(),
+            'shipped' => $this->getOrdersForStatus('shipped', $supplierCategoryIds)->count(),
+            'delivered' => $this->getOrdersForStatus('delivered', $supplierCategoryIds)->count(),
+            'completed' => $this->getOrdersForStatus('completed', $supplierCategoryIds)->count(),
         ];
 
-        return view('supplier.orders.index', compact('orders', 'statusCounts', 'status'));
+        // For pipeline view, get orders grouped by status
+        $ordersGrouped = [];
+        if ($viewType === 'pipeline') {
+            $statuses = ['awaiting_quotations', 'quotations_received', 'processing', 'shipped', 'delivered', 'completed'];
+            foreach ($statuses as $pipelineStatus) {
+                $ordersGrouped[$pipelineStatus] = $this->getOrdersForStatus($pipelineStatus, $supplierCategoryIds)->get();
+            }
+        }
+
+        // Get all orders for table view
+        $allOrders = collect();
+        if ($viewType === 'table') {
+            $allOrders = $this->getOrdersForStatus($status, $supplierCategoryIds)->get();
+        }
+
+        return view('supplier.orders.index', compact(
+            'orders', 
+            'statusCounts', 
+            'status', 
+            'viewType', 
+            'ordersGrouped', 
+            'allOrders'
+        ));
+    }
+
+    /**
+     * Get orders query for a specific status
+     */
+    private function getOrdersForStatus($status, $supplierCategoryIds)
+    {
+        $baseQuery = Order::with(['items.product', 'supplierQuotations' => function($q) {
+            $q->where('supplier_id', Auth::id());
+        }]);
+
+        switch ($status) {
+            case 'awaiting_quotations':
+                return $baseQuery->where(function($q) use ($supplierCategoryIds) {
+                    $q->whereHas('items.product', function($productQ) use ($supplierCategoryIds) {
+                        $productQ->whereIn('category_id', $supplierCategoryIds);
+                    });
+                })
+                ->where(function($q) {
+                    $q->where('status', Order::STATUS_AWAITING_QUOTATIONS)
+                      ->orWhere(function($subQ) {
+                          $subQ->where('status', 'pending')
+                               ->where('requires_quotation', true);
+                      });
+                })
+                ->whereDoesntHave('supplierQuotations', function($sq) {
+                    $sq->where('supplier_id', Auth::id());
+                })
+                ->latest();
+
+            case 'quotations_received':
+                return $baseQuery->where(function($q) use ($supplierCategoryIds) {
+                    $q->where(function($subQ) use ($supplierCategoryIds) {
+                        $subQ->whereHas('items.product', function($productQ) use ($supplierCategoryIds) {
+                            $productQ->whereIn('category_id', $supplierCategoryIds);
+                        });
+                    })
+                    ->orWhere(function($subQ) {
+                        $subQ->whereHas('supplierQuotations', function($quotationQ) {
+                            $quotationQ->where('supplier_id', Auth::id());
+                        });
+                    });
+                })
+                ->where('status', Order::STATUS_QUOTATIONS_RECEIVED)
+                ->where('requires_quotation', true)
+                ->whereHas('supplierQuotations', function($sq) {
+                    $sq->where('supplier_id', Auth::id())
+                        ->where('status', SupplierQuotation::STATUS_PENDING);
+                })
+                ->latest();
+
+            case 'processing':
+                return $baseQuery->where(function($q) use ($supplierCategoryIds) {
+                    $q->where(function($subQ) use ($supplierCategoryIds) {
+                        $subQ->whereHas('items.product', function($productQ) use ($supplierCategoryIds) {
+                            $productQ->whereIn('category_id', $supplierCategoryIds);
+                        });
+                    })
+                    ->orWhere(function($subQ) {
+                        $subQ->whereHas('supplierQuotations', function($quotationQ) {
+                            $quotationQ->where('supplier_id', Auth::id())
+                                ->where('status', SupplierQuotation::STATUS_APPROVED);
+                        });
+                    });
+                })
+                ->where(function($q) {
+                    $q->where('status', Order::STATUS_APPROVED)
+                      ->orWhere('status', Order::STATUS_PROCESSING)
+                      ->orWhere(function($subQ) {
+                          $subQ->where('status', 'pending')
+                               ->where('requires_quotation', false);
+                      });
+                })
+                ->latest();
+
+            case 'shipped':
+                return $baseQuery->where('status', Order::STATUS_SHIPPED)
+                ->where(function($q) use ($supplierCategoryIds) {
+                    $q->where(function($subQ) use ($supplierCategoryIds) {
+                        $subQ->whereHas('items.product', function($productQ) use ($supplierCategoryIds) {
+                            $productQ->whereIn('category_id', $supplierCategoryIds);
+                        });
+                    })
+                    ->orWhere(function($subQ) {
+                        $subQ->whereHas('supplierQuotations', function($sq) {
+                            $sq->where('supplier_id', Auth::id());
+                        });
+                    });
+                })
+                ->latest();
+
+            case 'delivered':
+                return $baseQuery->where('status', Order::STATUS_DELIVERED)
+                ->where(function($q) use ($supplierCategoryIds) {
+                    $q->where(function($subQ) use ($supplierCategoryIds) {
+                        $subQ->whereHas('items.product', function($productQ) use ($supplierCategoryIds) {
+                            $productQ->whereIn('category_id', $supplierCategoryIds);
+                        });
+                    })
+                    ->orWhere(function($subQ) {
+                        $subQ->whereHas('supplierQuotations', function($sq) {
+                            $sq->where('supplier_id', Auth::id());
+                        });
+                    });
+                })
+                ->latest();
+
+            case 'completed':
+                return $baseQuery->where('status', Order::STATUS_COMPLETED)
+                ->where(function($q) use ($supplierCategoryIds) {
+                    $q->where(function($subQ) use ($supplierCategoryIds) {
+                        $subQ->whereHas('items.product', function($productQ) use ($supplierCategoryIds) {
+                            $productQ->whereIn('category_id', $supplierCategoryIds);
+                        });
+                    })
+                    ->orWhere(function($subQ) {
+                        $subQ->whereHas('supplierQuotations', function($sq) {
+                            $sq->where('supplier_id', Auth::id());
+                        });
+                    });
+                })
+                ->latest();
+
+            case 'all':
+            default:
+                return $baseQuery->where(function($q) use ($supplierCategoryIds) {
+                    $q->where(function($subQ) use ($supplierCategoryIds) {
+                        // Show orders with products in supplier's categories
+                        $subQ->whereHas('items.product', function($productQ) use ($supplierCategoryIds) {
+                            $productQ->whereIn('category_id', $supplierCategoryIds);
+                        });
+                    })
+                    ->orWhere(function($subQ) {
+                        // Show orders that have quotations from this supplier
+                        $subQ->whereHas('supplierQuotations', function($sq) {
+                            $sq->where('supplier_id', Auth::id());
+                        });
+                    });
+                })
+                ->latest();
+        }
     }
 
     /**
@@ -50,12 +217,25 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        $order->load(['delivery', 'items.product']);
+        // Load order with related data
+        $order->load(['delivery', 'items.product.category', 'customer', 'user', 'supplierQuotations' => function($q) {
+            $q->where('supplier_id', Auth::id());
+        }]);
         
-        // Check if this order has a delivery
-        if (!$order->delivery) {
+        // Check if supplier has access to this order
+        $supplierCategoryIds = Auth::user()
+            ->supplierCategories()
+            ->where('status', 'active')
+            ->pluck('category_id');
+            
+        $orderCategoryIds = $order->items->pluck('product.category_id')->unique();
+        
+        $hasAccess = $orderCategoryIds->intersect($supplierCategoryIds)->isNotEmpty() ||
+                    $order->supplierQuotations->isNotEmpty();
+        
+        if (!$hasAccess) {
             return redirect()->route('supplier.orders.index')
-                ->with('error', 'No delivery found for this order.');
+                ->with('error', 'You do not have access to this order.');
         }
 
         return view('supplier.orders.show', compact('order'));
@@ -281,5 +461,212 @@ class OrderController extends Controller
             Log::error('Failed to update delivery status: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed to update delivery status.');
         }
+    }
+
+    /**
+     * Show quotation form for an order
+     */
+    public function showQuotationForm(Order $order)
+    {
+        // Check if this order requires quotation and is in the correct state
+        if (!$order->requires_quotation) {
+            return redirect()->route('supplier.orders.show', $order)
+                ->with('error', 'This order does not require quotations.');
+        }
+
+        if (!in_array($order->status, [Order::STATUS_AWAITING_QUOTATIONS, Order::STATUS_QUOTATIONS_RECEIVED, 'pending'])) {
+            return redirect()->route('supplier.orders.show', $order)
+                ->with('error', 'This order is not accepting quotations at this time.');
+        }
+
+        // Check if supplier has already submitted a quotation
+        $existingQuotation = SupplierQuotation::where('order_id', $order->id)
+            ->where('supplier_id', auth()->id())
+            ->first();
+
+        if ($existingQuotation) {
+            return redirect()->route('supplier.orders.show', $order)
+                ->with('error', 'You have already submitted a quotation for this order.');
+        }
+
+        $order->load(['items.product']);
+
+        return view('supplier.orders.quotation', compact('order'));
+    }
+
+    /**
+     * Submit quotation for an order
+     */
+    public function submitQuotation(Request $request, Order $order)
+    {
+        // Validate request
+        $validated = $request->validate([
+            'total_amount' => 'required|numeric|min:0',
+            'currency' => 'required|string|size:3',
+            'shipping_cost' => 'nullable|numeric|min:0',
+            'notes' => 'nullable|string|max:1000',
+        ]);
+
+        // Check if this order requires quotation and is in the correct state
+        if (!$order->requires_quotation) {
+            return redirect()->route('supplier.orders.show', $order)
+                ->with('error', 'This order does not require quotations.');
+        }
+
+        if (!in_array($order->status, [Order::STATUS_AWAITING_QUOTATIONS, Order::STATUS_QUOTATIONS_RECEIVED, 'pending'])) {
+            return redirect()->route('supplier.orders.show', $order)
+                ->with('error', 'This order is not accepting quotations at this time.');
+        }
+
+        // Check if supplier has already submitted a quotation
+        $existingQuotation = SupplierQuotation::where('order_id', $order->id)
+            ->where('supplier_id', auth()->id())
+            ->first();
+
+        if ($existingQuotation) {
+            return redirect()->route('supplier.orders.show', $order)
+                ->with('error', 'You have already submitted a quotation for this order.');
+        }
+
+        DB::beginTransaction();
+        try {
+            // Verify the order still exists and is accessible
+            $orderExists = Order::where('id', $order->id)->first();
+            if (!$orderExists) {
+                throw new \Exception("Order #{$order->id} no longer exists in the database.");
+            }
+
+            // Create the quotation
+            $quotation = SupplierQuotation::create([
+                'order_id' => $order->id,
+                'supplier_id' => auth()->id(),
+                'total_amount' => $validated['total_amount'],
+                'currency' => $validated['currency'],
+                'shipping_cost' => $validated['shipping_cost'] ?? null,
+                'notes' => $validated['notes'],
+                'status' => SupplierQuotation::STATUS_PENDING
+            ]);
+
+            // Update order quotation status
+            $order->updateQuotationStatus();
+
+            // Notify admin about new quotation
+            $admins = User::whereHas('role', function($query) {
+                $query->where('name', 'admin');
+            })->get();
+
+            // Send styled email to admins for order quotations
+            foreach ($admins as $admin) {
+                // For order quotations, we'll create a simpler email since it's different from inquiry quotations
+                \Mail::to($admin->email)->send(new \App\Mail\NewQuotationSubmitted($quotation));
+            }
+
+            Notification::send($admins, new NewQuotationNotification($quotation));
+
+            DB::commit();
+
+            Log::info("Supplier quotation submitted for order {$order->order_number}. Quotation ID: {$quotation->id}");
+
+            return redirect()->route('supplier.orders.show', $order)
+                ->with('success', 'Your quotation has been submitted successfully. You will be notified when it is reviewed.');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Failed to submit quotation: ' . $e->getMessage());
+            
+            // Provide more specific error messages
+            if (str_contains($e->getMessage(), 'foreign key constraint fails')) {
+                return redirect()->route('supplier.orders.index')
+                    ->with('error', 'The order you are trying to quote no longer exists. Please check the orders list.');
+            }
+            
+            return redirect()->back()
+                ->with('error', 'Failed to submit quotation. Please try again.')
+                ->withInput();
+        }
+    }
+
+    /**
+     * Show supplier's quotation history for an order
+     */
+    public function quotationHistory(Order $order)
+    {
+        $quotations = SupplierQuotation::where('order_id', $order->id)
+            ->where('supplier_id', auth()->id())
+            ->latest()
+            ->get();
+
+        return view('supplier.orders.quotation-history', compact('order', 'quotations'));
+    }
+
+    /**
+     * Display purchase orders for the supplier
+     */
+    public function purchaseOrders(Request $request)
+    {
+        $status = $request->get('status', 'all');
+        
+        $query = PurchaseOrder::where('supplier_id', auth()->id())
+            ->with(['order', 'items.product', 'supplierQuotation']);
+
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        $purchaseOrders = $query->latest()->paginate(15);
+        
+        // Get status counts
+        $statusCounts = [
+            'all' => PurchaseOrder::where('supplier_id', auth()->id())->count(),
+            'sent_to_supplier' => PurchaseOrder::where('supplier_id', auth()->id())->where('status', 'sent_to_supplier')->count(),
+            'acknowledged' => PurchaseOrder::where('supplier_id', auth()->id())->where('status', 'acknowledged')->count(),
+            'in_production' => PurchaseOrder::where('supplier_id', auth()->id())->where('status', 'in_production')->count(),
+            'shipped' => PurchaseOrder::where('supplier_id', auth()->id())->where('status', 'shipped')->count(),
+        ];
+
+        return view('supplier.purchase-orders.index', compact('purchaseOrders', 'statusCounts', 'status'));
+    }
+
+    /**
+     * Show purchase order details
+     */
+    public function showPurchaseOrder(PurchaseOrder $purchaseOrder)
+    {
+        // Check if supplier has access to this purchase order
+        if ($purchaseOrder->supplier_id !== auth()->id()) {
+            return redirect()->route('supplier.purchase-orders.index')
+                ->with('error', 'You do not have access to this purchase order.');
+        }
+
+        $purchaseOrder->load(['order', 'items.product', 'supplierQuotation', 'payments']);
+
+        return view('supplier.purchase-orders.show', compact('purchaseOrder'));
+    }
+
+    /**
+     * Acknowledge purchase order receipt
+     */
+    public function acknowledgePurchaseOrder(PurchaseOrder $purchaseOrder)
+    {
+        // Check if supplier has access to this purchase order
+        if ($purchaseOrder->supplier_id !== auth()->id()) {
+            return redirect()->route('supplier.purchase-orders.index')
+                ->with('error', 'You do not have access to this purchase order.');
+        }
+
+        if ($purchaseOrder->status !== PurchaseOrder::STATUS_SENT_TO_SUPPLIER) {
+            return redirect()->back()
+                ->with('error', 'Purchase order can only be acknowledged when status is "Sent to Supplier".');
+        }
+
+        $purchaseOrder->update([
+            'status' => PurchaseOrder::STATUS_ACKNOWLEDGED,
+            'acknowledged_at' => now()
+        ]);
+
+        Log::info("Purchase order {$purchaseOrder->po_number} acknowledged by supplier {$purchaseOrder->supplier->name}");
+
+        return redirect()->back()
+            ->with('success', 'Purchase order acknowledged successfully! You can now start production.');
     }
 } 

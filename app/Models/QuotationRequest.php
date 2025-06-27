@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Log;
+use App\Models\User;
+use App\Models\CrmLead;
+use App\Models\Product;
+use App\Models\Quote;
+use App\Models\SupplierQuotation;
+use App\Models\ContactSubmission;
 use App\Notifications\QuotationRequestNotification;
 
 class QuotationRequest extends Model
@@ -63,6 +69,9 @@ class QuotationRequest extends Model
                       });
             })
             ->whereNotNull('email')
+            ->whereDoesntHave('role', function($query) {
+                $query->where('name', 'supplier');
+            })
             ->get();
 
             if ($users->count() > 0) {
@@ -88,6 +97,14 @@ class QuotationRequest extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the lead associated with this quotation request
+     */
+    public function lead(): BelongsTo
+    {
+        return $this->belongsTo(CrmLead::class, 'lead_id');
     }
 
     /**
@@ -189,7 +206,7 @@ class QuotationRequest extends Model
     }
 
     /**
-     * Get supplier response badge class
+     * Get supplier response badge CSS class
      */
     public function getSupplierResponseBadgeClassAttribute(): string
     {
@@ -197,7 +214,7 @@ class QuotationRequest extends Model
             'pending' => 'bg-yellow-100 text-yellow-800',
             'available' => 'bg-green-100 text-green-800',
             'not_available' => 'bg-red-100 text-red-800',
-            default => 'bg-gray-100 text-gray-800'
+            default => 'bg-gray-100 text-gray-800',
         };
     }
 

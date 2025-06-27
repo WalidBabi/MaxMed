@@ -9,6 +9,12 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Abort;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Route;
 
 class ProductSpecificationController extends Controller
 {
@@ -18,7 +24,22 @@ class ProductSpecificationController extends Controller
     private function getCategorySpecificationTemplates($categoryId)
     {
         $category = Category::find($categoryId);
-        $categoryName = $category ? strtolower($category->name) : '';
+        
+        if (!$category) {
+            Log::warning("Category not found for ID: {$categoryId}");
+            return [];
+        }
+
+        // Return templates based on category name
+        return $this->getTemplatesByCategory($category->name);
+    }
+
+    /**
+     * Get templates by category name
+     */
+    private function getTemplatesByCategory($categoryName)
+    {
+        $categoryName = strtolower($categoryName);
         
         // Define specification templates based on category
         if (str_contains($categoryName, 'rapid test') || str_contains($categoryName, 'test kit')) {
@@ -37,8 +58,11 @@ class ProductSpecificationController extends Controller
             return $this->getElectrochemistrySpecifications();
         } elseif (str_contains($categoryName, 'thermal') || str_contains($categoryName, 'pcr')) {
             return $this->getThermalCyclerSpecifications();
+        } elseif (str_contains($categoryName, 'lab equipment')) {
+            return $this->getLabEquipmentSpecifications();
         } else {
-            return $this->getGeneralSpecifications();
+            // Default specifications for unknown categories
+            return $this->getDefaultSpecifications();
         }
     }
 
@@ -235,20 +259,98 @@ class ProductSpecificationController extends Controller
         ];
     }
 
-    private function getGeneralSpecifications()
+    private function getLabEquipmentSpecifications()
     {
         return [
-            'Basic' => [
-                ['key' => 'model_number', 'name' => 'Model Number', 'unit' => '', 'type' => 'text', 'required' => true],
-                ['key' => 'dimensions', 'name' => 'Dimensions', 'unit' => 'mm', 'type' => 'text', 'required' => true],
-                ['key' => 'weight', 'name' => 'Weight', 'unit' => 'kg', 'type' => 'decimal', 'required' => true],
-                ['key' => 'power_requirements', 'name' => 'Power Requirements', 'unit' => '', 'type' => 'text', 'required' => false],
-            ],
             'Performance' => [
-                ['key' => 'operating_temperature', 'name' => 'Operating Temperature', 'unit' => '°C', 'type' => 'text', 'required' => false],
-                ['key' => 'humidity_range', 'name' => 'Humidity Range', 'unit' => '%RH', 'type' => 'text', 'required' => false],
-                ['key' => 'certification', 'name' => 'Certification', 'unit' => '', 'type' => 'text', 'required' => false],
-            ]
+                [
+                    'key' => 'power_consumption',
+                    'name' => 'Power Consumption',
+                    'type' => 'text',
+                    'unit' => 'W',
+                    'required' => false,
+                ],
+                [
+                    'key' => 'operating_voltage',
+                    'name' => 'Operating Voltage',
+                    'type' => 'text',
+                    'unit' => 'V',
+                    'required' => false,
+                ],
+            ],
+            'Physical' => [
+                [
+                    'key' => 'dimensions',
+                    'name' => 'Dimensions',
+                    'type' => 'text',
+                    'unit' => 'cm',
+                    'required' => false,
+                ],
+                [
+                    'key' => 'weight',
+                    'name' => 'Weight',
+                    'type' => 'decimal',
+                    'unit' => 'kg',
+                    'required' => false,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Get default specifications for unknown categories
+     */
+    private function getDefaultSpecifications()
+    {
+        return [
+            'Performance' => [
+                [
+                    'key' => 'tests_per_kit',
+                    'name' => 'Tests per Kit',
+                    'type' => 'number',
+                    'unit' => 'tests',
+                    'required' => false,
+                ],
+                [
+                    'key' => 'detection_time',
+                    'name' => 'Detection Time',
+                    'type' => 'number',
+                    'unit' => 'minutes',
+                    'required' => false,
+                ],
+            ],
+            'Physical' => [
+                [
+                    'key' => 'sample_type',
+                    'name' => 'Sample Type',
+                    'type' => 'select',
+                    'options' => ['Serum', 'Plasma', 'Whole Blood', 'Urine', 'Saliva', 'Swab'],
+                    'required' => false,
+                ],
+                [
+                    'key' => 'storage_temperature',
+                    'name' => 'Storage Temperature',
+                    'type' => 'text',
+                    'unit' => '°C',
+                    'required' => false,
+                ],
+            ],
+            'Regulatory' => [
+                [
+                    'key' => 'ce_marking',
+                    'name' => 'CE Marking',
+                    'type' => 'select',
+                    'options' => ['Yes', 'No', 'In Progress'],
+                    'required' => false,
+                ],
+                [
+                    'key' => 'fda_status',
+                    'name' => 'FDA Status',
+                    'type' => 'select',
+                    'options' => ['Approved', 'Pending', 'Not Required', 'In Progress'],
+                    'required' => false,
+                ],
+            ],
         ];
     }
 
@@ -305,7 +407,7 @@ class ProductSpecificationController extends Controller
     {
         $user = Auth::user();
         
-        if (!$user->isSupplier() || $product->supplier_id !== $user->id) {
+        if (!$user || !$user->isSupplier() || $product->supplier_id !== $user->id) {
             abort(403, 'Access denied.');
         }
 
@@ -314,13 +416,25 @@ class ProductSpecificationController extends Controller
             abort(403, 'You are not assigned to manage products in this category.');
         }
 
-        $product->load(['specifications', 'category']);
+        // Load product with specifications and category
+        $product->load(['specifications' => function($query) {
+            $query->orderBy('category', 'asc')
+                  ->orderBy('sort_order', 'asc');
+        }, 'category']);
         
-        // Get existing specifications grouped by category
+        // Get existing specifications indexed by specification_key for easy access
         $existingSpecs = $product->specifications->keyBy('specification_key');
         
         // Get category-specific templates
         $templates = $this->getCategorySpecificationTemplates($product->category_id);
+
+        // Log for debugging
+        Log::info('Loaded specifications for product', [
+            'product_id' => $product->id,
+            'spec_count' => $existingSpecs->count(),
+            'template_count' => collect($templates)->count(),
+            'existing_keys' => $existingSpecs->keys()->toArray()
+        ]);
 
         return view('supplier.product-specifications.edit', compact('product', 'existingSpecs', 'templates'));
     }
@@ -348,18 +462,29 @@ class ProductSpecificationController extends Controller
             $templates = $this->getCategorySpecificationTemplates($product->category_id);
             $sortOrder = 1;
 
+            // Log incoming data
+            Log::info('Updating specifications for product', [
+                'product_id' => $product->id,
+                'spec_count' => count($specifications),
+                'specifications' => $specifications
+            ]);
+
             foreach ($templates as $categoryName => $categorySpecs) {
                 foreach ($categorySpecs as $spec) {
                     $key = $spec['key'];
                     $value = $specifications[$key] ?? null;
                     
                     // Skip if no value provided and not required
-                    if (empty($value) && !$spec['required']) {
+                    if (empty($value) && !($spec['required'] ?? false)) {
+                        // Delete existing specification if it exists and value is empty
+                        ProductSpecification::where('product_id', $product->id)
+                            ->where('specification_key', $key)
+                            ->delete();
                         continue;
                     }
 
                     // Validate required fields
-                    if ($spec['required'] && empty($value)) {
+                    if (($spec['required'] ?? false) && empty($value)) {
                         throw new \Exception("Field '{$spec['name']}' is required.");
                     }
 
@@ -371,7 +496,7 @@ class ProductSpecificationController extends Controller
                         ],
                         [
                             'specification_value' => $value,
-                            'unit' => $spec['unit'],
+                            'unit' => $spec['unit'] ?? '',
                             'category' => $categoryName,
                             'display_name' => $spec['name'],
                             'sort_order' => $sortOrder++,
@@ -386,11 +511,20 @@ class ProductSpecificationController extends Controller
 
             DB::commit();
 
-            return redirect()->route('supplier.product-specifications.show', $product)
+            Log::info('Successfully updated specifications for product', [
+                'product_id' => $product->id
+            ]);
+
+            return redirect()->route('supplier.products.show', $product)
                 ->with('success', 'Product specifications updated successfully.');
 
         } catch (\Exception $e) {
             DB::rollback();
+            Log::error('Error updating specifications', [
+                'product_id' => $product->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return redirect()->back()
                 ->with('error', 'Error updating specifications: ' . $e->getMessage())
                 ->withInput();

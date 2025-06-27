@@ -13,12 +13,13 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email')->unique();
+            $table->string('mobile')->nullable();
             $table->string('phone')->nullable();
             $table->string('company_name');
             $table->string('job_title')->nullable();
             $table->text('company_address')->nullable();
             $table->enum('status', ['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost'])->default('new');
-            $table->enum('source', ['website', 'linkedin', 'email', 'phone', 'referral', 'trade_show', 'google_ads', 'other'])->default('website');
+            $table->enum('source', ['website', 'linkedin', 'email', 'phone', 'whatsapp', 'on_site_visit', 'referral', 'trade_show', 'google_ads', 'other'])->default('website');
             $table->enum('priority', ['low', 'medium', 'high'])->default('medium');
             $table->decimal('estimated_value', 15, 2)->nullable();
             $table->text('notes')->nullable();

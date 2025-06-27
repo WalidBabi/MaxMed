@@ -480,6 +480,8 @@
                                                                              data-description="{{ $product->description }}"
                                                                              data-price="{{ $product->price_aed ?? $product->price }}"
                                                                              data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
+                                                                             data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
+                                                                             data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
                                                                              data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
                                                                             <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
                                                                             @if($product->description)
@@ -502,8 +504,16 @@
                                                                class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 specifications-search-input" 
                                                                placeholder="Select specifications..." 
                                                                autocomplete="off"
-                                                               readonly>
-                                                        <input type="hidden" name="items[{{ $index }}][specifications]" class="specifications-hidden" value="{{ $item->specifications }}">
+                                                               readonly
+                                                               value="{{ $item->specifications || '' }}">
+                                                        <input type="hidden" name="items[{{ $index }}][specifications]" class="specifications-hidden" value="{{ $item->specifications || '' }}">
+                                                        
+                                                        <!-- Size Options Dropdown -->
+                                                        <div class="mt-2">
+                                                            <select name="items[{{ $index }}][size]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 size-options-select" data-selected-size="{{ $item->size }}">
+                                                                <option value="">Select Size (if applicable)</option>
+                                                            </select>
+                                                        </div>
                                                         
                                                         <!-- Specifications Dropdown List -->
                                                         <div class="specifications-dropdown-list hidden">
@@ -764,6 +774,8 @@ function addItem() {
                                      data-description="{{ $product->description }}"
                                      data-price="{{ $product->price_aed ?? $product->price }}"
                                      data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
+                                     data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
+                                     data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
                                      data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
                                     <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
                                     @if($product->description)
@@ -786,8 +798,16 @@ function addItem() {
                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 specifications-search-input" 
                        placeholder="Select specifications..." 
                        autocomplete="off"
-                       readonly>
-                <input type="hidden" name="items[${itemCounter}][specifications]" class="specifications-hidden">
+                       readonly
+                       value="${data.specifications || ''}">
+                <input type="hidden" name="items[${itemCounter}][specifications]" class="specifications-hidden" value="${data.specifications || ''}">
+                
+                <!-- Size Options Dropdown -->
+                <div class="mt-2">
+                    <select name="items[${itemCounter}][size]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 size-options-select" data-selected-size="${data.size}">
+                        <option value="">Select Size (if applicable)</option>
+                    </select>
+                </div>
                 
                 <!-- Specifications Dropdown List -->
                 <div class="specifications-dropdown-list hidden">
@@ -838,6 +858,7 @@ function addItem() {
     const specificationsInput = row.querySelector('.specifications-search-input');
     const specificationsHidden = row.querySelector('.specifications-hidden');
     const specificationsDropdown = row.querySelector('.specifications-dropdown-list');
+    const sizeSelect = row.querySelector('.size-options-select');
     
     [quantityInput, rateInput, discountInput].forEach(input => {
         input.addEventListener('input', calculateRowAmount);
@@ -868,6 +889,24 @@ function addItem() {
     });
     
     calculateTotals();
+    
+    // Initialize size options if product is selected
+    if (productIdInput.value) {
+        const selectedSize = sizeSelect.getAttribute('data-selected-size') || '';
+        populateSizeOptions(productIdInput.value, sizeSelect, selectedSize);
+    }
+    
+    // Handle size options for existing items with selected size
+    if (sizeSelect) {
+        const selectedSize = sizeSelect.getAttribute('data-selected-size');
+        if (selectedSize && productIdInput.value) {
+            // Find the product and populate size options with selected size
+            const product = products.find(p => p.id == productIdInput.value);
+            if (product && product.has_size_options && product.size_options) {
+                populateSizeOptionsFromData(sizeSelect, true, product.size_options, selectedSize);
+            }
+        }
+    }
 }
 
 function removeItem(button) {
@@ -1049,56 +1088,26 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
                     specificationsInput.value = 'Click to select specifications...';
                     specificationsHidden.value = JSON.stringify(specsArray);
                     
-                    // Update specifications dropdown content with checkboxes
-                    specificationsDropdown.innerHTML = '';
-                    specsArray.forEach((spec, index) => {
-                        const specDiv = document.createElement('div');
-                        specDiv.className = 'p-3 text-sm text-gray-700 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 cursor-pointer flex items-center';
-                        specDiv.innerHTML = `
-                            <input type="checkbox" id="spec_${itemCounter}_${index}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox" data-spec="${spec}">
-                            <label for="spec_${itemCounter}_${index}" class="flex-1 cursor-pointer">${spec}</label>
+                    // Create checkboxes for specifications
+                    let checkboxesHtml = '';
+                    specsArray.forEach(spec => {
+                        checkboxesHtml += `
+                            <label class="flex items-center p-2 hover:bg-gray-50">
+                                <input type="checkbox" class="spec-checkbox h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" data-spec="${spec}">
+                                <span class="ml-2 text-sm text-gray-700">${spec}</span>
+                            </label>
                         `;
-                        specificationsDropdown.appendChild(specDiv);
                     });
+                    specificationsDropdown.innerHTML = checkboxesHtml;
                     
-                    // Add "Select All" option
-                    const selectAllDiv = document.createElement('div');
-                    selectAllDiv.className = 'p-3 text-sm font-medium text-indigo-600 border-b border-gray-200 bg-indigo-50 hover:bg-indigo-100 cursor-pointer';
-                    selectAllDiv.innerHTML = `
-                        <input type="checkbox" id="select_all_${itemCounter}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded select-all-checkbox">
-                        <label for="select_all_${itemCounter}" class="cursor-pointer">Select All</label>
-                    `;
-                    specificationsDropdown.insertBefore(selectAllDiv, specificationsDropdown.firstChild);
-                    
-                    // Add event listeners for checkboxes
+                    // Add event listeners to checkboxes
                     const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox');
-                    const selectAllCheckbox = specificationsDropdown.querySelector('.select-all-checkbox');
-                    
-                    // Select All functionality
-                    selectAllCheckbox.addEventListener('change', function() {
-                        checkboxes.forEach(checkbox => {
-                            checkbox.checked = this.checked;
-                        });
-                        updateSelectedSpecifications();
-                    });
-                    
-                    // Individual checkbox functionality
                     checkboxes.forEach(checkbox => {
-                        checkbox.addEventListener('change', function() {
-                            updateSelectedSpecifications();
-                            // Update select all checkbox
-                            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-                            const someChecked = Array.from(checkboxes).some(cb => cb.checked);
-                            selectAllCheckbox.checked = allChecked;
-                            selectAllCheckbox.indeterminate = someChecked && !allChecked;
-                        });
+                        checkbox.addEventListener('change', updateSelectedSpecifications);
                     });
-                } else {
-                    specificationsInput.value = '';
-                    specificationsHidden.value = '';
-                    specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
                 }
             } catch (e) {
+                console.error('Error parsing specifications:', e);
                 specificationsInput.value = '';
                 specificationsHidden.value = '';
                 specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
@@ -1107,6 +1116,15 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
             specificationsInput.value = '';
             specificationsHidden.value = '';
             specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
+        }
+        
+        // Populate size options
+        const row = searchInput.closest('tr');
+        const sizeSelect = row.querySelector('.size-options-select');
+        if (sizeSelect) {
+            const hasSizeOptions = item.dataset.hasSizeOptions === 'true';
+            const sizeOptions = item.dataset.sizeOptions ? JSON.parse(item.dataset.sizeOptions) : [];
+            populateSizeOptionsFromData(sizeSelect, hasSizeOptions, sizeOptions);
         }
         
         // Hide dropdown
@@ -1164,52 +1182,22 @@ document.addEventListener('DOMContentLoaded', function() {
         const dropdownList = row.querySelector('.product-dropdown-list');
         const dropdownItems = row.querySelector('.dropdown-items');
         const dropdownNoResults = row.querySelector('.dropdown-no-results');
+        const specificationsInput = row.querySelector('.specifications-search-input');
+        const specificationsHidden = row.querySelector('.specifications-hidden');
+        const specificationsDropdown = row.querySelector('.specifications-dropdown-list');
+        const sizeSelect = row.querySelector('.size-options-select');
         
         [quantityInput, rateInput, discountInput].forEach(input => {
             input.addEventListener('input', calculateRowAmount);
         });
         
         // Initialize custom dropdown functionality
-        if (productSearchInput) {
-            const specificationsInput = row.querySelector('.specifications-search-input');
-            const specificationsHidden = row.querySelector('.specifications-hidden');
-            const specificationsDropdown = row.querySelector('.specifications-dropdown-list');
-            initializeCustomDropdown(productSearchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput, specificationsInput, specificationsHidden, specificationsDropdown);
-            
-            // Add specifications dropdown functionality for existing items
-            if (specificationsInput && specificationsDropdown) {
-                specificationsInput.addEventListener('click', function() {
-                    if (specificationsHidden.value && specificationsHidden.value !== '[]') {
-                        specificationsDropdown.classList.toggle('hidden');
-                    }
-                });
-                
-                // Prevent dropdown from closing when clicking on checkboxes
-                specificationsDropdown.addEventListener('click', function(e) {
-                    if (e.target.type === 'checkbox' || e.target.tagName === 'LABEL') {
-                        e.stopPropagation();
-                    }
-                });
-                
-                // Hide specifications dropdown when clicking outside
-                document.addEventListener('click', function(e) {
-                    if (!specificationsInput.contains(e.target) && !specificationsDropdown.contains(e.target)) {
-                        specificationsDropdown.classList.add('hidden');
-                    }
-                });
-                
-                // Initialize existing specifications if any
-                if (specificationsHidden.value && specificationsHidden.value !== '[]' && specificationsHidden.value !== '') {
-                    try {
-                        const selectedSpecs = JSON.parse(specificationsHidden.value);
-                        if (selectedSpecs && selectedSpecs.length > 0) {
-                            specificationsInput.value = selectedSpecs.join(', ');
-                        }
-                    } catch (e) {
-                        console.log('Error parsing existing specifications:', e);
-                    }
-                }
-            }
+        initializeCustomDropdown(productSearchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput, specificationsInput, specificationsHidden, specificationsDropdown);
+        
+        // Initialize size options if product is selected
+        if (productIdInput.value) {
+            const selectedSize = sizeSelect.getAttribute('data-selected-size') || '';
+            populateSizeOptions(productIdInput.value, sizeSelect, selectedSize);
         }
     });
     
@@ -1218,5 +1206,70 @@ document.addEventListener('DOMContentLoaded', function() {
     // Trigger payment terms check
     document.getElementById('payment_terms').dispatchEvent(new Event('change'));
 });
+
+// Function to populate size options from data attributes
+function populateSizeOptionsFromData(sizeSelect, hasSizeOptions, sizeOptions, selectedSize = '') {
+    if (!hasSizeOptions || !sizeOptions || sizeOptions.length === 0) {
+        sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
+        return;
+    }
+
+    let options = '<option value="">Select Size (if applicable)</option>';
+    sizeOptions.forEach(size => {
+        const selected = size === selectedSize ? 'selected' : '';
+        options += `<option value="${size}" ${selected}>${size}</option>`;
+    });
+    sizeSelect.innerHTML = options;
+}
+
+// Function to populate size options (kept for compatibility)
+function populateSizeOptions(productId, sizeSelect, selectedSize = '') {
+    if (!productId) {
+        sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
+        return;
+    }
+
+    const product = products.find(p => p.id == productId);
+    if (!product || !product.has_size_options || !product.size_options) {
+        sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
+        return;
+    }
+
+    let options = '<option value="">Select Size (if applicable)</option>';
+    product.size_options.forEach(size => {
+        const selected = size === selectedSize ? 'selected' : '';
+        options += `<option value="${size}" ${selected}>${size}</option>`;
+    });
+    sizeSelect.innerHTML = options;
+}
+
+// Update size options when product is selected
+document.addEventListener('change', function(e) {
+    if (e.target.matches('.product-select')) {
+        const row = e.target.closest('tr');
+        const sizeSelect = row.querySelector('.size-options-select');
+        populateSizeOptions(e.target.value, sizeSelect);
+    }
+});
+
+// Initialize size options for existing items
+document.querySelectorAll('tr[data-item-id]').forEach(row => {
+    const productId = row.querySelector('.product-select').value;
+    const sizeSelect = row.querySelector('.size-options-select');
+    const selectedSize = row.querySelector('input[name$="[size]"]').value;
+    populateSizeOptions(productId, sizeSelect, selectedSize);
+});
+
+// Add product data to window for access
+const products = <?php echo json_encode($products->map(function($product) {
+    return [
+        'id' => $product->id,
+        'name' => $product->name,
+        'has_size_options' => $product->has_size_options,
+        'size_options' => $product->size_options,
+        'price' => $product->price_aed ?? $product->price
+    ];
+})); ?>;
+window.products = products;
 </script>
 @endsection
