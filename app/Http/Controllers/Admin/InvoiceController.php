@@ -95,84 +95,56 @@ class InvoiceController extends Controller
     public function convertFromQuote(Quote $quote)
     {
         try {
-            DB::beginTransaction();
+            DB::transaction(function () use ($quote) {
+                // Create the invoice
+                $invoice = Invoice::create([
+                    'quote_id' => $quote->id,
+                    'customer_id' => $quote->customer_id,
+                    'customer_name' => $quote->customer_name,
+                    'billing_address' => $quote->billing_address,
+                    'shipping_address' => $quote->shipping_address,
+                    'description' => $quote->subject ?: 'Invoice from Quote ' . $quote->quote_number,
+                    'terms_conditions' => $quote->terms_conditions,
+                    'notes' => $quote->customer_notes,
+                    'currency' => $quote->currency,
+                    'payment_terms' => 'advance_50', // Default to 50% advance
+                    'status' => 'draft',
+                ]);
 
-            // Check if quote already has an invoice
-            if ($quote->invoices()->exists()) {
-                return redirect()->back()->with('error', 'This quote has already been converted to an invoice.');
-            }
+                // Create invoice items
+                foreach ($quote->items as $quoteItem) {
+                    // Calculate item totals
+                    $subtotal = $quoteItem->quantity * $quoteItem->rate;
+                    $discountAmount = ($subtotal * $quoteItem->discount) / 100;
+                    $total = $subtotal - $discountAmount;
 
-            // Create proforma invoice from quote
-            $invoice = Invoice::create([
-                'type' => 'proforma',
-                'quote_id' => $quote->id,
-                'customer_name' => $quote->customer_name,
-                'billing_address' => $this->getCustomerBillingAddress($quote->customer_name),
-                'invoice_date' => now(),
-                'due_date' => now()->addDays(30),
-                'description' => $quote->subject ?: 'Proforma Invoice from Quote ' . $quote->quote_number,
-                'terms_conditions' => $quote->terms_conditions,
-                'notes' => $quote->customer_notes,
-                'sub_total' => $quote->sub_total,
-                'total_amount' => $quote->total_amount,
-                'currency' => 'AED',
-                'payment_terms' => 'advance_50', // Default to 50% advance
-                'status' => 'draft',
-                'is_proforma' => true,
-                'requires_advance_payment' => true,
-                'reference_number' => $quote->reference_number,
-                'created_by' => Auth::id()
-            ]);
+                    InvoiceItem::create([
+                        'invoice_id' => $invoice->id,
+                        'product_id' => $quoteItem->product_id,
+                        'description' => $quoteItem->item_details,
+                        'size' => $quoteItem->size,
+                        'quantity' => $quoteItem->quantity,
+                        'unit_price' => $quoteItem->rate,
+                        'subtotal' => $subtotal,
+                        'tax' => 0,
+                        'total' => $total
+                    ]);
+                }
 
-            // Copy quote items to invoice items
-            foreach ($quote->items as $index => $quoteItem) {
-                // Calculate line total to ensure accuracy
-                $subtotal = $quoteItem->quantity * $quoteItem->rate;
-                $discountAmount = ($subtotal * $quoteItem->discount) / 100;
-                $lineTotal = $subtotal - $discountAmount;
-                
-                // Log for debugging
-                Log::info("Converting quote item {$quoteItem->id}: product_id={$quoteItem->product_id}, item_details={$quoteItem->item_details}");
-                
-                // Create invoice item data array
-                $invoiceItemData = [
-                    'invoice_id' => $invoice->id,
-                    'product_id' => $quoteItem->product_id, // Ensure product_id is transferred
-                    'description' => $quoteItem->item_details,
-                    'size' => $quoteItem->size,
-                    'quantity' => $quoteItem->quantity,
-                    'unit_price' => $quoteItem->rate,
-                    'subtotal' => $lineTotal,
-                    'tax' => 0,
-                    'total' => $lineTotal,
-                    'sort_order' => $index + 1
-                ];
-                
-                // Debug log the data being passed to create
-                Log::info("Creating invoice item with data:", $invoiceItemData);
-                
-                $invoiceItem = InvoiceItem::create($invoiceItemData);
-                
-                // Log the created invoice item to verify product_id transfer
-                Log::info("Created invoice item {$invoiceItem->id}: product_id={$invoiceItem->product_id}");
-                
-                // Refresh from database and check again
-                $invoiceItem->refresh();
-                Log::info("After refresh - invoice item {$invoiceItem->id}: product_id={$invoiceItem->product_id}");
-            }
+                // Update quote status
+                $quote->update(['status' => 'invoiced']);
 
-            // Update quote status
-            $quote->update(['status' => 'invoiced']);
+                // Calculate and update invoice totals
+                $invoice->refresh(); // Reload the invoice with items
+                $invoice->calculateTotals();
+            });
 
-            DB::commit();
-
-            return redirect()->route('admin.invoices.show', $invoice)
-                ->with('success', 'Proforma invoice created successfully from quote ' . $quote->quote_number);
+            return redirect()->route('admin.invoices.index')
+                ->with('success', 'Quote converted to invoice successfully!');
 
         } catch (\Exception $e) {
-            DB::rollback();
-            Log::error('Failed to convert quote to invoice: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to convert quote to invoice: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Failed to convert quote to invoice: ' . $e->getMessage());
         }
     }
 

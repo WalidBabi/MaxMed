@@ -28,7 +28,7 @@ class Invoice extends Model
         'description',
         'terms_conditions',
         'notes',
-        'subtotal',
+        'sub_total',
         'tax_amount',
         'discount_amount',
         'total_amount',
@@ -183,13 +183,13 @@ class Invoice extends Model
      */
     public function calculateTotals()
     {
+        // Calculate totals from invoice items
         $subTotal = $this->items->sum('subtotal');
-        $taxAmount = $this->items->sum('tax');
         $total = $this->items->sum('total');
         
+        // Update invoice totals
         $this->update([
-            'subtotal' => $subTotal,
-            'tax_amount' => $taxAmount,
+            'sub_total' => $subTotal,
             'total_amount' => $total
         ]);
     }

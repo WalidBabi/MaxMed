@@ -631,38 +631,23 @@
                         <th style="width: 25%;">Item Description</th>
                         <th style="width: 20%;" class="text-center">Specifications</th>
                         <th style="width: 12%;" class="text-center">Quantity</th>
-                        <th style="width: 13%;" class="text-right">Unit Price</th>
+                        <th style="width: 13%;" class="text-right">Rate ({{ $invoice->currency ?? 'AED' }})</th>
                         <th style="width: 10%;" class="text-center">Discount</th>
-                        <th style="width: 20%;" class="text-right">Line Total</th>
+                        <th style="width: 20%;" class="text-right">Amount ({{ $invoice->currency ?? 'AED' }})</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($invoice->items as $index => $item)
                     <tr>
-                        <td class="item-description">
-                            {{ $item->item_description }}
-                       
+                        <td>
+                            <div class="item-description">{{ $item->description }}</div>
                         </td>
-                        <td style="font-size: 8px; line-height: 1.3; padding: 8px 4px;">
+                        <td class="text-center">
                             @if($item->specifications)
-                                @if(is_array($item->specifications) && count($item->specifications) > 0)
-                                    @foreach($item->specifications as $spec)
-                                        <div style="margin-bottom: 2px; color: var(--text-secondary);">{{ $spec }}</div>
-                                    @endforeach
-                                @elseif(is_string($item->specifications) && !empty(trim($item->specifications)))
-                                    @php
-                                        try {
-                                            $decodedSpecs = json_decode($item->specifications, true);
-                                            if (is_array($decodedSpecs) && count($decodedSpecs) > 0) {
-                                                $specsToShow = $decodedSpecs;
-                                            } else {
-                                                $specsToShow = explode(',', $item->specifications);
-                                                $specsToShow = array_map('trim', $specsToShow);
-                                            }
-                                        } catch (Exception $e) {
-                                            $specsToShow = [$item->specifications];
-                                        }
-                                    @endphp
+                                @php
+                                    $specsToShow = is_array($item->specifications) ? $item->specifications : explode("\n", $item->specifications);
+                                @endphp
+                                @if(count($specsToShow) > 0)
                                     @foreach($specsToShow as $spec)
                                         @if(!empty(trim($spec)))
                                             <div style="margin-bottom: 2px; color: var(--text-secondary);">{{ $spec }}</div>
@@ -682,15 +667,10 @@
                                 <span style="color: var(--text-muted);">-</span>
                             @endif
                         </td>
-                        <td class="text-center">
-                            {{ number_format($item->quantity, 2) }}
-                            @if($item->unit_of_measure)
-                                {{ $item->unit_of_measure }}
-                            @endif
-                        </td>
+                        <td class="text-center">{{ number_format($item->quantity, 2) }}</td>
                         <td class="text-right">{{ number_format($item->unit_price, 2) }}</td>
-                        <td class="text-center">{{ number_format($item->discount_percentage, 2) }}%</td>
-                        <td class="text-right">{{ number_format($item->line_total, 2) }}</td>
+                        <td class="text-center">-</td>
+                        <td class="text-right">{{ number_format($item->total, 2) }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -703,7 +683,7 @@
                 <table class="totals-table">
                     <tr>
                         <td class="total-label">Subtotal:</td>
-                        <td class="total-amount">{{ $invoice->currency }} {{ number_format($invoice->sub_total, 2) }}</td>
+                        <td class="total-amount">{{ $invoice->currency }} {{ number_format($invoice->items->sum('subtotal'), 2) }}</td>
                     </tr>
                     @if($invoice->tax_amount > 0)
                     <tr>

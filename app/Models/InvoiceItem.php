@@ -25,8 +25,7 @@ class InvoiceItem extends Model
         'unit_price' => 'decimal:2',
         'subtotal' => 'decimal:2',
         'tax' => 'decimal:2',
-        'total' => 'decimal:2',
-        'sort_order' => 'integer'
+        'total' => 'decimal:2'
     ];
 
     /**
@@ -37,8 +36,10 @@ class InvoiceItem extends Model
         parent::boot();
         
         static::saving(function ($item) {
-            // Calculate total
-            $item->total = $item->subtotal;
+            // Calculate subtotal and total
+            $subtotal = $item->quantity * $item->unit_price;
+            $item->subtotal = $subtotal;
+            $item->total = $subtotal + ($item->tax ?? 0);
         });
     }
 
@@ -70,11 +71,11 @@ class InvoiceItem extends Model
 
     public function getFormattedLineTotalAttribute()
     {
-        return number_format($this->total, 2);
+        return number_format($this->subtotal, 2);
     }
 
     public function getLineTotalAttribute()
     {
-        return $this->total;
+        return $this->subtotal;
     }
 } 
