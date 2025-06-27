@@ -17,8 +17,6 @@ return new class extends Migration
             $table->mediumText('value');
             $table->integer('expiration');
             });
-        }
-    });
         } else {
             Schema::table('cache', function (Blueprint $table) {
                 // Check and add any missing columns
@@ -28,9 +26,9 @@ return new class extends Migration
             $table->integer(\'expiration\');';
                 
                 // Parse the schema content to find column definitions
-                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
+                preg_match_all('/\$table->([^;]+);/', $schemaContent, $columnMatches);
                 foreach ($columnMatches[1] as $columnDef) {
-                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
+                    if (preg_match('/^(\w+)\([\'\"]([^\'\"]+)[\'\"]\)/', $columnDef, $colMatch)) {
                         $columnName = $colMatch[2];
                         if (!in_array($columnName, $columns)) {
                             $table->{$colMatch[1]}($columnName);
@@ -39,7 +37,6 @@ return new class extends Migration
                 }
             });
         }
-    });
     }
 
     /**
