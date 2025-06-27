@@ -12,7 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->string('pdf_file')->nullable()->after('image_url');
+            if (!Schema::hasColumn('products', 'pdf_file')) {
+                $table->string('pdf_file')->nullable()->after('image_url');
+                echo "Added pdf_file column to products table.\n";
+            } else {
+                echo "pdf_file column already exists in products table, skipping.\n";
+            }
         });
     }
 
@@ -22,7 +27,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('pdf_file');
+            if (Schema::hasColumn('products', 'pdf_file')) {
+                $table->dropColumn('pdf_file');
+                echo "Dropped pdf_file column from products table.\n";
+            } else {
+                echo "pdf_file column does not exist in products table, skipping drop.\n";
+            }
         });
     }
 }; 
