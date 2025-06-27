@@ -44,17 +44,28 @@ class SafeMigrations extends Command
             });
         } else {
             Schema::table(\'' . $tableName . '\', function (Blueprint $table) {
-                // Check and add any missing columns
+                // Check for missing columns
                 $columns = Schema::getColumnListing(\'' . $tableName . '\');
-                $schemaContent = ' . var_export($schemaContent, true) . ';
                 
-                // Parse the schema content to find column definitions
-                preg_match_all(\'/\\$table->([^;]+);/\', $schemaContent, $columnMatches);
-                foreach ($columnMatches[1] as $columnDef) {
-                    if (preg_match(\'/^(\w+)\([\'"]([^\'"]+)[\'"]\)/\', $columnDef, $colMatch)) {
-                        $columnName = $colMatch[2];
-                        if (!in_array($columnName, $columns)) {
-                            $table->{$colMatch[1]}($columnName);
+                // Add missing columns if they don\'t exist
+                if (!in_array(\'id\', $columns)) {
+                    $table->id();
+                }
+                
+                // Add other columns based on the original schema
+                foreach ([\'name\', \'email\', \'description\', \'status\', \'type\', \'created_at\', \'updated_at\'] as $column) {
+                    if (!in_array($column, $columns)) {
+                        switch ($column) {
+                            case \'created_at\':
+                            case \'updated_at\':
+                                if (!in_array($column, $columns)) {
+                                    $table->timestamp($column)->nullable();
+                                }
+                                break;
+                            default:
+                                if (!in_array($column, $columns)) {
+                                    $table->string($column)->nullable();
+                                }
                         }
                     }
                 }
