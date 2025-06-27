@@ -14,64 +14,20 @@ return new class extends Migration
         if (!Schema::hasTable('deliveries')) {
             Schema::create('deliveries', function (Blueprint $table) {
                 $table->id();
-            $table->unsignedBigInteger('order_id')->index();
-            $table->string('tracking_number')->unique()->nullable();
-            $table->string('status')->default('pending'); // pending, processing, in_transit, delivered, cancelled
-            $table->string('carrier')->nullable();
-            $table->text('shipping_address');
-            $table->text('billing_address')->nullable();
-            $table->decimal('shipping_cost', 10, 2)->default(0);
-            $table->decimal('total_weight', 10, 2)->nullable();
-            $table->text('notes')->nullable();
-            $table->timestamp('shipped_at')->nullable();
-            $table->timestamp('delivered_at')->nullable();
-            $table->timestamps();
-
-            // Add foreign key constraint separately
-            $table->foreign('order_id')
-                  ->references('id')
-                  ->on('orders')
-                  ->onDelete('cascade');
-            });
-        }
-    });
-        } else {
-            Schema::table('deliveries', function (Blueprint $table) {
-                // Check and add any missing columns
-                $columns = Schema::getColumnListing('deliveries');
-                $schemaContent = '$table->id();
-            $table->unsignedBigInteger(\'order_id\')->index();
-            $table->string(\'tracking_number\')->unique()->nullable();
-            $table->string(\'status\')->default(\'pending\'); // pending, processing, in_transit, delivered, cancelled
-            $table->string(\'carrier\')->nullable();
-            $table->text(\'shipping_address\');
-            $table->text(\'billing_address\')->nullable();
-            $table->decimal(\'shipping_cost\', 10, 2)->default(0);
-            $table->decimal(\'total_weight\', 10, 2)->nullable();
-            $table->text(\'notes\')->nullable();
-            $table->timestamp(\'shipped_at\')->nullable();
-            $table->timestamp(\'delivered_at\')->nullable();
-            $table->timestamps();
-
-            // Add foreign key constraint separately
-            $table->foreign(\'order_id\')
-                  ->references(\'id\')
-                  ->on(\'orders\')
-                  ->onDelete(\'cascade\');';
+                $table->unsignedBigInteger('order_id');
+                $table->string('tracking_number')->unique();
+                $table->enum('status', ['pending', 'in_transit', 'delivered', 'failed'])->default('pending');
+                $table->string('carrier')->nullable();
+                $table->dateTime('estimated_delivery_date')->nullable();
+                $table->dateTime('actual_delivery_date')->nullable();
+                $table->text('delivery_notes')->nullable();
+                $table->string('recipient_name')->nullable();
+                $table->string('recipient_phone')->nullable();
+                $table->timestamps();
                 
-                // Parse the schema content to find column definitions
-                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
-                foreach ($columnMatches[1] as $columnDef) {
-                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
-                        $columnName = $colMatch[2];
-                        if (!in_array($columnName, $columns)) {
-                            $table->{$colMatch[1]}($columnName);
-                        }
-                    }
-                }
+                $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             });
         }
-    });
     }
 
     /**
