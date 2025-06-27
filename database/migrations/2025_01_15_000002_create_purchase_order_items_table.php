@@ -27,6 +27,8 @@ return new class extends Migration
             $table->integer('sort_order')->default(0);
             $table->timestamps();
             });
+        }
+    });
         } else {
             Schema::table('purchase_order_items', function (Blueprint $table) {
                 // Check and add any missing columns

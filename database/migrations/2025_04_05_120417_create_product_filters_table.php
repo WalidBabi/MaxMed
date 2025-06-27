@@ -16,6 +16,8 @@ return new class extends Migration
                 $table->id();
             $table->timestamps();
             });
+        }
+    });
         } else {
             Schema::table('product_filters', function (Blueprint $table) {
                 // Check and add any missing columns

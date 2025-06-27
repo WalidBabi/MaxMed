@@ -21,6 +21,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             });
+        }
+    });
         } else {
             Schema::table('supplier_category_types', function (Blueprint $table) {
                 // Check and add any missing columns

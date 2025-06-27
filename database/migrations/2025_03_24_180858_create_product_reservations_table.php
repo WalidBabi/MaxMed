@@ -22,6 +22,8 @@ return new class extends Migration
             $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
             $table->timestamps();
             });
+        }
+    });
         } else {
             Schema::table('product_reservations', function (Blueprint $table) {
                 // Check and add any missing columns

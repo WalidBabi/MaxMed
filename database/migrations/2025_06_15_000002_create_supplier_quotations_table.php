@@ -32,6 +32,8 @@ return new class extends Migration
             $table->index(['status', 'created_at']);
             $table->index(['supplier_id', 'status']);
             });
+        }
+    });
         } else {
             Schema::table('supplier_quotations', function (Blueprint $table) {
                 // Check and add any missing columns

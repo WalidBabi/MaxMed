@@ -32,6 +32,8 @@ return new class extends Migration
             $table->index(['status', 'created_at']);
             $table->index(['assigned_to', 'status']);
             });
+        }
+    });
         } else {
             Schema::table('crm_leads', function (Blueprint $table) {
                 // Check and add any missing columns

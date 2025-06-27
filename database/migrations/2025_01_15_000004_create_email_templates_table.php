@@ -24,6 +24,8 @@ return new class extends Migration
             $table->index('created_by');
             $table->index(['category', 'is_active']);
             });
+        }
+    });
         } else {
             Schema::table('email_templates', function (Blueprint $table) {
                 // Check and add any missing columns

@@ -21,6 +21,8 @@ return new class extends Migration
             $table->unsignedInteger('available_at');
             $table->unsignedInteger('created_at');
             });
+        }
+    });
         } else {
             Schema::table('jobs', function (Blueprint $table) {
                 // Check and add any missing columns

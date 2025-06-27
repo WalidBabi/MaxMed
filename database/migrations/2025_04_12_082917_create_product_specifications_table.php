@@ -32,6 +32,8 @@ return new class extends Migration
             $table->index(['specification_key', 'is_filterable']);
             $table->index(['category', 'sort_order']);
             });
+        }
+    });
         } else {
             Schema::table('product_specifications', function (Blueprint $table) {
                 // Check and add any missing columns

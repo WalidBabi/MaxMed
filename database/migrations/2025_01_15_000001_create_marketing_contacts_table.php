@@ -31,6 +31,8 @@ return new class extends Migration
             $table->index(['email', 'status']);
             $table->index('status');
             });
+        }
+    });
         } else {
             Schema::table('marketing_contacts', function (Blueprint $table) {
                 // Check and add any missing columns

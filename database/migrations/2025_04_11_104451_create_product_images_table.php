@@ -26,6 +26,8 @@ return new class extends Migration
                   ->on('products')
                   ->onDelete('cascade');
             });
+        }
+    });
         } else {
             Schema::table('product_images', function (Blueprint $table) {
                 // Check and add any missing columns

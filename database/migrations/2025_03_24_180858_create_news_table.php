@@ -20,6 +20,8 @@ return new class extends Migration
             $table->boolean('published')->default(true);
             $table->timestamps();
             });
+        }
+    });
         } else {
             Schema::table('news', function (Blueprint $table) {
                 // Check and add any missing columns

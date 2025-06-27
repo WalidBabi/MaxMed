@@ -59,6 +59,8 @@ return new class extends Migration
             
             $table->timestamps();
             });
+        }
+    });
         } else {
             Schema::table('purchase_orders', function (Blueprint $table) {
                 // Check and add any missing columns

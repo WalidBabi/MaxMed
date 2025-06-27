@@ -20,6 +20,8 @@ return new class extends Migration
             $table->decimal('price', 10);
             $table->timestamps();
             });
+        }
+    });
         } else {
             Schema::table('order_items', function (Blueprint $table) {
                 // Check and add any missing columns

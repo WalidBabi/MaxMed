@@ -44,6 +44,8 @@ return new class extends Migration
             $table->index(['token', 'status']);
             $table->index('expires_at');
             });
+        }
+    });
         } else {
             Schema::table('supplier_invitations', function (Blueprint $table) {
                 // Check and add any missing columns

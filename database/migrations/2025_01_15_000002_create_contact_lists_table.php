@@ -21,6 +21,8 @@ return new class extends Migration
             
             $table->index('created_by');
             });
+        }
+    });
         } else {
             Schema::table('contact_lists', function (Blueprint $table) {
                 // Check and add any missing columns

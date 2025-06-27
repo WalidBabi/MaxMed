@@ -20,6 +20,8 @@ return new class extends Migration
             $table->timestamp('read_at')->nullable();
             $table->timestamps();
             });
+        }
+    });
         } else {
             Schema::table('notifications', function (Blueprint $table) {
                 // Check and add any missing columns

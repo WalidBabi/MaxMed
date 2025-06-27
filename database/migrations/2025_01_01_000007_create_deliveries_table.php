@@ -33,6 +33,8 @@ return new class extends Migration
                   ->on('orders')
                   ->onDelete('cascade');
             });
+        }
+    });
         } else {
             Schema::table('deliveries', function (Blueprint $table) {
                 // Check and add any missing columns

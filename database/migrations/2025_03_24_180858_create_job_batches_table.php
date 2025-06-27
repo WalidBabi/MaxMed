@@ -24,6 +24,8 @@ return new class extends Migration
             $table->integer('created_at');
             $table->integer('finished_at')->nullable();
             });
+        }
+    });
         } else {
             Schema::table('job_batches', function (Blueprint $table) {
                 // Check and add any missing columns

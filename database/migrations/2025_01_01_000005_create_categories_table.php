@@ -19,6 +19,8 @@ return new class extends Migration
             $table->timestamps();
             $table->string('image_url')->nullable();
             });
+        }
+    });
         } else {
             Schema::table('categories', function (Blueprint $table) {
                 // Check and add any missing columns

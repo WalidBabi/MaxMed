@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer('quantity')->default(0);
             $table->timestamps();
             });
+        }
+    });
         } else {
             Schema::table('inventories', function (Blueprint $table) {
                 // Check and add any missing columns
