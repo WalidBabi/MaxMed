@@ -129,7 +129,9 @@ class ProductController extends Controller
                 'image_url' => null, // Will be replaced by primary image
                 'has_size_options' => $request->has('has_size_options'),
                 'size_options' => $request->has('has_size_options') && $request->filled('size_options') ? 
-                                  json_encode(array_filter($request->size_options)) : null,
+                    array_map(function($size) {
+                        return json_decode('"' . $size . '"');
+                    }, array_filter($request->size_options)) : null,
             ]);
 
             // Create inventory record
@@ -252,7 +254,9 @@ class ProductController extends Controller
                     'brand_id' => $validated['brand_id'],
                     'has_size_options' => $request->has('has_size_options'),
                     'size_options' => $request->has('has_size_options') && $request->filled('size_options') ? 
-                                    json_encode(array_filter($request->size_options)) : null,
+                        array_map(function($size) {
+                            return json_decode('"' . $size . '"');
+                        }, array_filter($request->size_options)) : null,
                 ]);
 
                 // If brand changed, regenerate SKU
