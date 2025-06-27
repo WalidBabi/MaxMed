@@ -659,7 +659,7 @@
                             @if($item->size && !empty(trim($item->size)))
                                 <div style="margin-top: 3px; padding-top: 3px; border-top: 1px solid var(--border-color);">
                                     <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1px; font-size: 8px;">Size:</div>
-                                    <div style="color: var(--text-secondary); font-size: 8px;">{{ $item->size }}</div>
+                                    <div style="color: var(--text-secondary); font-size: 8px;">{{ json_decode('"' . $item->size . '"') }}</div>
                                 </div>
                             @endif
                             
