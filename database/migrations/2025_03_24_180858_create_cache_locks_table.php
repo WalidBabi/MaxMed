@@ -11,11 +11,33 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cache_locks', function (Blueprint $table) {
-            $table->string('key')->primary();
+        if (!Schema::hasTable('cache_locks')) {
+            Schema::create('cache_locks', function (Blueprint $table) {
+                $table->string('key')->primary();
             $table->string('owner', 255);
             $table->integer('expiration');
-        });
+            });
+        } else {
+            Schema::table('cache_locks', function (Blueprint $table) {
+                // Check and add any missing columns
+                $columns = Schema::getColumnListing('cache_locks');
+                $schemaContent = '$table->string(\'key\')->primary();
+            $table->string(\'owner\', 255);
+            $table->integer(\'expiration\');';
+                
+                // Parse the schema content to find column definitions
+                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
+                foreach ($columnMatches[1] as $columnDef) {
+                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
+                        $columnName = $colMatch[2];
+                        if (!in_array($columnName, $columns)) {
+                            $table->{$colMatch[1]}($columnName);
+                        }
+                    }
+                }
+            });
+        }
+    });
     }
 
     /**
@@ -23,6 +45,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cache_locks');
+        // Don't drop the table in production to preserve data
+        // Only drop columns that were added in this migration if any
     }
 };

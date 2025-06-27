@@ -11,14 +11,39 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notifications', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+        if (!Schema::hasTable('notifications')) {
+            Schema::create('notifications', function (Blueprint $table) {
+                $table->uuid('id')->primary();
             $table->string('type');
             $table->morphs('notifiable');
             $table->text('data');
             $table->timestamp('read_at')->nullable();
             $table->timestamps();
-        });
+            });
+        } else {
+            Schema::table('notifications', function (Blueprint $table) {
+                // Check and add any missing columns
+                $columns = Schema::getColumnListing('notifications');
+                $schemaContent = '$table->uuid(\'id\')->primary();
+            $table->string(\'type\');
+            $table->morphs(\'notifiable\');
+            $table->text(\'data\');
+            $table->timestamp(\'read_at\')->nullable();
+            $table->timestamps();';
+                
+                // Parse the schema content to find column definitions
+                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
+                foreach ($columnMatches[1] as $columnDef) {
+                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
+                        $columnName = $colMatch[2];
+                        if (!in_array($columnName, $columns)) {
+                            $table->{$colMatch[1]}($columnName);
+                        }
+                    }
+                }
+            });
+        }
+    });
     }
 
     /**
@@ -26,6 +51,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('notifications');
+        // Don't drop the table in production to preserve data
+        // Only drop columns that were added in this migration if any
     }
 }; 

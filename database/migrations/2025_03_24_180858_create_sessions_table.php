@@ -11,14 +11,39 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
+        if (!Schema::hasTable('sessions')) {
+            Schema::create('sessions', function (Blueprint $table) {
+                $table->string('id')->primary();
             $table->unsignedBigInteger('user_id')->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
             $table->integer('last_activity')->index();
-        });
+            });
+        } else {
+            Schema::table('sessions', function (Blueprint $table) {
+                // Check and add any missing columns
+                $columns = Schema::getColumnListing('sessions');
+                $schemaContent = '$table->string(\'id\')->primary();
+            $table->unsignedBigInteger(\'user_id\')->nullable()->index();
+            $table->string(\'ip_address\', 45)->nullable();
+            $table->text(\'user_agent\')->nullable();
+            $table->longText(\'payload\');
+            $table->integer(\'last_activity\')->index();';
+                
+                // Parse the schema content to find column definitions
+                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
+                foreach ($columnMatches[1] as $columnDef) {
+                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
+                        $columnName = $colMatch[2];
+                        if (!in_array($columnName, $columns)) {
+                            $table->{$colMatch[1]}($columnName);
+                        }
+                    }
+                }
+            });
+        }
+    });
     }
 
     /**
@@ -26,6 +51,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sessions');
+        // Don't drop the table in production to preserve data
+        // Only drop columns that were added in this migration if any
     }
 };

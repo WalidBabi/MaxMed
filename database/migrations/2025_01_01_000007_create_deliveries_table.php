@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('deliveries', function (Blueprint $table) {
-            $table->id();
+        if (!Schema::hasTable('deliveries')) {
+            Schema::create('deliveries', function (Blueprint $table) {
+                $table->id();
             $table->unsignedBigInteger('order_id')->index();
             $table->string('tracking_number')->unique()->nullable();
             $table->string('status')->default('pending'); // pending, processing, in_transit, delivered, cancelled
@@ -31,7 +32,44 @@ return new class extends Migration
                   ->references('id')
                   ->on('orders')
                   ->onDelete('cascade');
-        });
+            });
+        } else {
+            Schema::table('deliveries', function (Blueprint $table) {
+                // Check and add any missing columns
+                $columns = Schema::getColumnListing('deliveries');
+                $schemaContent = '$table->id();
+            $table->unsignedBigInteger(\'order_id\')->index();
+            $table->string(\'tracking_number\')->unique()->nullable();
+            $table->string(\'status\')->default(\'pending\'); // pending, processing, in_transit, delivered, cancelled
+            $table->string(\'carrier\')->nullable();
+            $table->text(\'shipping_address\');
+            $table->text(\'billing_address\')->nullable();
+            $table->decimal(\'shipping_cost\', 10, 2)->default(0);
+            $table->decimal(\'total_weight\', 10, 2)->nullable();
+            $table->text(\'notes\')->nullable();
+            $table->timestamp(\'shipped_at\')->nullable();
+            $table->timestamp(\'delivered_at\')->nullable();
+            $table->timestamps();
+
+            // Add foreign key constraint separately
+            $table->foreign(\'order_id\')
+                  ->references(\'id\')
+                  ->on(\'orders\')
+                  ->onDelete(\'cascade\');';
+                
+                // Parse the schema content to find column definitions
+                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
+                foreach ($columnMatches[1] as $columnDef) {
+                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
+                        $columnName = $colMatch[2];
+                        if (!in_array($columnName, $columns)) {
+                            $table->{$colMatch[1]}($columnName);
+                        }
+                    }
+                }
+            });
+        }
+    });
     }
 
     /**
@@ -39,6 +77,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('deliveries');
+        // Don't drop the table in production to preserve data
+        // Only drop columns that were added in this migration if any
     }
 };

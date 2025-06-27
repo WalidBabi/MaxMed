@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_reservations', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        if (!Schema::hasTable('product_reservations')) {
+            Schema::create('product_reservations', function (Blueprint $table) {
+                $table->bigIncrements('id');
             $table->unsignedBigInteger('product_id')->index('product_reservations_product_id_foreign');
             $table->unsignedBigInteger('user_id')->nullable()->index('product_reservations_user_id_foreign');
             $table->integer('quantity');
@@ -20,7 +21,33 @@ return new class extends Migration
             $table->timestamp('expires_at')->useCurrentOnUpdate()->useCurrent();
             $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
             $table->timestamps();
-        });
+            });
+        } else {
+            Schema::table('product_reservations', function (Blueprint $table) {
+                // Check and add any missing columns
+                $columns = Schema::getColumnListing('product_reservations');
+                $schemaContent = '$table->bigIncrements(\'id\');
+            $table->unsignedBigInteger(\'product_id\')->index(\'product_reservations_product_id_foreign\');
+            $table->unsignedBigInteger(\'user_id\')->nullable()->index(\'product_reservations_user_id_foreign\');
+            $table->integer(\'quantity\');
+            $table->string(\'session_id\');
+            $table->timestamp(\'expires_at\')->useCurrentOnUpdate()->useCurrent();
+            $table->enum(\'status\', [\'pending\', \'confirmed\', \'cancelled\'])->default(\'pending\');
+            $table->timestamps();';
+                
+                // Parse the schema content to find column definitions
+                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
+                foreach ($columnMatches[1] as $columnDef) {
+                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
+                        $columnName = $colMatch[2];
+                        if (!in_array($columnName, $columns)) {
+                            $table->{$colMatch[1]}($columnName);
+                        }
+                    }
+                }
+            });
+        }
+    });
     }
 
     /**
@@ -28,6 +55,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_reservations');
+        // Don't drop the table in production to preserve data
+        // Only drop columns that were added in this migration if any
     }
 };

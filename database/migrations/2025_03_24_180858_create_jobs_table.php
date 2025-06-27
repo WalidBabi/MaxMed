@@ -11,15 +11,41 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jobs', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        if (!Schema::hasTable('jobs')) {
+            Schema::create('jobs', function (Blueprint $table) {
+                $table->bigIncrements('id');
             $table->string('queue')->index();
             $table->longText('payload');
             $table->unsignedTinyInteger('attempts');
             $table->unsignedInteger('reserved_at')->nullable();
             $table->unsignedInteger('available_at');
             $table->unsignedInteger('created_at');
-        });
+            });
+        } else {
+            Schema::table('jobs', function (Blueprint $table) {
+                // Check and add any missing columns
+                $columns = Schema::getColumnListing('jobs');
+                $schemaContent = '$table->bigIncrements(\'id\');
+            $table->string(\'queue\')->index();
+            $table->longText(\'payload\');
+            $table->unsignedTinyInteger(\'attempts\');
+            $table->unsignedInteger(\'reserved_at\')->nullable();
+            $table->unsignedInteger(\'available_at\');
+            $table->unsignedInteger(\'created_at\');';
+                
+                // Parse the schema content to find column definitions
+                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
+                foreach ($columnMatches[1] as $columnDef) {
+                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
+                        $columnName = $colMatch[2];
+                        if (!in_array($columnName, $columns)) {
+                            $table->{$colMatch[1]}($columnName);
+                        }
+                    }
+                }
+            });
+        }
+    });
     }
 
     /**
@@ -27,6 +53,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jobs');
+        // Don't drop the table in production to preserve data
+        // Only drop columns that were added in this migration if any
     }
 };

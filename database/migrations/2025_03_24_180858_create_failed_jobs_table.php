@@ -11,15 +11,41 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('failed_jobs', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        if (!Schema::hasTable('failed_jobs')) {
+            Schema::create('failed_jobs', function (Blueprint $table) {
+                $table->bigIncrements('id');
             $table->string('uuid')->unique();
             $table->text('connection');
             $table->text('queue');
             $table->longText('payload');
             $table->longText('exception');
             $table->timestamp('failed_at')->useCurrent();
-        });
+            });
+        } else {
+            Schema::table('failed_jobs', function (Blueprint $table) {
+                // Check and add any missing columns
+                $columns = Schema::getColumnListing('failed_jobs');
+                $schemaContent = '$table->bigIncrements(\'id\');
+            $table->string(\'uuid\')->unique();
+            $table->text(\'connection\');
+            $table->text(\'queue\');
+            $table->longText(\'payload\');
+            $table->longText(\'exception\');
+            $table->timestamp(\'failed_at\')->useCurrent();';
+                
+                // Parse the schema content to find column definitions
+                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
+                foreach ($columnMatches[1] as $columnDef) {
+                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
+                        $columnName = $colMatch[2];
+                        if (!in_array($columnName, $columns)) {
+                            $table->{$colMatch[1]}($columnName);
+                        }
+                    }
+                }
+            });
+        }
+    });
     }
 
     /**
@@ -27,6 +53,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('failed_jobs');
+        // Don't drop the table in production to preserve data
+        // Only drop columns that were added in this migration if any
     }
 };
