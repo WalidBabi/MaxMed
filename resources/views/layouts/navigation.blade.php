@@ -207,7 +207,7 @@
                                 x-transition:leave-start="transform opacity-100 scale-100"
                                 x-transition:leave-end="transform opacity-0 scale-95"
                                 class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                                @if(Auth::user()->is_admin)
+                                @if(Auth::user()->isAdmin())
                                 <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admin Dashboard</a>
                                 <a href="{{ route('crm.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">CRM Dashboard</a>
                                 @endif
@@ -217,11 +217,10 @@
                                 <a href="{{ route('orders.index') }}" class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 group">
                                     <div class="flex items-center">
                                         <svg class="h-4 w-4 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 75.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
                                         </svg>
                                         My Orders
                                     </div>
-                                   
                                 </a>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
@@ -231,6 +230,7 @@
                         </div>
                         @else
                         <a href="{{ route('register') }}" class="flex items-center text-[#0064a8] hover:text-[#0052a3] font-normal h-full">Register</a>
+                        <a href="{{ route('supplier.register') }}" class="flex items-center text-[#0064a8] hover:text-[#0052a3] font-normal h-full">Register as Supplier</a>
                         <a href="{{ route('login') }}" class="flex items-center text-[#0064a8] hover:text-[#0052a3] font-normal h-full">Login</a>
                         @endauth
 
@@ -564,7 +564,7 @@
                 <a href="{{ route('news.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">News</a>
 
                 @auth
-                @if(Auth::user()->is_admin)
+                @if(Auth::user()->isAdmin())
                 <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Admin Dashboard</a>
                 <a href="{{ route('crm.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">CRM Dashboard</a>
                 @endif
@@ -574,11 +574,10 @@
                 <a href="{{ route('orders.index') }}" class="flex items-center justify-between px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 group">
                     <div class="flex items-center">
                         <svg class="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 75.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
                         </svg>
                         My Orders
                     </div>
-                    
                 </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
@@ -587,6 +586,7 @@
                 @else
                 <a href="{{ route('login') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0064a8] hover:bg-gray-50">Login</a>
                 <a href="{{ route('register') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0064a8] hover:bg-gray-50">Register</a>
+                <a href="{{ route('supplier.register') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0064a8] hover:bg-gray-50">Register as Supplier</a>
                 @endauth
             </div>
         </div>
@@ -604,7 +604,7 @@
 
 <!-- Orders Hint Tooltip -->
 @auth
-<div id="ordersHintTooltip" class="hidden fixed top-16 right-4 bg-blue-600 text-white rounded-lg shadow-xl w-64 z-50 p-3 text-xs">
+<div id="ordersHintTooltip" class="hidden fixed top-16 right-4 bg-blue-600 text-white rounded-lg shadow-xl w-64 p-3 text-xs" style="z-index: 9999;">
     <div class="relative">
         <!-- Arrow pointing to user dropdown -->
         <div class="absolute -top-2 right-6 w-3 h-3 bg-blue-600 transform rotate-45"></div>
@@ -617,7 +617,7 @@
         </button>
         
         <!-- Content -->
-        <div class="pr-4">
+        <div class="pr-4" style="position: relative; z-index: 10000;">
             <p class="text-blue-100 leading-snug">
                 💡 Click your name above to find <strong>"My Orders"</strong> and track your purchases!
             </p>
