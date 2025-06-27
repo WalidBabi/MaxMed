@@ -7,7 +7,6 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StripeController;
-use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\NewsController;
 use Illuminate\Support\Facades\Mail;
@@ -28,6 +27,9 @@ use App\Http\Controllers\CrmController;
 use App\Http\Controllers\CrmLeadController;
 use App\Http\Controllers\MarketingController;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Admin\OrderQuotationsController;
+use App\Http\Controllers\Admin\SupplierCategoryController;
+use App\Http\Controllers\Supplier\InquiryController;
 
 // Cookie Consent Routes
 // Route::post('/cookie-consent', [CookieConsentController::class, 'store'])->name('cookie.consent');
@@ -97,15 +99,26 @@ Route::get('/debug/campaign/{campaignId}', function($campaignId) {
     ]);
 })->name('debug.campaign');
 
-// Partners Route Group - Moved to the partners prefix group below
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('product.show');
-
-// Backward compatibility redirect: old ID-based URLs to new slug-based URLs
+// Product routes with proper redirect handling
 Route::get('/product/{id}', function($id) {
-    $product = \App\Models\Product::findOrFail($id);
-    return redirect()->route('product.show', $product->slug, 301);
-})->where('id', '[0-9]+')->name('product.show.old');
+    try {
+        $product = \App\Models\Product::findOrFail($id);
+        
+        // Ensure product has a slug
+        if (!$product->slug) {
+            $product->slug = $product->generateSlug();
+            $product->save();
+        }
+        
+        return redirect()->to("/products/{$product->slug}", 301);
+    } catch (\Exception $e) {
+        abort(404);
+    }
+})->where('id', '[0-9]+');
+
+// Main product routes
+Route::get('/products/{product:slug}', [\App\Http\Controllers\ProductController::class, 'show'])->name('product.show');
+Route::get('/products', [\App\Http\Controllers\ProductController::class, 'index'])->name('products.index');
 
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
@@ -147,8 +160,12 @@ Route::get('/quotation/confirmation/{id}', function($id) {
 })->where('id', '[0-9]+')->name('quotation.confirmation.old');
 
 // Authenticated Routes
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+
+    // Customer Order Routes - for regular users
+    Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
 
     // Stripe Routes
     Route::post('/stripe/checkout', [StripeController::class, 'checkout'])->name('stripe.checkout');
@@ -160,7 +177,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // CRM Routes
-    Route::prefix('crm')->name('crm.')->middleware(['web', 'auth'])->group(function () {
+    Route::prefix('crm')->name('crm.')->middleware(['web', 'auth', 'verified'])->group(function () {
     Route::get('/', [CrmController::class, 'dashboard'])->name('dashboard');
     Route::get('/reports', [CrmController::class, 'reports'])->name('reports');
     
@@ -242,8 +259,27 @@ Route::middleware(['auth'])->group(function () {
 });
 
     // Admin Routes
-    Route::prefix('admin')->name('admin.')->middleware(['web', 'auth', 'admin'])->group(function () {
+    Route::middleware(['web', 'auth', 'verified', 'admin'])->name('admin.')->prefix('admin')->group(function () {
         Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
+
+        // Inquiry Management
+        Route::resource('inquiries', \App\Http\Controllers\Admin\InquiryController::class)->names([
+            'index' => 'admin.inquiries.index',
+            'create' => 'admin.inquiries.create',
+            'store' => 'admin.inquiries.store',
+            'show' => 'admin.inquiries.show',
+            'edit' => 'admin.inquiries.edit',
+            'update' => 'admin.inquiries.update',
+            'destroy' => 'admin.inquiries.destroy',
+        ]);
+        Route::post('inquiries/{inquiry}/broadcast', [\App\Http\Controllers\Admin\InquiryController::class, 'broadcast'])->name('admin.inquiries.broadcast');
+        Route::put('inquiries/{inquiry}/status', [\App\Http\Controllers\Admin\InquiryController::class, 'updateStatus'])->name('admin.inquiries.status.update');
+        Route::post('inquiries/bulk-forward', [\App\Http\Controllers\Admin\InquiryController::class, 'bulkForward'])->name('admin.inquiries.bulk-forward');
+        Route::post('inquiries/{inquiry}/forward', [\App\Http\Controllers\Admin\InquiryController::class, 'forwardToSupplier'])->name('admin.inquiries.forward');
+        Route::post('inquiries/{inquiry}/generate-quote', [\App\Http\Controllers\Admin\InquiryController::class, 'generateQuote'])->name('admin.inquiries.generate-quote');
+        Route::post('inquiries/{inquiry}/create-purchase-order', [\App\Http\Controllers\Admin\InquiryController::class, 'createPurchaseOrder'])->name('admin.inquiries.create-purchase-order');
+        Route::get('inquiries/supplier-recommendations', [\App\Http\Controllers\Admin\InquiryController::class, 'getSupplierRecommendations'])->name('admin.inquiries.supplier-recommendations');
+        Route::get('inquiries/status-updates', [\App\Http\Controllers\Admin\InquiryController::class, 'getStatusUpdates'])->name('inquiries.status-updates');
 
         // News Management
         Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);
@@ -322,6 +358,21 @@ Route::middleware(['auth'])->group(function () {
         Route::post('purchase-orders/{purchaseOrder}/acknowledge', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'markAsAcknowledged'])->name('purchase-orders.acknowledge');
         Route::post('purchase-orders/{purchaseOrder}/update-status', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'updateStatus'])->name('purchase-orders.update-status');
         Route::post('purchase-orders/{purchaseOrder}/create-payment', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'createPayment'])->name('purchase-orders.create-payment');
+
+        // Unified Inquiry & Quotation Management Routes
+        Route::get('inquiry-quotations', [\App\Http\Controllers\Admin\InquiryQuotationController::class, 'index'])->name('inquiry-quotations.index');
+        Route::get('inquiry-quotations/{inquiry}', [\App\Http\Controllers\Admin\InquiryQuotationController::class, 'show'])->name('inquiry-quotations.show');
+        Route::get('inquiry-quotations/quotations/{quotation}', [\App\Http\Controllers\Admin\InquiryQuotationController::class, 'showQuotation'])->name('inquiry-quotations.quotation-show');
+        Route::post('inquiry-quotations/quotations/{quotation}/approve', [\App\Http\Controllers\Admin\InquiryQuotationController::class, 'approveQuotation'])->name('inquiry-quotations.quotations.approve');
+        Route::post('inquiry-quotations/quotations/bulk-approve', [\App\Http\Controllers\Admin\InquiryQuotationController::class, 'bulkApprove'])->name('inquiry-quotations.quotations.bulk-approve');
+
+        // Legacy routes (keep for backward compatibility)
+        Route::get('quotations', [\App\Http\Controllers\Admin\QuotationController::class, 'index'])->name('quotations.index');
+        Route::get('quotations/{quotation}', [\App\Http\Controllers\Admin\QuotationController::class, 'show'])->name('quotations.show');
+        Route::post('quotations/{quotation}/approve', [\App\Http\Controllers\Admin\QuotationController::class, 'approve'])->name('quotations.approve');
+
+        Route::post('quotations/bulk-action', [\App\Http\Controllers\Admin\QuotationController::class, 'bulkAction'])->name('quotations.bulk-action');
+        Route::get('quotations/{quotation}/workflow-status', [\App\Http\Controllers\Admin\QuotationController::class, 'workflowStatus'])->name('quotations.workflow-status');
         
         // Supplier Payments Management
         Route::resource('supplier-payments', \App\Http\Controllers\Admin\SupplierPaymentController::class)->only(['index', 'show', 'edit', 'update']);
@@ -329,19 +380,13 @@ Route::middleware(['auth'])->group(function () {
         Route::post('supplier-payments/{supplierPayment}/mark-failed', [\App\Http\Controllers\Admin\SupplierPaymentController::class, 'markAsFailed'])->name('supplier-payments.mark-failed');
         
         // Supplier Category Management
-        Route::get('supplier-categories', [\App\Http\Controllers\Admin\SupplierCategoryController::class, 'index'])->name('supplier-categories.index');
-        Route::get('supplier-categories/{supplier}/edit', [\App\Http\Controllers\Admin\SupplierCategoryController::class, 'edit'])->name('supplier-categories.edit');
-        Route::put('supplier-categories/{supplier}', [\App\Http\Controllers\Admin\SupplierCategoryController::class, 'update'])->name('supplier-categories.update');
-        Route::post('supplier-categories/bulk-assign', [\App\Http\Controllers\Admin\SupplierCategoryController::class, 'bulkAssign'])->name('supplier-categories.bulk-assign');
-        Route::get('supplier-categories/export', [\App\Http\Controllers\Admin\SupplierCategoryController::class, 'export'])->name('supplier-categories.export');
-        Route::get('supplier-categories/stats', [\App\Http\Controllers\Admin\SupplierCategoryController::class, 'getStats'])->name('supplier-categories.stats');
-        
-        // Inquiry Management
-        Route::resource('inquiries', \App\Http\Controllers\Admin\InquiryController::class);
-        Route::post('inquiries/{inquiry}/forward', [\App\Http\Controllers\Admin\InquiryController::class, 'forwardToSupplier'])->name('inquiries.forward');
-        Route::put('inquiries/{inquiry}/status', [\App\Http\Controllers\Admin\InquiryController::class, 'updateStatus'])->name('inquiries.status.update');
-        Route::post('inquiries/{inquiry}/generate-quote', [\App\Http\Controllers\Admin\InquiryController::class, 'generateQuote'])->name('inquiries.generate-quote');
-        Route::post('inquiries/{inquiry}/create-purchase-order', [\App\Http\Controllers\Admin\InquiryController::class, 'createPurchaseOrder'])->name('inquiries.create-purchase-order');
+        Route::get('supplier-categories', [SupplierCategoryController::class, 'index'])->name('supplier-categories.index');
+        Route::get('supplier-categories/{supplier}/edit', [SupplierCategoryController::class, 'edit'])->name('supplier-categories.edit');
+        Route::post('supplier-categories/{supplier}/categories', [SupplierCategoryController::class, 'update'])->name('supplier-categories.update');
+        Route::post('supplier-categories/{supplier}/{category}/approve', [SupplierCategoryController::class, 'approve'])->name('supplier-categories.approve');
+        Route::post('supplier-categories/{supplier}/{category}/reject', [SupplierCategoryController::class, 'reject'])->name('supplier-categories.reject');
+        Route::get('supplier-categories/export', [SupplierCategoryController::class, 'export'])->name('supplier-categories.export');
+        Route::post('supplier-categories/bulk-assign', [SupplierCategoryController::class, 'bulkAssign'])->name('supplier-categories.bulk-assign');
         
         // Feedback Management
         Route::resource('feedback', \App\Http\Controllers\Admin\FeedbackController::class)->only(['index', 'show', 'update']);
@@ -368,10 +413,25 @@ Route::middleware(['auth'])->group(function () {
             ]);
             return response()->json(['success' => true, 'message' => 'Test successful']);
         })->name('quotes.test.store');
+
+        // Order Quotations
+        Route::get('/orders/{order}/quotations', [OrderQuotationsController::class, 'index'])->name('orders.quotations.index');
+        Route::post('/orders/{order}/quotations/{quotation}/approve', [OrderQuotationsController::class, 'approve'])->name('orders.quotations.approve');
+
     });
 
-    // Supplier Routes
-    Route::prefix('supplier')->name('supplier.')->middleware(['auth'])->group(function () {
+    // Supplier Onboarding Routes (must be before main supplier routes)
+    Route::middleware(['auth', \App\Http\Middleware\SupplierMiddleware::class])->prefix('supplier/onboarding')->name('supplier.onboarding.')->group(function () {
+        Route::get('/company', [\App\Http\Controllers\Supplier\OnboardingController::class, 'company'])->name('company');
+        Route::post('/company', [\App\Http\Controllers\Supplier\OnboardingController::class, 'storeCompany'])->name('company.store');
+        Route::get('/documents', [\App\Http\Controllers\Supplier\OnboardingController::class, 'documents'])->name('documents');
+        Route::post('/documents', [\App\Http\Controllers\Supplier\OnboardingController::class, 'storeDocuments'])->name('documents.store');
+        Route::get('/categories', [\App\Http\Controllers\Supplier\OnboardingController::class, 'categories'])->name('categories');
+        Route::post('/categories', [\App\Http\Controllers\Supplier\OnboardingController::class, 'storeCategories'])->name('categories.store');
+    });
+
+    // Main Supplier Routes (protected by onboarding middleware)
+    Route::middleware(['auth', 'verified', \App\Http\Middleware\SupplierBadgeCountsMiddleware::class, \App\Http\Middleware\CheckSupplierOnboarding::class])->prefix('supplier')->name('supplier.')->group(function () {
         // Supplier Notifications
         Route::get('notifications', [\App\Http\Controllers\Supplier\NotificationController::class, 'index']);
         Route::get('notifications/check-new', [\App\Http\Controllers\Supplier\NotificationController::class, 'checkNew']);
@@ -381,17 +441,21 @@ Route::middleware(['auth'])->group(function () {
         
         Route::get('/', [\App\Http\Controllers\Supplier\DashboardController::class, 'index'])->name('dashboard');
         
-        // Supplier Products (temporarily disabled category permissions for debugging)
-        Route::resource('products', \App\Http\Controllers\Supplier\ProductController::class);
+        // Supplier Product Management Routes
+        Route::get('/products', [\App\Http\Controllers\Supplier\ProductController::class, 'index'])->name('products.index');
+        Route::get('/products/create', [\App\Http\Controllers\Supplier\ProductController::class, 'create'])->name('products.create');
+        Route::post('/products', [\App\Http\Controllers\Supplier\ProductController::class, 'store'])->name('products.store');
+        Route::get('/products/{product}', [\App\Http\Controllers\Supplier\ProductController::class, 'show'])->name('products.show');
+        Route::get('/products/{product}/edit', [\App\Http\Controllers\Supplier\ProductController::class, 'edit'])->name('products.edit');
+        Route::put('/products/{product}', [\App\Http\Controllers\Supplier\ProductController::class, 'update'])->name('products.update');
+        Route::delete('/products/{product}', [\App\Http\Controllers\Supplier\ProductController::class, 'destroy'])->name('products.destroy');
+        Route::post('/products/{product}/toggle-status', [\App\Http\Controllers\Supplier\ProductController::class, 'toggleStatus'])->name('products.toggle-status');
         
-        Route::resource('feedback', \App\Http\Controllers\Supplier\SystemFeedbackController::class);
-        
-        // Supplier Product Specifications (temporarily disabled category permissions for debugging)
+        // Supplier Product Specifications Routes
         Route::get('/product-specifications', [\App\Http\Controllers\Supplier\ProductSpecificationController::class, 'index'])->name('product-specifications.index');
         Route::get('/products/{product}/specifications', [\App\Http\Controllers\Supplier\ProductSpecificationController::class, 'show'])->name('product-specifications.show');
         Route::get('/products/{product}/specifications/edit', [\App\Http\Controllers\Supplier\ProductSpecificationController::class, 'edit'])->name('product-specifications.edit');
         Route::put('/products/{product}/specifications', [\App\Http\Controllers\Supplier\ProductSpecificationController::class, 'update'])->name('product-specifications.update');
-        Route::delete('/products/{product}/specifications/{specification}', [\App\Http\Controllers\Supplier\ProductSpecificationController::class, 'destroySpecification'])->name('product-specifications.destroy');
         Route::post('/products/{product}/specifications/bulk-import', [\App\Http\Controllers\Supplier\ProductSpecificationController::class, 'bulkImport'])->name('product-specifications.bulk-import');
         
         // Supplier API routes
@@ -402,30 +466,38 @@ Route::middleware(['auth'])->group(function () {
         // Supplier Order Management Routes
         Route::get('/orders', [\App\Http\Controllers\Supplier\OrderController::class, 'index'])->name('orders.index');
         Route::get('/orders/{order}', [\App\Http\Controllers\Supplier\OrderController::class, 'show'])->name('orders.show');
+        Route::get('/orders/{order}/quotation', [\App\Http\Controllers\Supplier\OrderController::class, 'showQuotationForm'])->name('orders.quotation');
+        Route::post('/orders/{order}/quotation', [\App\Http\Controllers\Supplier\OrderController::class, 'submitQuotation'])->name('orders.submit-quotation');
         Route::post('/orders/{order}/mark-processing', [\App\Http\Controllers\Supplier\OrderController::class, 'markAsProcessing'])->name('orders.mark-processing');
         Route::post('/orders/{order}/mark-pending', [\App\Http\Controllers\Supplier\OrderController::class, 'markAsPending'])->name('orders.mark-pending');
         Route::post('/orders/{order}/submit-documents', [\App\Http\Controllers\Supplier\OrderController::class, 'submitDocuments'])->name('orders.submit-documents');
         Route::get('/orders/{order}/download-packing-list', [\App\Http\Controllers\Supplier\OrderController::class, 'downloadPackingList'])->name('orders.download-packing-list');
         Route::get('/orders/{order}/download-commercial-invoice', [\App\Http\Controllers\Supplier\OrderController::class, 'downloadCommercialInvoice'])->name('orders.download-commercial-invoice');
-        Route::post('/orders/{order}/update-status', [\App\Http\Controllers\Supplier\OrderController::class, 'updateStatus'])->name('orders.update-status');
         
         // Supplier Inquiry Management Routes
-        Route::get('/inquiries', [\App\Http\Controllers\Supplier\InquiryController::class, 'index'])->name('inquiries.index');
+        Route::get('inquiries', [App\Http\Controllers\Supplier\InquiryController::class, 'index'])->name('supplier.inquiries.index');
+        Route::get('inquiries/{inquiry}', [App\Http\Controllers\Supplier\InquiryController::class, 'show'])->name('supplier.inquiries.show');
+        Route::patch('inquiries/{inquiry}/status', [App\Http\Controllers\Supplier\InquiryController::class, 'updateStatus'])->name('supplier.inquiries.status.update');
+        Route::post('inquiries/{inquiry}/not-available', [App\Http\Controllers\Supplier\InquiryController::class, 'respondNotAvailable'])->name('supplier.inquiries.not-available');
+        Route::get('inquiries/{inquiry}/quotation', [App\Http\Controllers\Supplier\InquiryController::class, 'quotationForm'])->name('supplier.inquiries.quotation');
+        Route::post('inquiries/{inquiry}/quotation', [App\Http\Controllers\Supplier\InquiryController::class, 'store'])->name('supplier.inquiries.quotation.store');
         
         // Supplier Category Management Routes
         Route::get('/categories', [\App\Http\Controllers\Supplier\CategoryController::class, 'index'])->name('categories.index');
         Route::get('/categories/{category}', [\App\Http\Controllers\Supplier\CategoryController::class, 'show'])->name('categories.show')->where('category', '[0-9]+');
         Route::post('/categories/request-assignment', [\App\Http\Controllers\Supplier\CategoryController::class, 'requestAssignment'])->name('categories.request-assignment');
-        Route::get('/inquiries/{inquiry}', [\App\Http\Controllers\Supplier\InquiryController::class, 'show'])->name('inquiries.show');
-        Route::post('/inquiries/{inquiry}/not-available', [\App\Http\Controllers\Supplier\InquiryController::class, 'respondNotAvailable'])->name('inquiries.not-available');
-        Route::get('/inquiries/{inquiry}/quotation', [\App\Http\Controllers\Supplier\InquiryController::class, 'quotationForm'])->name('inquiries.quotation-form');
-        Route::post('/inquiries/{inquiry}/quotation', [\App\Http\Controllers\Supplier\InquiryController::class, 'storeQuotation'])->name('inquiries.store-quotation');
-        Route::post('/quotations/{quotation}/submit', [\App\Http\Controllers\Supplier\InquiryController::class, 'submitQuotation'])->name('quotations.submit');
-    });
+        
+        // Supplier Feedback Routes
+        Route::get('/feedback', [\App\Http\Controllers\Supplier\SystemFeedbackController::class, 'index'])->name('feedback.index');
+        Route::get('/feedback/create', [\App\Http\Controllers\Supplier\SystemFeedbackController::class, 'create'])->name('feedback.create');
+        Route::post('/feedback', [\App\Http\Controllers\Supplier\SystemFeedbackController::class, 'store'])->name('feedback.store');
+        Route::get('/feedback/{feedback}', [\App\Http\Controllers\Supplier\SystemFeedbackController::class, 'show'])->name('feedback.show');
 
-    // Orders Routes
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+        // Supplier Purchase Order Routes
+        Route::get('/purchase-orders', [\App\Http\Controllers\Supplier\OrderController::class, 'purchaseOrders'])->name('purchase-orders.index');
+        Route::get('/purchase-orders/{purchaseOrder}', [\App\Http\Controllers\Supplier\OrderController::class, 'showPurchaseOrder'])->name('purchase-orders.show');
+        Route::post('/purchase-orders/{purchaseOrder}/acknowledge', [\App\Http\Controllers\Supplier\OrderController::class, 'acknowledgePurchaseOrder'])->name('purchase-orders.acknowledge');
+    });
 
     // Feedback Route
     Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
@@ -540,8 +612,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/deliveries/{delivery}/save-signature', [\App\Http\Controllers\SignatureController::class, 'saveSignature'])
         ->name('deliveries.signature.save');
 });
-
-// Orders Routes - moved to authenticated section
 
 // Categories Routes
 Route::prefix('categories')->name('categories.')->group(function () {
@@ -1004,9 +1074,129 @@ Route::get('/test-specs/{categoryId}', function($categoryId) {
     }
 })->name('test.specs');
 
+// Debug route for product specifications
+Route::get('/debug-product-specs/{productId}', function($productId) {
+    try {
+        $product = \App\Models\Product::with(['specifications', 'category'])->findOrFail($productId);
+        $controller = new \App\Http\Controllers\Supplier\ProductSpecificationController();
+        
+        // Use reflection to call private method
+        $reflection = new ReflectionClass($controller);
+        $method = $reflection->getMethod('getCategorySpecificationTemplates');
+        $method->setAccessible(true);
+        $templates = $method->invoke($controller, $product->category_id);
+        
+        return response()->json([
+            'product' => [
+                'id' => $product->id,
+                'name' => $product->name,
+                'category' => $product->category->name ?? 'Unknown'
+            ],
+            'existing_specs' => $product->specifications->map(function($spec) {
+                return [
+                    'key' => $spec->specification_key,
+                    'value' => $spec->specification_value,
+                    'category' => $spec->category,
+                    'display_name' => $spec->display_name
+                ];
+            }),
+            'templates' => $templates,
+            'success' => true
+        ], 200, [], JSON_PRETTY_PRINT);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+            'success' => false
+        ], 500);
+    }
+})->name('debug.product.specs');
+
 // Admin API routes
 Route::prefix('admin/api')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/category-specifications/{category}', [App\Http\Controllers\Admin\ProductController::class, 'getCategorySpecifications'])->name('category-specifications');
 });
+
+// Supplier Invitation Routes (Admin only)
+Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('supplier-invitations', \App\Http\Controllers\Admin\SupplierInvitationController::class)
+        ->except(['edit', 'update']);
+    Route::get('supplier-invitations/onboarding-preview', [\App\Http\Controllers\Admin\SupplierInvitationController::class, 'onboardingPreview'])->name('supplier-invitations.onboarding-preview');
+    Route::post('supplier-invitations/{supplierInvitation}/resend', [\App\Http\Controllers\Admin\SupplierInvitationController::class, 'resend'])->name('supplier-invitations.resend');
+    Route::match(['post', 'delete'], 'supplier-invitations/{supplierInvitation}/cancel', [\App\Http\Controllers\Admin\SupplierInvitationController::class, 'cancel'])->name('supplier-invitations.cancel');
+    Route::post('supplier-invitations/bulk-action', [\App\Http\Controllers\Admin\SupplierInvitationController::class, 'bulkAction'])->name('supplier-invitations.bulk-action');
+});
+
+// Apply prevent-back middleware to auth routes
+Route::middleware(['auth', \App\Http\Middleware\PreventBackHistory::class])->group(function () {
+    // Profile routes
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Admin routes
+    Route::prefix('admin')->middleware('admin')->group(function () {
+        // Inquiries
+        Route::resource('inquiries', \App\Http\Controllers\Admin\InquiryController::class)->names([
+            'index' => 'admin.inquiries.index',
+            'create' => 'admin.inquiries.create',
+            'store' => 'admin.inquiries.store',
+            'show' => 'admin.inquiries.show',
+            'edit' => 'admin.inquiries.edit',
+            'update' => 'admin.inquiries.update',
+            'destroy' => 'admin.inquiries.destroy',
+        ]);
+        Route::post('inquiries/{inquiry}/broadcast', [\App\Http\Controllers\Admin\InquiryController::class, 'broadcast'])->name('admin.inquiries.broadcast');
+        Route::put('inquiries/{inquiry}/status', [\App\Http\Controllers\Admin\InquiryController::class, 'updateStatus'])->name('admin.inquiries.status.update');
+        Route::post('inquiries/bulk-forward', [\App\Http\Controllers\Admin\InquiryController::class, 'bulkForward'])->name('admin.inquiries.bulk-forward');
+        Route::post('inquiries/{inquiry}/forward', [\App\Http\Controllers\Admin\InquiryController::class, 'forwardToSupplier'])->name('admin.inquiries.forward');
+        Route::post('inquiries/{inquiry}/generate-quote', [\App\Http\Controllers\Admin\InquiryController::class, 'generateQuote'])->name('admin.inquiries.generate-quote');
+        Route::post('inquiries/{inquiry}/create-purchase-order', [\App\Http\Controllers\Admin\InquiryController::class, 'createPurchaseOrder'])->name('admin.inquiries.create-purchase-order');
+        Route::get('inquiries/supplier-recommendations', [\App\Http\Controllers\Admin\InquiryController::class, 'getSupplierRecommendations'])->name('admin.inquiries.supplier-recommendations');
+        
+        // ... existing admin routes ...
+    });
+
+    // Supplier routes
+    Route::prefix('supplier')->middleware('supplier')->group(function () {
+        // Inquiries
+        Route::get('inquiries', [App\Http\Controllers\Supplier\InquiryController::class, 'index'])->name('supplier.inquiries.index');
+        Route::get('inquiries/{inquiry}', [App\Http\Controllers\Supplier\InquiryController::class, 'show'])->name('supplier.inquiries.show');
+        Route::patch('inquiries/{inquiry}/status', [App\Http\Controllers\Supplier\InquiryController::class, 'updateStatus'])->name('supplier.inquiries.status.update');
+        Route::post('inquiries/{inquiry}/not-available', [App\Http\Controllers\Supplier\InquiryController::class, 'respondNotAvailable'])->name('supplier.inquiries.not-available');
+        Route::get('inquiries/{inquiry}/quotation', [App\Http\Controllers\Supplier\InquiryController::class, 'quotationForm'])->name('supplier.inquiries.quotation');
+        Route::post('inquiries/{inquiry}/quotation', [App\Http\Controllers\Supplier\InquiryController::class, 'store'])->name('supplier.inquiries.quotation.store');
+        
+        // ... existing supplier routes ...
+    });
+
+    // Order and payment routes
+    Route::prefix('orders')->group(function () {
+        // ... existing order routes ...
+    });
+});
+
+// Apply to specific form submission routes
+Route::middleware([\App\Http\Middleware\PreventBackHistory::class])->group(function () {
+    Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+    Route::post('/quote', [\App\Http\Controllers\Admin\QuoteController::class, 'store'])->name('quote.store');
+    Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+});
+
+// Test route for supplier middleware
+Route::get('/test-supplier-middleware', function () {
+    $user = \Auth::user();
+    if (!$user) {
+        return 'Not authenticated';
+    }
+    
+    return [
+        'user_id' => $user->id,
+        'email' => $user->email,
+        'is_supplier' => $user->isSupplier(),
+        'role_name' => $user->role ? $user->role->name : 'no role',
+        'auth_check' => \Auth::check(),
+        'can_access_onboarding' => $user->isSupplier()
+    ];
+})->middleware(['auth', \App\Http\Middleware\SupplierMiddleware::class])->name('test.supplier.middleware');
 
 require __DIR__ . '/auth.php';
