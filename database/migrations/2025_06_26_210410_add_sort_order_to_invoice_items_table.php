@@ -12,7 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('invoice_items', function (Blueprint $table) {
-            $table->integer('sort_order')->default(0)->after('total');
+            if (!Schema::hasColumn('invoice_items', 'sort_order')) {
+                if (Schema::hasColumn('invoice_items', 'total')) {
+                    $table->integer('sort_order')->default(0)->after('total');
+                } else {
+                    $table->integer('sort_order')->default(0);
+                }
+            }
         });
     }
 
@@ -22,7 +28,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('invoice_items', function (Blueprint $table) {
-            $table->dropColumn('sort_order');
+            if (Schema::hasColumn('invoice_items', 'sort_order')) {
+                $table->dropColumn('sort_order');
+            }
         });
     }
 };
