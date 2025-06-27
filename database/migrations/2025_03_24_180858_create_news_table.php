@@ -11,14 +11,39 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('news', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        if (!Schema::hasTable('news')) {
+            Schema::create('news', function (Blueprint $table) {
+                $table->bigIncrements('id');
             $table->string('title');
             $table->text('content');
             $table->string('image_url')->nullable();
             $table->boolean('published')->default(true);
             $table->timestamps();
-        });
+            });
+        } else {
+            Schema::table('news', function (Blueprint $table) {
+                // Check and add any missing columns
+                $columns = Schema::getColumnListing('news');
+                $schemaContent = '$table->bigIncrements(\'id\');
+            $table->string(\'title\');
+            $table->text(\'content\');
+            $table->string(\'image_url\')->nullable();
+            $table->boolean(\'published\')->default(true);
+            $table->timestamps();';
+                
+                // Parse the schema content to find column definitions
+                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
+                foreach ($columnMatches[1] as $columnDef) {
+                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
+                        $columnName = $colMatch[2];
+                        if (!in_array($columnName, $columns)) {
+                            $table->{$colMatch[1]}($columnName);
+                        }
+                    }
+                }
+            });
+        }
+    });
     }
 
     /**
@@ -26,6 +51,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('news');
+        // Don't drop the table in production to preserve data
+        // Only drop columns that were added in this migration if any
     }
 };

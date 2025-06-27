@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('system_feedback', function (Blueprint $table) {
-            $table->id();
+        if (!Schema::hasTable('system_feedback')) {
+            Schema::create('system_feedback', function (Blueprint $table) {
+                $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('type', ['bug_report', 'feature_request', 'improvement', 'general'])->default('general');
             $table->string('title');
@@ -21,7 +22,34 @@ return new class extends Migration
             $table->enum('status', ['pending', 'in_progress', 'completed', 'rejected'])->default('pending');
             $table->text('admin_response')->nullable();
             $table->timestamps();
-        });
+            });
+        } else {
+            Schema::table('system_feedback', function (Blueprint $table) {
+                // Check and add any missing columns
+                $columns = Schema::getColumnListing('system_feedback');
+                $schemaContent = '$table->id();
+            $table->foreignId(\'user_id\')->constrained()->onDelete(\'cascade\');
+            $table->enum(\'type\', [\'bug_report\', \'feature_request\', \'improvement\', \'general\'])->default(\'general\');
+            $table->string(\'title\');
+            $table->text(\'description\');
+            $table->enum(\'priority\', [\'low\', \'medium\', \'high\'])->default(\'medium\');
+            $table->enum(\'status\', [\'pending\', \'in_progress\', \'completed\', \'rejected\'])->default(\'pending\');
+            $table->text(\'admin_response\')->nullable();
+            $table->timestamps();';
+                
+                // Parse the schema content to find column definitions
+                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
+                foreach ($columnMatches[1] as $columnDef) {
+                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
+                        $columnName = $colMatch[2];
+                        if (!in_array($columnName, $columns)) {
+                            $table->{$colMatch[1]}($columnName);
+                        }
+                    }
+                }
+            });
+        }
+    });
     }
 
     /**
@@ -29,6 +57,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('system_feedback');
+        // Don't drop the table in production to preserve data
+        // Only drop columns that were added in this migration if any
     }
 };

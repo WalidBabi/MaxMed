@@ -11,10 +11,31 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rapid_test_specifications_seeder', function (Blueprint $table) {
-            $table->id();
+        if (!Schema::hasTable('rapid_test_specifications_seeder')) {
+            Schema::create('rapid_test_specifications_seeder', function (Blueprint $table) {
+                $table->id();
             $table->timestamps();
-        });
+            });
+        } else {
+            Schema::table('rapid_test_specifications_seeder', function (Blueprint $table) {
+                // Check and add any missing columns
+                $columns = Schema::getColumnListing('rapid_test_specifications_seeder');
+                $schemaContent = '$table->id();
+            $table->timestamps();';
+                
+                // Parse the schema content to find column definitions
+                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
+                foreach ($columnMatches[1] as $columnDef) {
+                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
+                        $columnName = $colMatch[2];
+                        if (!in_array($columnName, $columns)) {
+                            $table->{$colMatch[1]}($columnName);
+                        }
+                    }
+                }
+            });
+        }
+    });
     }
 
     /**
@@ -22,6 +43,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rapid_test_specifications_seeder');
+        // Don't drop the table in production to preserve data
+        // Only drop columns that were added in this migration if any
     }
 };

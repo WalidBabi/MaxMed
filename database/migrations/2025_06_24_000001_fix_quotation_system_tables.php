@@ -9,19 +9,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Disable foreign key checks
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
-
-        // Drop tables in reverse dependency order
-        Schema::dropIfExists('supplier_quotations');
-        Schema::dropIfExists('contact_submissions');
-        Schema::dropIfExists('quotation_requests');
-        Schema::dropIfExists('quote_items');
-        Schema::dropIfExists('quotes');
-
-        // Create quotes table first
-        Schema::create('quotes', function (Blueprint $table) {
-            $table->id();
+        if (!Schema::hasTable('quotes')) {
+            Schema::create('quotes', function (Blueprint $table) {
+                $table->id();
             $table->string('quote_number')->unique(); // QT-000011 format
             $table->string('customer_name');
             $table->string('reference_number')->nullable();
@@ -37,7 +27,41 @@ return new class extends Migration
             $table->json('attachments')->nullable(); // Store file paths as JSON
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
-        });
+            });
+        } else {
+            Schema::table('quotes', function (Blueprint $table) {
+                // Check and add any missing columns
+                $columns = Schema::getColumnListing('quotes');
+                $schemaContent = '$table->id();
+            $table->string(\'quote_number\')->unique(); // QT-000011 format
+            $table->string(\'customer_name\');
+            $table->string(\'reference_number\')->nullable();
+            $table->date(\'quote_date\');
+            $table->date(\'expiry_date\');
+            $table->string(\'salesperson\')->nullable();
+            $table->text(\'subject\')->nullable();
+            $table->text(\'customer_notes\')->nullable();
+            $table->text(\'terms_conditions\')->nullable();
+            $table->enum(\'status\', [\'draft\', \'sent\', \'invoiced\'])->default(\'draft\');
+            $table->decimal(\'sub_total\', 10, 2)->default(0);
+            $table->decimal(\'total_amount\', 10, 2)->default(0);
+            $table->json(\'attachments\')->nullable(); // Store file paths as JSON
+            $table->foreignId(\'created_by\')->nullable()->constrained(\'users\')->onDelete(\'set null\');
+            $table->timestamps();';
+                
+                // Parse the schema content to find column definitions
+                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
+                foreach ($columnMatches[1] as $columnDef) {
+                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
+                        $columnName = $colMatch[2];
+                        if (!in_array($columnName, $columns)) {
+                            $table->{$colMatch[1]}($columnName);
+                        }
+                    }
+                }
+            });
+        }
+    });
 
         // Create quote_items table
         Schema::create('quote_items', function (Blueprint $table) {
@@ -235,17 +259,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        // Disable foreign key checks
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
-
-        // Drop tables in reverse order
-        Schema::dropIfExists('supplier_quotations');
-        Schema::dropIfExists('contact_submissions');
-        Schema::dropIfExists('quotation_requests');
-        Schema::dropIfExists('quote_items');
-        Schema::dropIfExists('quotes');
-
-        // Re-enable foreign key checks
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        // Don't drop the table in production to preserve data
+        // Only drop columns that were added in this migration if any
     }
 }; 

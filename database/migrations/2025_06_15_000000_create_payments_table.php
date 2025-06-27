@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Create invoices table first
-        Schema::create('invoices', function (Blueprint $table) {
-            $table->id();
+        if (!Schema::hasTable('invoices')) {
+            Schema::create('invoices', function (Blueprint $table) {
+                $table->id();
             $table->string('invoice_number')->unique(); // INV-000001
             $table->foreignId('order_id')->nullable()->constrained('orders')->onDelete('set null');
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
@@ -28,7 +28,40 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
-        });
+            });
+        } else {
+            Schema::table('invoices', function (Blueprint $table) {
+                // Check and add any missing columns
+                $columns = Schema::getColumnListing('invoices');
+                $schemaContent = '$table->id();
+            $table->string(\'invoice_number\')->unique(); // INV-000001
+            $table->foreignId(\'order_id\')->nullable()->constrained(\'orders\')->onDelete(\'set null\');
+            $table->foreignId(\'customer_id\')->constrained(\'customers\')->onDelete(\'cascade\');
+            $table->decimal(\'subtotal\', 10, 2);
+            $table->decimal(\'tax\', 10, 2)->default(0);
+            $table->decimal(\'shipping\', 10, 2)->default(0);
+            $table->decimal(\'total\', 10, 2);
+            $table->string(\'currency\', 3)->default(\'AED\');
+            $table->date(\'invoice_date\');
+            $table->date(\'due_date\');
+            $table->enum(\'status\', [\'draft\', \'sent\', \'paid\', \'overdue\', \'cancelled\'])->default(\'draft\');
+            $table->text(\'notes\')->nullable();
+            $table->foreignId(\'created_by\')->nullable()->constrained(\'users\')->onDelete(\'set null\');
+            $table->timestamps();';
+                
+                // Parse the schema content to find column definitions
+                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
+                foreach ($columnMatches[1] as $columnDef) {
+                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
+                        $columnName = $colMatch[2];
+                        if (!in_array($columnName, $columns)) {
+                            $table->{$colMatch[1]}($columnName);
+                        }
+                    }
+                }
+            });
+        }
+    });
 
         // Create invoice items table
         Schema::create('invoice_items', function (Blueprint $table) {
@@ -68,8 +101,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payments');
-        Schema::dropIfExists('invoice_items');
-        Schema::dropIfExists('invoices');
+        // Don't drop the table in production to preserve data
+        // Only drop columns that were added in this migration if any
     }
 }; 

@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        if (!Schema::hasTable('transactions')) {
+            Schema::create('transactions', function (Blueprint $table) {
+                $table->bigIncrements('id');
             $table->unsignedBigInteger('order_id')->index('transactions_order_id_foreign');
             $table->unsignedBigInteger('user_id')->index('transactions_user_id_foreign');
             $table->decimal('amount', 10);
@@ -20,7 +21,33 @@ return new class extends Migration
             $table->string('status');
             $table->string('transaction_id')->unique();
             $table->timestamps();
-        });
+            });
+        } else {
+            Schema::table('transactions', function (Blueprint $table) {
+                // Check and add any missing columns
+                $columns = Schema::getColumnListing('transactions');
+                $schemaContent = '$table->bigIncrements(\'id\');
+            $table->unsignedBigInteger(\'order_id\')->index(\'transactions_order_id_foreign\');
+            $table->unsignedBigInteger(\'user_id\')->index(\'transactions_user_id_foreign\');
+            $table->decimal(\'amount\', 10);
+            $table->string(\'payment_method\');
+            $table->string(\'status\');
+            $table->string(\'transaction_id\')->unique();
+            $table->timestamps();';
+                
+                // Parse the schema content to find column definitions
+                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
+                foreach ($columnMatches[1] as $columnDef) {
+                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
+                        $columnName = $colMatch[2];
+                        if (!in_array($columnName, $columns)) {
+                            $table->{$colMatch[1]}($columnName);
+                        }
+                    }
+                }
+            });
+        }
+    });
     }
 
     /**
@@ -28,6 +55,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transactions');
+        // Don't drop the table in production to preserve data
+        // Only drop columns that were added in this migration if any
     }
 };
