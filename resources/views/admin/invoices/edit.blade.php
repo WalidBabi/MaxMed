@@ -388,6 +388,16 @@
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
+                            <div>
+                                <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">Currency</label>
+                                <select name="currency" id="currency" required class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('currency') border-red-300 @enderror">
+                                    <option value="AED" {{ old('currency', $invoice->currency ?? 'AED') == 'AED' ? 'selected' : '' }}>AED (UAE Dirham)</option>
+                                    <option value="USD" {{ old('currency', $invoice->currency ?? 'AED') == 'USD' ? 'selected' : '' }}>USD (US Dollar)</option>
+                                </select>
+                                @error('currency')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -478,7 +488,8 @@
                                                                              data-id="{{ $product->id }}"
                                                                              data-name="{{ $product->name }}"
                                                                              data-description="{{ $product->description }}"
-                                                                             data-price="{{ $product->price_aed ?? $product->price }}"
+                                                                             data-price-aed="{{ $product->price_aed ?? $product->price }}"
+                                                                             data-price-usd="{{ $product->price }}"
                                                                              data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
                                                                              data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                                                              data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
@@ -488,7 +499,8 @@
                                                                                 <div class="text-gray-600 text-xs mt-1">{{ Str::limit($product->description, 80) }}</div>
                                                                             @endif
                                                                             @if($product->price_aed ?? $product->price)
-                                                                                <div class="text-indigo-600 text-sm font-medium mt-1">AED {{ number_format($product->price_aed ?? $product->price, 2) }}</div>
+                                                                                <div class="price-display-aed text-indigo-600 text-sm font-medium mt-1">AED {{ number_format($product->price_aed ?? $product->price, 2) }}</div>
+                                                                                <div class="price-display-usd text-indigo-600 text-sm font-medium mt-1 hidden">USD {{ number_format($product->price, 2) }}</div>
                                                                             @endif
                                                                         </div>
                                                                     @endforeach
@@ -558,15 +570,15 @@
                                 <div class="rounded-lg bg-gray-50 p-4">
                                     <div class="flex justify-between py-2">
                                         <span class="text-sm font-medium text-gray-700">Sub Total:</span>
-                                        <span id="subTotal" class="text-sm font-semibold text-gray-900">{{ number_format($invoice->sub_total, 2) }} AED</span>
+                                        <span id="subTotal" class="text-sm font-semibold text-gray-900">{{ number_format($invoice->sub_total, 2) }} <span id="subTotalCurrency">{{ $invoice->currency ?? 'AED' }}</span></span>
                                     </div>
                                     <div class="flex justify-between py-2">
                                         <span class="text-sm font-medium text-gray-700">Tax:</span>
-                                        <span id="tax-amount" class="text-sm font-semibold text-gray-900">{{ number_format($invoice->tax_amount, 2) }} AED</span>
+                                        <span id="tax-amount" class="text-sm font-semibold text-gray-900">{{ number_format($invoice->tax_amount, 2) }} <span id="taxCurrency">{{ $invoice->currency ?? 'AED' }}</span></span>
                                     </div>
                                     <div class="border-t border-gray-200 pt-2">
                                         <div class="flex justify-between">
-                                            <span class="text-base font-semibold text-gray-900">Total (AED):</span>
+                                            <span class="text-base font-semibold text-gray-900">Total (<span id="totalCurrency">{{ $invoice->currency ?? 'AED' }}</span>):</span>
                                             <span id="totalAmount" class="text-base font-bold text-indigo-600">{{ number_format($invoice->total_amount, 2) }}</span>
                                         </div>
                                     </div>
@@ -722,6 +734,50 @@ try {
     itemCounter = 1;
 }
 
+// Currency change handling
+document.getElementById('currency').addEventListener('change', function() {
+    const selectedCurrency = this.value;
+    
+    // Update total currency displays
+    document.getElementById('subTotalCurrency').textContent = selectedCurrency;
+    document.getElementById('taxCurrency').textContent = selectedCurrency;
+    document.querySelectorAll('#totalCurrency').forEach(el => el.textContent = selectedCurrency);
+    
+    // Toggle price displays in product dropdowns
+    const priceDisplaysAED = document.querySelectorAll('.price-display-aed');
+    const priceDisplaysUSD = document.querySelectorAll('.price-display-usd');
+    
+    if (selectedCurrency === 'USD') {
+        priceDisplaysAED.forEach(display => display.classList.add('hidden'));
+        priceDisplaysUSD.forEach(display => display.classList.remove('hidden'));
+    } else {
+        priceDisplaysAED.forEach(display => display.classList.remove('hidden'));
+        priceDisplaysUSD.forEach(display => display.classList.add('hidden'));
+    }
+    
+    // Update existing item rates based on selected currency
+    const existingRows = document.querySelectorAll('.item-row');
+    existingRows.forEach(row => {
+        const productIdInput = row.querySelector('.product-id-input');
+        const rateInput = row.querySelector('.rate-input');
+        
+        if (productIdInput && productIdInput.value && rateInput) {
+            // Find the product dropdown item to get the correct price
+            const dropdownItem = row.querySelector(`[data-id="${productIdInput.value}"]`);
+            if (dropdownItem) {
+                const price = selectedCurrency === 'USD' ? 
+                    dropdownItem.getAttribute('data-price-usd') : 
+                    dropdownItem.getAttribute('data-price-aed');
+                
+                if (price) {
+                    rateInput.value = price;
+                    calculateRowAmount({ target: rateInput });
+                }
+            }
+        }
+    });
+});
+
 // Payment terms handling
 document.addEventListener('DOMContentLoaded', function() {
     const paymentTermsSelect = document.getElementById('payment_terms');
@@ -772,7 +828,8 @@ function addItem() {
                                      data-id="{{ $product->id }}"
                                      data-name="{{ $product->name }}"
                                      data-description="{{ $product->description }}"
-                                     data-price="{{ $product->price_aed ?? $product->price }}"
+                                     data-price-aed="{{ $product->price_aed ?? $product->price }}"
+                                 data-price-usd="{{ $product->price }}"
                                      data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
                                      data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                      data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
@@ -782,7 +839,8 @@ function addItem() {
                                         <div class="text-gray-600 text-xs mt-1">{{ Str::limit($product->description, 80) }}</div>
                                     @endif
                                     @if($product->price_aed ?? $product->price)
-                                        <div class="text-indigo-600 text-sm font-medium mt-1">AED {{ number_format($product->price_aed ?? $product->price, 2) }}</div>
+                                        <div class="price-display-aed text-indigo-600 text-sm font-medium mt-1">AED {{ number_format($product->price_aed ?? $product->price, 2) }}</div>
+                                        <div class="price-display-usd text-indigo-600 text-sm font-medium mt-1 hidden">USD {{ number_format($product->price, 2) }}</div>
                                     @endif
                                 </div>
                             @endforeach
@@ -941,7 +999,8 @@ function calculateTotals() {
         total += parseFloat(amount.textContent) || 0;
     });
     
-    document.getElementById('subTotal').textContent = total.toFixed(2);
+    const selectedCurrency = document.getElementById('currency').value;
+    document.getElementById('subTotal').innerHTML = total.toFixed(2) + ' <span id="subTotalCurrency">' + selectedCurrency + '</span>';
     document.getElementById('totalAmount').textContent = total.toFixed(2);
 }
 
@@ -1071,7 +1130,10 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
     function selectProduct(item) {
         const productId = item.dataset.id;
         const productName = item.dataset.name;
-        const productPrice = item.dataset.price;
+        const selectedCurrency = document.getElementById('currency').value;
+        const productPrice = selectedCurrency === 'USD' ? 
+            item.dataset.priceUsd : 
+            item.dataset.priceAed;
         const specifications = item.dataset.specifications;
         
         // Set values
@@ -1205,6 +1267,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Trigger payment terms check
     document.getElementById('payment_terms').dispatchEvent(new Event('change'));
+    
+    // Initialize price displays based on selected currency
+    const initialCurrency = document.getElementById('currency').value;
+    if (initialCurrency === 'USD') {
+        document.querySelectorAll('.price-display-aed').forEach(display => display.classList.add('hidden'));
+        document.querySelectorAll('.price-display-usd').forEach(display => display.classList.remove('hidden'));
+    }
 });
 
 // Function to populate size options from data attributes

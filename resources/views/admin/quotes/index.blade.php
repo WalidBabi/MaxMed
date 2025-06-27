@@ -88,11 +88,14 @@
                             $totalByUsd = $quotes->where('currency', 'USD')->sum('total_amount');
                         @endphp
                         @if($totalByAed > 0 && $totalByUsd > 0)
-                            {{ number_format($totalByAed, 0) }} AED | {{ number_format($totalByUsd, 0) }} USD
+                            <div class="text-lg">{{ number_format($totalByAed, 0) }} AED</div>
+                            <div class="text-lg text-gray-600">{{ number_format($totalByUsd, 0) }} USD</div>
                         @elseif($totalByUsd > 0)
-                            {{ number_format($totalByUsd, 0) }} USD
+                            <div class="text-3xl">{{ number_format($totalByUsd, 0) }} USD</div>
+                        @elseif($totalByAed > 0)
+                            <div class="text-3xl">{{ number_format($totalByAed, 0) }} AED</div>
                         @else
-                            {{ number_format($totalByAed, 0) }} AED
+                            <div class="text-3xl">0 AED</div>
                         @endif
                     </p>
                 </div>

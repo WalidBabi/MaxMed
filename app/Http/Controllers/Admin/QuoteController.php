@@ -504,7 +504,7 @@ class QuoteController extends Controller
                 'tax_amount' => $quote->tax_amount ?? 0,
                 'discount_amount' => $quote->discount_amount ?? 0,
                 'total_amount' => $quote->total_amount,
-                'currency' => 'AED',
+                'currency' => $quote->currency,
                 'payment_status' => 'pending',
                 'payment_terms' => 'advance_50', // Default to 50% advance
                 'status' => 'draft',
