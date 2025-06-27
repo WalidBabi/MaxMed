@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -51,13 +52,20 @@ return new class extends Migration
                 $table->timestamp('expires_at')->nullable();
                 $table->timestamps();
                 $table->softDeletes();
-
-                // Foreign key constraints
-                $table->foreign('product_id')
-                    ->references('id')
-                    ->on('products')
-                    ->onDelete('set null');
             });
+
+            // Add foreign key constraint after table creation to handle potential data type issues
+            try {
+                DB::statement('
+                    ALTER TABLE supplier_inquiries 
+                    ADD CONSTRAINT supplier_inquiries_product_id_foreign 
+                    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL
+                ');
+            } catch (\Exception $e) {
+                // If foreign key constraint fails, log the error but continue
+                echo "Warning: Could not add foreign key constraint for product_id: " . $e->getMessage() . "\n";
+                echo "The table was created successfully without the foreign key constraint.\n";
+            }
         } else {
             Schema::table('supplier_inquiries', function (Blueprint $table) {
                 // Add columns if they don't exist
@@ -118,15 +126,20 @@ return new class extends Migration
                 if (!Schema::hasColumn('supplier_inquiries', 'deleted_at')) {
                     $table->softDeletes();
                 }
-
-                // Add foreign key if it doesn't exist
-                if (!Schema::hasColumn('supplier_inquiries', 'product_id')) {
-                    $table->foreign('product_id')
-                        ->references('id')
-                        ->on('products')
-                        ->onDelete('set null');
-                }
             });
+
+            // Add foreign key if it doesn't exist
+            if (!Schema::hasColumn('supplier_inquiries', 'product_id')) {
+                try {
+                    DB::statement('
+                        ALTER TABLE supplier_inquiries 
+                        ADD CONSTRAINT supplier_inquiries_product_id_foreign 
+                        FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL
+                    ');
+                } catch (\Exception $e) {
+                    echo "Warning: Could not add foreign key constraint for product_id: " . $e->getMessage() . "\n";
+                }
+            }
         }
 
         // Create responses table if it doesn't exist
