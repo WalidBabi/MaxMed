@@ -1089,7 +1089,9 @@ const products = <?php echo json_encode($products->map(function($product) {
         'id' => $product->id,
         'name' => $product->name,
         'has_size_options' => $product->has_size_options,
-        'size_options' => $product->size_options
+        'size_options' => array_map(function($size) {
+            return json_decode('"' . $size . '"');
+        }, is_array($product->size_options) ? $product->size_options : [])
     ];
 })); ?>;
 window.products = products;
