@@ -52,7 +52,15 @@ return new class extends Migration
             
             if (!Schema::hasColumn('supplier_quotations', 'total_amount')) {
                 try {
-                    $table->decimal('total_amount', 10, 2)->nullable()->after('shipping');
+                    // Check which shipping column exists and add total_amount after it
+                    if (Schema::hasColumn('supplier_quotations', 'shipping_cost')) {
+                        $table->decimal('total_amount', 10, 2)->nullable()->after('shipping_cost');
+                    } elseif (Schema::hasColumn('supplier_quotations', 'shipping')) {
+                        $table->decimal('total_amount', 10, 2)->nullable()->after('shipping');
+                    } else {
+                        // If neither shipping column exists, add at the end
+                        $table->decimal('total_amount', 10, 2)->nullable();
+                    }
                     echo "Added total_amount column to supplier_quotations table.\n";
                 } catch (\Exception $e) {
                     echo "Warning: Could not add total_amount column: " . $e->getMessage() . "\n";
