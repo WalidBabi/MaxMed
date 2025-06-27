@@ -26,10 +26,9 @@ return new class extends Migration
                 WHERE status = 'pending' 
                 AND requires_quotation = 1 
                 AND id NOT IN (
-                    SELECT DISTINCT o.id 
-                    FROM orders o
-                    JOIN quotation_requests qr ON qr.order_id = o.id
-                    JOIN supplier_quotations sq ON sq.quotation_request_id = qr.id
+                    SELECT DISTINCT order_id 
+                    FROM supplier_quotations 
+                    WHERE order_id IS NOT NULL
                 )
             ");
             
@@ -41,10 +40,9 @@ return new class extends Migration
                 WHERE status = 'pending' 
                 AND requires_quotation = 1 
                 AND id IN (
-                    SELECT DISTINCT o.id 
-                    FROM orders o
-                    JOIN quotation_requests qr ON qr.order_id = o.id
-                    JOIN supplier_quotations sq ON sq.quotation_request_id = qr.id
+                    SELECT DISTINCT order_id 
+                    FROM supplier_quotations 
+                    WHERE order_id IS NOT NULL
                 )
             ");
             
