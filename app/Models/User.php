@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -21,9 +23,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'is_admin',
         'role_id',
         'profile_photo',
+        'verification_reminder_sent_at',
     ];
 
     /**
@@ -46,7 +48,6 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'is_admin' => 'boolean',
         ];
     }
 
@@ -73,7 +74,7 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return $this->is_admin === true || ($this->role && $this->role->hasPermission('dashboard.view'));
+        return $this->role && $this->role->hasPermission('dashboard.view');
     }
 
     /**
@@ -84,10 +85,6 @@ class User extends Authenticatable
      */
     public function hasPermission(string $permission): bool
     {
-        if ($this->is_admin) {
-            return true; // Super admin has all permissions
-        }
-
         return $this->role && $this->role->hasPermission($permission);
     }
 
@@ -113,9 +110,17 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the supplier category assignments
+     * Get the supplier information associated with the user.
      */
-    public function supplierCategories()
+    public function supplierInformation(): HasOne
+    {
+        return $this->hasOne(SupplierInformation::class);
+    }
+
+    /**
+     * Get the supplier categories assigned to the user.
+     */
+    public function supplierCategories(): HasMany
     {
         return $this->hasMany(SupplierCategory::class, 'supplier_id');
     }
@@ -191,18 +196,22 @@ class User extends Authenticatable
     }
 
     /**
-     * Get supplier performance metrics for a category
+     * Send the email verification notification using custom template with logo.
      */
-    public function getCategoryPerformance($categoryId)
+    public function sendEmailVerificationNotification()
     {
-        return $this->supplierCategories()
-                    ->where('category_id', $categoryId)
-                    ->first();
+        $this->notify(new \App\Notifications\VerifyEmail);
     }
 
     /**
-     * Get overall supplier performance score
+     * Send the password reset notification using custom template with logo.
      */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new \App\Notifications\ResetPassword($token));
+    }
+
+
     public function getOverallPerformanceScoreAttribute(): float
     {
         $assignments = $this->activeSupplierCategories;
@@ -242,14 +251,16 @@ class User extends Authenticatable
      */
     public function getProfileDisplayAttribute()
     {
-        return strtoupper(substr($this->name ?? 'U', 0, 2));
-    }
-
-    /**
-     * Get the supplier information (for supplier users)
-     */
-    public function supplierInformation()
-    {
-        return $this->hasOne(SupplierInformation::class);
+        if ($this->profile_photo) {
+            return $this->profile_photo_url;
+        }
+        
+        // Generate initials from name
+        $words = explode(' ', $this->name);
+        $initials = '';
+        foreach ($words as $word) {
+            $initials .= strtoupper(substr($word, 0, 1));
+        }
+        return $initials;
     }
 }

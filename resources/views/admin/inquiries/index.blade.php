@@ -1,214 +1,591 @@
-@extends('layouts.app')
+@extends('admin.layouts.app')
 
-@section('title', 'Inquiry Management')
+@section('title', 'Supplier Inquiries')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="mb-8">
-        <div class="flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Inquiry Management</h1>
-                <p class="text-gray-600">Manage customer quotation requests and supplier workflow</p>
+<div class="px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="sm:flex sm:items-center">
+        <div class="sm:flex-auto">
+            <h1 class="text-2xl font-semibold leading-6 text-gray-900">Supplier Inquiries</h1>
+            <p class="mt-2 text-sm text-gray-700">Manage product inquiries sent to suppliers and track responses. Inquiries are automatically sent to suppliers who are registered for the relevant product categories.</p>
+        </div>
+        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none header-actions">
+            <a href="{{ route('admin.inquiries.create') }}" 
+               class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                <i class="fas fa-plus mr-2"></i> Create Inquiry
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Statistics -->
+    <div class="mt-8 mb-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <!-- Total Inquiries -->
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200 hover:border-indigo-500 transition-colors duration-200">
+                <div class="px-4 py-5 sm:p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-indigo-100 rounded-md p-3">
+                            <i class="fas fa-clipboard-list text-indigo-600 text-xl"></i>
+                        </div>
+                        <div class="ml-5">
+                            <dt class="text-sm font-medium text-gray-500">Total Inquiries</dt>
+                            <dd class="mt-1 text-3xl font-semibold text-indigo-600">{{ $inquiries->total() }}</dd>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="flex space-x-3">
-                <a href="{{ route('admin.inquiries.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium">
-                    <i class="fas fa-plus mr-2"></i>Add Manual Inquiry
-                </a>
+
+            <!-- Pending -->
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200 hover:border-yellow-500 transition-colors duration-200">
+                <div class="px-4 py-5 sm:p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-yellow-100 rounded-md p-3">
+                            <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                        </div>
+                        <div class="ml-5">
+                            <dt class="text-sm font-medium text-gray-500">Pending</dt>
+                            <dd class="mt-1 text-3xl font-semibold text-yellow-600">{{ $inquiries->where('status', 'pending')->count() }}</dd>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Broadcast -->
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200 hover:border-blue-500 transition-colors duration-200">
+                <div class="px-4 py-5 sm:p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-blue-100 rounded-md p-3">
+                            <i class="fas fa-broadcast-tower text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="ml-5">
+                            <dt class="text-sm font-medium text-gray-500">Broadcast</dt>
+                            <dd class="mt-1 text-3xl font-semibold text-blue-600">{{ $inquiries->where('status', 'broadcast')->count() }}</dd>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quoted -->
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200 hover:border-green-500 transition-colors duration-200">
+                <div class="px-4 py-5 sm:p-6">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 bg-green-100 rounded-md p-3">
+                            <i class="fas fa-check text-green-600 text-xl"></i>
+                        </div>
+                        <div class="ml-5">
+                            <dt class="text-sm font-medium text-gray-500">Quoted</dt>
+                            <dd class="mt-1 text-3xl font-semibold text-green-600">{{ $inquiries->where('status', 'quoted')->count() }}</dd>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Filters -->
-    <div class="bg-white rounded-lg shadow mb-6">
+    <div class="mt-8 bg-white shadow-sm rounded-lg border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Filter Inquiries</h3>
+        </div>
         <div class="p-6">
-            <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
-                    <input type="text" name="search" value="{{ request('search') }}" 
-                           placeholder="Product name, customer..." 
-                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                    <select name="status" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            <form method="GET" action="{{ route('admin.inquiries.index') }}" class="grid grid-cols-1 gap-6 sm:grid-cols-4">
+                <div class="sm:col-span-1">
+                    <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                    <select name="status" id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                         <option value="">All Statuses</option>
-                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending Review</option>
-                        <option value="forwarded" {{ request('status') == 'forwarded' ? 'selected' : '' }}>Forwarded to Supplier</option>
-                        <option value="supplier_responded" {{ request('status') == 'supplier_responded' ? 'selected' : '' }}>Supplier Responded</option>
-                        <option value="quote_created" {{ request('status') == 'quote_created' ? 'selected' : '' }}>Quote Created</option>
-                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="broadcast" {{ request('status') == 'broadcast' ? 'selected' : '' }}>Broadcast</option>
+                        <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>In Progress</option>
+                        <option value="quoted" {{ request('status') == 'quoted' ? 'selected' : '' }}>Quoted</option>
+                        <option value="converted" {{ request('status') == 'converted' ? 'selected' : '' }}>Converted</option>
                         <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                     </select>
                 </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Supplier Response</label>
-                    <select name="supplier_response" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="">All Responses</option>
-                        <option value="pending" {{ request('supplier_response') == 'pending' ? 'selected' : '' }}>Pending</option>
-                        <option value="available" {{ request('supplier_response') == 'available' ? 'selected' : '' }}>Available</option>
-                        <option value="not_available" {{ request('supplier_response') == 'not_available' ? 'selected' : '' }}>Not Available</option>
-                    </select>
+                <div class="sm:col-span-2">
+                    <label for="search" class="block text-sm font-medium text-gray-700">Search</label>
+                    <input type="text" name="search" id="search" 
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" 
+                           placeholder="Search by reference number or product..." 
+                           value="{{ request('search') }}">
                 </div>
-                
-                <div class="flex items-end">
-                    <button type="submit" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md font-medium">
-                        <i class="fas fa-search mr-2"></i>Filter
+                <div class="sm:col-span-1 flex items-end space-x-3">
+                    <button type="submit" 
+                            class="flex-1 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                        Filter
                     </button>
+                    <a href="{{ route('admin.inquiries.index') }}" 
+                       class="flex-1 text-center rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-200">
+                        Clear
+                    </a>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Inquiries Table -->
-    <div class="bg-white rounded-lg shadow overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-medium text-gray-900">Inquiries ({{ $inquiries->total() }})</h3>
-        </div>
-        
-        @if($inquiries->count() > 0)
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supplier</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach($inquiries as $inquiry)
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <div>
-                                    <div class="text-sm font-medium text-gray-900">{{ $inquiry->product->name }}</div>
-                                    <div class="text-sm text-gray-500">SKU: {{ $inquiry->product->sku ?? 'N/A' }}</div>
-                                    @if($inquiry->size)
-                                        <div class="text-xs text-blue-600">Size: {{ $inquiry->size }}</div>
-                                    @endif
-                                </div>
-                            </div>
-                        </td>
-                        
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">{{ $inquiry->user->name ?? 'Guest' }}</div>
-                            <div class="text-sm text-gray-500">{{ $inquiry->user->email ?? 'No email' }}</div>
-                        </td>
-                        
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ number_format($inquiry->quantity) }}
-                        </td>
-                        
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $inquiry->status_badge_class }}">
-                                {{ $inquiry->formatted_status }}
-                            </span>
-                            @if($inquiry->supplier_response !== 'pending')
-                                <div class="mt-1">
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium {{ $inquiry->supplier_response_badge_class }}">
-                                        {{ ucfirst(str_replace('_', ' ', $inquiry->supplier_response)) }}
-                                    </span>
-                                </div>
+    <div class="mt-8 flow-root">
+        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 table-container">
+            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                @if($inquiries->count() > 0)
+                    @php
+                        $hasBroadcastInquiries = $inquiries->contains('status', 'broadcast');
+                    @endphp
+                    <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg" data-has-broadcast-inquiries="{{ $hasBroadcastInquiries ? 'true' : 'false' }}">
+                        <table class="min-w-full divide-y divide-gray-300">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Reference</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Product/Description</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Quantity</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Status</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide group relative">
+                                        <div class="flex items-center">
+                                            Broadcast To
+                                            <span class="ml-1 cursor-help">
+                                                <i class="fas fa-info-circle"></i>
+                                                <div class="hidden group-hover:block absolute z-10 top-full left-0 mt-1 w-64 p-2 bg-gray-800 text-white text-xs rounded shadow-lg normal-case">
+                                                    Inquiries are sent to all suppliers with matching product categories.
+                                                </div>
+                                            </span>
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Responses</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Created</th>
+                                    <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 bg-white">
+                                @foreach($inquiries as $inquiry)
+                                    <tr class="hover:bg-gray-50 table-row-with-dropdown" data-inquiry-id="{{ $inquiry->id }}">
+                                        <td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
+                                            <div class="font-semibold">{{ $inquiry->reference_number }}</div>
+                                            @if($inquiry->customer_reference)
+                                                <div class="text-gray-500 text-xs">Ref: {{ $inquiry->customer_reference }}</div>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-900">
+                                            @if($inquiry->product_id)
+                                                <div class="font-medium">{{ $inquiry->product->name ?? 'Product Not Found' }}</div>
+                                                @if($inquiry->product && $inquiry->product->sku)
+                                                    <div class="text-gray-500 text-xs">SKU: {{ $inquiry->product->sku }}</div>
+                                                @endif
+                                            @else
+                                                <div class="font-medium">{{ $inquiry->product_name }}</div>
+                                                @if($inquiry->product_category)
+                                                    <div class="text-gray-500 text-xs">Category: {{ $inquiry->product_category }}</div>
+                                                @endif
+                                            @endif
+                                        </td>
+                                        <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-900">{{ number_format($inquiry->quantity) }}</td>
+                                        <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                                            @php
+                                                $statusColors = [
+                                                    'pending' => 'bg-yellow-100 text-yellow-800',
+                                                    'processing' => 'bg-blue-100 text-blue-800',
+                                                    'broadcast' => 'bg-indigo-100 text-indigo-800',
+                                                    'in_progress' => 'bg-blue-100 text-blue-800',
+                                                    'quoted' => 'bg-green-100 text-green-800',
+                                                    'converted' => 'bg-green-100 text-green-800',
+                                                    'cancelled' => 'bg-red-100 text-red-800',
+                                                    'expired' => 'bg-gray-100 text-gray-800'
+                                                ];
+                                                $color = $statusColors[$inquiry->status] ?? 'bg-gray-100 text-gray-800';
+                                            @endphp
+                                            <span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold {{ $color }}">
+                                                {{ ucfirst($inquiry->status) }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-900">
+                                            <span class="text-indigo-600 font-medium">Suppliers with relevant categories</span>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-900">
+                                            <div class="status-display space-y-2">
+                                            @php
+                                                // Only count actual responses (not pending ones)
+                                                $actualResponseCount = $inquiry->supplierResponses->where('status', 'quoted')->count();
+                                                $interestedCount = $inquiry->supplierResponses->where('status', 'interested')->count();
+                                                $quotedCount = $inquiry->supplierResponses->where('status', 'quoted')->count();
+                                                $totalSuppliersNotified = $inquiry->supplierResponses->count();
+                                                
+                                                // Enhanced email tracking metrics
+                                                $emailsSentSuccessfully = $inquiry->supplierResponses->where('email_sent_successfully', true)->count();
+                                                $emailsReceived = $emailsSentSuccessfully; // Assuming sent = received for now
+                                                $suppliersClickedEmail = $inquiry->supplierResponses->whereNotNull('viewed_at')->count();
+                                                $emailsFailed = $inquiry->supplierResponses->where('email_sent_successfully', false)->count();
+                                                $totalClicks = $suppliersClickedEmail;
+                                                
+                                                // Response categories
+                                                $notInterestedCount = $inquiry->supplierResponses->where('status', 'not_interested')->count();
+                                            @endphp
+                                            
+                                            <div class="space-y-2">
+                                                @if($totalSuppliersNotified > 0)
+                                                    <!-- Email Metrics Section -->
+                                                    <div class="bg-gray-50 rounded-lg p-3 space-y-2">
+                                                        <div class="text-xs font-medium text-gray-700 uppercase tracking-wide">Email Tracking</div>
+                                                        
+                                                        <div class="grid grid-cols-2 gap-3 text-xs">
+                                                            <!-- Emails Sent -->
+                                                            <div class="flex items-center justify-between">
+                                                                <span class="text-gray-600">📧 Sent:</span>
+                                                                <span class="font-medium {{ $emailsSentSuccessfully > 0 ? 'text-green-600' : 'text-gray-500' }}">
+                                                                    {{ $emailsSentSuccessfully }}
+                                                                </span>
+                                                            </div>
+                                                            
+                                                            <!-- Emails Received (Delivered) -->
+                                                            <div class="flex items-center justify-between">
+                                                                <span class="text-gray-600">✅ Received:</span>
+                                                                <span class="font-medium {{ $emailsReceived > 0 ? 'text-blue-600' : 'text-gray-500' }}">
+                                                                    {{ $emailsReceived }}
+                                                                </span>
+                                                            </div>
+                                                            
+                                                            <!-- Clicked on Email -->
+                                                            <div class="flex items-center justify-between">
+                                                                <span class="text-gray-600">👆 Clicked:</span>
+                                                                <span class="font-medium {{ $suppliersClickedEmail > 0 ? 'text-purple-600' : 'text-gray-500' }}">
+                                                                    {{ $suppliersClickedEmail }}
+                                                                </span>
+                                                            </div>
+                                                            
+                                                            <!-- Failed Emails -->
+                                                            @if($emailsFailed > 0)
+                                                                <div class="flex items-center justify-between">
+                                                                    <span class="text-gray-600">❌ Failed:</span>
+                                                                    <span class="font-medium text-red-600">{{ $emailsFailed }}</span>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Response Metrics Section -->
+                                                    @if($actualResponseCount > 0)
+                                                        <div class="bg-green-50 rounded-lg p-3 space-y-2">
+                                                            <div class="text-xs font-medium text-green-700 uppercase tracking-wide">Supplier Responses</div>
+                                                            
+                                                            <div class="space-y-1">
+                                                                <div class="flex items-center justify-between text-xs">
+                                                                    <span class="text-green-600">💬 Total Responses:</span>
+                                                                    <span class="font-medium text-green-700">{{ $quotedCount }}</span>
+                                                                </div>
+                                                                
+                                                                @if($interestedCount > 0)
+                                                                    <div class="flex items-center justify-between text-xs">
+                                                                        <span class="text-green-600">⭐ Interested:</span>
+                                                                        <span class="font-medium text-green-700">{{ $interestedCount }}</span>
+                                                                    </div>
+                                                                @endif
+                                                                
+                                                                @if($quotedCount > 0)
+                                                                    <div class="flex items-center justify-between text-xs">
+                                                                        <span class="text-blue-600">💰 Quoted:</span>
+                                                                        <span class="font-medium text-blue-700">{{ $quotedCount }}</span>
+                                                                    </div>
+                                                                @endif
+                                                                
+                                                                @if($notInterestedCount > 0)
+                                                                    <div class="flex items-center justify-between text-xs">
+                                                                        <span class="text-orange-600">🚫 Not Interested:</span>
+                                                                        <span class="font-medium text-orange-700">{{ $notInterestedCount }}</span>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        <div class="bg-yellow-50 rounded-lg p-3">
+                                                            <div class="text-xs font-medium text-yellow-700 uppercase tracking-wide">Response Status</div>
+                                                            <div class="text-xs text-yellow-600 mt-1">⏳ Awaiting supplier responses</div>
+                                                        </div>
+                                                    @endif
+                                                @else
+                                                    <div class="bg-gray-100 rounded-lg p-3">
+                                                        <div class="text-xs font-medium text-gray-500 uppercase tracking-wide">Status</div>
+                                                        <div class="text-xs text-gray-600 mt-1">📤 Not broadcast yet</div>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            </div>
+                                        </td>
+                                        <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                                            <div>{{ formatDubaiDate($inquiry->created_at, 'M j, Y') }}</div>
+                                            <div class="text-gray-500 text-xs">{{ formatDubaiDate($inquiry->created_at, 'g:i A') }}</div>
+                                        </td>
+                                        <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                                            <div class="flex items-center justify-end gap-2">
+                                                <a href="{{ route('admin.inquiries.show', $inquiry) }}" 
+                                                   class="inline-flex items-center rounded px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200">
+                                                    <i class="fas fa-eye mr-1"></i>View
+                                                </a>
+
+                                                @if($inquiry->status === 'pending')
+                                                    <form action="{{ route('admin.inquiries.status.update', $inquiry) }}" method="POST" class="inline-block">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <input type="hidden" name="status" value="broadcast">
+                                                        <button type="submit" 
+                                                                class="inline-flex items-center rounded px-2.5 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                                            <i class="fas fa-broadcast-tower mr-1"></i>Broadcast
+                                                        </button>
+                                                    </form>
+                                                @endif
+
+                                                @if(in_array($inquiry->status, ['pending', 'broadcast', 'in_progress']))
+                                                    <form action="{{ route('admin.inquiries.status.update', $inquiry) }}" method="POST" 
+                                                          class="inline-block"
+                                                          onsubmit="return confirm('Are you sure you want to cancel this inquiry?')">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <input type="hidden" name="status" value="cancelled">
+                                                        <button type="submit" 
+                                                                class="inline-flex items-center rounded px-2.5 py-1.5 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                                            <i class="fas fa-times mr-1"></i>Cancel
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    @if($inquiries->hasPages())
+                        <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+                            {{ $inquiries->appends(request()->query())->links() }}
+                        </div>
+                    @endif
+                @else
+                    <div class="text-center py-12">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-6m-4 0H4" />
+                        </svg>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900">No inquiries found</h3>
+                        <p class="mt-1 text-sm text-gray-500">
+                            @if(request()->hasAny(['status', 'search']))
+                                No inquiries match your current filters.
+                            @else
+                                You haven't created any supplier inquiries yet.
                             @endif
-                        </td>
-                        
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ $inquiry->supplier->name ?? 'Not assigned' }}
-                        </td>
-                        
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ formatDubaiDate($inquiry->created_at, 'M j, Y') }}
-                            <div class="text-xs text-gray-400">{{ formatDubaiDate($inquiry->created_at, 'g:i A') }}</div>
-                        </td>
-                        
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex space-x-2">
-                                <a href="{{ route('admin.inquiries.show', $inquiry) }}" 
-                                   class="text-blue-600 hover:text-blue-900">View</a>
-                                   
-                                @if($inquiry->status === 'pending')
-                                    <span class="text-gray-300">|</span>
-                                    <button type="button" onclick="showForwardModal({{ $inquiry->id }})" 
-                                            class="text-green-600 hover:text-green-900">Forward</button>
-                                @endif
-                                
-                                @if($inquiry->status === 'supplier_responded' && $inquiry->supplier_response === 'available')
-                                    <span class="text-gray-300">|</span>
-                                    <a href="{{ route('admin.inquiries.show', $inquiry) }}#generate-quote" 
-                                       class="text-purple-600 hover:text-purple-900">Generate Quote</a>
-                                @endif
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- Pagination -->
-        <div class="px-6 py-4 border-t border-gray-200">
-            {{ $inquiries->appends(request()->query())->links() }}
-        </div>
-        @else
-        <div class="px-6 py-12 text-center">
-            <div class="text-gray-500">
-                <i class="fas fa-inbox text-4xl mb-4"></i>
-                <h3 class="text-lg font-medium text-gray-900 mb-2">No inquiries found</h3>
-                <p class="text-sm">Customer quotation requests will appear here for workflow management.</p>
-                <div class="mt-6">
-                    <a href="{{ route('products.index') }}" class="text-blue-600 hover:text-blue-800">
-                        View products to see how customers can request quotes →
-                    </a>
-                </div>
+                        </p>
+                        <div class="mt-6">
+                            <a href="{{ route('admin.inquiries.create') }}" 
+                               class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                                <i class="fas fa-plus mr-2"></i> Create First Inquiry
+                            </a>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
-        @endif
     </div>
 </div>
+@endsection
 
-<!-- Forward to Supplier Modal (simplified for demo) -->
-<div id="forwardModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <h3 class="text-lg font-bold text-gray-900 mb-4">Forward to Supplier</h3>
-        <form id="forwardForm" method="POST">
-            @csrf
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Select Supplier</label>
-                <select name="supplier_id" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    <option value="">Select a supplier...</option>
-                    <!-- Suppliers will be loaded here -->
-                </select>
-            </div>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Internal Notes</label>
-                <textarea name="internal_notes" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Add any internal notes..."></textarea>
-            </div>
-            <div class="flex justify-end space-x-3">
-                <button type="button" onclick="closeForwardModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">
-                    Cancel
-                </button>
-                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
-                    Forward to Supplier
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
+@push('styles')
+<style>
+    /* Fix dropdown overflow issues in table */
+    .table-row-with-dropdown {
+        position: relative;
+    }
+    
+    .table-row-with-dropdown:last-child .dropdown-menu,
+    .table-row-with-dropdown:nth-last-child(2) .dropdown-menu {
+        transform: translateY(-100%);
+        top: auto;
+        bottom: 100%;
+    }
+    
+    /* Ensure table container doesn't clip dropdowns */
+    .table-container {
+        overflow: visible !important;
+    }
+    
+    .table-container .overflow-hidden {
+        overflow: visible !important;
+    }
 
+    /* Loading animation for dynamic updates */
+    .status-updating {
+        position: relative;
+    }
+    
+    .status-updating::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -20px;
+        width: 12px;
+        height: 12px;
+        border: 2px solid #3B82F6;
+        border-top: 2px solid transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .status-updated {
+        background-color: #FEF3C7;
+        transition: background-color 2s ease-out;
+    }
+</style>
+@endpush
+
+@push('scripts')
 <script>
-function showForwardModal(inquiryId) {
-    document.getElementById('forwardModal').classList.remove('hidden');
-    document.getElementById('forwardForm').action = `/admin/inquiries/${inquiryId}/forward-to-supplier`;
-}
+document.addEventListener('DOMContentLoaded', function() {
+    let updateInterval;
+    let isUpdating = false;
+    
+    // Function to update inquiry statuses
+    async function updateInquiryStatuses() {
+        if (isUpdating) return;
+        isUpdating = true;
+        
+        try {
+            const response = await fetch('{{ route("admin.inquiries.status-updates") }}', {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                updateStatusDisplays(data.inquiries);
+            }
+        } catch (error) {
+            console.error('Error updating statuses:', error);
+        } finally {
+            isUpdating = false;
+        }
+    }
+    
+    // Function to update the status displays in the UI
+    function updateStatusDisplays(inquiries) {
+        inquiries.forEach(inquiry => {
+            const statusElement = document.querySelector(`[data-inquiry-id="${inquiry.id}"] .status-display`);
+            if (statusElement) {
+                const currentContent = statusElement.innerHTML;
+                const newContent = generateStatusHTML(inquiry);
+                
+                if (currentContent !== newContent) {
+                    // Add updating animation
+                    statusElement.classList.add('status-updating');
+                    
+                    setTimeout(() => {
+                        statusElement.innerHTML = newContent;
+                        statusElement.classList.remove('status-updating');
+                        statusElement.classList.add('status-updated');
+                        
+                        // Remove the highlight after 2 seconds
+                        setTimeout(() => {
+                            statusElement.classList.remove('status-updated');
+                        }, 2000);
+                    }, 500);
+                }
+            }
+        });
+    }
+    
+    // Function to generate status HTML
+    function generateStatusHTML(inquiry) {
+        let html = '';
 
-function closeForwardModal() {
-    document.getElementById('forwardModal').classList.add('hidden');
-}
+        // Email Metrics Section
+        if (inquiry.total_suppliers > 0) {
+            html += `<div class="bg-blue-50 rounded-lg p-3 space-y-2">
+                <div class="text-xs font-medium text-blue-700 uppercase tracking-wide">Email Metrics</div>
+                <div class="space-y-1">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-blue-600">📧 Sent:</span>
+                        <span class="font-medium text-blue-700">${inquiry.emails_sent}/${inquiry.total_suppliers}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-blue-600">👁️ Viewed:</span>
+                        <span class="font-medium text-blue-700">${inquiry.emails_clicked}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-blue-600">❌ Failed:</span>
+                        <span class="font-medium text-blue-700">${inquiry.emails_failed}</span>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // Response Metrics Section
+        if (inquiry.quoted > 0) {
+            html += `<div class="bg-green-50 rounded-lg p-3 space-y-2">
+                <div class="text-xs font-medium text-green-700 uppercase tracking-wide">Supplier Responses</div>
+                <div class="space-y-1">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-green-600">💬 Total Responses:</span>
+                        <span class="font-medium text-green-700">${inquiry.quoted}</span>
+                    </div>`;
+            
+            if (inquiry.interested > 0) {
+                html += `<div class="flex items-center justify-between text-xs">
+                    <span class="text-green-600">⭐ Interested:</span>
+                    <span class="font-medium text-green-700">${inquiry.interested}</span>
+                </div>`;
+            }
+            
+            if (inquiry.quoted > 0) {
+                html += `<div class="flex items-center justify-between text-xs">
+                    <span class="text-blue-600">💰 Quoted:</span>
+                    <span class="font-medium text-blue-700">${inquiry.quoted}</span>
+                </div>`;
+            }
+            
+            if (inquiry.not_interested > 0) {
+                html += `<div class="flex items-center justify-between text-xs">
+                    <span class="text-orange-600">🚫 Not Interested:</span>
+                    <span class="font-medium text-orange-700">${inquiry.not_interested}</span>
+                </div>`;
+            }
+            
+            html += '</div></div>';
+        } else {
+            html += `<div class="bg-yellow-50 rounded-lg p-3">
+                <div class="text-xs font-medium text-yellow-700 uppercase tracking-wide">Response Status</div>
+                <div class="text-xs text-yellow-600 mt-1">⏳ Awaiting supplier responses</div>
+            </div>`;
+        }
+
+        return html;
+    }
+    
+    // Start auto-refresh only if there are broadcast inquiries with pending clicks
+    const hasBroadcastInquiries = document.querySelector('[data-has-broadcast-inquiries]');
+    if (hasBroadcastInquiries && hasBroadcastInquiries.dataset.hasBroadcastInquiries === 'true') {
+        // Update every 10 seconds
+        updateInterval = setInterval(updateInquiryStatuses, 10000);
+        
+        // Add indicator that auto-refresh is active
+        const refreshIndicator = document.createElement('div');
+        refreshIndicator.className = 'fixed bottom-4 right-4 bg-indigo-600 text-white px-3 py-2 rounded-lg shadow-lg text-sm z-50';
+        refreshIndicator.innerHTML = '<i class="fas fa-sync-alt mr-1 animate-spin"></i> Auto-refreshing email stats...';
+        document.body.appendChild(refreshIndicator);
+        
+        // Remove indicator when leaving page
+        window.addEventListener('beforeunload', () => {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
+            refreshIndicator.remove();
+        });
+    }
+    
+    // Initial update
+    updateInquiryStatuses();
+});
 </script>
-@endsection 
+@endpush 

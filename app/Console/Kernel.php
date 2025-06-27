@@ -8,6 +8,15 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 class Kernel extends ConsoleKernel
 {
     /**
+     * The Artisan commands provided by your application.
+     *
+     * @var array
+     */
+    protected $commands = [
+        Commands\SafeMigrations::class,
+    ];
+
+    /**
      * Define the application's command schedule.
      *
      * These schedules are run in a single process, so avoid doing any heavy processing.
@@ -17,6 +26,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('reservations:cleanup')->everyMinute();
         $schedule->command('sitemap:generate')->daily();
         $schedule->command('campaigns:send-scheduled')->everyMinute();
+        $schedule->command('users:cleanup-unverified --days=1')->everyFourHours();
+        $schedule->command('users:send-verification-reminders')->daily();
         
         // Process email and notification queues every minute
         $schedule->command('queue:work --queue=notifications,emails --stop-when-empty --tries=3')->everyMinute();

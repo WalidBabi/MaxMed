@@ -38,33 +38,18 @@ class AuthNotification extends Notification
             ? '👤 New User Registration - ' . config('app.name') 
             : '🔐 User Login Activity - ' . config('app.name');
             
-        if ($this->type === 'registered') {
-            $greeting = 'New User Registration Alert';
-            $message = 'A new user has successfully registered on ' . config('app.name') . '. Please review the registration details below.';
-            $actionText = 'View User Profile';
-            $actionUrl = url('/admin/users/' . $this->user->id);
-        } else {
-            $greeting = 'User Login Activity';
-            $message = 'A user has logged into ' . config('app.name') . '. Login activity details are provided below.';
-            $actionText = 'View Admin Dashboard';
-            $actionUrl = url('/admin/dashboard');
-        }
+        $actionUrl = $this->type === 'registered'
+            ? url('/admin/users/' . $this->user->id)
+            : url('/admin/dashboard');
 
         return (new MailMessage)
             ->subject($subject)
-            ->greeting($greeting)
-            ->line($message)
-            ->line('**User Details:**')
-            ->line('- **Name:** ' . $this->user->name)
-            ->line('- **Email:** ' . $this->user->email)
-            ->line('- **User ID:** #' . $this->user->id)
-            ->line('- **Time:** ' . now()->toDayDateTimeString())
-            ->line('- **Authentication Method:** ' . $this->method)
-            ->action($actionText, $actionUrl)
-            ->line('This is an automated notification for administrative monitoring.')
-            ->line('No action is required unless you notice suspicious activity.')
-            ->salutation('Best regards,  
-' . config('app.name') . ' Admin System');
+            ->view('emails.auth-notification', [
+                'type' => $this->type,
+                'user' => $this->user,
+                'method' => $this->method,
+                'actionUrl' => $actionUrl
+            ]);
     }
 
     /**

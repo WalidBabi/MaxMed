@@ -144,10 +144,10 @@
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Details</th>
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Rate (AED)</th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Rate ({{ $quote->currency ?? 'AED' }})</th>
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Discount</th>
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Specs</th>
-                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount (AED)</th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount ({{ $quote->currency ?? 'AED' }})</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
@@ -160,7 +160,7 @@
                                             <td class="px-6 py-4 text-center text-sm text-gray-900">
                                                 @if($item->product && $item->product->specifications->count() > 0)
                                                     <button 
-                                                        onclick="toggleSpecs({{ $index }})" 
+                                                        onclick="toggleSpecs({{ $loop->index }})" 
                                                         class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
                                                     >
                                                         <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,7 +175,7 @@
                                             <td class="px-6 py-4 text-right text-sm font-medium text-gray-900">{{ number_format($item->amount, 2) }}</td>
                                         </tr>
                                         @if($item->product && $item->product->specifications->count() > 0)
-                                            <tr id="specs-row-{{ $index }}" class="hidden">
+                                            <tr id="specs-row-{{ $loop->index }}" class="hidden">
                                                 <td colspan="6" class="px-6 py-4 bg-gray-50">
                                                     <div class="specs-content">
                                                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -208,11 +208,11 @@
                             <div class="w-full max-w-sm">
                                 <div class="flex justify-between py-2 text-sm">
                                     <span class="font-medium text-gray-900">Sub Total:</span>
-                                    <span class="font-bold text-gray-900">{{ number_format($quote->sub_total, 2) }} AED</span>
+                                    <span class="font-bold text-gray-900">{{ number_format($quote->sub_total, 2) }} {{ $quote->currency ?? 'AED' }}</span>
                                 </div>
                                 <div class="flex justify-between py-3 text-lg border-t border-gray-200">
                                     <span class="font-semibold text-gray-900">Total:</span>
-                                    <span class="font-bold text-indigo-600">{{ number_format($quote->total_amount, 2) }} AED</span>
+                                    <span class="font-bold text-indigo-600">{{ number_format($quote->total_amount, 2) }} {{ $quote->currency ?? 'AED' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -321,11 +321,11 @@
                     </div>
                     <div class="flex justify-between">
                         <span class="text-sm text-gray-600">Sub Total:</span>
-                        <span class="text-sm font-medium text-gray-900">{{ number_format($quote->sub_total, 2) }} AED</span>
+                        <span class="text-sm font-medium text-gray-900">{{ number_format($quote->sub_total, 2) }} {{ $quote->currency ?? 'AED' }}</span>
                     </div>
                     <div class="flex justify-between pt-4 border-t border-gray-200">
                         <span class="text-base font-semibold text-gray-900">Total Amount:</span>
-                        <span class="text-base font-bold text-indigo-600">{{ number_format($quote->total_amount, 2) }} AED</span>
+                        <span class="text-base font-bold text-indigo-600">{{ number_format($quote->total_amount, 2) }} {{ $quote->currency ?? 'AED' }}</span>
                     </div>
                 </div>
             </div>

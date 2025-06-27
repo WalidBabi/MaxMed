@@ -21,6 +21,7 @@ class Quote extends Model
         'status',
         'sub_total',
         'total_amount',
+        'currency',
         'attachments',
         'created_by'
     ];

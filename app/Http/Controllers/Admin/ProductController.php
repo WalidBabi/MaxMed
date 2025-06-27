@@ -205,8 +205,9 @@ class ProductController extends Controller
     {
         $categories = Category::all();
         
-        // Get existing specifications
-        $existingSpecs = $this->specificationService->getExistingSpecifications($product->id);
+        // Get existing specifications and index them by specification_key for easy access
+        $existingSpecsCollection = $this->specificationService->getExistingSpecifications($product->id);
+        $existingSpecs = $existingSpecsCollection->keyBy('specification_key');
         
         // Get category-specific templates
         $templates = $this->specificationService->getCategorySpecificationTemplates($product->category_id);

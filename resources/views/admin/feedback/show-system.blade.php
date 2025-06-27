@@ -215,14 +215,6 @@
                                 {{ $feedback->user && $feedback->user->created_at ? $feedback->user->created_at->format('F j, Y') : 'N/A' }}
                             </dd>
                         </div>
-                        @if($feedback->user && $feedback->user->isSupplier())
-                            <div>
-                                <dt class="text-sm font-medium text-gray-500">Supplier Performance</dt>
-                                <dd class="mt-1 text-sm text-gray-900">
-                                    {{ number_format($feedback->user->overall_performance_score ?? 0, 1) }}/5.0
-                                </dd>
-                            </div>
-                        @endif
                     </dl>
                 </div>
             </div>

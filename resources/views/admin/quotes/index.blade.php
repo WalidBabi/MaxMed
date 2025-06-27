@@ -82,7 +82,19 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600">Total Value</p>
-                    <p class="text-3xl font-bold text-gray-900">{{ number_format($quotes->sum('total_amount'), 0) }} AED</p>
+                    <p class="text-3xl font-bold text-gray-900">
+                        @php
+                            $totalByAed = $quotes->where('currency', 'AED')->sum('total_amount');
+                            $totalByUsd = $quotes->where('currency', 'USD')->sum('total_amount');
+                        @endphp
+                        @if($totalByAed > 0 && $totalByUsd > 0)
+                            {{ number_format($totalByAed, 0) }} AED | {{ number_format($totalByUsd, 0) }} USD
+                        @elseif($totalByUsd > 0)
+                            {{ number_format($totalByUsd, 0) }} USD
+                        @else
+                            {{ number_format($totalByAed, 0) }} AED
+                        @endif
+                    </p>
                 </div>
             </div>
         </div>
@@ -141,7 +153,7 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    {{ number_format($quote->total_amount, 2) }} AED
+                                    {{ number_format($quote->total_amount, 2) }} {{ $quote->currency ?? 'AED' }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex items-center justify-end space-x-2">

@@ -60,6 +60,13 @@ return [
             'report' => false,
         ],
 
+        'supplier_documents' => [
+            'driver' => 'local',
+            'root' => storage_path('app/supplier_documents'),
+            'url' => env('APP_URL').'/supplier-documents',
+            'visibility' => 'private',
+        ],
+
     ],
 
     /*

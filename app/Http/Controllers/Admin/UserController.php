@@ -121,7 +121,6 @@ class UserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role_id' => ['nullable', 'exists:roles,id'],
-            'is_admin' => ['boolean'],
         ]);
 
         $user = User::create([
@@ -129,7 +128,6 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role_id' => $request->role_id,
-            'is_admin' => $request->boolean('is_admin', false),
         ]);
 
         return redirect()->route('admin.users.index')
@@ -166,14 +164,12 @@ class UserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
             'role_id' => ['nullable', 'exists:roles,id'],
-            'is_admin' => ['boolean'],
         ]);
 
         $userData = [
             'name' => $request->name,
             'email' => $request->email,
             'role_id' => $request->role_id,
-            'is_admin' => $request->boolean('is_admin', false),
         ];
 
         if ($request->filled('password')) {

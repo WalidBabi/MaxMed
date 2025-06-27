@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 
 class SafeMigrations extends Command
 {
@@ -19,8 +21,8 @@ class SafeMigrations extends Command
         foreach ($files as $file) {
             $content = File::get($file);
             
-            // Skip if already modified
-            if (strpos($content, 'Schema::hasTable') !== false) {
+            // Skip if already modified with the new simple pattern
+            if (strpos($content, 'if (!Schema::hasTable') !== false && !strpos($content, 'preg_match')) {
                 $this->info("Already safe: " . basename($file));
                 continue;
             }

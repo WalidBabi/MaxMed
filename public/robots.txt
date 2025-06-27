@@ -1,9 +1,20 @@
 User-agent: *
+
+# Allow product pages explicitly
+Allow: /products/
+Allow: /product/
+Allow: /categories/
+
+# Block admin and auth routes
 Disallow: /admin/
 Disallow: /login
 Disallow: /register
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /supplier/
+Disallow: /crm/
 
-# Prevent soft 404s by disallowing categories mentioned in Search Console
+# Block specific problematic URLs that cause soft 404s
 Disallow: /categories/43/46
 Disallow: /categories/50
 Disallow: /categories/43/45
@@ -14,15 +25,6 @@ Disallow: /categories/45
 Disallow: /categories/55
 Disallow: /categories/43
 Disallow: /categories/34
-Disallow: /education%26-training-tools
-Disallow: /analytical-chemistry
-Disallow: /genomics-%26-life-sciences
-Disallow: /veterinary-%26-agri-tools
-Disallow: /forensic-supplies
-Disallow: /molecular-biology
-Disallow: /research-%26-life-sciences
-
-# Additional Soft 404 URLs to disallow
 Disallow: /categories/76
 Disallow: /categories/72
 Disallow: /categories/77
@@ -31,44 +33,30 @@ Disallow: /categories/56
 Disallow: /categories/51/60
 Disallow: /categories/51/55/59
 
-# Block Query Parameters causing duplicate content
-Disallow: /products?category=*
-Disallow: /*?category=MaxWare*
-Disallow: /*?category=consumables
-Disallow: /*?category=Microbiology
-Disallow: /*?category=Analytical*
-Disallow: /*?category=Medical*
-Disallow: /*?category=Molecular*
-Disallow: /*?category=rapid-tests
+# Block problematic category paths
+Disallow: /education%26-training-tools
+Disallow: /analytical-chemistry
+Disallow: /genomics-%26-life-sciences
+Disallow: /veterinary-%26-agri-tools
+Disallow: /forensic-supplies
+Disallow: /molecular-biology
+Disallow: /research-%26-life-sciences
+
+# Block duplicate content from query parameters
+Disallow: /*?*sort=
+Disallow: /*?*page=2
+Disallow: /*?*page=3
+Disallow: /*?*page=4
+Disallow: /*?*filter=
+Disallow: /*?*search=
+
+# Allow first page of category filters for SEO
+Allow: /products?category=*
 
 # Specify canonical domain
-User-agent: *
 Host: maxmedme.com
 
-# Specifically disallow duplicate URLs from Search Console
-Disallow: /product/80
-Disallow: /product/92
-Disallow: /categories/51/39/84
-Disallow: /categories/51/39/86
-Disallow: /categories/51/39/83
-Disallow: /categories/66/71/72
-Disallow: /categories/66/71/73
-Disallow: /categories/57/74
-Disallow: /categories/60/77
-Disallow: /categories/57/75
-
-# Fixed quotation handling - REMOVED CONTRADICTORY RULES
-Allow: /quotation/form
-Allow: /quotation/confirmation
-Allow: /quotation/*/form$
-
-# Allow specific paths (higher priority than disallow)
-Allow: /cart
-Allow: /
-Allow: /categories/49/51
-Allow: /categories/49/51/52
-
-# Allow CSS, JS, and Images
+# Allow static resources
 Allow: /*.js$
 Allow: /*.css$
 Allow: /*.png$
@@ -78,11 +66,14 @@ Allow: /*.gif$
 Allow: /*.webp$
 Allow: /*.avif$
 
-# RSS Feeds
+# Allow RSS feeds
 Allow: /rss/
 
-# Sitemaps
+# Sitemap locations (using correct filenames)
 Sitemap: https://maxmedme.com/sitemap.xml
+Sitemap: https://maxmedme.com/sitemap-product.xml
+Sitemap: https://maxmedme.com/sitemap-categories.xml
+Sitemap: https://maxmedme.com/sitemap-news.xml
 
 # RSS Feeds for Content Discovery
 # RSS: https://maxmedme.com/rss/feed.xml

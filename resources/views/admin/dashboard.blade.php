@@ -108,6 +108,84 @@
         </div>
     </div>
 
+    <!-- Quotation Management Section -->
+    <div class="mb-8">
+        <h3 class="text-lg font-semibold text-gray-500 mb-4 tracking-wide">QUOTATION MANAGEMENT</h3>
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <!-- Total Quotations -->
+            <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-500">
+                            <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Quotations</p>
+                        <p class="text-2xl font-semibold text-gray-900">{{ $stats['quotation_stats']['total_quotations'] ?? 0 }}</p>
+                        <p class="text-xs text-gray-500 mt-1">All time submissions</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Quotations -->
+            <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-500">
+                            <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Pending Review</p>
+                        <p class="text-2xl font-semibold text-gray-900">{{ $stats['quotation_stats']['pending_quotations'] ?? 0 }}</p>
+                        <p class="text-xs text-gray-500 mt-1">Awaiting approval</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- This Week's Quotations -->
+            <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-green-500">
+                            <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">This Week</p>
+                        <p class="text-2xl font-semibold text-gray-900">{{ $stats['quotation_stats']['quotations_this_week'] ?? 0 }}</p>
+                        <p class="text-xs text-gray-500 mt-1">New submissions</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Approved Quotations -->
+            <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-500">
+                            <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Approved</p>
+                        <p class="text-2xl font-semibold text-gray-900">{{ $stats['quotation_stats']['approved_quotations'] ?? 0 }}</p>
+                        <p class="text-xs text-gray-500 mt-1">Accepted quotations</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Supplier Management Section -->
     <div class="mb-8">
         <h3 class="text-lg font-semibold text-gray-500 mb-4 tracking-wide">SUPPLIER MANAGEMENT</h3>

@@ -53,7 +53,9 @@ class PurchaseOrderController extends Controller
             ->get();
 
         // Get suppliers (users with supplier role) with their information
-        $suppliers = User::where('role', 'supplier')
+        $suppliers = User::whereHas('role', function($q) {
+            $q->where('name', 'supplier');
+        })
             ->with('supplierInformation')
             ->get();
 

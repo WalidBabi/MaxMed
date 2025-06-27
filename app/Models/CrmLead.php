@@ -14,6 +14,7 @@ class CrmLead extends Model
         'first_name',
         'last_name',
         'email',
+        'mobile',
         'phone',
         'company_name',
         'job_title',

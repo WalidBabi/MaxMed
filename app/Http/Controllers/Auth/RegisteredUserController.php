@@ -44,7 +44,14 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
+        // Log for debugging duplicate emails
+        Log::info('Customer registered, firing Registered event', ['user_id' => $user->id, 'email' => $user->email]);
+        
+        // Send verification email manually instead of using event to avoid duplicates
+        $user->sendEmailVerificationNotification();
+        
+        // Note: Commenting out event firing to prevent duplicate emails
+        // event(new Registered($user));
         
         // Send notification to admin
         try {
@@ -57,7 +64,12 @@ class RegisteredUserController extends Controller
                 $admin->name = 'Admin';
                 $admin->id = 0;
             } else {
-                $admin = User::where('is_admin', true)->whereNotNull('email')->first();
+                $admin = User::where('is_admin', true)
+                    ->whereNotNull('email')
+                    ->whereDoesntHave('role', function($query) {
+                        $query->where('name', 'supplier');
+                    })
+                    ->first();
             }
             
             if ($admin) {
@@ -71,6 +83,12 @@ class RegisteredUserController extends Controller
 
         // Set a session flag to show orders hint
         session()->put('show_orders_hint', true);
+
+        // Redirect to email verification notice if email is not verified
+        if (!$user->hasVerifiedEmail()) {
+            return redirect()->route('verification.notice')
+                ->with('message', 'Please verify your email address to complete your registration.');
+        }
 
         return redirect(route('dashboard', absolute: false));
     }

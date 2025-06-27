@@ -100,10 +100,22 @@
                                             $statusClasses = [
                                                 'pending' => 'bg-orange-100 text-orange-800',
                                                 'processing' => 'bg-blue-100 text-blue-800',
+                                                'awaiting_quotations' => 'bg-yellow-100 text-yellow-800',
+                                                'quotations_received' => 'bg-blue-100 text-blue-800',
                                             ];
+                                            
+                                            if ($order->delivery) {
+                                                $currentStatus = $order->delivery->status;
+                                                $statusClass = $statusClasses[$currentStatus] ?? 'bg-gray-100 text-gray-800';
+                                                $statusText = ucfirst($currentStatus);
+                                            } else {
+                                                $currentStatus = $order->status;
+                                                $statusClass = $statusClasses[$currentStatus] ?? 'bg-gray-100 text-gray-800';
+                                                $statusText = $currentStatus === 'awaiting_quotations' ? 'Needs Quotation' : ucfirst(str_replace('_', ' ', $currentStatus));
+                                            }
                                         @endphp
-                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium {{ $statusClasses[$order->delivery->status] ?? 'bg-gray-100 text-gray-800' }}">
-                                            {{ ucfirst($order->delivery->status) }}
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium {{ $statusClass }}">
+                                            {{ $statusText }}
                                         </span>
                                     </div>
                                 </div>

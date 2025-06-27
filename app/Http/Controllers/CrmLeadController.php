@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\CrmLead;
 use App\Models\User;
 use App\Models\CrmDeal;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
 
 class CrmLeadController extends Controller
 {
@@ -108,11 +110,12 @@ class CrmLeadController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:crm_leads',
+            'mobile' => 'nullable|string|max:20',
             'phone' => 'nullable|string|max:20',
             'company_name' => 'required|string|max:255',
             'job_title' => 'nullable|string|max:255',
             'company_address' => 'nullable|string',
-            'source' => 'required|in:website,linkedin,email,phone,referral,trade_show,google_ads,other',
+            'source' => 'required|in:website,linkedin,email,phone,whatsapp,on_site_visit,referral,trade_show,google_ads,other',
             'priority' => 'required|in:low,medium,high',
             'estimated_value' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string',
@@ -147,12 +150,13 @@ class CrmLeadController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:crm_leads,email,' . $lead->id,
+            'mobile' => 'nullable|string|max:20',
             'phone' => 'nullable|string|max:20',
             'company_name' => 'required|string|max:255',
             'job_title' => 'nullable|string|max:255',
             'company_address' => 'nullable|string',
             'status' => 'required|in:new,contacted,qualified,proposal,negotiation,won,lost',
-            'source' => 'required|in:website,linkedin,email,phone,referral,trade_show,google_ads,other',
+            'source' => 'required|in:website,linkedin,email,phone,whatsapp,on_site_visit,referral,trade_show,google_ads,other',
             'priority' => 'required|in:low,medium,high',
             'estimated_value' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string',

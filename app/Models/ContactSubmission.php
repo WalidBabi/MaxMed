@@ -61,6 +61,9 @@ class ContactSubmission extends Model
                       });
             })
             ->whereNotNull('email')
+            ->whereDoesntHave('role', function($query) {
+                $query->where('name', 'supplier');
+            })
             ->get();
 
             Log::info('Found ' . $users->count() . ' admin/CRM users for notification');

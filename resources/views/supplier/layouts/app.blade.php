@@ -20,12 +20,15 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700" rel="stylesheet" />
 
+    <!-- Scripts and Styles -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <!-- Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Custom CSS - Load after Vite assets -->
+    <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/mobile.css') }}">
 
     <!-- Additional Styling -->
     <style>
@@ -158,6 +161,23 @@
         .lg\:fixed {
             position: static !important;
         }
+
+        /* Ensure Tailwind classes take precedence */
+        .tailwind-override {
+            all: revert;
+        }
+        
+        /* Fix for potential Bootstrap conflicts */
+        .container, .row, .col {
+            all: revert;
+        }
+        
+        /* Ensure proper z-index stacking */
+        .z-50 { z-index: 50 !important; }
+        .z-40 { z-index: 40 !important; }
+        .z-30 { z-index: 30 !important; }
+        .z-20 { z-index: 20 !important; }
+        .z-10 { z-index: 10 !important; }
     </style>
 </head>
 

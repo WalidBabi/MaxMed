@@ -137,6 +137,18 @@
                                     @enderror
                                 </div>
 
+                                <div>
+                                    <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">Currency Rate <span class="text-red-500">*</span></label>
+                                    <select id="currency" name="currency" required 
+                                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('currency') border-red-300 @enderror">
+                                        <option value="AED" {{ old('currency', $quote->currency ?? 'AED') == 'AED' ? 'selected' : '' }}>AED (Dirham)</option>
+                                        <option value="USD" {{ old('currency', $quote->currency ?? 'AED') == 'USD' ? 'selected' : '' }}>USD (Dollar)</option>
+                                    </select>
+                                    @error('currency')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
                                 <div class="md:col-span-2">
                                     <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
                                     <input type="text" id="subject" name="subject" 
@@ -151,12 +163,68 @@
                         </div>
                     </div>
 
+                    <!-- Item Table -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+                            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                                <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v1a2 2 0 002 2h2m0-4v4m0-4a2 2 0 012-2h1a2 2 0 012 2v1a2 2 0 01-2 2h-1m-2-4v4"></path>
+                                </svg>
+                                Item Table
+                            </h3>
+                            <button type="button" id="addItem" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                                <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                                </svg>
+                                Add Item
+                            </button>
+                        </div>
+                        <div class="p-6">
+                            <div class="overflow-x-auto w-full">
+                                <table class="w-full divide-y divide-gray-200 items-table">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 60px;">Drag</th>
+                                            <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 300px;">Item Details</th>
+                                            <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 200px;">Specifications</th>
+                                            <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Quantity</th>
+                                            <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Rate</th>
+                                            <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Discount</th>
+                                            <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Amount</th>
+                                            <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 80px;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="itemsTable" class="bg-white divide-y divide-gray-200">
+                                        <!-- Existing items will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="mt-6 flex justify-end">
+                                <div class="w-full max-w-sm">
+                                    <div class="rounded-lg bg-gray-50 p-4">
+                                        <div class="flex justify-between py-2">
+                                            <span class="text-sm font-medium text-gray-700">Sub Total:</span>
+                                            <span id="subTotal" class="text-sm font-semibold text-gray-900">{{ number_format($quote->sub_total, 2) }}</span>
+                                        </div>
+                                        <div class="border-t border-gray-200 pt-2">
+                                            <div class="flex justify-between">
+                                                <span class="text-base font-semibold text-gray-900">Total (<span id="totalCurrency">{{ $quote->currency ?? 'AED' }}</span>):</span>
+                                                <span id="totalAmount" class="text-base font-bold text-indigo-600">{{ number_format($quote->total_amount, 2) }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Customer Notes -->
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                         <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
                             <h3 class="text-lg font-semibold text-gray-900 flex items-center">
                                 <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
                                 Customer Notes
                             </h3>
@@ -233,64 +301,6 @@
                                 <p><span class="font-medium text-gray-900">Quote Date:</span> Update the quote date if needed</p>
                                 <p><span class="font-medium text-gray-900">Expiry Date:</span> Set when this quote expires</p>
                                 <p><span class="font-medium text-gray-900">Items:</span> Add, edit, or remove items as needed</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Item Table - Full Width -->
-            <div class="w-full px-4 sm:px-6 lg:px-8 mb-8">
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                            <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v1a2 2 0 002 2h2m0-4v4m0-4a2 2 0 012-2h1a2 2 0 012 2v1a2 2 0 01-2 2h-1m-2-4v4"></path>
-                            </svg>
-                            Item Table
-                        </h3>
-                        <button type="button" id="addItem" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
-                            <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                            </svg>
-                            Add Item
-                        </button>
-                    </div>
-                    <div class="p-6">
-                        <div class="overflow-x-auto w-full">
-                            <table class="w-full divide-y divide-gray-200 items-table">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 60px;">Drag</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 300px;">Item Details</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 200px;">Specifications</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Quantity</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Rate</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Discount</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Amount</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 80px;">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="itemsTable" class="bg-white divide-y divide-gray-200">
-                                    <!-- Existing items will be loaded here -->
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="mt-6 flex justify-end">
-                            <div class="w-full max-w-sm">
-                                <div class="rounded-lg bg-gray-50 p-4">
-                                    <div class="flex justify-between py-2">
-                                        <span class="text-sm font-medium text-gray-700">Sub Total:</span>
-                                        <span id="subTotal" class="text-sm font-semibold text-gray-900">{{ number_format($quote->sub_total, 2) }}</span>
-                                    </div>
-                                    <div class="border-t border-gray-200 pt-2">
-                                        <div class="flex justify-between">
-                                            <span class="text-base font-semibold text-gray-900">Total (AED):</span>
-                                            <span id="totalAmount" class="text-base font-bold text-indigo-600">{{ number_format($quote->total_amount, 2) }}</span>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -443,6 +453,8 @@
                                      data-name="{{ $product->name }}"
                                      data-description="{{ $product->description }}"
                                      data-price="{{ $product->price_aed ?? $product->price }}"
+                                 data-price-aed="{{ $product->price_aed ?? $product->price }}"
+                                 data-price-usd="{{ $product->price ?? 0 }}"
                                      data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
                                      data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                      data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
@@ -451,9 +463,12 @@
                                     @if($product->description)
                                         <div class="text-gray-600 text-xs mt-1">{{ Str::limit($product->description, 80) }}</div>
                                     @endif
-                                    @if($product->price_aed ?? $product->price)
-                                        <div class="text-indigo-600 text-sm font-medium mt-1">AED {{ number_format($product->price_aed ?? $product->price, 2) }}</div>
-                                    @endif
+                                                                    @if($product->price_aed ?? $product->price)
+                                    <div class="text-indigo-600 text-sm font-medium mt-1">
+                                        <span class="price-display-aed">AED {{ number_format($product->price_aed ?? $product->price, 2) }}</span>
+                                        <span class="price-display-usd" style="display: none;">USD {{ number_format($product->price ?? 0, 2) }}</span>
+                                    </div>
+                                @endif
                                 </div>
                             @endforeach
                         </div>
@@ -732,7 +747,9 @@
         function selectProduct(item) {
             const productId = item.dataset.id;
             const productName = item.dataset.name;
-            const productPrice = item.dataset.price;
+            const currencySelect = document.getElementById('currency');
+            const currency = currencySelect ? currencySelect.value : 'AED';
+            const productPrice = currency === 'USD' ? item.dataset.priceUsd : item.dataset.priceAed;
             const specifications = item.dataset.specifications;
             
             // Set values
@@ -1190,6 +1207,56 @@
         });
         sizeSelect.innerHTML = options;
     }
+
+    // Add currency change functionality after page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Currency change handler
+        const currencySelect = document.getElementById('currency');
+        if (currencySelect) {
+            currencySelect.addEventListener('change', function() {
+                const selectedCurrency = this.value;
+                
+                // Update total currency display
+                const totalCurrencyElement = document.getElementById('totalCurrency');
+                if (totalCurrencyElement) {
+                    totalCurrencyElement.textContent = selectedCurrency;
+                }
+                
+                // Update all product price displays in dropdown
+                const priceDisplaysAed = document.querySelectorAll('.price-display-aed');
+                const priceDisplaysUsd = document.querySelectorAll('.price-display-usd');
+                
+                if (selectedCurrency === 'USD') {
+                    priceDisplaysAed.forEach(el => el.style.display = 'none');
+                    priceDisplaysUsd.forEach(el => el.style.display = 'inline');
+                } else {
+                    priceDisplaysAed.forEach(el => el.style.display = 'inline');
+                    priceDisplaysUsd.forEach(el => el.style.display = 'none');
+                }
+                
+                // Update existing item rates based on selected currency
+                const itemRows = document.querySelectorAll('#itemsTable tr');
+                itemRows.forEach(row => {
+                    const productIdInput = row.querySelector('input[name*="[product_id]"]');
+                    const rateInput = row.querySelector('input[name*="[rate]"]');
+                    
+                    if (productIdInput && productIdInput.value && rateInput) {
+                        // Find the product in dropdown to get price data
+                        const productItem = document.querySelector(`[data-id="${productIdInput.value}"]`);
+                        if (productItem) {
+                            const newPrice = selectedCurrency === 'USD' ? 
+                                productItem.dataset.priceUsd : 
+                                productItem.dataset.priceAed;
+                            rateInput.value = newPrice || 0;
+                            
+                            // Trigger recalculation
+                            calculateRowAmount({ target: rateInput });
+                        }
+                    }
+                });
+            });
+        }
+    });
     </script>
 
     @push('styles')
