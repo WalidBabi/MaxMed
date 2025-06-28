@@ -1177,7 +1177,7 @@ Route::middleware(['auth', \App\Http\Middleware\PreventBackHistory::class])->gro
 
 // Apply to specific form submission routes
 Route::middleware([\App\Http\Middleware\PreventBackHistory::class])->group(function () {
-    Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+    // Route::post('/contact', [ContactController::class, 'store'])->name('contact.store'); // Removed duplicate route
     Route::post('/quote', [\App\Http\Controllers\Admin\QuoteController::class, 'store'])->name('quote.store');
     Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 });
