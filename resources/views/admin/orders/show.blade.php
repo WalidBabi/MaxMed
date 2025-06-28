@@ -168,19 +168,21 @@
                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     @php
                                         $allowedTransitions = [
-                                            'pending' => ['pending', 'quotations_received', 'processing', 'cancelled'],
-                                            'quotations_received' => ['quotations_received', 'approved', 'cancelled'],
-                                            'approved' => ['approved', 'processing', 'cancelled'],
-                                            'processing' => ['processing', 'prepared', 'cancelled'],
-                                            'prepared' => ['prepared', 'shipped', 'cancelled'],
-                                            'shipped' => ['shipped', 'in_transit', 'delivered', 'cancelled'],
-                                            'in_transit' => ['in_transit', 'delivered', 'cancelled'],
-                                            'delivered' => ['delivered', 'completed'],
-                                            'completed' => ['completed'],
+                                            'pending' => ['pending', 'processing', 'cancelled'],
+                                            'processing' => ['processing', 'shipped', 'cancelled'],
+                                            'shipped' => ['shipped'],
                                             'cancelled' => ['cancelled']
                                         ];
                                         $currentStatus = $order->status;
                                         $validTransitions = $allowedTransitions[$currentStatus] ?? [$currentStatus];
+
+                                        $statusColors = [
+                                            'pending' => 'bg-yellow-100 text-yellow-800',
+                                            'processing' => 'bg-blue-100 text-blue-800',
+                                            'shipped' => 'bg-green-100 text-green-800',
+                                            'cancelled' => 'bg-red-100 text-red-800'
+                                        ];
+                                        $statusColor = $statusColors[$order->status] ?? 'bg-gray-100 text-gray-800';
                                     @endphp
                                     
                                     @foreach($validTransitions as $status)
@@ -205,17 +207,6 @@
             <!-- Order Status Badge -->
             <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mt-6">
                 <div class="p-6 text-center">
-                    @php
-                        $statusColors = [
-                            'pending' => 'bg-yellow-100 text-yellow-800',
-                            'processing' => 'bg-blue-100 text-blue-800',
-                            'shipped' => 'bg-purple-100 text-purple-800',
-                            'delivered' => 'bg-green-100 text-green-800',
-                            'cancelled' => 'bg-red-100 text-red-800',
-                        ];
-                        $statusColor = $statusColors[$order->status] ?? 'bg-gray-100 text-gray-800';
-                    @endphp
-                    
                     <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium {{ $statusColor }}">
                         {{ ucfirst($order->status) }}
                     </span>

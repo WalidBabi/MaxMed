@@ -47,7 +47,22 @@ return new class extends Migration
                     AND sq.status = 'approved'
                 ");
                 
-                echo "Fixed existing order statuses to align with new status system.\n";
+                // Convert all in-progress statuses to 'processing'
+                DB::statement("
+                    UPDATE orders
+                    SET status = 'processing'
+                    WHERE status IN ('quotations_received', 'approved', 'prepared', 'in_transit', 'delivered', 'completed')
+                    AND status != 'cancelled'
+                ");
+
+                // Ensure only valid statuses remain
+                DB::statement("
+                    UPDATE orders
+                    SET status = 'pending'
+                    WHERE status NOT IN ('pending', 'processing', 'shipped', 'cancelled')
+                ");
+
+                echo "Fixed existing order statuses to align with simplified status system.\n";
             } else {
                 echo "Skipping order status fix - order_id column not yet available in supplier_quotations table.\n";
             }
