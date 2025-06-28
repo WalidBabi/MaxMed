@@ -559,10 +559,19 @@ class QuoteController extends Controller
                 $subtotal = $quoteItem->quantity * $quoteItem->rate;
                 $discountAmount = ($subtotal * ($quoteItem->discount ?? 0)) / 100;
                 
+                // Get item description, fallback to product name if not set
+                $itemDescription = $quoteItem->item_details;
+                if (empty($itemDescription) && $quoteItem->product) {
+                    $itemDescription = $quoteItem->product->name;
+                }
+                if (empty($itemDescription)) {
+                    $itemDescription = 'Product #' . $quoteItem->product_id;
+                }
+                
                 $invoiceItemData = [
                     'invoice_id' => $invoice->id,
                     'product_id' => $quoteItem->product_id,
-                    'item_description' => $quoteItem->item_details,
+                    'item_description' => $itemDescription,
                     'size' => $quoteItem->size,
                     'quantity' => $quoteItem->quantity,
                     'unit_price' => $quoteItem->rate,
@@ -577,7 +586,8 @@ class QuoteController extends Controller
                 Log::info("Creating invoice item with data:", array_merge($invoiceItemData, [
                     'original_quote_item_discount' => $quoteItem->discount,
                     'calculated_discount_amount' => $discountAmount,
-                    'original_subtotal' => $subtotal
+                    'original_subtotal' => $subtotal,
+                    'item_description_source' => empty($quoteItem->item_details) ? ($quoteItem->product ? 'product_name' : 'fallback') : 'item_details'
                 ]));
                 
                 $invoiceItem = \App\Models\InvoiceItem::create($invoiceItemData);
