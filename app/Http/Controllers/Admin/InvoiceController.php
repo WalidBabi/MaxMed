@@ -10,6 +10,7 @@ use App\Models\Quote;
 use App\Models\Order;
 use App\Models\Delivery;
 use App\Models\Customer;
+use App\Models\Product;
 use App\Mail\InvoiceEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\View\View;
 
 class InvoiceController extends Controller
 {
@@ -201,13 +203,13 @@ class InvoiceController extends Controller
                 InvoiceItem::create([
                     'invoice_id' => $invoice->id,
                     'product_id' => $itemData['product_id'] ?? null,
-                    'description' => $itemData['description'] ?? $itemData['item_description'] ?? '',
+                    'item_description' => $itemData['description'] ?? $itemData['item_description'] ?? '',
                     'size' => $itemData['size'] ?? null,
                     'quantity' => $quantity,
                     'unit_price' => $unitPrice,
-                    'subtotal' => $subtotal,
-                    'tax' => $itemData['tax'] ?? 0,
-                    'total' => $subtotal + ($itemData['tax'] ?? 0),
+                    'discount_percentage' => $itemData['discount_percentage'] ?? 0,
+                    'discount_amount' => 0, // We'll calculate this in the model's boot method
+                    'line_total' => $subtotal,
                     'sort_order' => $index + 1
                 ]);
             }
@@ -299,13 +301,13 @@ class InvoiceController extends Controller
                 InvoiceItem::create([
                     'invoice_id' => $invoice->id,
                     'product_id' => $itemData['product_id'] ?? null,
-                    'description' => $itemData['description'] ?? $itemData['item_description'] ?? '',
+                    'item_description' => $itemData['description'] ?? $itemData['item_description'] ?? '',
                     'size' => $itemData['size'] ?? null,
                     'quantity' => $quantity,
                     'unit_price' => $unitPrice,
-                    'subtotal' => $subtotal,
-                    'tax' => $itemData['tax'] ?? 0,
-                    'total' => $subtotal + ($itemData['tax'] ?? 0),
+                    'discount_percentage' => $itemData['discount_percentage'] ?? 0,
+                    'discount_amount' => 0, // We'll calculate this in the model's boot method
+                    'line_total' => $subtotal,
                     'sort_order' => $index + 1
                 ]);
             }
