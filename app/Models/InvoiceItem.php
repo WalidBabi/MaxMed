@@ -75,4 +75,23 @@ class InvoiceItem extends Model
     {
         return number_format($this->line_total, 2);
     }
+
+    public function getFormattedDiscountAmountAttribute()
+    {
+        return number_format($this->discount_amount, 2);
+    }
+
+    public function getCalculatedDiscountAmountAttribute()
+    {
+        if ($this->discount_amount > 0) {
+            return $this->discount_amount;
+        }
+        
+        if ($this->discount_percentage > 0) {
+            $subtotal = $this->quantity * $this->unit_price;
+            return $subtotal * ($this->discount_percentage / 100);
+        }
+        
+        return 0;
+    }
 } 

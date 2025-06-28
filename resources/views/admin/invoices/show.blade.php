@@ -158,7 +158,18 @@
                                                 @endif
                                             </td>
                                             <td class="px-6 py-4 text-right text-sm text-gray-900">{{ $item->formatted_unit_price }} {{ $invoice->currency }}</td>
-                                            <td class="px-6 py-4 text-center text-sm text-gray-900">{{ number_format($item->discount_percentage, 2) }}%</td>
+                                            <td class="px-6 py-4 text-center text-sm text-gray-900">
+                                                @if($item->discount_percentage > 0)
+                                                    {{ number_format($item->discount_percentage, 2) }}%
+                                                    @if($item->calculated_discount_amount > 0)
+                                                        <br><span class="text-xs text-gray-500">(-{{ number_format($item->calculated_discount_amount, 2) }} {{ $invoice->currency }})</span>
+                                                    @endif
+                                                @elseif($item->calculated_discount_amount > 0)
+                                                    -{{ number_format($item->calculated_discount_amount, 2) }} {{ $invoice->currency }}
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
                                             <td class="px-6 py-4 text-center text-sm text-gray-900">
                                                 @if($item->product && $item->product->specifications->count() > 0)
                                                     <button 
@@ -208,25 +219,37 @@
                         
                         <div class="mt-6 flex justify-end">
                             <div class="w-full max-w-sm">
+                                @php
+                                    $subtotal = $invoice->items->sum(function($item) {
+                                        return $item->quantity * $item->unit_price;
+                                    });
+                                    $totalDiscount = $invoice->items->sum('calculated_discount_amount') + ($invoice->discount_amount ?? 0);
+                                    $taxAmount = $invoice->tax_amount ?? 0;
+                                    $finalTotal = $subtotal - $totalDiscount + $taxAmount;
+                                @endphp
+                                
                                 <div class="flex justify-between py-2 text-sm">
                                     <span class="font-medium text-gray-900">Sub Total:</span>
-                                    <span class="font-bold text-gray-900">{{ $invoice->formatted_total }} {{ $invoice->currency }}</span>
+                                    <span class="font-bold text-gray-900">{{ number_format($subtotal, 2) }} {{ $invoice->currency }}</span>
                                 </div>
-                                @if($invoice->tax_amount > 0)
+                                
+                                @if($totalDiscount > 0)
+                                <div class="flex justify-between py-2 text-sm">
+                                    <span class="font-medium text-gray-900">Total Discount:</span>
+                                    <span class="font-bold text-red-600">-{{ number_format($totalDiscount, 2) }} {{ $invoice->currency }}</span>
+                                </div>
+                                @endif
+                                
+                                @if($taxAmount > 0)
                                 <div class="flex justify-between py-2 text-sm">
                                     <span class="font-medium text-gray-900">Tax:</span>
-                                    <span class="font-bold text-gray-900">{{ number_format($invoice->tax_amount, 2) }} {{ $invoice->currency }}</span>
+                                    <span class="font-bold text-gray-900">{{ number_format($taxAmount, 2) }} {{ $invoice->currency }}</span>
                                 </div>
                                 @endif
-                                @if($invoice->discount_amount > 0)
-                                <div class="flex justify-between py-2 text-sm">
-                                    <span class="font-medium text-gray-900">Discount:</span>
-                                    <span class="font-bold text-gray-900">-{{ number_format($invoice->discount_amount, 2) }} {{ $invoice->currency }}</span>
-                                </div>
-                                @endif
+                                
                                 <div class="flex justify-between py-3 text-lg border-t border-gray-200">
                                     <span class="font-semibold text-gray-900">Total:</span>
-                                    <span class="font-bold text-indigo-600">{{ $invoice->formatted_total }} {{ $invoice->currency }}</span>
+                                    <span class="font-bold text-indigo-600">{{ number_format($finalTotal, 2) }} {{ $invoice->currency }}</span>
                                 </div>
                             </div>
                         </div>
