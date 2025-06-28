@@ -178,15 +178,22 @@ class OrderController extends Controller
 
     public function updateStatus(Request $request, Order $order)
     {
-        $request->validate([
-            'status' => 'required|in:pending,processing,shipped,delivered,cancelled'
-        ]);
+        try {
+            $request->validate([
+                'status' => 'required|string'
+            ]);
 
-        $order->update([
-            'status' => $request->status
-        ]);
+            $order->update([
+                'status' => $request->status
+            ]);
 
-        return redirect()->back()->with('success', 'Order status updated successfully');
+            return redirect()->back()->with('success', 'Order status updated successfully');
+        } catch (\InvalidArgumentException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to update order status: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to update order status. Please try again.');
+        }
     }
 
     public function destroy(Order $order)
