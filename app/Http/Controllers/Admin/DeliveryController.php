@@ -37,11 +37,11 @@ class DeliveryController extends Controller
         }
         
         $orders = $selectedOrder
-            ? collect([$selectedOrder->id => 'Order #' . $selectedOrder->id . ' - ' . ($selectedOrder->user->name ?? 'N/A')])
+            ? collect([$selectedOrder->id => $selectedOrder->order_number . ' - ' . ($selectedOrder->user->name ?? 'N/A')])
             : Order::whereDoesntHave('delivery')
                 ->with('user')
                 ->get()
-                ->mapWithKeys(fn($order) => [$order->id => 'Order #' . $order->id . ' - ' . ($order->user->name ?? 'N/A')]);
+                ->mapWithKeys(fn($order) => [$order->id => $order->order_number . ' - ' . ($order->user->name ?? 'N/A')]);
 
         return view('admin.deliveries.create', compact('orders', 'selectedOrder'));
     }
