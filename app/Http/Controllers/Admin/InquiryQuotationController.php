@@ -167,23 +167,21 @@ class InquiryQuotationController extends Controller
                     ]);
                 }
                 
-                // CREATE ORDER AND PURCHASE ORDER FOR APPROVED QUOTATIONS
-                // This transitions to order management phase
-                $order = $this->createOrderFromQuotation($quotation, $validated['notes'] ?? null);
-                if ($order) {
-                    // Create Purchase Order
-                    $purchaseOrder = $this->createPurchaseOrderFromQuotation($quotation, $order);
-                    
+                // CREATE PURCHASE ORDER DIRECTLY FROM APPROVED QUOTATION
+                // No internal order needed for supplier inquiries
+                $purchaseOrder = $this->createPurchaseOrderFromSupplierInquiry($quotation, $validated['notes'] ?? null);
+                
+                if ($purchaseOrder) {
                     // Create initial payment record
                     $this->createInitialPaymentRecord($purchaseOrder);
                     
-                    Log::info("Created order {$order->order_number} and purchase order {$purchaseOrder->po_number} from approved quotation {$quotation->id}");
+                    Log::info("Created purchase order {$purchaseOrder->po_number} from approved supplier inquiry quotation {$quotation->id}");
                 }
             }
 
             DB::commit();
 
-            return redirect()->back()->with('success', 'Quotation approved successfully. Purchase order and payment record created.');
+            return redirect()->back()->with('success', 'Quotation approved successfully. Purchase order created and sent to supplier.');
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Error approving quotation: ' . $e->getMessage());
@@ -192,9 +190,9 @@ class InquiryQuotationController extends Controller
     }
 
     /**
-     * Create order from approved quotation
+     * Create purchase order directly from supplier inquiry quotation (no internal order needed)
      */
-    private function createOrderFromQuotation(SupplierQuotation $quotation, $notes = null)
+    private function createPurchaseOrderFromSupplierInquiry(SupplierQuotation $quotation, $notes = null)
     {
         try {
             // Get inquiry details
@@ -203,88 +201,55 @@ class InquiryQuotationController extends Controller
                 return null;
             }
 
-            // Create order from the quotation
-            $order = Order::create([
-                'user_id' => 1, // System user
-                'customer_id' => null, // Internal order, no customer
-                'total_amount' => $quotation->unit_price * $inquiry->quantity + ($quotation->shipping_cost ?? 0),
-                'status' => Order::STATUS_PROCESSING, // Start in processing since quotation is approved
-                'shipping_address' => 'Internal Order - MaxMed Office',
-                'shipping_city' => 'Dubai',
-                'shipping_state' => 'Dubai',
-                'shipping_zipcode' => '00000',
-                'shipping_phone' => '+971-50-000-0000',
-                'notes' => "Order created from approved quotation {$quotation->quotation_number}. " . ($notes ?? ''),
-                'requires_quotation' => false, // No longer requires quotation since it's approved
-                'quotation_status' => Order::QUOTATION_STATUS_APPROVED
+            // Get supplier information
+            $supplier = $quotation->supplier;
+            $supplierInfo = $supplier->supplierInformation;
+
+            // Create the purchase order directly (no order_id needed)
+            $purchaseOrder = PurchaseOrder::create([
+                'order_id' => null, // No customer order needed for supplier inquiries
+                'supplier_id' => $supplier->id,
+                'quotation_request_id' => $inquiry->id,
+                'supplier_quotation_id' => $quotation->id,
+                'supplier_name' => $supplierInfo ? $supplierInfo->company_name : $supplier->name,
+                'supplier_email' => $supplier->email,
+                'supplier_phone' => $supplierInfo->phone_primary ?? null,
+                'supplier_address' => $supplierInfo ? $this->formatSupplierAddress($supplierInfo) : null,
+                'po_date' => now()->toDateString(),
+                'delivery_date_requested' => now()->addDays(14)->toDateString(),
+                'description' => "Purchase order for approved supplier inquiry quotation {$quotation->quotation_number} - {$quotation->product->name}",
+                'sub_total' => $quotation->unit_price * $inquiry->quantity,
+                'shipping_cost' => $quotation->shipping_cost ?? 0,
+                'total_amount' => ($quotation->unit_price * $inquiry->quantity) + ($quotation->shipping_cost ?? 0),
+                'currency' => $quotation->currency,
+                'status' => PurchaseOrder::STATUS_SENT_TO_SUPPLIER,
+                'sent_to_supplier_at' => now(),
+                'payment_status' => PurchaseOrder::PAYMENT_STATUS_PENDING,
+                'payment_due_date' => now()->addDays(30),
+                'notes' => $quotation->notes . ($notes ? "\n\nAdmin Notes: " . $notes : ''),
+                'terms_conditions' => $this->getDefaultTermsAndConditions(),
+                'created_by' => auth()->id()
             ]);
 
-            // Create order items
-            \App\Models\OrderItem::create([
-                'order_id' => $order->id,
+            // Create purchase order items
+            PurchaseOrderItem::create([
+                'purchase_order_id' => $purchaseOrder->id,
                 'product_id' => $quotation->product_id,
+                'item_description' => $quotation->product->name,
                 'quantity' => $inquiry->quantity,
-                'price' => $quotation->unit_price,
-                'variation' => $quotation->size ?? null
+                'unit_price' => $quotation->unit_price,
+                'line_total' => $quotation->unit_price * $inquiry->quantity,
+                'unit_of_measure' => 'pcs',
+                'specifications' => $quotation->size ?? 'Standard specifications',
+                'sort_order' => 1
             ]);
 
-            return $order;
+            return $purchaseOrder;
+
         } catch (\Exception $e) {
-            Log::error('Error creating order from quotation: ' . $e->getMessage());
+            Log::error('Error creating purchase order from supplier inquiry: ' . $e->getMessage());
             return null;
         }
-    }
-
-    /**
-     * Create purchase order from approved quotation
-     */
-    private function createPurchaseOrderFromQuotation(SupplierQuotation $quotation, Order $order)
-    {
-        // Get supplier information
-        $supplier = $quotation->supplier;
-        $supplierInfo = $supplier->supplierInformation;
-        $inquiry = $quotation->supplierInquiry;
-
-        // Create the purchase order
-        $purchaseOrder = PurchaseOrder::create([
-            'order_id' => $order->id,
-            'supplier_id' => $supplier->id,
-            'quotation_request_id' => $inquiry->id,
-            'supplier_quotation_id' => $quotation->id,
-            'supplier_name' => $supplierInfo ? $supplierInfo->company_name : $supplier->name,
-            'supplier_email' => $supplier->email,
-            'supplier_phone' => $supplierInfo->phone_primary ?? null,
-            'supplier_address' => $supplierInfo ? $this->formatSupplierAddress($supplierInfo) : null,
-            'po_date' => now()->toDateString(),
-            'delivery_date_requested' => now()->addDays(14)->toDateString(),
-            'description' => "Purchase order for approved quotation {$quotation->quotation_number} - {$quotation->product->name}",
-            'sub_total' => $quotation->unit_price * $inquiry->quantity,
-            'shipping_cost' => $quotation->shipping_cost ?? 0,
-            'total_amount' => ($quotation->unit_price * $inquiry->quantity) + ($quotation->shipping_cost ?? 0),
-            'currency' => $quotation->currency,
-            'status' => PurchaseOrder::STATUS_SENT_TO_SUPPLIER,
-            'sent_to_supplier_at' => now(),
-            'payment_status' => PurchaseOrder::PAYMENT_STATUS_PENDING,
-            'payment_due_date' => now()->addDays(30),
-            'notes' => $quotation->notes,
-            'terms_conditions' => $this->getDefaultTermsAndConditions(),
-            'created_by' => auth()->id()
-        ]);
-
-        // Create purchase order items
-        PurchaseOrderItem::create([
-            'purchase_order_id' => $purchaseOrder->id,
-            'product_id' => $quotation->product_id,
-            'item_description' => $quotation->product->name,
-            'quantity' => $inquiry->quantity,
-            'unit_price' => $quotation->unit_price,
-            'line_total' => $quotation->unit_price * $inquiry->quantity,
-            'unit_of_measure' => 'pcs',
-            'specifications' => $quotation->size ?? 'Standard specifications',
-            'sort_order' => 1
-        ]);
-
-        return $purchaseOrder;
     }
 
     /**

@@ -21,7 +21,8 @@ class Product extends Model
         'size_options',
         'pdf_file',
         'average_rating',
-        'review_count'
+        'review_count',
+        'is_active'
     ];
 
     protected $casts = [
@@ -29,7 +30,8 @@ class Product extends Model
         'has_size_options' => 'boolean',
         'size_options' => 'array',
         'average_rating' => 'decimal:1',
-        'review_count' => 'integer'
+        'review_count' => 'integer',
+        'is_active' => 'boolean'
     ];
 
     public function category()

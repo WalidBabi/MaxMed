@@ -71,6 +71,7 @@ class QuotationApprovedNotification extends Notification implements ShouldQueue
         elseif ($this->quotation->supplier_inquiry_id) {
             $message->line('**Supplier Inquiry Details:**')
                 ->line('- **Total Amount:** ' . $this->quotation->currency . ' ' . number_format($this->quotation->total_amount, 2))
+                ->line('- **Source:** Supplier Inquiry')
                 ->line('')
                 ->action('View Inquiry', URL::to('/supplier/inquiries/' . $this->quotation->supplier_inquiry_id));
         }
@@ -79,18 +80,13 @@ class QuotationApprovedNotification extends Notification implements ShouldQueue
             $message->line('**Quotation Request Details:**')
                 ->line('- **Total Amount:** ' . $this->quotation->currency . ' ' . number_format($this->quotation->total_amount, 2))
                 ->line('')
-                ->action('View Request', URL::to('/supplier/quotation-requests/' . $this->quotation->quotation_request_id));
+                ->action('View Quotation Request', URL::to('/supplier/quotation-requests/' . $this->quotation->quotation_request_id));
         }
 
-        return $message
-            ->line('**Next Steps:**')
-            ->line('1. Log in to your supplier dashboard')
-            ->line('2. View the details')
-            ->line('3. Begin processing')
-            ->line('4. Update the status as you progress')
-            ->line('Please ensure timely processing and delivery.')
-            ->salutation('Best regards,  
-' . Config::get('app.name') . ' Team');
+        $message->line('Please proceed with order processing and keep us updated on the delivery status.')
+            ->line('Thank you for your business!');
+
+        return $message;
     }
 
     /**
@@ -101,10 +97,10 @@ class QuotationApprovedNotification extends Notification implements ShouldQueue
         $data = [
             'type' => 'quotation_approved',
             'quotation_id' => $this->quotation->id,
+            'quotation_number' => $this->quotation->quotation_number,
             'total_amount' => $this->quotation->total_amount,
             'currency' => $this->quotation->currency,
-            'created_at' => Carbon::now()->toISOString(),
-            'title' => 'Quotation approved'
+            'message' => 'Your quotation has been approved.'
         ];
 
         // Handle order-based quotations
@@ -129,6 +125,15 @@ class QuotationApprovedNotification extends Notification implements ShouldQueue
             $data['po_number'] = $this->purchaseOrder->po_number;
             $data['delivery_date'] = $this->purchaseOrder->delivery_date_requested->toISOString();
             $data['message'] = 'Your quotation has been approved. PO #' . $this->purchaseOrder->po_number . ' has been created.';
+            
+            // Add source type information
+            if ($this->purchaseOrder->isFromSupplierInquiry()) {
+                $data['source_type'] = 'supplier_inquiry';
+                $data['message'] = 'Your quotation has been approved for supplier inquiry. PO #' . $this->purchaseOrder->po_number . ' has been created.';
+            } elseif ($this->purchaseOrder->hasCustomerOrder()) {
+                $data['source_type'] = 'customer_order';
+                $data['message'] = 'Your quotation has been approved for customer order. PO #' . $this->purchaseOrder->po_number . ' has been created.';
+            }
         }
 
         return $data;

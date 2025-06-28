@@ -487,12 +487,12 @@ class InquiryController extends Controller
     {
         $validated = $request->validate([
             'supplier_quotation_id' => 'required|exists:supplier_quotations,id',
-            'customer_order_id' => 'required|exists:orders,id',
+            'customer_order_id' => 'nullable|exists:orders,id', // Make customer order optional
             'notes' => 'nullable|string',
         ]);
 
         $supplierQuotation = SupplierQuotation::with(['supplier', 'supplier.supplierInformation'])->find($validated['supplier_quotation_id']);
-        $order = Order::find($validated['customer_order_id']);
+        $order = $validated['customer_order_id'] ? Order::find($validated['customer_order_id']) : null;
         
         DB::beginTransaction();
         try {
@@ -500,9 +500,9 @@ class InquiryController extends Controller
             $supplier = $supplierQuotation->supplier;
             $supplierInfo = $supplier->supplierInformation;
             
-            // Create purchase order with supplier information (NO CUSTOMER INFO)
+            // Create purchase order with or without customer order
             $po = PurchaseOrder::create([
-                'order_id' => $order->id,
+                'order_id' => $order ? $order->id : null, // Optional customer order
                 'supplier_id' => $supplier->id,
                 'quotation_request_id' => $inquiry->id,
                 'supplier_quotation_id' => $supplierQuotation->id,
@@ -516,7 +516,8 @@ class InquiryController extends Controller
                 'supplier_address' => $supplierInfo ? $supplierInfo->formatted_address : null,
                 
                 // Order details without customer identification
-                'description' => "Purchase Order for Product: {$supplierQuotation->product->name}",
+                'description' => "Purchase Order for Product: {$supplierQuotation->product->name}" . 
+                                ($order ? " - Customer Order #{$order->order_number}" : " - Supplier Inquiry"),
                 'terms_conditions' => $supplierQuotation->terms_conditions,
                 'notes' => $validated['notes'] ?? "Lead time: {$supplierQuotation->lead_time_days} days",
                 'currency' => $supplierQuotation->currency,
@@ -545,8 +546,12 @@ class InquiryController extends Controller
 
             DB::commit();
 
+            $successMessage = $order 
+                ? 'Purchase order created and ready to send to supplier (customer information protected).'
+                : 'Purchase order created from supplier inquiry and ready to send to supplier.';
+
             return redirect()->route('admin.purchase-orders.show', $po)
-                ->with('success', 'Purchase order created and ready to send to supplier (customer information protected).');
+                ->with('success', $successMessage);
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Error creating purchase order from supplier quotation: ' . $e->getMessage());

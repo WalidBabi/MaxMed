@@ -1200,3 +1200,79 @@ Route::get('/test-supplier-middleware', function () {
 })->middleware(['auth', \App\Http\Middleware\SupplierMiddleware::class])->name('test.supplier.middleware');
 
 require __DIR__ . '/auth.php';
+
+// Temporary debug route for customer address issue
+Route::get('/debug/customer-address/{customerId}', function($customerId) {
+    $customer = \App\Models\Customer::find($customerId);
+    
+    if (!$customer) {
+        return response()->json(['error' => 'Customer not found']);
+    }
+    
+    $debug = [
+        'customer_id' => $customer->id,
+        'customer_name' => $customer->name,
+        'raw_fields' => [
+            'billing_street' => $customer->billing_street,
+            'billing_city' => $customer->billing_city,
+            'billing_state' => $customer->billing_state,
+            'billing_zip' => $customer->billing_zip,
+            'billing_country' => $customer->billing_country,
+            'shipping_street' => $customer->shipping_street,
+            'shipping_city' => $customer->shipping_city,
+            'shipping_state' => $customer->shipping_state,
+            'shipping_zip' => $customer->shipping_zip,
+            'shipping_country' => $customer->shipping_country,
+        ],
+        'computed_addresses' => [
+            'billing_address' => $customer->billing_address,
+            'shipping_address' => $customer->shipping_address,
+        ]
+    ];
+    
+    return response()->json($debug, 200, [], JSON_PRETTY_PRINT);
+})->name('debug.customer.address');
+
+// Debug route to test quote conversion for specific quote
+Route::get('/debug/quote-conversion/{quoteId}', function($quoteId) {
+    $quote = \App\Models\Quote::find($quoteId);
+    
+    if (!$quote) {
+        return response()->json(['error' => 'Quote not found']);
+    }
+    
+    $customer = \App\Models\Customer::where('name', $quote->customer_name)->first();
+    
+    $debug = [
+        'quote_id' => $quote->id,
+        'quote_number' => $quote->quote_number,
+        'customer_name' => $quote->customer_name,
+        'customer_found' => $customer ? true : false,
+    ];
+    
+    if ($customer) {
+        $debug['customer_debug'] = [
+            'customer_id' => $customer->id,
+            'raw_billing_fields' => [
+                'billing_street' => $customer->billing_street,
+                'billing_city' => $customer->billing_city,
+                'billing_state' => $customer->billing_state,
+                'billing_zip' => $customer->billing_zip,
+                'billing_country' => $customer->billing_country,
+            ],
+            'raw_shipping_fields' => [
+                'shipping_street' => $customer->shipping_street,
+                'shipping_city' => $customer->shipping_city,
+                'shipping_state' => $customer->shipping_state,
+                'shipping_zip' => $customer->shipping_zip,
+                'shipping_country' => $customer->shipping_country,
+            ],
+            'computed_addresses' => [
+                'billing_address' => $customer->billing_address,
+                'shipping_address' => $customer->shipping_address,
+            ]
+        ];
+    }
+    
+    return response()->json($debug, 200, [], JSON_PRETTY_PRINT);
+})->name('debug.quote.conversion');

@@ -482,9 +482,49 @@ class QuoteController extends Controller
                     ->with('error', 'Customer not found. Please ensure the customer exists in the system.');
             }
 
-            // Get billing and shipping addresses
-            $billingAddress = $customer->billing_address ?? 'Billing address not available';
-            $shippingAddress = $customer->shipping_address ?? $billingAddress;
+            // Get billing and shipping addresses with proper null handling
+            $billingAddress = 'Billing address not available';
+            $shippingAddress = 'Shipping address not available';
+            
+            try {
+                // Safely get billing address
+                if ($customer->billing_street || $customer->billing_city || $customer->billing_state || $customer->billing_zip || $customer->billing_country) {
+                    $billingAddressParts = array_filter([
+                        $customer->billing_street,
+                        $customer->billing_city,
+                        trim(implode(' ', array_filter([$customer->billing_state, $customer->billing_zip]))),
+                        $customer->billing_country,
+                    ]);
+                    $billingAddress = implode("\n", $billingAddressParts);
+                }
+                
+                // Safely get shipping address
+                if ($customer->shipping_street || $customer->shipping_city || $customer->shipping_state || $customer->shipping_zip || $customer->shipping_country) {
+                    $shippingAddressParts = array_filter([
+                        $customer->shipping_street,
+                        $customer->shipping_city,
+                        trim(implode(' ', array_filter([$customer->shipping_state, $customer->shipping_zip]))),
+                        $customer->shipping_country,
+                    ]);
+                    $shippingAddress = implode("\n", $shippingAddressParts);
+                } else {
+                    // Use billing address as fallback if shipping is empty
+                    $shippingAddress = $billingAddress;
+                }
+                
+                Log::info('QuoteController convertToProforma: Address processing successful', [
+                    'quote_id' => $quote->id,
+                    'billing_address_length' => strlen($billingAddress),
+                    'shipping_address_length' => strlen($shippingAddress)
+                ]);
+                
+            } catch (\Exception $e) {
+                Log::error('QuoteController convertToProforma: Error processing addresses', [
+                    'quote_id' => $quote->id,
+                    'error' => $e->getMessage()
+                ]);
+                // Keep the default fallback values
+            }
 
             // Create proforma invoice
             $invoice = \App\Models\Invoice::create([

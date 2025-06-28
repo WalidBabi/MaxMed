@@ -58,16 +58,23 @@ class Customer extends Model
      */
     public function getBillingAddressAttribute(): ?string
     {
-        if (!$this->billing_street) {
+        try {
+            if (!$this->billing_street && !$this->billing_city && !$this->billing_state && !$this->billing_zip && !$this->billing_country) {
+                return null;
+            }
+
+            $addressParts = array_filter([
+                $this->billing_street,
+                $this->billing_city,
+                trim(implode(' ', array_filter([$this->billing_state, $this->billing_zip]))),
+                $this->billing_country,
+            ]);
+
+            return !empty($addressParts) ? implode("\n", $addressParts) : null;
+        } catch (\Exception $e) {
+            \Log::error('Error getting billing address for customer ' . $this->id . ': ' . $e->getMessage());
             return null;
         }
-
-        return implode("\n", array_filter([
-            $this->billing_street,
-            $this->billing_city,
-            trim(implode(' ', array_filter([$this->billing_state, $this->billing_zip]))),
-            $this->billing_country,
-        ]));
     }
 
     /**
@@ -75,15 +82,23 @@ class Customer extends Model
      */
     public function getShippingAddressAttribute(): ?string
     {
-        if (!$this->shipping_street) {
-            return $this->billing_address;
-        }
+        try {
+            // If no shipping address fields are set, return billing address
+            if (!$this->shipping_street && !$this->shipping_city && !$this->shipping_state && !$this->shipping_zip && !$this->shipping_country) {
+                return $this->getBillingAddressAttribute();
+            }
 
-        return implode("\n", array_filter([
-            $this->shipping_street,
-            $this->shipping_city,
-            trim(implode(' ', array_filter([$this->shipping_state, $this->shipping_zip]))),
-            $this->shipping_country,
-        ]));
+            $addressParts = array_filter([
+                $this->shipping_street,
+                $this->shipping_city,
+                trim(implode(' ', array_filter([$this->shipping_state, $this->shipping_zip]))),
+                $this->shipping_country,
+            ]);
+
+            return !empty($addressParts) ? implode("\n", $addressParts) : $this->getBillingAddressAttribute();
+        } catch (\Exception $e) {
+            \Log::error('Error getting shipping address for customer ' . $this->id . ': ' . $e->getMessage());
+            return $this->getBillingAddressAttribute();
+        }
     }
 }
