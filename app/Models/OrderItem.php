@@ -13,32 +13,14 @@ class OrderItem extends Model
         'price',
         'variation',
         'discount_percentage',
-        'discount_amount',
-        'line_total'
+        'discount_amount'
     ];
 
     protected $casts = [
-        'quantity' => 'integer',
         'price' => 'decimal:2',
         'discount_percentage' => 'decimal:2',
         'discount_amount' => 'decimal:2',
-        'line_total' => 'decimal:2'
     ];
-
-    /**
-     * Boot the model
-     */
-    protected static function boot()
-    {
-        parent::boot();
-        
-        static::saving(function ($item) {
-            // Calculate line total
-            $subtotal = $item->quantity * $item->price;
-            $discount = $item->discount_amount ?: ($subtotal * $item->discount_percentage / 100);
-            $item->line_total = $subtotal - $discount;
-        });
-    }
 
     public function order()
     {
@@ -50,28 +32,29 @@ class OrderItem extends Model
         return $this->belongsTo(Product::class);
     }
 
-    /**
-     * Get the formatted line total
-     */
-    public function getFormattedLineTotalAttribute()
-    {
-        return number_format($this->line_total, 2);
-    }
-
-    /**
-     * Get the calculated discount amount
-     */
     public function getCalculatedDiscountAmountAttribute()
     {
         if ($this->discount_amount > 0) {
             return $this->discount_amount;
         }
-        
+
         if ($this->discount_percentage > 0) {
-            $subtotal = $this->quantity * $this->price;
+            $subtotal = $this->price * $this->quantity;
             return $subtotal * ($this->discount_percentage / 100);
         }
-        
+
         return 0;
+    }
+
+    public function getLineSubtotalAttribute()
+    {
+        return $this->price * $this->quantity;
+    }
+
+    public function getLineTotalAttribute()
+    {
+        $subtotal = $this->line_subtotal;
+        $discount = $this->calculated_discount_amount;
+        return $subtotal - $discount;
     }
 }
