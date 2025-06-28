@@ -555,6 +555,10 @@ class QuoteController extends Controller
             foreach ($quote->items as $quoteItem) {
                 Log::info("Converting quote item {$quoteItem->id}: product_id={$quoteItem->product_id}, item_details={$quoteItem->item_details}");
                 
+                // Calculate discount amount from percentage
+                $subtotal = $quoteItem->quantity * $quoteItem->rate;
+                $discountAmount = ($subtotal * ($quoteItem->discount ?? 0)) / 100;
+                
                 $invoiceItemData = [
                     'invoice_id' => $invoice->id,
                     'product_id' => $quoteItem->product_id,
@@ -562,23 +566,27 @@ class QuoteController extends Controller
                     'size' => $quoteItem->size,
                     'quantity' => $quoteItem->quantity,
                     'unit_price' => $quoteItem->rate,
-                    'discount_percentage' => 0,
-                    'discount_amount' => 0,
+                    'discount_percentage' => $quoteItem->discount ?? 0,
+                    'discount_amount' => $discountAmount,
                     'line_total' => $quoteItem->amount,
-                    'unit_of_measure' => null,
-                    'specifications' => null,
+                    'unit_of_measure' => $quoteItem->unit_of_measure ?? null,
+                    'specifications' => $quoteItem->specifications ?? null,
                     'sort_order' => $quoteItem->sort_order,
                 ];
                 
-                Log::info("Creating invoice item with data:", $invoiceItemData);
+                Log::info("Creating invoice item with data:", array_merge($invoiceItemData, [
+                    'original_quote_item_discount' => $quoteItem->discount,
+                    'calculated_discount_amount' => $discountAmount,
+                    'original_subtotal' => $subtotal
+                ]));
                 
                 $invoiceItem = \App\Models\InvoiceItem::create($invoiceItemData);
                 
-                Log::info("Created invoice item {$invoiceItem->id}: product_id={$invoiceItem->product_id}");
+                Log::info("Created invoice item {$invoiceItem->id}: product_id={$invoiceItem->product_id}, discount_percentage={$invoiceItem->discount_percentage}, discount_amount={$invoiceItem->discount_amount}");
                 
                 // Refresh from database and check again
                 $invoiceItem->refresh();
-                Log::info("After refresh - invoice item {$invoiceItem->id}: product_id={$invoiceItem->product_id}");
+                Log::info("After refresh - invoice item {$invoiceItem->id}: product_id={$invoiceItem->product_id}, discount_percentage={$invoiceItem->discount_percentage}, discount_amount={$invoiceItem->discount_amount}");
             }
 
             // Update quote status
