@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -40,7 +41,12 @@ return new class extends Migration
                 $table->text('terms_conditions')->nullable()->after('description');
             }
             if (!Schema::hasColumn('invoices', 'sub_total')) {
-                $table->decimal('sub_total', 10, 2)->default(0)->after('subtotal');
+                if (Schema::hasColumn('invoices', 'subtotal')) {
+                    // Rename subtotal to sub_total
+                    DB::statement('ALTER TABLE invoices CHANGE subtotal sub_total DECIMAL(10,2) DEFAULT 0');
+                } else {
+                    $table->decimal('sub_total', 10, 2)->default(0);
+                }
             }
             if (!Schema::hasColumn('invoices', 'tax_amount')) {
                 $table->decimal('tax_amount', 10, 2)->default(0)->after('tax');

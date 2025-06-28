@@ -691,7 +691,9 @@ class Invoice extends Model
                     'product_id' => $invoiceItem->product_id,
                     'quantity' => $invoiceItem->quantity,
                     'price' => $invoiceItem->product ? $invoiceItem->product->price_aed : $invoiceItem->unit_price,
-                    'variation' => $invoiceItem->specifications
+                    'variation' => $invoiceItem->specifications,
+                    'discount_percentage' => $invoiceItem->discount_percentage,
+                    'discount_amount' => $invoiceItem->discount_amount
                 ]);
             }
 
