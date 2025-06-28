@@ -27,7 +27,7 @@ class Invoice extends Model
         'description',
         'terms_conditions',
         'notes',
-        'sub_total',
+        'subtotal',
         'tax_amount',
         'discount_amount',
         'total_amount',
@@ -58,7 +58,7 @@ class Invoice extends Model
         'sent_at' => 'datetime',
         'email_history' => 'array',
         'attachments' => 'array',
-        'sub_total' => 'decimal:2',
+        'subtotal' => 'decimal:2',
         'tax_amount' => 'decimal:2',
         'discount_amount' => 'decimal:2',
         'total_amount' => 'decimal:2',
@@ -281,7 +281,7 @@ class Invoice extends Model
                 if ($this->paid_amount >= ($this->total_amount * 0.5)) {
                     // 50% advance was paid, final invoice is for remaining 50%
                     $finalInvoice->total_amount = $remainingAmount;
-                    $finalInvoice->sub_total = $remainingAmount;
+                    $finalInvoice->subtotal = $remainingAmount;
                     $finalInvoice->payment_status = $remainingAmount > 0 ? 'pending' : 'paid';
                     $finalInvoice->paid_amount = 0;
                     $finalInvoice->description = 'Final Invoice - Remaining Balance (50% advance payment received)';
@@ -298,7 +298,7 @@ class Invoice extends Model
                 if ($this->paid_amount >= $this->total_amount) {
                     // Full payment was made on proforma, final invoice is for record keeping
                     $finalInvoice->total_amount = 0;
-                    $finalInvoice->sub_total = 0;
+                    $finalInvoice->subtotal = 0;
                     $finalInvoice->payment_status = 'paid';
                     $finalInvoice->paid_amount = 0;
                     $finalInvoice->paid_at = now();
@@ -311,7 +311,7 @@ class Invoice extends Model
             case 'on_delivery':
                 // Full amount due on delivery
                 $finalInvoice->total_amount = $this->total_amount;
-                $finalInvoice->sub_total = $this->total_amount;
+                $finalInvoice->subtotal = $this->total_amount;
                 $finalInvoice->payment_status = 'pending';
                 $finalInvoice->paid_amount = 0;
                 $finalInvoice->due_date = now(); // Payment due immediately upon delivery
@@ -321,7 +321,7 @@ class Invoice extends Model
             case 'net_30':
                 // Full amount due within 30 days
                 $finalInvoice->total_amount = $this->total_amount;
-                $finalInvoice->sub_total = $this->total_amount;
+                $finalInvoice->subtotal = $this->total_amount;
                 $finalInvoice->payment_status = 'pending';
                 $finalInvoice->paid_amount = 0;
                 $finalInvoice->due_date = now()->addDays(30);
@@ -335,7 +335,7 @@ class Invoice extends Model
                     if ($this->paid_amount >= $requiredAdvance) {
                         // Custom advance was paid, final invoice is for remaining amount
                         $finalInvoice->total_amount = $remainingAmount;
-                        $finalInvoice->sub_total = $remainingAmount;
+                        $finalInvoice->subtotal = $remainingAmount;
                         $finalInvoice->payment_status = $remainingAmount > 0 ? 'pending' : 'paid';
                         $finalInvoice->paid_amount = 0;
                         $finalInvoice->description = "Final Invoice - Remaining Balance ({$advancePercentage}% advance payment received)";
@@ -349,7 +349,7 @@ class Invoice extends Model
                 } else {
                     // No advance required, full amount due
                     $finalInvoice->total_amount = $this->total_amount;
-                    $finalInvoice->sub_total = $this->total_amount;
+                    $finalInvoice->subtotal = $this->total_amount;
                     $finalInvoice->payment_status = 'pending';
                     $finalInvoice->paid_amount = 0;
                     $finalInvoice->description = 'Final Invoice - Custom Payment Terms';
@@ -359,7 +359,7 @@ class Invoice extends Model
             default:
                 // Default case - remaining amount or full amount if no payment
                 $finalInvoice->total_amount = $remainingAmount > 0 ? $remainingAmount : $this->total_amount;
-                $finalInvoice->sub_total = $finalInvoice->total_amount;
+                $finalInvoice->subtotal = $finalInvoice->total_amount;
                 $finalInvoice->payment_status = $finalInvoice->total_amount > 0 ? 'pending' : 'paid';
                 $finalInvoice->paid_amount = 0;
                 $finalInvoice->description = 'Final Invoice';
