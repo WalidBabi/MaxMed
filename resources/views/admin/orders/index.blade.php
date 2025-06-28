@@ -102,19 +102,6 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 </svg>
                                             </a>
-                                            @if($order->requires_quotation)
-                                                <span class="text-gray-300">|</span>
-                                                <a href="{{ route('admin.orders.quotations.index', $order) }}" class="text-indigo-600 hover:text-indigo-900">
-                                                    Quotations
-                                                    @if($order->quotation_status === 'pending')
-                                                        <span class="ml-1 px-2 py-0.5 text-xs rounded-full bg-yellow-100 text-yellow-800">Pending</span>
-                                                    @elseif($order->quotation_status === 'approved')
-                                                        <span class="ml-1 px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-800">Approved</span>
-                                                    @elseif($order->quotation_status === 'all_received')
-                                                        <span class="ml-1 px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-800">All Received</span>
-                                                    @endif
-                                                </a>
-                                            @endif
                                             <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this order? This action cannot be undone.')">
                                                 @csrf
                                                 @method('DELETE')
