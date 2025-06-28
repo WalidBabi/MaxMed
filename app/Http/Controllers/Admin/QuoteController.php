@@ -558,12 +558,15 @@ class QuoteController extends Controller
                 $invoiceItemData = [
                     'invoice_id' => $invoice->id,
                     'product_id' => $quoteItem->product_id,
-                    'description' => $quoteItem->item_details,
+                    'item_description' => $quoteItem->item_details,
                     'size' => $quoteItem->size,
                     'quantity' => $quoteItem->quantity,
                     'unit_price' => $quoteItem->rate,
-                    'subtotal' => $quoteItem->amount,
-                    'total' => $quoteItem->amount,
+                    'discount_percentage' => 0,
+                    'discount_amount' => 0,
+                    'line_total' => $quoteItem->amount,
+                    'unit_of_measure' => null,
+                    'specifications' => null,
                     'sort_order' => $quoteItem->sort_order,
                 ];
                 
