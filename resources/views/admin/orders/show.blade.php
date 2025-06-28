@@ -75,6 +75,7 @@
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Discount</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subtotal</th>
                                 </tr>
                             </thead>
@@ -91,16 +92,46 @@
                                             <div class="text-sm text-gray-900">AED {{ number_format($item->price, 2) }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">AED {{ number_format($item->price * $item->quantity, 2) }}</div>
+                                            <div class="text-sm text-gray-900">
+                                                @if($item->discount_percentage > 0)
+                                                    {{ number_format($item->discount_percentage, 2) }}%
+                                                    @if($item->calculated_discount_amount > 0)
+                                                        <br><span class="text-xs text-gray-500">(-AED {{ number_format($item->calculated_discount_amount, 2) }})</span>
+                                                    @endif
+                                                @elseif($item->calculated_discount_amount > 0)
+                                                    -AED {{ number_format($item->calculated_discount_amount, 2) }}
+                                                @else
+                                                    -
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">AED {{ number_format($item->line_total, 2) }}</div>
                                         </td>
                                     </tr>
                                 @endforeach
                                 <tr class="bg-gray-50">
-                                    <td colspan="3" class="px-6 py-4 whitespace-nowrap text-right">
+                                    <td colspan="4" class="px-6 py-4 whitespace-nowrap text-right">
+                                        <div class="text-sm font-medium text-gray-900">Subtotal</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">AED {{ number_format($order->orderItems->sum(function($item) { return $item->quantity * $item->price; }), 2) }}</div>
+                                    </td>
+                                </tr>
+                                <tr class="bg-gray-50">
+                                    <td colspan="4" class="px-6 py-4 whitespace-nowrap text-right">
+                                        <div class="text-sm font-medium text-gray-900">Total Discount</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">-AED {{ number_format($order->orderItems->sum(function($item) { return $item->calculated_discount_amount; }), 2) }}</div>
+                                    </td>
+                                </tr>
+                                <tr class="bg-gray-50 font-bold">
+                                    <td colspan="4" class="px-6 py-4 whitespace-nowrap text-right">
                                         <div class="text-sm font-medium text-gray-900">Total</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">AED {{ number_format($order->orderItems->sum(function($item) { return $item->price * $item->quantity; }), 2) }}</div>
+                                        <div class="text-sm font-medium text-gray-900">AED {{ number_format($order->orderItems->sum('line_total'), 2) }}</div>
                                     </td>
                                 </tr>
                             </tbody>
