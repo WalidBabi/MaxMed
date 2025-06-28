@@ -99,14 +99,28 @@
                             <p class="text-lg font-semibold text-gray-900">{{ formatDubaiDate($purchaseOrder->po_date, 'M d, Y') }}</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-500">Customer Order</label>
-                            @if($purchaseOrder->order)
-                                <a href="{{ route('admin.orders.show', $purchaseOrder->order) }}" class="text-lg font-semibold text-indigo-600 hover:text-indigo-700">
-                                    {{ $purchaseOrder->order->order_number }}
-                                </a>
-                                <p class="text-sm text-gray-500">{{ $purchaseOrder->order->getCustomerName() }}</p>
+                            <label class="block text-sm font-medium text-gray-500">Source</label>
+                            @if($purchaseOrder->hasCustomerOrder())
+                                <div>
+                                    <span class="text-sm text-gray-500">Customer Order</span>
+                                    <a href="{{ route('admin.orders.show', $purchaseOrder->order) }}" class="block text-lg font-semibold text-indigo-600 hover:text-indigo-700">
+                                        {{ $purchaseOrder->order->order_number }}
+                                    </a>
+                                    <p class="text-sm text-gray-500">{{ $purchaseOrder->order->getCustomerName() }}</p>
+                                </div>
+                            @elseif($purchaseOrder->isFromSupplierInquiry())
+                                <div>
+                                    <span class="text-sm text-gray-500">Supplier Inquiry</span>
+                                    <p class="text-lg font-semibold text-gray-900">Inquiry #{{ $purchaseOrder->supplier_quotation_id }}</p>
+                                    @if($purchaseOrder->supplierQuotation)
+                                        <p class="text-sm text-gray-500">{{ $purchaseOrder->supplierQuotation->product->name }}</p>
+                                    @endif
+                                </div>
                             @else
-                                <p class="text-lg font-semibold text-gray-900">N/A</p>
+                                <div>
+                                    <span class="text-sm text-gray-500">Internal Purchase</span>
+                                    <p class="text-lg font-semibold text-gray-900">Direct Purchase</p>
+                                </div>
                             @endif
                         </div>
                         <div>

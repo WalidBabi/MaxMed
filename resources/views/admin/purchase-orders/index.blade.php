@@ -85,7 +85,7 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PO Number</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer Order</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supplier</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
@@ -107,8 +107,24 @@
                                 </td>
                                 
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ $po->order->order_number ?? 'N/A' }}</div>
-                                    <div class="text-sm text-gray-500">{{ $po->order->getCustomerName() ?? 'N/A' }}</div>
+                                    @if($po->hasCustomerOrder())
+                                        <div class="text-sm font-medium text-gray-900">
+                                            <a href="{{ route('admin.orders.show', $po->order) }}" class="text-indigo-600 hover:text-indigo-700">
+                                                {{ $po->order->order_number }}
+                                            </a>
+                                        </div>
+                                        <div class="text-sm text-gray-500">{{ $po->order->getCustomerName() }}</div>
+                                        <div class="text-xs text-gray-400">Customer Order</div>
+                                    @elseif($po->isFromSupplierInquiry())
+                                        <div class="text-sm font-medium text-gray-900">Inquiry #{{ $po->supplier_quotation_id }}</div>
+                                        @if($po->supplierQuotation && $po->supplierQuotation->product)
+                                            <div class="text-sm text-gray-500">{{ $po->supplierQuotation->product->name }}</div>
+                                        @endif
+                                        <div class="text-xs text-gray-400">Supplier Inquiry</div>
+                                    @else
+                                        <div class="text-sm font-medium text-gray-900">Direct Purchase</div>
+                                        <div class="text-xs text-gray-400">Internal Purchase</div>
+                                    @endif
                                 </td>
                                 
                                 <td class="px-6 py-4 whitespace-nowrap">

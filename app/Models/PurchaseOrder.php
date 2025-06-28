@@ -134,7 +134,7 @@ class PurchaseOrder extends Model
      */
     public function order(): BelongsTo
     {
-        return $this->belongsTo(Order::class);
+        return $this->belongsTo(Order::class)->nullable();
     }
 
     public function delivery(): BelongsTo
@@ -184,6 +184,114 @@ class PurchaseOrder extends Model
     public function supplierQuotation(): BelongsTo
     {
         return $this->belongsTo(SupplierQuotation::class);
+    }
+
+    /**
+     * Check if this purchase order is linked to a customer order
+     */
+    public function hasCustomerOrder(): bool
+    {
+        return !is_null($this->order_id);
+    }
+
+    /**
+     * Check if this purchase order is from a supplier inquiry (no customer order)
+     */
+    public function isFromSupplierInquiry(): bool
+    {
+        return is_null($this->order_id) && !is_null($this->supplier_quotation_id);
+    }
+
+    /**
+     * Get the source type of this purchase order
+     */
+    public function getSourceType(): string
+    {
+        if ($this->hasCustomerOrder()) {
+            return 'customer_order';
+        } elseif ($this->isFromSupplierInquiry()) {
+            return 'supplier_inquiry';
+        } else {
+            return 'internal_purchase';
+        }
+    }
+
+    /**
+     * Get display name for the source
+     */
+    public function getSourceDisplayName(): string
+    {
+        if ($this->hasCustomerOrder()) {
+            return 'Customer Order #' . $this->order->order_number;
+        } elseif ($this->isFromSupplierInquiry()) {
+            return 'Supplier Inquiry #' . $this->supplier_quotation_id;
+        } else {
+            return 'Internal Purchase';
+        }
+    }
+
+    /**
+     * Get the source URL for navigation
+     */
+    public function getSourceUrl(): ?string
+    {
+        if ($this->hasCustomerOrder()) {
+            return route('admin.orders.show', $this->order);
+        } elseif ($this->isFromSupplierInquiry() && $this->quotationRequest) {
+            return route('admin.inquiries.show', $this->quotationRequest);
+        }
+        return null;
+    }
+
+    /**
+     * Get the source type badge class
+     */
+    public function getSourceTypeBadgeClass(): string
+    {
+        switch ($this->getSourceType()) {
+            case 'customer_order':
+                return 'bg-blue-100 text-blue-800';
+            case 'supplier_inquiry':
+                return 'bg-green-100 text-green-800';
+            case 'internal_purchase':
+                return 'bg-gray-100 text-gray-800';
+            default:
+                return 'bg-gray-100 text-gray-800';
+        }
+    }
+
+    /**
+     * Check if this purchase order can be sent to supplier
+     */
+    public function canBeSentToSupplier(): bool
+    {
+        return $this->status === self::STATUS_DRAFT;
+    }
+
+    /**
+     * Check if this purchase order can be acknowledged by supplier
+     */
+    public function canBeAcknowledgedBySupplier(): bool
+    {
+        return $this->status === self::STATUS_SENT_TO_SUPPLIER;
+    }
+
+    /**
+     * Get the total amount with currency formatting
+     */
+    public function getFormattedSubTotalAttribute(): string
+    {
+        return number_format($this->sub_total, 2);
+    }
+
+    public function getFormattedTaxAmountAttribute(): string
+    {
+        return number_format($this->tax_amount, 2);
+    }
+
+    public function getFormattedShippingCostAttribute(): string
+    {
+        return number_format($this->shipping_cost, 2);
     }
 
     /**

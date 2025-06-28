@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\PurchaseOrder;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\SupplierPayment;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -59,12 +60,23 @@ class PurchaseOrderController extends Controller
             ->with('supplierInformation')
             ->get();
 
+        // Get products for the dropdown
+        try {
+            $products = Product::with(['brand', 'specifications'])
+                ->orderBy('name')
+                ->get();
+        } catch (\Exception $e) {
+            // If there's an error with products, set to empty collection
+            $products = collect([]);
+            \Log::error('Error loading products for purchase order create: ' . $e->getMessage());
+        }
+
         $selectedOrder = null;
         if ($request->has('order_id')) {
             $selectedOrder = Order::with(['items.product'])->find($request->order_id);
         }
 
-        return view('admin.purchase-orders.create', compact('availableOrders', 'selectedOrder', 'suppliers'));
+        return view('admin.purchase-orders.create', compact('availableOrders', 'selectedOrder', 'suppliers', 'products'));
     }
 
     /**
