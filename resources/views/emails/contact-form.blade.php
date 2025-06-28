@@ -56,6 +56,15 @@
             background-color: #FFFFFF;
         }
         
+        /* Logo styles */
+        .email-logo {
+            width: 380px;
+            height: 97px;
+            max-width: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+        
         /* Media queries for mobile (will be ignored by Outlook) */
         @media only screen and (max-width: 650px) {
             .email-container {
@@ -67,6 +76,10 @@
             .mobile-text-center {
                 text-align: center !important;
             }
+            .email-logo {
+                width: 280px !important;
+                height: 71px !important;
+            }
         }
     </style>
 </head>
@@ -76,18 +89,20 @@
             <td align="center" style="padding: 30px 20px;">
                 <table class="email-container" cellpadding="0" cellspacing="0" border="0" style="width: 650px; background-color: #FFFFFF; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.08);">
                     
-                    <!-- Modern Header Section -->
+                    <!-- Modern Header Section with Logo -->
                     <tr>
-                        <td style="background-color: #4F46E5; background: linear-gradient(135deg, #4F46E5 0%, #3B82F6 100%); padding: 50px 30px; text-align: center;">
+                        <td style="background-color: #FFFFFF; padding: 40px 30px; text-align: center; border-bottom: 2px solid #171e60;">
                             <!--[if gte mso 9]>
-                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #4F46E5;">
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #FFFFFF;">
                                 <tr>
-                                    <td style="padding: 50px 30px; text-align: center;">
+                                    <td style="padding: 40px 30px; text-align: center;">
                             <![endif]-->
-                                        <h1 style="margin: 0 0 8px 0; font-size: 32px; font-weight: 600; color: #FFFFFF; letter-spacing: -0.5px;">
-                                            📧 New Contact Submission
-                                        </h1>
-                                        <p style="margin: 0; font-size: 18px; color: rgba(255,255,255,0.9); font-weight: 300;">MaxMed Scientific & Laboratory Equipment</p>
+                                        <!-- MaxMed Logo -->
+                                        <div style="margin-bottom: 30px;">
+                                            <img src="{{ asset('Images/logo.png') }}" alt="MaxMed Logo" width="380" height="97" class="email-logo" style="width: 380px; height: 97px; max-width: 100%; display: block; margin: 0 auto;">
+                                        </div>
+                                        <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 600; color: #171e60; letter-spacing: -0.5px;">📧 New Contact Submission</h1>
+                                        <p style="margin: 0; font-size: 16px; color: #0a5694; font-weight: 400;">MaxMed Scientific & Laboratory Equipment</p>
                             <!--[if gte mso 9]>
                                     </td>
                                 </tr>
@@ -100,52 +115,48 @@
                     <tr>
                         <td class="mobile-padding" style="padding: 40px 30px;">
                             
-                            <!-- Alert Section -->
-                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background: linear-gradient(135deg, #EBF8FF 0%, #BEE3F8 100%); border-left: 4px solid #3182CE; margin: 0 0 30px 0; border-radius: 8px; overflow: hidden;">
-                                <tr>
-                                    <td style="padding: 20px;">
-                                        <div style="font-weight: 600; color: #2B6CB0; margin-bottom: 8px; font-size: 16px;">🔔 New Customer Inquiry</div>
-                                        <p style="margin: 0; color: #2D3748; line-height: 1.6;">A potential customer has submitted a contact form through your website. Please review the details below and respond promptly to maintain excellent customer service.</p>
-                                    </td>
-                                </tr>
-                            </table>
+                            <!-- Greeting -->
+                            <div style="margin-bottom: 30px;">
+                                <h2 style="margin: 0 0 12px 0; font-size: 24px; font-weight: 600; color: #1A202C;">New Customer Inquiry</h2>
+                                <p style="margin: 0; font-size: 18px; color: #4A5568; line-height: 1.7;">A potential customer has submitted a contact form through your website. Please review the details below and respond promptly to maintain excellent customer service.</p>
+                            </div>
 
                             <!-- Customer Information Card -->
-                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #EDF2F7; background: linear-gradient(135deg, #EDF2F7 0%, #E2E8F0 100%); margin: 30px 0; border-radius: 8px; border-left: 4px solid #4F46E5; overflow: hidden;">
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #f8fafc; margin: 30px 0; border-radius: 8px; border-left: 4px solid #171e60; overflow: hidden;">
                                 <tr>
                                     <td style="padding: 25px;">
                                         <div style="margin-bottom: 20px;">
-                                            <div style="font-size: 20px; font-weight: 700; color: #4F46E5; margin-bottom: 8px; letter-spacing: -0.5px;">👤 Customer Details</div>
+                                            <h3 style="margin: 0; color: #171e60; font-size: 18px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Customer Details</h3>
                                         </div>
                                         
                                         <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
                                             <tr>
-                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px; width: 120px;">Name</td>
-                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; font-weight: 500; font-size: 15px;">{{ $data['name'] }}</td>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">Name</td>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ $data['name'] }}</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">Email</td>
-                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; font-weight: 500; font-size: 15px;">
-                                                    <a href="mailto:{{ $data['email'] }}" style="color: #4F46E5; text-decoration: none;">{{ $data['email'] }}</a>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">
+                                                    <a href="mailto:{{ $data['email'] }}" style="color: #171e60; text-decoration: none;">{{ $data['email'] }}</a>
                                                 </td>
                                             </tr>
                                             @if(isset($data['phone']) && $data['phone'])
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">Phone</td>
-                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; font-weight: 500; font-size: 15px;">
-                                                    <a href="tel:{{ $data['phone'] }}" style="color: #4F46E5; text-decoration: none;">{{ $data['phone'] }}</a>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">
+                                                    <a href="tel:{{ $data['phone'] }}" style="color: #171e60; text-decoration: none;">{{ $data['phone'] }}</a>
                                                 </td>
                                             </tr>
                                             @endif
                                             @if(isset($data['company']) && $data['company'])
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">Company</td>
-                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; font-weight: 500; font-size: 15px;">{{ $data['company'] }}</td>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ $data['company'] }}</td>
                                             </tr>
                                             @endif
                                             <tr>
                                                 <td style="padding: 12px 0; font-weight: 600; color: #4A5568; font-size: 15px;">Subject</td>
-                                                <td style="padding: 12px 0; color: #1A202C; font-weight: 600; font-size: 15px;">{{ $data['subject'] }}</td>
+                                                <td style="padding: 12px 0; color: #1A202C; text-align: right; font-weight: 600; font-size: 15px;">{{ $data['subject'] }}</td>
                                             </tr>
                                         </table>
                                     </td>
@@ -154,7 +165,7 @@
 
                             <!-- Message Content -->
                             <div style="margin: 30px 0;">
-                                <h3 style="margin: 0 0 15px 0; font-size: 20px; font-weight: 600; color: #1A202C; border-bottom: 2px solid #E2E8F0; padding-bottom: 10px;">💬 Customer Message</h3>
+                                <h3 style="margin: 0 0 15px 0; font-size: 20px; font-weight: 600; color: #1A202C; border-bottom: 2px solid #E2E8F0; padding-bottom: 10px;">Customer Message</h3>
                                 <div style="background-color: #F7FAFC; padding: 25px; border-radius: 8px; border-left: 4px solid #E2E8F0;">
                                     <p style="margin: 0; color: #2D3748; font-size: 16px; line-height: 1.7; white-space: pre-line;">{{ $data['message'] }}</p>
                                 </div>
@@ -179,12 +190,13 @@
                             @endphp
 
                             @if($isPotentialSale || $hasCompany || $hasPhone)
-                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); border: 1px solid #F59E0B; margin: 25px 0; border-radius: 8px; overflow: hidden;">
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #fef3f2; margin: 25px 0; border-radius: 8px; border-left: 4px solid #dc2626; overflow: hidden;">
                                 <tr>
                                     <td style="padding: 25px;">
-                                        <div style="display: inline-block; background-color: #F59E0B; color: #FFFFFF; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">⚡ High Priority Lead</div>
-                                        <h4 style="color: #92400E; margin: 0 0 12px 0; font-size: 18px; font-weight: 600;">Priority Indicators Detected</h4>
-                                        <ul style="margin: 0; padding-left: 20px; color: #451A03; line-height: 1.6;">
+                                        <div style="margin-bottom: 15px;">
+                                            <h3 style="margin: 0; color: #dc2626; font-size: 18px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Priority Indicators</h3>
+                                        </div>
+                                        <ul style="margin: 0; padding-left: 20px; color: #7F1D1D; line-height: 1.6;">
                                             @if($isPotentialSale)
                                                 <li style="margin-bottom: 5px;">🎯 <strong>Potential Sales Inquiry</strong> - Keywords related to quotation/purchase detected</li>
                                             @endif
@@ -195,7 +207,7 @@
                                                 <li style="margin-bottom: 5px;">📞 <strong>Phone Contact Available</strong> - Ready for immediate follow-up call</li>
                                             @endif
                                         </ul>
-                                        <p style="margin: 15px 0 0 0; color: #451A03; font-size: 14px; font-weight: 600;">
+                                        <p style="margin: 15px 0 0 0; color: #7F1D1D; font-size: 14px; font-weight: 600;">
                                             ⏰ Recommended Response Time: <span style="color: #DC2626;">Within 2 hours</span>
                                         </p>
                                     </td>
@@ -204,23 +216,25 @@
                             @endif
 
                             <!-- Action Steps -->
-                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background: linear-gradient(135deg, #F0FFF4 0%, #C6F6D5 100%); border: 1px solid #48BB78; margin: 25px 0; border-radius: 8px; overflow: hidden;">
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #F0FFF4; margin: 25px 0; border-radius: 8px; border-left: 4px solid #48BB78; overflow: hidden;">
                                 <tr>
                                     <td style="padding: 25px;">
-                                        <div style="display: inline-block; background-color: #48BB78; color: #FFFFFF; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">📋 Next Steps</div>
-                                        <h4 style="color: #22543D; margin: 0 0 12px 0; font-size: 18px; font-weight: 600;">Recommended Actions</h4>
-                                        <ol style="margin: 0; padding-left: 20px; color: #1A365D; line-height: 1.6;">
-                                            <li style="margin-bottom: 8px;"><strong>Review Contact Details:</strong> Verify customer information and add to CRM if applicable</li>
-                                            @if($isPotentialSale)
-                                                <li style="margin-bottom: 8px;"><strong>Prepare Quotation:</strong> Gather product information and pricing for immediate response</li>
-                                            @endif
-                                            @if($hasPhone)
-                                                <li style="margin-bottom: 8px;"><strong>Phone Follow-up:</strong> Consider calling {{ $data['phone'] }} for immediate assistance</li>
-                                            @else
-                                                <li style="margin-bottom: 8px;"><strong>Email Response:</strong> Reply professionally to {{ $data['email'] }}</li>
-                                            @endif
-                                            <li style="margin-bottom: 8px;"><strong>CRM Update:</strong> Log this interaction and set follow-up reminders</li>
-                                            <li style="margin-bottom: 0;"><strong>Monitor Response:</strong> Track customer engagement and follow up if needed</li>
+                                        <div style="margin-bottom: 15px;">
+                                            <h3 style="margin: 0; color: #48BB78; font-size: 18px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Recommended Actions</h3>
+                                        </div>
+                                        <ol style="margin: 0; padding-left: 20px; color: #15803D; line-height: 1.6;">
+                                            <li style="margin-bottom: 8px;"><strong>Review Inquiry:</strong> Analyze the customer's message and requirements</li>
+                                            <li style="margin-bottom: 8px;"><strong>Assess Priority:</strong> Determine if this is a sales lead or general inquiry</li>
+                                            <li style="margin-bottom: 8px;"><strong>Contact Customer:</strong> 
+                                                @if($hasPhone)
+                                                    Call {{ $data['phone'] }} for immediate discussion
+                                                @else
+                                                    Email {{ $data['email'] }} with detailed response
+                                                @endif
+                                            </li>
+                                            <li style="margin-bottom: 8px;"><strong>CRM Update:</strong> Log this contact in CRM and create follow-up tasks</li>
+                                            <li style="margin-bottom: 8px;"><strong>Prepare Response:</strong> Draft professional response addressing all points</li>
+                                            <li style="margin-bottom: 0;"><strong>Follow Up:</strong> Schedule follow-up within 24-48 hours if no response</li>
                                         </ol>
                                     </td>
                                 </tr>
@@ -228,6 +242,7 @@
 
                             <!-- Submission Details -->
                             <div style="margin: 30px 0; padding: 20px; background-color: #F7FAFC; border-radius: 8px; border: 1px solid #E2E8F0;">
+                                <p style="margin: 0 0 10px 0; color: #4A5568; font-size: 14px;"><strong>Submission ID:</strong> #{{ nowDubai('YmdHis') }}</p>
                                 <p style="margin: 0 0 10px 0; color: #4A5568; font-size: 14px;"><strong>Submission Time:</strong> {{ nowDubai('M j, Y \a\t g:i A T') }}</p>
                                 <p style="margin: 0 0 10px 0; color: #4A5568; font-size: 14px;"><strong>Source:</strong> Website Contact Form</p>
                                 <p style="margin: 0; color: #4A5568; font-size: 14px;"><strong>IP Address:</strong> {{ request()->ip() }}</p>
@@ -242,13 +257,14 @@
                                 <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 8px; font-size: 18px;">MaxMed Scientific and Laboratory Equipment Trading Co. LLC</div>
                                 <div style="font-size: 14px; margin-bottom: 5px;">📍 Dubai 448945, United Arab Emirates</div>
                                 <div style="font-size: 14px;">
-                                    📧 <a href="mailto:sales@maxmedme.com" style="color: #4F46E5; text-decoration: none;">sales@maxmedme.com</a> | 
-                                    🌐 <a href="http://www.maxmedme.com" style="color: #4F46E5; text-decoration: none;">www.maxmedme.com</a>
+                                    📧 <a href="mailto:sales@maxmedme.com" style="color: #059669; text-decoration: none;">sales@maxmedme.com</a> | 
+                                    🌐 <a href="http://www.maxmedme.com" style="color: #059669; text-decoration: none;">www.maxmedme.com</a>
                                 </div>
                             </div>
                             <div style="font-size: 12px; opacity: 0.7; border-top: 1px solid #2D3748; padding-top: 15px; margin-top: 15px;">
-                                This is an automated notification from your website contact form system.<br>
-                                Please respond to the customer inquiry promptly to maintain excellent service standards.
+                                This is an automated notification from your contact form system.<br>
+                                Please respond to this customer inquiry promptly to maintain excellent service standards.<br>
+                                <strong>Remember:</strong> Fast response times significantly increase customer satisfaction and conversion rates.
                             </div>
                         </td>
                     </tr>
