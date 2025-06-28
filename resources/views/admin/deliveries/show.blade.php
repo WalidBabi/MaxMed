@@ -62,7 +62,7 @@
                                 <div class="mt-1">
                                     @if($delivery->order)
                                         <a href="{{ route('admin.orders.show', $delivery->order) }}" class="text-indigo-600 hover:text-indigo-500 font-medium">
-                                            Order #{{ $delivery->order_id }}
+                                            {{ $delivery->order->order_number }}
                                         </a>
                                     @else
                                         <span class="text-red-600 font-medium">
@@ -358,97 +358,6 @@
                                 Update Status
                             </button>
                         </form>
-                    </div>
-                </div>
-            @endif
-
-            <!-- Proforma Invoice Information -->
-            @php
-                $proformaInvoice = $delivery->getProformaInvoice();
-                $hasProforma = $proformaInvoice !== null;
-                $canConvert = $delivery->isReadyForFinalInvoice();
-            @endphp
-
-            @if($hasProforma)
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                            <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                            Proforma Invoice
-                        </h3>
-                    </div>
-                    <div class="p-6">
-                        <div class="space-y-3 text-sm">
-                            <div class="flex justify-between">
-                                <span class="font-medium text-gray-500">Invoice #:</span>
-                                <a href="{{ route('admin.invoices.show', $proformaInvoice) }}" class="text-indigo-600 hover:text-indigo-500">
-                                    {{ $proformaInvoice->invoice_number }}
-                                </a>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="font-medium text-gray-500">Customer:</span>
-                                <span class="text-gray-900">{{ $proformaInvoice->customer_name }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="font-medium text-gray-500">Total Amount:</span>
-                                <span class="text-gray-900">{{ number_format($proformaInvoice->total_amount, 2) }} {{ $proformaInvoice->currency }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="font-medium text-gray-500">Paid Amount:</span>
-                                <span class="text-green-600">{{ number_format($proformaInvoice->paid_amount, 2) }} {{ $proformaInvoice->currency }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="font-medium text-gray-500">Remaining:</span>
-                                <span class="text-yellow-600">{{ number_format($proformaInvoice->getRemainingAmount(), 2) }} {{ $proformaInvoice->currency }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="font-medium text-gray-500">Payment Status:</span>
-                                <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium {{ 
-                                    $proformaInvoice->payment_status === 'paid' ? 'bg-green-100 text-green-800' : 
-                                    ($proformaInvoice->payment_status === 'partial' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800')
-                                }}">
-                                    {{ $proformaInvoice::PAYMENT_STATUS[$proformaInvoice->payment_status] ?? ucfirst($proformaInvoice->payment_status) }}
-                                </span>
-                            </div>
-                        </div>
-
-                        @if($canConvert)
-                            <div class="mt-4 p-3 bg-blue-50 rounded-md">
-                                <p class="text-sm text-blue-700 mb-3">
-                                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    This delivery is ready to convert the proforma invoice to a final invoice.
-                                </p>
-                                <form action="{{ route('admin.deliveries.convert-to-final-invoice', $delivery) }}" method="POST" 
-                                      onsubmit="return confirm('Are you sure you want to convert the proforma invoice to a final invoice? This action cannot be undone.')">
-                                    @csrf
-                                    <button type="submit" class="w-full inline-flex justify-center items-center rounded-md bg-yellow-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-500">
-                                        <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
-                                        </svg>
-                                        Convert to Final Invoice
-                                    </button>
-                                </form>
-                            </div>
-                        @else
-                            <div class="mt-4 p-3 bg-yellow-50 rounded-md">
-                                <p class="text-sm text-yellow-700">
-                                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                                    </svg>
-                                    @if($proformaInvoice->payment_status === 'pending')
-                                        Waiting for advance payment before conversion.
-                                    @elseif(!$proformaInvoice->canConvertToFinalInvoice())
-                                        Invoice cannot be converted (status: {{ $proformaInvoice->status }}).
-                                    @else
-                                        Conversion requirements not met.
-                                    @endif
-                                </p>
-                            </div>
-                        @endif
                     </div>
                 </div>
             @endif
