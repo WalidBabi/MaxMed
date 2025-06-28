@@ -19,7 +19,6 @@ class Invoice extends Model
         'order_id',
         'delivery_id',
         'parent_invoice_id',
-        'customer_id',
         'customer_name',
         'billing_address',
         'shipping_address',
