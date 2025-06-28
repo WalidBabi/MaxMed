@@ -352,6 +352,7 @@
                                             </td>
                                             <td class="px-3 py-4 text-right">
                                                 <span class="amount-display font-medium text-gray-900">{{ number_format($item->amount, 2) }}</span>
+                                                <input type="hidden" name="items[{{ $index }}][line_total]" value="{{ $item->amount }}">
                                             </td>
                                             <td class="px-3 py-4 text-center">
                                                 <button type="button" onclick="removeItem(this)" class="inline-flex items-center p-1 border border-transparent rounded-full text-red-600 hover:bg-red-50 action-button">
@@ -829,9 +830,9 @@ function addItem() {
                                                                       data-price-aed="{{ $product->price_aed ?? $product->price }}"
                                      data-price-usd="{{ $product->price }}"
                                  data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
-                                 data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
-                                 data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
-                                 data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
+                                                                     data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
+                                                                     data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
+                                                                     data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
                                 <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
                                 @if($product->description)
                                     <div class="text-gray-600 text-xs mt-1">{{ Str::limit($product->description, 80) }}</div>
@@ -886,6 +887,7 @@ function addItem() {
         </td>
         <td class="px-3 py-4 text-right">
             <span class="amount-display font-medium text-gray-900">0.00</span>
+            <input type="hidden" name="items[${itemCounter}][line_total]" value="0.00">
         </td>
         <td class="px-3 py-4 text-center">
             <button type="button" onclick="removeItem(this)" class="inline-flex items-center p-1 border border-transparent rounded-full text-red-600 hover:bg-red-50 action-button">
@@ -959,7 +961,15 @@ function calculateRowAmount(event) {
     const discountAmount = (subtotal * discount) / 100;
     const amount = subtotal - discountAmount;
     
+    // Update the display
     row.querySelector('.amount-display').textContent = amount.toFixed(2);
+    
+    // Update hidden input for form submission
+    const amountHidden = row.querySelector('input[name*="[line_total]"]');
+    if (amountHidden) {
+        amountHidden.value = amount.toFixed(2);
+    }
+    
     calculateTotals();
 }
 

@@ -550,6 +550,7 @@
                                                 </td>
                                                 <td class="px-3 py-4 text-right">
                                                     <span class="amount-display font-medium text-gray-900">{{ $item->formatted_line_total }}</span>
+                                                    <input type="hidden" name="items[{{ $index }}][line_total]" value="{{ $item->line_total }}">
                                                 </td>
                                                 <td class="px-3 py-4 text-center">
                                                     <button type="button" onclick="removeItem(this)" class="inline-flex items-center p-1 border border-transparent rounded-full text-red-600 hover:bg-red-50">
@@ -582,6 +583,7 @@
                                             <span id="totalAmount" class="text-base font-bold text-indigo-600">{{ number_format($invoice->total_amount, 2) }}</span>
                                         </div>
                                     </div>
+                                    <input type="hidden" id="total_amount_hidden" name="total_amount" value="{{ $invoice->total_amount }}">
                                 </div>
                             </div>
                         </div>
@@ -829,7 +831,7 @@ function addItem() {
                                      data-name="{{ $product->name }}"
                                      data-description="{{ $product->description }}"
                                      data-price-aed="{{ $product->price_aed ?? $product->price }}"
-                                 data-price-usd="{{ $product->price }}"
+                                     data-price-usd="{{ $product->price }}"
                                      data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
                                      data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                      data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
@@ -890,6 +892,7 @@ function addItem() {
         </td>
         <td class="px-3 py-4 text-right">
             <span class="amount-display font-medium text-gray-900">0.00</span>
+            <input type="hidden" name="items[${itemCounter}][line_total]" value="0.00">
         </td>
         <td class="px-3 py-4 text-center">
             <button type="button" onclick="removeItem(this)" class="inline-flex items-center p-1 border border-transparent rounded-full text-red-600 hover:bg-red-50">
@@ -951,7 +954,7 @@ function addItem() {
     // Initialize size options if product is selected
     if (productIdInput.value) {
         const selectedSize = sizeSelect.getAttribute('data-selected-size') || '';
-        populateSizeOptions(productIdInput.value, sizeSelect, selectedSize);
+        populateSizeOptionsFromData(sizeSelect, true, product.size_options, selectedSize);
     }
     
     // Handle size options for existing items with selected size
@@ -987,7 +990,15 @@ function calculateRowAmount(event) {
     const discountAmount = (subtotal * discount) / 100;
     const amount = subtotal - discountAmount;
     
+    // Update the display
     row.querySelector('.amount-display').textContent = amount.toFixed(2);
+    
+    // Update hidden input for form submission
+    const amountHidden = row.querySelector('input[name*="[line_total]"]');
+    if (amountHidden) {
+        amountHidden.value = amount.toFixed(2);
+    }
+    
     calculateTotals();
 }
 
@@ -1002,6 +1013,12 @@ function calculateTotals() {
     const selectedCurrency = document.getElementById('currency').value;
     document.getElementById('subTotal').innerHTML = total.toFixed(2) + ' <span id="subTotalCurrency">' + selectedCurrency + '</span>';
     document.getElementById('totalAmount').textContent = total.toFixed(2);
+    
+    // Update hidden total input for form submission
+    const totalHidden = document.getElementById('total_amount_hidden');
+    if (totalHidden) {
+        totalHidden.value = total.toFixed(2);
+    }
 }
 
 function validateForm() {

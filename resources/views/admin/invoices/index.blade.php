@@ -287,11 +287,19 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
-                                        {{ number_format($invoice->total_amount, 2) }} {{ $invoice->currency }}
+                                        @php
+                                            $subtotal = $invoice->items->sum(function($item) {
+                                                return $item->quantity * $item->unit_price;
+                                            });
+                                            $totalDiscount = $invoice->items->sum('calculated_discount_amount') + ($invoice->discount_amount ?? 0);
+                                            $taxAmount = $invoice->tax_amount ?? 0;
+                                            $finalTotal = $subtotal - $totalDiscount + $taxAmount;
+                                        @endphp
+                                        {{ number_format($finalTotal, 2) }} {{ $invoice->currency }}
                                     </div>
                                     @if($invoice->paid_amount > 0 && $invoice->payment_status !== 'paid')
                                         <div class="text-xs text-gray-500">
-                                            Balance: {{ number_format($invoice->total_amount - $invoice->paid_amount, 2) }}
+                                            Balance: {{ number_format($finalTotal - $invoice->paid_amount, 2) }}
                                         </div>
                                     @endif
                                 </td>

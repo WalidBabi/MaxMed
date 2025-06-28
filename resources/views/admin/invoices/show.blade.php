@@ -473,21 +473,30 @@
                             <div class="px-6 py-4 space-y-6">
                                 <!-- Payment Amount -->
                                 <div>
+                                    @php
+                                        $subtotal = $invoice->items->sum(function($item) {
+                                            return $item->quantity * $item->unit_price;
+                                        });
+                                        $totalDiscount = $invoice->items->sum('calculated_discount_amount') + ($invoice->discount_amount ?? 0);
+                                        $taxAmount = $invoice->tax_amount ?? 0;
+                                        $finalTotal = $subtotal - $totalDiscount + $taxAmount;
+                                        $remainingAmount = $finalTotal - $invoice->paid_amount;
+                                    @endphp
                                     <label for="payment_amount" class="block text-sm font-medium text-gray-700 mb-2">Payment Amount <span class="text-red-500">*</span></label>
                                     <input type="number" 
                                            id="payment_amount" 
                                            name="amount" 
                                            step="0.01" 
                                            min="0.01" 
-                                           max="{{ $invoice->total_amount - $invoice->paid_amount }}"
-                                           value="{{ old('amount', $invoice->total_amount - $invoice->paid_amount) }}"
+                                           max="{{ $remainingAmount }}"
+                                           value="{{ old('amount', $remainingAmount) }}"
                                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('amount') border-red-300 @enderror" 
                                            required>
                                     @error('amount')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                     <p class="mt-1 text-xs text-gray-500">
-                                        Remaining balance: {{ number_format($invoice->total_amount - $invoice->paid_amount, 2) }} {{ $invoice->currency }}
+                                        Remaining balance: {{ number_format($remainingAmount, 2) }} {{ $invoice->currency }}
                                     </p>
                                 </div>
 
@@ -561,33 +570,6 @@
                                 </button>
                             </div>
                         </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Invoice Summary -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                    <h3 class="text-lg font-semibold text-gray-900">Invoice Summary</h3>
-                </div>
-                <div class="p-6 space-y-4">
-                    <div class="flex justify-between">
-                        <span class="text-sm text-gray-600">Items Count:</span>
-                        <span class="text-sm font-medium text-gray-900">{{ $invoice->items->count() }}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-sm text-gray-600">Sub Total:</span>
-                        <span class="text-sm font-medium text-gray-900">{{ $invoice->formatted_total }} {{ $invoice->currency }}</span>
-                    </div>
-                    @if($invoice->tax_amount > 0)
-                    <div class="flex justify-between">
-                        <span class="text-sm text-gray-600">Tax:</span>
-                        <span class="text-sm font-medium text-gray-900">{{ number_format($invoice->tax_amount, 2) }} {{ $invoice->currency }}</span>
-                    </div>
-                    @endif
-                    <div class="flex justify-between pt-4 border-t border-gray-200">
-                        <span class="text-base font-semibold text-gray-900">Total Amount:</span>
-                        <span class="text-base font-bold text-indigo-600">{{ $invoice->formatted_total }} {{ $invoice->currency }}</span>
                     </div>
                 </div>
             </div>

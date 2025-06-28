@@ -195,10 +195,10 @@ class InvoiceController extends Controller
 
             // Create invoice items
             foreach ($request->items as $index => $itemData) {
-                // Calculate subtotal based on quantity and unit price
+                // Use line_total from form (which includes discount calculation)
                 $quantity = $itemData['quantity'];
                 $unitPrice = $itemData['unit_price'];
-                $subtotal = $quantity * $unitPrice;
+                $lineTotal = $itemData['line_total'] ?? ($quantity * $unitPrice);
                 
                 InvoiceItem::create([
                     'invoice_id' => $invoice->id,
@@ -209,7 +209,7 @@ class InvoiceController extends Controller
                     'unit_price' => $unitPrice,
                     'discount_percentage' => $itemData['discount_percentage'] ?? 0,
                     'discount_amount' => 0, // We'll calculate this in the model's boot method
-                    'line_total' => $subtotal,
+                    'line_total' => $lineTotal,
                     'sort_order' => $index + 1
                 ]);
             }
@@ -293,10 +293,10 @@ class InvoiceController extends Controller
             $invoice->items()->delete();
 
             foreach ($request->items as $index => $itemData) {
-                // Calculate subtotal based on quantity and unit price
+                // Use line_total from form (which includes discount calculation)
                 $quantity = $itemData['quantity'];
                 $unitPrice = $itemData['unit_price'];
-                $subtotal = $quantity * $unitPrice;
+                $lineTotal = $itemData['line_total'] ?? ($quantity * $unitPrice);
                 
                 InvoiceItem::create([
                     'invoice_id' => $invoice->id,
@@ -307,7 +307,7 @@ class InvoiceController extends Controller
                     'unit_price' => $unitPrice,
                     'discount_percentage' => $itemData['discount_percentage'] ?? 0,
                     'discount_amount' => 0, // We'll calculate this in the model's boot method
-                    'line_total' => $subtotal,
+                    'line_total' => $lineTotal,
                     'sort_order' => $index + 1
                 ]);
             }
