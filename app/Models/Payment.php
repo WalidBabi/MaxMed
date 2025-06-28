@@ -99,6 +99,11 @@ class Payment extends Model
         }
 
         $invoice = $this->invoice;
+        
+        // Always recalculate totals before checking payment status to ensure total_amount is correct
+        $invoice->calculateTotals();
+        $invoice->refresh();
+        
         $totalPaid = $invoice->payments()->where('status', 'completed')->sum('amount');
         
         Log::info("Processing payment for invoice {$invoice->id}: total_amount={$invoice->total_amount}, total_paid={$totalPaid}, payment_terms={$invoice->payment_terms}");

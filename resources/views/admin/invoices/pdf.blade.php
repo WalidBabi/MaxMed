@@ -641,7 +641,7 @@
                     @foreach($invoice->items as $index => $item)
                     <tr>
                         <td>
-                            <div class="item-description">{{ $item->description }}</div>
+                            <div class="item-description">{{ $item->item_description }}</div>
                         </td>
                         <td class="text-center">
                             @if($item->specifications)
@@ -670,8 +670,19 @@
                         </td>
                         <td class="text-center">{{ number_format($item->quantity, 2) }}</td>
                         <td class="text-right">{{ number_format($item->unit_price, 2) }}</td>
-                        <td class="text-center">-</td>
-                        <td class="text-right">{{ number_format($item->total, 2) }}</td>
+                        <td class="text-center">
+                            @if($item->discount_percentage > 0)
+                                {{ number_format($item->discount_percentage, 2) }}%
+                                @if($item->calculated_discount_amount > 0)
+                                    <br><span style="font-size: 8px; color: var(--text-secondary);">(-{{ number_format($item->calculated_discount_amount, 2) }})</span>
+                                @endif
+                            @elseif($item->calculated_discount_amount > 0)
+                                -{{ number_format($item->calculated_discount_amount, 2) }}
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td class="text-right">{{ number_format($item->line_total, 2) }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -681,26 +692,34 @@
         <!-- TOTALS - RIGHT ALIGNED -->
         <div class="totals-wrapper">
             <div class="totals-section">
+                @php
+                    $subtotal = $invoice->items->sum(function($item) {
+                        return $item->quantity * $item->unit_price;
+                    });
+                    $totalDiscount = $invoice->items->sum('calculated_discount_amount') + ($invoice->discount_amount ?? 0);
+                    $taxAmount = $invoice->tax_amount ?? 0;
+                    $finalTotal = $subtotal - $totalDiscount + $taxAmount;
+                @endphp
                 <table class="totals-table">
                     <tr>
                         <td class="total-label">Subtotal:</td>
-                        <td class="total-amount">{{ $invoice->currency }} {{ number_format($invoice->items->sum('subtotal'), 2) }}</td>
+                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($subtotal, 2) }}</td>
                     </tr>
-                    @if($invoice->tax_amount > 0)
+                    @if($totalDiscount > 0)
                     <tr>
-                        <td class="total-label">Tax:</td>
-                        <td class="total-amount">{{ $invoice->currency }} {{ number_format($invoice->tax_amount, 2) }}</td>
+                        <td class="total-label">Total Discount:</td>
+                        <td class="total-amount">-{{ $invoice->currency ?? 'AED' }} {{ number_format($totalDiscount, 2) }}</td>
                     </tr>
                     @endif
-                    @if($invoice->discount_amount > 0)
+                    @if($taxAmount > 0)
                     <tr>
-                        <td class="total-label">Discount:</td>
-                        <td class="total-amount">-{{ $invoice->currency }} {{ number_format($invoice->discount_amount, 2) }}</td>
+                        <td class="total-label">Tax:</td>
+                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($taxAmount, 2) }}</td>
                     </tr>
                     @endif
                     <tr class="grand-total">
                         <td class="total-label">Total Amount:</td>
-                        <td class="total-amount">{{ $invoice->currency }} {{ number_format($invoice->total_amount, 2) }}</td>
+                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($finalTotal, 2) }}</td>
                     </tr>
                 </table>
             </div>
