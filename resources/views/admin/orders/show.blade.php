@@ -22,42 +22,41 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
-        <!-- Order Details -->
-        <div class="lg:col-span-3 space-y-6">
-            <!-- Customer Information -->
-            <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
-                <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                        <svg class="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                        </svg>
-                        Customer Information
-                    </h3>
+    <!-- Customer Information -->
+    <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-8">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                <svg class="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                </svg>
+                Customer Information
+            </h3>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                    <dt class="text-sm font-medium text-gray-500">Customer Name</dt>
+                    <dd class="mt-1 text-sm text-gray-900">{{ $order->getCustomerName() }}</dd>
                 </div>
-                <div class="p-6">
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        <div>
-                            <dt class="text-sm font-medium text-gray-500">Customer Name</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ $order->getCustomerName() }}</dd>
-                        </div>
-                        <div>
-                            <dt class="text-sm font-medium text-gray-500">Email Address</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ $order->getCustomerEmail() }}</dd>
-                        </div>
-                        <div>
-                            <dt class="text-sm font-medium text-gray-500">Order Date</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ formatDubaiDate($order->created_at, 'M d, Y \a\t H:i') }}</dd>
-                        </div>
-                        <div>
-                            <dt class="text-sm font-medium text-gray-500">Order Number</dt>
-                            <dd class="mt-1 text-sm text-gray-900">#{{ $order->order_number }}</dd>
-                        </div>
-                    </div>
+                <div>
+                    <dt class="text-sm font-medium text-gray-500">Email Address</dt>
+                    <dd class="mt-1 text-sm text-gray-900">{{ $order->getCustomerEmail() }}</dd>
+                </div>
+                <div>
+                    <dt class="text-sm font-medium text-gray-500">Order Date</dt>
+                    <dd class="mt-1 text-sm text-gray-900">{{ formatDubaiDate($order->created_at, 'M d, Y \a\t H:i') }}</dd>
+                </div>
+                <div>
+                    <dt class="text-sm font-medium text-gray-500">Order Number</dt>
+                    <dd class="mt-1 text-sm text-gray-900">#{{ $order->order_number }}</dd>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Order Items -->
+    <div class="flex flex-wrap gap-8">
+        <!-- Order Items -->
+        <div class="w-full">
             <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-900 flex items-center">
@@ -68,7 +67,7 @@
                     </h3>
                 </div>
                 <div class="p-6">
-                    <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                    <div class="w-full overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-300">
                             <thead class="bg-gray-50">
                                 <tr>
@@ -147,7 +146,7 @@
         </div>
 
         <!-- Order Status -->
-        <div class="lg:col-span-1 space-y-6">
+        <div class="w-full md:w-96">
             <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-900 flex items-center">
@@ -187,7 +186,7 @@
             </div>
 
             <!-- Order Status Badge -->
-            <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+            <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mt-6">
                 <div class="p-6 text-center">
                     @php
                         $statusColors = [
