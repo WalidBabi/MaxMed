@@ -75,9 +75,4 @@ class InvoiceItem extends Model
     {
         return number_format($this->line_total, 2);
     }
-
-    public function getLineTotalAttribute()
-    {
-        return $this->line_total;
-    }
 } 

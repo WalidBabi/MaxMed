@@ -549,7 +549,7 @@
                                                     </div>
                                                 </td>
                                                 <td class="px-3 py-4 text-right">
-                                                    <span class="amount-display font-medium text-gray-900">{{ number_format($item->line_total, 2) }}</span>
+                                                    <span class="amount-display font-medium text-gray-900">{{ $item->formatted_line_total }}</span>
                                                 </td>
                                                 <td class="px-3 py-4 text-center">
                                                     <button type="button" onclick="removeItem(this)" class="inline-flex items-center p-1 border border-transparent rounded-full text-red-600 hover:bg-red-50">

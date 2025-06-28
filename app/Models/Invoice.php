@@ -183,8 +183,8 @@ class Invoice extends Model
     public function calculateTotals()
     {
         // Calculate totals from invoice items
-        $subTotal = $this->items->sum('subtotal');
-        $total = $this->items->sum('total');
+        $subTotal = $this->items->sum('line_total');
+        $total = $this->items->sum('line_total');
         
         // Update invoice totals
         $this->update([
