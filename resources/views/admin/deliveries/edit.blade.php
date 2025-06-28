@@ -51,7 +51,7 @@
                             <!-- Order (Read-only) -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Order</label>
-                                <input type="text" value="Order #{{ $delivery->order_id }}" disabled
+                                <input type="text" value="{{ $delivery->order->order_number ?? 'Order #' . $delivery->order_id }}" disabled
                                        class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 bg-gray-50 sm:text-sm sm:leading-6">
                                 <p class="mt-1 text-sm text-gray-500">Order cannot be changed after creation.</p>
                             </div>
