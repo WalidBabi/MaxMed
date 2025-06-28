@@ -166,11 +166,29 @@
                             <div class="mt-2">
                                 <select name="status" id="status" 
                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                    <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Processing</option>
-                                    <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : '' }}>Shipped</option>
-                                    <option value="delivered" {{ $order->status == 'delivered' ? 'selected' : '' }}>Delivered</option>
-                                    <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                    @php
+                                        $allowedTransitions = [
+                                            'pending' => ['pending', 'awaiting_quotations', 'processing', 'cancelled'],
+                                            'awaiting_quotations' => ['awaiting_quotations', 'quotations_received', 'cancelled'],
+                                            'quotations_received' => ['quotations_received', 'approved', 'awaiting_quotations', 'cancelled'],
+                                            'approved' => ['approved', 'processing', 'cancelled'],
+                                            'processing' => ['processing', 'prepared', 'cancelled'],
+                                            'prepared' => ['prepared', 'shipped', 'cancelled'],
+                                            'shipped' => ['shipped', 'in_transit', 'delivered', 'cancelled'],
+                                            'in_transit' => ['in_transit', 'delivered', 'cancelled'],
+                                            'delivered' => ['delivered', 'completed'],
+                                            'completed' => ['completed'],
+                                            'cancelled' => ['cancelled']
+                                        ];
+                                        $currentStatus = $order->status;
+                                        $validTransitions = $allowedTransitions[$currentStatus] ?? [$currentStatus];
+                                    @endphp
+                                    
+                                    @foreach($validTransitions as $status)
+                                        <option value="{{ $status }}" {{ $order->status == $status ? 'selected' : '' }}>
+                                            {{ ucfirst(str_replace('_', ' ', $status)) }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
