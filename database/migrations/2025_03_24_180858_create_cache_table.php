@@ -14,26 +14,20 @@ return new class extends Migration
         if (!Schema::hasTable('cache')) {
             Schema::create('cache', function (Blueprint $table) {
                 $table->string('key')->primary();
-            $table->mediumText('value');
-            $table->integer('expiration');
+                $table->mediumText('value');
+                $table->integer('expiration');
             });
         } else {
             Schema::table('cache', function (Blueprint $table) {
                 // Check and add any missing columns
                 $columns = Schema::getColumnListing('cache');
-                $schemaContent = '$table->string(\'key\')->primary();
-            $table->mediumText(\'value\');
-            $table->integer(\'expiration\');';
                 
-                // Parse the schema content to find column definitions
-                preg_match_all('/\$table->([^;]+);/', $schemaContent, $columnMatches);
-                foreach ($columnMatches[1] as $columnDef) {
-                    if (preg_match('/^(\w+)\([\'\"]([^\'\"]+)[\'\"]\)/', $columnDef, $colMatch)) {
-                        $columnName = $colMatch[2];
-                        if (!in_array($columnName, $columns)) {
-                            $table->{$colMatch[1]}($columnName);
-                        }
-                    }
+                // Add missing columns if they don't exist
+                if (!in_array('value', $columns)) {
+                    $table->mediumText('value');
+                }
+                if (!in_array('expiration', $columns)) {
+                    $table->integer('expiration');
                 }
             });
         }
