@@ -205,48 +205,6 @@
                     </div>
                 </div>
             @endif
-
-            <!-- Order Summary -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                    <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                        <svg class="w-5 h-5 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                        </svg>
-                        Order Summary
-                    </h3>
-                </div>
-                <div class="p-6">
-                    <div class="space-y-4">
-                        @foreach($delivery->order->items as $item)
-                            <div class="flex justify-between items-start">
-                                <div class="flex-1">
-                                    <div class="font-medium text-gray-900">{{ $item->quantity }}x {{ $item->product->name }}</div>
-                                    @if($item->variation)
-                                        <div class="text-sm text-gray-500">{{ $item->variation }}</div>
-                                    @endif
-                                </div>
-                                <div class="font-medium text-gray-900">AED {{ number_format($item->price * $item->quantity, 2) }}</div>
-                            </div>
-                        @endforeach
-                    </div>
-                    
-                    <div class="mt-6 pt-6 border-t border-gray-200 space-y-2">
-                        <div class="flex justify-between text-gray-900">
-                            <span>Subtotal:</span>
-                            <span class="font-medium">AED {{ number_format($delivery->order->total_amount - $delivery->shipping_cost, 2) }}</span>
-                        </div>
-                        <div class="flex justify-between text-gray-900">
-                            <span>Shipping:</span>
-                            <span class="font-medium">AED {{ number_format($delivery->shipping_cost, 2) }}</span>
-                        </div>
-                        <div class="flex justify-between text-lg font-semibold text-gray-900 pt-2 border-t border-gray-200">
-                            <span>Total:</span>
-                            <span>AED {{ number_format($delivery->order->total_amount, 2) }}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Sidebar -->
