@@ -14,36 +14,35 @@ return new class extends Migration
         if (!Schema::hasTable('notifications')) {
             Schema::create('notifications', function (Blueprint $table) {
                 $table->uuid('id')->primary();
-            $table->string('type');
-            $table->morphs('notifiable');
-            $table->text('data');
-            $table->timestamp('read_at')->nullable();
-            $table->timestamps();
+                $table->string('type');
+                $table->morphs('notifiable');
+                $table->text('data');
+                $table->timestamp('read_at')->nullable();
+                $table->timestamps();
             });
         } else {
             Schema::table('notifications', function (Blueprint $table) {
                 // Check and add any missing columns
                 $columns = Schema::getColumnListing('notifications');
-                $schemaContent = '$table->uuid(\'id\')->primary();
-            $table->string(\'type\');
-            $table->morphs(\'notifiable\');
-            $table->text(\'data\');
-            $table->timestamp(\'read_at\')->nullable();
-            $table->timestamps();';
                 
-                // Parse the schema content to find column definitions
-                preg_match_all('/\$table->([^;]+);/', $schemaContent, $columnMatches);
-                foreach ($columnMatches[1] as $columnDef) {
-                    if (preg_match('/^(\w+)\([\'\"]([^\'\"]+)[\'\"]\)/', $columnDef, $colMatch)) {
-                        $columnName = $colMatch[2];
-                        if (!in_array($columnName, $columns)) {
-                            $table->{$colMatch[1]}($columnName);
-                        }
-                    }
+                // Add missing columns if they don't exist
+                if (!in_array('type', $columns)) {
+                    $table->string('type');
+                }
+                if (!in_array('notifiable_type', $columns)) {
+                    $table->string('notifiable_type');
+                }
+                if (!in_array('notifiable_id', $columns)) {
+                    $table->unsignedBigInteger('notifiable_id');
+                }
+                if (!in_array('data', $columns)) {
+                    $table->text('data');
+                }
+                if (!in_array('read_at', $columns)) {
+                    $table->timestamp('read_at')->nullable();
                 }
             });
         }
-    });
     }
 
     /**
