@@ -42,76 +42,34 @@ class Order extends Model
         'shipping_state',
         'shipping_zipcode',
         'shipping_phone',
-        'notes',
-        'requires_quotation',
-        'quotation_status'
+        'notes'
     ];
 
     // Status constants - Comprehensive order lifecycle for supplier workflow and customer tracking
-    const STATUS_PENDING = 'pending';                           // Initial state
-    const STATUS_QUOTATIONS_RECEIVED = 'quotations_received';   // Supplier: Pending Approval
-    const STATUS_APPROVED = 'approved';                         // Supplier: Approved - To Process
-    const STATUS_PROCESSING = 'processing';                     // Supplier: Processing order
-    const STATUS_PREPARED = 'prepared';                         // Customer: Order prepared for shipping
-    const STATUS_SHIPPED = 'shipped';                          // Customer: Package shipped
-    const STATUS_IN_TRANSIT = 'in_transit';                    // Customer: Out for delivery
-    const STATUS_DELIVERED = 'delivered';                      // Customer: Package delivered
-    const STATUS_COMPLETED = 'completed';                      // Order fully completed
-    const STATUS_CANCELLED = 'cancelled';                      // Order cancelled
-
-    // Quotation status constants
-    const QUOTATION_STATUS_PENDING = 'pending';
-    const QUOTATION_STATUS_PARTIAL = 'partial';
-    const QUOTATION_STATUS_COMPLETE = 'complete';
-    const QUOTATION_STATUS_APPROVED = 'approved';
-    const QUOTATION_STATUS_REJECTED = 'rejected';
+    const STATUS_PENDING = 'pending';           // Initial state
+    const STATUS_PROCESSING = 'processing';     // Order is being processed
+    const STATUS_SHIPPED = 'shipped';          // Order has been shipped
+    const STATUS_CANCELLED = 'cancelled';      // Order cancelled
 
     // Add after the status constants
     private const ALLOWED_STATUS_TRANSITIONS = [
         self::STATUS_PENDING => [
-            self::STATUS_QUOTATIONS_RECEIVED,   // When quotations are submitted
-            self::STATUS_PROCESSING,            // For direct orders
-            self::STATUS_CANCELLED
-        ],
-        self::STATUS_QUOTATIONS_RECEIVED => [
-            self::STATUS_APPROVED,              // When quotation is approved
-            self::STATUS_CANCELLED
-        ],
-        self::STATUS_APPROVED => [
-            self::STATUS_PROCESSING,            // Supplier starts processing
+            self::STATUS_PROCESSING,            // Start processing
             self::STATUS_CANCELLED
         ],
         self::STATUS_PROCESSING => [
-            self::STATUS_PREPARED,              // Order prepared for shipping
-            self::STATUS_CANCELLED
-        ],
-        self::STATUS_PREPARED => [
-            self::STATUS_SHIPPED,               // Package handed to carrier
+            self::STATUS_SHIPPED,               // Order shipped
             self::STATUS_CANCELLED
         ],
         self::STATUS_SHIPPED => [
-            self::STATUS_IN_TRANSIT,            // Package in transit
-            self::STATUS_DELIVERED,             // Direct delivery (skip in_transit)
-            self::STATUS_CANCELLED
-        ],
-        self::STATUS_IN_TRANSIT => [
-            self::STATUS_DELIVERED,             // Package delivered to customer
-            self::STATUS_CANCELLED
-        ],
-        self::STATUS_DELIVERED => [
-            self::STATUS_COMPLETED              // Order fully completed
-        ],
-        self::STATUS_COMPLETED => [
-            self::STATUS_COMPLETED              // Final state
+            self::STATUS_SHIPPED                // Final state
         ],
         self::STATUS_CANCELLED => [
             self::STATUS_CANCELLED              // Final state
         ]
     ];
 
-    protected $casts = [
-        'requires_quotation' => 'boolean'
-    ];
+    protected $casts = [];
 
     /**
      * Boot the model
@@ -125,13 +83,8 @@ class Order extends Model
                 $order->order_number = static::generateOrderNumber();
             }
             
-            // Set default values for new orders that require quotation
-            if ($order->requires_quotation) {
-                $order->status = self::STATUS_QUOTATIONS_RECEIVED;
-                $order->quotation_status = self::QUOTATION_STATUS_PENDING;
-            } else {
-                $order->status = self::STATUS_PENDING;
-            }
+            // All orders start as pending
+            $order->status = self::STATUS_PENDING;
         });
 
         static::updating(function ($order) {
@@ -156,11 +109,6 @@ class Order extends Model
         static::updated(function ($order) {
             $order->handleWorkflowAutomation();
             $order->sendStatusChangeNotification();
-        });
-        
-        // Send notification when order is created
-        static::created(function ($order) {
-            $order->sendOrderPlacedNotification();
         });
     }
 
@@ -525,8 +473,8 @@ class Order extends Model
             $newOrderStatus = match($newQuotationStatus) {
                 self::QUOTATION_STATUS_APPROVED => self::STATUS_PROCESSING,
                 self::QUOTATION_STATUS_REJECTED => self::STATUS_CANCELLED,
-                self::QUOTATION_STATUS_PARTIAL => self::STATUS_QUOTATIONS_RECEIVED, // Pending approval
-                self::QUOTATION_STATUS_COMPLETE => self::STATUS_QUOTATIONS_RECEIVED, // Pending approval
+                self::QUOTATION_STATUS_PARTIAL => self::STATUS_PROCESSING, // Pending approval
+                self::QUOTATION_STATUS_COMPLETE => self::STATUS_PROCESSING, // Pending approval
                 default => $order->status
             };
 
