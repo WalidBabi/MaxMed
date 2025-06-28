@@ -14,34 +14,24 @@ return new class extends Migration
         if (!Schema::hasTable('inventories')) {
             Schema::create('inventories', function (Blueprint $table) {
                 $table->bigIncrements('id');
-            $table->unsignedBigInteger('product_id')->index('inventories_product_id_foreign');
-            $table->integer('quantity')->default(0);
-            $table->timestamps();
+                $table->unsignedBigInteger('product_id')->index('inventories_product_id_foreign');
+                $table->integer('quantity')->default(0);
+                $table->timestamps();
             });
-        }
-    });
         } else {
             Schema::table('inventories', function (Blueprint $table) {
                 // Check and add any missing columns
                 $columns = Schema::getColumnListing('inventories');
-                $schemaContent = '$table->bigIncrements(\'id\');
-            $table->unsignedBigInteger(\'product_id\')->index(\'inventories_product_id_foreign\');
-            $table->integer(\'quantity\')->default(0);
-            $table->timestamps();';
                 
-                // Parse the schema content to find column definitions
-                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
-                foreach ($columnMatches[1] as $columnDef) {
-                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
-                        $columnName = $colMatch[2];
-                        if (!in_array($columnName, $columns)) {
-                            $table->{$colMatch[1]}($columnName);
-                        }
-                    }
+                // Add missing columns if they don't exist
+                if (!in_array('product_id', $columns)) {
+                    $table->unsignedBigInteger('product_id')->index('inventories_product_id_foreign');
+                }
+                if (!in_array('quantity', $columns)) {
+                    $table->integer('quantity')->default(0);
                 }
             });
         }
-    });
     }
 
     /**
