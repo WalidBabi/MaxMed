@@ -765,7 +765,7 @@ Route::get('/debug/quote/{quote}/to-invoice', function(\App\Models\Quote $quote)
                 'quantity' => $item->quantity,
                 'unit_price' => $item->unit_price,
                 'discount_percentage' => $item->discount_percentage,
-                'line_total' => $item->line_total,
+                'line_total' => $item->formatted_line_total,
             ];
         }
     }
