@@ -168,9 +168,8 @@
                                         class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     @php
                                         $allowedTransitions = [
-                                            'pending' => ['pending', 'awaiting_quotations', 'processing', 'cancelled'],
-                                            'awaiting_quotations' => ['awaiting_quotations', 'quotations_received', 'cancelled'],
-                                            'quotations_received' => ['quotations_received', 'approved', 'awaiting_quotations', 'cancelled'],
+                                            'pending' => ['pending', 'quotations_received', 'processing', 'cancelled'],
+                                            'quotations_received' => ['quotations_received', 'approved', 'cancelled'],
                                             'approved' => ['approved', 'processing', 'cancelled'],
                                             'processing' => ['processing', 'prepared', 'cancelled'],
                                             'prepared' => ['prepared', 'shipped', 'cancelled'],
