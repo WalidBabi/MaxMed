@@ -19,37 +19,33 @@ return new class extends Migration
                 // Fix existing order statuses to align with new status system
                 
                 // 1. Orders that require quotation but are in 'pending' status
-                // should be moved to 'awaiting_quotations' if they have no quotations
-                // or 'quotations_received' if they have quotations
-                
+                // should be moved to 'quotations_received' if they have no quotations
                 DB::statement("
-                    UPDATE orders 
-                    SET status = 'awaiting_quotations' 
-                    WHERE status = 'pending' 
-                    AND requires_quotation = 1 
-                    AND id NOT IN (
-                        SELECT DISTINCT order_id 
-                        FROM supplier_quotations 
-                        WHERE order_id IS NOT NULL
-                    )
+                    UPDATE orders
+                    SET status = 'quotations_received'
+                    WHERE status = 'pending'
+                    AND requires_quotation = 1
+                    AND quotation_status = 'pending'
                 ");
-                
+
                 // 2. Orders that require quotation, are in 'pending' status, 
                 // but have quotations should be moved to 'quotations_received'
                 DB::statement("
-                    UPDATE orders 
-                    SET status = 'quotations_received' 
-                    WHERE status = 'pending' 
-                    AND requires_quotation = 1 
-                    AND id IN (
-                        SELECT DISTINCT order_id 
-                        FROM supplier_quotations 
-                        WHERE order_id IS NOT NULL
-                    )
+                    UPDATE orders o
+                    INNER JOIN supplier_quotations sq ON o.id = sq.order_id
+                    SET o.status = 'quotations_received'
+                    WHERE o.status = 'pending'
+                    AND o.requires_quotation = 1
                 ");
                 
-                // 3. Orders in 'processing' status should stay as they are for now
-                // as they might be actively being processed
+                // 3. Orders with approved quotations should be moved to 'processing'
+                DB::statement("
+                    UPDATE orders o
+                    INNER JOIN supplier_quotations sq ON o.id = sq.order_id
+                    SET o.status = 'processing'
+                    WHERE o.status IN ('quotations_received')
+                    AND sq.status = 'approved'
+                ");
                 
                 echo "Fixed existing order statuses to align with new status system.\n";
             } else {
@@ -71,7 +67,7 @@ return new class extends Migration
                 DB::statement("
                     UPDATE orders 
                     SET status = 'pending' 
-                    WHERE status IN ('awaiting_quotations', 'quotations_received')
+                    WHERE status IN ('quotations_received')
                     AND requires_quotation = 1
                 ");
                 

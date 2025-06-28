@@ -49,7 +49,6 @@ class Order extends Model
 
     // Status constants - Comprehensive order lifecycle for supplier workflow and customer tracking
     const STATUS_PENDING = 'pending';                           // Initial state
-    const STATUS_AWAITING_QUOTATIONS = 'awaiting_quotations';   // Supplier: Needs Quotation
     const STATUS_QUOTATIONS_RECEIVED = 'quotations_received';   // Supplier: Pending Approval
     const STATUS_APPROVED = 'approved';                         // Supplier: Approved - To Process
     const STATUS_PROCESSING = 'processing';                     // Supplier: Processing order
@@ -70,17 +69,12 @@ class Order extends Model
     // Add after the status constants
     private const ALLOWED_STATUS_TRANSITIONS = [
         self::STATUS_PENDING => [
-            self::STATUS_AWAITING_QUOTATIONS,   // For quotation orders
-            self::STATUS_PROCESSING,            // For direct orders
-            self::STATUS_CANCELLED
-        ],
-        self::STATUS_AWAITING_QUOTATIONS => [
             self::STATUS_QUOTATIONS_RECEIVED,   // When quotations are submitted
+            self::STATUS_PROCESSING,            // For direct orders
             self::STATUS_CANCELLED
         ],
         self::STATUS_QUOTATIONS_RECEIVED => [
             self::STATUS_APPROVED,              // When quotation is approved
-            self::STATUS_AWAITING_QUOTATIONS,   // If need more quotations
             self::STATUS_CANCELLED
         ],
         self::STATUS_APPROVED => [
@@ -106,6 +100,12 @@ class Order extends Model
         ],
         self::STATUS_DELIVERED => [
             self::STATUS_COMPLETED              // Order fully completed
+        ],
+        self::STATUS_COMPLETED => [
+            self::STATUS_COMPLETED              // Final state
+        ],
+        self::STATUS_CANCELLED => [
+            self::STATUS_CANCELLED              // Final state
         ]
     ];
 
@@ -127,7 +127,7 @@ class Order extends Model
             
             // Set default values for new orders that require quotation
             if ($order->requires_quotation) {
-                $order->status = self::STATUS_AWAITING_QUOTATIONS;
+                $order->status = self::STATUS_QUOTATIONS_RECEIVED;
                 $order->quotation_status = self::QUOTATION_STATUS_PENDING;
             } else {
                 $order->status = self::STATUS_PENDING;

@@ -102,7 +102,7 @@ class OrderController extends Controller
             // If order requires quotation, update status accordingly
             if ($order->requires_quotation) {
                 $order->update([
-                    'status' => \App\Models\Order::STATUS_AWAITING_QUOTATIONS,
+                    'status' => \App\Models\Order::STATUS_QUOTATIONS_RECEIVED,
                     'quotation_status' => \App\Models\Order::QUOTATION_STATUS_PENDING
                 ]);
             }
