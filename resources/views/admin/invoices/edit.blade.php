@@ -1247,36 +1247,22 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
 
 // Initialize with existing items
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('addItem').addEventListener('click', addItem);
-    
-    // Initialize existing items if any
-    const existingItems = document.querySelectorAll('.item-row');
-    existingItems.forEach(row => {
+    const addItemBtn = document.getElementById('addItem');
+    if (addItemBtn) {
+        addItemBtn.onclick = addItem;
+    }
+    // Attach event listeners to all existing rows
+    const existingRows = document.querySelectorAll('.item-row');
+    existingRows.forEach(row => {
         const quantityInput = row.querySelector('.quantity-input');
         const rateInput = row.querySelector('.rate-input');
         const discountInput = row.querySelector('.discount-input');
-        const productSearchInput = row.querySelector('.product-search-input');
-        const productIdInput = row.querySelector('.product-id-input');
-        const itemDetailsHidden = row.querySelector('.item-details-hidden');
-        const dropdownList = row.querySelector('.product-dropdown-list');
-        const dropdownItems = row.querySelector('.dropdown-items');
-        const dropdownNoResults = row.querySelector('.dropdown-no-results');
-        const specificationsInput = row.querySelector('.specifications-search-input');
-        const specificationsHidden = row.querySelector('.specifications-hidden');
-        const specificationsDropdown = row.querySelector('.specifications-dropdown-list');
-        const sizeSelect = row.querySelector('.size-options-select');
-        
         [quantityInput, rateInput, discountInput].forEach(input => {
-            input.addEventListener('input', calculateRowAmount);
+            if (input) input.addEventListener('input', calculateRowAmount);
         });
-        
-        // Initialize custom dropdown functionality
-        initializeCustomDropdown(productSearchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput, specificationsInput, specificationsHidden, specificationsDropdown);
-        
-        // Initialize size options if product is selected
-        if (productIdInput.value) {
-            const selectedSize = sizeSelect.getAttribute('data-selected-size') || '';
-            populateSizeOptions(productIdInput.value, sizeSelect, selectedSize);
+        // Trigger calculation for initial display
+        if (quantityInput && rateInput && discountInput) {
+            calculateRowAmount({target: quantityInput});
         }
     });
     
