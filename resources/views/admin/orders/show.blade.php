@@ -8,7 +8,7 @@
     <div class="mb-8">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">Order #{{ $order->id }}</h1>
+                <h1 class="text-3xl font-bold text-gray-900">Order #{{ $order->order_number }}</h1>
                 <p class="text-gray-600 mt-2">Order details and management</p>
             </div>
             <div class="flex items-center space-x-3">
@@ -22,9 +22,9 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
         <!-- Order Details -->
-        <div class="lg:col-span-2 space-y-6">
+        <div class="lg:col-span-3 space-y-6">
             <!-- Customer Information -->
             <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
                 <div class="px-6 py-4 border-b border-gray-200">
@@ -50,8 +50,8 @@
                             <dd class="mt-1 text-sm text-gray-900">{{ formatDubaiDate($order->created_at, 'M d, Y \a\t H:i') }}</dd>
                         </div>
                         <div>
-                            <dt class="text-sm font-medium text-gray-500">Order ID</dt>
-                            <dd class="mt-1 text-sm text-gray-900">#{{ $order->id }}</dd>
+                            <dt class="text-sm font-medium text-gray-500">Order Number</dt>
+                            <dd class="mt-1 text-sm text-gray-900">#{{ $order->order_number }}</dd>
                         </div>
                     </div>
                 </div>
@@ -95,6 +95,14 @@
                                         </td>
                                     </tr>
                                 @endforeach
+                                <tr class="bg-gray-50">
+                                    <td colspan="3" class="px-6 py-4 whitespace-nowrap text-right">
+                                        <div class="text-sm font-medium text-gray-900">Total</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">AED {{ number_format($order->orderItems->sum(function($item) { return $item->price * $item->quantity; }), 2) }}</div>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -102,9 +110,8 @@
             </div>
         </div>
 
-        <!-- Order Status & Summary -->
+        <!-- Order Status -->
         <div class="lg:col-span-1 space-y-6">
-            <!-- Order Status -->
             <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-900 flex items-center">
@@ -143,39 +150,6 @@
                 </div>
             </div>
 
-            <!-- Order Summary -->
-            <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
-                <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                        <svg class="h-5 w-5 text-orange-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Order Summary
-                    </h3>
-                </div>
-                <div class="p-6">
-                    <div class="space-y-3">
-                        @php
-                            $subtotal = $order->orderItems->sum(function($item) {
-                                return $item->price * $item->quantity;
-                            });
-                        @endphp
-                        
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-500">Items ({{ $order->orderItems->count() }})</span>
-                            <span class="text-gray-900">AED {{ number_format($subtotal, 2) }}</span>
-                        </div>
-                        
-                        <div class="border-t border-gray-200 pt-3">
-                            <div class="flex justify-between">
-                                <span class="text-base font-medium text-gray-900">Total</span>
-                                <span class="text-base font-medium text-gray-900">AED {{ number_format($subtotal, 2) }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Order Status Badge -->
             <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
                 <div class="p-6 text-center">
@@ -201,7 +175,6 @@
     </div>
 </div>
 
-<!-- Add the reject modal at the end of the file -->
 @push('modals')
 @endpush
 
