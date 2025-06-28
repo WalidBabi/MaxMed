@@ -199,12 +199,20 @@ class Invoice extends Model
      */
     public function calculateTotals()
     {
-        // Calculate totals from invoice items (line_total already includes item-level discounts)
-        $subTotal = $this->items->sum('line_total');
+        // Calculate subtotal (before any discounts)
+        $subTotal = $this->items->sum(function($item) {
+            return $item->quantity * $item->unit_price;
+        });
+        
+        // Calculate total item-level discounts
+        $itemDiscounts = $this->items->sum('calculated_discount_amount');
         
         // Apply invoice-level discount
-        $discountAmount = $this->discount_amount ?? 0;
-        $totalAfterDiscount = $subTotal - $discountAmount;
+        $invoiceDiscount = $this->discount_amount ?? 0;
+        $totalDiscount = $itemDiscounts + $invoiceDiscount;
+        
+        // Calculate total after discounts
+        $totalAfterDiscount = $subTotal - $totalDiscount;
         
         // Apply tax
         $taxAmount = $this->tax_amount ?? 0;
@@ -382,11 +390,10 @@ class Invoice extends Model
             // If this is a partial amount final invoice, adjust totals proportionally
             if ($finalInvoice->total_amount != $this->total_amount && $this->total_amount > 0) {
                 $ratio = $finalInvoice->total_amount / $this->total_amount;
-                $newItem->total = $item->total * $ratio;
-                $newItem->subtotal = $item->subtotal * $ratio;
+                $newItem->line_total = $item->line_total * $ratio;
                 $newItem->unit_price = $item->unit_price * $ratio;
                 
-                Log::info("Adjusted invoice item {$item->id} by ratio {$ratio}: new total {$newItem->total}");
+                Log::info("Adjusted invoice item {$item->id} by ratio {$ratio}: new line_total {$newItem->line_total}");
             }
             
             $newItem->save();

@@ -123,13 +123,14 @@ class InvoiceController extends Controller
                     InvoiceItem::create([
                         'invoice_id' => $invoice->id,
                         'product_id' => $quoteItem->product_id,
-                        'description' => $quoteItem->item_details,
+                        'item_description' => $quoteItem->item_details,
                         'size' => $quoteItem->size,
                         'quantity' => $quoteItem->quantity,
                         'unit_price' => $quoteItem->rate,
-                        'subtotal' => $subtotal,
-                        'tax' => 0,
-                        'total' => $total
+                        'discount_percentage' => $quoteItem->discount ?? 0,
+                        'discount_amount' => $discountAmount,
+                        'line_total' => $total,
+                        'sort_order' => $quoteItem->sort_order ?? 0
                     ]);
                 }
 
