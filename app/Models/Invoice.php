@@ -113,6 +113,23 @@ class Invoice extends Model
         static::updated(function ($invoice) {
             $invoice->handleWorkflowAutomation();
         });
+
+        // Recalculate totals when discount or tax is updated
+        static::saving(function ($invoice) {
+            // Check if discount_amount or tax_amount has changed
+            if ($invoice->isDirty(['discount_amount', 'tax_amount'])) {
+                // We'll recalculate after save to ensure items are loaded
+                $invoice->shouldRecalculateTotals = true;
+            }
+        });
+
+        static::saved(function ($invoice) {
+            // Recalculate totals if needed
+            if (isset($invoice->shouldRecalculateTotals) && $invoice->shouldRecalculateTotals) {
+                $invoice->calculateTotals();
+                unset($invoice->shouldRecalculateTotals);
+            }
+        });
     }
 
     /**
@@ -182,14 +199,21 @@ class Invoice extends Model
      */
     public function calculateTotals()
     {
-        // Calculate totals from invoice items
+        // Calculate totals from invoice items (line_total already includes item-level discounts)
         $subTotal = $this->items->sum('line_total');
-        $total = $this->items->sum('line_total');
+        
+        // Apply invoice-level discount
+        $discountAmount = $this->discount_amount ?? 0;
+        $totalAfterDiscount = $subTotal - $discountAmount;
+        
+        // Apply tax
+        $taxAmount = $this->tax_amount ?? 0;
+        $finalTotal = $totalAfterDiscount + $taxAmount;
         
         // Update invoice totals
         $this->update([
-            'sub_total' => $subTotal,
-            'total_amount' => $total
+            'subtotal' => $subTotal,
+            'total_amount' => $finalTotal
         ]);
     }
 

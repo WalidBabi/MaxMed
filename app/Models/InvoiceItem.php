@@ -43,6 +43,20 @@ class InvoiceItem extends Model
             $discount = $item->discount_amount ?: ($subtotal * $item->discount_percentage / 100);
             $item->line_total = $subtotal - $discount;
         });
+
+        static::saved(function ($item) {
+            // Recalculate invoice totals when item is saved
+            if ($item->invoice) {
+                $item->invoice->calculateTotals();
+            }
+        });
+
+        static::deleted(function ($item) {
+            // Recalculate invoice totals when item is deleted
+            if ($item->invoice) {
+                $item->invoice->calculateTotals();
+            }
+        });
     }
 
     /**
