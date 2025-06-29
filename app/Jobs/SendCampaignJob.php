@@ -8,6 +8,7 @@ use App\Models\EmailTemplate;
 use App\Models\MarketingContact;
 use App\Mail\CampaignEmail;
 use App\Notifications\CampaignStatusNotification;
+use App\Services\CampaignMailService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -165,45 +166,50 @@ class SendCampaignJob implements ShouldQueue
             // Build email content (HTML or text) with tracking
             $emailContent = $this->buildEmailContentWithTracking($contact, $emailLog);
             
-            // Send the email using Laravel's Mail facade
-            Mail::to($contact->email)->send(new CampaignEmail(
+            // Use campaign mail service to send email
+            $campaignMailService = new CampaignMailService();
+            $sent = $campaignMailService->sendCampaignEmail(
                 $this->campaign,
                 $contact,
                 $subject,
                 $emailContent
-            ));
+            );
 
-            // Mark as sent in email log
-            $emailLog->markAsSent();
-            
-            // Update campaign contact pivot to sent status
-            $this->campaign->contacts()
-                          ->updateExistingPivot($contact->id, [
-                              'status' => 'sent',
-                              'sent_at' => now(),
-                          ]);
+            if ($sent) {
+                // Mark as sent in email log
+                $emailLog->markAsSent();
+                
+                // Update campaign contact pivot to sent status
+                $this->campaign->contacts()
+                              ->updateExistingPivot($contact->id, [
+                                  'status' => 'sent',
+                                  'sent_at' => now(),
+                              ]);
 
-            // Update campaign statistics to capture sent count
-            $this->campaign->updateStatistics();
+                // Update campaign statistics to capture sent count
+                $this->campaign->updateStatistics();
 
-            // For development: Auto-mark as delivered since we don't have delivery webhooks
-            // In production, this would be updated via webhooks from your email provider
-            $emailLog->markAsDelivered();
-            
-            // Update campaign contact pivot to delivered (keeping sent_at timestamp)
-            $this->campaign->contacts()
-                          ->updateExistingPivot($contact->id, [
-                              'status' => 'delivered',
-                              'delivered_at' => now(),
-                          ]);
+                // For development: Auto-mark as delivered since we don't have delivery webhooks
+                // In production, this would be updated via webhooks from your email provider
+                $emailLog->markAsDelivered();
+                
+                // Update campaign contact pivot to delivered (keeping sent_at timestamp)
+                $this->campaign->contacts()
+                              ->updateExistingPivot($contact->id, [
+                                  'status' => 'delivered',
+                                  'delivered_at' => now(),
+                              ]);
 
-            Log::info("Campaign email sent successfully", [
-                'campaign_id' => $this->campaign->id,
-                'contact_id' => $contact->id,
-                'email' => $contact->email
-            ]);
+                Log::info("Campaign email sent successfully", [
+                    'campaign_id' => $this->campaign->id,
+                    'contact_id' => $contact->id,
+                    'email' => $contact->email
+                ]);
 
-            return true;
+                return true;
+            } else {
+                throw new \Exception('Campaign mail service failed to send email');
+            }
 
         } catch (\Exception $e) {
             // Mark as failed

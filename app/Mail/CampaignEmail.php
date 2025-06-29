@@ -56,6 +56,10 @@ class CampaignEmail extends Mailable
             $mail->html($this->htmlContent);
         }
 
+        // Use campaign mailer and from address
+        $mail->mailer('campaign')
+             ->from(config('mail.campaign_from.address'), config('mail.campaign_from.name'));
+
         return $mail;
     }
 } 
