@@ -1,4 +1,33 @@
-{{-- Local Business Schema Markup for MaxMed UAE --}}
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"LocalBusiness","@id":"https://maxmedme.com/#organization","name":"MaxMed UAE","alternateName":"MaxMed Laboratory Equipment Supplier","description":"Leading laboratory equipment supplier in Dubai, UAE. Providing high-quality scientific instruments, laboratory supplies, and analytical equipment to research institutions, hospitals, and laboratories across the Middle East.","url":"https://maxmedme.com","logo":{"@type":"ImageObject","url":"https://maxmedme.com/Images/logo.png","width":300,"height":100},"image":["https://maxmedme.com/Images/about.png","https://maxmedme.com/Images/bacteria.jpg"],"telephone":"+971554602500","email":"sales@maxmedme.com","address":{"@type":"PostalAddress","streetAddress":"Dubai, UAE","addressLocality":"Dubai","addressRegion":"Dubai","addressCountry":"AE","postalCode":""},"geo":{"@type":"GeoCoordinates","latitude":25.2048,"longitude":55.2708},"areaServed":[{"@type":"Country","name":"United Arab Emirates"},{"@type":"Country","name":"Saudi Arabia"},{"@type":"Country","name":"Qatar"},{"@type":"Country","name":"Kuwait"},{"@type":"Country","name":"Oman"},{"@type":"Country","name":"Bahrain"}],"serviceArea":{"@type":"GeoCircle","geoMidpoint":{"@type":"GeoCoordinates","latitude":25.2048,"longitude":55.2708},"geoRadius":"2000"},"openingHours":["Mo-Th 09:00-18:00","Fr 09:00-17:00","Sa-Su closed"],"currenciesAccepted":"AED,USD,EUR","paymentAccepted":"Cash, Credit Card, Bank Transfer, Check","priceRange":"$$$","category":["Laboratory Equipment Supplier","Scientific Instruments","Medical Equipment","Research Equipment"],"hasOfferCatalog":{"@type":"OfferCatalog","name":"Laboratory Equipment Catalog","itemListElement":[{"@type":"OfferCatalog","name":"Analytical Chemistry Equipment","url":"https://maxmedme.com/categories/analytical-chemistry"},{"@type":"OfferCatalog","name":"Laboratory Consumables","url":"https://maxmedme.com/categories/laboratory-consumables"},{"@type":"OfferCatalog","name":"Medical Equipment","url":"https://maxmedme.com/categories/medical-equipment"}]},"makesOffer":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Laboratory Equipment Supply","description":"Professional laboratory equipment supply and installation services"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Technical Support","description":"Expert technical support and maintenance for laboratory equipment"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Equipment Consultation","description":"Professional consultation for laboratory setup and equipment selection"}}],"sameAs":["https://www.linkedin.com/company/maxmed-uae","https://www.facebook.com/maxmeduae","https://twitter.com/maxmeduae"],"potentialAction":[{"@type":"SearchAction","target":"https://maxmedme.com/search?q={search_term_string}","query-input":"required name=search_term_string"}],"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.8","reviewCount":"127","bestRating":"5"},"review":[{"@type":"Review","reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},"author":{"@type":"Person","name":"Dr. Ahmed Hassan"},"reviewBody":"Excellent laboratory equipment supplier with professional service and high-quality products. Fast delivery and great technical support."},{"@type":"Review","reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},"author":{"@type":"Person","name":"Dr. Sarah Al-Mansouri"},"reviewBody":"MaxMed UAE has been our trusted partner for laboratory equipment. Their expertise and reliability make them our go-to supplier."}]}
+{
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "MaxMed UAE",
+    "image": "https://maxmedme.com/Images/about.png",
+    "telephone": "+971-55-460-2500",
+    "email": "sales@maxmedme.com",
+    "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "AE",
+        "addressRegion": "Dubai",
+        "addressLocality": "Dubai"
+    },
+    "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 25.2048,
+        "longitude": 55.2708
+    },
+    "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday"
+        ],
+        "opens": "09:00",
+        "closes": "18:00"
+    }
+}
 </script>

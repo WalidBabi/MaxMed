@@ -1,0 +1,71 @@
+{
+    "timestamp": "2025-06-29T17:24:17.224054Z",
+    "domain": "http:\/\/localhost",
+    "summary": [],
+    "technical_seo": {
+        "issues": [
+            "Homepage meta description too long (170 chars)",
+            "Product 'SK-O330-Pro Large Shaker' title too long",
+            "Product 'SK-O180-Pro Multifunctional Orbital Decolorizing Shaker' title too long",
+            "Product 'SK-O330-M Orbital Decolorizing Shaker' title too long",
+            "Product 'SK-O180-S Intelligent Decolorizing Shaker (Multi-functional\uff09' title too long",
+            "Product 'SK-L180-S Intelligent Linear Decolorizing Shaker' title too long"
+        ],
+        "recommendations": [],
+        "score": 40
+    },
+    "content_seo": {
+        "issues": [
+            "288 pages with titles too long (>60 chars)",
+            "293 pages with meta descriptions too long (>160 chars)"
+        ],
+        "recommendations": [],
+        "score": 75
+    },
+    "mobile_seo": {
+        "issues": [],
+        "recommendations": [
+            "Ensure touch targets are at least 44px for mobile usability",
+            "Test mobile page speed with Google PageSpeed Insights"
+        ],
+        "score": 100
+    },
+    "accessibility": {
+        "issues": [],
+        "recommendations": [
+            "Ensure proper heading hierarchy (H1 > H2 > H3) throughout the site",
+            "Verify color contrast ratios meet WCAG 2.1 AA standards (4.5:1 for normal text)",
+            "Test all interactive elements are accessible via keyboard navigation"
+        ],
+        "score": 100
+    },
+    "performance": {
+        "issues": [],
+        "recommendations": [
+            "Minify CSS and JavaScript files for better performance",
+            "Monitor Core Web Vitals (LCP, FID, CLS) using Google Search Console",
+            "Optimize for LCP < 2.5s, FID < 100ms, CLS < 0.1"
+        ],
+        "score": 100
+    },
+    "security": {
+        "issues": [
+            "Website not using HTTPS"
+        ],
+        "recommendations": [
+            "Implement SSL certificate for better security and SEO"
+        ],
+        "score": 80
+    },
+    "fixes_applied": [],
+    "recommendations": [],
+    "score": 78,
+    "internationalization": {
+        "issues": [],
+        "recommendations": [
+            "Verify language and region targeting in Google Search Console"
+        ],
+        "score": 100
+    },
+    "grade": "B"
+}

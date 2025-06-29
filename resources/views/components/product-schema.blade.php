@@ -4,38 +4,24 @@
     "@type": "Product",
     "name": "{{ $product->name }}",
     "description": "{{ $product->description }}",
-    "image": "{{ asset($product->image) }}",
-    "sku": "{{ $product->sku }}",
-    "mpn": "{{ $product->sku }}",
+    "image": "{{ $product->image_url ?? asset(\"/Images/placeholder.jpg\") }}",
     "brand": {
         "@type": "Brand",
-        "name": "{{ $product->brand ?? 'MaxMed UAE' }}"
+        "name": "{{ $product->brand->name ?? \"MaxMed UAE\" }}"
     },
-    "category": "{{ $product->category->name ?? 'Laboratory Equipment' }}",
+    "manufacturer": {
+        "@type": "Organization",
+        "name": "MaxMed UAE"
+    },
     "offers": {
         "@type": "Offer",
-        "url": "{{ url()->current() }}",
+        "url": "{{ route(\"product.show\", $product) }}",
         "priceCurrency": "AED",
-        "price": "{{ $product->price }}",
-        "priceValidUntil": "{{ now()->addMonths(3)->format('Y-m-d') }}",
-        "availability": "{{ $product->in_stock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }}",
+        "availability": "https://schema.org/InStock",
         "seller": {
             "@type": "Organization",
-            "name": "MaxMed UAE",
-            "url": "https://maxmedme.com"
-        },
-        "itemCondition": "https://schema.org/NewCondition",
-        "deliveryLeadTime": {
-            "@type": "QuantitativeValue",
-            "minValue": "2",
-            "maxValue": "5",
-            "unitCode": "DAY"
+            "name": "MaxMed UAE"
         }
-    },
-    "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "{{ $product->average_rating ?? 4.8 }}",
-        "reviewCount": "{{ $product->review_count ?? 12 }}"
     }
 }
-</script> 
+</script>

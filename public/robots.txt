@@ -1,81 +1,39 @@
 User-agent: *
-
-# Allow product pages explicitly
-Allow: /products/
-Allow: /product/
-Allow: /categories/
-
-# Block admin and auth routes
+Allow: /
 Disallow: /admin/
+Disallow: /crm/
+Disallow: /supplier/
 Disallow: /login
 Disallow: /register
-Disallow: /dashboard
-Disallow: /profile
-Disallow: /supplier/
-Disallow: /crm/
+Disallow: /password/
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /search?
+Disallow: /*?sort=
+Disallow: /*?filter=
+Disallow: /*?page=
+Allow: /products/
+Allow: /categories/
+Allow: /news/
+Allow: /about
+Allow: /contact
 
-# Block specific problematic URLs that cause soft 404s
-Disallow: /categories/43/46
-Disallow: /categories/50
-Disallow: /categories/43/45
-Disallow: /categories/46
-Disallow: /categories/44 
-Disallow: /categories/40
-Disallow: /categories/45
-Disallow: /categories/55
-Disallow: /categories/43
-Disallow: /categories/34
-Disallow: /categories/76
-Disallow: /categories/72
-Disallow: /categories/77
-Disallow: /categories/79
-Disallow: /categories/56
-Disallow: /categories/51/60
-Disallow: /categories/51/55/59
-
-# Block problematic category paths
-Disallow: /education%26-training-tools
-Disallow: /analytical-chemistry
-Disallow: /genomics-%26-life-sciences
-Disallow: /veterinary-%26-agri-tools
-Disallow: /forensic-supplies
-Disallow: /molecular-biology
-Disallow: /research-%26-life-sciences
-
-# Block duplicate content from query parameters
-Disallow: /*?*sort=
-Disallow: /*?*page=2
-Disallow: /*?*page=3
-Disallow: /*?*page=4
-Disallow: /*?*filter=
-Disallow: /*?*search=
-
-# Allow first page of category filters for SEO
-Allow: /products?category=*
-
-# Specify canonical domain
-Host: maxmedme.com
-
-# Allow static resources
-Allow: /*.js$
-Allow: /*.css$
-Allow: /*.png$
-Allow: /*.jpg$
-Allow: /*.jpeg$
-Allow: /*.gif$
-Allow: /*.webp$
-Allow: /*.avif$
-
-# Allow RSS feeds
-Allow: /rss/
-
-# Sitemap locations (using correct filenames)
+# Sitemaps
 Sitemap: https://maxmedme.com/sitemap.xml
-Sitemap: https://maxmedme.com/sitemap-product.xml
-Sitemap: https://maxmedme.com/sitemap-categories.xml
-Sitemap: https://maxmedme.com/sitemap-news.xml
+Sitemap: https://maxmedme.com/rss/feed.xml
 
-# RSS Feeds for Content Discovery
-# RSS: https://maxmedme.com/rss/feed.xml
-# RSS: https://maxmedme.com/rss/news.xml  
-# RSS: https://maxmedme.com/rss/products.xml
+# Crawl delay for respectful crawling
+Crawl-delay: 1
+
+# Block AI training bots (optional)
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
