@@ -100,6 +100,7 @@ Route::get('/debug/campaign/{campaignId}', function($campaignId) {
 })->name('debug.campaign');
 
 // Product Routes
+Route::get('/products', [\App\Http\Controllers\ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product:slug}', [\App\Http\Controllers\ProductController::class, 'show'])->name('product.show');
 
 // Legacy product URL redirect (ID-based to slug-based)
