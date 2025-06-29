@@ -4,7 +4,7 @@
 
 @section('meta_description', 'Browse ' . $category->name . ' laboratory equipment categories at MaxMed UAE. Find high-quality scientific instruments and lab supplies in Dubai.')
 
-@if(isset($emptyCategory) || (isset($category) && $category->subcategories->isEmpty()))
+@if(isset($emptyCategory))
     @section('meta_robots', 'noindex, follow')
 @endif
 
