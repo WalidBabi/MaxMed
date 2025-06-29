@@ -2,8 +2,13 @@
     $currentUrl = url()->current();
     $preferredDomain = 'https://maxmedme.com';
     
-    // Replace www with non-www in canonical URLs
-    $canonicalUrl = str_replace('https://www.maxmedme.com', $preferredDomain, $currentUrl);
+    // Initialize canonical URL
+    $canonicalUrl = $currentUrl;
+    
+    // Always use non-www version for canonical URLs
+    $canonicalUrl = str_replace('https://www.maxmedme.com', $preferredDomain, $canonicalUrl);
+    $canonicalUrl = str_replace('http://www.maxmedme.com', $preferredDomain, $canonicalUrl);
+    $canonicalUrl = str_replace('http://maxmedme.com', $preferredDomain, $canonicalUrl);
     
     // Handle product pages - ensure consistent URL structure
     if (request()->route() && request()->route()->getName() === 'product.show') {
@@ -11,6 +16,50 @@
         if ($product && is_object($product) && method_exists($product, 'getSlug')) {
             $canonicalUrl = $preferredDomain . '/products/' . $product->getSlug();
         }
+    }
+    
+    // Handle category pages - ensure consistent URL structure
+    if (request()->route() && strpos(request()->route()->getName(), 'categories.') === 0) {
+        $category = request()->route('category');
+        if ($category && is_object($category) && method_exists($category, 'getSlug')) {
+            $canonicalUrl = $preferredDomain . '/categories/' . $category->getSlug();
+        }
+    }
+    
+    // Handle news pages
+    if (request()->route() && request()->route()->getName() === 'news.show') {
+        $news = request()->route('news');
+        if ($news && is_object($news) && method_exists($news, 'getSlug')) {
+            $canonicalUrl = $preferredDomain . '/news/' . $news->getSlug();
+        }
+    }
+    
+    // Remove query parameters from canonical URLs (except essential ones)
+    $parsedUrl = parse_url($canonicalUrl);
+    if (isset($parsedUrl['query'])) {
+        parse_str($parsedUrl['query'], $queryParams);
+        
+        // Keep only essential query parameters
+        $essentialParams = ['utm_source', 'utm_medium', 'utm_campaign'];
+        $filteredParams = array_intersect_key($queryParams, array_flip($essentialParams));
+        
+        if (empty($filteredParams)) {
+            // Remove query string entirely if no essential params
+            $canonicalUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . $parsedUrl['path'];
+        } else {
+            // Rebuild URL with only essential params
+            $canonicalUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . $parsedUrl['path'] . '?' . http_build_query($filteredParams);
+        }
+    }
+    
+    // Remove trailing slash for consistency (except for homepage)
+    if ($canonicalUrl !== $preferredDomain && substr($canonicalUrl, -1) === '/') {
+        $canonicalUrl = rtrim($canonicalUrl, '/');
+    }
+    
+    // Ensure homepage canonical is exactly the preferred domain
+    if ($canonicalUrl === $preferredDomain . '/') {
+        $canonicalUrl = $preferredDomain;
     }
 @endphp
 
@@ -31,14 +80,14 @@
 <link rel="alternate" type="application/rss+xml" title="MaxMed UAE - Latest Products" href="{{ url('/rss/products.xml') }}">
 
 <!-- Hreflang for International SEO -->
-<link rel="alternate" hreflang="en" href="{{ url()->current() }}">
-<link rel="alternate" hreflang="en-ae" href="{{ url()->current() }}">
-<link rel="alternate" hreflang="en-sa" href="{{ url()->current() }}">
-<link rel="alternate" hreflang="en-qa" href="{{ url()->current() }}">
-<link rel="alternate" hreflang="en-kw" href="{{ url()->current() }}">
-<link rel="alternate" hreflang="en-om" href="{{ url()->current() }}">
-<link rel="alternate" hreflang="en-bh" href="{{ url()->current() }}">
-<link rel="alternate" hreflang="x-default" href="{{ url()->current() }}">
+<link rel="alternate" hreflang="en" href="{{ $canonicalUrl }}">
+<link rel="alternate" hreflang="en-ae" href="{{ $canonicalUrl }}">
+<link rel="alternate" hreflang="en-sa" href="{{ $canonicalUrl }}">
+<link rel="alternate" hreflang="en-qa" href="{{ $canonicalUrl }}">
+<link rel="alternate" hreflang="en-kw" href="{{ $canonicalUrl }}">
+<link rel="alternate" hreflang="en-om" href="{{ $canonicalUrl }}">
+<link rel="alternate" hreflang="en-bh" href="{{ $canonicalUrl }}">
+<link rel="alternate" hreflang="x-default" href="{{ $canonicalUrl }}">
 
 <!-- Favicon -->
 <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('img/favicon/favicon-96x96.png') }}">
@@ -56,7 +105,7 @@
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
-<meta property="og:url" content="{{ url()->current() }}">
+<meta property="og:url" content="{{ $canonicalUrl }}">
 <meta property="og:title" content="@yield('og_title', 'MaxMed UAE - Premium Laboratory & Medical Equipment Supplier in Dubai')">
 <meta property="og:description" content="@yield('og_description', 'Leading supplier of laboratory equipment and medical supplies in Dubai, UAE. Contact us at +971 55 460 2500.')">
 @php
@@ -97,7 +146,7 @@
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="{{ url()->current() }}">
+<meta name="twitter:url" content="{{ $canonicalUrl }}">
 <meta name="twitter:title" content="@yield('title')">
 <meta name="twitter:description" content="@yield('meta_description')">
 <meta name="twitter:image" content="{{ $ogImage }}">

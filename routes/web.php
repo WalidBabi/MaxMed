@@ -1385,3 +1385,112 @@ Route::get('/debug/quote-conversion/{quoteId}', function($quoteId) {
     
     return response()->json($debug, 200, [], JSON_PRETTY_PRINT);
 })->name('debug.quote.conversion');
+
+// Comprehensive redirects for canonical URL issues from Google Search Console CSV
+// These redirects ensure proper canonical URLs and prevent "Alternate page with proper canonical tag" errors
+
+// Redirect www to non-www (handled by middleware, but adding explicit redirects for problematic URLs)
+Route::get('/products/{product:slug}', function($product) {
+    return redirect()->route('product.show', $product->slug, 301);
+})->where('product', '.*')->middleware('canonical.domain');
+
+// Redirect old product URLs with numeric IDs to slug-based URLs
+$productRedirectIds = [92, 117, 186, 224, 314, 43, 64, 276, 226, 219, 304, 230, 307, 309, 303, 280, 229, 85, 103, 37, 379, 359, 331, 279, 40, 274, 312, 305, 311, 257, 399, 396, 347, 389, 69, 363, 283, 420, 60, 249, 62, 95, 200, 422];
+
+foreach ($productRedirectIds as $productId) {
+    Route::get("/product/{$productId}", function($productId) {
+        $product = \App\Models\Product::find($productId);
+        if ($product && $product->slug) {
+            return redirect()->route('product.show', $product->slug, 301);
+        }
+        return redirect('/products', 301);
+    })->where('productId', '[0-9]+');
+}
+
+// Redirect problematic category URLs with query parameters
+Route::get('/categories/{category}/{subcategory}?page={page}', function($category, $subcategory, $page = null) {
+    $categoryModel = \App\Models\Category::where('slug', $category)->first();
+    if ($categoryModel) {
+        $url = route('categories.show', $categoryModel);
+        if ($page && $page > 1) {
+            $url .= "?page={$page}";
+        }
+        return redirect($url, 301);
+    }
+    return redirect('/categories', 301);
+})->where(['category' => '[a-z0-9\-]+', 'subcategory' => '[a-z0-9\-]+', 'page' => '[0-9]+']);
+
+// Redirect specific problematic category combinations from CSV
+$categoryRedirects = [
+    '51/39/82' => 'research-life-sciences/analytical-instruments/laboratory-equipment',
+    '82' => 'laboratory-equipment',
+    '75' => 'molecular-biology',
+    '66/68/88' => 'analytical-chemistry/laboratory-equipment/centrifuges',
+    '68/61' => 'laboratory-equipment/pcr-thermocyclers',
+    '39/82' => 'analytical-instruments/laboratory-equipment',
+    '81' => 'rapid-test-kits',
+    '84' => 'thermal-process-equipment'
+];
+
+foreach ($categoryRedirects as $oldPath => $newPath) {
+    Route::get("/categories/{$oldPath}", function() use ($newPath) {
+        return redirect("/categories/{$newPath}", 301);
+    });
+    
+    // Handle pagination
+    Route::get("/categories/{$oldPath}?page={page}", function($page) use ($newPath) {
+        return redirect("/categories/{$newPath}?page={$page}", 301);
+    })->where('page', '[0-9]+');
+}
+
+// Redirect product query URLs to proper category pages
+Route::get('/products?category={category}', function($category) {
+    $categoryMap = [
+        'plasticware' => 'laboratory-consumables',
+        'rapid-tests' => 'rapid-test-kits',
+        'consumables' => 'laboratory-consumables',
+        'MaxTest© Rapid Tests IVD' => 'rapid-test-kits',
+        'microbiology' => 'microbiology-equipment'
+    ];
+    
+    $newCategory = $categoryMap[$category] ?? 'laboratory-equipment';
+    return redirect("/categories/{$newCategory}", 301);
+})->where('category', '.*');
+
+// Redirect quotation URLs to ensure proper canonical structure
+Route::get('/quotation/{product:slug}', function($product) {
+    return redirect()->route('quotation.redirect', $product->slug, 301);
+})->where('product', '.*');
+
+Route::get('/quotation/{product:slug}/form', function($product) {
+    return redirect()->route('quotation.form', $product->slug, 301);
+})->where('product', '.*');
+
+// Redirect legacy URLs with special characters
+Route::get('/education%26training-tools', function() {
+    return redirect('/categories/education-training-tools', 301);
+});
+
+Route::get('/analytical-chemistry', function() {
+    return redirect('/categories/analytical-chemistry', 301);
+});
+
+Route::get('/genomics-%26-life-sciences', function() {
+    return redirect('/categories/genomics-life-sciences', 301);
+});
+
+Route::get('/veterinary-%26-agri-tools', function() {
+    return redirect('/categories/veterinary-agri-tools', 301);
+});
+
+Route::get('/forensic-supplies', function() {
+    return redirect('/categories/forensic-supplies', 301);
+});
+
+Route::get('/molecular-biology', function() {
+    return redirect('/categories/molecular-biology', 301);
+});
+
+Route::get('/research-%26-life-sciences', function() {
+    return redirect('/categories/research-life-sciences', 301);
+});
