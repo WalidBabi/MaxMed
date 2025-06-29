@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
+    <loc>https://maxmedme.com/sitemap-clean.xml</loc>
+    <lastmod>2025-06-29T22:58:05+04:00</lastmod>
+  </sitemap>
+  <sitemap>
     <loc>https://maxmedme.com/sitemap-product.xml</loc>
     <lastmod>2025-06-29T18:41:01.565646Z</lastmod>
   </sitemap>
@@ -10,6 +14,14 @@
   </sitemap>
   <sitemap>
     <loc>https://maxmedme.com/sitemap-news.xml</loc>
+    <lastmod>2025-06-29T18:41:01.566240Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://maxmedme.com/sitemap-quotation.xml</loc>
+    <lastmod>2025-06-29T18:41:01.566240Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://maxmedme.com/sitemap-quotation-form.xml</loc>
     <lastmod>2025-06-29T18:41:01.566240Z</lastmod>
   </sitemap>
 </sitemapindex>

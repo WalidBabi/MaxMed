@@ -12,18 +12,25 @@ Disallow: /search?*
 Disallow: /*?sort=*
 Disallow: /*?filter=*
 Disallow: /*?page=*
+
+# Explicitly allow important pages
 Allow: /products/
 Allow: /categories/
 Allow: /news/
 Allow: /about
 Allow: /contact
 Allow: /quotation/
+Allow: /quotation/*/form
+Allow: /product/
 
 # Sitemaps
 Sitemap: https://maxmedme.com/sitemap.xml
+Sitemap: https://maxmedme.com/sitemap-clean.xml
 Sitemap: https://maxmedme.com/sitemap-products.xml
 Sitemap: https://maxmedme.com/sitemap-categories.xml
 Sitemap: https://maxmedme.com/sitemap-news.xml
+Sitemap: https://maxmedme.com/sitemap-quotation.xml
+Sitemap: https://maxmedme.com/sitemap-quotation-form.xml
 Sitemap: https://maxmedme.com/rss/feed.xml
 
 # Crawl delay for respectful crawling (reduced from 1 to encourage faster crawling)
