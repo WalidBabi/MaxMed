@@ -49,6 +49,18 @@ return [
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
 
+        // Campaign mailer using Mailtrap bulk stream
+        'campaign' => [
+            'transport' => 'smtp',
+            'host' => env('MAIL_CAMPAIGN_HOST', 'smtp.mailtrap.io'),
+            'port' => env('MAIL_CAMPAIGN_PORT', 2525),
+            'username' => env('MAIL_CAMPAIGN_USERNAME'),
+            'password' => env('MAIL_CAMPAIGN_PASSWORD'),
+            'encryption' => env('MAIL_CAMPAIGN_ENCRYPTION', 'tls'),
+            'timeout' => 60, // Longer timeout for bulk sending
+            'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
+        ],
+
         'ses' => [
             'transport' => 'ses',
         ],
@@ -117,6 +129,21 @@ return [
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Campaign "From" Address
+    |--------------------------------------------------------------------------
+    |
+    | This is the address used for campaign emails. It can be different from
+    | the transactional email address to help with deliverability and tracking.
+    |
+    */
+
+    'campaign_from' => [
+        'address' => env('MAIL_CAMPAIGN_FROM_ADDRESS', env('MAIL_FROM_ADDRESS', 'hello@example.com')),
+        'name' => env('MAIL_CAMPAIGN_FROM_NAME', env('MAIL_FROM_NAME', 'Example')),
     ],
 
     /*
