@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\QuotationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
@@ -13,6 +12,7 @@ use App\Http\Controllers\NewsController;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use App\Models\Order;
+use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PartnersController;
@@ -47,12 +47,6 @@ Route::get('/privacy-policy', function() {
 Route::get('/about', fn() => view('about'))->name('about');
 Route::get('/contact', fn() => view('contact'))->name('contact');
 Route::post('/contact', [\App\Http\Controllers\ContactController::class, 'submit'])->name('contact.submit');
-
-// Quotation routes - Public access
-Route::get('/quotation/{product:slug}', [QuotationController::class, 'redirect'])->name('quotation.redirect');
-Route::get('/quotation/form/{product:slug}', [QuotationController::class, 'form'])->name('quotation.form');
-Route::post('/quotation/store', [QuotationController::class, 'store'])->name('quotation.store');
-Route::get('/quotation/confirmation/{product:slug}', [QuotationController::class, 'confirmation'])->name('quotation.confirmation');
 
 // Marketing Unsubscribe Route (public)
 Route::get('/marketing/unsubscribe/{token}', [\App\Http\Controllers\MarketingController::class, 'unsubscribe'])->name('marketing.unsubscribe');
@@ -145,7 +139,14 @@ foreach ($problematicProductIds as $productId) {
     });
 }
 
-// Legacy www.maxmedme.com redirects - Handled by quotation.redirect.old route
+// Legacy www.maxmedme.com redirects
+Route::get('/quotation/{id}', function($id) {
+    $product = \App\Models\Product::find($id);
+    if ($product && $product->slug) {
+        return redirect()->route('quotation.redirect', $product->slug, 301);
+    }
+    return redirect('/quotation/form', 301);
+})->where('id', '[0-9]+');
 
 // Fix category URLs with specific IDs from CSV
 $problematicCategoryIds = [64, 56, 52, 85, 113, 46, 153, 69, 163, 188, 109, 135, 177, 99, 190, 91, 145, 106];
@@ -178,42 +179,58 @@ Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.a
 Route::post('/cart/remove/{product}', [CartController::class, 'removeFromCart'])->name('cart.remove');
 Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
 
+// Quotation routes for viewing - Move outside auth for SEO
+Route::prefix('quotation')->name('quotation.')->group(function () {
+    Route::get('/{product:slug}', [QuotationController::class, 'redirect'])->name('redirect');
+    Route::get('/{product:slug}/form', [QuotationController::class, 'form'])->name('form');
+    Route::post('/store', [QuotationController::class, 'store'])->name('store');
+    Route::get('/confirmation/{product:slug}', [QuotationController::class, 'confirmation'])->name('confirmation');
+});
+
 // Backward compatibility redirects: old ID-based quotation URLs to new slug-based URLs
 Route::get('/quotation/{id}', function($id) {
     $product = \App\Models\Product::findOrFail($id);
     return redirect()->route('quotation.redirect', $product->slug, 301);
 })->where('id', '[0-9]+')->name('quotation.redirect.old');
 
+Route::get('/quotation/{id}/form', function($id) {
+    $product = \App\Models\Product::findOrFail($id);
+    return redirect()->route('quotation.form', $product->slug, 301);
+})->where('id', '[0-9]+')->name('quotation.form.old');
+
+Route::get('/quotation/confirmation/{id}', function($id) {
+    $product = \App\Models\Product::findOrFail($id);
+    return redirect()->route('quotation.confirmation', $product->slug, 301);
+})->where('id', '[0-9]+')->name('quotation.confirmation.old');
+
 // Comprehensive redirects for all problematic URLs from Google Search Console CSV
 // These URLs are being blocked by robots.txt and need proper 301 redirects
 
 // Quotation form redirects for specific IDs found in CSV
-// TEMPORARILY COMMENTED OUT TO TEST MAIN ROUTES
 $quotationFormIds = [80, 45, 307, 309, 303, 315, 310, 314, 47, 79, 74, 75, 72, 82, 311, 221, 230, 44, 225, 224, 223, 227, 229, 222, 92, 81, 233, 226, 219, 312, 306, 71, 43, 316, 70, 175, 228, 115, 117, 118, 123, 122, 127, 249, 124, 119, 120, 255, 125, 126, 245, 212, 121, 250, 145, 73, 64, 57, 261, 266, 78, 263, 267, 63, 96, 246, 273, 279, 272, 254, 93, 258, 252, 260, 253, 247, 244, 251, 256, 234, 257, 248, 259, 86, 61, 271, 264, 166, 278, 190, 274, 277, 276, 281, 283, 189, 270, 91, 187, 185, 140, 137, 90, 87, 114, 94, 89, 136, 141, 59, 51, 133, 113, 104, 98, 107, 103, 102, 100, 55, 110, 49, 52, 50, 60, 284, 206, 265, 285, 109, 207, 209, 69, 76, 85, 56, 280, 135, 48, 112, 108, 105, 99, 129, 186, 171, 188, 116, 275, 97, 58, 236, 282, 177, 54, 156, 143, 167, 101, 139, 173, 142, 163, 134, 164, 168, 131, 159, 130, 157, 88, 53, 128, 138, 165, 153, 150, 111, 38, 35, 40, 37, 42, 46, 36];
 
-// foreach ($quotationFormIds as $formId) {
-//     Route::get("/quotation/{$formId}/form", function($formId) {
-//         $product = \App\Models\Product::find($formId);
-//         if ($product && $product->slug) {
-//             return redirect()->route('quotation.form', $product->slug, 301);
-//         }
-//         return redirect('/quotation/form', 301);
-//     })->where('formId', '[0-9]+');
-// }
+foreach ($quotationFormIds as $formId) {
+    Route::get("/quotation/{$formId}/form", function($formId) {
+        $product = \App\Models\Product::find($formId);
+        if ($product && $product->slug) {
+            return redirect()->route('quotation.form', $product->slug, 301);
+        }
+        return redirect('/quotation/form', 301);
+    })->where('formId', '[0-9]+');
+}
 
 // Quotation page redirects (without /form)
-// TEMPORARILY COMMENTED OUT TO TEST MAIN ROUTES
 $quotationIds = [80, 92, 43, 35, 40, 37, 42, 46, 36];
 
-// foreach ($quotationIds as $quotationId) {
-//     Route::get("/quotation/{$quotationId}", function($quotationId) {
-//         $product = \App\Models\Product::find($quotationId);
-//         if ($product && $product->slug) {
-//             return redirect()->route('quotation.redirect', $product->slug, 301);
-//         }
-//         return redirect('/quotation/form', 301);
-//     })->where('quotationId', '[0-9]+');
-// }
+foreach ($quotationIds as $quotationId) {
+    Route::get("/quotation/{$quotationId}", function($quotationId) {
+        $product = \App\Models\Product::find($quotationId);
+        if ($product && $product->slug) {
+            return redirect()->route('quotation.redirect', $product->slug, 301);
+        }
+        return redirect('/quotation/form', 301);
+    })->where('quotationId', '[0-9]+');
+}
 
 // Category redirects for specific problematic category combinations from CSV
 $categoryCombinations = [
@@ -1442,14 +1459,9 @@ Route::get('/products?category={category}', function($category) {
 })->where('category', '.*');
 
 // Redirect quotation URLs to ensure proper canonical structure
-// REMOVED: These routes were causing circular redirects and overriding the main quotation routes
-// Route::get('/quotation/{product:slug}', function($product) {
-//     return redirect()->route('quotation.redirect', $product->slug, 301);
-// })->where('product', '.*');
-
-// Route::get('/quotation/{product:slug}/form', function($product) {
-//     return redirect()->route('quotation.form', $product->slug, 301);
-// })->where('product', '.*');
+Route::get('/quotation/{product:slug}', function($product) {
+    return redirect()->route('quotation.redirect', $product->slug, 301);
+})->where('product', '.*');
 
 Route::get('/quotation/{product:slug}/form', function($product) {
     return redirect()->route('quotation.form', $product->slug, 301);
