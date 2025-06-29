@@ -203,6 +203,71 @@ Route::get('/quotation/confirmation/{id}', function($id) {
     return redirect()->route('quotation.confirmation', $product->slug, 301);
 })->where('id', '[0-9]+')->name('quotation.confirmation.old');
 
+// Comprehensive redirects for all problematic URLs from Google Search Console CSV
+// These URLs are being blocked by robots.txt and need proper 301 redirects
+
+// Quotation form redirects for specific IDs found in CSV
+$quotationFormIds = [80, 45, 307, 309, 303, 315, 310, 314, 47, 79, 74, 75, 72, 82, 311, 221, 230, 44, 225, 224, 223, 227, 229, 222, 92, 81, 233, 226, 219, 312, 306, 71, 43, 316, 70, 175, 228, 115, 117, 118, 123, 122, 127, 249, 124, 119, 120, 255, 125, 126, 245, 212, 121, 250, 145, 73, 64, 57, 261, 266, 78, 263, 267, 63, 96, 246, 273, 279, 272, 254, 93, 258, 252, 260, 253, 247, 244, 251, 256, 234, 257, 248, 259, 86, 61, 271, 264, 166, 278, 190, 274, 277, 276, 281, 283, 189, 270, 91, 187, 185, 140, 137, 90, 87, 114, 94, 89, 136, 141, 59, 51, 133, 113, 104, 98, 107, 103, 102, 100, 55, 110, 49, 52, 50, 60, 284, 206, 265, 285, 109, 207, 209, 69, 76, 85, 56, 280, 135, 48, 112, 108, 105, 99, 129, 186, 171, 188, 116, 275, 97, 58, 236, 282, 177, 54, 156, 143, 167, 101, 139, 173, 142, 163, 134, 164, 168, 131, 159, 130, 157, 88, 53, 128, 138, 165, 153, 150, 111, 38, 35, 40, 37, 42, 46, 36];
+
+foreach ($quotationFormIds as $formId) {
+    Route::get("/quotation/{$formId}/form", function($formId) {
+        $product = \App\Models\Product::find($formId);
+        if ($product && $product->slug) {
+            return redirect()->route('quotation.form', $product->slug, 301);
+        }
+        return redirect('/quotation/form', 301);
+    })->where('formId', '[0-9]+');
+}
+
+// Quotation page redirects (without /form)
+$quotationIds = [80, 92, 43, 35, 40, 37, 42, 46, 36];
+
+foreach ($quotationIds as $quotationId) {
+    Route::get("/quotation/{$quotationId}", function($quotationId) {
+        $product = \App\Models\Product::find($quotationId);
+        if ($product && $product->slug) {
+            return redirect()->route('quotation.redirect', $product->slug, 301);
+        }
+        return redirect('/quotation/form', 301);
+    })->where('quotationId', '[0-9]+');
+}
+
+// Category redirects for specific problematic category combinations from CSV
+$categoryCombinations = [
+    '66/71/73' => 'analytical-chemistry/laboratory-equipment/centrifuges',
+    '50/58' => 'research-life-sciences/laboratory-equipment',
+    '66/71/72' => 'analytical-chemistry/laboratory-equipment/shakers',
+    '60/77' => 'molecular-biology/dna-rna-extraction',
+    '55/61' => 'genomics-life-sciences/pcr-thermocyclers',
+    '51/39/86' => 'research-life-sciences/analytical-instruments/spectrophotometers',
+    '57/74' => 'genomics-life-sciences/laboratory-equipment',
+    '46' => 'laboratory-equipment',
+    '55/59' => 'genomics-life-sciences/microscopes',
+    '43/46' => 'analytical-chemistry/laboratory-equipment',
+    '76' => 'forensic-supplies',
+    '55/58' => 'genomics-life-sciences/laboratory-equipment',
+    '55' => 'genomics-life-sciences',
+    '56' => 'molecular-biology',
+    '51/60' => 'research-life-sciences/molecular-biology',
+    '51/55/59' => 'research-life-sciences/genomics-life-sciences/microscopes',
+    '79' => 'veterinary-agri-tools',
+    '34/36' => 'education-training-tools/laboratory-equipment',
+    '44' => 'analytical-chemistry',
+    '40' => 'forensic-supplies',
+    '34' => 'education-training-tools',
+    '50' => 'research-life-sciences',
+    '43' => 'analytical-chemistry',
+    '49/51/52' => 'education-training-tools/research-life-sciences/laboratory-equipment',
+    '49/51' => 'education-training-tools/research-life-sciences',
+    '72' => 'laboratory-equipment'
+];
+
+foreach ($categoryCombinations as $oldPath => $newPath) {
+    Route::get("/categories/{$oldPath}", function() use ($newPath) {
+        return redirect("/categories/{$newPath}", 301);
+    });
+}
+
 // Authenticated Routes
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
