@@ -98,6 +98,17 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
+        {{-- reCAPTCHA v2 - Only show in production --}}
+        @if(app()->environment('production'))
+        <div class="mt-4">
+           <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+           <x-input-error :messages="$errors->get('g-recaptcha-response')" class="mt-2" />
+        </div>
+        @else
+        {{-- Hidden field for development environment --}}
+        <input type="hidden" name="g-recaptcha-response" value="dev-bypass">
+        @endif
+
         <div class="flex items-center justify-between mt-4">
             <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
                 {{ __('Already registered?') }}
@@ -119,4 +130,11 @@
         });
     </script>
     @endpush
-@endsection 
+@endsection
+
+{{-- Add reCAPTCHA script only in production --}}
+@if(app()->environment('production'))
+@push('scripts')
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+@endpush
+@endif 

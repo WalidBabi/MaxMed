@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rules;
 use Carbon\Carbon;
 use Illuminate\View\View as ViewContract;
@@ -68,6 +69,34 @@ class SupplierRegistrationController extends Controller
             'company_name' => ['required', 'string', 'max:255'],
             'business_address' => ['required', 'string', 'max:500'],
             'phone_primary' => ['required', 'string', 'max:20'],
+            'g-recaptcha-response' => [
+                // Only require reCAPTCHA in production environment
+                app()->environment('production') ? 'required' : 'nullable',
+                function ($attribute, $value, $fail) {
+                    // Skip reCAPTCHA validation in development environment
+                    if (!app()->environment('production')) {
+                        Log::info('Skipping reCAPTCHA validation in development environment');
+                        return;
+                    }
+                    
+                    if (empty($value)) {
+                        $fail('The reCAPTCHA verification is required.');
+                        return;
+                    }
+                    
+                    $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                        'secret' => config('services.recaptcha.secret_key'),
+                        'response' => $value,
+                        'remoteip' => request()->ip(),
+                    ]);
+                    
+                    Log::info('reCAPTCHA response', ['success' => $response->json('success')]);
+                    
+                    if (!$response->json('success')) {
+                        $fail('The reCAPTCHA verification failed. Please try again.');
+                    }
+                }
+            ],
         ];
 
         $invitation = null;
