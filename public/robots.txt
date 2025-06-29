@@ -48,3 +48,9 @@ Disallow: /
 
 User-agent: Claude-Web
 Disallow: /
+# Prevent crawling of duplicate URLs
+Disallow: /product/
+Disallow: /*?page=*
+Disallow: /*?category=*
+Disallow: /*?sort=*
+Disallow: /*?filter=*
