@@ -26,11 +26,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('reservations:cleanup')->everyMinute();
         $schedule->command('sitemap:generate')->daily();
         $schedule->command('campaigns:send-scheduled')->everyMinute();
-        $schedule->command('users:cleanup-unverified --days=1')->everyFourHours();
-        $schedule->command('users:send-verification-reminders')->daily();
-        
-        // Process email and notification queues every minute
-        $schedule->command('queue:work --queue=notifications,emails --stop-when-empty --tries=3')->everyMinute();
+        $schedule->command('users:cleanup-unverified --days=30')->daily();
+        $schedule->command('users:send-verification-reminders --reminder-after=10')->daily();
     }
 
     /**
