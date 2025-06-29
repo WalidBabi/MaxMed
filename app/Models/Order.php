@@ -50,11 +50,38 @@ class Order extends Model
     const STATUS_PROCESSING = 'processing';     // Order is being processed
     const STATUS_SHIPPED = 'shipped';          // Order has been shipped
     const STATUS_CANCELLED = 'cancelled';      // Order cancelled
+    
+    // Additional status constants for quotation workflow
+    const STATUS_AWAITING_QUOTATIONS = 'awaiting_quotations';  // Waiting for supplier quotations
+    const STATUS_QUOTATIONS_RECEIVED = 'quotations_received';  // Quotations received, pending approval
+    const STATUS_APPROVED = 'approved';        // Order approved after quotation review
+    const STATUS_DELIVERED = 'delivered';      // Order delivered to customer
+    const STATUS_COMPLETED = 'completed';      // Order completed (final state)
+    
+    // Quotation status constants
+    const QUOTATION_STATUS_PENDING = 'pending';
+    const QUOTATION_STATUS_APPROVED = 'approved';
+    const QUOTATION_STATUS_REJECTED = 'rejected';
+    const QUOTATION_STATUS_PARTIAL = 'partial';
+    const QUOTATION_STATUS_COMPLETE = 'complete';
 
     // Add after the status constants
     private const ALLOWED_STATUS_TRANSITIONS = [
         self::STATUS_PENDING => [
-            self::STATUS_PROCESSING,            // Start processing
+            self::STATUS_AWAITING_QUOTATIONS,   // Move to quotation workflow
+            self::STATUS_PROCESSING,            // Start processing (for non-quotation orders)
+            self::STATUS_CANCELLED
+        ],
+        self::STATUS_AWAITING_QUOTATIONS => [
+            self::STATUS_QUOTATIONS_RECEIVED,   // Quotations received
+            self::STATUS_CANCELLED
+        ],
+        self::STATUS_QUOTATIONS_RECEIVED => [
+            self::STATUS_APPROVED,              // Order approved
+            self::STATUS_CANCELLED
+        ],
+        self::STATUS_APPROVED => [
+            self::STATUS_PROCESSING,            // Start processing approved order
             self::STATUS_CANCELLED
         ],
         self::STATUS_PROCESSING => [
@@ -62,7 +89,15 @@ class Order extends Model
             self::STATUS_CANCELLED
         ],
         self::STATUS_SHIPPED => [
-            self::STATUS_SHIPPED                // Final state
+            self::STATUS_DELIVERED,             // Order delivered
+            self::STATUS_CANCELLED
+        ],
+        self::STATUS_DELIVERED => [
+            self::STATUS_COMPLETED,             // Order completed
+            self::STATUS_CANCELLED
+        ],
+        self::STATUS_COMPLETED => [
+            self::STATUS_COMPLETED              // Final state
         ],
         self::STATUS_CANCELLED => [
             self::STATUS_CANCELLED              // Final state
