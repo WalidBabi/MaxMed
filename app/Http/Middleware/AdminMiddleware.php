@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Log;
 
 class AdminMiddleware
 {
@@ -16,17 +15,7 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        Log::info('AdminMiddleware: Processing request', [
-            'url' => $request->url(),
-            'method' => $request->method(),
-            'user_id' => auth()->id(),
-            'is_authenticated' => auth()->check(),
-            'is_admin' => auth()->check() ? auth()->user()->isAdmin() : false
-        ]);
-
         if (!auth()->check()) {
-            Log::warning('AdminMiddleware: User not authenticated, redirecting to login');
-            
             // Don't store API endpoints or notification checks as intended URL
             if (!$this->shouldStoreIntendedUrl($request)) {
                 return redirect()->route('login');
@@ -36,14 +25,8 @@ class AdminMiddleware
         }
 
         if (!auth()->user()->isAdmin()) {
-            Log::warning('AdminMiddleware: User is not admin', ['user_id' => auth()->id()]);
             abort(403, 'Unauthorized access to admin area.');
         }
-
-        Log::info('AdminMiddleware: Request authorized', [
-            'user_id' => auth()->id(),
-            'url' => $request->url()
-        ]);
 
         return $next($request);
     }
