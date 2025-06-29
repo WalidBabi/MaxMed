@@ -99,26 +99,69 @@ Route::get('/debug/campaign/{campaignId}', function($campaignId) {
     ]);
 })->name('debug.campaign');
 
-// Product routes with proper redirect handling
+// Product Routes
+Route::get('/products/{product:slug}', [\App\Http\Controllers\ProductController::class, 'show'])->name('product.show');
+
+// Legacy product URL redirect (ID-based to slug-based)
 Route::get('/product/{id}', function($id) {
-    try {
-        $product = \App\Models\Product::findOrFail($id);
-        
-        // Ensure product has a slug
-        if (!$product->slug) {
-            $product->slug = $product->generateSlug();
-            $product->save();
-        }
-        
-        return redirect()->to("/products/{$product->slug}", 301);
-    } catch (\Exception $e) {
-        abort(404);
+    $product = \App\Models\Product::findOrFail($id);
+    return redirect()->route('product.show', $product->slug, 301);
+})->where('id', '[0-9]+')->name('product.show.old');
+
+// Fix specific problematic product URLs from Search Console
+Route::get('/product/117', function() {
+    $product = \App\Models\Product::find(117);
+    if ($product && $product->slug) {
+        return redirect()->route('product.show', $product->slug, 301);
     }
+    return redirect('/products', 301);
+});
+
+Route::get('/product/186', function() {
+    $product = \App\Models\Product::find(186);
+    if ($product && $product->slug) {
+        return redirect()->route('product.show', $product->slug, 301);
+    }
+    return redirect('/products', 301);
+});
+
+// Handle all remaining product IDs found in the CSV
+$problematicProductIds = [224, 314, 43, 64, 276, 226, 219, 304, 230, 307, 309, 303, 280, 229, 85, 103, 37, 379, 359, 331, 279, 40, 274, 312, 305, 311, 257, 399, 396, 347, 389, 69, 363, 283, 420, 60, 249, 62, 95, 200, 422];
+
+foreach ($problematicProductIds as $productId) {
+    Route::get("/product/{$productId}", function() use ($productId) {
+        $product = \App\Models\Product::find($productId);
+        if ($product && $product->slug) {
+            return redirect()->route('product.show', $product->slug, 301);
+        }
+        return redirect('/products', 301);
+    });
+}
+
+// Legacy www.maxmedme.com redirects
+Route::get('/quotation/{id}', function($id) {
+    $product = \App\Models\Product::find($id);
+    if ($product && $product->slug) {
+        return redirect()->route('quotation.redirect', $product->slug, 301);
+    }
+    return redirect('/quotation/form', 301);
 })->where('id', '[0-9]+');
 
-// Main product routes
-Route::get('/products/{product:slug}', [\App\Http\Controllers\ProductController::class, 'show'])->name('product.show');
-Route::get('/products', [\App\Http\Controllers\ProductController::class, 'index'])->name('products.index');
+// Fix category URLs with specific IDs from CSV
+$problematicCategoryIds = [64, 56, 52, 85, 113, 46, 153, 69, 163, 188, 109, 135, 177, 99, 190, 91, 145, 106];
+foreach ($problematicCategoryIds as $categoryId) {
+    Route::get("/categories/{$categoryId}", function() use ($categoryId) {
+        $category = \App\Models\Category::find($categoryId);
+        if ($category) {
+            return redirect("/categories/{$category->slug}", 301);
+        }
+        return redirect('/categories', 301);
+    });
+    
+    Route::get("/categories/{$categoryId}/{sub}", function($categoryId, $sub) {
+        return redirect('/categories', 301);
+    })->where(['categoryId' => '[0-9]+', 'sub' => '.*']);
+}
 
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
