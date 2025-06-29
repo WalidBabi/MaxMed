@@ -17,14 +17,9 @@ class QuotationController extends Controller
     /**
      * Handle direct URL access to quotation/ID which should be redirected
      */
-    public function redirect(Request $request, $productId)
+    public function redirect(Product $product)
     {
-        try {
-            $product = Product::findOrFail($productId);
-            return redirect()->route('product.show', $product)->setStatusCode(301);
-        } catch (\Exception $e) {
-            return redirect()->route('products.index')->setStatusCode(301);
-        }
+        return redirect()->route('product.show', $product)->setStatusCode(301);
     }
   
     public function form(Product $product)
