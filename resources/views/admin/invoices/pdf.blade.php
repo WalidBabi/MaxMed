@@ -634,7 +634,7 @@
                         <th style="width: 12%;" class="text-center">Quantity</th>
                         <th style="width: 13%;" class="text-right">Rate ({{ $invoice->currency ?? 'AED' }})</th>
                         <th style="width: 10%;" class="text-center">Discount</th>
-                        <th style="width: 20%;" class="text-right">Amount ({{ $invoice->currency ?? 'AED' }})</th>
+                        <th style="width: 20%;" class="text-right">Amount After Discount ({{ $invoice->currency ?? 'AED' }})</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -644,17 +644,41 @@
                             <div class="item-description">{{ $item->item_description }}</div>
                         </td>
                         <td class="text-center">
-                            @if($item->specifications)
-                                @php
-                                    $specsToShow = is_array($item->specifications) ? $item->specifications : explode("\n", $item->specifications);
-                                @endphp
-                                @if(count($specsToShow) > 0)
-                                    @foreach($specsToShow as $spec)
-                                        @if(!empty(trim($spec)))
-                                            <div style="margin-bottom: 2px; color: var(--text-secondary);">{{ $spec }}</div>
-                                        @endif
-                                    @endforeach
-                                @endif
+                            @php
+                                $allSpecs = [];
+                                
+                                // Add item-specific specifications
+                                if($item->specifications) {
+                                    $itemSpecs = is_array($item->specifications) ? $item->specifications : explode("\n", $item->specifications);
+                                    foreach($itemSpecs as $spec) {
+                                        if(!empty(trim($spec))) {
+                                            $allSpecs[] = trim($spec);
+                                        }
+                                    }
+                                }
+                                
+                                // Add product specifications if product exists
+                                if($item->product && $item->product->specifications) {
+                                    $productSpecs = $item->product->specifications()
+                                        ->where('show_on_detail', true)
+                                        ->orderBy('category', 'asc')
+                                        ->orderBy('sort_order', 'asc')
+                                        ->get();
+                                    
+                                    foreach($productSpecs as $spec) {
+                                        $specText = $spec->display_name . ': ' . $spec->specification_value;
+                                        if($spec->unit) {
+                                            $specText .= ' ' . $spec->unit;
+                                        }
+                                        $allSpecs[] = $specText;
+                                    }
+                                }
+                            @endphp
+                            
+                            @if(count($allSpecs) > 0)
+                                @foreach($allSpecs as $spec)
+                                    <div style="margin-bottom: 2px; color: var(--text-secondary); font-size: 8px;">{{ $spec }}</div>
+                                @endforeach
                             @endif
                             
                             @if($item->size && !empty(trim($item->size)))
@@ -664,7 +688,7 @@
                                 </div>
                             @endif
                             
-                            @if((!$item->specifications || (is_array($item->specifications) && count($item->specifications) == 0) || (is_string($item->specifications) && empty(trim($item->specifications)))) && (!$item->size || empty(trim($item->size))))
+                            @if(count($allSpecs) == 0 && (!$item->size || empty(trim($item->size))))
                                 <span style="color: var(--text-muted);">-</span>
                             @endif
                         </td>

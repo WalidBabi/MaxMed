@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -36,6 +37,34 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'g-recaptcha-response' => [
+                // Only require reCAPTCHA in production environment
+                app()->environment('production') ? 'required' : 'nullable',
+                function ($attribute, $value, $fail) {
+                    // Skip reCAPTCHA validation in development environment
+                    if (!app()->environment('production')) {
+                        Log::info('Skipping reCAPTCHA validation in development environment');
+                        return;
+                    }
+                    
+                    if (empty($value)) {
+                        $fail('The reCAPTCHA verification is required.');
+                        return;
+                    }
+                    
+                    $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                        'secret' => config('services.recaptcha.secret_key'),
+                        'response' => $value,
+                        'remoteip' => request()->ip(),
+                    ]);
+                    
+                    Log::info('reCAPTCHA response', ['success' => $response->json('success')]);
+                    
+                    if (!$response->json('success')) {
+                        $fail('The reCAPTCHA verification failed. Please try again.');
+                    }
+                }
+            ],
         ]);
 
         $user = User::create([
