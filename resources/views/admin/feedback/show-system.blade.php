@@ -40,7 +40,7 @@
                     </ol>
                 </nav>
                 <h1 class="mt-4 text-3xl font-bold text-gray-900">System Feedback Details</h1>
-                <p class="text-gray-600 mt-2">{{ $feedback->subject ?? 'System feedback report' }}</p>
+                <p class="text-gray-600 mt-2">{{ $systemFeedback->title ?? 'System feedback report' }}</p>
             </div>
             <div class="flex items-center space-x-3">
                 <a href="{{ route('admin.feedback.index', ['tab' => 'system']) }}" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
@@ -63,24 +63,24 @@
                         <h3 class="text-lg font-semibold text-gray-900">Feedback Details</h3>
                         <div class="flex items-center space-x-2">
                             <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
-                                @if($feedback->type === 'bug') bg-red-100 text-red-800
-                                @elseif($feedback->type === 'feature') bg-blue-100 text-blue-800
-                                @elseif($feedback->type === 'improvement') bg-green-100 text-green-800
+                                @if($systemFeedback->type === 'bug') bg-red-100 text-red-800
+                                @elseif($systemFeedback->type === 'feature') bg-blue-100 text-blue-800
+                                @elseif($systemFeedback->type === 'improvement') bg-green-100 text-green-800
                                 @else bg-gray-100 text-gray-800 @endif">
-                                {{ ucfirst($feedback->type ?? 'general') }}
+                                {{ ucfirst($systemFeedback->type ?? 'general') }}
                             </span>
                             <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
-                                @if($feedback->priority === 'high') bg-red-100 text-red-800
-                                @elseif($feedback->priority === 'medium') bg-yellow-100 text-yellow-800
+                                @if($systemFeedback->priority === 'high') bg-red-100 text-red-800
+                                @elseif($systemFeedback->priority === 'medium') bg-yellow-100 text-yellow-800
                                 @else bg-green-100 text-green-800 @endif">
-                                {{ ucfirst($feedback->priority ?? 'low') }} Priority
+                                {{ ucfirst($systemFeedback->priority ?? 'low') }} Priority
                             </span>
                             <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
-                                @if($feedback->status === 'completed') bg-green-100 text-green-800
-                                @elseif($feedback->status === 'in_progress') bg-blue-100 text-blue-800
-                                @elseif($feedback->status === 'rejected') bg-red-100 text-red-800
+                                @if($systemFeedback->status === 'completed') bg-green-100 text-green-800
+                                @elseif($systemFeedback->status === 'in_progress') bg-blue-100 text-blue-800
+                                @elseif($systemFeedback->status === 'rejected') bg-red-100 text-red-800
                                 @else bg-gray-100 text-gray-800 @endif">
-                                {{ ucfirst(str_replace('_', ' ', $feedback->status ?? 'pending')) }}
+                                {{ ucfirst(str_replace('_', ' ', $systemFeedback->status ?? 'pending')) }}
                             </span>
                         </div>
                     </div>
@@ -88,31 +88,31 @@
                 <div class="p-6">
                     <div class="space-y-6">
                         <div>
-                            <h4 class="text-sm font-medium text-gray-900 mb-2">Subject</h4>
-                            <p class="text-gray-700">{{ $feedback->subject ?? 'No subject provided' }}</p>
+                            <h4 class="text-sm font-medium text-gray-900 mb-2">Title</h4>
+                            <p class="text-gray-700">{{ $systemFeedback->title ?? 'No title provided' }}</p>
                         </div>
 
                         <div>
                             <h4 class="text-sm font-medium text-gray-900 mb-2">Description</h4>
                             <div class="bg-gray-50 rounded-lg p-4">
-                                <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ $feedback->description ?? 'No description provided' }}</p>
+                                <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ $systemFeedback->description ?? 'No description provided' }}</p>
                             </div>
                         </div>
 
-                        @if($feedback->steps_to_reproduce)
+                        @if($systemFeedback->steps_to_reproduce)
                             <div>
                                 <h4 class="text-sm font-medium text-gray-900 mb-2">Steps to Reproduce</h4>
                                 <div class="bg-gray-50 rounded-lg p-4">
-                                    <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ $feedback->steps_to_reproduce }}</p>
+                                    <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">{{ $systemFeedback->steps_to_reproduce }}</p>
                                 </div>
                             </div>
                         @endif
 
-                        @if($feedback->expected_behavior)
+                        @if($systemFeedback->expected_behavior)
                             <div>
                                 <h4 class="text-sm font-medium text-gray-900 mb-2">Expected Behavior</h4>
                                 <div class="bg-gray-50 rounded-lg p-4">
-                                    <p class="text-gray-700 leading-relaxed">{{ $feedback->expected_behavior }}</p>
+                                    <p class="text-gray-700 leading-relaxed">{{ $systemFeedback->expected_behavior }}</p>
                                 </div>
                             </div>
                         @endif
@@ -126,17 +126,17 @@
                     <h3 class="text-lg font-semibold text-gray-900">Admin Response</h3>
                 </div>
                 <div class="p-6">
-                    @if($feedback->admin_response)
+                    @if($systemFeedback->admin_response)
                         <div class="bg-blue-50 rounded-lg p-4 mb-4">
                             <h4 class="text-sm font-medium text-blue-900 mb-2">Current Response</h4>
-                            <p class="text-blue-800 whitespace-pre-wrap">{{ $feedback->admin_response }}</p>
-                            @if($feedback->responded_at)
-                                <p class="text-xs text-blue-600 mt-2">Responded on {{ formatDubaiDate($feedback->responded_at, 'F j, Y \a\t g:i A') }}</p>
+                            <p class="text-blue-800 whitespace-pre-wrap">{{ $systemFeedback->admin_response }}</p>
+                            @if($systemFeedback->responded_at)
+                                <p class="text-xs text-blue-600 mt-2">Responded on {{ formatDubaiDate($systemFeedback->responded_at, 'F j, Y \a\t g:i A') }}</p>
                             @endif
                         </div>
                     @endif
 
-                    <form action="{{ route('admin.feedback.update-system', $feedback->id) }}" method="POST" class="space-y-4">
+                    <form action="{{ route('admin.feedback.update-system', $systemFeedback->id) }}" method="POST" class="space-y-4">
                         @csrf
                         @method('PUT')
                         
@@ -144,28 +144,28 @@
                             <div>
                                 <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
                                 <select id="status" name="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                    <option value="pending" {{ $feedback->status === 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="in_progress" {{ $feedback->status === 'in_progress' ? 'selected' : '' }}>In Progress</option>
-                                    <option value="completed" {{ $feedback->status === 'completed' ? 'selected' : '' }}>Completed</option>
-                                    <option value="rejected" {{ $feedback->status === 'rejected' ? 'selected' : '' }}>Rejected</option>
+                                    <option value="pending" {{ $systemFeedback->status === 'pending' ? 'selected' : '' }}>Pending</option>
+                                    <option value="in_progress" {{ $systemFeedback->status === 'in_progress' ? 'selected' : '' }}>In Progress</option>
+                                    <option value="completed" {{ $systemFeedback->status === 'completed' ? 'selected' : '' }}>Completed</option>
+                                    <option value="rejected" {{ $systemFeedback->status === 'rejected' ? 'selected' : '' }}>Rejected</option>
                                 </select>
                             </div>
                             
                             <div>
                                 <label for="priority" class="block text-sm font-medium text-gray-700">Priority</label>
                                 <select id="priority" name="priority" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                    <option value="low" {{ $feedback->priority === 'low' ? 'selected' : '' }}>Low</option>
-                                    <option value="medium" {{ $feedback->priority === 'medium' ? 'selected' : '' }}>Medium</option>
-                                    <option value="high" {{ $feedback->priority === 'high' ? 'selected' : '' }}>High</option>
+                                    <option value="low" {{ $systemFeedback->priority === 'low' ? 'selected' : '' }}>Low</option>
+                                    <option value="medium" {{ $systemFeedback->priority === 'medium' ? 'selected' : '' }}>Medium</option>
+                                    <option value="high" {{ $systemFeedback->priority === 'high' ? 'selected' : '' }}>High</option>
                                 </select>
                             </div>
                         </div>
 
                         <div>
                             <label for="admin_response" class="block text-sm font-medium text-gray-700">Admin Response</label>
-                            <textarea id="admin_response" name="admin_response" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Enter your response to this feedback...">{{ $feedback->admin_response }}</textarea>
+                            <textarea id="admin_response" name="admin_response" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Enter your response to this feedback...">{{ $systemFeedback->admin_response }}</textarea>
                             <p class="mt-2 text-sm text-gray-500" id="char-count">
-                                <span id="current-count">{{ strlen($feedback->admin_response ?? '') }}</span>/500 characters
+                                <span id="current-count">{{ strlen($systemFeedback->admin_response ?? '') }}</span>/500 characters
                             </p>
                         </div>
 
@@ -193,12 +193,12 @@
                     <div class="flex items-center mb-4">
                         <div class="flex-shrink-0 h-12 w-12">
                             <div class="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center">
-                                <span class="text-lg font-medium text-indigo-700">{{ substr($feedback->user->name ?? 'U', 0, 2) }}</span>
+                                <span class="text-lg font-medium text-indigo-700">{{ substr($systemFeedback->user->name ?? 'U', 0, 2) }}</span>
                             </div>
                         </div>
                         <div class="ml-4">
-                            <h4 class="text-sm font-medium text-gray-900">{{ $feedback->user->name ?? 'Unknown User' }}</h4>
-                            <p class="text-sm text-gray-500">{{ $feedback->user->email ?? 'No email' }}</p>
+                            <h4 class="text-sm font-medium text-gray-900">{{ $systemFeedback->user->name ?? 'Unknown User' }}</h4>
+                            <p class="text-sm text-gray-500">{{ $systemFeedback->user->email ?? 'No email' }}</p>
                         </div>
                     </div>
 
@@ -206,13 +206,13 @@
                         <div>
                             <dt class="text-sm font-medium text-gray-500">User Role</dt>
                             <dd class="mt-1 text-sm text-gray-900">
-                                {{ $feedback->user && $feedback->user->role ? ucfirst($feedback->user->role->name) : 'Customer' }}
+                                {{ $systemFeedback->user && $systemFeedback->user->role ? ucfirst($systemFeedback->user->role->name) : 'Customer' }}
                             </dd>
                         </div>
                         <div>
                             <dt class="text-sm font-medium text-gray-500">Member Since</dt>
                             <dd class="mt-1 text-sm text-gray-900">
-                                {{ $feedback->user && $feedback->user->created_at ? $feedback->user->created_at->format('F j, Y') : 'N/A' }}
+                                {{ $systemFeedback->user && $systemFeedback->user->created_at ? $systemFeedback->user->created_at->format('F j, Y') : 'N/A' }}
                             </dd>
                         </div>
                     </dl>
@@ -229,7 +229,7 @@
                         <ul role="list" class="-mb-8">
                             <li>
                                 <div class="relative pb-8">
-                                    @if($feedback->responded_at)
+                                    @if($systemFeedback->responded_at)
                                         <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
                                     @endif
                                     <div class="relative flex space-x-3">
@@ -245,31 +245,30 @@
                                                 <p class="text-sm text-gray-500">Feedback submitted</p>
                                             </div>
                                             <div class="text-right text-sm whitespace-nowrap text-gray-500">
-                                                {{ $feedback->created_at ? $feedback->created_at->format('M j, Y g:i A') : 'N/A' }}
+                                                {{ $systemFeedback->created_at ? $systemFeedback->created_at->format('M j, Y g:i A') : 'N/A' }}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </li>
                             
-                            @if($feedback->responded_at)
+                            @if($systemFeedback->responded_at)
                                 <li>
                                     <div class="relative pb-8">
                                         <div class="relative flex space-x-3">
                                             <div>
                                                 <span class="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center ring-8 ring-white">
                                                     <svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                                                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                                     </svg>
                                                 </span>
                                             </div>
                                             <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
                                                 <div>
-                                                    <p class="text-sm text-gray-500">Admin response provided</p>
+                                                    <p class="text-sm text-gray-500">Admin responded</p>
                                                 </div>
                                                 <div class="text-right text-sm whitespace-nowrap text-gray-500">
-                                                    {{ formatDubaiDate($feedback->responded_at, 'M j, Y g:i A') }}
+                                                    {{ formatDubaiDate($systemFeedback->responded_at, 'M j, Y g:i A') }}
                                                 </div>
                                             </div>
                                         </div>
@@ -287,16 +286,16 @@
                     <h3 class="text-lg font-semibold text-gray-900">Quick Actions</h3>
                 </div>
                 <div class="p-6 space-y-3">
-                    @if($feedback->user && $feedback->user->email)
-                        <a href="mailto:{{ $feedback->user->email }}" class="w-full inline-flex justify-center items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                    @if($systemFeedback->user && $systemFeedback->user->email)
+                        <a href="mailto:{{ $systemFeedback->user->email }}" class="w-full inline-flex justify-center items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
                             <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                             </svg>
                             Contact User
                         </a>
                     @endif
-                    
-                    <form action="{{ route('admin.feedback.update-system', $feedback->id) }}" method="POST" class="w-full">
+
+                    <form action="{{ route('admin.feedback.update-system', $systemFeedback->id) }}" method="POST" class="w-full">
                         @csrf
                         @method('PUT')
                         <input type="hidden" name="status" value="completed">
@@ -317,22 +316,21 @@
 document.addEventListener('DOMContentLoaded', function() {
     const textarea = document.getElementById('admin_response');
     const currentCount = document.getElementById('current-count');
-    const maxLength = 500;
+    const maxCount = 500;
 
-    if (textarea && currentCount) {
-        textarea.addEventListener('input', function() {
-            const length = this.value.length;
-            currentCount.textContent = length;
-            
-            if (length > maxLength) {
-                currentCount.parentElement.className = 'mt-2 text-sm text-red-500';
-            } else if (length > maxLength * 0.8) {
-                currentCount.parentElement.className = 'mt-2 text-sm text-yellow-500';
-            } else {
-                currentCount.parentElement.className = 'mt-2 text-sm text-gray-500';
-            }
-        });
+    function updateCharCount() {
+        const currentLength = textarea.value.length;
+        currentCount.textContent = currentLength;
+        
+        if (currentLength > maxCount) {
+            currentCount.classList.add('text-red-600');
+        } else {
+            currentCount.classList.remove('text-red-600');
+        }
     }
+
+    textarea.addEventListener('input', updateCharCount);
+    updateCharCount();
 });
 </script>
 @endsection 

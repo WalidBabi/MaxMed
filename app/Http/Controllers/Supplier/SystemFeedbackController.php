@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Supplier;
 
 use App\Http\Controllers\Controller;
 use App\Models\SystemFeedback;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class SystemFeedbackController extends Controller
 {
@@ -43,19 +46,20 @@ class SystemFeedbackController extends Controller
 
         // Send notification to all admin users
         try {
-            // Get all admin users with the is_admin flag or admin role
-            $admins = \App\Models\User::where(function($query) {
-                $query->where('is_admin', true)
-                      ->orWhereHas('role', function($roleQuery) {
-                          $roleQuery->where('name', 'admin');
-                      });
+            // Get all admin users using the role relationship
+            $admins = \App\Models\User::whereHas('role', function($query) {
+                $query->where('name', 'admin');
             })
             ->whereNotNull('email')
             ->get();
 
             if ($admins->count() > 0) {
-                \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\SystemFeedbackNotification($systemFeedback));
-                \Illuminate\Support\Facades\Log::info('System feedback notification sent to ' . $admins->count() . ' admin(s) for feedback ID: ' . $systemFeedback->id);
+                // Send styled email to each admin
+                foreach ($admins as $admin) {
+                    \Illuminate\Support\Facades\Mail::to($admin->email)->send(new \App\Mail\AdminSystemFeedbackSubmitted($systemFeedback));
+                }
+                
+                \Illuminate\Support\Facades\Log::info('System feedback styled email sent to ' . $admins->count() . ' admin(s) for feedback ID: ' . $systemFeedback->id);
             } else {
                 \Illuminate\Support\Facades\Log::warning('No admin users found to send system feedback notification for feedback ID: ' . $systemFeedback->id);
             }
