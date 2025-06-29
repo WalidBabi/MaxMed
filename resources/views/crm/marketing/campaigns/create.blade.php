@@ -329,20 +329,10 @@
                             <p class="text-sm text-gray-600">✨ <strong>HTML is automatically generated</strong> from your text content for better tracking and formatting.</p>
                             <p class="text-sm text-gray-500">Use variables like {!! '{{' !!}first_name{!! '}}' !!}, {!! '{{' !!}company_name{!! '}}' !!}, {!! '{{' !!}job_title{!! '}}' !!} to personalize your message.</p>
                         </div>
-                        <textarea name="text_content" id="text_content" rows="12" placeholder="Dear {!! '{{' !!}first_name{!! '}}' !!},
-
-I hope this email finds you well. My name is Walid, and I am reaching out on behalf of MaxMed, a trusted provider of advanced scientific solutions tailored to life science and research professionals.
-
-We specialize in:
-- Laboratory Equipment
-- Medical Consumables  
-- Analytical Chemistry Tools
-
-I would love to discuss how we can support your research and laboratory needs.
-
-Best regards,
-Walid Babi"
-                                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('text_content') border-red-300 @enderror">{{ old('text_content') }}</textarea>
+                        <textarea name="text_content" id="text_content" rows="12"
+                            placeholder="Dear {{ old('first_name') }},\n\nI hope this email finds you well. My name is Walid, and I am reaching out on behalf of MaxMed, a trusted provider of advanced scientific solutions tailored to life science and research professionals.\n\nWe specialize in:\n- Laboratory Equipment\n- Medical Consumables\n- Analytical Chemistry Tools\n\nI would love to discuss how we can support your research and laboratory needs.\n\nBest regards,\nWalid Babi"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            required>{{ old('text_content') }}</textarea>
                         @error('text_content')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -560,20 +550,37 @@ Walid Babi"
                 // Show A/B test options and hide standard email section
                 abTestOptions.style.display = 'block';
                 standardEmailSection.style.display = 'none';
+                
+                // Remove required from standard fields when hidden
+                textContentField.removeAttribute('required');
+                document.getElementById('subject').removeAttribute('required');
+                
                 showVariantSection(abTestTypeSelect.value || 'subject_line');
                 updateLabelsForAbTest();
             } else {
                 // Hide A/B test options and show standard email section
                 abTestOptions.style.display = 'none';
                 standardEmailSection.style.display = 'block';
+                
+                // Add required back to standard fields when shown
+                if (!emailTemplateSelect.value) {
+                    textContentField.setAttribute('required', 'required');
+                }
+                
                 hideAllVariantSections();
                 resetLabels();
+                
+                // Remove required from all variant fields when hidden
+                removeRequiredFromVariantFields();
             }
         }
 
         function showVariantSection(testType) {
             // Hide all variant sections first
             hideAllVariantSections();
+            
+            // Remove required from all variant fields first
+            removeRequiredFromVariantFields();
             
             // Map test types to section IDs
             let variantASectionId, variantBSectionId;
@@ -582,10 +589,17 @@ Walid Babi"
                 case 'subject_line':
                     variantASectionId = 'subject-variant-a-section';
                     variantBSectionId = 'subject-variant-b-section';
+                    // Add required to subject variants
+                    document.getElementById('subject_variant_b').setAttribute('required', 'required');
                     break;
                 case 'cta':
                     variantASectionId = 'cta-variant-a-section';
                     variantBSectionId = 'cta-variant-b-section';
+                    // Add required to CTA variants
+                    document.getElementById('cta_text_variant_a').setAttribute('required', 'required');
+                    document.getElementById('cta_url_variant_a').setAttribute('required', 'required');
+                    document.getElementById('cta_text_variant_b').setAttribute('required', 'required');
+                    document.getElementById('cta_url_variant_b').setAttribute('required', 'required');
                     break;
                 case 'template':
                     variantASectionId = 'template-variant-a-section';
@@ -597,6 +611,11 @@ Walid Babi"
                 case 'send_time':
                     variantASectionId = 'send-time-variant-a-section';
                     variantBSectionId = 'send-time-variant-b-section';
+                    // Add required to send time variants
+                    document.getElementById('scheduled_date_variant_a').setAttribute('required', 'required');
+                    document.getElementById('scheduled_time_variant_a').setAttribute('required', 'required');
+                    document.getElementById('scheduled_date_variant_b').setAttribute('required', 'required');
+                    document.getElementById('scheduled_time_variant_b').setAttribute('required', 'required');
                     break;
                 default:
                     return;
@@ -628,21 +647,62 @@ Walid Babi"
             });
         }
 
+        function removeRequiredFromVariantFields() {
+            // Subject variants
+            const subjectVariantB = document.getElementById('subject_variant_b');
+            if (subjectVariantB) subjectVariantB.removeAttribute('required');
+            
+            // CTA variants
+            const ctaTextA = document.getElementById('cta_text_variant_a');
+            const ctaUrlA = document.getElementById('cta_url_variant_a');
+            const ctaTextB = document.getElementById('cta_text_variant_b');
+            const ctaUrlB = document.getElementById('cta_url_variant_b');
+            
+            if (ctaTextA) ctaTextA.removeAttribute('required');
+            if (ctaUrlA) ctaUrlA.removeAttribute('required');
+            if (ctaTextB) ctaTextB.removeAttribute('required');
+            if (ctaUrlB) ctaUrlB.removeAttribute('required');
+            
+            // Send time variants
+            const scheduledDateA = document.getElementById('scheduled_date_variant_a');
+            const scheduledTimeA = document.getElementById('scheduled_time_variant_a');
+            const scheduledDateB = document.getElementById('scheduled_date_variant_b');
+            const scheduledTimeB = document.getElementById('scheduled_time_variant_b');
+            
+            if (scheduledDateA) scheduledDateA.removeAttribute('required');
+            if (scheduledTimeA) scheduledTimeA.removeAttribute('required');
+            if (scheduledDateB) scheduledDateB.removeAttribute('required');
+            if (scheduledTimeB) scheduledTimeB.removeAttribute('required');
+            
+            // Template variant textareas
+            const textContentA = document.getElementById('text_content_variant_a');
+            const textContentB = document.getElementById('text_content_variant_b');
+            
+            if (textContentA) textContentA.removeAttribute('required');
+            if (textContentB) textContentB.removeAttribute('required');
+        }
+
         function toggleTemplateContentForVariant(variant) {
             const templateSelect = variant === 'a' ? emailTemplateVariantASelect : emailTemplateVariantBSelect;
             const contentSection = variant === 'a' ? textContentVariantASection : textContentVariantBSection;
             const infoSection = variant === 'a' ? templateInfoVariantASection : templateInfoVariantBSection;
+            const textContentField = variant === 'a' ? document.getElementById('text_content_variant_a') : document.getElementById('text_content_variant_b');
             
-            if (!templateSelect || !contentSection || !infoSection) return;
+            if (!templateSelect || !contentSection || !infoSection || !textContentField) return;
             
             if (templateSelect.value) {
                 // Template selected - show info message, hide content textarea
                 contentSection.style.display = 'none';
                 infoSection.style.display = 'block';
+                textContentField.removeAttribute('required');
             } else {
                 // No template - show content textarea, hide info message
                 contentSection.style.display = 'block';
                 infoSection.style.display = 'none';
+                // Add required only if A/B testing is enabled and template test type is selected
+                if (abTestCheckbox.checked && abTestTypeSelect.value === 'template') {
+                    textContentField.setAttribute('required', 'required');
+                }
             }
         }
 
