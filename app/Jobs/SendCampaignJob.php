@@ -44,14 +44,63 @@ class SendCampaignJob implements ShouldQueue
         try {
             Log::info("Starting campaign send", ['campaign_id' => $this->campaign->id]);
 
+            // Validate campaign has required content - improved logic for A/B testing
+            $hasContent = false;
+            
+            if ($this->campaign->isAbTest()) {
+                // For A/B testing, check if variants have content or templates
+                $variantData = $this->campaign->ab_test_variant_data;
+                if (is_string($variantData)) {
+                    $variantData = json_decode($variantData, true) ?? [];
+                }
+                
+                if ($this->campaign->ab_test_type === 'template') {
+                    // For template A/B tests, check if variants have valid templates
+                    $variantA = $variantData['variant_a'] ?? [];
+                    $variantB = $variantData['variant_b'] ?? [];
+                    
+                    $hasTemplateA = !empty($variantA['email_template_id']) || !empty($variantA['text_content']);
+                    $hasTemplateB = !empty($variantB['email_template_id']) || !empty($variantB['text_content']);
+                    
+                    $hasContent = $hasTemplateA || $hasTemplateB;
+                } else {
+                    // For other A/B test types, campaign should have base content
+                    $hasContent = !empty($this->campaign->text_content) || !empty($this->campaign->html_content) || $this->campaign->emailTemplate;
+                }
+            } else {
+                // For regular campaigns, check standard content
+                $hasContent = !empty($this->campaign->text_content) || !empty($this->campaign->html_content) || $this->campaign->emailTemplate;
+            }
+            
+            if (!$hasContent) {
+                throw new \Exception('Campaign has no content or template to send');
+            }
+
             // Get all contacts for this campaign that haven't been sent yet
             $contacts = $this->campaign->contacts()
                 ->wherePivot('status', 'pending')
                 ->with(['campaigns'])
                 ->get();
 
+            Log::info("Campaign contact retrieval", [
+                'campaign_id' => $this->campaign->id,
+                'is_ab_test' => $this->campaign->isAbTest(),
+                'ab_test_type' => $this->campaign->ab_test_type,
+                'total_contacts_in_campaign' => $this->campaign->contacts()->count(),
+                'pending_contacts_found' => $contacts->count(),
+                'variant_data' => $this->campaign->ab_test_variant_data
+            ]);
+
             if ($contacts->isEmpty()) {
-                Log::warning("No pending contacts found for campaign", ['campaign_id' => $this->campaign->id]);
+                Log::warning("No pending contacts found for campaign", [
+                    'campaign_id' => $this->campaign->id,
+                    'total_contacts' => $this->campaign->contacts()->count(),
+                    'contact_statuses' => $this->campaign->contacts()
+                        ->selectRaw('status, COUNT(*) as count')
+                        ->groupBy('status')
+                        ->pluck('count', 'status')
+                        ->toArray()
+                ]);
                 $this->campaign->markAsSent();
                 return;
             }
@@ -68,39 +117,24 @@ class SendCampaignJob implements ShouldQueue
             $contacts->chunk($this->batchSize)->each(function ($batch) use (&$totalSent, &$totalFailed) {
                 foreach ($batch as $contact) {
                     try {
-                        $this->sendEmailToContact($contact);
+                        $sent = $this->sendEmailToContact($contact);
+                        if ($sent) {
                         $totalSent++;
-                        
-                        // Memory cleanup for large campaigns
-                        if ($totalSent % 500 === 0) {
-                            gc_collect_cycles();
-                            Log::info("Memory check", [
-                                'campaign_id' => $this->campaign->id,
-                                'sent_so_far' => $totalSent,
-                                'memory_usage' => memory_get_usage(true) / 1024 / 1024 . ' MB'
-                            ]);
+                        } else {
+                            $totalFailed++;
                         }
-                        
                     } catch (\Exception $e) {
+                        $totalFailed++;
                         Log::error("Failed to send email to contact", [
                             'campaign_id' => $this->campaign->id,
                             'contact_id' => $contact->id,
                             'error' => $e->getMessage()
                         ]);
-                        $totalFailed++;
-                        
-                        // Mark contact as failed
-                        $this->campaign->contacts()->updateExistingPivot($contact->id, [
-                            'status' => 'failed'
-                        ]);
                     }
                 }
                 
-                // Adaptive delay based on batch size for huge campaigns
-                $delay = $this->campaign->total_recipients > 1000 ? 1 : 2;
-                if ($batch->count() == $this->batchSize) {
-                    sleep($delay);
-                }
+                // Memory cleanup after each batch
+                gc_collect_cycles();
             });
 
             // Update campaign statistics
@@ -118,10 +152,12 @@ class SendCampaignJob implements ShouldQueue
                 'total_failed' => $totalFailed
             ]);
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error("Campaign send job failed", [
                 'campaign_id' => $this->campaign->id,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'exception_type' => get_class($e),
+                'trace' => $e->getTraceAsString()
             ]);
             
             // Mark campaign as failed/draft so it can be retried
@@ -243,15 +279,21 @@ class SendCampaignJob implements ShouldQueue
             'unsubscribe_url' => route('marketing.unsubscribe', ['token' => $this->generateUnsubscribeToken($contact)]),
         ];
 
+        // Get A/B test variant for this contact if applicable
+        $variant = $this->getContactVariant($contact);
+        
+        // Get campaign content based on A/B test variant
+        $campaignContent = $this->getCampaignContentForVariant($variant);
+
         // Render email content
-        if ($this->campaign->emailTemplate) {
-            $htmlContent = $this->campaign->emailTemplate->renderHtmlContent($data);
-            $textContent = $this->campaign->emailTemplate->renderTextContent($data);
+        if ($campaignContent['template']) {
+            $htmlContent = $campaignContent['template']->renderHtmlContent($data);
+            $textContent = $campaignContent['template']->renderTextContent($data);
         } else {
             $template = new EmailTemplate([
-                'subject' => $this->campaign->subject,
-                'html_content' => $this->campaign->html_content,
-                'text_content' => $this->campaign->text_content,
+                'subject' => $campaignContent['subject'],
+                'html_content' => $campaignContent['html_content'],
+                'text_content' => $campaignContent['text_content'],
             ]);
             $htmlContent = $template->renderHtmlContent($data);
             $textContent = $template->renderTextContent($data);
@@ -259,8 +301,13 @@ class SendCampaignJob implements ShouldQueue
 
         // Auto-generate HTML from text if no HTML content exists
         if (empty($htmlContent) && !empty($textContent)) {
-            $bannerImage = $this->campaign->emailTemplate?->banner_image;
+            $bannerImage = $campaignContent['template']?->banner_image;
             $htmlContent = $this->generateHtmlFromText($textContent, $data, $bannerImage);
+        }
+
+        // Add A/B test specific content (like CTA buttons)
+        if ($this->campaign->isAbTest() && !empty($campaignContent['cta_data'])) {
+            $htmlContent = $this->addCtaToHtmlContent($htmlContent, $campaignContent['cta_data']);
         }
 
         // Add tracking to HTML content
@@ -273,6 +320,14 @@ class SendCampaignJob implements ShouldQueue
                 $emailLog
             );
         }
+
+        Log::debug("Built email content for variant", [
+            'campaign_id' => $this->campaign->id,
+            'contact_id' => $contact->id,
+            'variant' => $variant,
+            'has_html' => !empty($htmlContent),
+            'has_text' => !empty($textContent)
+        ]);
 
         return [
             'html' => $htmlContent,
@@ -383,11 +438,12 @@ class SendCampaignJob implements ShouldQueue
         return $htmlContent;
     }
 
-    public function failed(\Exception $exception)
+    public function failed(\Throwable $exception)
     {
         Log::error("SendCampaignJob failed completely", [
             'campaign_id' => $this->campaign->id,
-            'error' => $exception->getMessage()
+            'error' => $exception->getMessage(),
+            'exception_type' => get_class($exception)
         ]);
 
         // Revert campaign status
@@ -437,10 +493,6 @@ class SendCampaignJob implements ShouldQueue
      */
     private function getSubjectForContact(MarketingContact $contact): string
     {
-        if (!$this->campaign->isAbTest()) {
-            return $this->campaign->subject;
-        }
-
         // Get the assigned variant for this contact
         $pivotData = $this->campaign->contacts()
             ->where('marketing_contacts.id', $contact->id)
@@ -448,13 +500,21 @@ class SendCampaignJob implements ShouldQueue
 
         if (!$pivotData || !$pivotData->pivot->ab_test_variant) {
             // Fallback to variant A if no assignment found
-            return $this->campaign->subject;
+            $subject = $this->campaign->subject;
+            return !empty($subject) ? $subject : 'MaxMed Campaign - ' . $this->campaign->name;
         }
 
         $variant = $pivotData->pivot->ab_test_variant;
         
         if ($variant === 'variant_b') {
-            $subject = $this->campaign->subject_variant_b ?? $this->campaign->subject;
+            $subject = $this->campaign->subject_variant_b;
+            if (empty($subject)) {
+                $subject = $this->campaign->subject;
+            }
+            if (empty($subject)) {
+                $subject = 'MaxMed Campaign - ' . $this->campaign->name;
+            }
+            
             Log::debug("Using variant B subject", [
                 'campaign_id' => $this->campaign->id,
                 'contact_id' => $contact->id,
@@ -464,11 +524,254 @@ class SendCampaignJob implements ShouldQueue
         }
 
         // Default to variant A
+        $subject = $this->campaign->subject;
+        if (empty($subject)) {
+            $subject = 'MaxMed Campaign - ' . $this->campaign->name;
+        }
+        
         Log::debug("Using variant A subject", [
             'campaign_id' => $this->campaign->id,
             'contact_id' => $contact->id,
-            'subject' => $this->campaign->subject
+            'subject' => $subject
         ]);
-        return $this->campaign->subject;
+        return $subject;
+    }
+
+    /**
+     * Get the A/B test variant assigned to a contact
+     */
+    private function getContactVariant(MarketingContact $contact): string
+    {
+        if (!$this->campaign->isAbTest()) {
+            return 'variant_a'; // Default variant for non-A/B campaigns
+        }
+
+        // Get the assigned variant for this contact
+        $pivotData = $this->campaign->contacts()
+            ->where('marketing_contacts.id', $contact->id)
+            ->first();
+
+        if ($pivotData && $pivotData->pivot->ab_test_variant) {
+            return $pivotData->pivot->ab_test_variant;
+        }
+
+        // Fallback to variant A if no assignment found
+        return 'variant_a';
+    }
+
+    /**
+     * Get campaign content based on A/B test variant
+     */
+    private function getCampaignContentForVariant(string $variant): array
+    {
+        if (!$this->campaign->isAbTest()) {
+            return [
+                'template' => $this->campaign->emailTemplate,
+                'subject' => $this->campaign->subject,
+                'html_content' => $this->campaign->html_content,
+                'text_content' => $this->campaign->text_content,
+                'cta_data' => null
+            ];
+        }
+
+        // Ensure variant data is properly decoded from JSON
+        $variantData = $this->campaign->ab_test_variant_data;
+        if (is_string($variantData)) {
+            $variantData = json_decode($variantData, true) ?? [];
+        } elseif (!is_array($variantData)) {
+            $variantData = [];
+        }
+        
+        $abTestType = $this->campaign->ab_test_type;
+
+        Log::debug("Getting content for variant", [
+            'campaign_id' => $this->campaign->id,
+            'variant' => $variant,
+            'ab_test_type' => $abTestType,
+            'variant_data' => $variantData
+        ]);
+
+        switch ($abTestType) {
+            case 'template':
+                return $this->getTemplateVariantContent($variant, $variantData);
+                
+            case 'cta':
+                return $this->getCtaVariantContent($variant, $variantData);
+                
+            case 'subject_line':
+            case 'send_time':
+            default:
+                // For subject line and send time tests, content remains the same
+                return [
+                    'template' => $this->campaign->emailTemplate,
+                    'subject' => $this->campaign->subject,
+                    'html_content' => $this->campaign->html_content,
+                    'text_content' => $this->campaign->text_content,
+                    'cta_data' => null
+                ];
+        }
+    }
+
+    /**
+     * Get template variant content
+     */
+    private function getTemplateVariantContent(string $variant, array $variantData): array
+    {
+        if ($variant === 'variant_b') {
+            $variantBData = $variantData['variant_b'] ?? [];
+            $templateId = $variantBData['email_template_id'] ?? null;
+            $customContent = $variantBData['text_content'] ?? null;
+            
+            if ($templateId) {
+                $template = EmailTemplate::find($templateId);
+                if ($template) {
+                    return [
+                        'template' => $template,
+                        'subject' => $template->subject,
+                        'html_content' => $template->html_content,
+                        'text_content' => $customContent ?: $template->text_content,
+                        'cta_data' => null
+                    ];
+                }
+            }
+            
+            // Fallback to custom content if template not found
+            if ($customContent) {
+                return [
+                    'template' => null,
+                    'subject' => $this->campaign->subject,
+                    'html_content' => null,
+                    'text_content' => $customContent,
+                    'cta_data' => null
+                ];
+            }
+        } else {
+            // Variant A
+            $variantAData = $variantData['variant_a'] ?? [];
+            $templateId = $variantAData['email_template_id'] ?? null;
+            $customContent = $variantAData['text_content'] ?? null;
+            
+            if ($templateId) {
+                $template = EmailTemplate::find($templateId);
+                if ($template) {
+                    return [
+                        'template' => $template,
+                        'subject' => $template->subject,
+                        'html_content' => $template->html_content,
+                        'text_content' => $customContent ?: $template->text_content,
+                        'cta_data' => null
+                    ];
+                }
+            }
+            
+            // Fallback to custom content if template not found
+            if ($customContent) {
+                return [
+                    'template' => null,
+                    'subject' => $this->campaign->subject,
+                    'html_content' => null,
+                    'text_content' => $customContent,
+                    'cta_data' => null
+                ];
+            }
+        }
+
+        // Final fallback to campaign default content
+        return [
+            'template' => $this->campaign->emailTemplate,
+            'subject' => $this->campaign->subject,
+            'html_content' => $this->campaign->html_content,
+            'text_content' => $this->campaign->text_content,
+            'cta_data' => null
+        ];
+    }
+
+    /**
+     * Get CTA variant content
+     */
+    private function getCtaVariantContent(string $variant, array $variantData): array
+    {
+        $ctaData = null;
+        
+        if ($variant === 'variant_b') {
+            $variantBData = $variantData['variant_b'] ?? [];
+            $ctaData = [
+                'text' => $variantBData['cta_text'] ?? null,
+                'url' => $variantBData['cta_url'] ?? null,
+                'color' => $variantBData['cta_color'] ?? 'indigo'
+            ];
+        } else {
+            // Variant A
+            $variantAData = $variantData['variant_a'] ?? [];
+            $ctaData = [
+                'text' => $variantAData['cta_text'] ?? null,
+                'url' => $variantAData['cta_url'] ?? null,
+                'color' => $variantAData['cta_color'] ?? 'indigo'
+            ];
+        }
+
+        return [
+            'template' => $this->campaign->emailTemplate,
+            'subject' => $this->campaign->subject,
+            'html_content' => $this->campaign->html_content,
+            'text_content' => $this->campaign->text_content,
+            'cta_data' => $ctaData
+        ];
+    }
+
+    /**
+     * Add CTA button to HTML content
+     */
+    private function addCtaToHtmlContent(string $htmlContent, array $ctaData): string
+    {
+        if (empty($ctaData['text']) || empty($ctaData['url'])) {
+            return $htmlContent;
+        }
+
+        $ctaButton = $this->generateCtaButton($ctaData);
+        
+        // Try to insert before closing body tag, or append if not found
+        if (strpos($htmlContent, '</body>') !== false) {
+            $htmlContent = str_replace('</body>', $ctaButton . '</body>', $htmlContent);
+        } else {
+            $htmlContent .= $ctaButton;
+        }
+
+        return $htmlContent;
+    }
+
+    /**
+     * Generate CTA button HTML
+     */
+    private function generateCtaButton(array $ctaData): string
+    {
+        $colors = [
+            'indigo' => ['bg' => '#4F46E5', 'hover' => '#4338CA'],
+            'green' => ['bg' => '#059669', 'hover' => '#047857'],
+            'orange' => ['bg' => '#EA580C', 'hover' => '#C2410C'],
+            'red' => ['bg' => '#DC2626', 'hover' => '#B91C1C'],
+            'purple' => ['bg' => '#7C3AED', 'hover' => '#6D28D9']
+        ];
+
+        $color = $colors[$ctaData['color']] ?? $colors['indigo'];
+
+        return '
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="' . htmlspecialchars($ctaData['url']) . '" 
+               style="display: inline-block; 
+                      background-color: ' . $color['bg'] . '; 
+                      color: white; 
+                      padding: 12px 24px; 
+                      text-decoration: none; 
+                      border-radius: 6px; 
+                      font-weight: 600;
+                      font-size: 16px;
+                      border: none;
+                      cursor: pointer;"
+               onmouseover="this.style.backgroundColor=\'' . $color['hover'] . '\'"
+               onmouseout="this.style.backgroundColor=\'' . $color['bg'] . '\'">
+                ' . htmlspecialchars($ctaData['text']) . '
+            </a>
+        </div>';
     }
 } 

@@ -72,33 +72,33 @@ class CampaignController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'subject' => 'nullable|string|max:255',
-            'subject_variant_b' => 'required_if:ab_test_type,subject_line|string|max:255',
-            'text_content' => 'required_without:email_template_id|nullable|string|min:10',
+            'subject_variant_b' => 'nullable|string|max:255',
+            'text_content' => 'nullable|string|min:10',
             'email_template_id' => 'nullable|exists:email_templates,id',
             'type' => 'required|in:one_time,recurring,drip',
             'is_ab_test' => 'boolean',
             'ab_test_type' => 'required_if:is_ab_test,1|in:subject_line,cta,template,send_time',
             'ab_test_split_percentage' => 'required_if:is_ab_test,1|integer|min:10|max:90',
             
-            // CTA variant fields
-            'cta_text_variant_a' => 'required_if:ab_test_type,cta|string|max:255',
-            'cta_url_variant_a' => 'required_if:ab_test_type,cta|url',
-            'cta_color_variant_a' => 'required_if:ab_test_type,cta|in:indigo,green,orange,red,purple',
-            'cta_text_variant_b' => 'required_if:ab_test_type,cta|string|max:255',
-            'cta_url_variant_b' => 'required_if:ab_test_type,cta|url',
-            'cta_color_variant_b' => 'required_if:ab_test_type,cta|in:indigo,green,orange,red,purple',
+            // CTA variant fields - only required when A/B testing CTA
+            'cta_text_variant_a' => 'nullable|string|max:255',
+            'cta_url_variant_a' => 'nullable|url',
+            'cta_color_variant_a' => 'nullable|in:indigo,green,orange,red,purple',
+            'cta_text_variant_b' => 'nullable|string|max:255',
+            'cta_url_variant_b' => 'nullable|url',
+            'cta_color_variant_b' => 'nullable|in:indigo,green,orange,red,purple',
             
-            // Template variant fields
-            'email_template_variant_a_id' => 'required_if:ab_test_type,template|exists:email_templates,id',
+            // Template variant fields - only required when A/B testing templates
+            'email_template_variant_a_id' => 'nullable|exists:email_templates,id',
             'text_content_variant_a' => 'nullable|string',
-            'email_template_variant_b_id' => 'required_if:ab_test_type,template|exists:email_templates,id',
+            'email_template_variant_b_id' => 'nullable|exists:email_templates,id',
             'text_content_variant_b' => 'nullable|string',
             
-            // Send time variant fields
-            'scheduled_date_variant_a' => 'required_if:ab_test_type,send_time|date|after:today',
-            'scheduled_time_variant_a' => 'required_if:ab_test_type,send_time',
-            'scheduled_date_variant_b' => 'required_if:ab_test_type,send_time|date|after:today',
-            'scheduled_time_variant_b' => 'required_if:ab_test_type,send_time',
+            // Send time variant fields - only required when A/B testing send times
+            'scheduled_date_variant_a' => 'nullable|date|after:today',
+            'scheduled_time_variant_a' => 'nullable',
+            'scheduled_date_variant_b' => 'nullable|date|after:today',
+            'scheduled_time_variant_b' => 'nullable',
             
             'send_option' => 'required|in:draft,now,schedule',
             'scheduled_date' => 'required_if:send_option,schedule|nullable|date|after:today',
@@ -108,6 +108,49 @@ class CampaignController extends Controller
             'contact_lists.*' => 'exists:contact_lists,id',
             'recipient_criteria' => 'required_if:recipient_type,custom|array',
         ]);
+
+        // Apply conditional validation rules based on A/B test type
+        if ($request->boolean('is_ab_test')) {
+            $abTestType = $request->ab_test_type;
+            
+            // Add specific validation rules based on A/B test type
+            $conditionalRules = [];
+            
+            switch ($abTestType) {
+                case 'subject_line':
+                    $conditionalRules['subject_variant_b'] = 'required|string|max:255';
+                    break;
+                    
+                case 'cta':
+                    $conditionalRules['cta_text_variant_a'] = 'required|string|max:255';
+                    $conditionalRules['cta_url_variant_a'] = 'required|url';
+                    $conditionalRules['cta_text_variant_b'] = 'required|string|max:255';
+                    $conditionalRules['cta_url_variant_b'] = 'required|url';
+                    break;
+                    
+                case 'template':
+                    $conditionalRules['email_template_variant_a_id'] = 'required|exists:email_templates,id';
+                    $conditionalRules['email_template_variant_b_id'] = 'required|exists:email_templates,id';
+                    break;
+                    
+                case 'send_time':
+                    $conditionalRules['scheduled_date_variant_a'] = 'required|date|after:today';
+                    $conditionalRules['scheduled_time_variant_a'] = 'required';
+                    $conditionalRules['scheduled_date_variant_b'] = 'required|date|after:today';
+                    $conditionalRules['scheduled_time_variant_b'] = 'required';
+                    break;
+            }
+            
+            // Apply conditional rules
+            if (!empty($conditionalRules)) {
+                $validator->addRules($conditionalRules);
+            }
+        } else {
+            // Standard campaign validation - require content or template
+            if (!$request->email_template_id) {
+                $validator->addRules(['text_content' => 'required|string|min:10']);
+            }
+        }
 
         if ($validator->fails()) {
             \Log::info('Campaign validation failed', [
@@ -396,6 +439,24 @@ class CampaignController extends Controller
         }
 
         try {
+            // Reset all contact statuses to 'pending' so they can be sent again
+            $campaign->contacts()->updateExistingPivot(
+                $campaign->contacts()->pluck('marketing_contacts.id')->toArray(),
+                [
+                    'status' => 'pending',
+                    'sent_at' => null,
+                    'delivered_at' => null,
+                    'opened_at' => null,
+                    'clicked_at' => null,
+                    'bounce_reason' => null
+                ]
+            );
+
+            // For A/B testing campaigns, ensure variant assignments exist
+            if ($campaign->isAbTest()) {
+                $this->ensureAbTestVariantAssignments($campaign);
+            }
+
             // Mark campaign as sending
             $campaign->markAsSending();
 
@@ -409,6 +470,43 @@ class CampaignController extends Controller
             return redirect()->back()
                            ->with('error', 'Failed to start sending campaign. Please try again.');
         }
+    }
+
+    /**
+     * Ensure A/B test variant assignments exist for all contacts
+     */
+    private function ensureAbTestVariantAssignments(Campaign $campaign)
+    {
+        if (!$campaign->isAbTest()) {
+            return;
+        }
+
+        // Check if any contacts are missing variant assignments
+        $contactsWithoutVariants = $campaign->contacts()
+            ->whereNull('campaign_contacts.ab_test_variant')
+            ->get();
+
+        if ($contactsWithoutVariants->isEmpty()) {
+            return; // All contacts already have variants assigned
+        }
+
+        \Log::info('Assigning missing A/B test variants for campaign', [
+            'campaign_id' => $campaign->id,
+            'contacts_without_variants' => $contactsWithoutVariants->count()
+        ]);
+
+        // Assign variants to contacts without assignments
+        $splitPercentage = $campaign->ab_test_split_percentage ?? 50;
+        $totalContacts = $contactsWithoutVariants->count();
+        $variantASampleSize = (int) ceil(($splitPercentage / 100) * $totalContacts);
+
+        $contactsWithoutVariants->each(function ($contact, $index) use ($variantASampleSize, $campaign) {
+            $variant = $index < $variantASampleSize ? 'variant_a' : 'variant_b';
+            
+            $campaign->contacts()->updateExistingPivot($contact->id, [
+                'ab_test_variant' => $variant
+            ]);
+        });
     }
 
     public function selectWinner(Request $request, Campaign $campaign)
@@ -892,6 +990,10 @@ class CampaignController extends Controller
         <div class="header">
             <h1 style="margin: 0; color: #2c3e50; font-size: 24px;">' . config('app.name', 'MaxMed') . '</h1>
         </div>
+        
+        <!-- Banner Section - At the beginning -->
+        ' . ($bannerImage ? '<div class="banner-section" style="text-align: center; margin: 0 0 30px 0;"><img src="' . asset('storage/' . $bannerImage) . '" alt="Company Banner" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"></div>' : '') . '
+        
         <div class="content">';
         
         // Convert line breaks to paragraphs
@@ -944,9 +1046,6 @@ class CampaignController extends Controller
                 </div>
             </div>
         </div>
-        
-        <!-- Banner Section -->
-        ' . ($bannerImage ? '<div class="banner-section"><img src="' . asset('storage/' . $bannerImage) . '" alt="Company Banner" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"></div>' : '') . '
         
         <div class="footer">
             <p><a href="{{unsubscribe_url}}" class="unsubscribe-link">Unsubscribe from this list</a></p>

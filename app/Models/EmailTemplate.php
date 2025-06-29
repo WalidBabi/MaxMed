@@ -181,6 +181,12 @@ class EmailTemplate extends Model
         // Start with basic HTML structure
         $html = '<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">';
         
+        // Add banner image at the beginning if exists
+        if ($this->banner_image) {
+            $bannerUrl = asset('storage/' . $this->banner_image);
+            $html .= '<div style="text-align: center; margin-bottom: 30px;"><img src="' . $bannerUrl . '" alt="' . config('app.name') . '" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"></div>';
+        }
+        
         // Process the text content
         $content = htmlspecialchars($textContent, ENT_QUOTES, 'UTF-8');
         
@@ -199,12 +205,6 @@ class EmailTemplate extends Model
         
         // Add the content to HTML
         $html .= '<div style="padding: 20px 0;">' . $content . '</div>';
-        
-        // Add banner image at the end if exists
-        if ($this->banner_image) {
-            $bannerUrl = asset('storage/' . $this->banner_image);
-            $html .= '<div style="text-align: center; margin-top: 30px; margin-bottom: 20px;"><img src="' . $bannerUrl . '" alt="' . config('app.name') . '" style="max-width: 100%; height: auto;"></div>';
-        }
         
         // Add footer
         $html .= '<div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 14px; color: #666; text-align: center;">';
