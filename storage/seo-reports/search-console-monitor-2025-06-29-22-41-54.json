@@ -1,0 +1,4880 @@
+{
+    "generated_at": "2025-06-29 22:41:54",
+    "total_urls": 486,
+    "summary": {
+        "by_type": {
+            "quotation_long": 195,
+            "product_id": 118,
+            "quotation_id": 133,
+            "other": 5,
+            "category_id": 35
+        },
+        "by_fix_status": {
+            "no_fix_needed": 196,
+            "redirect_added": 290
+        },
+        "by_accessibility": []
+    },
+    "urls": [
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/ph-portable-meter-single-parameter-mw-0056-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/ph-portable-meter-single-parameter-mw-0056-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/117",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/117",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/malaria-pfpvpan-rapid-test-mt-0099-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/malaria-pfpvpan-rapid-test-mt-0099-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/celiac-rapid-test-cassette-mt-0026-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/celiac-rapid-test-cassette-mt-0026-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/mx-s-variable-speed-vortex-mixer-mw-0029-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/mx-s-variable-speed-vortex-mixer-mw-0029-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/186",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/186",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/influenza-ab-rapid-test-mt-0119-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/influenza-ab-rapid-test-mt-0119-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/224",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/224",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hiv-p24-antigen-rapid-test-mt-0057-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/hiv-p24-antigen-rapid-test-mt-0057-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/314",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/314",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sp-uv3102-uv-vis-spectrophotometer-mw-0053-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/sp-uv3102-uv-vis-spectrophotometer-mw-0053-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/43",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/43",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sp-uv5102-uv-vis-spectrophotometer-mw-0055-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/sp-uv5102-uv-vis-spectrophotometer-mw-0055-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/64",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/64",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/64",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/64",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/56",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/56",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/276",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/276",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/226",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/226",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/219",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/219",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/304",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/304",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/230",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/230",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/307",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/307",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/309",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/309",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/gas-wash-bottle-mw-0118-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/gas-wash-bottle-mw-0118-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hiv-12o-and-p24-combo-rapid-test-mt-0053-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/hiv-12o-and-p24-combo-rapid-test-mt-0053-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hydroxide-anion-exchange-chromatography-columns-mw-0074-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/hydroxide-anion-exchange-chromatography-columns-mw-0074-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/ph-meter-benchtop-classical-seriessingle-parameter-mw-0025-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/ph-meter-benchtop-classical-seriessingle-parameter-mw-0025-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/fecal-occult-blood-fob-rapid-test-40-ngml-mt-0020-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/fecal-occult-blood-fob-rapid-test-40-ngml-mt-0020-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/303",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/303",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hiv-12-rapid-test-urine-mt-0055-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/hiv-12-rapid-test-urine-mt-0055-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/glass-beaker-mw-0119-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/glass-beaker-mw-0119-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/fecal-occult-blood-fob-rapid-test-50-ngml-mt-0021-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/fecal-occult-blood-fob-rapid-test-50-ngml-mt-0021-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/adenovirusrsvhmpvinfluenza-ab-combo-rapid-test-nasopharyngeal-swab-mt-0041-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/adenovirusrsvhmpvinfluenza-ab-combo-rapid-test-nasopharyngeal-swab-mt-0041-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/forced-air-drying-oven-bjpx-hgz30l-mm-0025-biobase-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/forced-air-drying-oven-bjpx-hgz30l-mm-0025-biobase-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/mycoplasma-pneumoniae-antigen-rapid-test-mt-0109-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/mycoplasma-pneumoniae-antigen-rapid-test-mt-0109-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/micro-albumin-rapid-test-mt-0031-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/micro-albumin-rapid-test-mt-0031-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/ovulation-lh-rapid-test-mt-0004-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/ovulation-lh-rapid-test-mt-0004-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/rhinovirus-rapid-test-nasopharyngeal-swab-mt-0039-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/rhinovirus-rapid-test-nasopharyngeal-swab-mt-0039-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/re100-s-led-digital-rotary-evaporator-mw-0082-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/re100-s-led-digital-rotary-evaporator-mw-0082-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/laboratory-refrigeratoreconomic-type-46l-150l-320l-400l-mm-0013-biobase-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/laboratory-refrigeratoreconomic-type-46l-150l-320l-400l-mm-0013-biobase-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/chagas-rapid-test-sp-mt-0084-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/chagas-rapid-test-sp-mt-0084-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/filariasis-iggigm-rapid-test-sp-mt-0089-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/filariasis-iggigm-rapid-test-sp-mt-0089-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/levo-e-pipette-pump-mm-0041-dlab-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/levo-e-pipette-pump-mm-0041-dlab-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/mono-rapid-test-mt-0112-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/mono-rapid-test-mt-0112-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/52",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/52",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/52",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/52",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/glass-flask-mw-0120-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/glass-flask-mw-0120-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/leishmania-iggigm-rapid-test-mt-0094-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/leishmania-iggigm-rapid-test-mt-0094-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/ducted-fume-hood-fh1800ecustomized-mm-0009-biobase-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/ducted-fume-hood-fh1800ecustomized-mm-0009-biobase-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/cmv-iggigm-rapid-test-sp-mt-0007-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/cmv-iggigm-rapid-test-sp-mt-0007-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/re5000-e-pilot-scale-digital-control-rotary-evaporator-mw-0086-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/re5000-e-pilot-scale-digital-control-rotary-evaporator-mw-0086-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hav-iggigm-rapid-test-mt-0101-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/hav-iggigm-rapid-test-mt-0101-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sk-l180-s-intelligent-linear-decolorizing-shaker-mw-0005-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/sk-l180-s-intelligent-linear-decolorizing-shaker-mw-0005-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/aflatoxin-m1-rapid-test-kit-005ppb-mt-0121-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/aflatoxin-m1-rapid-test-kit-005ppb-mt-0121-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/h-fabp-and-ctni-combo-rapid-test-mt-0025-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/h-fabp-and-ctni-combo-rapid-test-mt-0025-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sk-r30s-e-short-deck-rocking-rotator-mw-0038-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/sk-r30s-e-short-deck-rocking-rotator-mw-0038-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/stepmate-stepper-mm-0045-dlab-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/stepmate-stepper-mm-0045-dlab-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dorp10-mv-portable-meter-single-parameter-mw-0057-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/dorp10-mv-portable-meter-single-parameter-mw-0057-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/mycoplasma-pneumoniae-iggigm-combo-rapid-test-mt-0111-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/mycoplasma-pneumoniae-iggigm-combo-rapid-test-mt-0111-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/strep-b-rapid-test-mt-0016-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/strep-b-rapid-test-mt-0016-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/2025-freezereconomic-type-mm-0014-biobase-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/2025-freezereconomic-type-mm-0014-biobase-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/adenovirus-rapid-test-mt-0073-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/adenovirus-rapid-test-mt-0073-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/alcohol-lamp-mw-0109-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/alcohol-lamp-mw-0109-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dessciator-mw-0112-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/dessciator-mw-0112-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/adenovirusrsvhmpvhpivinfluenza-ab-combo-rapid-test-mt-0066-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/adenovirusrsvhmpvhpivinfluenza-ab-combo-rapid-test-mt-0066-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/melamine-rapid-test-kit-mt-0122-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/melamine-rapid-test-kit-mt-0122-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/norovirus-rotavirus-adenovirus-and-astrovirus-rapid-test-mt-0078-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/norovirus-rotavirus-adenovirus-and-astrovirus-rapid-test-mt-0078-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/280",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/280",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/229",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/229",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dengue-iggigm-and-ns1-rapid-test-mt-0087-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/dengue-iggigm-and-ns1-rapid-test-mt-0087-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/113",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/113",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/113",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/113",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dph1-pocket-testerbluetooth-mw-0070-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/dph1-pocket-testerbluetooth-mw-0070-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/re2000-e-pilot-scale-digital-control-rotary-evaporator-mw-0085-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/re2000-e-pilot-scale-digital-control-rotary-evaporator-mw-0085-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hev-iggigm-rapid-test-mt-0104-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/hev-iggigm-rapid-test-mt-0104-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/fecal-occult-blood-fob-rapid-test-25-ngml-mt-0019-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/fecal-occult-blood-fob-rapid-test-25-ngml-mt-0019-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dental-tray-mw-0101-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/dental-tray-mw-0101-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/46",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/46",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sars-cov-2-and-influenza-ab-antigen-combo-rapid-test-mt-0120-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/sars-cov-2-and-influenza-ab-antigen-combo-rapid-test-mt-0120-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/salmonella-paratyphi-antigen-rapid-test-mt-0093-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/salmonella-paratyphi-antigen-rapid-test-mt-0093-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/do-optical-type-portable-meter-single-parameter-mw-0060-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/do-optical-type-portable-meter-single-parameter-mw-0060-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/astrovirus-rapid-test-mt-0076-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/astrovirus-rapid-test-mt-0076-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/153",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/153",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/85",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/85",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/85",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/85",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/ls-1100-dry-fluorescence-immunoassay-analyzer-portable-mm-0002-lansionbiotech-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/ls-1100-dry-fluorescence-immunoassay-analyzer-portable-mm-0002-lansionbiotech-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dpc1-pocket-testerbluetooth-mw-0073-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/dpc1-pocket-testerbluetooth-mw-0073-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/legionella-pneumophila-rapid-test-mt-0105-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/legionella-pneumophila-rapid-test-mt-0105-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/86-ultra-low-temperature-freezer-mm-0018-biobase-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/86-ultra-low-temperature-freezer-mm-0018-biobase-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dm0506-low-speed-centrifuge-mw-0023-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/dm0506-low-speed-centrifuge-mw-0023-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/rotavirus-and-adenovirus-combo-rapid-test-mt-0077-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/rotavirus-and-adenovirus-combo-rapid-test-mt-0077-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/d2012s-high-speed-micro-centrifuges-mw-0014-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/d2012s-high-speed-micro-centrifuges-mw-0014-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/respiratory-infectious-diseases-rapid-test-influenza-ab-mt-0036-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/respiratory-infectious-diseases-rapid-test-influenza-ab-mt-0036-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/mx-m-microplate-mixer-mw-0033-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/mx-m-microplate-mixer-mw-0033-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/tc1000-s-thermal-cycler-standard-mw-0043-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/tc1000-s-thermal-cycler-standard-mw-0043-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/chagas-rapid-test-wbsp-mt-0083-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/chagas-rapid-test-wbsp-mt-0083-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/monkeypox-virus-antigen-rapid-test-mt-0071-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/monkeypox-virus-antigen-rapid-test-mt-0071-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/typhoid-iggigm-rapid-test-wbsp-mt-0091-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/typhoid-iggigm-rapid-test-wbsp-mt-0091-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/glass-funnel-mw-0122-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/glass-funnel-mw-0122-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/mx-rl-e-economical-rotator-mw-0037-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/mx-rl-e-economical-rotator-mw-0037-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sk-o180-pro-multifunctional-orbital-decolorizing-shaker-mw-0002-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/sk-o180-pro-multifunctional-orbital-decolorizing-shaker-mw-0002-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hplc-column-nova-element-liquid-chromatography-mw-0078-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/hplc-column-nova-element-liquid-chromatography-mw-0078-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/adenovirusrsvhmpvhpivinfluenza-ab-combo-rapid-test-mt-0067-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/adenovirusrsvhmpvhpivinfluenza-ab-combo-rapid-test-mt-0067-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/69",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/69",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hsv-12-iggigm-rapid-test-wbsp-mt-0009-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/hsv-12-iggigm-rapid-test-wbsp-mt-0009-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sk-d3309-pro-large-multifunctional-3d-shaker-mw-0011-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/sk-d3309-pro-large-multifunctional-3d-shaker-mw-0011-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sk-o330-m-orbital-decolorizing-shaker-mw-0003-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/sk-o330-m-orbital-decolorizing-shaker-mw-0003-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/mini-pipettepremium-model-mm-0043-dlab-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/mini-pipettepremium-model-mm-0043-dlab-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/micropette-plus-fully-autoclavable-adjustable-volume-mechanical-pipette-mm-0032-dlab-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/micropette-plus-fully-autoclavable-adjustable-volume-mechanical-pipette-mm-0032-dlab-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dpette-multi-functional-8-channel-electronic-pipette-mm-0038-dlab-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/dpette-multi-functional-8-channel-electronic-pipette-mm-0038-dlab-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hiv-12-rapid-test-cassette-single-use-kit-whole-blood-mt-0064-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/hiv-12-rapid-test-cassette-single-use-kit-whole-blood-mt-0064-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/rotavirus-rapid-test-mt-0074-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/rotavirus-rapid-test-mt-0074-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/micropette-plus-12-channel-adjustable-volume-mechanical-pipettesmagnetic-suction-model-mm-0035-dlab",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/micropette-plus-12-channel-adjustable-volume-mechanical-pipettesmagnetic-suction-model-mm-0035-dlab",
+            "type": "other",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/d1524r-high-speed-refrigerated-centrifuge-mw-0016-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/d1524r-high-speed-refrigerated-centrifuge-mw-0016-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/vc100-vacuum-controller-mw-0087-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/vc100-vacuum-controller-mw-0087-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/suction-tips-mw-0094-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/suction-tips-mw-0094-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/103",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/103",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/re500-e-pilot-scale-digital-control-rotary-evaporator-mw-0083-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/re500-e-pilot-scale-digital-control-rotary-evaporator-mw-0083-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/mx-e-economic-vortex-mixer-mw-0031-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/mx-e-economic-vortex-mixer-mw-0031-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hiv-12o-rapid-test-cassette-single-use-kit-whole-blood-mt-0060-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/hiv-12o-rapid-test-cassette-single-use-kit-whole-blood-mt-0060-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/multiplex-respiratory-antigen-rapid-test-mt-0048-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/multiplex-respiratory-antigen-rapid-test-mt-0048-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hcvhbsaghiv-12-rapid-test-mt-0051-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/hcvhbsaghiv-12-rapid-test-mt-0051-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/respiratory-infectious-diseases-rapid-test-hmpv-mt-0033-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/respiratory-infectious-diseases-rapid-test-hmpv-mt-0033-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/respiratory-infectious-diseases-rapid-test-hpiv-mt-0034-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/respiratory-infectious-diseases-rapid-test-hpiv-mt-0034-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dec1-pocket-testerbluetooth-mw-0072-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/dec1-pocket-testerbluetooth-mw-0072-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sterilization-reel-heat-sealing-flat-reel-paper-blue-film-mw-0096-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/sterilization-reel-heat-sealing-flat-reel-paper-blue-film-mw-0096-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/mx-f-fixed-speed-vortex-mixer-mw-0030-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/mx-f-fixed-speed-vortex-mixer-mw-0030-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sk-l330-pro-large-multifunctional-linear-decolorizing-shaker-mw-0007-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/sk-l330-pro-large-multifunctional-linear-decolorizing-shaker-mw-0007-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/high-temperature-drying-oven-mm-0022-biobase-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/high-temperature-drying-oven-mm-0022-biobase-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sp-v1000-spectrophotometer-mw-0045-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/sp-v1000-spectrophotometer-mw-0045-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dph1-pocket-tester-mw-0066-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/dph1-pocket-tester-mw-0066-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/respiratory-infectious-diseases-rapid-test-rsv-mt-0038-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/respiratory-infectious-diseases-rapid-test-rsv-mt-0038-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/ls-2100-dry-fluorescence-immunoassay-analyzer-8-channels-mm-0003-lansionbiotech-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/ls-2100-dry-fluorescence-immunoassay-analyzer-8-channels-mm-0003-lansionbiotech-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sk-r30l-e-long-deck-rocking-rotator-mw-0039-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/sk-r30l-e-long-deck-rocking-rotator-mw-0039-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/glass-funnel-mw-0123-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/glass-funnel-mw-0123-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hav-igm-rapid-test-mt-0100-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/hav-igm-rapid-test-mt-0100-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/vinyl-examination-gloves-powder-free-clear-mw-0090-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/vinyl-examination-gloves-powder-free-clear-mw-0090-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dm0412-low-speed-centrifuge-mw-0020-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/dm0412-low-speed-centrifuge-mw-0020-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/ls-4000-dry-fluorescence-immunoassay-analyzerhandheld-mm-0004-lansionbiotech-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/ls-4000-dry-fluorescence-immunoassay-analyzerhandheld-mm-0004-lansionbiotech-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/typhoid-iggigm-rapid-test-sp-mt-0090-maxtest-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/typhoid-iggigm-rapid-test-sp-mt-0090-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/163",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/163",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/94",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/94",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/188",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/188",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/359",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/359",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/erlenmeyer-flask-mw-0121-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/erlenmeyer-flask-mw-0121-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/37",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/37",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/379",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/product\/379",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/search",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/search",
+            "type": "other",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dm1224-high-speed-centrifuge-mw-0019-maxware-dubai-uae",
+            "crawl_date": "2025-06-24",
+            "status": "Pending",
+            "path": "\/quotation\/dm1224-high-speed-centrifuge-mw-0019-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/d2012-high-speed-centrifuge-mw-0015-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/d2012-high-speed-centrifuge-mw-0015-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/forced-air-drying-ovenbov-tf-mm-0028-biobase-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/forced-air-drying-ovenbov-tf-mm-0028-biobase-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/coagulation-analyzer-reagents-mm-0007-lansionbiotech-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/coagulation-analyzer-reagents-mm-0007-lansionbiotech-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/culture-flask-mw-0111-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/culture-flask-mw-0111-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sk-o180-s-intelligent-decolorizing-shaker-multi-functional-mw-0004-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/sk-o180-s-intelligent-decolorizing-shaker-multi-functional-mw-0004-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sk-o330-pro-large-multifunctional-orbital-decolorizing-shaker-mw-0001-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/sk-o330-pro-large-multifunctional-orbital-decolorizing-shaker-mw-0001-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sk-r30d-e-long-deck-double-layer-rocking-rotator-mw-0040-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/sk-r30d-e-long-deck-double-layer-rocking-rotator-mw-0040-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dpcd10-ph-portable-metermulti-parameter-mw-0065-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/dpcd10-ph-portable-metermulti-parameter-mw-0065-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/shigella-rapid-test-mt-0068-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/shigella-rapid-test-mt-0068-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/wooden-tongue-depressor-mw-0095-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/wooden-tongue-depressor-mw-0095-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/transferrinfob-and-hb-hp-combo-rapid-test-mt-0024-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/transferrinfob-and-hb-hp-combo-rapid-test-mt-0024-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dorp1-pocket-testerbluetooth-mw-0071-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/dorp1-pocket-testerbluetooth-mw-0071-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/308",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/product\/308",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hsv-12-iggigm-rapid-test-sp-mt-0010-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/hsv-12-iggigm-rapid-test-sp-mt-0010-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sk-r330-pro-large-multifunctional-transference-rocking-shaker-mw-0008-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/sk-r330-pro-large-multifunctional-transference-rocking-shaker-mw-0008-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/forced-air-drying-oven-bjpx-hg-series-mm-0020-biobase-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/forced-air-drying-oven-bjpx-hg-series-mm-0020-biobase-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "http:\/\/www.maxmedme.com\/",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/",
+            "type": "other",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/261",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/product\/261",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/109",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/109",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/190",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/product\/190",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/methane-sulfonic-acid-cation-exchange-chromatography-columns-mw-0076-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/methane-sulfonic-acid-cation-exchange-chromatography-columns-mw-0076-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/423",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/product\/423",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/99",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/product\/99",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/185",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/product\/185",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "http:\/\/maxmedme.com\/",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/",
+            "type": "other",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/313",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/product\/313",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dpette-simple-electronic-pipette-mm-0040-dlab-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/dpette-simple-electronic-pipette-mm-0040-dlab-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/re100-pro-digital-rotary-evaporator-mw-0081-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/re100-pro-digital-rotary-evaporator-mw-0081-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/cond-portable-meter-single-parameter-mw-0058-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/cond-portable-meter-single-parameter-mw-0058-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/malaria-pfpv-rapid-test-mt-0098-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/malaria-pfpv-rapid-test-mt-0098-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/abo-and-rhd-blood-grouping-rapid-test-mt-0035-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/abo-and-rhd-blood-grouping-rapid-test-mt-0035-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/table-top-autoclave-class-n-series-mm-0008-biobase-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/table-top-autoclave-class-n-series-mm-0008-biobase-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/pregnancy-hcg-rapid-test-spu-mt-0002-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/pregnancy-hcg-rapid-test-spu-mt-0002-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/mx-c-cell-disruptor-mw-0032-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/mx-c-cell-disruptor-mw-0032-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/do-polarographic-type-portable-meter-single-parameter-mw-0059-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/do-polarographic-type-portable-meter-single-parameter-mw-0059-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/bowie-dick-test-pack-mw-0103-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/bowie-dick-test-pack-mw-0103-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/saliva-ejector-mw-0098-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/saliva-ejector-mw-0098-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/strep-a-rapid-test-mt-0106-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/strep-a-rapid-test-mt-0106-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dcd10-cond-portable-metermulti-parameter-mw-0063-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/dcd10-cond-portable-metermulti-parameter-mw-0063-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sp-uv3102-uv-vis-spectrophotometer-mw-0052-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/sp-uv3102-uv-vis-spectrophotometer-mw-0052-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/respiratory-infectious-diseases-rapid-test-mt-0047-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/respiratory-infectious-diseases-rapid-test-mt-0047-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/chikungunya-iggigm-rapid-test-sp-mt-0085-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/chikungunya-iggigm-rapid-test-sp-mt-0085-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dm0408-low-speed-centrifuge-mw-0022-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/dm0408-low-speed-centrifuge-mw-0022-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/glass-measuring-cup-mw-0124-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/glass-measuring-cup-mw-0124-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/shigella-sonnei-antigen-rapid-test-mt-0070-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/shigella-sonnei-antigen-rapid-test-mt-0070-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/salmonella-typhi-antigen-rapid-test-mt-0092-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/salmonella-typhi-antigen-rapid-test-mt-0092-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/carbonate-anion-exchange-chromatography-columns-mw-0075-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/carbonate-anion-exchange-chromatography-columns-mw-0075-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sk-o180-s-intelligent-decolorizing-shakerbasic-model-mw-0006-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/sk-o180-s-intelligent-decolorizing-shakerbasic-model-mw-0006-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/gonorrhea-rapid-test-mt-0014-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/gonorrhea-rapid-test-mt-0014-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sk-d1810-s-intelligent-3d-shaker-mw-0010-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/sk-d1810-s-intelligent-3d-shaker-mw-0010-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/drying-tower-mw-0115-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/drying-tower-mw-0115-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/measles-iggigm-rapid-test-mt-0050-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/measles-iggigm-rapid-test-mt-0050-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hbsag-rapid-test-dipstick-wbsp-mt-0102-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/hbsag-rapid-test-dipstick-wbsp-mt-0102-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hpv-antigen-rapid-test-mt-0017-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/hpv-antigen-rapid-test-mt-0017-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/ebna-igg-rapid-test-cassette-whole-bloodserumplasma-mt-0044-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/ebna-igg-rapid-test-cassette-whole-bloodserumplasma-mt-0044-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/filariasis-iggigm-rapid-test-wbsp-mt-0088-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/filariasis-iggigm-rapid-test-wbsp-mt-0088-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dec1-pocket-tester-mw-0068-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/dec1-pocket-tester-mw-0068-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/fetal-fibronectin-ffn-rapid-test-mt-0006-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/fetal-fibronectin-ffn-rapid-test-mt-0006-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dpd10-do-portable-metermulti-parameter-mw-0062-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/dpd10-do-portable-metermulti-parameter-mw-0062-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/malaria-pf-rapid-test-cassette-mt-0096-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/malaria-pf-rapid-test-cassette-mt-0096-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hiv-12o-rapid-test-mt-0059-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/hiv-12o-rapid-test-mt-0059-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/tuberculosis-tb-rapid-test-mt-0116-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/tuberculosis-tb-rapid-test-mt-0116-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/filtrating-equipment-mw-0116-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/filtrating-equipment-mw-0116-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sterilization-pouch-self-sealing-flat-pouch-mw-0097-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/sterilization-pouch-self-sealing-flat-pouch-mw-0097-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/40-freezereconomic-type-mm-0015-biobase-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/40-freezereconomic-type-mm-0015-biobase-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dpo10-mv-portable-metermulti-parameter-mw-0064-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/dpo10-mv-portable-metermulti-parameter-mw-0064-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hiv-12-rapid-test-cassette-wbsp-mt-0061-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/hiv-12-rapid-test-cassette-wbsp-mt-0061-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hpiv-rapid-test-mt-0114-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/hpiv-rapid-test-mt-0114-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sp-uv1100-spectrophotometer-mw-0048-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/sp-uv1100-spectrophotometer-mw-0048-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sk-r1807-s-intelligent-transference-decolorizing-shaker-mw-0009-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/sk-r1807-s-intelligent-transference-decolorizing-shaker-mw-0009-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/chlamydia-rapid-test-mt-0015-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/chlamydia-rapid-test-mt-0015-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/150-freezer-128l-mm-0017-biobase-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/150-freezer-128l-mm-0017-biobase-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/barrier-film-mw-0104-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/barrier-film-mw-0104-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/ph-cond-do-atc-meterbenchtop-classical-seriesmulti-parameter-mw-0026-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/ph-cond-do-atc-meterbenchtop-classical-seriesmulti-parameter-mw-0026-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/laboratory-refrigeratoreconomic-typevertical-type-46l-150l-320l-400l-mm-0016-biobase-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/laboratory-refrigeratoreconomic-typevertical-type-46l-150l-320l-400l-mm-0016-biobase-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/micropette-plus-12-channel-adjustable-volume-mechanical-pipettes-mm-0037-dlab-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/micropette-plus-12-channel-adjustable-volume-mechanical-pipettes-mm-0037-dlab-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/respiratory-infectious-diseases-rapid-test-sars-cov-2-mt-0037-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/respiratory-infectious-diseases-rapid-test-sars-cov-2-mt-0037-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dpette-multi-functional-electronic-pipette-mm-0039-dlab-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/dpette-multi-functional-electronic-pipette-mm-0039-dlab-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/sp-uv3101-uv-vis-spectrophotometer-mw-0051-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/sp-uv3101-uv-vis-spectrophotometer-mw-0051-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/malaria-pfpan-rapid-test-mt-0097-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/malaria-pfpan-rapid-test-mt-0097-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dm0424-low-speed-centrifuge-mw-0021-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/dm0424-low-speed-centrifuge-mw-0021-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hplc-column-nova-atom-liquid-chromatography-mw-0077-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/hplc-column-nova-atom-liquid-chromatography-mw-0077-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/tetanus-rapid-test-mt-0117-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/tetanus-rapid-test-mt-0117-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/341",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/product\/341",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hbhb-hp-combo-rapid-test-mt-0023-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/hbhb-hp-combo-rapid-test-mt-0023-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/hipette-fully-autoclavable-mechanical-pipette-mm-0031-dlab-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/hipette-fully-autoclavable-mechanical-pipette-mm-0031-dlab-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/chikungunya-iggigm-rapid-test-wbsp-mt-0086-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/chikungunya-iggigm-rapid-test-wbsp-mt-0086-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/rhinovirus-rapid-test-mt-0049-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/rhinovirus-rapid-test-mt-0049-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/dm0636-low-speed-centrifuge-mw-0024-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/dm0636-low-speed-centrifuge-mw-0024-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/toxo-iggigm-rapid-test-s-p-mt-0012-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/toxo-iggigm-rapid-test-s-p-mt-0012-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/h-pylori-antigen-rapid-test-cassette-feces-mt-0095-maxtest-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/h-pylori-antigen-rapid-test-cassette-feces-mt-0095-maxtest-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/ph-portable-metermulti-parameter-mw-0061-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/ph-portable-metermulti-parameter-mw-0061-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/mx-rl-pro-lcd-digital-tube-rotator-horizontal-mw-0035-maxware-dubai-uae",
+            "crawl_date": "2025-06-23",
+            "status": "Pending",
+            "path": "\/quotation\/mx-rl-pro-lcd-digital-tube-rotator-horizontal-mw-0035-maxware-dubai-uae",
+            "type": "quotation_long",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/306",
+            "crawl_date": "2025-06-22",
+            "status": "Pending",
+            "path": "\/product\/306",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/386",
+            "crawl_date": "2025-06-22",
+            "status": "Pending",
+            "path": "\/product\/386",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/395",
+            "crawl_date": "2025-06-22",
+            "status": "Pending",
+            "path": "\/product\/395",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/135",
+            "crawl_date": "2025-06-21",
+            "status": "Pending",
+            "path": "\/quotation\/135",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/177",
+            "crawl_date": "2025-06-21",
+            "status": "Pending",
+            "path": "\/quotation\/177",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/99",
+            "crawl_date": "2025-06-21",
+            "status": "Pending",
+            "path": "\/quotation\/99",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/164",
+            "crawl_date": "2025-06-21",
+            "status": "Pending",
+            "path": "\/product\/164",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/228",
+            "crawl_date": "2025-06-21",
+            "status": "Pending",
+            "path": "\/product\/228",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/233",
+            "crawl_date": "2025-06-21",
+            "status": "Pending",
+            "path": "\/product\/233",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/302",
+            "crawl_date": "2025-06-21",
+            "status": "Pending",
+            "path": "\/product\/302",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/339",
+            "crawl_date": "2025-06-21",
+            "status": "Pending",
+            "path": "\/product\/339",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/38",
+            "crawl_date": "2025-06-21",
+            "status": "Pending",
+            "path": "\/product\/38",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/415",
+            "crawl_date": "2025-06-21",
+            "status": "Pending",
+            "path": "\/product\/415",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/106",
+            "crawl_date": "2025-06-21",
+            "status": "Pending",
+            "path": "\/quotation\/106",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/249",
+            "crawl_date": "2025-06-21",
+            "status": "Pending",
+            "path": "\/product\/249",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/62",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/62",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/62",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/62",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/62",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/quotation\/62",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/95",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/95",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/95",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/quotation\/95",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/190",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/quotation\/190",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/38",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/38",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/422",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/422",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/200",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/200",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/91",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/quotation\/91",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/145",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/quotation\/145",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/95",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/95",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/331",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/331",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/63",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/63",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/279",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/279",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/40",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/40",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/274",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/274",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/312",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/312",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/305",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/305",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/311",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/311",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/257",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/257",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/189",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/189",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/189",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/quotation\/189",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/106",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/106",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/399",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/399",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/106",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/quotation\/106",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/189",
+            "crawl_date": "2025-06-20",
+            "status": "Pending",
+            "path": "\/product\/189",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/396",
+            "crawl_date": "2025-06-19",
+            "status": "Pending",
+            "path": "\/product\/396",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/347",
+            "crawl_date": "2025-06-19",
+            "status": "Pending",
+            "path": "\/product\/347",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/389",
+            "crawl_date": "2025-06-19",
+            "status": "Pending",
+            "path": "\/product\/389",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/69",
+            "crawl_date": "2025-06-19",
+            "status": "Pending",
+            "path": "\/product\/69",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/363",
+            "crawl_date": "2025-06-19",
+            "status": "Pending",
+            "path": "\/product\/363",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/283",
+            "crawl_date": "2025-06-19",
+            "status": "Pending",
+            "path": "\/product\/283",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/106",
+            "crawl_date": "2025-06-19",
+            "status": "Pending",
+            "path": "\/product\/106",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/400",
+            "crawl_date": "2025-06-19",
+            "status": "Pending",
+            "path": "\/product\/400",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/283",
+            "crawl_date": "2025-06-19",
+            "status": "Pending",
+            "path": "\/product\/283",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/420",
+            "crawl_date": "2025-06-19",
+            "status": "Pending",
+            "path": "\/product\/420",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/product\/60",
+            "crawl_date": "2025-06-18",
+            "status": "Pending",
+            "path": "\/product\/60",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/114",
+            "crawl_date": "2025-06-17",
+            "status": "Pending",
+            "path": "\/quotation\/114",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/32",
+            "crawl_date": "2025-06-17",
+            "status": "Pending",
+            "path": "\/quotation\/32",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/66\/71",
+            "crawl_date": "2025-06-17",
+            "status": "Pending",
+            "path": "\/categories\/66\/71",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/136",
+            "crawl_date": "2025-06-16",
+            "status": "Pending",
+            "path": "\/product\/136",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/34",
+            "crawl_date": "2025-06-15",
+            "status": "Pending",
+            "path": "\/quotation\/34",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/49",
+            "crawl_date": "2025-06-10",
+            "status": "Pending",
+            "path": "\/product\/49",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/112",
+            "crawl_date": "2025-06-10",
+            "status": "Pending",
+            "path": "\/product\/112",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/146",
+            "crawl_date": "2025-06-10",
+            "status": "Pending",
+            "path": "\/quotation\/146",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/88\/90",
+            "crawl_date": "2025-06-10",
+            "status": "Pending",
+            "path": "\/categories\/88\/90",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/144",
+            "crawl_date": "2025-06-10",
+            "status": "Pending",
+            "path": "\/quotation\/144",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/82",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/categories\/82",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/118",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/product\/118",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/116",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/116",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/122",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/122",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/124",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/124",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/151",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/151",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/125",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/125",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/121",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/121",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/96",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/96",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/120",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/120",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/66\/68\/64",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/categories\/66\/68\/64",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/154",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/154",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/159",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/159",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/110",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/110",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/104",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/product\/104",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/152",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/product\/152",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/152",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/152",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/127",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/127",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/68\/64",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/categories\/68\/64",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/165",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/165",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/164",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/product\/164",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/166",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/166",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/147",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/147",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/168",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/168",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/132",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/quotation\/132",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/134",
+            "crawl_date": "2025-06-09",
+            "status": "Pending",
+            "path": "\/product\/134",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/131",
+            "crawl_date": "2025-06-08",
+            "status": "Pending",
+            "path": "\/product\/131",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/109",
+            "crawl_date": "2025-06-08",
+            "status": "Pending",
+            "path": "\/product\/109",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/66\/68\/88",
+            "crawl_date": "2025-06-08",
+            "status": "Pending",
+            "path": "\/categories\/66\/68\/88",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/188",
+            "crawl_date": "2025-06-08",
+            "status": "Pending",
+            "path": "\/product\/188",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/183",
+            "crawl_date": "2025-06-08",
+            "status": "Pending",
+            "path": "\/quotation\/183",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/112",
+            "crawl_date": "2025-06-07",
+            "status": "Pending",
+            "path": "\/quotation\/112",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/107",
+            "crawl_date": "2025-06-07",
+            "status": "Pending",
+            "path": "\/product\/107",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/84",
+            "crawl_date": "2025-06-06",
+            "status": "Pending",
+            "path": "\/categories\/84",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/105",
+            "crawl_date": "2025-06-05",
+            "status": "Pending",
+            "path": "\/product\/105",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/136",
+            "crawl_date": "2025-06-04",
+            "status": "Pending",
+            "path": "\/quotation\/136",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/142",
+            "crawl_date": "2025-06-04",
+            "status": "Pending",
+            "path": "\/quotation\/142",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/161",
+            "crawl_date": "2025-06-04",
+            "status": "Pending",
+            "path": "\/quotation\/161",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/140",
+            "crawl_date": "2025-06-03",
+            "status": "Pending",
+            "path": "\/product\/140",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/47",
+            "crawl_date": "2025-06-01",
+            "status": "Pending",
+            "path": "\/product\/47",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/108",
+            "crawl_date": "2025-05-30",
+            "status": "Pending",
+            "path": "\/quotation\/108",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/185",
+            "crawl_date": "2025-05-30",
+            "status": "Pending",
+            "path": "\/quotation\/185",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/100",
+            "crawl_date": "2025-05-30",
+            "status": "Pending",
+            "path": "\/quotation\/100",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/104",
+            "crawl_date": "2025-05-29",
+            "status": "Pending",
+            "path": "\/quotation\/104",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/89",
+            "crawl_date": "2025-05-27",
+            "status": "Pending",
+            "path": "\/quotation\/89",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/59",
+            "crawl_date": "2025-05-26",
+            "status": "Pending",
+            "path": "\/product\/59",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/128",
+            "crawl_date": "2025-05-25",
+            "status": "Pending",
+            "path": "\/quotation\/128",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/149",
+            "crawl_date": "2025-05-25",
+            "status": "Pending",
+            "path": "\/quotation\/149",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/167",
+            "crawl_date": "2025-05-25",
+            "status": "Pending",
+            "path": "\/quotation\/167",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/185",
+            "crawl_date": "2025-05-25",
+            "status": "Pending",
+            "path": "\/product\/185",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/107",
+            "crawl_date": "2025-05-25",
+            "status": "Pending",
+            "path": "\/quotation\/107",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/174",
+            "crawl_date": "2025-05-24",
+            "status": "Pending",
+            "path": "\/quotation\/174",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/66\/71\/96",
+            "crawl_date": "2025-05-24",
+            "status": "Pending",
+            "path": "\/categories\/66\/71\/96",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/50",
+            "crawl_date": "2025-05-22",
+            "status": "Pending",
+            "path": "\/product\/50",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/77",
+            "crawl_date": "2025-05-22",
+            "status": "Pending",
+            "path": "\/quotation\/77",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/376",
+            "crawl_date": "2025-05-20",
+            "status": "Pending",
+            "path": "\/product\/376",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/51\/39\/82",
+            "crawl_date": "2025-05-20",
+            "status": "Pending",
+            "path": "\/categories\/51\/39\/82",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/88\/89",
+            "crawl_date": "2025-05-20",
+            "status": "Pending",
+            "path": "\/categories\/88\/89",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/79",
+            "crawl_date": "2025-05-20",
+            "status": "Pending",
+            "path": "\/product\/79",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/126",
+            "crawl_date": "2025-05-20",
+            "status": "Pending",
+            "path": "\/quotation\/126",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/176",
+            "crawl_date": "2025-05-20",
+            "status": "Pending",
+            "path": "\/quotation\/176",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/72",
+            "crawl_date": "2025-05-19",
+            "status": "Pending",
+            "path": "\/quotation\/72",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/57\/94",
+            "crawl_date": "2025-05-17",
+            "status": "Pending",
+            "path": "\/categories\/57\/94",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/48",
+            "crawl_date": "2025-05-14",
+            "status": "Pending",
+            "path": "\/product\/48",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/48",
+            "crawl_date": "2025-05-14",
+            "status": "Pending",
+            "path": "\/quotation\/48",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/133",
+            "crawl_date": "2025-05-13",
+            "status": "Pending",
+            "path": "\/quotation\/133",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/129",
+            "crawl_date": "2025-05-13",
+            "status": "Pending",
+            "path": "\/quotation\/129",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/137",
+            "crawl_date": "2025-05-13",
+            "status": "Pending",
+            "path": "\/quotation\/137",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/139",
+            "crawl_date": "2025-05-13",
+            "status": "Pending",
+            "path": "\/quotation\/139",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/150",
+            "crawl_date": "2025-05-13",
+            "status": "Pending",
+            "path": "\/quotation\/150",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/170",
+            "crawl_date": "2025-05-13",
+            "status": "Pending",
+            "path": "\/quotation\/170",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/325",
+            "crawl_date": "2025-05-13",
+            "status": "Pending",
+            "path": "\/product\/325",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/86",
+            "crawl_date": "2025-05-13",
+            "status": "Pending",
+            "path": "\/quotation\/86",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/39",
+            "crawl_date": "2025-05-13",
+            "status": "Pending",
+            "path": "\/product\/39",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/88",
+            "crawl_date": "2025-05-12",
+            "status": "Pending",
+            "path": "\/quotation\/88",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/97",
+            "crawl_date": "2025-05-12",
+            "status": "Pending",
+            "path": "\/product\/97",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/125",
+            "crawl_date": "2025-05-11",
+            "status": "Pending",
+            "path": "\/product\/125",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/92\/93",
+            "crawl_date": "2025-05-11",
+            "status": "Pending",
+            "path": "\/categories\/92\/93",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/66\/50",
+            "crawl_date": "2025-05-11",
+            "status": "Pending",
+            "path": "\/categories\/66\/50",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/66\/68\/61?page=2",
+            "crawl_date": "2025-05-10",
+            "status": "Pending",
+            "path": "\/categories\/66\/68\/61",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/88",
+            "crawl_date": "2025-05-10",
+            "status": "Pending",
+            "path": "\/categories\/88",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/66\/68\/61?page=1",
+            "crawl_date": "2025-05-10",
+            "status": "Pending",
+            "path": "\/categories\/66\/68\/61",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/31",
+            "crawl_date": "2025-05-10",
+            "status": "Pending",
+            "path": "\/quotation\/31",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/51\/91",
+            "crawl_date": "2025-05-09",
+            "status": "Pending",
+            "path": "\/categories\/51\/91",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/83",
+            "crawl_date": "2025-05-09",
+            "status": "Pending",
+            "path": "\/product\/83",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/165",
+            "crawl_date": "2025-05-09",
+            "status": "Pending",
+            "path": "\/product\/165",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/60",
+            "crawl_date": "2025-05-09",
+            "status": "Pending",
+            "path": "\/categories\/60",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/102",
+            "crawl_date": "2025-05-08",
+            "status": "Pending",
+            "path": "\/quotation\/102",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/66\/50\/58",
+            "crawl_date": "2025-05-08",
+            "status": "Pending",
+            "path": "\/categories\/66\/50\/58",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/57",
+            "crawl_date": "2025-05-07",
+            "status": "Pending",
+            "path": "\/categories\/57",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/66\/71\/98",
+            "crawl_date": "2025-05-07",
+            "status": "Pending",
+            "path": "\/categories\/66\/71\/98",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/59",
+            "crawl_date": "2025-05-07",
+            "status": "Pending",
+            "path": "\/categories\/59",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/80",
+            "crawl_date": "2025-05-07",
+            "status": "Pending",
+            "path": "\/categories\/80",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/51",
+            "crawl_date": "2025-05-06",
+            "status": "Pending",
+            "path": "\/categories\/51",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/101",
+            "crawl_date": "2025-05-06",
+            "status": "Pending",
+            "path": "\/quotation\/101",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/84",
+            "crawl_date": "2025-05-06",
+            "status": "Pending",
+            "path": "\/product\/84",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/30",
+            "crawl_date": "2025-05-05",
+            "status": "Pending",
+            "path": "\/quotation\/30",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/82",
+            "crawl_date": "2025-05-05",
+            "status": "Pending",
+            "path": "\/quotation\/82",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/61?page=1",
+            "crawl_date": "2025-05-05",
+            "status": "Pending",
+            "path": "\/categories\/61",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/products",
+            "crawl_date": "2025-05-05",
+            "status": "Pending",
+            "path": "\/products",
+            "type": "other",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "no_fix_needed"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/134",
+            "crawl_date": "2025-05-04",
+            "status": "Pending",
+            "path": "\/quotation\/134",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/171",
+            "crawl_date": "2025-05-04",
+            "status": "Pending",
+            "path": "\/quotation\/171",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/67",
+            "crawl_date": "2025-05-04",
+            "status": "Pending",
+            "path": "\/quotation\/67",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/117",
+            "crawl_date": "2025-05-04",
+            "status": "Pending",
+            "path": "\/quotation\/117",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/66",
+            "crawl_date": "2025-05-04",
+            "status": "Pending",
+            "path": "\/categories\/66",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/56",
+            "crawl_date": "2025-05-04",
+            "status": "Pending",
+            "path": "\/product\/56",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/105",
+            "crawl_date": "2025-05-04",
+            "status": "Pending",
+            "path": "\/quotation\/105",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/239",
+            "crawl_date": "2025-05-04",
+            "status": "Pending",
+            "path": "\/product\/239",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/246",
+            "crawl_date": "2025-05-04",
+            "status": "Pending",
+            "path": "\/product\/246",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/89",
+            "crawl_date": "2025-05-03",
+            "status": "Pending",
+            "path": "\/categories\/89",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/101",
+            "crawl_date": "2025-05-03",
+            "status": "Pending",
+            "path": "\/quotation\/101",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/315",
+            "crawl_date": "2025-05-02",
+            "status": "Pending",
+            "path": "\/product\/315",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/77",
+            "crawl_date": "2025-05-02",
+            "status": "Pending",
+            "path": "\/product\/77",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/166",
+            "crawl_date": "2025-05-02",
+            "status": "Pending",
+            "path": "\/product\/166",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/85",
+            "crawl_date": "2025-05-02",
+            "status": "Pending",
+            "path": "\/categories\/85",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/181",
+            "crawl_date": "2025-05-02",
+            "status": "Pending",
+            "path": "\/quotation\/181",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/182",
+            "crawl_date": "2025-05-02",
+            "status": "Pending",
+            "path": "\/quotation\/182",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/187",
+            "crawl_date": "2025-05-01",
+            "status": "Pending",
+            "path": "\/quotation\/187",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/139",
+            "crawl_date": "2025-05-01",
+            "status": "Pending",
+            "path": "\/quotation\/139",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/169",
+            "crawl_date": "2025-05-01",
+            "status": "Pending",
+            "path": "\/quotation\/169",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/61",
+            "crawl_date": "2025-04-30",
+            "status": "Pending",
+            "path": "\/quotation\/61",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/172",
+            "crawl_date": "2025-04-30",
+            "status": "Pending",
+            "path": "\/quotation\/172",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/178",
+            "crawl_date": "2025-04-30",
+            "status": "Pending",
+            "path": "\/quotation\/178",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/175",
+            "crawl_date": "2025-04-30",
+            "status": "Pending",
+            "path": "\/quotation\/175",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/95",
+            "crawl_date": "2025-04-29",
+            "status": "Pending",
+            "path": "\/categories\/95",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/78",
+            "crawl_date": "2025-04-29",
+            "status": "Pending",
+            "path": "\/quotation\/78",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/62",
+            "crawl_date": "2025-04-28",
+            "status": "Pending",
+            "path": "\/categories\/62",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/237",
+            "crawl_date": "2025-04-28",
+            "status": "Pending",
+            "path": "\/product\/237",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/66\/50\/59",
+            "crawl_date": "2025-04-28",
+            "status": "Pending",
+            "path": "\/categories\/66\/50\/59",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/87",
+            "crawl_date": "2025-04-28",
+            "status": "Pending",
+            "path": "\/product\/87",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/51\/39\/85",
+            "crawl_date": "2025-04-28",
+            "status": "Pending",
+            "path": "\/categories\/51\/39\/85",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/83",
+            "crawl_date": "2025-04-28",
+            "status": "Pending",
+            "path": "\/quotation\/83",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/65",
+            "crawl_date": "2025-04-27",
+            "status": "Pending",
+            "path": "\/quotation\/65",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/79",
+            "crawl_date": "2025-04-27",
+            "status": "Pending",
+            "path": "\/quotation\/79",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/76",
+            "crawl_date": "2025-04-27",
+            "status": "Pending",
+            "path": "\/quotation\/76",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/75",
+            "crawl_date": "2025-04-27",
+            "status": "Pending",
+            "path": "\/quotation\/75",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/87",
+            "crawl_date": "2025-04-27",
+            "status": "Pending",
+            "path": "\/quotation\/87",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/166",
+            "crawl_date": "2025-04-25",
+            "status": "Pending",
+            "path": "\/quotation\/166",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/60",
+            "crawl_date": "2025-04-25",
+            "status": "Pending",
+            "path": "\/quotation\/60",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/66\/68\/88\/subcategories",
+            "crawl_date": "2025-04-23",
+            "status": "Pending",
+            "path": "\/categories\/66\/68\/88\/subcategories",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/71",
+            "crawl_date": "2025-04-23",
+            "status": "Pending",
+            "path": "\/quotation\/71",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/68\/61",
+            "crawl_date": "2025-04-22",
+            "status": "Pending",
+            "path": "\/categories\/68\/61",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/120",
+            "crawl_date": "2025-04-22",
+            "status": "Pending",
+            "path": "\/product\/120",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/63",
+            "crawl_date": "2025-04-22",
+            "status": "Pending",
+            "path": "\/quotation\/63",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/73",
+            "crawl_date": "2025-04-22",
+            "status": "Pending",
+            "path": "\/quotation\/73",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/141",
+            "crawl_date": "2025-04-22",
+            "status": "Pending",
+            "path": "\/quotation\/141",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/41",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/41",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/154",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/product\/154",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/143",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/143",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/128",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/product\/128",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/50",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/50",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/49",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/49",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/45",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/45",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/55",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/55",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/98",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/98",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/278",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/product\/278",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/57",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/57",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/59",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/59",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/51",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/51",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/186",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/186",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/categories\/39\/82",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/categories\/39\/82",
+            "type": "category_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/54",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/54",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/97",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/97",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/133",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/product\/133",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/168",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/168",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/157",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/157",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/119",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/119",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/68",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/68",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/163",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/163",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/141",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/141",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/155",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/155",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/39",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/39",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/154",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/154",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/product\/101",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/product\/101",
+            "type": "product_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/161",
+            "crawl_date": "2025-04-21",
+            "status": "Pending",
+            "path": "\/quotation\/161",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/115",
+            "crawl_date": "2025-04-20",
+            "status": "Pending",
+            "path": "\/quotation\/115",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/maxmedme.com\/quotation\/165",
+            "crawl_date": "2025-04-20",
+            "status": "Pending",
+            "path": "\/quotation\/165",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/32",
+            "crawl_date": "2025-03-27",
+            "status": "Pending",
+            "path": "\/quotation\/32",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/34",
+            "crawl_date": "2025-03-27",
+            "status": "Pending",
+            "path": "\/quotation\/34",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/31",
+            "crawl_date": "2025-03-27",
+            "status": "Pending",
+            "path": "\/quotation\/31",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        },
+        {
+            "url": "https:\/\/www.maxmedme.com\/quotation\/35",
+            "crawl_date": "2025-03-26",
+            "status": "Pending",
+            "path": "\/quotation\/35",
+            "type": "quotation_id",
+            "accessible": null,
+            "redirect_target": null,
+            "fix_applied": "redirect_added"
+        }
+    ]
+}
