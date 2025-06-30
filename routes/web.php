@@ -512,8 +512,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     });
 
-    // Supplier Onboarding Routes (must be before main supplier routes)
-    Route::middleware(['auth', \App\Http\Middleware\SupplierMiddleware::class])->prefix('supplier/onboarding')->name('supplier.onboarding.')->group(function () {
+    // Supplier Onboarding Routes (accessible without authentication for invitation flow)
+    Route::prefix('supplier/onboarding')->name('supplier.onboarding.')->group(function () {
         Route::get('/company', [\App\Http\Controllers\Supplier\OnboardingController::class, 'company'])->name('company');
         Route::post('/company', [\App\Http\Controllers\Supplier\OnboardingController::class, 'storeCompany'])->name('company.store');
         Route::get('/documents', [\App\Http\Controllers\Supplier\OnboardingController::class, 'documents'])->name('documents');
@@ -1483,3 +1483,29 @@ Route::get('/molecular-biology', function() {
 Route::get('/research-%26-life-sciences', function() {
     return redirect('/categories/research-life-sciences', 301);
 });
+
+// Test Supplier Invitation Route
+Route::get('/test-supplier-invitation', function () {
+    try {
+        // Get a sample invitation
+        $invitation = \App\Models\SupplierInvitation::first();
+        
+        if (!$invitation) {
+            return 'No supplier invitations found in database. Please create one from the admin panel first.';
+        }
+        
+        $invitationUrl = route('supplier.invitation.onboarding', ['token' => $invitation->token]);
+        
+        return "
+            <h3>Supplier Invitation Test</h3>
+            <p><strong>Found invitation for:</strong> {$invitation->email}</p>
+            <p><strong>Company:</strong> {$invitation->company_name}</p>
+            <p><strong>Status:</strong> {$invitation->status}</p>
+            <p><strong>Invitation URL:</strong></p>
+            <p><a href='{$invitationUrl}' target='_blank'>{$invitationUrl}</a></p>
+            <p><strong>Test:</strong> Click the link above to test the invitation flow</p>
+        ";
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+})->name('test.supplier.invitation');

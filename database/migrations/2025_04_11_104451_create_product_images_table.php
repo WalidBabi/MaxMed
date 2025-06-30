@@ -14,50 +14,50 @@ return new class extends Migration
         if (!Schema::hasTable('product_images')) {
             Schema::create('product_images', function (Blueprint $table) {
                 $table->id();
-            $table->unsignedBigInteger('product_id');
-            $table->string('image_path');
-            $table->string('image_url');
-            $table->integer('sort_order')->default(0);
-            $table->boolean('is_primary')->default(false);
-            $table->timestamps();
+                $table->unsignedBigInteger('product_id');
+                $table->string('image_path');
+                $table->string('image_url');
+                $table->integer('sort_order')->default(0);
+                $table->boolean('is_primary')->default(false);
+                $table->timestamps();
 
-            $table->foreign('product_id')
-                  ->references('id')
-                  ->on('products')
-                  ->onDelete('cascade');
+                $table->foreign('product_id')
+                      ->references('id')
+                      ->on('products')
+                      ->onDelete('cascade');
             });
-        }
-    });
         } else {
             Schema::table('product_images', function (Blueprint $table) {
                 // Check and add any missing columns
                 $columns = Schema::getColumnListing('product_images');
-                $schemaContent = '$table->id();
-            $table->unsignedBigInteger(\'product_id\');
-            $table->string(\'image_path\');
-            $table->string(\'image_url\');
-            $table->integer(\'sort_order\')->default(0);
-            $table->boolean(\'is_primary\')->default(false);
-            $table->timestamps();
-
-            $table->foreign(\'product_id\')
-                  ->references(\'id\')
-                  ->on(\'products\')
-                  ->onDelete(\'cascade\');';
                 
-                // Parse the schema content to find column definitions
-                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
-                foreach ($columnMatches[1] as $columnDef) {
-                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
-                        $columnName = $colMatch[2];
-                        if (!in_array($columnName, $columns)) {
-                            $table->{$colMatch[1]}($columnName);
-                        }
-                    }
+                if (!in_array('product_id', $columns)) {
+                    $table->unsignedBigInteger('product_id');
+                }
+                if (!in_array('image_path', $columns)) {
+                    $table->string('image_path');
+                }
+                if (!in_array('image_url', $columns)) {
+                    $table->string('image_url');
+                }
+                if (!in_array('sort_order', $columns)) {
+                    $table->integer('sort_order')->default(0);
+                }
+                if (!in_array('is_primary', $columns)) {
+                    $table->boolean('is_primary')->default(false);
+                }
+                
+                // Add foreign key if it doesn't exist
+                try {
+                    $table->foreign('product_id')
+                          ->references('id')
+                          ->on('products')
+                          ->onDelete('cascade');
+                } catch (\Exception $e) {
+                    // Foreign key already exists
                 }
             });
         }
-    });
     }
 
     /**

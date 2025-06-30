@@ -16,12 +16,13 @@ class SupplierInvitation extends Model
         'email',
         'contact_name',
         'company_name',
+        'phone',
         'token',
         'invited_by',
         'message',
         'expires_at',
         'accepted_at',
-        'user_id',
+        'supplier_id',
         'status'
     ];
 
@@ -79,7 +80,7 @@ class SupplierInvitation extends Model
         $this->update([
             'status' => self::STATUS_ACCEPTED,
             'accepted_at' => now(),
-            'user_id' => $user->id,
+            'supplier_id' => $user->id,
         ]);
     }
 
@@ -96,7 +97,7 @@ class SupplierInvitation extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'supplier_id');
     }
 
     /**
