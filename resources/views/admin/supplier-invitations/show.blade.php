@@ -99,10 +99,10 @@
                     <label class="block text-sm font-medium text-gray-600">Expires At</label>
                     <span class="mt-1 block text-gray-900">{{ $invitation->expires_at->format('M d, Y H:i') }}</span>
                 </div>
-                @if($invitation->custom_message)
+                @if($invitation->message)
                 <div>
                     <label class="block text-sm font-medium text-gray-600">Custom Message</label>
-                    <span class="mt-1 block text-gray-900 whitespace-pre-line">{{ $invitation->custom_message }}</span>
+                    <span class="mt-1 block text-gray-900 whitespace-pre-line">{{ $invitation->message }}</span>
                 </div>
                 @endif
             </div>
