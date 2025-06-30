@@ -106,15 +106,15 @@
             
             <div class="p-6">
                 <div>
-                    <label for="custom_message" class="block text-sm font-medium text-gray-700 mb-2">
+                    <label for="message" class="block text-sm font-medium text-gray-700 mb-2">
                         Custom Message <span class="text-gray-400">(Optional)</span>
                     </label>
-                    <textarea name="custom_message" 
-                              id="custom_message" 
+                    <textarea name="message" 
+                              id="message" 
                               rows="4"
-                              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('custom_message') border-red-300 @enderror"
-                              placeholder="Add a personal message to include in the invitation email (optional)">{{ old('custom_message') }}</textarea>
-                    @error('custom_message')
+                              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('message') border-red-300 @enderror"
+                              placeholder="Add a personal message to include in the invitation email (optional)">{{ old('message') }}</textarea>
+                    @error('message')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                     <p class="text-sm text-gray-500 mt-2">
@@ -238,7 +238,7 @@ function previewInvitation() {
     const name = document.getElementById('name').value || '[Supplier Name]';
     const email = document.getElementById('email').value || '[Email Address]';
     const company = document.getElementById('company_name').value || '';
-    const message = document.getElementById('custom_message').value || '';
+    const message = document.getElementById('message').value || '';
     
     const previewContent = `
         <div class="text-sm text-gray-700">

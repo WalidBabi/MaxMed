@@ -61,7 +61,7 @@ class SupplierInvitationController extends Controller
             'email' => 'required|email|unique:users,email|unique:supplier_invitations,email,NULL,id,status,pending',
             'name' => 'required|string|max:255',
             'company_name' => 'nullable|string|max:255',
-            'custom_message' => 'nullable|string|max:1000',
+            'message' => 'nullable|string|max:1000',
         ]);
 
         DB::beginTransaction();
@@ -73,7 +73,7 @@ class SupplierInvitationController extends Controller
                 'contact_name' => $request->name,
                 'company_name' => $request->company_name,
                 'invited_by' => Auth::id(),
-                'custom_message' => $request->custom_message,
+                'message' => $request->message,
                 'token' => Str::random(60),
                 'status' => 'pending',
                 'expires_at' => now()->addDays(7),
@@ -86,7 +86,7 @@ class SupplierInvitationController extends Controller
                 $invitation->token,
                 $invitation->company_name ?? '',
                 Auth::user()->name ?? 'MaxMed Admin',
-                $invitation->custom_message ?? ''
+                $invitation->message ?? ''
             ));
 
             DB::commit();
@@ -137,7 +137,7 @@ class SupplierInvitationController extends Controller
                 $supplierInvitation->token,
                 $supplierInvitation->company_name,
                 auth()->user()->name,
-                $supplierInvitation->custom_message
+                $supplierInvitation->message
             ));
 
             return redirect()->back()->with('success', 'Invitation resent successfully.');
@@ -216,7 +216,7 @@ class SupplierInvitationController extends Controller
                                 $invitation->token,
                                 $invitation->company_name,
                                 auth()->user()->name,
-                                $invitation->custom_message
+                                $invitation->message
                             ));
                             $successCount++;
                         }

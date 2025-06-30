@@ -18,7 +18,7 @@ class SupplierInvitation extends Model
         'company_name',
         'token',
         'invited_by',
-        'custom_message',
+        'message',
         'expires_at',
         'accepted_at',
         'user_id',
