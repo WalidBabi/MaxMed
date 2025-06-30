@@ -218,8 +218,11 @@
                 <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200">
                     <img src="{{ asset($product->image_url) }}" alt="{{ $product->name }}" class="h-48 w-full object-cover object-center group-hover:opacity-75">
                     <div class="absolute top-4 right-4">
-                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {{ $product->inventory->quantity > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                            {{ $product->inventory->quantity }} in stock
+                        @php
+                            $quantity = $product->inventory ? $product->inventory->quantity : 0;
+                        @endphp
+                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {{ $quantity > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                            {{ $quantity }} in stock
                         </span>
                     </div>
                 </div>
