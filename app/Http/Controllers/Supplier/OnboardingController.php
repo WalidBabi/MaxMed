@@ -20,7 +20,16 @@ class OnboardingController extends Controller
      */
     public function company()
     {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Please log in to access the onboarding process.');
+        }
+
         $user = Auth::user();
+        
+        if (!$user->isSupplier()) {
+            return redirect()->route('login')->with('error', 'Access denied. This area is for suppliers only.');
+        }
+
         $supplierInfo = $user->supplierInformation;
         
         return View::make('supplier.onboarding.company-info', compact('supplierInfo'));
@@ -31,6 +40,16 @@ class OnboardingController extends Controller
      */
     public function storeCompany(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Please log in to access the onboarding process.');
+        }
+
+        $user = Auth::user();
+        
+        if (!$user->isSupplier()) {
+            return redirect()->route('login')->with('error', 'Access denied. This area is for suppliers only.');
+        }
+
         $validated = $request->validate([
             'company_name' => 'required|string|max:255',
             'business_registration_number' => 'required|string|max:50',
@@ -42,7 +61,25 @@ class OnboardingController extends Controller
             'postal_code' => 'required|string|max:20',
             'country' => 'required|string|max:100',
             'phone_primary' => 'required|string|max:20',
-            'website' => 'nullable|url|max:255',
+            'website' => [
+                'nullable',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) {
+                    if (!empty($value)) {
+                        // Add protocol if missing
+                        $url = $value;
+                        if (!preg_match('/^https?:\/\//', $url)) {
+                            $url = 'http://' . $url;
+                        }
+                        
+                        // Validate the URL format
+                        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+                            $fail('The website field must be a valid URL.');
+                        }
+                    }
+                }
+            ],
             'years_in_business' => 'required|integer|min:0',
             'company_description' => 'required|string|max:1000',
             'primary_contact_name' => 'required|string|max:255',
@@ -50,6 +87,13 @@ class OnboardingController extends Controller
             'primary_contact_email' => 'required|email|max:255',
             'primary_contact_phone' => 'required|string|max:20',
         ]);
+
+        // Process website URL to add protocol if missing
+        if (!empty($validated['website'])) {
+            if (!preg_match('/^https?:\/\//', $validated['website'])) {
+                $validated['website'] = 'http://' . $validated['website'];
+            }
+        }
 
         $user = Auth::user();
         $supplierInfo = $user->supplierInformation ?? new SupplierInformation();

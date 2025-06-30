@@ -197,6 +197,9 @@ class SupplierRegistrationController extends Controller
             // event(new Registered($user));
 
             Auth::login($user);
+            
+            // Regenerate session to ensure authentication is properly set
+            request()->session()->regenerate();
 
             Log::info('Supplier registered successfully', ['user_id' => $user->id, 'type' => $isInvitationBased ? 'invitation' : 'public']);
 
@@ -249,6 +252,9 @@ class SupplierRegistrationController extends Controller
         if ($existingUser) {
             // User already exists, log them in and redirect to onboarding
             Auth::login($existingUser);
+            
+            // Regenerate session to ensure authentication is properly set
+            request()->session()->regenerate();
             
             // Update invitation status
             $invitation->accept($existingUser);
@@ -319,6 +325,9 @@ class SupplierRegistrationController extends Controller
 
             // Log in the user
             Auth::login($user);
+            
+            // Regenerate session to ensure authentication is properly set
+            request()->session()->regenerate();
 
             // Send email verification notification instead of password reset
             $user->sendEmailVerificationNotification();
