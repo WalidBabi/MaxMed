@@ -271,7 +271,7 @@ class SupplierRegistrationController extends Controller
             // Create user with temporary password
             $tempPassword = Str::random(12);
             $user = User::create([
-                'name' => $invitation->name,
+                'name' => $invitation->contact_name,
                 'email' => $invitation->email,
                 'password' => Hash::make($tempPassword),
                 'role_id' => $supplierRole->id,

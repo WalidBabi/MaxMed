@@ -62,8 +62,8 @@
                     </span>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-600">Name</label>
-                    <span class="mt-1 block text-gray-900">{{ $invitation->name }}</span>
+                    <label class="block text-sm font-medium text-gray-600">Contact Name</label>
+                    <span class="mt-1 block text-gray-900">{{ $invitation->contact_name }}</span>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-600">Email</label>

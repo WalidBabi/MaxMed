@@ -34,7 +34,7 @@ class SupplierInvitationController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('email', 'like', "%{$search}%")
-                  ->orWhere('name', 'like', "%{$search}%")
+                  ->orWhere('contact_name', 'like', "%{$search}%")
                   ->orWhere('company_name', 'like', "%{$search}%");
             });
         }
@@ -70,7 +70,7 @@ class SupplierInvitationController extends Controller
             // Create invitation
             $invitation = SupplierInvitation::create([
                 'email' => $request->email,
-                'name' => $request->name,
+                'contact_name' => $request->name,
                 'company_name' => $request->company_name,
                 'invited_by' => Auth::id(),
                 'custom_message' => $request->custom_message,
@@ -82,7 +82,7 @@ class SupplierInvitationController extends Controller
             // Send invitation email
             Mail::to($invitation->email)->send(new SupplierInvitationMail(
                 $invitation->email,
-                $invitation->name,
+                $invitation->contact_name,
                 $invitation->token,
                 $invitation->company_name ?? '',
                 Auth::user()->name ?? 'MaxMed Admin',
@@ -133,7 +133,7 @@ class SupplierInvitationController extends Controller
             // Resend the invitation email
             Mail::to($supplierInvitation->email)->send(new SupplierInvitationMail(
                 $supplierInvitation->email,
-                $supplierInvitation->name,
+                $supplierInvitation->contact_name,
                 $supplierInvitation->token,
                 $supplierInvitation->company_name,
                 auth()->user()->name,
@@ -212,7 +212,7 @@ class SupplierInvitationController extends Controller
                             
                             Mail::to($invitation->email)->send(new SupplierInvitationMail(
                                 $invitation->email,
-                                $invitation->name,
+                                $invitation->contact_name,
                                 $invitation->token,
                                 $invitation->company_name,
                                 auth()->user()->name,

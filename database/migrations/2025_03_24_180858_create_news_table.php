@@ -14,38 +14,31 @@ return new class extends Migration
         if (!Schema::hasTable('news')) {
             Schema::create('news', function (Blueprint $table) {
                 $table->bigIncrements('id');
-            $table->string('title');
-            $table->text('content');
-            $table->string('image_url')->nullable();
-            $table->boolean('published')->default(true);
-            $table->timestamps();
+                $table->string('title');
+                $table->text('content');
+                $table->string('image_url')->nullable();
+                $table->boolean('published')->default(true);
+                $table->timestamps();
             });
-        }
-    });
         } else {
             Schema::table('news', function (Blueprint $table) {
                 // Check and add any missing columns
                 $columns = Schema::getColumnListing('news');
-                $schemaContent = '$table->bigIncrements(\'id\');
-            $table->string(\'title\');
-            $table->text(\'content\');
-            $table->string(\'image_url\')->nullable();
-            $table->boolean(\'published\')->default(true);
-            $table->timestamps();';
                 
-                // Parse the schema content to find column definitions
-                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
-                foreach ($columnMatches[1] as $columnDef) {
-                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
-                        $columnName = $colMatch[2];
-                        if (!in_array($columnName, $columns)) {
-                            $table->{$colMatch[1]}($columnName);
-                        }
-                    }
+                if (!in_array('title', $columns)) {
+                    $table->string('title');
+                }
+                if (!in_array('content', $columns)) {
+                    $table->text('content');
+                }
+                if (!in_array('image_url', $columns)) {
+                    $table->string('image_url')->nullable();
+                }
+                if (!in_array('published', $columns)) {
+                    $table->boolean('published')->default(true);
                 }
             });
         }
-    });
     }
 
     /**

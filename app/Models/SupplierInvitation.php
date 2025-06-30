@@ -14,7 +14,7 @@ class SupplierInvitation extends Model
 
     protected $fillable = [
         'email',
-        'name',
+        'contact_name',
         'company_name',
         'token',
         'invited_by',
