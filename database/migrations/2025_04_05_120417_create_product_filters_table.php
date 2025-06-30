@@ -14,30 +14,20 @@ return new class extends Migration
         if (!Schema::hasTable('product_filters')) {
             Schema::create('product_filters', function (Blueprint $table) {
                 $table->id();
-            $table->timestamps();
+                $table->timestamps();
             });
-        }
-    });
         } else {
             Schema::table('product_filters', function (Blueprint $table) {
                 // Check and add any missing columns
                 $columns = Schema::getColumnListing('product_filters');
-                $schemaContent = '$table->id();
-            $table->timestamps();';
-                
-                // Parse the schema content to find column definitions
-                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
-                foreach ($columnMatches[1] as $columnDef) {
-                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
-                        $columnName = $colMatch[2];
-                        if (!in_array($columnName, $columns)) {
-                            $table->{$colMatch[1]}($columnName);
-                        }
-                    }
+                if (!in_array('id', $columns)) {
+                    $table->id();
+                }
+                if (!in_array('created_at', $columns) || !in_array('updated_at', $columns)) {
+                    $table->timestamps();
                 }
             });
         }
-    });
     }
 
     /**

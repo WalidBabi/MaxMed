@@ -92,7 +92,7 @@
                     @forelse($invitations as $invitation)
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="font-medium text-gray-800">{{ $invitation->name }}</div>
+                            <div class="font-medium text-gray-800">{{ $invitation->contact_name }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-gray-600">{{ $invitation->email }}</div>
