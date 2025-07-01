@@ -583,7 +583,14 @@
                 <tbody>
                     @forelse($quote->items as $index => $item)
                     <tr>
-                        <td class="item-description">{{ $item->item_details }}</td>
+                        <td class="item-description">
+                            {{ $item->item_details }}
+                            @if($item->product && $item->product->brand)
+                                <div style="font-size: 9px; color: var(--text-secondary); margin-top: 2px;">
+                                    <span style="font-weight: 600;">Brand:</span> {{ $item->product->brand->name }}
+                                </div>
+                            @endif
+                        </td>
                         <td class="specifications">
                             @if($item->specifications && !empty(trim($item->specifications)))
                                 @php

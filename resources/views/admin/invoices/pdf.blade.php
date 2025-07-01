@@ -641,7 +641,14 @@
                     @foreach($invoice->items as $index => $item)
                     <tr>
                         <td>
-                            <div class="item-description">{{ $item->item_description }}</div>
+                            <div class="item-description">
+                                {{ $item->item_description }}
+                                @if($item->product && $item->product->brand)
+                                    <div style="font-size: 9px; color: var(--text-secondary); margin-top: 2px;">
+                                        <span style="font-weight: 600;">Brand:</span> {{ $item->product->brand->name }}
+                                    </div>
+                                @endif
+                            </div>
                         </td>
                         <td class="text-center">
                             @php

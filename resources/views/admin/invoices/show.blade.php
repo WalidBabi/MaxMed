@@ -147,6 +147,11 @@
                                         <tr class="hover:bg-gray-50">
                                             <td class="px-6 py-4 text-sm text-gray-900">
                                                 {{ $item->item_description }}
+                                                @if($item->product && $item->product->brand)
+                                                    <div class="text-xs text-gray-500 mt-1">
+                                                        <span class="font-medium">Brand:</span> {{ $item->product->brand->name }}
+                                                    </div>
+                                                @endif
                                                 @if($item->specifications)
                                                     <div class="text-xs text-gray-500 mt-1">{{ $item->specifications }}</div>
                                                 @endif
