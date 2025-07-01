@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Http;
 
 class QuotationController extends Controller
 {
@@ -46,6 +47,34 @@ class QuotationController extends Controller
                 'contact_email' => 'required_without:user_id|nullable|email|max:255',
                 'contact_phone' => 'nullable|string|max:20',
                 'contact_company' => 'nullable|string|max:255',
+                'g-recaptcha-response' => [
+                    // Only require reCAPTCHA in production environment
+                    app()->environment('production') ? 'required' : 'nullable',
+                    function ($attribute, $value, $fail) {
+                        // Skip reCAPTCHA validation in development environment
+                        if (!app()->environment('production')) {
+                            Log::info('Skipping reCAPTCHA validation in development environment');
+                            return;
+                        }
+                        
+                        if (empty($value)) {
+                            $fail('The reCAPTCHA verification is required.');
+                            return;
+                        }
+                        
+                        $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                            'secret' => config('services.recaptcha.secret_key'),
+                            'response' => $value,
+                            'remoteip' => request()->ip(),
+                        ]);
+                        
+                        Log::info('reCAPTCHA response', ['success' => $response->json('success')]);
+                        
+                        if (!$response->json('success')) {
+                            $fail('The reCAPTCHA verification failed. Please try again.');
+                        }
+                    }
+                ],
             ]);
             
             Log::info('Validation passed', $validatedData);
