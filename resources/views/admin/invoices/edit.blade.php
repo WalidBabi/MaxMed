@@ -1302,17 +1302,19 @@ document.addEventListener('DOMContentLoaded', function() {
             initializeCustomDropdown(productSearchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput, specificationsInput, specificationsHidden, specificationsDropdown);
         }
         
-        // Initialize specifications and size for existing items
-        if (existingItems && existingItems[index]) {
-            const item = existingItems[index];
-            const sizeSelect = row.querySelector('.size-options-select');
-            
-            // Find matching product in dropdown to get specifications and size options
-            if (item.description && dropdownItems) {
-                const dropdownItemElements = dropdownItems.querySelectorAll('.dropdown-item');
-                for (let dropdownItem of dropdownItemElements) {
-                    const productName = dropdownItem.getAttribute('data-name');
-                    if (productName && productName === item.description) {
+                                // Initialize specifications and size for existing items
+                        if (existingItems && existingItems[index]) {
+                            const item = existingItems[index];
+                            const sizeSelect = row.querySelector('.size-options-select');
+                            
+                            // Find matching product in dropdown to get specifications and size options
+                            let productFound = false;
+                            if (item.description && dropdownItems) {
+                                const dropdownItemElements = dropdownItems.querySelectorAll('.dropdown-item');
+                                for (let dropdownItem of dropdownItemElements) {
+                                    const productName = dropdownItem.getAttribute('data-name');
+                                    if (productName && productName === item.description) {
+                                        productFound = true;
                         // Initialize size options
                         if (sizeSelect && item.size) {
                             const hasSizeOptions = dropdownItem.getAttribute('data-has-size-options') === 'true';
@@ -1324,6 +1326,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                 } catch (e) {
                                     console.error('Error parsing size options:', e);
                                 }
+                            } else {
+                                // Fallback: if no size options from product, create a simple option with the saved size
+                                sizeSelect.innerHTML = `<option value="">Select Size (if applicable)</option><option value="${item.size}" selected>${item.size}</option>`;
                             }
                         }
                         
@@ -1424,6 +1429,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                     console.error('Error parsing product specifications:', e);
                                 }
                             }
+                            
+                            // Fallback: if product not found in dropdown but size exists, create a simple option
+                            if (!productFound && sizeSelect && item.size) {
+                                sizeSelect.innerHTML = `<option value="">Select Size (if applicable)</option><option value="${item.size}" selected>${item.size}</option>`;
+                            }
                         }
                         break;
                     }
@@ -1499,7 +1509,7 @@ document.addEventListener('change', function(e) {
 document.querySelectorAll('tr[data-item-id]').forEach(row => {
     const productId = row.querySelector('.product-select')?.value;
     const sizeSelect = row.querySelector('.size-options-select');
-    const selectedSize = row.querySelector('input[name$="[size]"]')?.value;
+    const selectedSize = sizeSelect?.getAttribute('data-selected-size');
     
     if (productId && sizeSelect && selectedSize) {
         populateSizeOptions(productId, sizeSelect, selectedSize);

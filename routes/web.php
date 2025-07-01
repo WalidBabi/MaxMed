@@ -829,6 +829,8 @@ Route::get('/debug/quote/{quote}/to-invoice', function(\App\Models\Quote $quote)
             'product_id' => $item->product_id,
             'product_name' => $item->product ? $item->product->name : 'No Product',
             'item_details' => $item->item_details,
+            'size' => $item->size,
+            'specifications' => $item->specifications,
             'quantity' => $item->quantity,
             'rate' => $item->rate,
             'discount' => $item->discount,
@@ -854,7 +856,10 @@ Route::get('/debug/quote/{quote}/to-invoice', function(\App\Models\Quote $quote)
                 'id' => $item->id,
                 'product_id' => $item->product_id,
                 'product_name' => $item->product ? $item->product->name : 'No Product',
-                'item_description' => $item->item_description,
+                'description' => $item->description,
+                'item_description' => $item->item_description ?? 'N/A',
+                'size' => $item->size,
+                'specifications' => $item->specifications,
                 'quantity' => $item->quantity,
                 'unit_price' => $item->unit_price,
                 'discount_percentage' => $item->discount_percentage,
@@ -867,8 +872,10 @@ Route::get('/debug/quote/{quote}/to-invoice', function(\App\Models\Quote $quote)
         'quote' => $quoteData,
         'invoice' => $invoiceData,
         'invoice_exists' => $invoice ? true : false,
-        'product_id_transferred' => $invoice ? 
-            collect($invoice->items)->every(fn($item) => !is_null($item->product_id)) : false
+        'size_transferred' => $invoice ? 
+            collect($invoice->items)->every(fn($item) => !is_null($item->size)) : false,
+        'size_values' => $invoice ? 
+            collect($invoice->items)->pluck('size')->toArray() : []
     ]);
 })->name('debug.quote.to-invoice');
 
