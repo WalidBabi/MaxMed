@@ -156,7 +156,14 @@
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach($quote->items as $index => $item)
                                         <tr class="hover:bg-gray-50">
-                                            <td class="px-6 py-4 text-sm text-gray-900">{{ $item->item_details }}</td>
+                                            <td class="px-6 py-4 text-sm text-gray-900">
+                                                {{ $item->item_details }}
+                                                @if($item->product && $item->product->brand)
+                                                    <div class="text-xs text-gray-500 mt-1">
+                                                        <span class="font-medium">Brand:</span> {{ $item->product->brand->name }}
+                                                    </div>
+                                                @endif
+                                            </td>
                                             <td class="px-6 py-4 text-center text-sm text-gray-900">{{ number_format($item->quantity, 2) }}</td>
                                             <td class="px-6 py-4 text-right text-sm text-gray-900">{{ number_format($item->rate, 2) }}</td>
                                             <td class="px-6 py-4 text-center text-sm text-gray-900">{{ number_format($item->discount, 2) }}%</td>
