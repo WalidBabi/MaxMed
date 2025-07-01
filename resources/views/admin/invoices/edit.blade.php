@@ -1204,6 +1204,9 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
             const hasSizeOptions = item.dataset.hasSizeOptions === 'true';
             const sizeOptions = item.dataset.sizeOptions ? JSON.parse(item.dataset.sizeOptions) : [];
             populateSizeOptionsFromData(sizeSelect, hasSizeOptions, sizeOptions);
+            
+            // Add event listener for size changes
+            sizeSelect.addEventListener('change', updateSelectedSpecifications);
         }
         
         // Hide dropdown
@@ -1218,9 +1221,20 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox:checked');
         const selectedSpecs = Array.from(checkboxes).map(cb => cb.dataset.spec);
         
-        if (selectedSpecs.length > 0) {
-            specificationsInput.value = selectedSpecs.join(', ');
-            specificationsHidden.value = JSON.stringify(selectedSpecs);
+        // Get selected size
+        const row = specificationsDropdown.closest('tr');
+        const sizeSelect = row.querySelector('.size-options-select');
+        const selectedSize = sizeSelect ? sizeSelect.value : '';
+        
+        // Combine specifications and size
+        let allSpecs = [...selectedSpecs];
+        if (selectedSize && selectedSize.trim() !== '') {
+            allSpecs.push(`Size: ${selectedSize}`);
+        }
+        
+        if (allSpecs.length > 0) {
+            specificationsInput.value = allSpecs.join(', ');
+            specificationsHidden.value = JSON.stringify(allSpecs);
         } else {
             specificationsInput.value = 'Click to select specifications...';
             specificationsHidden.value = '';
@@ -1251,6 +1265,234 @@ document.addEventListener('DOMContentLoaded', function() {
     if (addItemBtn) {
         addItemBtn.onclick = addItem;
     }
+    
+    // Get existing items data from PHP
+    const existingItems = <?php echo json_encode($invoice->items->map(function($item) {
+        return [
+            'id' => $item->id,
+            'product_id' => $item->product_id,
+            'description' => $item->description,
+            'specifications' => $item->specifications,
+            'size' => $item->size,
+            'quantity' => $item->quantity,
+            'unit_price' => $item->unit_price,
+            'discount_percentage' => $item->discount_percentage,
+            'line_total' => $item->line_total
+        ];
+    })); ?>;
+    
+    // Load existing items with proper initialization
+    if (existingItems && existingItems.length > 0) {
+        existingItems.forEach((item, index) => {
+            // Add item row
+            addItem({
+                description: item.description || '',
+                specifications: item.specifications || '',
+                size: item.size || '',
+                quantity: parseFloat(item.quantity) || 1.00,
+                unit_price: parseFloat(item.unit_price) || 0.00,
+                discount_percentage: parseFloat(item.discount_percentage) || 0,
+                line_total: parseFloat(item.line_total) || 0.00
+            });
+            
+            // Pre-select product in dropdown after a short delay
+            setTimeout(() => {
+                const rowIndex = index;
+                const searchInputs = document.querySelectorAll('.product-search-input');
+                const productIdInputs = document.querySelectorAll('.product-id-input');
+                const specificationsInputs = document.querySelectorAll('.specifications-search-input');
+                const specificationsHiddens = document.querySelectorAll('.specifications-hidden');
+                
+                if (searchInputs[rowIndex] && item.description) {
+                    // Find matching product in dropdown
+                    const dropdownItems = searchInputs[rowIndex].closest('td').querySelectorAll('.dropdown-item');
+                    for (let dropdownItem of dropdownItems) {
+                        const productName = dropdownItem.getAttribute('data-name');
+                        if (productName && productName === item.description) {
+                            // Set the values
+                            searchInputs[rowIndex].value = productName;
+                            productIdInputs[rowIndex].value = dropdownItem.getAttribute('data-id');
+                            
+                            // Handle size - populate with saved value
+                            if (item.size && item.size !== '') {
+                                const sizeSelect = searchInputs[rowIndex].closest('tr').querySelector('.size-options-select');
+                                if (sizeSelect) {
+                                    const hasSizeOptions = dropdownItem.getAttribute('data-has-size-options') === 'true';
+                                    const sizeOptions = dropdownItem.getAttribute('data-size-options') ? JSON.parse(dropdownItem.getAttribute('data-size-options')) : [];
+                                    populateSizeOptionsFromData(sizeSelect, hasSizeOptions, sizeOptions, item.size);
+                                    
+                                    // Add event listener for size changes
+                                    sizeSelect.addEventListener('change', updateSelectedSpecifications);
+                                }
+                            }
+                            
+                            // Handle specifications - populate with saved values
+                            if (item.specifications && item.specifications !== '') {
+                                try {
+                                    // Check if specifications is a JSON string or plain text
+                                    let savedSpecsArray;
+                                    if (item.specifications.startsWith('[') && item.specifications.endsWith(']')) {
+                                        // It's a JSON array
+                                        savedSpecsArray = JSON.parse(item.specifications);
+                                    } else {
+                                        // It's plain text, split by comma
+                                        savedSpecsArray = item.specifications.split(',').map(spec => spec.trim());
+                                    }
+                                    
+                                    if (savedSpecsArray.length > 0) {
+                                        // Display the specifications in the input field
+                                        specificationsInputs[rowIndex].value = savedSpecsArray.join(', ');
+                                        specificationsHiddens[rowIndex].value = JSON.stringify(savedSpecsArray);
+                                        
+                                        // Get all available specifications from the product
+                                        const productSpecifications = dropdownItem.getAttribute('data-specifications');
+                                        const specificationsDropdown = specificationsInputs[rowIndex].closest('td').querySelector('.specifications-dropdown-list');
+                                        
+                                        if (specificationsDropdown && productSpecifications) {
+                                            try {
+                                                const allSpecsArray = JSON.parse(productSpecifications);
+                                                if (allSpecsArray.length > 0) {
+                                                    specificationsDropdown.innerHTML = '';
+                                                    
+                                                    // Add "Select All" option
+                                                    const selectAllDiv = document.createElement('div');
+                                                    selectAllDiv.className = 'p-3 text-sm font-medium text-indigo-600 border-b border-gray-200 bg-indigo-50 hover:bg-indigo-100 cursor-pointer';
+                                                    selectAllDiv.innerHTML = `
+                                                        <input type="checkbox" id="select_all_${rowIndex}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded select-all-checkbox">
+                                                        <label for="select_all_${rowIndex}" class="cursor-pointer">Select All</label>
+                                                    `;
+                                                    specificationsDropdown.appendChild(selectAllDiv);
+                                                    
+                                                    // Add all available specifications with checkboxes
+                                                    allSpecsArray.forEach((spec, specIndex) => {
+                                                        const isChecked = savedSpecsArray.includes(spec);
+                                                        const specDiv = document.createElement('div');
+                                                        specDiv.className = 'p-3 text-sm text-gray-700 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 cursor-pointer flex items-center';
+                                                        specDiv.innerHTML = `
+                                                            <input type="checkbox" id="spec_${rowIndex}_${specIndex}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox" data-spec="${spec}" ${isChecked ? 'checked' : ''}>
+                                                            <label for="spec_${rowIndex}_${specIndex}" class="flex-1 cursor-pointer">${spec}</label>
+                                                        `;
+                                                        specificationsDropdown.appendChild(specDiv);
+                                                    });
+                                                    
+                                                    // Add event listeners for checkboxes
+                                                    const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox');
+                                                    const selectAllCheckbox = specificationsDropdown.querySelector('.select-all-checkbox');
+                                                    
+                                                    // Set initial state of select all checkbox
+                                                    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                                                    const someChecked = Array.from(checkboxes).some(cb => cb.checked);
+                                                    selectAllCheckbox.checked = allChecked;
+                                                    selectAllCheckbox.indeterminate = someChecked && !allChecked;
+                                                    
+                                                    // Select All functionality
+                                                    selectAllCheckbox.addEventListener('change', function() {
+                                                        checkboxes.forEach(checkbox => {
+                                                            checkbox.checked = this.checked;
+                                                        });
+                                                        updateSelectedSpecifications();
+                                                    });
+                                                    
+                                                    // Individual checkbox functionality
+                                                    checkboxes.forEach(checkbox => {
+                                                        checkbox.addEventListener('change', function() {
+                                                            updateSelectedSpecifications();
+                                                            // Update select all checkbox
+                                                            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                                                            const someChecked = Array.from(checkboxes).some(cb => cb.checked);
+                                                            selectAllCheckbox.checked = allChecked;
+                                                            selectAllCheckbox.indeterminate = someChecked && !allChecked;
+                                                        });
+                                                    });
+                                                } else {
+                                                    specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
+                                                }
+                                            } catch (e) {
+                                                console.error('Error parsing product specifications:', e);
+                                                specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
+                                            }
+                                        }
+                                    }
+                                } catch (e) {
+                                    console.error('Error parsing specifications:', e);
+                                    // Fallback to plain text
+                                    specificationsInputs[rowIndex].value = item.specifications;
+                                    specificationsHiddens[rowIndex].value = item.specifications;
+                                }
+                            } else {
+                                // No saved specifications, but still show available ones from product
+                                const productSpecifications = dropdownItem.getAttribute('data-specifications');
+                                const specificationsDropdown = specificationsInputs[rowIndex].closest('td').querySelector('.specifications-dropdown-list');
+                                
+                                if (specificationsDropdown && productSpecifications) {
+                                    try {
+                                        const allSpecsArray = JSON.parse(productSpecifications);
+                                        if (allSpecsArray.length > 0) {
+                                            specificationsDropdown.innerHTML = '';
+                                            
+                                            // Add "Select All" option
+                                            const selectAllDiv = document.createElement('div');
+                                            selectAllDiv.className = 'p-3 text-sm font-medium text-indigo-600 border-b border-gray-200 bg-indigo-50 hover:bg-indigo-100 cursor-pointer';
+                                            selectAllDiv.innerHTML = `
+                                                <input type="checkbox" id="select_all_${rowIndex}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded select-all-checkbox">
+                                                <label for="select_all_${rowIndex}" class="cursor-pointer">Select All</label>
+                                            `;
+                                            specificationsDropdown.appendChild(selectAllDiv);
+                                            
+                                            // Add all available specifications with checkboxes (none checked)
+                                            allSpecsArray.forEach((spec, specIndex) => {
+                                                const specDiv = document.createElement('div');
+                                                specDiv.className = 'p-3 text-sm text-gray-700 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 cursor-pointer flex items-center';
+                                                specDiv.innerHTML = `
+                                                    <input type="checkbox" id="spec_${rowIndex}_${specIndex}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox" data-spec="${spec}">
+                                                    <label for="spec_${rowIndex}_${specIndex}" class="flex-1 cursor-pointer">${spec}</label>
+                                                `;
+                                                specificationsDropdown.appendChild(specDiv);
+                                            });
+                                            
+                                            // Add event listeners for checkboxes
+                                            const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox');
+                                            const selectAllCheckbox = specificationsDropdown.querySelector('.select-all-checkbox');
+                                            
+                                            // Select All functionality
+                                            selectAllCheckbox.addEventListener('change', function() {
+                                                checkboxes.forEach(checkbox => {
+                                                    checkbox.checked = this.checked;
+                                                });
+                                                updateSelectedSpecifications();
+                                            });
+                                            
+                                            // Individual checkbox functionality
+                                            checkboxes.forEach(checkbox => {
+                                                checkbox.addEventListener('change', function() {
+                                                    updateSelectedSpecifications();
+                                                    // Update select all checkbox
+                                                    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                                                    const someChecked = Array.from(checkboxes).some(cb => cb.checked);
+                                                    selectAllCheckbox.checked = allChecked;
+                                                    selectAllCheckbox.indeterminate = someChecked && !allChecked;
+                                                });
+                                            });
+                                        } else {
+                                            specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
+                                        }
+                                    } catch (e) {
+                                        console.error('Error parsing product specifications:', e);
+                                        specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }, 200 * (index + 1)); // Stagger the updates
+        });
+    } else {
+        // Add initial default item if no existing items
+        addItem();
+    }
+    
     // Attach event listeners to all existing rows
     const existingRows = document.querySelectorAll('.item-row');
     existingRows.forEach(row => {
@@ -1324,12 +1566,18 @@ document.addEventListener('change', function(e) {
     }
 });
 
-// Initialize size options for existing items
+// Initialize size options for existing items (fallback for any items not handled by the main logic)
 document.querySelectorAll('tr[data-item-id]').forEach(row => {
-    const productId = row.querySelector('.product-select').value;
+    const productId = row.querySelector('.product-select')?.value;
     const sizeSelect = row.querySelector('.size-options-select');
-    const selectedSize = row.querySelector('input[name$="[size]"]').value;
-    populateSizeOptions(productId, sizeSelect, selectedSize);
+    const selectedSize = row.querySelector('input[name$="[size]"]')?.value;
+    
+    if (productId && sizeSelect && selectedSize) {
+        populateSizeOptions(productId, sizeSelect, selectedSize);
+        
+        // Add event listener for size changes
+        sizeSelect.addEventListener('change', updateSelectedSpecifications);
+    }
 });
 
 // Add product data to window for access

@@ -974,6 +974,9 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
             const hasSizeOptions = item.dataset.hasSizeOptions === 'true';
             const sizeOptions = item.dataset.sizeOptions ? JSON.parse(item.dataset.sizeOptions) : [];
             populateSizeOptionsFromData(sizeSelect, hasSizeOptions, sizeOptions);
+            
+            // Add event listener for size changes
+            sizeSelect.addEventListener('change', updateSelectedSpecifications);
         }
         
         // Handle specifications
@@ -1056,9 +1059,20 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox:checked');
         const selectedSpecs = Array.from(checkboxes).map(cb => cb.dataset.spec);
         
-        if (selectedSpecs.length > 0) {
-            specificationsInput.value = selectedSpecs.join(', ');
-            specificationsHidden.value = JSON.stringify(selectedSpecs);
+        // Get selected size
+        const row = specificationsDropdown.closest('tr');
+        const sizeSelect = row.querySelector('.size-options-select');
+        const selectedSize = sizeSelect ? sizeSelect.value : '';
+        
+        // Combine specifications and size
+        let allSpecs = [...selectedSpecs];
+        if (selectedSize && selectedSize.trim() !== '') {
+            allSpecs.push(`Size: ${selectedSize}`);
+        }
+        
+        if (allSpecs.length > 0) {
+            specificationsInput.value = allSpecs.join(', ');
+            specificationsHidden.value = JSON.stringify(allSpecs);
         } else {
             specificationsInput.value = 'Click to select specifications...';
             specificationsHidden.value = '';
@@ -1175,6 +1189,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add initial default item
     addItem();
+    
+    // Add event listeners for size changes on existing items
+    document.querySelectorAll('.size-options-select').forEach(sizeSelect => {
+        sizeSelect.addEventListener('change', updateSelectedSpecifications);
+    });
     
     // File upload handling
     const fileInput = document.getElementById('attachments');
