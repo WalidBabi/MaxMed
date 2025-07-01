@@ -114,20 +114,27 @@ class Invoice extends Model
             $invoice->handleWorkflowAutomation();
         });
 
+        // Track invoices that need total recalculation
+        static $invoicesNeedingRecalculation = [];
+        
         // Recalculate totals when discount or tax is updated
-        static::saving(function ($invoice) {
+        static::saving(function ($invoice) use (&$invoicesNeedingRecalculation) {
             // Check if discount_amount or tax_amount has changed
             if ($invoice->isDirty(['discount_amount', 'tax_amount'])) {
-                // We'll recalculate after save to ensure items are loaded
-                $invoice->shouldRecalculateTotals = true;
+                // Mark this invoice for recalculation after save
+                $invoicesNeedingRecalculation[$invoice->id ?? 'new'] = true;
             }
         });
 
-        static::saved(function ($invoice) {
-            // Recalculate totals if needed
-            if (isset($invoice->shouldRecalculateTotals) && $invoice->shouldRecalculateTotals) {
+        static::saved(function ($invoice) use (&$invoicesNeedingRecalculation) {
+            // Check if this invoice needs recalculation
+            $key = $invoice->id;
+            if (isset($invoicesNeedingRecalculation[$key]) || isset($invoicesNeedingRecalculation['new'])) {
+                // Remove from tracking
+                unset($invoicesNeedingRecalculation[$key], $invoicesNeedingRecalculation['new']);
+                
+                // Recalculate totals without triggering the saved event again
                 $invoice->calculateTotals();
-                unset($invoice->shouldRecalculateTotals);
             }
         });
     }
