@@ -56,7 +56,7 @@
                     <div>
                         <label for="logo" class="block text-sm font-medium leading-6 text-gray-900">Brand Logo</label>
                         <div class="mt-2">
-                            <input type="file" name="logo" id="logo" accept="image/*"
+                            <input type="file" name="logo" id="logo" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/avif"
                                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent @error('logo') border-red-500 @enderror">
                             <p class="mt-1 text-sm text-gray-500">Upload a square logo image (recommended size: 200x200px)</p>
                             @error('logo')
