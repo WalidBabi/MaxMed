@@ -103,6 +103,8 @@ class ProductController extends Controller
             'description' => 'required',
             'price' => 'required|numeric|min:0',
             'price_aed' => 'required|numeric|min:0',
+            'procurement_price_aed' => 'nullable|numeric|min:0',
+            'procurement_price_usd' => 'nullable|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'nullable|exists:brands,id',
@@ -124,6 +126,8 @@ class ProductController extends Controller
                 'description' => $validated['description'],
                 'price' => $validated['price'],
                 'price_aed' => $validated['price_aed'],
+                'procurement_price_aed' => $validated['procurement_price_aed'] ?? null,
+                'procurement_price_usd' => $validated['procurement_price_usd'] ?? null,
                 'category_id' => $validated['category_id'],
                 'brand_id' => $validated['brand_id'] ?? null,
                 'image_url' => null, // Will be replaced by primary image
@@ -203,6 +207,9 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
+        // Load the product with inventory relationship
+        $product->load('inventory');
+        
         $categories = Category::all();
         
         // Get existing specifications and index them by specification_key for easy access
@@ -222,6 +229,8 @@ class ProductController extends Controller
             'description' => 'required',
             'price' => 'required|numeric|min:0',
             'price_aed' => 'required|numeric|min:0',
+            'procurement_price_aed' => 'nullable|numeric|min:0',
+            'procurement_price_usd' => 'nullable|numeric|min:0',
             'inventory_quantity' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'nullable|exists:brands,id',
@@ -248,6 +257,8 @@ class ProductController extends Controller
                     'description' => $validated['description'],
                     'price' => $validated['price'],
                     'price_aed' => $validated['price_aed'],
+                    'procurement_price_aed' => $validated['procurement_price_aed'] ?? null,
+                    'procurement_price_usd' => $validated['procurement_price_usd'] ?? null,
                     'category_id' => $validated['category_id'],
                     'brand_id' => $validated['brand_id'],
                     'has_size_options' => $request->has('has_size_options'),
@@ -262,9 +273,16 @@ class ProductController extends Controller
                 }
 
                 // Update inventory quantity
-                $product->inventory->update([
-                    'quantity' => $validated['inventory_quantity']
-                ]);
+                if ($product->inventory) {
+                    $product->inventory->update([
+                        'quantity' => $validated['inventory_quantity']
+                    ]);
+                } else {
+                    // Create inventory record if it doesn't exist
+                    $product->inventory()->create([
+                        'quantity' => $validated['inventory_quantity']
+                    ]);
+                }
 
                 // Handle specifications if provided
                 if ($request->filled('specifications')) {

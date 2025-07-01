@@ -538,8 +538,10 @@ class QuoteController extends Controller
                 
                 // Calculate values
                 $subtotal = $quoteItem->quantity * $quoteItem->rate;
+                $discountAmount = ($subtotal * ($quoteItem->discount ?? 0)) / 100;
+                $lineTotal = $subtotal - $discountAmount;
                 $tax = 0; // Default tax to 0, can be updated later if needed
-                $total = $subtotal + $tax;
+                $total = $lineTotal + $tax;
                 
                 // Get item description, fallback to product name if not set
                 $description = $quoteItem->item_details;
@@ -560,6 +562,11 @@ class QuoteController extends Controller
                     'subtotal' => $subtotal,
                     'tax' => $tax,
                     'total' => $total,
+                    'discount_percentage' => $quoteItem->discount ?? 0,
+                    'discount_amount' => $discountAmount,
+                    'line_total' => $lineTotal,
+                    'unit_of_measure' => null, // Quote items don't have unit_of_measure
+                    'specifications' => $quoteItem->specifications,
                     'sort_order' => $quoteItem->sort_order,
                 ];
                 

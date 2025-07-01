@@ -70,7 +70,7 @@
                                                 <option value="">Select a customer order (optional)</option>
                                                 @foreach($availableOrders as $order)
                                                     <option value="{{ $order->id }}" {{ old('order_id') == $order->id ? 'selected' : '' }}>
-                                                        {{ $order->order_number }} - {{ $order->currency }} {{ number_format($order->total_amount, 2) }}
+                                                        {{ $order->order_number }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -611,12 +611,12 @@ document.getElementById('currency').addEventListener('change', function() {
         const rateInput = row.querySelector('.rate-input');
         
         if (productIdInput && productIdInput.value && rateInput) {
-            // Find the product dropdown item to get the correct price
+            // Find the product dropdown item to get the correct procurement price
             const dropdownItem = row.querySelector(`[data-id="${productIdInput.value}"]`);
             if (dropdownItem) {
                 const price = selectedCurrency === 'USD' ? 
-                    dropdownItem.getAttribute('data-price-usd') : 
-                    dropdownItem.getAttribute('data-price-aed');
+                    dropdownItem.getAttribute('data-procurement-price-usd') : 
+                    dropdownItem.getAttribute('data-procurement-price-aed');
                 
                 if (price) {
                     rateInput.value = price;
@@ -658,6 +658,8 @@ function addItem() {
                                  data-description="{{ $product->description }}"
                                  data-price-aed="{{ $product->price_aed ?? $product->price }}"
                                  data-price-usd="{{ $product->price }}"
+                                 data-procurement-price-aed="{{ $product->procurement_price_aed ?? $product->price_aed ?? $product->price }}"
+                                 data-procurement-price-usd="{{ $product->procurement_price_usd ?? $product->price }}"
                                  data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
                                  data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                  data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
@@ -666,9 +668,9 @@ function addItem() {
                                 @if($product->description)
                                     <div class="text-gray-600 text-xs mt-1">{{ Str::limit($product->description, 80) }}</div>
                                 @endif
-                                @if($product->price_aed ?? $product->price)
-                                    <div class="price-display-aed text-indigo-600 text-sm font-medium mt-1">AED {{ number_format($product->price_aed ?? $product->price, 2) }}</div>
-                                    <div class="price-display-usd text-indigo-600 text-sm font-medium mt-1 hidden">USD {{ number_format($product->price, 2) }}</div>
+                                @if($product->procurement_price_aed ?? $product->price_aed ?? $product->price)
+                                    <div class="price-display-aed text-indigo-600 text-sm font-medium mt-1">AED {{ number_format($product->procurement_price_aed ?? $product->price_aed ?? $product->price, 2) }}</div>
+                                    <div class="price-display-usd text-indigo-600 text-sm font-medium mt-1 hidden">USD {{ number_format($product->procurement_price_usd ?? $product->price, 2) }}</div>
                                 @endif
                             </div>
                         @endforeach
@@ -685,14 +687,12 @@ function addItem() {
                        autocomplete="off"
                        readonly>
                 <input type="hidden" name="items[${itemCounter}][specifications]" class="specifications-hidden">
-                
                 <!-- Size Options Dropdown -->
                 <div class="mt-2">
                     <select name="items[${itemCounter}][size]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 size-options-select">
                         <option value="">Select Size (if applicable)</option>
                     </select>
                 </div>
-                
                 <!-- Specifications Dropdown List -->
                 <div class="specifications-dropdown-list hidden">
                     <div class="p-2 text-sm text-gray-500">No specifications available</div>
@@ -934,8 +934,8 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         const productName = item.dataset.name;
         const selectedCurrency = document.getElementById('currency').value;
         const productPrice = selectedCurrency === 'USD' ? 
-            item.dataset.priceUsd : 
-            item.dataset.priceAed;
+            item.dataset.procurementPriceUsd : 
+            item.dataset.procurementPriceAed;
         const specifications = item.dataset.specifications;
         
         // Set values
@@ -1030,8 +1030,98 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
     });
 }
 
+// Function to populate size options from data attributes (global scope)
+function populateSizeOptionsFromData(sizeSelect, hasSizeOptions, sizeOptions) {
+    if (!hasSizeOptions || !sizeOptions || sizeOptions.length === 0) {
+        sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
+        return;
+    }
+
+    let options = '<option value="">Select Size (if applicable)</option>';
+    sizeOptions.forEach(size => {
+        options += `<option value="${size}">${size}</option>`;
+    });
+    sizeSelect.innerHTML = options;
+}
+
+// Function to populate size options (kept for compatibility)
+function populateSizeOptions(productId, sizeSelect) {
+    if (!productId) {
+        sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
+        return;
+    }
+
+    const product = window.products ? window.products.find(p => p.id == productId) : null;
+    if (!product || !product.has_size_options || !product.size_options) {
+        sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
+        return;
+    }
+
+    let options = '<option value="">Select Size (if applicable)</option>';
+    product.size_options.forEach(size => {
+        options += `<option value="${size}">${size}</option>`;
+    });
+    sizeSelect.innerHTML = options;
+}
+
+// Initialize supplier selection functionality
+function initializeSupplierSelection() {
+    const existingSupplierRadio = document.getElementById('existing_supplier');
+    const newSupplierRadio = document.getElementById('new_supplier');
+    const existingSupplierSection = document.getElementById('existing_supplier_section');
+    const manualSupplierSection = document.getElementById('manual_supplier_section');
+    const supplierIdSelect = document.getElementById('supplier_id');
+    
+    // Function to toggle supplier sections
+    function toggleSupplierSections() {
+        if (existingSupplierRadio.checked) {
+            existingSupplierSection.style.display = 'block';
+            manualSupplierSection.style.display = 'none';
+            
+            // Clear manual supplier inputs
+            document.getElementById('supplier_name').value = '';
+            document.getElementById('supplier_email').value = '';
+            document.getElementById('supplier_phone').value = '';
+            document.getElementById('supplier_address').value = '';
+        } else {
+            existingSupplierSection.style.display = 'none';
+            manualSupplierSection.style.display = 'block';
+            
+            // Clear existing supplier selection
+            supplierIdSelect.value = '';
+        }
+    }
+    
+    // Add event listeners to radio buttons
+    existingSupplierRadio.addEventListener('change', toggleSupplierSections);
+    newSupplierRadio.addEventListener('change', toggleSupplierSections);
+    
+    // Initialize based on current selection
+    toggleSupplierSections();
+    
+    // Auto-populate manual fields when existing supplier is selected
+    supplierIdSelect.addEventListener('change', function() {
+        if (this.value) {
+            const selectedOption = this.options[this.selectedIndex];
+            const supplierName = selectedOption.getAttribute('data-company');
+            const supplierEmail = selectedOption.getAttribute('data-email');
+            const supplierPhone = selectedOption.getAttribute('data-phone');
+            const supplierAddress = selectedOption.getAttribute('data-address');
+            
+            // Populate manual fields (these will be used for the PO)
+            document.getElementById('supplier_name').value = supplierName || '';
+            document.getElementById('supplier_email').value = supplierEmail || '';
+            document.getElementById('supplier_phone').value = supplierPhone || '';
+            document.getElementById('supplier_address').value = supplierAddress || '';
+        }
+    });
+}
+
 // Initialize with one item
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize supplier selection functionality
+    initializeSupplierSelection();
+    
     document.getElementById('addItem').addEventListener('click', addItem);
     
     // Initialize existing items if any
@@ -1078,39 +1168,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.price-display-usd').forEach(display => display.classList.remove('hidden'));
     }
 
-    // Function to populate size options from data attributes
-    function populateSizeOptionsFromData(sizeSelect, hasSizeOptions, sizeOptions) {
-        if (!hasSizeOptions || !sizeOptions || sizeOptions.length === 0) {
-            sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
-            return;
-        }
 
-        let options = '<option value="">Select Size (if applicable)</option>';
-        sizeOptions.forEach(size => {
-            options += `<option value="${size}">${size}</option>`;
-        });
-        sizeSelect.innerHTML = options;
-    }
-
-    // Function to populate size options (kept for compatibility)
-    function populateSizeOptions(productId, sizeSelect) {
-        if (!productId) {
-            sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
-            return;
-        }
-
-        const product = products.find(p => p.id == productId);
-        if (!product || !product.has_size_options || !product.size_options) {
-            sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
-            return;
-        }
-
-        let options = '<option value="">Select Size (if applicable)</option>';
-        product.size_options.forEach(size => {
-            options += `<option value="${size}">${size}</option>`;
-        });
-        sizeSelect.innerHTML = options;
-    }
 
     // Update size options when product is selected
     document.addEventListener('change', function(e) {

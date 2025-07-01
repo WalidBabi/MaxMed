@@ -13,6 +13,8 @@ class Product extends Model
         'description', 
         'price', 
         'price_aed', 
+        'procurement_price_aed',
+        'procurement_price_usd',
         'image_url', 
         'category_id', 
         'brand_id',
@@ -27,6 +29,9 @@ class Product extends Model
 
     protected $casts = [
         'price' => 'decimal:2',
+        'price_aed' => 'decimal:2',
+        'procurement_price_aed' => 'decimal:2',
+        'procurement_price_usd' => 'decimal:2',
         'has_size_options' => 'boolean',
         'size_options' => 'array',
         'average_rating' => 'decimal:1',

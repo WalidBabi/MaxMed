@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PurchaseOrderController extends Controller
 {
@@ -184,7 +185,19 @@ class PurchaseOrderController extends Controller
     public function edit(PurchaseOrder $purchaseOrder)
     {
         $purchaseOrder->load(['items.product']);
-        return view('admin.purchase-orders.edit', compact('purchaseOrder'));
+        
+        // Get products for the dropdown
+        try {
+            $products = Product::with(['brand', 'specifications'])
+                ->orderBy('name')
+                ->get();
+        } catch (\Exception $e) {
+            // If there's an error with products, set to empty collection
+            $products = collect([]);
+            \Log::error('Error loading products for purchase order edit: ' . $e->getMessage());
+        }
+        
+        return view('admin.purchase-orders.edit', compact('purchaseOrder', 'products'));
     }
 
     /**
@@ -337,6 +350,18 @@ class PurchaseOrderController extends Controller
             Log::error('Failed to create supplier payment: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed to create payment record.');
         }
+    }
+
+    /**
+     * Generate PDF
+     */
+    public function generatePdf(PurchaseOrder $purchaseOrder)
+    {
+        $purchaseOrder->load(['items.product', 'order', 'supplier']);
+        
+        $pdf = Pdf::loadView('admin.purchase-orders.pdf', compact('purchaseOrder'));
+        
+        return $pdf->download($purchaseOrder->po_number . '.pdf');
     }
 
     /**

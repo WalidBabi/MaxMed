@@ -232,7 +232,7 @@ class ProductController extends Controller
         }
         
         return response()->json([
-            'available' => $product->inventory->quantity >= $quantity
+            'available' => ($product->inventory && $product->inventory->quantity >= $quantity)
         ]);
     }
 

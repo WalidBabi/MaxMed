@@ -281,7 +281,7 @@
                                                            value="{{ $item->item_details }}"
                                                            autocomplete="off">
                                                     <input type="hidden" name="items[{{ $index }}][product_id]" class="product-id-input" value="{{ $item->product_id ?? '' }}">
-                                                    <input type="hidden" name="items[{{ $index }}][item_description]" class="item-details-hidden" value="{{ $item->item_details }}">
+                                                    <input type="hidden" name="items[{{ $index }}][description]" class="item-details-hidden" value="{{ $item->item_details }}">
                                                     
                                                     <!-- Dropdown List -->
                                                     <div class="product-dropdown-list hidden">
@@ -816,7 +816,7 @@ function addItem() {
                        placeholder="Search products..." 
                        autocomplete="off">
                 <input type="hidden" name="items[${itemCounter}][product_id]" class="product-id-input">
-                <input type="hidden" name="items[${itemCounter}][item_description]" class="item-details-hidden">
+                <input type="hidden" name="items[${itemCounter}][description]" class="item-details-hidden">
                 
                 <!-- Dropdown List -->
                 <div class="product-dropdown-list hidden">

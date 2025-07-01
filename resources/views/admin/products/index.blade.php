@@ -247,6 +247,12 @@
                         <div>
                             <p class="text-sm text-gray-500">${{ number_format($product->price, 2) }}</p>
                             <p class="text-xs text-gray-400">AED {{ number_format($product->price_aed, 2) }}</p>
+                            @if($product->procurement_price_usd !== null)
+                                <p class="text-xs text-gray-400">Proc. USD: ${{ number_format($product->procurement_price_usd, 2) }}</p>
+                            @endif
+                            @if($product->procurement_price_aed !== null)
+                                <p class="text-xs text-gray-400">Proc. AED: {{ number_format($product->procurement_price_aed, 2) }}</p>
+                            @endif
                         </div>
                     </div>
                     
