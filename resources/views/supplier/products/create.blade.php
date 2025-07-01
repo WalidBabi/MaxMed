@@ -209,11 +209,11 @@
                                 <div class="flex text-sm text-gray-600">
                                     <label for="image" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                                         <span>Upload a file</span>
-                                        <input id="image" name="image" type="file" class="sr-only" required accept="image/*">
+                                        <input id="image" name="image" type="file" class="sr-only" required accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/avif">
                                     </label>
                                     <p class="pl-1">or drag and drop</p>
                                 </div>
-                                <p class="text-xs text-gray-500">PNG, JPG, WEBP up to 5MB</p>
+                                <p class="text-xs text-gray-500">PNG, JPG, WEBP, AVIF up to 5MB</p>
                             </div>
                         </div>
                         <p class="mt-2 text-sm text-gray-500">Recommended size: 800x800px</p>
@@ -235,7 +235,7 @@
                                 <div class="flex text-sm text-gray-600">
                                     <label for="additional_images" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                                         <span>Select multiple files</span>
-                                        <input id="additional_images" name="additional_images[]" type="file" class="sr-only" multiple accept="image/*">
+                                        <input id="additional_images" name="additional_images[]" type="file" class="sr-only" multiple accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/avif">
                                     </label>
                                 </div>
                                 <p class="text-xs text-gray-500">Hold Ctrl/Cmd to select multiple images</p>
@@ -259,7 +259,7 @@
                                 <div class="flex text-sm text-gray-600">
                                     <label for="specification_image" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                                         <span>Upload specification image</span>
-                                        <input id="specification_image" name="specification_image" type="file" class="sr-only" accept="image/*">
+                                        <input id="specification_image" name="specification_image" type="file" class="sr-only" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/avif">
                                     </label>
                                 </div>
                                 <p class="text-xs text-gray-500">Technical specifications or chart</p>
