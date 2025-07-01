@@ -47,206 +47,231 @@
             </div>
         @endif
 
-                <!-- Form -->
+        <!-- Form -->
         <form action="{{ route('admin.purchase-orders.store') }}" method="POST" id="purchaseOrderForm">
             @csrf
             <div class="px-4 sm:px-6 lg:px-8">
-                        <div class="space-y-8">
-                            <!-- Basic Information -->
-                            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                                    <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                                        <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25M8.25 9h2.25m-2.25 4.5h2.25m-2.25 4.5h2.25M10.5 21h4.5" />
-                                        </svg>
-                                        Purchase Order Information
-                                    </h3>
+                <div class="space-y-8">
+                    <!-- Basic Information -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                                <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25M8.25 9h2.25m-2.25 4.5h2.25m-2.25 4.5h2.25M10.5 21h4.5" />
+                                </svg>
+                                Purchase Order Information
+                            </h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="order_id" class="block text-sm font-medium text-gray-700 mb-2">Customer Order (Optional)</label>
+                                    <select name="order_id" id="order_id" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        <option value="">Select a customer order (optional)</option>
+                                        @foreach($availableOrders as $order)
+                                            <option value="{{ $order->id }}" {{ old('order_id') == $order->id ? 'selected' : '' }}>
+                                                {{ $order->order_number }} - {{ $order->getCustomerName() }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <p class="mt-1 text-sm text-gray-500">Link to an existing customer order or create a standalone purchase order</p>
                                 </div>
-                                <div class="p-6">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div>
-                                            <label for="order_id" class="block text-sm font-medium text-gray-700 mb-2">Customer Order (Optional)</label>
-                                            <select name="order_id" id="order_id" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                <option value="">Select a customer order (optional)</option>
-                                                @foreach($availableOrders as $order)
-                                                    <option value="{{ $order->id }}" {{ old('order_id') == $order->id ? 'selected' : '' }}>
-                                                        {{ $order->order_number }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label for="po_date" class="block text-sm font-medium text-gray-700 mb-2">PO Date</label>
-                                            <input type="date" id="po_date" name="po_date" 
-                                                   value="{{ old('po_date', now()->format('Y-m-d')) }}" required
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                        </div>
-                                        <div>
-                                            <label for="delivery_date_requested" class="block text-sm font-medium text-gray-700 mb-2">Requested Delivery Date</label>
-                                            <input type="date" id="delivery_date_requested" name="delivery_date_requested" 
-                                                   value="{{ old('delivery_date_requested', now()->addDays(14)->format('Y-m-d')) }}" required
-                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                        </div>
-                                        <div>
-                                            <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">Currency</label>
-                                            <select name="currency" id="currency" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                <option value="AED" {{ old('currency', 'AED') == 'AED' ? 'selected' : '' }}>AED (UAE Dirham)</option>
-                                                <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>USD (US Dollar)</option>
-                                                <option value="EUR" {{ old('currency') == 'EUR' ? 'selected' : '' }}>EUR (Euro)</option>
-                                                <option value="GBP" {{ old('currency') == 'GBP' ? 'selected' : '' }}>GBP (British Pound)</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                <div>
+                                    <label for="po_date" class="block text-sm font-medium text-gray-700 mb-2">PO Date</label>
+                                    <input type="date" id="po_date" name="po_date" 
+                                           value="{{ old('po_date', now()->format('Y-m-d')) }}" required
+                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                </div>
+                                <div>
+                                    <label for="delivery_date_requested" class="block text-sm font-medium text-gray-700 mb-2">Requested Delivery Date</label>
+                                    <input type="date" id="delivery_date_requested" name="delivery_date_requested" 
+                                           value="{{ old('delivery_date_requested', now()->addDays(14)->format('Y-m-d')) }}" required
+                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                </div>
+                                <div>
+                                    <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">Currency</label>
+                                    <select name="currency" id="currency" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        <option value="AED" {{ old('currency', 'AED') == 'AED' ? 'selected' : '' }}>AED (UAE Dirham)</option>
+                                        <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>USD (US Dollar)</option>
+                                        <option value="EUR" {{ old('currency') == 'EUR' ? 'selected' : '' }}>EUR (Euro)</option>
+                                        <option value="GBP" {{ old('currency') == 'GBP' ? 'selected' : '' }}>GBP (British Pound)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="payment_terms" class="block text-sm font-medium text-gray-700 mb-2">Payment Terms</label>
+                                    <select name="payment_terms" id="payment_terms" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        <option value="">Select payment terms</option>
+                                        <option value="Net 30" {{ old('payment_terms') == 'Net 30' ? 'selected' : '' }}>Net 30</option>
+                                        <option value="Net 60" {{ old('payment_terms') == 'Net 60' ? 'selected' : '' }}>Net 60</option>
+                                        <option value="Net 90" {{ old('payment_terms') == 'Net 90' ? 'selected' : '' }}>Net 90</option>
+                                        <option value="Due on Receipt" {{ old('payment_terms') == 'Due on Receipt' ? 'selected' : '' }}>Due on Receipt</option>
+                                        <option value="50% Advance, 50% on Delivery" {{ old('payment_terms') == '50% Advance, 50% on Delivery' ? 'selected' : '' }}>50% Advance, 50% on Delivery</option>
+                                        <option value="Custom" {{ old('payment_terms') == 'Custom' ? 'selected' : '' }}>Custom</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="shipping_method" class="block text-sm font-medium text-gray-700 mb-2">Shipping Method</label>
+                                    <select name="shipping_method" id="shipping_method" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        <option value="">Select shipping method</option>
+                                        <option value="Standard Shipping" {{ old('shipping_method') == 'Standard Shipping' ? 'selected' : '' }}>Standard Shipping</option>
+                                        <option value="Express Shipping" {{ old('shipping_method') == 'Express Shipping' ? 'selected' : '' }}>Express Shipping</option>
+                                        <option value="Overnight Shipping" {{ old('shipping_method') == 'Overnight Shipping' ? 'selected' : '' }}>Overnight Shipping</option>
+                                        <option value="Local Pickup" {{ old('shipping_method') == 'Local Pickup' ? 'selected' : '' }}>Local Pickup</option>
+                                        <option value="Supplier Delivery" {{ old('shipping_method') == 'Supplier Delivery' ? 'selected' : '' }}>Supplier Delivery</option>
+                                    </select>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- Supplier Information -->
-                            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                                    <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                                        <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                                        </svg>
-                                        Supplier Information
-                                    </h3>
+                    <!-- Supplier Information -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                                <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                                </svg>
+                                Supplier Information
+                            </h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-6">
+                                <!-- Supplier Selection -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Supplier Selection</label>
+                                    <div class="flex items-center space-x-4">
+                                        <label class="flex items-center">
+                                            <input type="radio" name="supplier_type" value="existing" id="existing_supplier" 
+                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500 border-gray-300" 
+                                                   {{ old('supplier_type', 'existing') == 'existing' ? 'checked' : '' }}>
+                                            <span class="text-sm text-gray-700">Select Existing Supplier</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="radio" name="supplier_type" value="new" id="new_supplier" 
+                                                   class="mr-2 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                                                   {{ old('supplier_type') == 'new' ? 'checked' : '' }}>
+                                            <span class="text-sm text-gray-700">Enter New Supplier</span>
+                                        </label>
+                                    </div>
                                 </div>
-                                <div class="p-6">
-                                    <div class="space-y-6">
-                                        <!-- Supplier Selection -->
+
+                                <!-- Existing Supplier Selection -->
+                                <div id="existing_supplier_section">
+                                    <label for="supplier_id" class="block text-sm font-medium text-gray-700 mb-2">Select Supplier</label>
+                                    <select id="supplier_id" name="supplier_id"
+                                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        <option value="">Choose a registered supplier</option>
+                                        @foreach($suppliers as $supplier)
+                                            <option value="{{ $supplier->id }}" 
+                                                    data-company="{{ $supplier->supplierInformation->company_name ?? $supplier->name }}"
+                                                    data-email="{{ $supplier->email }}"
+                                                    data-phone="{{ $supplier->supplierInformation->phone_primary ?? '' }}"
+                                                    data-address="{{ $supplier->supplierInformation->business_address ?? '' }}"
+                                                    {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>
+                                                {{ $supplier->supplierInformation->company_name ?? $supplier->name }} 
+                                                @if($supplier->supplierInformation)
+                                                    ({{ $supplier->supplierInformation->city ?? '' }})
+                                                @endif
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <!-- Manual Supplier Entry -->
+                                <div id="manual_supplier_section" style="display: none;">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">Supplier Selection</label>
-                                            <div class="flex items-center space-x-4">
-                                                <label class="flex items-center">
-                                                    <input type="radio" name="supplier_type" value="existing" id="existing_supplier" 
-                                                           class="mr-2 text-indigo-600 focus:ring-indigo-500 border-gray-300" 
-                                                           {{ old('supplier_type', 'existing') == 'existing' ? 'checked' : '' }}>
-                                                    <span class="text-sm text-gray-700">Select Existing Supplier</span>
-                                                </label>
-                                                <label class="flex items-center">
-                                                    <input type="radio" name="supplier_type" value="new" id="new_supplier" 
-                                                           class="mr-2 text-indigo-600 focus:ring-indigo-500 border-gray-300"
-                                                           {{ old('supplier_type') == 'new' ? 'checked' : '' }}>
-                                                    <span class="text-sm text-gray-700">Enter New Supplier</span>
-                                                </label>
-                                            </div>
+                                            <label for="supplier_name" class="block text-sm font-medium text-gray-700 mb-2">Supplier Name *</label>
+                                            <input type="text" id="supplier_name" name="supplier_name" value="{{ old('supplier_name') }}"
+                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                         </div>
-
-                                        <!-- Existing Supplier Selection -->
-                                        <div id="existing_supplier_section">
-                                            <label for="supplier_id" class="block text-sm font-medium text-gray-700 mb-2">Select Supplier</label>
-                                            <select id="supplier_id" name="supplier_id"
-                                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                <option value="">Choose a registered supplier</option>
-                                                @foreach($suppliers as $supplier)
-                                                    <option value="{{ $supplier->id }}" 
-                                                            data-company="{{ $supplier->supplierInformation->company_name ?? $supplier->name }}"
-                                                            data-email="{{ $supplier->email }}"
-                                                            data-phone="{{ $supplier->supplierInformation->phone_primary ?? '' }}"
-                                                            data-address="{{ $supplier->supplierInformation->business_address ?? '' }}"
-                                                            {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>
-                                                        {{ $supplier->supplierInformation->company_name ?? $supplier->name }} 
-                                                        @if($supplier->supplierInformation)
-                                                            ({{ $supplier->supplierInformation->city ?? '' }})
-                                                        @endif
-                                                    </option>
-                                                @endforeach
-                                            </select>
+                                        <div>
+                                            <label for="supplier_email" class="block text-sm font-medium text-gray-700 mb-2">Supplier Email</label>
+                                            <input type="email" id="supplier_email" name="supplier_email" value="{{ old('supplier_email') }}"
+                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                         </div>
-
-                                        <!-- Manual Supplier Entry -->
-                                        <div id="manual_supplier_section" style="display: none;">
-                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                <div>
-                                                    <label for="supplier_name" class="block text-sm font-medium text-gray-700 mb-2">Supplier Name *</label>
-                                                    <input type="text" id="supplier_name" name="supplier_name" value="{{ old('supplier_name') }}"
-                                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                </div>
-                                                <div>
-                                                    <label for="supplier_email" class="block text-sm font-medium text-gray-700 mb-2">Supplier Email</label>
-                                                    <input type="email" id="supplier_email" name="supplier_email" value="{{ old('supplier_email') }}"
-                                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                </div>
-                                                <div>
-                                                    <label for="supplier_phone" class="block text-sm font-medium text-gray-700 mb-2">Supplier Phone</label>
-                                                    <input type="text" id="supplier_phone" name="supplier_phone" value="{{ old('supplier_phone') }}"
-                                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                </div>
-                                            </div>
-                                            <div class="mt-4">
-                                                <label for="supplier_address" class="block text-sm font-medium text-gray-700 mb-2">Supplier Address</label>
-                                                <textarea id="supplier_address" name="supplier_address" rows="3"
-                                                          placeholder="Enter supplier address"
-                                                          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('supplier_address') }}</textarea>
-                                            </div>
+                                        <div>
+                                            <label for="supplier_phone" class="block text-sm font-medium text-gray-700 mb-2">Supplier Phone</label>
+                                            <input type="text" id="supplier_phone" name="supplier_phone" value="{{ old('supplier_phone') }}"
+                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                         </div>
+                                        <div>
+                                            <label for="supplier_contact_person" class="block text-sm font-medium text-gray-700 mb-2">Contact Person</label>
+                                            <input type="text" id="supplier_contact_person" name="supplier_contact_person" value="{{ old('supplier_contact_person') }}"
+                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <label for="supplier_address" class="block text-sm font-medium text-gray-700 mb-2">Supplier Address</label>
+                                        <textarea id="supplier_address" name="supplier_address" rows="3"
+                                                  placeholder="Enter supplier address"
+                                                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('supplier_address') }}</textarea>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
-                    </div>
+                </div>
+            </div>
 
-                    <!-- Item Table - Full Width -->
-                    <div class="w-full px-4 sm:px-6 lg:px-8 mb-8">
-                        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-                                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                                    <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 17.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                                    </svg>
-                                    Purchase Order Items
-                                </h3>
-                                <button type="button" id="addItem" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
-                                    <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                                    </svg>
-                                    Add Item
-                                </button>
-                            </div>
-                            <div class="p-6">
-                                <div class="overflow-x-auto w-full">
-                                    <table class="w-full divide-y divide-gray-200 items-table">
-                                        <thead class="bg-gray-50">
-                                            <tr>
-                                                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 60px;">Drag</th>
-                                                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 300px;">Item Details</th>
-                                                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 200px;">Specifications</th>
-                                                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Quantity</th>
-                                                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Rate</th>
-                                                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Discount</th>
-                                                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Amount</th>
-                                                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 80px;">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="itemsTable" class="bg-white divide-y divide-gray-200">
-                                            <!-- Items will be added here dynamically -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                                
-                                <!-- Purchase Order Totals -->
-                                <div class="mt-6 flex justify-end">
-                                    <div class="w-full max-w-sm">
-                                        <div class="rounded-lg bg-gray-50 p-4">
-                                            <div class="flex justify-between py-2">
-                                                <span class="text-sm font-medium text-gray-700">Sub Total:</span>
-                                                <span id="subTotal" class="text-sm font-semibold text-gray-900">0.00 <span id="subTotalCurrency">AED</span></span>
-                                            </div>
-                                            <div class="flex justify-between py-2">
-                                                <span class="text-sm font-medium text-gray-700">Tax:</span>
-                                                <span id="tax-amount" class="text-sm font-semibold text-gray-900">0.00 <span id="taxCurrency">AED</span></span>
-                                            </div>
-                                            <div class="flex justify-between py-2">
-                                                <span class="text-sm font-medium text-gray-700">Shipping:</span>
-                                                <span id="shipping-amount" class="text-sm font-semibold text-gray-900">0.00 <span id="shippingCurrency">AED</span></span>
-                                            </div>
-                                            <div class="border-t border-gray-200 pt-2">
-                                                <div class="flex justify-between">
-                                                    <span class="text-base font-semibold text-gray-900">Total:</span>
-                                                    <span id="totalAmount" class="text-base font-bold text-gray-900">0.00 <span id="totalCurrency">AED</span></span>
-                                                </div>
-                                            </div>
+            <!-- Item Table - Full Width -->
+            <div class="w-full px-4 sm:px-6 lg:px-8 mb-8">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                            <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 17.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                            </svg>
+                            Purchase Order Items
+                        </h3>
+                        <button type="button" id="addItem" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                            <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
+                            </svg>
+                            Add Item
+                        </button>
+                    </div>
+                    <div class="p-6">
+                        <div class="overflow-x-auto w-full">
+                            <table class="w-full divide-y divide-gray-200 items-table">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 60px;">Drag</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 300px;">Item Details</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 200px;">Specifications</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Quantity</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Rate</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Discount</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Amount</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 80px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itemsTable" class="bg-white divide-y divide-gray-200">
+                                    <!-- Items will be added here dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Purchase Order Totals -->
+                        <div class="mt-6 flex justify-end">
+                            <div class="w-full max-w-sm">
+                                <div class="rounded-lg bg-gray-50 p-4">
+                                    <div class="flex justify-between py-2">
+                                        <span class="text-sm font-medium text-gray-700">Sub Total:</span>
+                                        <span id="subTotal" class="text-sm font-semibold text-gray-900">0.00 <span id="subTotalCurrency">AED</span></span>
+                                    </div>
+                                    <div class="flex justify-between py-2">
+                                        <span class="text-sm font-medium text-gray-700">Tax:</span>
+                                        <span id="tax-amount" class="text-sm font-semibold text-gray-900">0.00 <span id="taxCurrency">AED</span></span>
+                                    </div>
+                                    <div class="flex justify-between py-2">
+                                        <span class="text-sm font-medium text-gray-700">Shipping:</span>
+                                        <span id="shipping-amount" class="text-sm font-semibold text-gray-900">0.00 <span id="shippingCurrency">AED</span></span>
+                                    </div>
+                                    <div class="border-t border-gray-200 pt-2">
+                                        <div class="flex justify-between">
+                                            <span class="text-base font-semibold text-gray-900">Total:</span>
+                                            <span id="totalAmount" class="text-base font-bold text-gray-900">0.00 <span id="totalCurrency">AED</span></span>
                                         </div>
                                     </div>
                                 </div>
@@ -274,17 +299,67 @@
                                 <div>
                                     <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
                                     <textarea id="description" name="description" rows="3"
+                                              placeholder="Enter purchase order description..."
                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('description') }}</textarea>
+                                    <p class="mt-1 text-sm text-gray-500">Brief description of the purchase order</p>
                                 </div>
                                 <div>
                                     <label for="terms_conditions" class="block text-sm font-medium text-gray-700 mb-2">Terms & Conditions</label>
-                                    <textarea id="terms_conditions" name="terms_conditions" rows="3"
+                                    <textarea id="terms_conditions" name="terms_conditions" rows="4"
+                                              placeholder="Enter terms and conditions for this purchase order..."
                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('terms_conditions') }}</textarea>
+                                    <p class="mt-1 text-sm text-gray-500">Terms and conditions that will be included in the purchase order</p>
                                 </div>
                                 <div>
-                                    <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">Notes</label>
+                                    <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">Internal Notes</label>
                                     <textarea id="notes" name="notes" rows="3"
+                                              placeholder="Enter internal notes (not visible to supplier)..."
                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('notes') }}</textarea>
+                                    <p class="mt-1 text-sm text-gray-500">Internal notes for your reference only</p>
+                                </div>
+                                <div>
+                                    <label for="special_instructions" class="block text-sm font-medium text-gray-700 mb-2">Special Instructions</label>
+                                    <textarea id="special_instructions" name="special_instructions" rows="3"
+                                              placeholder="Enter any special instructions for the supplier..."
+                                              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('special_instructions') }}</textarea>
+                                    <p class="mt-1 text-sm text-gray-500">Special handling, packaging, or delivery instructions</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Financial Details -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                                <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Financial Details
+                            </h3>
+                        </div>
+                        <div class="p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div>
+                                    <label for="tax_rate" class="block text-sm font-medium text-gray-700 mb-2">Tax Rate (%)</label>
+                                    <input type="number" id="tax_rate" name="tax_rate" step="0.01" min="0" max="100"
+                                           value="{{ old('tax_rate', '5') }}"
+                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    <p class="mt-1 text-sm text-gray-500">Tax rate percentage to apply</p>
+                                </div>
+                                <div>
+                                    <label for="shipping_cost" class="block text-sm font-medium text-gray-700 mb-2">Shipping Cost</label>
+                                    <input type="number" id="shipping_cost" name="shipping_cost" step="0.01" min="0"
+                                           value="{{ old('shipping_cost', '0') }}"
+                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    <p class="mt-1 text-sm text-gray-500">Shipping and handling cost</p>
+                                </div>
+                                <div>
+                                    <label for="discount_amount" class="block text-sm font-medium text-gray-700 mb-2">Discount Amount</label>
+                                    <input type="number" id="discount_amount" name="discount_amount" step="0.01" min="0"
+                                           value="{{ old('discount_amount', '0') }}"
+                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    <p class="mt-1 text-sm text-gray-500">Total discount amount</p>
                                 </div>
                             </div>
                         </div>
@@ -294,7 +369,13 @@
 
             <!-- Create Button Section -->
             <div class="px-4 sm:px-6 lg:px-8 mt-8 mb-8">
-                <div class="flex justify-end">
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="saveAsDraft()" class="inline-flex items-center rounded-md bg-gray-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                        <svg class="-ml-0.5 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 3.75V16.5L12 14.25 7.5 16.5V3.75m9 0H18A2.25 2.25 0 0120.25 6v12A2.25 2.25 0 0118 20.25H6A2.25 2.25 0 013.75 18V6A2.25 2.25 0 016 3.75h9z" />
+                        </svg>
+                        Save as Draft
+                    </button>
                     <button type="submit" name="action" value="create" class="inline-flex items-center rounded-md bg-indigo-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         <svg class="-ml-0.5 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
@@ -989,6 +1070,9 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
             const hasSizeOptions = item.dataset.hasSizeOptions === 'true';
             const sizeOptions = item.dataset.sizeOptions ? JSON.parse(item.dataset.sizeOptions) : [];
             populateSizeOptionsFromData(sizeSelect, hasSizeOptions, sizeOptions);
+            
+            // Add event listener for size changes
+            sizeSelect.addEventListener('change', updateSelectedSpecifications);
         }
         
         // Hide dropdown
@@ -1003,9 +1087,20 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox:checked');
         const selectedSpecs = Array.from(checkboxes).map(cb => cb.dataset.spec);
         
-        if (selectedSpecs.length > 0) {
-            specificationsInput.value = selectedSpecs.join(', ');
-            specificationsHidden.value = JSON.stringify(selectedSpecs);
+        // Get selected size
+        const row = specificationsDropdown.closest('tr');
+        const sizeSelect = row.querySelector('.size-options-select');
+        const selectedSize = sizeSelect ? sizeSelect.value : '';
+        
+        // Combine specifications and size
+        let allSpecs = [...selectedSpecs];
+        if (selectedSize && selectedSize.trim() !== '') {
+            allSpecs.push(`Size: ${selectedSize}`);
+        }
+        
+        if (allSpecs.length > 0) {
+            specificationsInput.value = allSpecs.join(', ');
+            specificationsHidden.value = JSON.stringify(allSpecs);
         } else {
             specificationsInput.value = 'Click to select specifications...';
             specificationsHidden.value = '';
@@ -1152,6 +1247,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (productIdInput.value) {
             populateSizeOptions(productIdInput.value, sizeSelect);
         }
+        
+        // Add event listener for size changes
+        if (sizeSelect) {
+            sizeSelect.addEventListener('change', updateSelectedSpecifications);
+        }
     });
     
     // Add initial item if none exist
@@ -1167,8 +1267,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.price-display-aed').forEach(display => display.classList.add('hidden'));
         document.querySelectorAll('.price-display-usd').forEach(display => display.classList.remove('hidden'));
     }
-
-
 
     // Update size options when product is selected
     document.addEventListener('change', function(e) {

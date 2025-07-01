@@ -673,16 +673,7 @@
                                         @endforeach
                                     </div>
                                 @endif
-                            @endif
-                            
-                            @if($item->size && !empty(trim($item->size)))
-                                <div style="margin-top: 3px; padding-top: 3px; border-top: 1px solid var(--border-color);">
-                                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1px; font-size: 8px;">Size:</div>
-                                    <div style="color: var(--text-secondary); font-size: 8px;">{{ preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/', function($matches) { return mb_convert_encoding(pack('H*', $matches[1]), 'UTF-8', 'UCS-2BE'); }, $item->size) }}</div>
-                                </div>
-                            @endif
-                            
-                            @if((!$item->specifications || empty(trim($item->specifications))) && (!$item->size || empty(trim($item->size))))
+                            @else
                                 <span style="color: var(--text-muted);">-</span>
                             @endif
                         </td>

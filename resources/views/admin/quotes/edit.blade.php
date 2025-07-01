@@ -861,9 +861,20 @@
                 const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox:checked');
                 const selectedSpecs = Array.from(checkboxes).map(cb => cb.dataset.spec);
                 
-                if (selectedSpecs.length > 0) {
-                    specificationsInputs[rowIndex].value = selectedSpecs.join(', ');
-                    specificationsHiddens[rowIndex].value = JSON.stringify(selectedSpecs);
+                // Get selected size
+                const row = specificationsInputs[rowIndex].closest('tr');
+                const sizeSelect = row.querySelector('.size-options-select');
+                const selectedSize = sizeSelect ? sizeSelect.value : '';
+                
+                // Combine specifications and size
+                let allSpecs = [...selectedSpecs];
+                if (selectedSize && selectedSize.trim() !== '') {
+                    allSpecs.push(`Size: ${selectedSize}`);
+                }
+                
+                if (allSpecs.length > 0) {
+                    specificationsInputs[rowIndex].value = allSpecs.join(', ');
+                    specificationsHiddens[rowIndex].value = JSON.stringify(allSpecs);
                 } else {
                     specificationsInputs[rowIndex].value = 'Click to select specifications...';
                     specificationsHiddens[rowIndex].value = '';
@@ -919,6 +930,9 @@
                                         const hasSizeOptions = dropdownItem.getAttribute('data-has-size-options') === 'true';
                                         const sizeOptions = dropdownItem.getAttribute('data-size-options') ? JSON.parse(dropdownItem.getAttribute('data-size-options')) : [];
                                         populateSizeOptionsFromData(sizeSelect, hasSizeOptions, sizeOptions, item.size);
+                                        
+                                        // Add event listener for size changes
+                                        sizeSelect.addEventListener('change', () => updateSelectedSpecificationsForRow(rowIndex));
                                     }
                                 }
                                 

@@ -616,14 +616,7 @@
                                 @endif
                             @endif
                             
-                            @if($item->size && !empty(trim($item->size)))
-                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3; margin-top: 3px;">
-                                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1px;">Size:</div>
-                                    <div>{{ preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/', function($matches) { return mb_convert_encoding(pack('H*', $matches[1]), 'UTF-8', 'UCS-2BE'); }, $item->size) }}</div>
-                                </div>
-                            @endif
-                            
-                            @if((!$item->specifications || empty(trim($item->specifications))) && (!$item->size || empty(trim($item->size))))
+                            @if((!$item->specifications || empty(trim($item->specifications))))
                                 <span style="font-size: 9px; color: var(--text-muted);">-</span>
                             @endif
                         </td>

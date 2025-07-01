@@ -919,29 +919,34 @@ function addItem() {
         input.addEventListener('input', calculateRowAmount);
     });
     
-    // Initialize custom dropdown functionality
-    initializeCustomDropdown(productSearchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput, specificationsInput, specificationsHidden, specificationsDropdown);
-    
-    // Add specifications dropdown functionality
-    specificationsInput.addEventListener('click', function() {
-        if (specificationsHidden.value && specificationsHidden.value !== '[]') {
-            specificationsDropdown.classList.toggle('hidden');
+            // Initialize custom dropdown functionality
+        initializeCustomDropdown(productSearchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput, specificationsInput, specificationsHidden, specificationsDropdown);
+        
+        // Add specifications dropdown functionality
+        specificationsInput.addEventListener('click', function() {
+            if (specificationsHidden.value && specificationsHidden.value !== '[]') {
+                specificationsDropdown.classList.toggle('hidden');
+            }
+        });
+        
+        // Hide specifications dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!specificationsInput.contains(e.target) && !specificationsDropdown.contains(e.target)) {
+                specificationsDropdown.classList.add('hidden');
+            }
+        });
+        
+        // Prevent dropdown from closing when clicking on checkboxes
+        specificationsDropdown.addEventListener('click', function(e) {
+            if (e.target.type === 'checkbox' || e.target.tagName === 'LABEL') {
+                e.stopPropagation();
+            }
+        });
+        
+        // Add event listener for size changes
+        if (sizeSelect) {
+            sizeSelect.addEventListener('change', updateSelectedSpecifications);
         }
-    });
-    
-    // Hide specifications dropdown when clicking outside
-    document.addEventListener('click', function(e) {
-        if (!specificationsInput.contains(e.target) && !specificationsDropdown.contains(e.target)) {
-            specificationsDropdown.classList.add('hidden');
-        }
-    });
-    
-    // Prevent dropdown from closing when clicking on checkboxes
-    specificationsDropdown.addEventListener('click', function(e) {
-        if (e.target.type === 'checkbox' || e.target.tagName === 'LABEL') {
-            e.stopPropagation();
-        }
-    });
     
     calculateTotals();
 }
@@ -1187,6 +1192,9 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
             const hasSizeOptions = item.dataset.hasSizeOptions === 'true';
             const sizeOptions = item.dataset.sizeOptions ? JSON.parse(item.dataset.sizeOptions) : [];
             populateSizeOptionsFromData(sizeSelect, hasSizeOptions, sizeOptions);
+            
+            // Add event listener for size changes
+            sizeSelect.addEventListener('change', updateSelectedSpecifications);
         }
         
         // Hide dropdown
@@ -1201,9 +1209,20 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox:checked');
         const selectedSpecs = Array.from(checkboxes).map(cb => cb.dataset.spec);
         
-        if (selectedSpecs.length > 0) {
-            specificationsInput.value = selectedSpecs.join(', ');
-            specificationsHidden.value = JSON.stringify(selectedSpecs);
+        // Get selected size
+        const row = specificationsDropdown.closest('tr');
+        const sizeSelect = row.querySelector('.size-options-select');
+        const selectedSize = sizeSelect ? sizeSelect.value : '';
+        
+        // Combine specifications and size
+        let allSpecs = [...selectedSpecs];
+        if (selectedSize && selectedSize.trim() !== '') {
+            allSpecs.push(`Size: ${selectedSize}`);
+        }
+        
+        if (allSpecs.length > 0) {
+            specificationsInput.value = allSpecs.join(', ');
+            specificationsHidden.value = JSON.stringify(allSpecs);
         } else {
             specificationsInput.value = 'Click to select specifications...';
             specificationsHidden.value = '';
@@ -1259,6 +1278,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Initialize size options if product is selected
         if (productIdInput.value) {
             populateSizeOptions(productIdInput.value, sizeSelect);
+        }
+        
+        // Add event listener for size changes
+        if (sizeSelect) {
+            sizeSelect.addEventListener('change', updateSelectedSpecifications);
         }
     });
     
