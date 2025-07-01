@@ -147,6 +147,7 @@
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supplier</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned Categories</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Suggested Categories</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Specializations</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Products</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Assignment</th>
@@ -190,6 +191,19 @@
                                             </div>
                                         @else
                                             <span class="text-sm text-gray-500">No categories assigned</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        @if($supplier->supplierInformation && $supplier->supplierInformation->suggested_categories)
+                                            <div class="flex flex-wrap gap-1">
+                                                @foreach($supplier->supplierInformation->suggested_categories as $suggestedCategory)
+                                                    <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                        {{ $suggestedCategory }}
+                                                    </span>
+                                                @endforeach
+                                            </div>
+                                        @else
+                                            <span class="text-sm text-gray-500">No suggestions</span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4">

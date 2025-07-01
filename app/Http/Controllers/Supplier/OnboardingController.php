@@ -218,6 +218,8 @@ class OnboardingController extends Controller
             'categories.*' => 'exists:categories,id',
             'specializations' => 'required|array|min:1',
             'specializations.*' => 'required|string|max:255',
+            'suggested_categories' => 'nullable|array',
+            'suggested_categories.*' => 'required|string|max:255',
         ]);
 
         $user = Auth::user();
@@ -231,9 +233,10 @@ class OnboardingController extends Controller
             ]);
         }
 
-        // Save specializations - no need to filter empty lines since validation handles it
+        // Save specializations and suggested categories
         $supplierInfo = $user->supplierInformation;
         $supplierInfo->specializations = $validated['specializations'];
+        $supplierInfo->suggested_categories = $validated['suggested_categories'] ?? [];
         $supplierInfo->onboarding_completed = true;
         $supplierInfo->onboarding_completed_at = now();
         $supplierInfo->status = SupplierInformation::STATUS_PENDING_APPROVAL;

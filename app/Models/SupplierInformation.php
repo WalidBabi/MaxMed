@@ -52,6 +52,7 @@ class SupplierInformation extends Model
         'primary_contact_phone',
         'documents',
         'specializations',
+        'suggested_categories',
         'onboarding_completed',
         'onboarding_completed_at',
         'status'
@@ -65,6 +66,7 @@ class SupplierInformation extends Model
     protected $casts = [
         'documents' => 'array',
         'specializations' => 'array',
+        'suggested_categories' => 'array',
         'onboarding_completed' => 'boolean',
         'onboarding_completed_at' => 'datetime',
     ];

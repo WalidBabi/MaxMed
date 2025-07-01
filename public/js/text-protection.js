@@ -46,8 +46,14 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }, false);
 
-        // Disable text selection on mobile
+        // Disable text selection on mobile - but allow navigation
         document.addEventListener('touchstart', function(e) {
+            // Allow navigation links and buttons
+            if (e.target.closest('a') || e.target.closest('button') || e.target.closest('[role="button"]')) {
+                return true;
+            }
+            
+            // Only prevent multi-touch gestures
             if (e.touches.length > 1) {
                 e.preventDefault();
             }
@@ -261,22 +267,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Additional mobile-specific protections
 if ('ontouchstart' in window) {
-    // Disable long press on mobile
+    // Disable long press on mobile - but allow navigation
     document.addEventListener('touchstart', function(e) {
+        // Allow navigation links and buttons
+        if (e.target.closest('a') || e.target.closest('button') || e.target.closest('[role="button"]')) {
+            return true;
+        }
+        
+        // Only prevent multi-touch gestures
         if (e.touches.length > 1) {
             e.preventDefault();
         }
     });
 
-    // Disable iOS callout
+    // Disable iOS callout - but allow navigation
     document.addEventListener('touchstart', function(e) {
-        if (!e.target.closest('input, textarea, .allow-select')) {
-            e.preventDefault();
+        if (e.target.closest('a') || e.target.closest('button') || e.target.closest('[role="button"]') || 
+            e.target.closest('input, textarea, .allow-select')) {
+            return true;
         }
+        e.preventDefault();
     });
 
-    // Disable text selection on mobile Safari
+    // Disable text selection on mobile Safari - but allow navigation
     document.addEventListener('gesturestart', function(e) {
+        // Allow navigation gestures
+        if (e.target.closest('a') || e.target.closest('button') || e.target.closest('[role="button"]')) {
+            return true;
+        }
         e.preventDefault();
     });
 }
