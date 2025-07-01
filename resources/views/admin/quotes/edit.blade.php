@@ -861,16 +861,8 @@
                 const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox:checked');
                 const selectedSpecs = Array.from(checkboxes).map(cb => cb.dataset.spec);
                 
-                // Get selected size
-                const row = specificationsInputs[rowIndex].closest('tr');
-                const sizeSelect = row.querySelector('.size-options-select');
-                const selectedSize = sizeSelect ? sizeSelect.value : '';
-                
-                // Combine specifications and size
+                // Remove the line that combines size with specifications
                 let allSpecs = [...selectedSpecs];
-                if (selectedSize && selectedSize.trim() !== '') {
-                    allSpecs.push(`Size: ${selectedSize}`);
-                }
                 
                 if (allSpecs.length > 0) {
                     specificationsInputs[rowIndex].value = allSpecs.join(', ');

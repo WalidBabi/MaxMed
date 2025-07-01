@@ -1209,16 +1209,8 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox:checked');
         const selectedSpecs = Array.from(checkboxes).map(cb => cb.dataset.spec);
         
-        // Get selected size
-        const row = specificationsDropdown.closest('tr');
-        const sizeSelect = row.querySelector('.size-options-select');
-        const selectedSize = sizeSelect ? sizeSelect.value : '';
-        
-        // Combine specifications and size
+        // Don't combine size with specifications - keep them separate
         let allSpecs = [...selectedSpecs];
-        if (selectedSize && selectedSize.trim() !== '') {
-            allSpecs.push(`Size: ${selectedSize}`);
-        }
         
         if (allSpecs.length > 0) {
             specificationsInput.value = allSpecs.join(', ');
