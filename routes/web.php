@@ -417,6 +417,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('deliveries', [\App\Http\Controllers\Admin\DeliveryController::class, 'index'])->name('deliveries.index');
         
         // Customer Management moved to CRM Portal
+        Route::get('customers/by-name/{name}', [\App\Http\Controllers\Crm\CustomerController::class, 'getByName'])->name('customers.by-name');
         
         // Role Management
         Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class);

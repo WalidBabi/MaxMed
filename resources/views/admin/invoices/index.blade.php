@@ -712,8 +712,19 @@ document.addEventListener('DOMContentLoaded', function() {
         emailInput.disabled = true;
         
         // Fetch customer email
-        fetch(`/admin/customers/by-name/${encodeURIComponent(customerName)}`)
-            .then(response => response.json())
+        fetch(`/admin/customers/by-name/${encodeURIComponent(customerName)}`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 loadingSpinner.classList.add('hidden');
                 emailInput.disabled = false;
