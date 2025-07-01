@@ -241,6 +241,24 @@
         color: #1e40af;
     }
     
+    /* reCAPTCHA Styling */
+    .g-recaptcha {
+        margin: 1rem 0;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .g-recaptcha > div {
+        transform: scale(1);
+        transform-origin: 0 0;
+    }
+    
+    @media (max-width: 480px) {
+        .g-recaptcha > div {
+            transform: scale(0.9);
+        }
+    }
+    
     /* Responsive Design */
     @media (max-width: 768px) {
         .hero-title {
@@ -446,6 +464,21 @@
                                   placeholder="Any additional information, questions, or special requests...">{{ old('notes') }}</textarea>
                         </div>
 
+                    {{-- reCAPTCHA v2 - Only show in production --}}
+                    @if(app()->environment('production'))
+                    <div class="form-group">
+                        <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                        @error('g-recaptcha-response')
+                            <div class="text-red-600 text-sm mt-1">
+                                <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    @else
+                    {{-- Hidden field for development environment --}}
+                    <input type="hidden" name="g-recaptcha-response" value="dev-bypass">
+                    @endif
+
                     <button type="submit" class="submit-btn" id="submitBtn">
                         <i class="fas fa-paper-plane mr-2"></i>
                         Submit Quote Request
@@ -504,4 +537,10 @@
                         });
                     });
                     </script>
+
+{{-- Add reCAPTCHA script only in production --}}
+@if(app()->environment('production'))
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+@endif
+
 @endsection
