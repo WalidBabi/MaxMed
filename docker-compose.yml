@@ -26,6 +26,7 @@ services:
         volumes:
             - ./:/var/www
             - ./docker/nginx/conf.d:/etc/nginx/conf.d
+            - ./upload-limit.conf:/etc/nginx/conf.d/upload-limit.conf
             - /etc/letsencrypt:/etc/letsencrypt
         networks:
             - laravel-network
