@@ -155,13 +155,15 @@ class InvoiceController extends Controller
                     InvoiceItem::create([
                         'invoice_id' => $invoice->id,
                         'product_id' => $quoteItem->product_id,
-                        'item_description' => $itemDescription,
+                        'description' => $itemDescription,
                         'size' => $quoteItem->size,
                         'quantity' => $quoteItem->quantity,
                         'unit_price' => $quoteItem->rate,
                         'discount_percentage' => $quoteItem->discount ?? 0,
                         'discount_amount' => $discountAmount,
                         'line_total' => $total,
+                        'unit_of_measure' => null, // Quote items don't have unit_of_measure
+                        'specifications' => $quoteItem->specifications,
                         'sort_order' => $quoteItem->sort_order ?? 0
                     ]);
                 }
@@ -242,13 +244,15 @@ class InvoiceController extends Controller
                 InvoiceItem::create([
                     'invoice_id' => $invoice->id,
                     'product_id' => $itemData['product_id'] ?? null,
-                    'item_description' => $itemData['description'] ?? $itemData['item_description'] ?? '',
+                    'description' => $itemData['description'] ?? $itemData['item_description'] ?? '',
                     'size' => $itemData['size'] ?? null,
                     'quantity' => $quantity,
                     'unit_price' => $unitPrice,
                     'discount_percentage' => $itemData['discount_percentage'] ?? 0,
                     'discount_amount' => 0, // We'll calculate this in the model's boot method
                     'line_total' => $lineTotal,
+                    'unit_of_measure' => $itemData['unit_of_measure'] ?? null,
+                    'specifications' => $itemData['specifications'] ?? null,
                     'sort_order' => $index + 1
                 ]);
             }
@@ -340,13 +344,15 @@ class InvoiceController extends Controller
                 InvoiceItem::create([
                     'invoice_id' => $invoice->id,
                     'product_id' => $itemData['product_id'] ?? null,
-                    'item_description' => $itemData['description'] ?? $itemData['item_description'] ?? '',
+                    'description' => $itemData['description'] ?? $itemData['item_description'] ?? '',
                     'size' => $itemData['size'] ?? null,
                     'quantity' => $quantity,
                     'unit_price' => $unitPrice,
                     'discount_percentage' => $itemData['discount_percentage'] ?? 0,
                     'discount_amount' => 0, // We'll calculate this in the model's boot method
                     'line_total' => $lineTotal,
+                    'unit_of_measure' => $itemData['unit_of_measure'] ?? null,
+                    'specifications' => $itemData['specifications'] ?? null,
                     'sort_order' => $index + 1
                 ]);
             }

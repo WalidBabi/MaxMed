@@ -100,8 +100,10 @@ class StripeController extends Controller
 
                 // Decrease inventory
                 $inventory = $item->product->inventory;
-                $inventory->quantity -= $item->quantity;
-                $inventory->save();
+                if ($inventory) {
+                    $inventory->quantity -= $item->quantity;
+                    $inventory->save();
+                }
             }
 
             $order->status = 'processing';

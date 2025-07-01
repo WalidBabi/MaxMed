@@ -449,6 +449,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('purchase-orders/{purchaseOrder}/send-to-supplier', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'sendToSupplier'])->name('purchase-orders.send-to-supplier');
         Route::post('purchase-orders/{purchaseOrder}/acknowledge', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'markAsAcknowledged'])->name('purchase-orders.acknowledge');
         Route::post('purchase-orders/{purchaseOrder}/update-status', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'updateStatus'])->name('purchase-orders.update-status');
+        Route::get('purchase-orders/{purchaseOrder}/pdf', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'generatePdf'])->name('purchase-orders.pdf');
         Route::post('purchase-orders/{purchaseOrder}/create-payment', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'createPayment'])->name('purchase-orders.create-payment');
 
         // Unified Inquiry & Quotation Management Routes

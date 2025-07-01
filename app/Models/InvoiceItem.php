@@ -11,12 +11,18 @@ class InvoiceItem extends Model
         'invoice_id',
         'product_id',
         'description',
+        'item_description',
         'size',
         'quantity',
         'unit_price',
         'subtotal',
         'tax',
         'total',
+        'discount_percentage',
+        'discount_amount',
+        'line_total',
+        'unit_of_measure',
+        'specifications',
         'sort_order'
     ];
 

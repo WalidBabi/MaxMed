@@ -163,6 +163,18 @@
                             <dt class="text-sm font-medium text-gray-500">Price (AED)</dt>
                             <dd class="text-xl font-semibold text-gray-700">AED {{ number_format($product->price_aed, 2) }}</dd>
                         </div>
+                        @if($product->procurement_price_usd !== null)
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Procurement Price (USD)</dt>
+                            <dd class="text-xl font-semibold text-gray-700">${{ number_format($product->procurement_price_usd, 2) }}</dd>
+                        </div>
+                        @endif
+                        @if($product->procurement_price_aed !== null)
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Procurement Price (AED)</dt>
+                            <dd class="text-xl font-semibold text-gray-700">AED {{ number_format($product->procurement_price_aed, 2) }}</dd>
+                        </div>
+                        @endif
                         <div>
                             <dt class="text-sm font-medium text-gray-500">Category</dt>
                             <dd class="text-sm text-gray-900">{{ $product->category->name ?? 'N/A' }}</dd>

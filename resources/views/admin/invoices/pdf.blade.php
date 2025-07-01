@@ -642,7 +642,7 @@
                     <tr>
                         <td>
                             <div class="item-description">
-                                {{ $item->item_description }}
+                                {{ $item->description }}
                                 @if($item->product && $item->product->brand)
                                     <div style="font-size: 9px; color: var(--text-secondary); margin-top: 2px;">
                                         <span style="font-weight: 600;">Brand:</span> {{ $item->product->brand->name }}
@@ -651,41 +651,28 @@
                             </div>
                         </td>
                         <td class="text-center">
-                            @php
-                                $allSpecs = [];
-                                
-                                // Add item-specific specifications
-                                if($item->specifications) {
-                                    $itemSpecs = is_array($item->specifications) ? $item->specifications : explode("\n", $item->specifications);
-                                    foreach($itemSpecs as $spec) {
-                                        if(!empty(trim($spec))) {
-                                            $allSpecs[] = trim($spec);
+                            @if($item->specifications && !empty(trim($item->specifications)))
+                                @php
+                                    $selectedSpecs = [];
+                                    try {
+                                        if (is_string($item->specifications) && (str_starts_with($item->specifications, '[') && str_ends_with($item->specifications, ']'))) {
+                                            $selectedSpecs = json_decode($item->specifications, true);
+                                        } else {
+                                            $selectedSpecs = explode(',', $item->specifications);
+                                            $selectedSpecs = array_map('trim', $selectedSpecs);
                                         }
+                                    } catch (Exception $e) {
+                                        $selectedSpecs = [$item->specifications];
                                     }
-                                }
+                                @endphp
                                 
-                                // Add product specifications if product exists
-                                if($item->product && $item->product->specifications) {
-                                    $productSpecs = $item->product->specifications()
-                                        ->where('show_on_detail', true)
-                                        ->orderBy('category', 'asc')
-                                        ->orderBy('sort_order', 'asc')
-                                        ->get();
-                                    
-                                    foreach($productSpecs as $spec) {
-                                        $specText = $spec->display_name . ': ' . $spec->specification_value;
-                                        if($spec->unit) {
-                                            $specText .= ' ' . $spec->unit;
-                                        }
-                                        $allSpecs[] = $specText;
-                                    }
-                                }
-                            @endphp
-                            
-                            @if(count($allSpecs) > 0)
-                                @foreach($allSpecs as $spec)
-                                    <div style="margin-bottom: 2px; color: var(--text-secondary); font-size: 8px;">{{ $spec }}</div>
-                                @endforeach
+                                @if(count($selectedSpecs) > 0)
+                                    <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
+                                        @foreach($selectedSpecs as $spec)
+                                            <div style="margin-bottom: 2px;">{{ $spec }}</div>
+                                        @endforeach
+                                    </div>
+                                @endif
                             @endif
                             
                             @if($item->size && !empty(trim($item->size)))
@@ -695,7 +682,7 @@
                                 </div>
                             @endif
                             
-                            @if(count($allSpecs) == 0 && (!$item->size || empty(trim($item->size))))
+                            @if((!$item->specifications || empty(trim($item->specifications))) && (!$item->size || empty(trim($item->size))))
                                 <span style="color: var(--text-muted);">-</span>
                             @endif
                         </td>

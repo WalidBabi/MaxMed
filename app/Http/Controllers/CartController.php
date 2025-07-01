@@ -129,7 +129,7 @@ class CartController extends Controller
             ->where('session_id', '!=', session()->getId())
             ->sum('quantity');
 
-        return $product->inventory->quantity - $otherReservations;
+        return ($product->inventory ? $product->inventory->quantity : 0) - $otherReservations;
     }
 
     /**

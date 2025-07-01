@@ -17,27 +17,6 @@ return new class extends Migration
             $table->timestamps();
             });
         }
-    });
-        } else {
-            Schema::table('rapid_test_specifications_seeder', function (Blueprint $table) {
-                // Check and add any missing columns
-                $columns = Schema::getColumnListing('rapid_test_specifications_seeder');
-                $schemaContent = '$table->id();
-            $table->timestamps();';
-                
-                // Parse the schema content to find column definitions
-                preg_match_all('/$table->([^;]+);/', $schemaContent, $columnMatches);
-                foreach ($columnMatches[1] as $columnDef) {
-                    if (preg_match('/^(\w+)\(['"]([^'"]+)['"]\)/', $columnDef, $colMatch)) {
-                        $columnName = $colMatch[2];
-                        if (!in_array($columnName, $columns)) {
-                            $table->{$colMatch[1]}($columnName);
-                        }
-                    }
-                }
-            });
-        }
-    });
     }
 
     /**
