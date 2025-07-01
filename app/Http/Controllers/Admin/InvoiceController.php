@@ -98,32 +98,64 @@ class InvoiceController extends Controller
     {
         try {
             DB::transaction(function () use ($quote) {
+                // Find customer by name to get additional details
+                $customer = \App\Models\Customer::where('name', $quote->customer_name)->first();
+                
+                // Get billing and shipping addresses with proper fallback
+                $billingAddress = 'Billing address not available';
+                $shippingAddress = 'Shipping address not available';
+                
+                if ($customer) {
+                    // Use Customer model's accessor methods for cleaner code
+                    $billingAddress = $customer->billing_address ?: 'Billing address not available';
+                    $shippingAddress = $customer->shipping_address ?: $billingAddress;
+                }
+
                 // Create the invoice
                 $invoice = Invoice::create([
+                    'type' => 'proforma',
+                    'is_proforma' => true,
                     'quote_id' => $quote->id,
-                    'customer_id' => $quote->customer_id,
                     'customer_name' => $quote->customer_name,
-                    'billing_address' => $quote->billing_address,
-                    'shipping_address' => $quote->shipping_address,
+                    'billing_address' => $billingAddress,
+                    'shipping_address' => $shippingAddress,
+                    'invoice_date' => now(),
+                    'due_date' => now()->addDays(30),
                     'description' => $quote->subject ?: 'Invoice from Quote ' . $quote->quote_number,
                     'terms_conditions' => $quote->terms_conditions,
                     'notes' => $quote->customer_notes,
-                    'currency' => $quote->currency,
+                    'sub_total' => $quote->sub_total,
+                    'tax_amount' => 0,
+                    'discount_amount' => 0,
+                    'total_amount' => $quote->total_amount,
+                    'currency' => $quote->currency ?: 'AED', // Default to AED if not set
                     'payment_terms' => 'advance_50', // Default to 50% advance
+                    'payment_status' => 'pending',
                     'status' => 'draft',
+                    'reference_number' => $quote->reference_number,
+                    'created_by' => \Auth::id(),
                 ]);
 
                 // Create invoice items
                 foreach ($quote->items as $quoteItem) {
                     // Calculate item totals
                     $subtotal = $quoteItem->quantity * $quoteItem->rate;
-                    $discountAmount = ($subtotal * $quoteItem->discount) / 100;
+                    $discountAmount = ($subtotal * ($quoteItem->discount ?? 0)) / 100;
                     $total = $subtotal - $discountAmount;
+
+                    // Get item description, fallback to product name if not set
+                    $itemDescription = $quoteItem->item_details;
+                    if (empty($itemDescription) && $quoteItem->product) {
+                        $itemDescription = $quoteItem->product->name;
+                    }
+                    if (empty($itemDescription)) {
+                        $itemDescription = 'Product #' . $quoteItem->product_id;
+                    }
 
                     InvoiceItem::create([
                         'invoice_id' => $invoice->id,
                         'product_id' => $quoteItem->product_id,
-                        'item_description' => $quoteItem->item_details,
+                        'item_description' => $itemDescription,
                         'size' => $quoteItem->size,
                         'quantity' => $quoteItem->quantity,
                         'unit_price' => $quoteItem->rate,
@@ -146,6 +178,12 @@ class InvoiceController extends Controller
                 ->with('success', 'Quote converted to invoice successfully!');
 
         } catch (\Exception $e) {
+            \Log::error('Failed to convert quote to invoice', [
+                'quote_id' => $quote->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return redirect()->back()
                 ->with('error', 'Failed to convert quote to invoice: ' . $e->getMessage());
         }

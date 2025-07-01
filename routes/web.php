@@ -431,7 +431,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('quotes/{quote}/status', [\App\Http\Controllers\Admin\QuoteController::class, 'updateStatus'])->name('quotes.status.update');
         Route::delete('quotes/{quote}/attachments', [\App\Http\Controllers\Admin\QuoteController::class, 'removeAttachment'])->name('quotes.attachments.remove');
         Route::post('quotes/{quote}/send-email', [\App\Http\Controllers\Admin\QuoteController::class, 'sendEmail'])->name('quotes.send-email');
-        Route::get('quotes/{quote}/convert-to-proforma', [\App\Http\Controllers\Admin\QuoteController::class, 'convertToProforma'])->name('quotes.convert-to-proforma');
+        Route::post('quotes/{quote}/convert-to-proforma', [\App\Http\Controllers\Admin\QuoteController::class, 'convertToProforma'])->name('quotes.convert-to-proforma');
         
         // Invoice Management
         Route::resource('invoices', \App\Http\Controllers\Admin\InvoiceController::class);
