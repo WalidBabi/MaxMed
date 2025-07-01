@@ -1,9 +1,22 @@
 // Prevent back button on sensitive pages
 (function() {
-    window.history.pushState(null, '', window.location.href);
-    window.onpopstate = function() {
+    // Only apply back button protection to sensitive pages
+    const sensitivePaths = [
+        '/checkout',
+        '/payment',
+        '/profile/edit',
+        '/admin/settings'
+    ];
+    
+    const currentPath = window.location.pathname;
+    
+    // Only apply protection if we're on a sensitive page
+    if (sensitivePaths.some(path => currentPath.startsWith(path))) {
         window.history.pushState(null, '', window.location.href);
-    };
+        window.onpopstate = function() {
+            window.history.pushState(null, '', window.location.href);
+        };
+    }
 })();
 
 // Prevent form resubmission

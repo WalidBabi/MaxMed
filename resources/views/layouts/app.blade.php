@@ -203,71 +203,94 @@
             }
         </style>
         
-        <!-- Page Transition Script - Prevents flashing -->
+        <!-- Page Transition System -->
         <script>
-            // Simple function to remove the overlay
-            function hideOverlay() {
-                document.body.classList.remove('navigating');
-            }
-            
-            // Simple function to show the overlay with lab loader
-            function showOverlay() {
-                document.body.classList.add('navigating');
-            }
-            
-            // Create page transition system that prevents flashing
-            document.addEventListener('DOMContentLoaded', function() {
-                // Create overlay if it doesn't exist (should already be in HTML)
-                const overlay = document.getElementById('page-transition-overlay');
-                if (!overlay) {
-                    console.warn('Page transition overlay not found in DOM');
-                }
+            // Single source of truth for navigation state
+            const navigation = {
+                isNavigating: false,
+                preventNextClick: false,
                 
-                // Add event listeners to all internal links
-                document.querySelectorAll('a').forEach(link => {
-                    // Only handle links to the same domain
-                    if (link.hostname === window.location.hostname) {
-                        link.addEventListener('click', function(e) {
-                            // Skip if using modifier keys or it's a download
-                            if (e.ctrlKey || e.metaKey || e.shiftKey || link.hasAttribute('download')) {
-                                return;
-                            }
-                            
-                            // Skip for special links
-                            if (link.getAttribute('href').startsWith('#') || 
-                                link.getAttribute('href').startsWith('mailto:') || 
-                                link.getAttribute('href').startsWith('tel:') ||
-                                link.getAttribute('target') === '_blank' ||
-                                link.hasAttribute('data-no-transition')) {
-                                return;
-                            }
-                            
-                            // Start transition with lab loader
-                            showOverlay();
-                        });
+                start() {
+                    if (this.isNavigating || this.preventNextClick) return false;
+                    this.isNavigating = true;
+                    document.body.classList.add('navigating');
+                    return true;
+                },
+                
+                end() {
+                    this.isNavigating = false;
+                    this.preventNextClick = false;
+                    document.body.classList.remove('navigating');
+                    const overlay = document.getElementById('page-transition-overlay');
+                    if (overlay) {
+                        overlay.style.opacity = "0";
+                        overlay.style.visibility = "hidden";
                     }
+                },
+                
+                preventNext() {
+                    this.preventNextClick = true;
+                    setTimeout(() => this.preventNextClick = false, 300);
+                }
+            };
+
+            // Initialize navigation system
+            function initializeNavigation() {
+                // Single click handler for all internal links
+                document.addEventListener('click', function(e) {
+                    const link = e.target.closest('a');
+                    if (!link) return;
+                    
+                    // Only handle links to the same domain
+                    if (link.hostname !== window.location.hostname) return;
+                    
+                    // Skip if using modifier keys or it's a special link
+                    if (e.ctrlKey || e.metaKey || e.shiftKey || 
+                        link.hasAttribute('download') ||
+                        link.hasAttribute('data-no-transition') ||
+                        link.getAttribute('href').startsWith('#') || 
+                        link.getAttribute('href').startsWith('mailto:') || 
+                        link.getAttribute('href').startsWith('tel:') ||
+                        link.getAttribute('target') === '_blank') {
+                        return;
+                    }
+                    
+                    // Start navigation
+                    if (!navigation.start()) {
+                        e.preventDefault();
+                        return;
+                    }
+                    
+                    // Let the navigation proceed
+                    navigation.preventNext();
                 });
                 
-                // Handle browser back/forward navigation
-                window.addEventListener('popstate', hideOverlay);
-                
-                // Handle page showing from cache
+                // Handle page load and back/forward navigation
                 window.addEventListener('pageshow', function(e) {
-                    if (e.persisted) {
-                        // Page was loaded from back-forward cache
-                        hideOverlay();
+                    navigation.end();
+                });
+                
+                window.addEventListener('popstate', function() {
+                    navigation.end();
+                });
+                
+                // Handle page unload
+                window.addEventListener('beforeunload', function() {
+                    if (!navigation.isNavigating) {
+                        setTimeout(() => navigation.start(), 50);
                     }
                 });
                 
                 // Mark page as loaded
                 document.body.classList.add('page-loaded');
-                
-                // Always ensure overlay is hidden after load
-                hideOverlay();
-            });
+            }
             
-            // Hide overlay when page is fully loaded
-            window.addEventListener('load', hideOverlay);
+            // Initialize immediately if DOM is ready, otherwise wait
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initializeNavigation);
+            } else {
+                initializeNavigation();
+            }
         </script>
         
         <!-- Preconnect to external domains -->
@@ -277,69 +300,30 @@
     
         <!-- Immediate script to prevent flashing of Alpine elements -->
         <script>
-            // Hide Alpine components until Alpine is loaded
             document.addEventListener('DOMContentLoaded', function() {
-                // Add a class to the body to indicate JS is available
                 document.body.classList.add('js-enabled');
                 
-                // Preserve Alpine state during navigation
+                // Initialize Alpine components
                 document.addEventListener('alpine:initialized', () => {
                     document.body.classList.add('alpine-ready');
                 });
-            });
-            
-            // Preserve Alpine state during page transitions
-            window.addEventListener('beforeunload', function(e) {
-                // Check if this is actually a page navigation and not a browser back/forward
-                if (e.currentTarget.performance && e.currentTarget.performance.navigation) {
-                    const navType = e.currentTarget.performance.navigation.type;
-                    // Only apply for normal navigation, not for reload (1) or back/forward (2)
-                    if (navType !== 1 && navType !== 2) {
-                        if (window.Alpine) {
-                            // Don't destroy Alpine components during navigation
-                            document.body.classList.add('navigating');
-                        }
-                    }
-                } else {
-                    // For browsers that don't support the above
-                    document.body.classList.add('navigating');
-                }
-            });
-        </script>
-    
-        <!-- Schema.org structured data -->
-        @include('layouts.schema')
-
-        <!-- Script to prevent navbar flashing during navigation -->
-        <script>
-            // Apply immediate styles to the navbar to prevent flashing
-            document.addEventListener('DOMContentLoaded', function() {
-                // Mark that Alpine is ready
+                
+                // Initialize navbar
                 const navbar = document.querySelector('nav');
                 if (navbar) {
-                    // Force the navbar to display block to avoid flashing
                     navbar.classList.add('initialized');
                 }
                 
-                // Force sidebars to be visible
+                // Initialize sidebars
                 document.querySelectorAll('.sidebar, .sidebar-column').forEach(el => {
                     el.style.opacity = '1';
                     el.style.visibility = 'visible';
                 });
             });
-            
-            // Preserve navbar state during page navigation
-            if (window.history && window.history.pushState) {
-                window.addEventListener('beforeunload', function() {
-                    // Keep navbar visible during page transitions
-                    const navbar = document.querySelector('nav');
-                    if (navbar) {
-                        navbar.style.opacity = '1';
-                        navbar.style.transition = 'none';
-                    }
-                });
-            }
         </script>
+    
+        <!-- Schema.org structured data -->
+        @include('layouts.schema')
 
         <!-- Critical CSS inline -->
         <style>
@@ -713,27 +697,6 @@
                     el.style.opacity = '1';
                     el.style.visibility = 'visible';
                 });
-                
-                // Add transition handlers to internal links for smooth navigation
-                const internalLinks = document.querySelectorAll('a[href^="/"]:not([target]), a[href^="{{ url("/") }}"]:not([target])');
-                internalLinks.forEach(link => {
-                    if (!link.hasAttribute('data-no-transition')) {
-                        link.addEventListener('click', function(e) {
-                            // Skip if using modifier keys
-                            if (e.ctrlKey || e.metaKey || e.shiftKey) return;
-                            
-                            // Skip for specific links
-                            if (link.getAttribute('href').startsWith('#') || 
-                                link.getAttribute('href').startsWith('mailto:') || 
-                                link.getAttribute('href').startsWith('tel:')) {
-                                return;
-                            }
-                            
-                            // Start transition
-                            document.body.classList.add('navigating');
-                        });
-                    }
-                });
             });
         </script>
 
@@ -748,46 +711,6 @@
                 </div>
             </a>
         </div>
-
-        <!-- Extra script to handle browser back button overlay removal -->
-        <script>
-            // Ensure overlay is removed on back navigation
-            (function() {
-                // Forcibly remove overlay when page loads from back button
-                window.addEventListener('pageshow', function(e) {
-                    document.body.classList.remove('navigating');
-                    
-                    // Force all related styles to be cleared
-                    const overlay = document.getElementById('page-transition-overlay');
-                    if (overlay) {
-                        overlay.style.opacity = "0";
-                        overlay.style.visibility = "hidden";
-                    }
-                });
-                
-                // Also handle popstate events
-                window.addEventListener('popstate', function() {
-                    document.body.classList.remove('navigating');
-                    
-                    // Force all related styles to be cleared
-                    const overlay = document.getElementById('page-transition-overlay');
-                    if (overlay) {
-                        overlay.style.opacity = "0";
-                        overlay.style.visibility = "hidden";
-                    }
-                });
-                
-                // Add a small delay for showing loader during navigation
-                // This prevents the loader from showing for very fast page loads
-                window.addEventListener('beforeunload', function(e) {
-                    // Don't show loader immediately - only after a tiny delay
-                    // This prevents flashing for quick navigations
-                    setTimeout(function() {
-                        document.body.classList.add('navigating');
-                    }, 50);
-                });
-            })();
-        </script>
         
         <!-- Google One Tap Sign-in -->
         @include('components.google-one-tap')

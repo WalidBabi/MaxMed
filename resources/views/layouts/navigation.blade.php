@@ -13,6 +13,7 @@
             margin-top: 0 !important; 
             padding-top: 0 !important;
             top: 0 !important;
+            transition: opacity 0.2s ease-in-out;
         }
         
         /* Add a placeholder during load to prevent layout shift */
@@ -20,6 +21,23 @@
             display: none; /* Disable the placeholder */
         }
     </style>
+    
+    <!-- Initialize Alpine.js components without delays -->
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('navigation', () => ({
+                open: false,
+                activeSubmenu: null,
+                activeSubSubmenu: null,
+                
+                init() {
+                    // Mark navigation as initialized immediately
+                    this.$el.closest('nav').classList.add('initialized');
+                }
+            }));
+        });
+    </script>
+    
     <!-- Single Bar with Logo, Links, Search and Navigation -->
     <div class="bg-white py-2" x-init="$el.closest('nav').classList.add('initialized')">
         <div class="container mx-auto px-4 sm:px-6 lg:px-12">
@@ -654,7 +672,7 @@
 </style>
 
 <script>
-    // Function to show cart notification (defined globally)
+    // Function to show cart notification
     function showCartNotification(message) {
         const notification = document.getElementById('cartNotification');
         if (!notification) return; // Guard clause
@@ -666,7 +684,6 @@
 
         // Show notification
         notification.classList.remove('hidden');
-        // Removed animation classes for simplicity and potential conflicts
 
         // Hide after 3 seconds
         setTimeout(function() {
@@ -683,9 +700,6 @@
         const userId = '{{ Auth::id() }}';
         const hintShown = localStorage.getItem('ordersHintShown_' + userId);
         if (hintShown === 'true') return;
-        
-        // For testing: uncomment the line below to reset the hint for all users
-        // localStorage.removeItem('ordersHintShown_' + userId);
 
         // Show tooltip after a short delay
         setTimeout(() => {
@@ -722,42 +736,12 @@
 {{-- Add autocomplete functionality script before the closing </nav> tag --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Page transition to prevent navbar flashing during navigation
-        const links = document.querySelectorAll('a:not([target="_blank"]):not([href^="#"]):not([href^="javascript"]):not([href^="mailto"])');
-        
-        // Apply to internal links that navigate to other pages
-        links.forEach(link => {
-            if (link.hostname === window.location.hostname) {
-                link.addEventListener('click', function(e) {
-                    // Skip if user is pressing modifier keys
-                    if (e.ctrlKey || e.metaKey || e.shiftKey) return;
-                    
-                    // Don't apply to download links or links with data-no-transition
-                    if (link.hasAttribute('download') || link.hasAttribute('data-no-transition')) return;
-                    
-                    const href = link.getAttribute('href');
-                    if (href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
-                    
-                    // Store current scroll position in session storage
-                    sessionStorage.setItem('scrollPos', window.scrollY);
-                    
-                    // Don't hide the navbar during the transition to prevent flashing
-                    document.querySelector('nav').style.opacity = '1';
-                    document.querySelector('nav').style.transition = 'none';
-                });
-            }
-        });
-        
-        // Show orders hint for authenticated users
-        showOrdersHint();
-
-        // Search autocomplete functionality
-        const setupSearchAutocomplete = (inputId, suggestionsId) => {
+        // Setup search autocomplete functionality
+        function setupSearchAutocomplete(inputId, suggestionsId) {
             const searchInput = document.getElementById(inputId);
             const suggestionsContainer = document.getElementById(suggestionsId);
-            
             if (!searchInput || !suggestionsContainer) return;
-            
+
             let debounceTimer;
             
             searchInput.addEventListener('input', function() {
@@ -850,7 +834,7 @@
                 suggestions[activeIndex].classList.add('bg-gray-200');
                 suggestions[activeIndex].scrollIntoView({ block: 'nearest' });
             }
-        };
+        }
         
         // Initialize autocomplete for both desktop and mobile search inputs
         setupSearchAutocomplete('desktop-search-input', 'desktop-search-suggestions');

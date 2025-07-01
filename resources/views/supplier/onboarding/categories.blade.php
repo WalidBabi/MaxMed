@@ -83,6 +83,21 @@
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    <!-- Suggest Categories -->
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-gray-700">Suggest New Categories</label>
+                        <p class="text-sm text-gray-500 mt-1">Don't see a category that fits your products? Suggest new categories here (one per line)</p>
+                        <div class="mt-2">
+                            <textarea id="suggested_categories" name="suggested_categories" rows="4"
+                                      class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                      placeholder="e.g.&#10;Advanced Molecular Diagnostics&#10;Bioinformatics Solutions&#10;Next-Generation Sequencing"></textarea>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-500">We'll review your suggestions and may add them to our category list for all suppliers.</p>
+                        @error('suggested_categories')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="flex justify-end mt-6">
@@ -101,8 +116,9 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle specializations textarea
+    // Handle specializations and suggested categories textareas
     const specializationsTextarea = document.getElementById('specializations');
+    const suggestedCategoriesTextarea = document.getElementById('suggested_categories');
     const form = specializationsTextarea.closest('form');
     
     // Add event listeners to parent category checkboxes
@@ -125,17 +141,32 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Convert textarea lines to array and remove empty lines
-        const lines = specializationsTextarea.value.split('\n').filter(line => line.trim() !== '');
+        // Handle specializations textarea
+        const specializationLines = specializationsTextarea.value.split('\n').filter(line => line.trim() !== '');
         
-        // Remove existing hidden inputs
+        // Remove existing hidden inputs for specializations
         form.querySelectorAll('input[name="specializations[]"]').forEach(input => input.remove());
         
-        // Create hidden inputs for each line
-        lines.forEach(line => {
+        // Create hidden inputs for each specialization line
+        specializationLines.forEach(line => {
             const input = document.createElement('input');
             input.type = 'hidden';
             input.name = 'specializations[]';
+            input.value = line.trim();
+            form.appendChild(input);
+        });
+
+        // Handle suggested categories textarea
+        const suggestedCategoryLines = suggestedCategoriesTextarea.value.split('\n').filter(line => line.trim() !== '');
+        
+        // Remove existing hidden inputs for suggested categories
+        form.querySelectorAll('input[name="suggested_categories[]"]').forEach(input => input.remove());
+        
+        // Create hidden inputs for each suggested category line
+        suggestedCategoryLines.forEach(line => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'suggested_categories[]';
             input.value = line.trim();
             form.appendChild(input);
         });
