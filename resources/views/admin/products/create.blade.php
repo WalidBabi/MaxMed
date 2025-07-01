@@ -256,7 +256,7 @@
                             <!-- Primary Image -->
                             <div>
                                 <label for="image" class="block text-sm font-medium text-gray-700 mb-2">Primary Product Image <span class="text-red-500">*</span></label>
-                                <input type="file" name="image" id="image" required
+                                <input type="file" name="image" id="image" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/avif" required
                                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
                                 <p class="mt-1 text-xs text-gray-500">Recommended size: 800x800px, Max file size: 5MB</p>
                                 @error('image')
@@ -267,7 +267,7 @@
                             <!-- Additional Images -->
                             <div>
                                 <label for="additional_images" class="block text-sm font-medium text-gray-700 mb-2">Additional Product Images</label>
-                                <input type="file" name="additional_images[]" id="additional_images" multiple
+                                <input type="file" name="additional_images[]" id="additional_images" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/avif" multiple
                                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100">
                                 <p class="mt-1 text-xs text-gray-500">You can select multiple images (hold Ctrl or Cmd while selecting)</p>
                                 @error('additional_images')
@@ -281,7 +281,7 @@
                             <!-- Specification Image -->
                             <div>
                                 <label for="specification_image" class="block text-sm font-medium text-gray-700 mb-2">Product Specification Image</label>
-                                <input type="file" name="specification_image" id="specification_image"
+                                <input type="file" name="specification_image" id="specification_image" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/avif"
                                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100">
                                 <p class="mt-1 text-xs text-gray-500">Upload an image showing product specifications or technical details</p>
                                 @error('specification_image')
