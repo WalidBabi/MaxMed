@@ -38,35 +38,35 @@ $organization = [
 {
     "@context": "https://schema.org",
     "@type": "Product",
-    "name": "{{ $product->name }}",
-    "description": "{{ strip_tags(Str::limit($product->description, 300)) }}",
-    "sku": "{{ $product->sku }}",
-    "mpn": "{{ $product->sku }}",
+    "name": "{{ is_object($product) && isset($product->name) ? $product->name : 'Product' }}",
+    "description": "{{ is_object($product) && isset($product->description) ? strip_tags(Str::limit($product->description, 300)) : 'Laboratory equipment and medical supplies' }}",
+    "sku": "{{ is_object($product) && isset($product->sku) ? $product->sku : '' }}",
+    "mpn": "{{ is_object($product) && isset($product->sku) ? $product->sku : '' }}",
     "brand": {
         "@type": "Brand",
-        "name": "{{ $product->brand ? $product->brand->name : 'MaxMed' }}"
+        "name": "{{ is_object($product) && is_object($product->brand) && isset($product->brand->name) ? $product->brand->name : 'MaxMed' }}"
     },
     "manufacturer": {
         "@type": "Organization",
-        "name": "{{ $product->brand ? $product->brand->name : 'MaxMed UAE' }}"
+        "name": "{{ is_object($product) && is_object($product->brand) && isset($product->brand->name) ? $product->brand->name : 'MaxMed UAE' }}"
     },
     "image": [
-        "{{ $product->image_url }}"
-        @if($product->images && $product->images->count() > 0)
+        "{{ is_object($product) && isset($product->image_url) ? $product->image_url : asset('Images/logo.png') }}"
+        @if(is_object($product) && isset($product->images) && $product->images && $product->images->count() > 0)
             @foreach($product->images as $image)
-            ,"{{ $image->image_url }}"
+            ,"{{ is_object($image) && isset($image->image_url) ? $image->image_url : '' }}"
             @endforeach
         @endif
     ],
-    "url": "{{ route('product.show', $product) }}",
-    "category": "{{ $product->category ? $product->category->name : 'Laboratory Equipment' }}",
+    "url": "{{ is_object($product) ? route('product.show', $product) : url()->current() }}",
+    "category": "{{ is_object($product) && is_object($product->category) && isset($product->category->name) ? $product->category->name : 'Laboratory Equipment' }}",
     "offers": {
         "@type": "Offer",
-        "url": "{{ route('product.show', $product) }}",
+        "url": "{{ is_object($product) ? route('product.show', $product) : url()->current() }}",
         "priceCurrency": "AED",
-        "price": "{{ $product->price_aed ?? $product->price }}",
+        "price": "{{ is_object($product) && isset($product->price_aed) ? $product->price_aed : (is_object($product) && isset($product->price) ? $product->price : '0') }}",
         "priceValidUntil": "{{ now()->addMonths(6)->format('Y-m-d') }}",
-        "availability": "{{ $product->inStock() ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }}",
+        "availability": "{{ is_object($product) && method_exists($product, 'inStock') ? ($product->inStock() ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock') : 'https://schema.org/InStock' }}",
         "itemCondition": "https://schema.org/NewCondition",
         "seller": {
             "@type": "Organization",
@@ -124,8 +124,8 @@ $organization = [
     },
     "aggregateRating": {
         "@type": "AggregateRating",
-        "ratingValue": "{{ $product->average_rating ?? 4.8 }}",
-        "reviewCount": "{{ $product->review_count ?? 15 }}",
+        "ratingValue": "{{ is_object($product) && isset($product->average_rating) ? $product->average_rating : 4.8 }}",
+        "reviewCount": "{{ is_object($product) && isset($product->review_count) ? $product->review_count : 15 }}",
         "bestRating": "5",
         "worstRating": "1"
     },
@@ -141,7 +141,7 @@ $organization = [
                 "@type": "Person",
                 "name": "Healthcare Professional"
             },
-            "reviewBody": "Excellent quality {{ strtolower($product->category ? $product->category->name : 'laboratory equipment') }}. Fast delivery and great customer service from MaxMed UAE."
+            "reviewBody": "Excellent quality {{ strtolower(is_object($product) && is_object($product->category) && isset($product->category->name) ? $product->category->name : 'laboratory equipment') }}. Fast delivery and great customer service from MaxMed UAE."
         }
     ]
 }
@@ -167,8 +167,8 @@ $organization = [
 {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
-    "headline": "{{ $news->title }}",
-    "description": "{{ strip_tags(Str::limit($news->content, 300)) }}",
+    "headline": "{{ is_object($news) && isset($news->title) ? $news->title : 'News Article' }}",
+    "description": "{{ is_object($news) && isset($news->content) ? strip_tags(Str::limit($news->content, 300)) : 'Latest news and updates from MaxMed UAE' }}",
     "author": {
         "@type": "Organization",
         "name": "MaxMed UAE"
@@ -181,9 +181,9 @@ $organization = [
             "url": "{{ asset('Images/logo.png') }}"
         }
     },
-    "datePublished": "{{ $news->created_at->toISOString() }}",
-    "dateModified": "{{ $news->updated_at->toISOString() }}",
-    "url": "{{ route('news.show', $news) }}"
+    "datePublished": "{{ is_object($news) && isset($news->created_at) ? $news->created_at->toISOString() : now()->toISOString() }}",
+    "dateModified": "{{ is_object($news) && isset($news->updated_at) ? $news->updated_at->toISOString() : now()->toISOString() }}",
+    "url": "{{ is_object($news) ? route('news.show', $news) : url()->current() }}"
 }
 </script>
 @endif
@@ -199,8 +199,8 @@ $organization = [
         {
             "@type": "ListItem",
             "position": {{ $index + 1 }},
-            "name": "{{ $breadcrumb['name'] }}",
-            "item": "{{ $breadcrumb['url'] }}"
+            "name": "{{ is_array($breadcrumb) && isset($breadcrumb['name']) ? $breadcrumb['name'] : (is_string($breadcrumb) ? $breadcrumb : 'Page ' . ($index + 1)) }}",
+            "item": "{{ is_array($breadcrumb) && isset($breadcrumb['url']) ? $breadcrumb['url'] : url()->current() }}"
         }@if(!$loop->last),@endif
         @endforeach
     ]
