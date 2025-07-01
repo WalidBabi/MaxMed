@@ -110,7 +110,10 @@ class OnboardingController extends Controller
      */
     public function documents()
     {
-        return View::make('supplier.onboarding.documents');
+        $user = Auth::user();
+        $supplierInfo = $user->supplierInformation;
+        
+        return View::make('supplier.onboarding.documents', compact('supplierInfo'));
     }
 
     /**
@@ -135,15 +138,31 @@ class OnboardingController extends Controller
      */
     public function storeDocuments(Request $request)
     {
-        $validated = $request->validate([
-            'trade_license_file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'tax_certificate_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-            'company_profile_file' => 'required|file|mimes:pdf|max:10240',
-            'certification_files.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
-        ]);
-
         $user = Auth::user();
         $supplierInfo = $user->supplierInformation;
+        
+        // Check if documents already exist to make validation conditional
+        $existingDocs = $supplierInfo->documents ?? [];
+        
+        $rules = [
+            'tax_certificate_file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'certification_files.*' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+        ];
+        
+        // Only require files if they don't already exist
+        if (!isset($existingDocs['trade_license_file'])) {
+            $rules['trade_license_file'] = 'required|file|mimes:pdf,jpg,jpeg,png|max:5120';
+        } else {
+            $rules['trade_license_file'] = 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120';
+        }
+        
+        if (!isset($existingDocs['company_profile_file'])) {
+            $rules['company_profile_file'] = 'required|file|mimes:pdf|max:10240';
+        } else {
+            $rules['company_profile_file'] = 'nullable|file|mimes:pdf|max:10240';
+        }
+        
+        $validated = $request->validate($rules);
 
         if (!$supplierInfo || !$supplierInfo->company_name) {
             return redirect()->back()->with('error', 'Please complete company information first.');
@@ -153,27 +172,53 @@ class OnboardingController extends Controller
         $safeCompanyName = $this->createSafeCompanyName($supplierInfo->company_name);
 
         try {
+            // Ensure the supplier documents directory exists
+            $supplierDocsPath = storage_path('app/supplier_documents');
+            if (!file_exists($supplierDocsPath)) {
+                mkdir($supplierDocsPath, 0755, true);
+            }
+            
+            $companyPath = $supplierDocsPath . '/' . $safeCompanyName;
+            if (!file_exists($companyPath)) {
+                mkdir($companyPath, 0755, true);
+            }
+
+            // Get existing documents or initialize empty array
+            $documents = $supplierInfo->documents ?? [];
+            
             // Store documents
-            $documents = [];
             foreach ($validated as $type => $file) {
                 if ($type !== 'certification_files' && $file) {
-                    $path = Storage::disk('supplier_documents')->put(
-                        $safeCompanyName . '/' . $type,
-                        $file
-                    );
-                    $documents[$type] = $path;
+                    try {
+                        $path = Storage::disk('supplier_documents')->put(
+                            $safeCompanyName . '/' . $type,
+                            $file
+                        );
+                        $documents[$type] = $path;
+                        \Log::info("Successfully uploaded {$type}: {$path}");
+                    } catch (\Exception $e) {
+                        \Log::error("Failed to upload {$type}: " . $e->getMessage());
+                        return redirect()->back()
+                            ->with('error', "Failed to upload {$type}. Please try again.")
+                            ->withInput();
+                    }
                 }
             }
 
             // Store certification files if any
             if ($request->hasFile('certification_files')) {
-                $certificationPaths = [];
+                $certificationPaths = $documents['certification_files'] ?? [];
                 foreach ($request->file('certification_files') as $file) {
-                    $path = Storage::disk('supplier_documents')->put(
-                        $safeCompanyName . '/certifications',
-                        $file
-                    );
-                    $certificationPaths[] = $path;
+                    try {
+                        $path = Storage::disk('supplier_documents')->put(
+                            $safeCompanyName . '/certifications',
+                            $file
+                        );
+                        $certificationPaths[] = $path;
+                        \Log::info("Successfully uploaded certification: {$path}");
+                    } catch (\Exception $e) {
+                        \Log::error("Failed to upload certification: " . $e->getMessage());
+                    }
                 }
                 $documents['certification_files'] = $certificationPaths;
             }
@@ -185,8 +230,10 @@ class OnboardingController extends Controller
                 ->with('success', 'Documents uploaded successfully!');
 
         } catch (\Exception $e) {
+            \Log::error('Document upload error: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
             return redirect()->back()
-                ->with('error', 'Failed to upload documents. Please try again.')
+                ->with('error', 'Failed to upload documents. Please try again. Error: ' . $e->getMessage())
                 ->withInput();
         }
     }
