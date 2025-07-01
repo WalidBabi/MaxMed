@@ -487,29 +487,10 @@ class QuoteController extends Controller
             $shippingAddress = 'Shipping address not available';
             
             try {
-                // Safely get billing address
-                if ($customer->billing_street || $customer->billing_city || $customer->billing_state || $customer->billing_zip || $customer->billing_country) {
-                    $billingAddressParts = array_filter([
-                        $customer->billing_street,
-                        $customer->billing_city,
-                        trim(implode(' ', array_filter([$customer->billing_state, $customer->billing_zip]))),
-                        $customer->billing_country,
-                    ]);
-                    $billingAddress = implode("\n", $billingAddressParts);
-                }
-                
-                // Safely get shipping address
-                if ($customer->shipping_street || $customer->shipping_city || $customer->shipping_state || $customer->shipping_zip || $customer->shipping_country) {
-                    $shippingAddressParts = array_filter([
-                        $customer->shipping_street,
-                        $customer->shipping_city,
-                        trim(implode(' ', array_filter([$customer->shipping_state, $customer->shipping_zip]))),
-                        $customer->shipping_country,
-                    ]);
-                    $shippingAddress = implode("\n", $shippingAddressParts);
-                } else {
-                    // Use billing address as fallback if shipping is empty
-                    $shippingAddress = $billingAddress;
+                // Use Customer model's accessor methods for cleaner code
+                if ($customer) {
+                    $billingAddress = $customer->billing_address ?: 'Billing address not available';
+                    $shippingAddress = $customer->shipping_address ?: $billingAddress;
                 }
                 
                 Log::info('QuoteController convertToProforma: Address processing successful', [
@@ -543,7 +524,7 @@ class QuoteController extends Controller
                 'tax_amount' => $quote->tax_amount ?? 0,
                 'discount_amount' => $quote->discount_amount ?? 0,
                 'total_amount' => $quote->total_amount,
-                'currency' => $quote->currency,
+                'currency' => $quote->currency ?: 'AED', // Default to AED if not set
                 'payment_status' => 'pending',
                 'payment_terms' => 'advance_50', // Default to 50% advance
                 'status' => 'draft',
@@ -555,48 +536,38 @@ class QuoteController extends Controller
             foreach ($quote->items as $quoteItem) {
                 Log::info("Converting quote item {$quoteItem->id}: product_id={$quoteItem->product_id}, item_details={$quoteItem->item_details}");
                 
-                // Calculate discount amount from percentage
+                // Calculate values
                 $subtotal = $quoteItem->quantity * $quoteItem->rate;
-                $discountAmount = ($subtotal * ($quoteItem->discount ?? 0)) / 100;
+                $tax = 0; // Default tax to 0, can be updated later if needed
+                $total = $subtotal + $tax;
                 
                 // Get item description, fallback to product name if not set
-                $itemDescription = $quoteItem->item_details;
-                if (empty($itemDescription) && $quoteItem->product) {
-                    $itemDescription = $quoteItem->product->name;
+                $description = $quoteItem->item_details;
+                if (empty($description) && $quoteItem->product) {
+                    $description = $quoteItem->product->name;
                 }
-                if (empty($itemDescription)) {
-                    $itemDescription = 'Product #' . $quoteItem->product_id;
+                if (empty($description)) {
+                    $description = 'Product #' . $quoteItem->product_id;
                 }
                 
                 $invoiceItemData = [
                     'invoice_id' => $invoice->id,
                     'product_id' => $quoteItem->product_id,
-                    'item_description' => $itemDescription,
+                    'description' => $description,
                     'size' => $quoteItem->size,
                     'quantity' => $quoteItem->quantity,
                     'unit_price' => $quoteItem->rate,
-                    'discount_percentage' => $quoteItem->discount ?? 0,
-                    'discount_amount' => $discountAmount,
-                    'line_total' => $quoteItem->amount,
-                    'unit_of_measure' => $quoteItem->unit_of_measure ?? null,
-                    'specifications' => $quoteItem->specifications ?? null,
+                    'subtotal' => $subtotal,
+                    'tax' => $tax,
+                    'total' => $total,
                     'sort_order' => $quoteItem->sort_order,
                 ];
                 
-                Log::info("Creating invoice item with data:", array_merge($invoiceItemData, [
-                    'original_quote_item_discount' => $quoteItem->discount,
-                    'calculated_discount_amount' => $discountAmount,
-                    'original_subtotal' => $subtotal,
-                    'item_description_source' => empty($quoteItem->item_details) ? ($quoteItem->product ? 'product_name' : 'fallback') : 'item_details'
-                ]));
+                Log::info("Creating invoice item with data:", $invoiceItemData);
                 
                 $invoiceItem = \App\Models\InvoiceItem::create($invoiceItemData);
                 
-                Log::info("Created invoice item {$invoiceItem->id}: product_id={$invoiceItem->product_id}, discount_percentage={$invoiceItem->discount_percentage}, discount_amount={$invoiceItem->discount_amount}");
-                
-                // Refresh from database and check again
-                $invoiceItem->refresh();
-                Log::info("After refresh - invoice item {$invoiceItem->id}: product_id={$invoiceItem->product_id}, discount_percentage={$invoiceItem->discount_percentage}, discount_amount={$invoiceItem->discount_amount}");
+                Log::info("Created invoice item {$invoiceItem->id}: product_id={$invoiceItem->product_id}, subtotal={$invoiceItem->subtotal}, total={$invoiceItem->total}");
             }
 
             // Update quote status

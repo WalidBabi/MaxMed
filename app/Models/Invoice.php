@@ -12,6 +12,9 @@ use Carbon\Carbon;
 
 class Invoice extends Model
 {
+    // Add a flag to prevent infinite loops
+    protected $isHandlingWorkflow = false;
+
     protected $fillable = [
         'invoice_number',
         'type',
@@ -111,7 +114,15 @@ class Invoice extends Model
 
         // Automatic workflow triggers
         static::updated(function ($invoice) {
-            $invoice->handleWorkflowAutomation();
+            // Prevent infinite loops by checking if workflow is already being handled
+            if (!$invoice->isHandlingWorkflow) {
+                $invoice->isHandlingWorkflow = true;
+                try {
+                    $invoice->handleWorkflowAutomation();
+                } finally {
+                    $invoice->isHandlingWorkflow = false;
+                }
+            }
         });
 
         // Track invoices that need total recalculation
@@ -225,8 +236,8 @@ class Invoice extends Model
         $taxAmount = $this->tax_amount ?? 0;
         $finalTotal = $totalAfterDiscount + $taxAmount;
         
-        // Update invoice totals
-        $this->update([
+        // Update invoice totals without triggering events to prevent infinite loops
+        $this->updateQuietly([
             'subtotal' => $subTotal,
             'total_amount' => $finalTotal
         ]);
@@ -409,8 +420,8 @@ class Invoice extends Model
         // Recalculate totals to ensure accuracy
         $finalInvoice->calculateTotals();
 
-        // Update proforma invoice status
-        $this->update([
+        // Update proforma invoice status without triggering events
+        $this->updateQuietly([
             'status' => 'completed',
             'updated_by' => auth()->id() ?? $userId ?? null
         ]);
@@ -502,7 +513,8 @@ class Invoice extends Model
             $this->paid_amount > 0) {
             
             Log::info("Auto-confirming proforma invoice {$this->id}");
-            $this->update(['status' => 'confirmed']);
+            // Use updateQuietly to prevent triggering more events
+            $this->updateQuietly(['status' => 'confirmed']);
         }
 
         // Auto-create order when proforma invoice meets payment requirements
@@ -544,8 +556,8 @@ class Invoice extends Model
         if (in_array($this->payment_terms, $autoAdvancePaymentTerms)) {
             Log::info("Auto-advancing invoice {$this->id} from 'draft' to 'sent' status due to payment terms: {$this->payment_terms}");
             
-            // Update status to 'sent' and set sent_at timestamp
-            $this->update([
+            // Update status to 'sent' and set sent_at timestamp without triggering events
+            $this->updateQuietly([
                 'status' => 'sent',
                 'sent_at' => now(),
                 'updated_by' => auth()->id() ?? null
@@ -735,9 +747,9 @@ class Invoice extends Model
                 ]);
             }
 
-            // Link invoice to order and update status
+            // Link invoice to order and update status without triggering events
             $newInvoiceStatus = $this->determineNewInvoiceStatus($orderStatus);
-            $this->update([
+            $this->updateQuietly([
                 'order_id' => $order->id, 
                 'status' => $newInvoiceStatus
             ]);
@@ -952,7 +964,7 @@ class Invoice extends Model
         $newStatus = $statusMapping[$this->order->status] ?? $this->status;
         
         if ($newStatus !== $this->status) {
-            $this->update(['status' => $newStatus]);
+            $this->updateQuietly(['status' => $newStatus]);
             Log::info("Auto-updated invoice {$this->id} status to {$newStatus} based on order status");
         }
     }
