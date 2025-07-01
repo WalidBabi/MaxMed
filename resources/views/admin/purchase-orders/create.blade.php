@@ -1094,9 +1094,6 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         
         // Combine specifications and size
         let allSpecs = [...selectedSpecs];
-        if (selectedSize && selectedSize.trim() !== '') {
-            allSpecs.push(`Size: ${selectedSize}`);
-        }
         
         if (allSpecs.length > 0) {
             specificationsInput.value = allSpecs.join(', ');
