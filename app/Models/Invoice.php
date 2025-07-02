@@ -306,12 +306,17 @@ class Invoice extends Model
         
         Log::info("Remaining amount calculation: {$remainingAmount} (Total: {$this->total_amount}, Paid: {$this->paid_amount})");
 
+        // Get delivery info for better descriptions
+        $delivery = $deliveryId ? \App\Models\Delivery::find($deliveryId) : $this->delivery;
+        $deliveryStatus = $delivery ? $delivery->status : null;
+        $isDelivered = $deliveryStatus === 'delivered';
+
         switch ($this->payment_terms) {
             case 'advance_50':
                 if ($this->paid_amount >= ($this->total_amount * 0.5)) {
                     // 50% advance was paid, final invoice is for remaining 50%
                     $finalInvoice->total_amount = $remainingAmount;
-                    $finalInvoice->subtotal = $remainingAmount;
+                    $finalInvoice->subtotal = $this->subtotal; // Keep original subtotal structure
                     $finalInvoice->payment_status = $remainingAmount > 0 ? 'pending' : 'paid';
                     $finalInvoice->paid_amount = 0;
                     $finalInvoice->description = 'Final Invoice - Remaining Balance (50% advance payment received)';
@@ -339,23 +344,44 @@ class Invoice extends Model
                 break;
 
             case 'on_delivery':
-                // Full amount due on delivery
-                $finalInvoice->total_amount = $this->total_amount;
-                $finalInvoice->subtotal = $this->total_amount;
-                $finalInvoice->payment_status = 'pending';
-                $finalInvoice->paid_amount = 0;
-                $finalInvoice->due_date = now(); // Payment due immediately upon delivery
-                $finalInvoice->description = 'Final Invoice - Payment Due on Delivery';
+                // Check if payment was already received
+                if ($this->paid_amount >= $this->total_amount) {
+                    // Payment already received, final invoice for record keeping
+                    $finalInvoice->total_amount = $this->total_amount;
+                    $finalInvoice->subtotal = $this->subtotal; // Preserve original subtotal
+                    $finalInvoice->payment_status = 'paid';
+                    $finalInvoice->paid_amount = $this->total_amount;
+                    $finalInvoice->paid_at = now();
+                    $finalInvoice->description = $isDelivered 
+                        ? "Final Invoice - Payment Received on Delivery. Previous advance payment received: {$this->paid_amount} AED"
+                        : "Final Invoice - Payment Received. Previous advance payment received: {$this->paid_amount} AED";
+                } else {
+                    // Payment still pending
+                    $finalInvoice->total_amount = $this->total_amount;
+                    $finalInvoice->subtotal = $this->subtotal; // Preserve original subtotal
+                    $finalInvoice->payment_status = 'pending';
+                    $finalInvoice->paid_amount = 0;
+                    $finalInvoice->due_date = now(); // Payment due immediately
+                    $finalInvoice->description = $isDelivered 
+                        ? "Final Invoice - Payment Due. Order has been delivered." . ($this->paid_amount > 0 ? " Previous advance payment received: {$this->paid_amount} AED" : "")
+                        : "Final Invoice - Payment Due on Delivery." . ($this->paid_amount > 0 ? " Previous advance payment received: {$this->paid_amount} AED" : "");
+                }
                 break;
 
             case 'net_30':
                 // Full amount due within 30 days
                 $finalInvoice->total_amount = $this->total_amount;
-                $finalInvoice->subtotal = $this->total_amount;
-                $finalInvoice->payment_status = 'pending';
+                $finalInvoice->subtotal = $this->subtotal; // Preserve original subtotal
+                $finalInvoice->payment_status = $remainingAmount > 0 ? 'pending' : 'paid';
                 $finalInvoice->paid_amount = 0;
                 $finalInvoice->due_date = now()->addDays(30);
-                $finalInvoice->description = 'Final Invoice - Payment Due in 30 Days';
+                $finalInvoice->description = $isDelivered 
+                    ? "Final Invoice - Payment Due in 30 Days. Order has been delivered." . ($this->paid_amount > 0 ? " Previous advance payment received: {$this->paid_amount} AED" : "")
+                    : "Final Invoice - Payment Due in 30 Days." . ($this->paid_amount > 0 ? " Previous advance payment received: {$this->paid_amount} AED" : "");
+                
+                if ($remainingAmount <= 0) {
+                    $finalInvoice->paid_at = now();
+                }
                 break;
 
             case 'custom':
@@ -365,10 +391,12 @@ class Invoice extends Model
                     if ($this->paid_amount >= $requiredAdvance) {
                         // Custom advance was paid, final invoice is for remaining amount
                         $finalInvoice->total_amount = $remainingAmount;
-                        $finalInvoice->subtotal = $remainingAmount;
+                        $finalInvoice->subtotal = $this->subtotal; // Keep original subtotal structure
                         $finalInvoice->payment_status = $remainingAmount > 0 ? 'pending' : 'paid';
                         $finalInvoice->paid_amount = 0;
-                        $finalInvoice->description = "Final Invoice - Remaining Balance ({$advancePercentage}% advance payment received)";
+                        $finalInvoice->description = $isDelivered 
+                            ? "Final Invoice - Remaining Balance ({$advancePercentage}% advance payment received). Order has been delivered."
+                            : "Final Invoice - Remaining Balance ({$advancePercentage}% advance payment received)";
                         
                         if ($remainingAmount <= 0) {
                             $finalInvoice->paid_at = now();
@@ -379,20 +407,24 @@ class Invoice extends Model
                 } else {
                     // No advance required, full amount due
                     $finalInvoice->total_amount = $this->total_amount;
-                    $finalInvoice->subtotal = $this->total_amount;
+                    $finalInvoice->subtotal = $this->subtotal; // Preserve original subtotal
                     $finalInvoice->payment_status = 'pending';
                     $finalInvoice->paid_amount = 0;
-                    $finalInvoice->description = 'Final Invoice - Custom Payment Terms';
+                    $finalInvoice->description = $isDelivered 
+                        ? 'Final Invoice - Custom Payment Terms. Order has been delivered.'
+                        : 'Final Invoice - Custom Payment Terms';
                 }
                 break;
 
             default:
                 // Default case - remaining amount or full amount if no payment
                 $finalInvoice->total_amount = $remainingAmount > 0 ? $remainingAmount : $this->total_amount;
-                $finalInvoice->subtotal = $finalInvoice->total_amount;
+                $finalInvoice->subtotal = $this->subtotal; // Preserve original subtotal structure
                 $finalInvoice->payment_status = $finalInvoice->total_amount > 0 ? 'pending' : 'paid';
                 $finalInvoice->paid_amount = 0;
-                $finalInvoice->description = 'Final Invoice';
+                $finalInvoice->description = $isDelivered 
+                    ? 'Final Invoice - Order has been delivered.'
+                    : 'Final Invoice';
                 
                 if ($finalInvoice->total_amount <= 0) {
                     $finalInvoice->paid_at = now();
@@ -404,13 +436,16 @@ class Invoice extends Model
 
         Log::info("Created final invoice {$finalInvoice->id} with amount {$finalInvoice->total_amount} and status {$finalInvoice->payment_status}");
 
-        // Copy items with potentially adjusted amounts
+        // Copy items - preserve original amounts for full payment scenarios
         foreach ($this->items as $item) {
             $newItem = $item->replicate();
             $newItem->invoice_id = $finalInvoice->id;
             
-            // If this is a partial amount final invoice, adjust totals proportionally
-            if ($finalInvoice->total_amount != $this->total_amount && $this->total_amount > 0) {
+            // Only adjust item amounts if this is a partial amount final invoice
+            // For "on_delivery" with full amount, preserve original item details
+            if ($this->payment_terms !== 'on_delivery' && 
+                $finalInvoice->total_amount != $this->total_amount && 
+                $this->total_amount > 0) {
                 $ratio = $finalInvoice->total_amount / $this->total_amount;
                 $newItem->line_total = $item->line_total * $ratio;
                 $newItem->unit_price = $item->unit_price * $ratio;
@@ -421,8 +456,10 @@ class Invoice extends Model
             $newItem->save();
         }
 
-        // Recalculate totals to ensure accuracy
-        $finalInvoice->calculateTotals();
+        // Recalculate totals to ensure accuracy - but only if needed
+        if ($this->payment_terms !== 'on_delivery' || $finalInvoice->total_amount == 0) {
+            $finalInvoice->calculateTotals();
+        }
 
         // Update proforma invoice status without triggering events
         $this->updateQuietly([
