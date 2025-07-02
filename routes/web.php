@@ -471,6 +471,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Cash Receipts Management
         Route::resource('cash-receipts', \App\Http\Controllers\Admin\CashReceiptController::class)->except(['edit', 'update']);
         Route::get('cash-receipts/{cashReceipt}/pdf', [\App\Http\Controllers\Admin\CashReceiptController::class, 'downloadPdf'])->name('cash-receipts.pdf');
+        Route::post('cash-receipts/{cashReceipt}/send-email', [\App\Http\Controllers\Admin\CashReceiptController::class, 'sendEmail'])->name('cash-receipts.send-email');
         Route::post('orders/{order}/quick-cash-receipt', [\App\Http\Controllers\Admin\CashReceiptController::class, 'quickCreate'])->name('orders.quick-cash-receipt');
 
         // Supplier Payments Management
