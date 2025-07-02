@@ -63,7 +63,7 @@ class InvoiceController extends Controller
         // Calculate totals avoiding double counting
         // - Include proforma invoices that haven't been converted (no child final invoice)
         // - Include final invoices that are standalone (no parent proforma)
-        $totalsQuery = Invoice::whereNull('deleted_at');
+        $totalsQuery = Invoice::query();
         
         // Apply same filters for totals calculation
         if ($request->filled('type')) {
