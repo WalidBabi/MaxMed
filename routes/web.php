@@ -514,6 +514,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return response()->json(['success' => true, 'message' => 'Test successful']);
         })->name('quotes.test.store');
 
+        // Test route for cash receipt debugging
+        Route::post('cash-receipts/test-store', function(\Illuminate\Http\Request $request) {
+            \Log::info('Cash receipt test store route hit', [
+                'authenticated' => auth()->check(),
+                'user_id' => auth()->id(),
+                'data' => $request->all(),
+                'method' => $request->method(),
+                'url' => $request->url()
+            ]);
+            return response()->json(['success' => true, 'message' => 'Cash receipt test successful']);
+        })->name('cash-receipts.test.store');
+
         // Order Quotations
         Route::get('/orders/{order}/quotations', [OrderQuotationsController::class, 'index'])->name('orders.quotations.index');
         Route::post('/orders/{order}/quotations/{quotation}/approve', [OrderQuotationsController::class, 'approve'])->name('orders.quotations.approve');

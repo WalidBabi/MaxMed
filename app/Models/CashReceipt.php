@@ -18,6 +18,7 @@ class CashReceipt extends Model
         'payment_method',
         'description',
         'notes',
+        'reference_number',
         'customer_name',
         'customer_email',
         'customer_phone',
