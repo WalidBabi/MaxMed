@@ -468,6 +468,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('quotations/bulk-action', [\App\Http\Controllers\Admin\QuotationController::class, 'bulkAction'])->name('quotations.bulk-action');
         Route::get('quotations/{quotation}/workflow-status', [\App\Http\Controllers\Admin\QuotationController::class, 'workflowStatus'])->name('quotations.workflow-status');
         
+        // Cash Receipts Management
+        Route::resource('cash-receipts', \App\Http\Controllers\Admin\CashReceiptController::class)->except(['edit', 'update']);
+        Route::get('cash-receipts/{cashReceipt}/download-pdf', [\App\Http\Controllers\Admin\CashReceiptController::class, 'downloadPdf'])->name('cash-receipts.download-pdf');
+        Route::patch('cash-receipts/{cashReceipt}/cancel', [\App\Http\Controllers\Admin\CashReceiptController::class, 'cancel'])->name('cash-receipts.cancel');
+        Route::post('orders/{order}/quick-cash-receipt', [\App\Http\Controllers\Admin\CashReceiptController::class, 'quickCreate'])->name('orders.quick-cash-receipt');
+
         // Supplier Payments Management
         Route::resource('supplier-payments', \App\Http\Controllers\Admin\SupplierPaymentController::class)->only(['index', 'show', 'edit', 'update']);
         Route::post('supplier-payments/{supplierPayment}/mark-completed', [\App\Http\Controllers\Admin\SupplierPaymentController::class, 'markAsCompleted'])->name('supplier-payments.mark-completed');

@@ -101,4 +101,12 @@ class Customer extends Model
             return $this->getBillingAddressAttribute();
         }
     }
+
+    /**
+     * Get the customer's full address (shipping or billing).
+     */
+    public function getFullAddress(): ?string
+    {
+        return $this->getShippingAddressAttribute();
+    }
 }
