@@ -252,6 +252,45 @@ document.addEventListener('DOMContentLoaded', function() {
     const customerAddressInput = document.getElementById('customer_address');
     const amountInput = document.getElementById('amount');
     const currencySelect = document.getElementById('currency');
+    const form = document.querySelector('form');
+
+    // Add form submission debugging
+    form.addEventListener('submit', function(e) {
+        console.log('Form submission started');
+        console.log('Form action:', form.action);
+        console.log('Form method:', form.method);
+        
+        // Log form data
+        const formData = new FormData(form);
+        for (let [key, value] of formData.entries()) {
+            console.log(key + ': ' + value);
+        }
+        
+        // Basic validation
+        const customerId = document.getElementById('customer_id').value;
+        const amount = document.getElementById('amount').value;
+        const receiptDate = document.getElementById('receipt_date').value;
+        
+        if (!customerId) {
+            e.preventDefault();
+            alert('Please select a customer');
+            return false;
+        }
+        
+        if (!amount || amount <= 0) {
+            e.preventDefault();
+            alert('Please enter a valid amount');
+            return false;
+        }
+        
+        if (!receiptDate) {
+            e.preventDefault();
+            alert('Please select a receipt date');
+            return false;
+        }
+        
+        console.log('Form validation passed, submitting...');
+    });
 
     // Auto-fill customer details when customer is selected
     customerSelect.addEventListener('change', function() {

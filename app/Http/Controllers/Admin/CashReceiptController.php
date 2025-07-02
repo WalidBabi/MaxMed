@@ -74,14 +74,28 @@ class CashReceiptController extends Controller
      */
     public function store(Request $request)
     {
+        // Debug logging
+        Log::info('Cash receipt store method called', [
+            'user_id' => auth()->id(),
+            'request_data' => $request->all(),
+            'method' => $request->method(),
+            'url' => $request->url()
+        ]);
+
         $request->validate([
             'customer_id' => 'required|exists:customers,id',
+            'customer_name' => 'required|string|max:255',
+            'customer_email' => 'nullable|email|max:255',
+            'customer_phone' => 'nullable|string|max:255',
+            'customer_address' => 'nullable|string|max:1000',
             'order_id' => 'nullable|exists:orders,id',
             'amount' => 'required|numeric|min:0.01',
-            'payment_date' => 'required|date',
+            'receipt_date' => 'required|date',
             'payment_method' => 'required|in:' . implode(',', array_keys(CashReceipt::$paymentMethods)),
+            'currency' => 'required|in:AED,USD,EUR',
             'description' => 'nullable|string|max:1000',
-            'notes' => 'nullable|string|max:1000',
+            'reference_number' => 'nullable|string|max:255',
+            'status' => 'required|in:draft,issued',
         ]);
 
         try {
@@ -95,16 +109,17 @@ class CashReceiptController extends Controller
                 'order_id' => $request->order_id,
                 'customer_id' => $customer->id,
                 'amount' => $request->amount,
-                'currency' => 'AED', // Default to AED as per memory
-                'payment_date' => $request->payment_date,
+                'currency' => $request->currency,
+                'payment_date' => $request->receipt_date,
                 'payment_method' => $request->payment_method,
                 'description' => $request->description ?: ($order ? "Cash payment for Order #{$order->order_number}" : "Cash payment from {$customer->name}"),
-                'notes' => $request->notes,
-                'customer_name' => $customer->name,
-                'customer_email' => $customer->email,
-                'customer_phone' => $customer->phone,
-                'customer_address' => $customer->getFullAddress(),
-                'status' => CashReceipt::STATUS_ISSUED,
+                'notes' => null,
+                'reference_number' => $request->reference_number,
+                'customer_name' => $request->customer_name,
+                'customer_email' => $request->customer_email,
+                'customer_phone' => $request->customer_phone,
+                'customer_address' => $request->customer_address,
+                'status' => $request->status,
                 'created_by' => Auth::id(),
             ]);
 
@@ -121,7 +136,12 @@ class CashReceiptController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
-            Log::error('Failed to create cash receipt: ' . $e->getMessage());
+            Log::error('Failed to create cash receipt: ' . $e->getMessage(), [
+                'user_id' => auth()->id(),
+                'request_data' => $request->all(),
+                'exception' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return redirect()->back()->with('error', 'Failed to create cash receipt: ' . $e->getMessage())->withInput();
         }
     }
