@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class CashReceiptController extends Controller
@@ -208,6 +209,72 @@ class CashReceiptController extends Controller
         } catch (\Exception $e) {
             Log::error('Failed to delete cash receipt: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed to delete receipt.');
+        }
+    }
+
+    /**
+     * Send email for cash receipt from index page
+     */
+    public function sendEmail(Request $request, CashReceipt $cashReceipt)
+    {
+        $request->validate([
+            'customer_email' => 'required|email',
+            'cc_emails' => 'nullable|string'
+        ]);
+
+        try {
+            // Parse CC emails
+            $ccEmails = [];
+            if ($request->filled('cc_emails')) {
+                $ccEmails = array_filter(
+                    array_map('trim', explode(',', $request->cc_emails)),
+                    function($email) {
+                        return filter_var($email, FILTER_VALIDATE_EMAIL);
+                    }
+                );
+            }
+
+            // Find or create customer by email
+            $customer = Customer::where('email', $request->customer_email)->first();
+            if (!$customer) {
+                // Create a minimal customer record for sending email
+                $customer = new Customer();
+                $customer->email = $request->customer_email;
+                $customer->name = $cashReceipt->customer_name; // Use receipt's customer name
+            }
+
+            Mail::to($request->customer_email)->send(new \App\Mail\CashReceiptEmail($cashReceipt, $customer, $ccEmails));
+            
+            $previousStatus = $cashReceipt->status;
+            
+            // Update status to issued if email was sent successfully and it was draft
+            if ($cashReceipt->status === 'draft') {
+                $cashReceipt->update(['status' => 'issued']);
+            }
+            
+            // Return JSON response for AJAX requests
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Cash receipt email sent successfully!',
+                    'previous_status' => $previousStatus,
+                    'new_status' => $cashReceipt->fresh()->status
+                ]);
+            }
+            
+            return redirect()->back()->with('success', 'Cash receipt email sent successfully to ' . $request->customer_email . '!');
+        } catch (\Exception $e) {
+            Log::error('Failed to send cash receipt email: ' . $e->getMessage());
+            
+            // Return JSON response for AJAX requests
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to send email: ' . $e->getMessage()
+                ]);
+            }
+            
+            return redirect()->back()->with('error', 'Failed to send email: ' . $e->getMessage());
         }
     }
 } 
