@@ -325,6 +325,12 @@
                                                     </svg>
                                                 </button>
                                             </form>
+                                        @elseif($invoice->type === 'proforma' && $invoice->status !== 'cancelled')
+                                            <span class="text-gray-400 cursor-help" title="Status: {{ ucfirst($invoice->status) }} - Click invoice to view details and update status">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"></path>
+                                                </svg>
+                                            </span>
                                         @endif
                                         <a href="{{ route('admin.invoices.pdf', $invoice) }}" class="text-red-600 hover:text-red-900" title="Download PDF">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
