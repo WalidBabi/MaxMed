@@ -52,11 +52,11 @@ class InvoiceController extends Controller
         }
 
         // Custom ordering to group related invoices together
-        // Order by parent_invoice_id (nulls first), then by created_at asc, then by type (proforma first)
+        // Order by parent_invoice_id (nulls first), then by created_at desc, then by type (proforma first)
         $query->orderByRaw('COALESCE(parent_invoice_id, id)')
               ->orderBy('parent_invoice_id', 'asc')
               ->orderBy('type', 'asc') // 'final' comes before 'proforma' alphabetically, but we want proforma first
-              ->orderBy('created_at', 'asc');
+              ->orderBy('created_at', 'desc');
 
         $invoices = $query->paginate(20);
 
