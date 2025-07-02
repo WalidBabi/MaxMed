@@ -710,34 +710,26 @@
         <!-- TOTALS - RIGHT ALIGNED -->
         <div class="totals-wrapper">
             <div class="totals-section">
-                @php
-                    $subtotal = $invoice->items->sum(function($item) {
-                        return $item->quantity * $item->unit_price;
-                    });
-                    $totalDiscount = $invoice->items->sum('calculated_discount_amount') + ($invoice->discount_amount ?? 0);
-                    $taxAmount = $invoice->tax_amount ?? 0;
-                    $finalTotal = $subtotal - $totalDiscount + $taxAmount;
-                @endphp
                 <table class="totals-table">
                     <tr>
                         <td class="total-label">Subtotal:</td>
-                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($subtotal, 2) }}</td>
+                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->subtotal ?? $invoice->items->sum('line_total'), 2) }}</td>
                     </tr>
-                    @if($totalDiscount > 0)
+                    @if(($invoice->discount_amount ?? 0) > 0)
                     <tr>
                         <td class="total-label">Total Discount:</td>
-                        <td class="total-amount">-{{ $invoice->currency ?? 'AED' }} {{ number_format($totalDiscount, 2) }}</td>
+                        <td class="total-amount">-{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->discount_amount, 2) }}</td>
                     </tr>
                     @endif
-                    @if($taxAmount > 0)
+                    @if(($invoice->tax_amount ?? 0) > 0)
                     <tr>
                         <td class="total-label">Tax:</td>
-                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($taxAmount, 2) }}</td>
+                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->tax_amount, 2) }}</td>
                     </tr>
                     @endif
                     <tr class="grand-total">
                         <td class="total-label">Total Amount:</td>
-                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($finalTotal, 2) }}</td>
+                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->total_amount, 2) }}</td>
                     </tr>
                 </table>
             </div>
@@ -768,12 +760,28 @@
         @if($invoice->type === 'final')
         <div class="payment-section">
             <div class="payment-title">Final Invoice</div>
-            <div class="payment-text">Your order has been processed and is ready for delivery. Please arrange payment for the remaining amount if applicable.</div>
-            @if($invoice->parentInvoice && $invoice->parentInvoice->paid_amount > 0)
-                <div class="payment-text">Previous advance payment received: <strong>{{ number_format($invoice->parentInvoice->paid_amount, 2) }} {{ $invoice->currency }}</strong></div>
+            @php
+                $isDelivered = $invoice->delivery && in_array($invoice->delivery->status, ['delivered', 'completed']);
+                $hasAdvancePayment = $invoice->parentInvoice && $invoice->parentInvoice->paid_amount > 0;
+            @endphp
+            
+            @if($isDelivered)
+                <div class="payment-text">Your order has been delivered successfully. 
+                    @if($invoice->payment_status === 'paid')
+                        Payment has been received.
+                    @else
+                        Please arrange payment for the remaining amount.
+                    @endif
+                </div>
+            @else
+                <div class="payment-text">Your order has been processed and is ready for delivery. Please arrange payment for the remaining amount if applicable.</div>
+            @endif
+            
+            @if($hasAdvancePayment)
+                <div class="payment-text">Previous advance payment received: <strong>{{ number_format($invoice->parentInvoice->paid_amount, 2) }} {{ $invoice->currency ?? 'AED' }}</strong></div>
             @endif
         </div>
-                 @endif
+        @endif
 
          <!-- BANKING SECTION -->
          <div class="banking-section">
