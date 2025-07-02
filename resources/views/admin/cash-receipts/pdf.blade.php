@@ -646,9 +646,20 @@
                             @endif
                         </td>
                         <td>
-                            @if($item->specifications)
+                            @php
+                                // Get invoice item for this order item to get specifications and size
+                                $invoiceItem = null;
+                                if($cashReceipt->order && $cashReceipt->order->invoices) {
+                                    foreach($cashReceipt->order->invoices as $invoice) {
+                                        $invoiceItem = $invoice->items->where('product_id', $item->product_id)->first();
+                                        if($invoiceItem) break;
+                                    }
+                                }
+                            @endphp
+                            
+                            @if($invoiceItem && $invoiceItem->specifications)
                                 @php
-                                    $selectedSpecs = json_decode($item->specifications, true);
+                                    $selectedSpecs = json_decode($invoiceItem->specifications, true);
                                 @endphp
                                 @if(count($selectedSpecs) > 0)
                                     <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
@@ -659,14 +670,14 @@
                                 @endif
                             @endif
                             
-                            @if($item->size && !empty(trim($item->size)))
+                            @if($invoiceItem && $invoiceItem->size && !empty(trim($invoiceItem->size)))
                                 <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3; margin-top: 3px;">
                                     <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1px;">Size:</div>
-                                    <div>{{ $item->size }}</div>
+                                    <div>{{ $invoiceItem->size }}</div>
                                 </div>
                             @endif
                             
-                            @if((!$item->specifications || empty(trim($item->specifications))) && (!$item->size || empty(trim($item->size))))
+                            @if((!$invoiceItem || !$invoiceItem->specifications || empty(trim($invoiceItem->specifications))) && (!$invoiceItem || !$invoiceItem->size || empty(trim($invoiceItem->size))))
                                 <span style="font-size: 9px; color: var(--text-muted);">-</span>
                             @endif
                         </td>

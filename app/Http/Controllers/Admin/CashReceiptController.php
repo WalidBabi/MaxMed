@@ -161,7 +161,7 @@ class CashReceiptController extends Controller
      */
     public function downloadPdf(CashReceipt $cashReceipt)
     {
-        $cashReceipt->load(['customer', 'order']);
+        $cashReceipt->load(['customer', 'order.invoices.items']);
         
         $customer = $cashReceipt->customer;
         
