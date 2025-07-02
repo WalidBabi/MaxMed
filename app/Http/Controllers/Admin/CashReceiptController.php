@@ -131,7 +131,7 @@ class CashReceiptController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.cash-receipts.show', $cashReceipt)
+            return redirect()->route('admin.cash-receipts.index')
                 ->with('success', 'Cash receipt created successfully!');
 
         } catch (\Exception $e) {
@@ -169,29 +169,6 @@ class CashReceiptController extends Controller
     }
 
     /**
-     * Cancel a cash receipt
-     */
-    public function cancel(CashReceipt $cashReceipt)
-    {
-        try {
-            if ($cashReceipt->status === CashReceipt::STATUS_CANCELLED) {
-                return redirect()->back()->with('error', 'Receipt is already cancelled.');
-            }
-
-            $cashReceipt->update([
-                'status' => CashReceipt::STATUS_CANCELLED,
-                'updated_by' => Auth::id(),
-            ]);
-
-            return redirect()->back()->with('success', 'Receipt cancelled successfully.');
-
-        } catch (\Exception $e) {
-            Log::error('Failed to cancel cash receipt: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to cancel receipt.');
-        }
-    }
-
-    /**
      * Quick create receipt from order
      */
     public function quickCreate(Order $order)
@@ -208,12 +185,27 @@ class CashReceiptController extends Controller
                 $order->update(['status' => Order::STATUS_PROCESSING]);
             }
 
-            return redirect()->route('admin.cash-receipts.show', $cashReceipt)
+            return redirect()->route('admin.cash-receipts.index')
                 ->with('success', 'Cash receipt created successfully!');
 
         } catch (\Exception $e) {
             Log::error('Failed to create quick cash receipt: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed to create cash receipt.');
+        }
+    }
+
+    /**
+     * Delete the specified cash receipt
+     */
+    public function destroy(CashReceipt $cashReceipt)
+    {
+        try {
+            $cashReceipt->delete();
+            return redirect()->route('admin.cash-receipts.index')
+                ->with('success', 'Cash receipt deleted successfully!');
+        } catch (\Exception $e) {
+            Log::error('Failed to delete cash receipt: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to delete receipt.');
         }
     }
 } 

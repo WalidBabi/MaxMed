@@ -1,347 +1,406 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cash Receipt - {{ $cashReceipt->receipt_number }}</title>
+    <meta charset="utf-8">
+    <title>Cash Receipt {{ $cashReceipt->receipt_number }}</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
+        @page {
             margin: 0;
-            padding: 20px;
-            color: #333;
-            font-size: 14px;
-            line-height: 1.6;
+            size: A4;
         }
-        
-        .header {
-            border-bottom: 3px solid #4F46E5;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
+
+        :root {
+            --primary-color: #1e40af;
+            --primary-light: #dbeafe;
+            --secondary-color: #1f2937;
+            --accent-color: #0ea5e9;
+            --light-gray: #f8fafc;
+            --medium-gray: #e2e8f0;
+            --border-color: #d1d5db;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --text-muted: #9ca3af;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --danger-color: #dc2626;
         }
-        
-        .company-info {
-            text-align: center;
-            margin-bottom: 20px;
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'DejaVu Sans', 'Arial', 'Helvetica', sans-serif !important;
         }
-        
-        .company-name {
-            font-size: 28px;
-            font-weight: bold;
-            color: #4F46E5;
-            margin-bottom: 5px;
-        }
-        
-        .company-tagline {
-            font-size: 12px;
-            color: #6B7280;
-            margin-bottom: 10px;
-        }
-        
-        .company-details {
-            font-size: 11px;
-            color: #6B7280;
+
+        body {
+            font-family: 'DejaVu Sans', 'Arial', 'Helvetica', sans-serif !important;
+            color: var(--text-primary);
+            font-size: 10px;
             line-height: 1.4;
+            background-color: white;
+            padding: 25px 35px;
         }
-        
-        .receipt-title {
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            color: #1F2937;
-            margin: 20px 0;
+
+        /* MAIN CONTAINER */
+        .document-container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* HEADER SECTION */
+        .header-wrapper {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 25px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0;
+        }
+
+        .company-section {
+            width: 60%;
+            padding-top: 8px;
+        }
+
+        .company-logo {
+            margin-bottom: 15px;
+        }
+
+        .company-logo img {
+            height: 50px;
+            max-width: 250px;
+            object-fit: contain;
+        }
+
+        .company-details {
+            font-size: 9px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .company-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .document-title-section {
+            width: 35%;
+            text-align: right;
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 0;
+        }
+
+        .document-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary-color);
+            letter-spacing: -0.8px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .document-number {
+            font-size: 16px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* META INFORMATION */
+        .meta-wrapper {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            gap: 25px;
+            margin-top: 8px;
+        }
+
+        .client-section {
+            width: 60%;
+        }
+
+        .client-info {
+            background-color: var(--light-gray);
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 3px solid var(--primary-color);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-heading {
+            font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-weight: 700;
         }
-        
-        .receipt-number {
-            text-align: center;
-            font-size: 16px;
-            color: #4F46E5;
-            font-weight: bold;
-            margin-bottom: 30px;
+
+        .client-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.3;
         }
-        
-        .info-section {
-            margin-bottom: 25px;
+
+        .client-address {
+            font-size: 10px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-top: 6px;
         }
-        
-        .info-row {
-            display: flex;
-            margin-bottom: 12px;
-            border-bottom: 1px dotted #E5E7EB;
-            padding-bottom: 8px;
+
+        .meta-section {
+            width: 35%;
         }
-        
-        .info-label {
-            font-weight: bold;
-            color: #374151;
-            width: 120px;
-            flex-shrink: 0;
-        }
-        
-        .info-value {
-            color: #1F2937;
-            flex: 1;
-        }
-        
-        .customer-section, .payment-section {
-            background-color: #F9FAFB;
-            padding: 20px;
+
+        .meta-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--light-gray);
             border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid #4F46E5;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
-        
-        .section-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #374151;
+
+        .meta-table td {
+            padding: 10px 15px;
+            vertical-align: top;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .meta-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .meta-table .label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            width: 45%;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .meta-table .value {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 10px;
+        }
+
+        /* PAYMENT DETAILS */
+        .payment-details {
+            margin-top: 30px;
+            background-color: var(--primary-light);
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .payment-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-color);
             margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .amount-section {
+            text-align: right;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--light-gray);
+            border-radius: 8px;
+        }
+
+        .amount-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        
-        .amount-section {
-            background-color: #FEF3C7;
-            border: 2px solid #F59E0B;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            margin: 30px 0;
-        }
-        
-        .amount-label {
-            font-size: 14px;
-            color: #92400E;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
+
         .amount-value {
-            font-size: 32px;
-            font-weight: bold;
-            color: #92400E;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
         }
-        
-        .payment-method {
-            display: inline-block;
-            background-color: #E0E7FF;
-            color: #3730A3;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        
-        .status-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        
-        .status-issued {
-            background-color: #D1FAE5;
-            color: #065F46;
-        }
-        
-        .status-draft {
-            background-color: #FEF3C7;
-            color: #92400E;
-        }
-        
-        .status-cancelled {
-            background-color: #FEE2E2;
-            color: #991B1B;
-        }
-        
+
+        /* FOOTER */
         .footer {
-            margin-top: 50px;
-            border-top: 2px solid #E5E7EB;
+            margin-top: 40px;
             padding-top: 20px;
+            border-top: 1px solid var(--border-color);
         }
-        
+
         .signature-section {
             display: flex;
             justify-content: space-between;
-            margin-top: 40px;
+            margin-top: 30px;
         }
-        
+
         .signature-box {
+            width: 45%;
             text-align: center;
-            width: 200px;
         }
-        
+
         .signature-line {
-            border-bottom: 2px solid #374151;
-            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 8px;
             height: 40px;
         }
-        
+
         .signature-label {
-            font-size: 12px;
-            color: #6B7280;
-            font-weight: bold;
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        
+
         .notes {
-            margin-top: 30px;
-            padding: 15px;
-            background-color: #F3F4F6;
-            border-radius: 6px;
-            border-left: 3px solid #6B7280;
-        }
-        
-        .notes-title {
-            font-weight: bold;
-            color: #374151;
-            margin-bottom: 8px;
-        }
-        
-        .thank-you {
+            margin-top: 20px;
+            font-size: 9px;
+            color: var(--text-secondary);
             text-align: center;
-            margin-top: 30px;
             font-style: italic;
-            color: #6B7280;
-            font-size: 16px;
         }
-        
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-issued {
+            background-color: #dcfce7;
+            color: var(--success-color);
+        }
+
+        .status-draft {
+            background-color: #fef3c7;
+            color: var(--warning-color);
+        }
+
+        .status-cancelled {
+            background-color: #fee2e2;
+            color: var(--danger-color);
+        }
+
+        /* RESPONSIVE ADJUSTMENTS */
         @media print {
             body {
-                margin: 0;
-                padding: 15px;
-            }
-            
-            .header {
-                page-break-inside: avoid;
-            }
-            
-            .amount-section {
-                page-break-inside: avoid;
+                padding: 20px 30px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <div class="company-info">
-            <div class="company-name">MaxMed</div>
-            <div class="company-tagline">Your Trusted Laboratory & Medical Equipment Partner</div>
-            <div class="company-details">
-                Office: Dubai, UAE | Email: info@maxmed.ae | Phone: +971-XX-XXX-XXXX<br>
-                Website: www.maxmed.ae | Laboratory & Medical Equipment Solutions
-            </div>
-        </div>
-    </div>
-
-    <!-- Receipt Title -->
-    <div class="receipt-title">Cash Receipt</div>
-    <div class="receipt-number">{{ $cashReceipt->receipt_number }}</div>
-
-    <!-- Customer Information -->
-    <div class="customer-section">
-        <div class="section-title">Customer Information</div>
-        <div class="info-row">
-            <div class="info-label">Customer Name:</div>
-            <div class="info-value">{{ $cashReceipt->customer_name }}</div>
-        </div>
-        @if($cashReceipt->customer_email)
-        <div class="info-row">
-            <div class="info-label">Email:</div>
-            <div class="info-value">{{ $cashReceipt->customer_email }}</div>
-        </div>
-        @endif
-        @if($cashReceipt->customer_phone)
-        <div class="info-row">
-            <div class="info-label">Phone:</div>
-            <div class="info-value">{{ $cashReceipt->customer_phone }}</div>
-        </div>
-        @endif
-        @if($cashReceipt->customer_address)
-        <div class="info-row">
-            <div class="info-label">Address:</div>
-            <div class="info-value">{{ $cashReceipt->customer_address }}</div>
-        </div>
-        @endif
-    </div>
-
-    <!-- Payment Information -->
-    <div class="payment-section">
-        <div class="section-title">Payment Details</div>
-        <div class="info-row">
-            <div class="info-label">Receipt Date:</div>
-            <div class="info-value">{{ formatDubaiDate($cashReceipt->receipt_date, 'F j, Y') }}</div>
-        </div>
-        <div class="info-row">
-            <div class="info-label">Payment Method:</div>
-            <div class="info-value">
-                <span class="payment-method">{{ ucfirst(str_replace('_', ' ', $cashReceipt->payment_method)) }}</span>
-            </div>
-        </div>
-        @if($cashReceipt->reference_number)
-        <div class="info-row">
-            <div class="info-label">Reference Number:</div>
-            <div class="info-value">{{ $cashReceipt->reference_number }}</div>
-        </div>
-        @endif
-        @if($cashReceipt->order)
-        <div class="info-row">
-            <div class="info-label">Related Order:</div>
-            <div class="info-value">{{ $cashReceipt->order->order_number }}</div>
-        </div>
-        @endif
-        <div class="info-row">
-            <div class="info-label">Status:</div>
-            <div class="info-value">
-                <span class="status-badge status-{{ $cashReceipt->status }}">{{ ucfirst($cashReceipt->status) }}</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Amount Section -->
-    <div class="amount-section">
-        <div class="amount-label">Total Amount Received</div>
-        <div class="amount-value">{{ number_format($cashReceipt->amount, 2) }} {{ $cashReceipt->currency }}</div>
-    </div>
-
-    <!-- Description -->
-    @if($cashReceipt->description)
-    <div class="notes">
-        <div class="notes-title">Description:</div>
-        {{ $cashReceipt->description }}
-    </div>
-    @endif
-
-    <!-- Footer -->
-    <div class="footer">
-        <div class="info-row">
-            <div class="info-label">Issued By:</div>
-            <div class="info-value">{{ $cashReceipt->user->name ?? 'System' }}</div>
-        </div>
-        <div class="info-row">
-            <div class="info-label">Issue Date:</div>
-            <div class="info-value">{{ formatDubaiDate($cashReceipt->created_at, 'F j, Y \a\t g:i A') }}</div>
-        </div>
-
-        <!-- Signature Section -->
-        <div class="signature-section">
-            <div class="signature-box">
-                <div class="signature-line"></div>
-                <div class="signature-label">Customer Signature</div>
-            </div>
-            <div class="signature-box">
-                <div class="signature-line"></div>
-                <div class="signature-label">Authorized Signature</div>
+    <div class="document-container">
+        <!-- Header -->
+        <div class="header-wrapper">
+            <div class="header-section">
+                <div class="company-section">
+                    <div class="company-logo">
+                        <img src="{{ public_path('Images/logo.png') }}" alt="MaxMed Logo">
+                    </div>
+                    <div class="company-details">
+                        <div class="company-name">MaxMed Scientific and Laboratory Equipment Trading Co. LLC</div>
+                        <div>Dubai 448945</div>
+                        <div>United Arab Emirates</div>
+                        <div>sales@maxmedme.com</div>
+                        <div>www.maxmedme.com</div>
+                    </div>
+                </div>
+                <div class="document-title-section">
+                    <div class="document-title">Cash Receipt</div>
+                    <div class="document-number">{{ $cashReceipt->receipt_number }}</div>
+                </div>
             </div>
         </div>
 
-        <div class="thank-you">
-            Thank you for your business!
+        <!-- Meta Information -->
+        <div class="meta-wrapper">
+            <div class="client-section">
+                <div class="client-info">
+                    <div class="section-heading">Customer Information</div>
+                    <div class="client-name">{{ $cashReceipt->customer_name }}</div>
+                    <div class="client-address">
+                        {{ $cashReceipt->customer_address }}<br>
+                        @if($cashReceipt->customer_email)Email: {{ $cashReceipt->customer_email }}<br>@endif
+                        @if($cashReceipt->customer_phone)Phone: {{ $cashReceipt->customer_phone }}@endif
+                    </div>
+                </div>
+            </div>
+            <div class="meta-section">
+                <table class="meta-table">
+                    <tr>
+                        <td class="label">Receipt Date</td>
+                        <td class="value">{{ formatDubaiDate($cashReceipt->receipt_date, 'M d, Y') }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Payment Method</td>
+                        <td class="value">{{ ucfirst(str_replace('_', ' ', $cashReceipt->payment_method)) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Status</td>
+                        <td class="value">
+                            <span class="status-badge status-{{ $cashReceipt->status }}">
+                                {{ ucfirst($cashReceipt->status) }}
+                            </span>
+                        </td>
+                    </tr>
+                    @if($cashReceipt->reference_number)
+                    <tr>
+                        <td class="label">Reference</td>
+                        <td class="value">{{ $cashReceipt->reference_number }}</td>
+                    </tr>
+                    @endif
+                </table>
+            </div>
+        </div>
+
+        <!-- Payment Details -->
+        <div class="payment-details">
+            <div class="payment-title">Payment Details</div>
+            @if($cashReceipt->description)
+            <div style="margin-bottom: 15px; font-size: 10px;">{{ $cashReceipt->description }}</div>
+            @endif
+            <div class="amount-section">
+                <div class="amount-label">Amount Received</div>
+                <div class="amount-value">{{ number_format($cashReceipt->amount, 2) }} {{ $cashReceipt->currency }}</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="signature-section">
+                <div class="signature-box">
+                    <div class="signature-line"></div>
+                    <div class="signature-label">Authorized Signature</div>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-line"></div>
+                    <div class="signature-label">Customer Signature</div>
+                </div>
+            </div>
+            <div class="notes">
+                Thank you for your business. This is an official receipt of payment.
+            </div>
         </div>
     </div>
 </body>

@@ -269,8 +269,12 @@ class Invoice extends Model
 
     public function canConvertToFinalInvoice()
     {
+        // Allow conversion for proforma invoices that are confirmed, sent, or paid
+        // This is more flexible than just 'confirmed' status
+        $allowedStatuses = ['confirmed', 'sent', 'paid'];
+        
         return $this->type === 'proforma' && 
-               $this->status === 'confirmed' && 
+               in_array($this->status, $allowedStatuses) && 
                !$this->childInvoices()->where('type', 'final')->exists();
     }
 

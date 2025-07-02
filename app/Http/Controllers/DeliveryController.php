@@ -98,7 +98,22 @@ class DeliveryController extends Controller
             // Auto-convert proforma invoice to final invoice and create cash receipt
             $proformaInvoice = $this->findProformaInvoice($delivery->order);
             
+            // Add comprehensive debugging
             if ($proformaInvoice) {
+                Log::info("Found proforma invoice: {$proformaInvoice->invoice_number} (ID: {$proformaInvoice->id})");
+                Log::info("Proforma invoice status: {$proformaInvoice->status}");
+                Log::info("Proforma invoice type: {$proformaInvoice->type}");
+                Log::info("Proforma invoice payment terms: {$proformaInvoice->payment_terms}");
+                Log::info("Proforma invoice total amount: {$proformaInvoice->total_amount}");
+                Log::info("Proforma invoice paid amount: {$proformaInvoice->paid_amount}");
+                Log::info("Can convert to final invoice: " . ($proformaInvoice->canConvertToFinalInvoice() ? 'YES' : 'NO'));
+                
+                // Check if final invoice already exists
+                $existingFinalInvoice = $proformaInvoice->childInvoices()->where('type', 'final')->first();
+                if ($existingFinalInvoice) {
+                    Log::info("Final invoice already exists: {$existingFinalInvoice->invoice_number}");
+                }
+                
                 $results = $this->processInvoiceConversion($proformaInvoice, $delivery);
                 
                 if ($results['success']) {
@@ -108,6 +123,13 @@ class DeliveryController extends Controller
                 }
             } else {
                 Log::info("No proforma invoice found for order {$delivery->order->order_number}, skipping conversion.");
+                
+                // Debug: Check what invoices exist for this order
+                $allInvoices = $delivery->order->invoices;
+                Log::info("All invoices for order {$delivery->order->order_number}:");
+                foreach ($allInvoices as $invoice) {
+                    Log::info("  - Invoice {$invoice->invoice_number}: type={$invoice->type}, status={$invoice->status}");
+                }
             }
 
             DB::commit();
@@ -121,6 +143,7 @@ class DeliveryController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Failed to process signature: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
             return response()->json(['error' => 'Failed to process signature'], 500);
         }
     }
@@ -130,9 +153,22 @@ class DeliveryController extends Controller
      */
     private function findProformaInvoice(Order $order): ?Invoice
     {
-        return $order->proformaInvoice()
+        // First try to find a proforma invoice with confirmed status
+        $proformaInvoice = $order->proformaInvoice()
             ->where('status', '!=', 'cancelled')
             ->first();
+            
+        if ($proformaInvoice) {
+            return $proformaInvoice;
+        }
+        
+        // If no proforma invoice found via relationship, try a broader search
+        $proformaInvoice = Invoice::where('order_id', $order->id)
+            ->where('type', 'proforma')
+            ->where('status', '!=', 'cancelled')
+            ->first();
+            
+        return $proformaInvoice;
     }
 
     /**
