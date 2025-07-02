@@ -121,8 +121,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const suggestedCategoriesTextarea = document.getElementById('suggested_categories');
     const form = specializationsTextarea.closest('form');
     
-    // Add event listeners to parent category checkboxes
-    document.querySelectorAll('input[type="checkbox"][name="categories[]"]').forEach(checkbox => {
+    // Add event listeners to parent category checkboxes only (not subcategories)
+    document.querySelectorAll('.relative > .flex > .flex.items-center > input[type="checkbox"][name="categories[]"]').forEach(checkbox => {
         checkbox.addEventListener('change', function() {
             // Find the parent div that contains subcategories
             const parentDiv = this.closest('.relative');
