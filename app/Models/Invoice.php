@@ -352,9 +352,19 @@ class Invoice extends Model
                     $finalInvoice->payment_status = 'paid';
                     $finalInvoice->paid_amount = $this->total_amount;
                     $finalInvoice->paid_at = now();
-                    $finalInvoice->description = $isDelivered 
-                        ? "Final Invoice - Payment Received on Delivery. Previous advance payment received: {$this->paid_amount} AED"
-                        : "Final Invoice - Payment Received. Previous advance payment received: {$this->paid_amount} AED";
+                    
+                    // Dynamic description based on actual payment scenario
+                    if ($this->paid_amount > 0) {
+                        // There was some advance payment, but this is on_delivery terms
+                        $finalInvoice->description = $isDelivered 
+                            ? "Final Invoice - Payment completed. Partial advance payment was received: {$this->paid_amount} AED. Remaining balance collected on delivery."
+                            : "Final Invoice - Payment completed. Partial advance payment was received: {$this->paid_amount} AED. Remaining balance to be collected on delivery.";
+                    } else {
+                        // Pure on_delivery payment - no advance
+                        $finalInvoice->description = $isDelivered 
+                            ? "Final Invoice - Payment collected on delivery. Full amount paid upon delivery."
+                            : "Final Invoice - Payment received. Payment collected as per on-delivery terms.";
+                    }
                 } else {
                     // Payment still pending
                     $finalInvoice->total_amount = $this->total_amount;
@@ -362,9 +372,20 @@ class Invoice extends Model
                     $finalInvoice->payment_status = 'pending';
                     $finalInvoice->paid_amount = 0;
                     $finalInvoice->due_date = now(); // Payment due immediately
-                    $finalInvoice->description = $isDelivered 
-                        ? "Final Invoice - Payment Due. Order has been delivered." . ($this->paid_amount > 0 ? " Previous advance payment received: {$this->paid_amount} AED" : "")
-                        : "Final Invoice - Payment Due on Delivery." . ($this->paid_amount > 0 ? " Previous advance payment received: {$this->paid_amount} AED" : "");
+                    
+                    // Dynamic description for pending payments
+                    if ($this->paid_amount > 0) {
+                        // Some advance payment made
+                        $remainingBalance = $this->total_amount - $this->paid_amount;
+                        $finalInvoice->description = $isDelivered 
+                            ? "Final Invoice - Payment Due. Order delivered. Advance payment received: {$this->paid_amount} AED. Balance due: {$remainingBalance} AED."
+                            : "Final Invoice - Payment Due on Delivery. Advance payment received: {$this->paid_amount} AED. Balance due: {$remainingBalance} AED.";
+                    } else {
+                        // Pure on_delivery - no advance payment
+                        $finalInvoice->description = $isDelivered 
+                            ? "Final Invoice - Payment Due. Order has been delivered. Full payment due as per on-delivery terms."
+                            : "Final Invoice - Payment Due on Delivery. Full payment to be collected upon delivery.";
+                    }
                 }
                 break;
 

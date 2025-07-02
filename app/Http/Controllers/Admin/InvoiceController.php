@@ -27,7 +27,7 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Invoice::with(['quote', 'order', 'delivery', 'creator', 'payments']);
+        $query = Invoice::with(['quote', 'order', 'delivery', 'creator', 'payments', 'parentInvoice', 'childInvoices']);
 
         // Apply filters
         if ($request->filled('type')) {
@@ -51,7 +51,61 @@ class InvoiceController extends Controller
             });
         }
 
-        $invoices = $query->latest()->paginate(20);
+        // Custom ordering to group related invoices together
+        // Order by parent_invoice_id (nulls first), then by created_at desc, then by type (proforma first)
+        $query->orderByRaw('COALESCE(parent_invoice_id, id)')
+              ->orderBy('parent_invoice_id', 'asc')
+              ->orderBy('type', 'asc') // 'final' comes before 'proforma' alphabetically, but we want proforma first
+              ->orderBy('created_at', 'desc');
+
+        $invoices = $query->paginate(20);
+
+        // Calculate totals avoiding double counting
+        // - Include proforma invoices that haven't been converted (no child final invoice)
+        // - Include final invoices that are standalone (no parent proforma)
+        $totalsQuery = Invoice::whereNull('deleted_at');
+        
+        // Apply same filters for totals calculation
+        if ($request->filled('type')) {
+            $totalsQuery->where('type', $request->type);
+        }
+        if ($request->filled('status')) {
+            $totalsQuery->where('status', $request->status);
+        }
+        if ($request->filled('payment_status')) {
+            $totalsQuery->where('payment_status', $request->payment_status);
+        }
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $totalsQuery->where(function($q) use ($search) {
+                $q->where('invoice_number', 'like', "%{$search}%")
+                  ->orWhere('customer_name', 'like', "%{$search}%")
+                  ->orWhere('reference_number', 'like', "%{$search}%");
+            });
+        }
+        
+        // Filter to avoid double counting
+        $totalsQuery->where(function($q) {
+            $q->where(function($subQ) {
+                // Proforma invoices that haven't been converted
+                $subQ->where('type', 'proforma')
+                     ->whereNotExists(function($existsQ) {
+                         $existsQ->select(DB::raw(1))
+                                 ->from('invoices as child')
+                                 ->whereRaw('child.parent_invoice_id = invoices.id')
+                                 ->where('child.type', 'final');
+                     });
+            })->orWhere(function($subQ) {
+                // Final invoices that are standalone (no parent)
+                $subQ->where('type', 'final')
+                     ->whereNull('parent_invoice_id');
+            });
+        });
+        
+        $invoiceTotals = [
+            'aed' => $totalsQuery->where('currency', 'AED')->sum('total_amount'),
+            'usd' => $totalsQuery->where('currency', 'USD')->sum('total_amount')
+        ];
 
         // Get filter options
         $filterOptions = [
@@ -60,7 +114,7 @@ class InvoiceController extends Controller
             'payment_statuses' => Invoice::PAYMENT_STATUS
         ];
 
-        return view('admin.invoices.index', compact('invoices', 'filterOptions'));
+        return view('admin.invoices.index', compact('invoices', 'filterOptions', 'invoiceTotals'));
     }
 
     /**
@@ -572,7 +626,7 @@ class InvoiceController extends Controller
      */
     public function generatePdf(Invoice $invoice)
     {
-        $invoice->load(['items.product.specifications']);
+        $invoice->load(['items.product.specifications', 'delivery', 'parentInvoice']);
         
         $pdf = Pdf::loadView('admin.invoices.pdf', compact('invoice'));
         

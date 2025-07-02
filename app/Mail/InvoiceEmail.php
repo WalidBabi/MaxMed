@@ -62,7 +62,7 @@ class InvoiceEmail extends Mailable
     public function attachments(): array
     {
         // Generate PDF and attach it
-        $this->invoice->load('items.product.specifications');
+        $this->invoice->load(['items.product.specifications', 'delivery', 'parentInvoice']);
         $pdf = Pdf::loadView('admin.invoices.pdf', ['invoice' => $this->invoice]);
         
         $pdfContent = $pdf->output();
