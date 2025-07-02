@@ -649,11 +649,8 @@
                             @php
                                 // Get invoice item for this order item to get specifications and size
                                 $invoiceItem = null;
-                                if($cashReceipt->order && $cashReceipt->order->invoices) {
-                                    foreach($cashReceipt->order->invoices as $invoice) {
-                                        $invoiceItem = $invoice->items->where('product_id', $item->product_id)->first();
-                                        if($invoiceItem) break;
-                                    }
+                                if($cashReceipt->order && $cashReceipt->order->invoice) {
+                                    $invoiceItem = $cashReceipt->order->invoice->items->where('product_id', $item->product_id)->first();
                                 }
                             @endphp
                             
