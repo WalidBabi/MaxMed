@@ -470,7 +470,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         // Cash Receipts Management
         Route::resource('cash-receipts', \App\Http\Controllers\Admin\CashReceiptController::class)->except(['edit', 'update']);
-        Route::get('cash-receipts/{cashReceipt}/download-pdf', [\App\Http\Controllers\Admin\CashReceiptController::class, 'downloadPdf'])->name('cash-receipts.download-pdf');
+        Route::get('cash-receipts/{cashReceipt}/pdf', [\App\Http\Controllers\Admin\CashReceiptController::class, 'downloadPdf'])->name('cash-receipts.pdf');
         Route::patch('cash-receipts/{cashReceipt}/cancel', [\App\Http\Controllers\Admin\CashReceiptController::class, 'cancel'])->name('cash-receipts.cancel');
         Route::post('orders/{order}/quick-cash-receipt', [\App\Http\Controllers\Admin\CashReceiptController::class, 'quickCreate'])->name('orders.quick-cash-receipt');
 
