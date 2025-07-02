@@ -434,6 +434,38 @@
                     <h3 class="text-lg font-semibold text-gray-900">Quick Actions</h3>
                 </div>
                 <div class="p-6 space-y-3">
+                    <!-- Status Update for Proforma Invoices -->
+                    @if($invoice->type === 'proforma' && !$invoice->canConvertToFinalInvoice() && $invoice->status !== 'cancelled')
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-yellow-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                                </svg>
+                                <div class="flex-1">
+                                    <h4 class="text-sm font-medium text-yellow-800 mb-2">Update Status to Enable Conversion</h4>
+                                    <p class="text-sm text-yellow-700 mb-3">Current status: <strong>{{ ucfirst($invoice->status) }}</strong>. Update to enable final invoice conversion.</p>
+                                    <form action="{{ route('admin.invoices.status.update', $invoice) }}" method="POST" class="inline-block">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="flex items-center space-x-2">
+                                            <select name="status" class="text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                                <option value="sent" {{ $invoice->status === 'sent' ? 'selected' : '' }}>Sent</option>
+                                                <option value="confirmed" {{ $invoice->status === 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                                                <option value="in_production" {{ $invoice->status === 'in_production' ? 'selected' : '' }}>In Production</option>
+                                                <option value="ready_to_ship" {{ $invoice->status === 'ready_to_ship' ? 'selected' : '' }}>Ready to Ship</option>
+                                                <option value="shipped" {{ $invoice->status === 'shipped' ? 'selected' : '' }}>Shipped</option>
+                                                <option value="delivered" {{ $invoice->status === 'delivered' ? 'selected' : '' }}>Delivered</option>
+                                            </select>
+                                            <button type="submit" class="inline-flex items-center px-3 py-1.5 bg-yellow-600 border border-transparent rounded-md text-xs font-medium text-white hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                                                Update
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     @if($invoice->type === 'proforma' && $invoice->canConvertToFinalInvoice())
                         <form action="{{ route('admin.invoices.convert-to-final', $invoice) }}" method="POST" class="inline" onsubmit="return confirm('Convert this proforma invoice to final invoice?');">
                             @csrf
