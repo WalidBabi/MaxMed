@@ -541,7 +541,6 @@
                 <div class="document-title-section">
                     <div class="document-title">Cash Receipt</div>
                     <div class="document-number">{{ $cashReceipt->receipt_number }}</div>
-                    <div class="company-name" style="font-size: 12px; color: #4b5563; margin-top: 8px;">MaxMed Scientific and Laboratory Equipment Trading Co. LLC</div>
                 </div>
             </div>
         </div>
@@ -552,6 +551,11 @@
                 <div class="client-info">
                     <div class="section-heading">Customer Information</div>
                     <div class="client-name">{{ $cashReceipt->customer_name }}</div>
+                    @if($customer && $customer->company_name)
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 3px; font-weight: 500;">
+                            {{ $customer->company_name }}
+                        </div>
+                    @endif
                 </div>
             </div>
             <div class="meta-section">
@@ -642,12 +646,27 @@
                             @endif
                         </td>
                         <td>
-                            @if($item->size)
-                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
+                            @if($item->specifications)
+                                @php
+                                    $selectedSpecs = json_decode($item->specifications, true);
+                                @endphp
+                                @if(count($selectedSpecs) > 0)
+                                    <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
+                                        @foreach($selectedSpecs as $spec)
+                                            <div style="margin-bottom: 2px;">{{ $spec }}</div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            @endif
+                            
+                            @if($item->size && !empty(trim($item->size)))
+                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3; margin-top: 3px;">
                                     <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1px;">Size:</div>
                                     <div>{{ $item->size }}</div>
                                 </div>
-                            @else
+                            @endif
+                            
+                            @if((!$item->specifications || empty(trim($item->specifications))) && (!$item->size || empty(trim($item->size))))
                                 <span style="font-size: 9px; color: var(--text-muted);">-</span>
                             @endif
                         </td>
@@ -693,34 +712,19 @@
         @if($cashReceipt->order && $cashReceipt->order->delivery && $cashReceipt->order->delivery->customer_signature)
         <div class="delivery-signature">
             <div class="payment-title">Delivery Confirmation</div>
-            <div>
-                <span>Signed at:</span>
+            <div style="margin-bottom: 10px;">
+                <span style="font-weight: 600;">Signed at:</span>
                 <span>{{ formatDubaiDate($cashReceipt->order->delivery->signed_at, 'M d, Y H:i') }}</span>
             </div>
-            <div class="signature-image">
-                <img src="{{ $cashReceipt->order->delivery->customer_signature }}" alt="Customer Signature">
+            <div class="signature-image" style="text-align: left;">
+                <img src="{{ public_path('storage/' . $cashReceipt->order->delivery->customer_signature) }}" alt="Customer Signature" style="max-width: 300px; max-height: 100px; border: 1px solid #d1d5db; border-radius: 4px;">
             </div>
         </div>
         @endif
 
         @endif
 
-        <!-- Footer -->
-        <div class="footer">
-            <div class="signature-section">
-                <div class="signature-box">
-                    <div class="signature-line"></div>
-                    <div class="signature-label">Authorized Signature</div>
-                </div>
-                <div class="signature-box">
-                    <div class="signature-line"></div>
-                    <div class="signature-label">Customer Signature</div>
-                </div>
-            </div>
-            <div class="notes">
-                Thank you for your business. This is an official receipt of payment.
-            </div>
-        </div>
+
     </div>
 </body>
 </html>
