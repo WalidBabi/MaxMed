@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Facades\Log;
 
 class CashReceipt extends Model
@@ -127,6 +128,21 @@ class CashReceipt extends Model
     public function updater(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * Get the delivery associated with this cash receipt through the order
+     */
+    public function delivery()
+    {
+        return $this->hasOneThrough(
+            Delivery::class,
+            Order::class,
+            'id', // Foreign key on orders table (order.id)
+            'order_id', // Foreign key on deliveries table (delivery.order_id)
+            'order_id', // Local key on cash_receipts table (cash_receipt.order_id)
+            'id' // Local key on orders table (order.id)
+        );
     }
 
     /**

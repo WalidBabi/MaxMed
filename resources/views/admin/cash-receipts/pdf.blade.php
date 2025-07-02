@@ -237,6 +237,52 @@
             color: var(--primary-color);
         }
 
+        /* Related Documents */
+        .related-documents {
+            margin-top: 30px;
+        }
+
+        .related-documents table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+        }
+
+        .related-documents table td {
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--light-gray);
+        }
+
+        .related-documents table td:first-child {
+            width: 25%;
+        }
+
+        .related-documents table td:last-child {
+            font-weight: 600;
+        }
+
+        /* Delivery Signature */
+        .delivery-signature {
+            margin-top: 30px;
+        }
+
+        .delivery-signature .signature-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .delivery-signature .signature-image {
+            text-align: center;
+        }
+
+        .delivery-signature .signature-image img {
+            max-width: 300px;
+            max-height: 100px;
+        }
+
         /* FOOTER */
         .footer {
             margin-top: 40px;
@@ -307,6 +353,172 @@
                 padding: 20px 30px;
             }
         }
+
+        /* ITEMS TABLE */
+        .items-section {
+            margin-bottom: 25px;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+            table-layout: fixed;
+            border-spacing: 0;
+        }
+
+        .items-table thead {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .items-table th {
+            padding: 12px 10px;
+            text-transform: uppercase;
+            font-size: 8px;
+            letter-spacing: 0.4px;
+            font-weight: 700;
+            text-align: left;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            box-sizing: border-box;
+        }
+
+        .items-table th.text-right {
+            text-align: right;
+        }
+
+        .items-table th.text-center {
+            text-align: center;
+        }
+
+        .items-table tbody tr {
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.1s ease;
+        }
+
+        .items-table tbody tr:nth-child(even) {
+            background-color: var(--light-gray);
+        }
+
+        .items-table tbody tr:hover {
+            background-color: var(--medium-gray);
+        }
+
+        .items-table td {
+            padding: 12px 10px;
+            vertical-align: top;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            border-right: 1px solid var(--border-color);
+            box-sizing: border-box;
+        }
+
+        .items-table td.text-right {
+            text-align: right;
+        }
+
+        .items-table td.text-center {
+            text-align: center;
+        }
+
+        .items-table td:last-child,
+        .items-table th:last-child {
+            border-right: none;
+        }
+
+        .item-description {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* TOTALS SECTION - RIGHT ALIGNED */
+        .totals-wrapper {
+            margin-bottom: 25px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+            margin-left: auto;
+        }
+
+        .totals-section {
+            width: 320px;
+            background-color: var(--light-gray);
+            border-radius: 6px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-left: auto;
+        }
+
+        .totals-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .totals-table tr {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .totals-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .totals-table td {
+            padding: 8px 0;
+        }
+
+        .total-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-align: left;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .total-amount {
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: right;
+            width: 110px;
+            font-size: 11px;
+        }
+
+        .grand-total {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 4px;
+        }
+
+        .grand-total td {
+            padding: 12px 10px;
+        }
+
+        .grand-total .total-label {
+            color: white;
+            font-weight: 700;
+            font-size: 11px;
+        }
+
+        .grand-total .total-amount {
+            color: white;
+            font-weight: 700;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
@@ -329,6 +541,7 @@
                 <div class="document-title-section">
                     <div class="document-title">Cash Receipt</div>
                     <div class="document-number">{{ $cashReceipt->receipt_number }}</div>
+                    <div class="company-name" style="font-size: 12px; color: #4b5563; margin-top: 8px;">MaxMed Scientific and Laboratory Equipment Trading Co. LLC</div>
                 </div>
             </div>
         </div>
@@ -339,30 +552,17 @@
                 <div class="client-info">
                     <div class="section-heading">Customer Information</div>
                     <div class="client-name">{{ $cashReceipt->customer_name }}</div>
-                    <div class="client-address">
-                        {{ $cashReceipt->customer_address }}<br>
-                        @if($cashReceipt->customer_email)Email: {{ $cashReceipt->customer_email }}<br>@endif
-                        @if($cashReceipt->customer_phone)Phone: {{ $cashReceipt->customer_phone }}@endif
-                    </div>
                 </div>
             </div>
             <div class="meta-section">
                 <table class="meta-table">
                     <tr>
                         <td class="label">Receipt Date</td>
-                        <td class="value">{{ formatDubaiDate($cashReceipt->receipt_date, 'M d, Y') }}</td>
+                        <td class="value">{{ formatDubaiDate($cashReceipt->payment_date, 'M d, Y') }}</td>
                     </tr>
                     <tr>
                         <td class="label">Payment Method</td>
                         <td class="value">{{ ucfirst(str_replace('_', ' ', $cashReceipt->payment_method)) }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">Status</td>
-                        <td class="value">
-                            <span class="status-badge status-{{ $cashReceipt->status }}">
-                                {{ ucfirst($cashReceipt->status) }}
-                            </span>
-                        </td>
                     </tr>
                     @if($cashReceipt->reference_number)
                     <tr>
@@ -386,6 +586,125 @@
             </div>
         </div>
 
+        <!-- Related Documents -->
+        @if($cashReceipt->order)
+        <div class="related-documents">
+            <div class="payment-title">Related Documents</div>
+            <table>
+                <tr>
+                    <td>Order Number:</td>
+                    <td>{{ $cashReceipt->order->order_number }}</td>
+                </tr>
+                @if($cashReceipt->order->delivery)
+                <tr>
+                    <td>Delivery Number:</td>
+                    <td>{{ $cashReceipt->order->delivery->tracking_number }}</td>
+                </tr>
+                @endif
+                @if($cashReceipt->order->proformaInvoice)
+                <tr>
+                    <td>Proforma Invoice:</td>
+                    <td>{{ $cashReceipt->order->proformaInvoice->invoice_number }}</td>
+                </tr>
+                @endif
+                @if($cashReceipt->order->delivery && $cashReceipt->order->delivery->finalInvoice)
+                <tr>
+                    <td>Final Invoice:</td>
+                    <td>{{ $cashReceipt->order->delivery->finalInvoice->invoice_number }}</td>
+                </tr>
+                @endif
+            </table>
+        </div>
+
+        <!-- Products List -->
+        <div style="margin-top: 30px;"></div>
+        @if($cashReceipt->order->items->count() > 0)
+        <div class="items-section">
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40%;">Item Description</th>
+                        <th style="width: 20%;">Specifications</th>
+                        <th style="width: 10%;" class="text-center">Quantity</th>
+                        <th style="width: 15%;" class="text-right">Unit Price ({{ $cashReceipt->currency }})</th>
+                        <th style="width: 15%;" class="text-right">Amount ({{ $cashReceipt->currency }})</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($cashReceipt->order->items as $item)
+                    <tr>
+                        <td class="item-description">
+                            {{ $item->product->name }}
+                            @if($item->product && $item->product->brand)
+                                <div style="font-size: 9px; color: var(--text-secondary); margin-top: 3px;">
+                                    <span class="font-medium">Brand:</span> {{ $item->product->brand->name }}
+                                </div>
+                            @endif
+                        </td>
+                        <td>
+                            @if($item->size)
+                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
+                                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1px;">Size:</div>
+                                    <div>{{ $item->size }}</div>
+                                </div>
+                            @else
+                                <span style="font-size: 9px; color: var(--text-muted);">-</span>
+                            @endif
+                        </td>
+                        <td class="text-center">{{ number_format($item->quantity) }}</td>
+                        <td class="text-right">{{ number_format($item->unit_price, 2) }}</td>
+                        <td class="text-right">{{ number_format($item->quantity * $item->unit_price, 2) }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
+            <!-- Totals Section -->
+            <div class="totals-wrapper">
+                <div class="totals-section">
+                    <table class="totals-table">
+                        <tr>
+                            <td class="total-label">Subtotal:</td>
+                            <td class="total-amount">{{ $cashReceipt->currency }} {{ number_format($cashReceipt->order->items->sum(function($item) { return $item->quantity * $item->unit_price; }), 2) }}</td>
+                        </tr>
+                        @if($cashReceipt->order->tax_amount > 0)
+                        <tr>
+                            <td class="total-label">Tax:</td>
+                            <td class="total-amount">{{ $cashReceipt->currency }} {{ number_format($cashReceipt->order->tax_amount, 2) }}</td>
+                        </tr>
+                        @endif
+                        @if($cashReceipt->order->discount_amount > 0)
+                        <tr>
+                            <td class="total-label">Discount:</td>
+                            <td class="total-amount">-{{ $cashReceipt->currency }} {{ number_format($cashReceipt->order->discount_amount, 2) }}</td>
+                        </tr>
+                        @endif
+                        <tr class="grand-total">
+                            <td class="total-label">Total Amount:</td>
+                            <td class="total-amount">{{ $cashReceipt->currency }} {{ number_format($cashReceipt->order->total_amount, 2) }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        <!-- Delivery Signature -->
+        @if($cashReceipt->order && $cashReceipt->order->delivery && $cashReceipt->order->delivery->customer_signature)
+        <div class="delivery-signature">
+            <div class="payment-title">Delivery Confirmation</div>
+            <div>
+                <span>Signed at:</span>
+                <span>{{ formatDubaiDate($cashReceipt->order->delivery->signed_at, 'M d, Y H:i') }}</span>
+            </div>
+            <div class="signature-image">
+                <img src="{{ $cashReceipt->order->delivery->customer_signature }}" alt="Customer Signature">
+            </div>
+        </div>
+        @endif
+
+        @endif
+
         <!-- Footer -->
         <div class="footer">
             <div class="signature-section">
@@ -404,4 +723,4 @@
         </div>
     </div>
 </body>
-</html> 
+</html>
