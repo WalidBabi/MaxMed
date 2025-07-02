@@ -163,7 +163,9 @@ class CashReceiptController extends Controller
     {
         $cashReceipt->load(['customer', 'order']);
         
-        $pdf = Pdf::loadView('admin.cash-receipts.pdf', compact('cashReceipt'));
+        $customer = $cashReceipt->customer;
+        
+        $pdf = Pdf::loadView('admin.cash-receipts.pdf', compact('cashReceipt', 'customer'));
         
         return $pdf->download("cash-receipt-{$cashReceipt->receipt_number}.pdf");
     }
