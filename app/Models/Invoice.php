@@ -456,9 +456,16 @@ class Invoice extends Model
             $newItem->save();
         }
 
-        // Recalculate totals to ensure accuracy - but only if needed
-        if ($this->payment_terms !== 'on_delivery' || $finalInvoice->total_amount == 0) {
+        // Only recalculate totals if we're dealing with partial amounts or custom adjustments
+        // For "on_delivery" or when preserving original amounts, skip calculateTotals()
+        $shouldRecalculate = ($this->payment_terms !== 'on_delivery' && $finalInvoice->total_amount != $this->total_amount) ||
+                            ($finalInvoice->total_amount == 0);
+                            
+        if ($shouldRecalculate) {
             $finalInvoice->calculateTotals();
+            Log::info("Recalculated totals for final invoice {$finalInvoice->id}");
+        } else {
+            Log::info("Preserved original amounts for final invoice {$finalInvoice->id} - skipped calculateTotals()");
         }
 
         // Update proforma invoice status without triggering events
