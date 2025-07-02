@@ -183,6 +183,11 @@ class Order extends Model
      */
     public function handleWorkflowAutomation()
     {
+        // Auto-create delivery if it doesn't exist (for orders created before auto-creation was implemented)
+        if (!$this->hasDelivery()) {
+            $this->autoCreateDelivery();
+        }
+        
         // Auto-update delivery status based on order status
         if ($this->hasDelivery()) {
             $this->syncDeliveryStatus();
@@ -190,7 +195,7 @@ class Order extends Model
     }
 
     /**
-     * Automatically create delivery when order is in appropriate state
+     * Automatically create delivery when order is created
      */
     public function autoCreateDelivery()
     {
@@ -201,39 +206,56 @@ class Order extends Model
                 return;
             }
 
-            // Only create delivery for orders in processing state
-            if ($this->status !== self::STATUS_PROCESSING) {
-                Log::info("Order {$this->id} not ready for delivery creation. Current status: {$this->status}");
-                return;
-            }
-
-            // Ensure we have an approved quotation for orders requiring quotation
-            if ($this->requires_quotation && 
-                (!$this->approvedQuotation || $this->quotation_status !== self::QUOTATION_STATUS_APPROVED)) {
-                Log::info("Order {$this->id} requires approved quotation before delivery creation");
-                return;
+            // Create delivery for all new orders, regardless of initial status
+            // The delivery will track the fulfillment process from creation to completion
+            
+            // For orders requiring quotations, create delivery but keep it in pending until approved
+            $deliveryStatus = 'pending';
+            
+            // Determine initial delivery status based on order requirements
+            if ($this->requires_quotation) {
+                if ($this->quotation_status === self::QUOTATION_STATUS_APPROVED) {
+                    $deliveryStatus = 'processing';
+                } else {
+                    $deliveryStatus = 'pending'; // Wait for quotation approval
+                }
+            } else {
+                // For orders not requiring quotations, delivery can start processing
+                $deliveryStatus = ($this->status === self::STATUS_PROCESSING) ? 'processing' : 'pending';
             }
 
             $delivery = Delivery::create([
                 'order_id' => $this->id,
-                'status' => 'pending',
+                'status' => $deliveryStatus,
                 'carrier' => 'TBD',
-                'tracking_number' => 'TRK' . strtoupper(uniqid()),
+                'tracking_number' => $this->generateTrackingNumber(),
                 'shipping_address' => $this->getFullShippingAddress(),
                 'billing_address' => $this->getFullShippingAddress(),
                 'shipping_cost' => 0,
                 'total_weight' => $this->calculateTotalWeight(),
-                'notes' => 'Auto-created delivery for order ' . $this->order_number,
+                'notes' => "Auto-created delivery for order {$this->order_number}",
             ]);
 
-            Log::info("Auto-created delivery {$delivery->id} for order {$this->id} with status 'pending'");
+            Log::info("Auto-created delivery {$delivery->id} for order {$this->id} (Order: {$this->order_number}) with status '{$deliveryStatus}'");
 
             // Notify supplier about new order
             $this->notifySupplierNewOrder($delivery);
 
         } catch (\Exception $e) {
-            Log::error('Failed to auto-create delivery for order: ' . $e->getMessage());
+            Log::error("Failed to auto-create delivery for order {$this->id}: " . $e->getMessage());
         }
+    }
+
+    /**
+     * Generate a unique tracking number
+     */
+    private function generateTrackingNumber(): string
+    {
+        $prefix = 'TRK';
+        $timestamp = now()->format('ymd'); // YYMMDD
+        $random = strtoupper(substr(uniqid(), -6)); // Last 6 chars of uniqid
+        
+        return $prefix . $timestamp . $random;
     }
 
     /**
@@ -261,23 +283,82 @@ class Order extends Model
     {
         $delivery = $this->delivery;
         
-        $statusMapping = [
-            'shipped' => 'in_transit',
-            'delivered' => 'delivered',
-            'completed' => 'delivered',
-            'cancelled' => 'cancelled'
-        ];
-
-        $newStatus = $statusMapping[$this->status] ?? $delivery->status;
+        if (!$delivery) {
+            Log::warning("Cannot sync delivery status - no delivery found for order {$this->id}");
+            return;
+        }
         
-        if ($newStatus !== $delivery->status) {
-            $delivery->update(['status' => $newStatus]);
+        $currentDeliveryStatus = $delivery->status;
+        $newDeliveryStatus = $currentDeliveryStatus;
+        
+        // Enhanced status mapping with more granular control
+        switch ($this->status) {
+            case self::STATUS_PENDING:
+                // Keep delivery as pending
+                if ($currentDeliveryStatus !== 'pending') {
+                    $newDeliveryStatus = 'pending';
+                }
+                break;
+                
+            case self::STATUS_AWAITING_QUOTATIONS:
+            case self::STATUS_QUOTATIONS_RECEIVED:
+                // Keep delivery pending while waiting for quotations
+                $newDeliveryStatus = 'pending';
+                break;
+                
+            case self::STATUS_APPROVED:
+            case self::STATUS_PROCESSING:
+                // Move to processing when order is being processed
+                if (in_array($currentDeliveryStatus, ['pending'])) {
+                    $newDeliveryStatus = 'processing';
+                }
+                break;
+                
+            case self::STATUS_SHIPPED:
+                // Order shipped - delivery should be in transit
+                if (in_array($currentDeliveryStatus, ['pending', 'processing'])) {
+                    $newDeliveryStatus = 'in_transit';
+                }
+                break;
+                
+            case self::STATUS_DELIVERED:
+                // Order delivered - delivery should be delivered
+                if ($currentDeliveryStatus !== 'delivered') {
+                    $newDeliveryStatus = 'delivered';
+                }
+                break;
+                
+            case self::STATUS_COMPLETED:
+                // Order completed - ensure delivery is delivered
+                if ($currentDeliveryStatus !== 'delivered') {
+                    $newDeliveryStatus = 'delivered';
+                }
+                break;
+                
+            case self::STATUS_CANCELLED:
+                // Order cancelled - cancel delivery unless already delivered
+                if (!in_array($currentDeliveryStatus, ['delivered', 'cancelled'])) {
+                    $newDeliveryStatus = 'cancelled';
+                }
+                break;
+        }
+        
+        // Update delivery status if changed
+        if ($newDeliveryStatus !== $currentDeliveryStatus) {
+            $updateData = ['status' => $newDeliveryStatus];
             
-            if ($newStatus === 'delivered' && !$delivery->delivered_at) {
-                $delivery->update(['delivered_at' => now()]);
+            // Set timestamps for specific status changes
+            if ($newDeliveryStatus === 'in_transit' && !$delivery->shipped_at) {
+                $updateData['shipped_at'] = now();
             }
             
-            Log::info("Auto-updated delivery {$delivery->id} status to {$newStatus}");
+            if ($newDeliveryStatus === 'delivered' && !$delivery->delivered_at) {
+                $updateData['delivered_at'] = now();
+            }
+            
+            $delivery->update($updateData);
+            
+            Log::info("Auto-updated delivery {$delivery->id} status from '{$currentDeliveryStatus}' to '{$newDeliveryStatus}' for order {$this->id} (status: {$this->status})");
         }
     }
 
@@ -636,5 +717,31 @@ class Order extends Model
         // Check if the transition is allowed
         return isset(self::ALLOWED_STATUS_TRANSITIONS[$from]) &&
             in_array($to, self::ALLOWED_STATUS_TRANSITIONS[$from]);
+    }
+
+    /**
+     * Get the cash receipts associated with the order.
+     */
+    public function cashReceipts()
+    {
+        return $this->hasMany(\App\Models\CashReceipt::class);
+    }
+
+    /**
+     * Check if the order has any cash receipts.
+     */
+    public function hasCashReceipts(): bool
+    {
+        return $this->cashReceipts()->exists();
+    }
+
+    /**
+     * Get the total amount of cash receipts for this order.
+     */
+    public function getTotalCashReceiptsAmount(): float
+    {
+        return $this->cashReceipts()
+            ->where('status', \App\Models\CashReceipt::STATUS_ISSUED)
+            ->sum('amount');
     }
 } 
