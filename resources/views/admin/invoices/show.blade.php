@@ -434,6 +434,18 @@
                     <h3 class="text-lg font-semibold text-gray-900">Quick Actions</h3>
                 </div>
                 <div class="p-6 space-y-3">
+                    @if($invoice->type === 'proforma' && $invoice->canConvertToFinalInvoice())
+                        <form action="{{ route('admin.invoices.convert-to-final', $invoice) }}" method="POST" class="inline" onsubmit="return confirm('Convert this proforma invoice to final invoice?');">
+                            @csrf
+                            <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 bg-yellow-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-700 focus:bg-yellow-700 active:bg-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"></path>
+                                </svg>
+                                Convert to Final Invoice
+                            </button>
+                        </form>
+                    @endif
+                    
                     @if($invoice->payment_status !== 'paid')
                     <button onclick="openPaymentModal()" class="w-full inline-flex items-center justify-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -243,6 +243,7 @@ class DeliveryController extends Controller
         $paymentTerms = $proformaInvoice->payment_terms;
         $paidAmount = $proformaInvoice->paid_amount;
         $totalAmount = $proformaInvoice->total_amount;
+        $deliveryStatus = $delivery->status;
 
         switch ($paymentTerms) {
             case 'advance_50':
@@ -255,6 +256,18 @@ class DeliveryController extends Controller
             case 'advance_100':
                 if ($paidAmount < $totalAmount) {
                     return "Full advance payment required. Paid: {$paidAmount} AED, Required: {$totalAmount} AED";
+                }
+                break;
+
+            case 'on_delivery':
+                if (!in_array($deliveryStatus, ['in_transit', 'delivered'])) {
+                    return "For payment on delivery terms, the delivery must be shipped first. Current status: {$deliveryStatus}";
+                }
+                break;
+
+            case 'net_30':
+                if (!in_array($deliveryStatus, ['in_transit', 'delivered'])) {
+                    return "For net 30 payment terms, the delivery must be shipped first. Current status: {$deliveryStatus}";
                 }
                 break;
 
