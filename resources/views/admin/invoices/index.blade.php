@@ -83,17 +83,13 @@
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600">Total Value</p>
                     <div class="text-base font-bold text-gray-900">
-                        @php
-                            $aedTotal = $invoices->where('currency', 'AED')->sum('total_amount');
-                            $usdTotal = $invoices->where('currency', 'USD')->sum('total_amount');
-                        @endphp
-                        @if($aedTotal > 0 && $usdTotal > 0)
-                            <div class="text-lg">{{ number_format($aedTotal, 0) }} AED</div>
-                            <div class="text-lg text-gray-600">{{ number_format($usdTotal, 0) }} USD</div>
-                        @elseif($usdTotal > 0)
-                            <div class="text-3xl">{{ number_format($usdTotal, 0) }} USD</div>
-                        @elseif($aedTotal > 0)
-                            <div class="text-3xl">{{ number_format($aedTotal, 0) }} AED</div>
+                        @if($invoiceTotals['aed'] > 0 && $invoiceTotals['usd'] > 0)
+                            <div class="text-lg">{{ number_format($invoiceTotals['aed'], 0) }} AED</div>
+                            <div class="text-lg text-gray-600">{{ number_format($invoiceTotals['usd'], 0) }} USD</div>
+                        @elseif($invoiceTotals['usd'] > 0)
+                            <div class="text-3xl">{{ number_format($invoiceTotals['usd'], 0) }} USD</div>
+                        @elseif($invoiceTotals['aed'] > 0)
+                            <div class="text-3xl">{{ number_format($invoiceTotals['aed'], 0) }} AED</div>
                         @else
                             <div class="text-3xl">0 AED</div>
                         @endif
@@ -201,30 +197,68 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach($invoices as $invoice)
-                            <tr class="hover:bg-gray-50">
+                            @php
+                                $isChildInvoice = $invoice->parent_invoice_id !== null;
+                                $hasChildInvoice = $invoice->childInvoices()->where('type', 'final')->exists();
+                                $rowClass = 'hover:bg-gray-50';
+                                
+                                if ($isChildInvoice) {
+                                    $rowClass .= ' bg-green-50 border-l-4 border-green-500';
+                                } elseif ($hasChildInvoice && $invoice->type === 'proforma') {
+                                    $rowClass .= ' bg-blue-50 border-l-4 border-blue-500';
+                                }
+                            @endphp
+                            <tr class="{{ $rowClass }}">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     {{ formatDubaiDate($invoice->invoice_date, 'M d, Y') }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">
-                                        <a href="{{ route('admin.invoices.show', $invoice) }}" class="text-indigo-600 hover:text-indigo-900">
-                                            {{ $invoice->invoice_number }}
-                                        </a>
+                                    <div class="flex items-center">
+                                        @if($isChildInvoice)
+                                            <div class="mr-2 text-green-600" title="Final invoice converted from proforma">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                                </svg>
+                                            </div>
+                                        @endif
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900">
+                                                <a href="{{ route('admin.invoices.show', $invoice) }}" class="text-indigo-600 hover:text-indigo-900">
+                                                    {{ $invoice->invoice_number }}
+                                                </a>
+                                            </div>
+                                            @if($invoice->quote_id)
+                                                <div class="text-xs text-gray-500">from {{ $invoice->quote->quote_number }}</div>
+                                            @endif
+                                            @if($isChildInvoice && $invoice->parentInvoice)
+                                                <div class="text-xs text-green-600">← from {{ $invoice->parentInvoice->invoice_number }}</div>
+                                            @elseif($hasChildInvoice)
+                                                @php $finalInvoice = $invoice->childInvoices()->where('type', 'final')->first(); @endphp
+                                                @if($finalInvoice)
+                                                    <div class="text-xs text-blue-600">→ converted to {{ $finalInvoice->invoice_number }}</div>
+                                                @endif
+                                            @endif
+                                        </div>
                                     </div>
-                                    @if($invoice->quote_id)
-                                        <div class="text-xs text-gray-500">from {{ $invoice->quote->quote_number }}</div>
-                                    @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($invoice->type === 'proforma')
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                            Proforma
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                            Final
-                                        </span>
-                                    @endif
+                                    <div class="flex items-center">
+                                        @if($invoice->type === 'proforma')
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                Proforma
+                                            </span>
+                                            @if($hasChildInvoice)
+                                                <span class="ml-2 text-xs text-blue-600 font-medium">(Converted)</span>
+                                            @endif
+                                        @else
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                Final
+                                            </span>
+                                            @if($isChildInvoice)
+                                                <span class="ml-2 text-xs text-green-600 font-medium">(From Proforma)</span>
+                                            @endif
+                                        @endif
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">{{ $invoice->customer_name }}</div>
@@ -287,19 +321,11 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
-                                        @php
-                                            $subtotal = $invoice->items->sum(function($item) {
-                                                return $item->quantity * $item->unit_price;
-                                            });
-                                            $totalDiscount = $invoice->items->sum('calculated_discount_amount') + ($invoice->discount_amount ?? 0);
-                                            $taxAmount = $invoice->tax_amount ?? 0;
-                                            $finalTotal = $subtotal - $totalDiscount + $taxAmount;
-                                        @endphp
-                                        {{ number_format($finalTotal, 2) }} {{ $invoice->currency }}
+                                        {{ number_format($invoice->total_amount, 2) }} {{ $invoice->currency }}
                                     </div>
                                     @if($invoice->paid_amount > 0 && $invoice->payment_status !== 'paid')
                                         <div class="text-xs text-gray-500">
-                                            Balance: {{ number_format($finalTotal - $invoice->paid_amount, 2) }}
+                                            Balance: {{ number_format($invoice->total_amount - $invoice->paid_amount, 2) }}
                                         </div>
                                     @endif
                                 </td>

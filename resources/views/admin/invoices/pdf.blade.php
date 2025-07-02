@@ -761,7 +761,8 @@
         <div class="payment-section">
             <div class="payment-title">Final Invoice</div>
             @php
-                $isDelivered = $invoice->delivery && in_array($invoice->delivery->status, ['delivered', 'completed']);
+                $isDelivered = $invoice->delivery && in_array($invoice->delivery->status, ['delivered']);
+                $isShipped = $invoice->delivery && in_array($invoice->delivery->status, ['in_transit', 'delivered']);
                 $hasAdvancePayment = $invoice->parentInvoice && $invoice->parentInvoice->paid_amount > 0;
             @endphp
             
@@ -773,6 +774,8 @@
                         Please arrange payment for the remaining amount.
                     @endif
                 </div>
+            @elseif($isShipped)
+                <div class="payment-text">Your order has been shipped and is in transit. Please arrange payment for the remaining amount if applicable.</div>
             @else
                 <div class="payment-text">Your order has been processed and is ready for delivery. Please arrange payment for the remaining amount if applicable.</div>
             @endif
