@@ -679,8 +679,8 @@
                             @endif
                         </td>
                         <td class="text-center">{{ number_format($item->quantity) }}</td>
-                        <td class="text-right">{{ number_format($item->unit_price, 2) }}</td>
-                        <td class="text-right">{{ number_format($item->quantity * $item->unit_price, 2) }}</td>
+                        <td class="text-right">{{ number_format($item->price, 2) }}</td>
+                        <td class="text-right">{{ number_format($item->quantity * $item->price, 2) }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -692,7 +692,7 @@
                     <table class="totals-table">
                         <tr>
                             <td class="total-label">Subtotal:</td>
-                            <td class="total-amount">{{ $cashReceipt->currency }} {{ number_format($cashReceipt->order->items->sum(function($item) { return $item->quantity * $item->unit_price; }), 2) }}</td>
+                            <td class="total-amount">{{ $cashReceipt->currency }} {{ number_format($cashReceipt->order->items->sum(function($item) { return $item->quantity * $item->price; }), 2) }}</td>
                         </tr>
                         @if($cashReceipt->order->tax_amount > 0)
                         <tr>
