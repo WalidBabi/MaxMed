@@ -119,6 +119,40 @@ class InvoiceController extends Controller
             'usd' => $totalsQuery->where('currency', 'USD')->sum('total_amount')
         ];
 
+        // Calculate invoice counts by type
+        $invoiceCounts = [
+            'proforma' => Invoice::where('type', 'proforma')->count(),
+            'final' => Invoice::where('type', 'final')->count(),
+            'total' => Invoice::count()
+        ];
+
+        // Calculate unique paid orders (avoiding double counting proforma + final)
+        $paidOrdersCount = Invoice::where('payment_status', 'paid')
+            ->where(function($q) {
+                $q->where(function($subQ) {
+                    // Proforma invoices that haven't been converted
+                    $subQ->where('type', 'proforma')
+                         ->where('payment_status', 'paid')
+                         ->whereNotExists(function($existsQ) {
+                             $existsQ->select(DB::raw(1))
+                                     ->from('invoices as child')
+                                     ->whereRaw('child.parent_invoice_id = invoices.id')
+                                     ->where('child.type', 'final');
+                         });
+                })->orWhere(function($subQ) {
+                    // Final invoices that are standalone (no parent)
+                    $subQ->where('type', 'final')
+                         ->where('payment_status', 'paid')
+                         ->whereNull('parent_invoice_id');
+                })->orWhere(function($subQ) {
+                    // Final invoices that are converted from proforma (have a parent)
+                    $subQ->where('type', 'final')
+                         ->where('payment_status', 'paid')
+                         ->whereNotNull('parent_invoice_id');
+                });
+            })
+            ->count();
+
         // Get filter options
         $filterOptions = [
             'types' => ['proforma' => 'Proforma', 'final' => 'Final'],
@@ -126,7 +160,7 @@ class InvoiceController extends Controller
             'payment_statuses' => Invoice::PAYMENT_STATUS
         ];
 
-        return view('admin.invoices.index', compact('invoices', 'filterOptions', 'invoiceTotals'));
+        return view('admin.invoices.index', compact('invoices', 'filterOptions', 'invoiceTotals', 'invoiceCounts', 'paidOrdersCount'));
     }
 
     /**

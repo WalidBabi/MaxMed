@@ -35,8 +35,11 @@
                     </div>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Total Invoices</p>
-                    <p class="text-3xl font-bold text-gray-900">{{ $invoices->total() }}</p>
+                    <p class="text-sm font-medium text-gray-600">Invoices</p>
+                    <div class="text-base font-bold text-gray-900">
+                        <div class="text-lg">{{ $invoiceCounts['proforma'] }} Proforma</div>
+                        <div class="text-lg text-gray-600">{{ $invoiceCounts['final'] }} Final</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -67,8 +70,9 @@
                     </div>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Paid</p>
-                    <p class="text-3xl font-bold text-gray-900">{{ $invoices->where('payment_status', 'paid')->count() }}</p>
+                    <p class="text-sm font-medium text-gray-600">Paid Orders</p>
+                    <p class="text-3xl font-bold text-gray-900">{{ $paidOrdersCount }}</p>
+                    <p class="text-xs text-gray-500 mt-1">Unique orders paid</p>
                 </div>
             </div>
         </div>
