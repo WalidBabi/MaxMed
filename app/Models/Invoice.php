@@ -396,9 +396,16 @@ class Invoice extends Model
                 $finalInvoice->payment_status = $remainingAmount > 0 ? 'pending' : 'paid';
                 $finalInvoice->paid_amount = 0;
                 $finalInvoice->due_date = now()->addDays(30);
+                
+                // Only show advance payment info if it's actually an advance payment, not payment on delivery
+                $advancePaymentText = "";
+                if ($this->paid_amount > 0 && !$isDelivered) {
+                    $advancePaymentText = " Previous advance payment received: {$this->paid_amount} AED";
+                }
+                
                 $finalInvoice->description = $isDelivered 
-                    ? "Final Invoice - Payment Due in 30 Days. Order has been delivered." . ($this->paid_amount > 0 ? " Previous advance payment received: {$this->paid_amount} AED" : "")
-                    : "Final Invoice - Payment Due in 30 Days." . ($this->paid_amount > 0 ? " Previous advance payment received: {$this->paid_amount} AED" : "");
+                    ? "Final Invoice - Payment Due in 30 Days. Order has been delivered." . $advancePaymentText
+                    : "Final Invoice - Payment Due in 30 Days." . $advancePaymentText;
                 
                 if ($remainingAmount <= 0) {
                     $finalInvoice->paid_at = now();

@@ -763,7 +763,10 @@
             @php
                 $isDelivered = $invoice->delivery && in_array($invoice->delivery->status, ['delivered']);
                 $isShipped = $invoice->delivery && in_array($invoice->delivery->status, ['in_transit', 'delivered']);
-                $hasAdvancePayment = $invoice->parentInvoice && $invoice->parentInvoice->paid_amount > 0;
+                $parentInvoice = $invoice->parentInvoice;
+                $hasAdvancePayment = $parentInvoice && $parentInvoice->paid_amount > 0;
+                $isOnDeliveryTerms = $parentInvoice && $parentInvoice->payment_terms === 'on_delivery';
+                $paymentCollectedOnDelivery = $isDelivered && $invoice->payment_status === 'paid' && $isOnDeliveryTerms;
             @endphp
             
             @if($isDelivered)
@@ -780,8 +783,8 @@
                 <div class="payment-text">Your order has been processed and is ready for delivery. Please arrange payment for the remaining amount if applicable.</div>
             @endif
             
-            @if($hasAdvancePayment)
-                <div class="payment-text">Previous advance payment received: <strong>{{ number_format($invoice->parentInvoice->paid_amount, 2) }} {{ $invoice->currency ?? 'AED' }}</strong></div>
+            @if($hasAdvancePayment && !$paymentCollectedOnDelivery)
+                <div class="payment-text">Previous advance payment received: <strong>{{ number_format($parentInvoice->paid_amount, 2) }} {{ $invoice->currency ?? 'AED' }}</strong></div>
             @endif
         </div>
         @endif

@@ -243,9 +243,15 @@
                                     <td style="padding: 25px;">
                                         <div style="display: inline-block; background-color: #48BB78; color: #FFFFFF; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">✅ Order Ready</div>
                                         <h4 style="color: #22543D; margin: 0 0 12px 0; font-size: 18px; font-weight: 600;">Final Invoice</h4>
+                                        @php
+                                            $parentInvoice = $invoice->parentInvoice;
+                                            $isDelivered = $invoice->delivery && in_array($invoice->delivery->status, ['delivered']);
+                                            $isOnDeliveryTerms = $parentInvoice && $parentInvoice->payment_terms === 'on_delivery';
+                                            $paymentCollectedOnDelivery = $isDelivered && $invoice->payment_status === 'paid' && $isOnDeliveryTerms;
+                                        @endphp
                                         <p style="margin: 0 0 15px 0; color: #1A365D; line-height: 1.6;">Your order has been processed and is ready for delivery. Please arrange payment for the remaining amount if applicable.</p>
-                                        @if($invoice->parentInvoice && $invoice->parentInvoice->paid_amount > 0)
-                                            <p style="margin: 0; color: #1A365D; font-size: 14px;">💰 Previous advance payment received: <strong>{{ number_format($invoice->parentInvoice->paid_amount, 2) }} {{ $invoice->currency }}</strong></p>
+                                        @if($parentInvoice && $parentInvoice->paid_amount > 0 && !$paymentCollectedOnDelivery)
+                                            <p style="margin: 0; color: #1A365D; font-size: 14px;">💰 Previous advance payment received: <strong>{{ number_format($parentInvoice->paid_amount, 2) }} {{ $invoice->currency }}</strong></p>
                                         @endif
                                     </td>
                                 </tr>
