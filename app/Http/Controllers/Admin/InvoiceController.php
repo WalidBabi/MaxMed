@@ -94,7 +94,7 @@ class InvoiceController extends Controller
         // Filter to avoid double counting
         $totalsQuery->where(function($q) {
             $q->where(function($subQ) {
-                // Proforma invoices that haven't been converted
+                // Proforma invoices that haven't been converted (no child final invoice)
                 $subQ->where('type', 'proforma')
                      ->whereNotExists(function($existsQ) {
                          $existsQ->select(DB::raw(1))
@@ -103,9 +103,14 @@ class InvoiceController extends Controller
                                  ->where('child.type', 'final');
                      });
             })->orWhere(function($subQ) {
-                // Final invoices that are standalone (no parent)
+                // Final invoices that are standalone (no parent proforma)
                 $subQ->where('type', 'final')
                      ->whereNull('parent_invoice_id');
+            })->orWhere(function($subQ) {
+                // Final invoices that are converted from proforma (have a parent)
+                // This ensures we count the final invoice value instead of the proforma
+                $subQ->where('type', 'final')
+                     ->whereNotNull('parent_invoice_id');
             });
         });
         
