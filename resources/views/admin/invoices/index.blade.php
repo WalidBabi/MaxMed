@@ -238,6 +238,51 @@
                                                     <div class="text-xs text-blue-600">→ converted to {{ $finalInvoice->invoice_number }}</div>
                                                 @endif
                                             @endif
+                                            
+                                            <!-- Related Order Information -->
+                                            @if($invoice->order)
+                                                <div class="text-xs text-purple-600 mt-1">
+                                                    📦 Order: <a href="{{ route('admin.orders.show', $invoice->order) }}" class="hover:underline">{{ $invoice->order->order_number }}</a>
+                                                    @if($invoice->order->status)
+                                                        <span class="text-gray-500">({{ ucfirst($invoice->order->status) }})</span>
+                                                    @endif
+                                                </div>
+                                            @endif
+                                            
+                                            <!-- Related Delivery Information -->
+                                            @if($invoice->delivery)
+                                                <div class="text-xs text-orange-600">
+                                                    🚚 Delivery: {{ $invoice->delivery->tracking_number ?? 'ID: ' . $invoice->delivery->id }}
+                                                    @if($invoice->delivery->status)
+                                                        <span class="text-gray-500">({{ ucfirst($invoice->delivery->status) }})</span>
+                                                    @endif
+                                                </div>
+                                            @elseif($invoice->order && $invoice->order->delivery)
+                                                <div class="text-xs text-orange-600">
+                                                    🚚 Delivery: {{ $invoice->order->delivery->tracking_number ?? 'ID: ' . $invoice->order->delivery->id }}
+                                                    @if($invoice->order->delivery->status)
+                                                        <span class="text-gray-500">({{ ucfirst($invoice->order->delivery->status) }})</span>
+                                                    @endif
+                                                </div>
+                                            @endif
+                                            
+                                            <!-- Related Cash Receipt Information -->
+                                            @if($invoice->order)
+                                                @php
+                                                    $cashReceipts = \App\Models\CashReceipt::where('order_id', $invoice->order->id)->get();
+                                                @endphp
+                                                @if($cashReceipts->count() > 0)
+                                                    <div class="text-xs text-green-600">
+                                                        🧾 Receipts: 
+                                                        @foreach($cashReceipts->take(2) as $receipt)
+                                                            <a href="{{ route('admin.cash-receipts.show', $receipt) }}" class="hover:underline">{{ $receipt->receipt_number }}</a>{{ !$loop->last ? ', ' : '' }}
+                                                        @endforeach
+                                                        @if($cashReceipts->count() > 2)
+                                                            <span class="text-gray-500">(+{{ $cashReceipts->count() - 2 }} more)</span>
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            @endif
                                         </div>
                                     </div>
                                 </td>

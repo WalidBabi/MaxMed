@@ -58,7 +58,14 @@ class InvoiceController extends Controller
               ->orderBy('type', 'asc') // 'final' comes before 'proforma' alphabetically, but we want proforma first
               ->orderBy('created_at', 'desc');
 
-        $invoices = $query->paginate(20);
+        // Load necessary relationships to avoid N+1 queries
+        $invoices = $query->with([
+            'quote',
+            'order.delivery',
+            'delivery',
+            'parentInvoice',
+            'childInvoices'
+        ])->paginate(20);
 
         // Calculate totals avoiding double counting
         // - Include proforma invoices that haven't been converted (no child final invoice)
