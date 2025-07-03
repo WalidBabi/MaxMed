@@ -115,4 +115,11 @@ class InvoiceItem extends Model
         
         return 0;
     }
+
+    public function getFormattedLineTotalAttribute()
+    {
+        // Use line_total if set, otherwise fallback to total
+        $value = $this->line_total ?? $this->total ?? 0;
+        return number_format($value, 2);
+    }
 } 
