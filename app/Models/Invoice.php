@@ -474,19 +474,22 @@ class Invoice extends Model
         foreach ($this->items as $item) {
             $newItem = $item->replicate();
             $newItem->invoice_id = $finalInvoice->id;
-            
+
             // Only adjust item amounts if this is a partial amount final invoice
-            // For "on_delivery" with full amount, preserve original item details
-            if ($this->payment_terms !== 'on_delivery' && 
-                $finalInvoice->total_amount != $this->total_amount && 
-                $this->total_amount > 0) {
+            if (
+                $this->payment_terms !== 'on_delivery' &&
+                $finalInvoice->total_amount != $this->total_amount &&
+                $this->total_amount > 0
+            ) {
                 $ratio = $finalInvoice->total_amount / $this->total_amount;
                 $newItem->line_total = $item->line_total * $ratio;
                 $newItem->unit_price = $item->unit_price * $ratio;
-                
-                Log::info("Adjusted invoice item {$item->id} by ratio {$ratio}: new line_total {$newItem->line_total}");
+            } else {
+                // Always set to original values for full payment scenarios
+                $newItem->unit_price = $item->unit_price;
+                $newItem->line_total = $item->line_total;
             }
-            
+
             $newItem->save();
         }
 
