@@ -334,6 +334,8 @@ class Invoice extends Model
                     // Full payment was made on proforma, final invoice shows actual transaction amounts for record keeping
                     $finalInvoice->total_amount = $this->total_amount;
                     $finalInvoice->subtotal = $this->subtotal; // Preserve original subtotal structure
+                    $finalInvoice->discount_amount = $this->discount_amount; // Preserve discount amount
+                    $finalInvoice->tax_amount = $this->tax_amount; // Preserve tax amount
                     $finalInvoice->payment_status = 'paid';
                     $finalInvoice->paid_amount = $this->total_amount; // Show actual amount paid
                     $finalInvoice->paid_at = now();
@@ -349,6 +351,8 @@ class Invoice extends Model
                     // Payment already received, final invoice for record keeping
                     $finalInvoice->total_amount = $this->total_amount;
                     $finalInvoice->subtotal = $this->subtotal; // Preserve original subtotal
+                    $finalInvoice->discount_amount = $this->discount_amount; // Preserve discount amount
+                    $finalInvoice->tax_amount = $this->tax_amount; // Preserve tax amount
                     $finalInvoice->payment_status = 'paid';
                     $finalInvoice->paid_amount = $this->total_amount;
                     $finalInvoice->paid_at = now();
@@ -393,6 +397,8 @@ class Invoice extends Model
                 // Full amount due within 30 days
                 $finalInvoice->total_amount = $this->total_amount;
                 $finalInvoice->subtotal = $this->subtotal; // Preserve original subtotal
+                $finalInvoice->discount_amount = $this->discount_amount; // Preserve discount amount
+                $finalInvoice->tax_amount = $this->tax_amount; // Preserve tax amount
                 $finalInvoice->payment_status = $remainingAmount > 0 ? 'pending' : 'paid';
                 $finalInvoice->paid_amount = 0;
                 $finalInvoice->due_date = now()->addDays(30);
@@ -484,18 +490,24 @@ class Invoice extends Model
             $newItem->save();
         }
 
-        // Always recalculate totals if there are discount amounts to ensure proper total_amount calculation
-        // Also recalculate if we're dealing with partial amounts or custom adjustments
+        // Determine if we should recalculate totals
         $hasDiscounts = ($this->discount_amount > 0) || $this->items->sum('calculated_discount_amount') > 0;
-        $shouldRecalculate = $hasDiscounts || 
-                            ($this->payment_terms !== 'on_delivery' && $finalInvoice->total_amount != $this->total_amount) ||
+        
+        // For advance_100 and on_delivery payment terms where full payment was received, preserve the exact amounts
+        $preserveExactAmounts = (($this->payment_terms === 'advance_100' || $this->payment_terms === 'on_delivery') && 
+                                $this->paid_amount >= $this->total_amount);
+        
+        // Always recalculate if there are discounts, unless we're preserving exact amounts for full payments
+        // Also recalculate for partial amounts, custom adjustments, or zero totals
+        $shouldRecalculate = ($hasDiscounts && !$preserveExactAmounts) || 
+                            ($this->payment_terms !== 'on_delivery' && !$preserveExactAmounts && $finalInvoice->total_amount != $this->total_amount) ||
                             ($finalInvoice->total_amount == 0);
                             
         if ($shouldRecalculate) {
             $finalInvoice->calculateTotals();
             Log::info("Recalculated totals for final invoice {$finalInvoice->id}" . ($hasDiscounts ? " (has discount amounts)" : ""));
         } else {
-            Log::info("Preserved original amounts for final invoice {$finalInvoice->id} - skipped calculateTotals()");
+            Log::info("Preserved original amounts for final invoice {$finalInvoice->id} - skipped calculateTotals()" . ($preserveExactAmounts ? " (full payment received)" : ""));
         }
 
         // Update proforma invoice status without triggering events
