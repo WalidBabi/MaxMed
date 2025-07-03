@@ -98,6 +98,7 @@
                             <div class="text-3xl">0 AED</div>
                         @endif
                     </div>
+                    <p class="text-xs text-gray-500 mt-1">Sent final invoices only</p>
                 </div>
             </div>
         </div>
