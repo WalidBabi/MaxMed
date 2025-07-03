@@ -497,8 +497,38 @@ class Delivery extends Model
      */
     public function finalInvoice()
     {
-        return $this->belongsTo(\App\Models\Invoice::class, 'id', 'delivery_id')
+        return $this->hasOne(\App\Models\Invoice::class, 'delivery_id', 'id')
                     ->where('type', 'final');
+    }
+
+    /**
+     * Get the final invoice through the proforma invoice relationship
+     * This is an alternative method that checks for final invoices as children of the proforma invoice
+     */
+    public function getFinalInvoiceThroughProforma()
+    {
+        $proformaInvoice = $this->getProformaInvoice();
+        
+        if (!$proformaInvoice) {
+            return null;
+        }
+
+        return $proformaInvoice->childInvoices()->where('type', 'final')->first();
+    }
+
+    /**
+     * Check if delivery has a final invoice (using both methods for reliability)
+     */
+    public function hasFinalInvoice(): bool
+    {
+        // First check direct relationship
+        if ($this->finalInvoice()->exists()) {
+            return true;
+        }
+
+        // Then check through proforma invoice relationship
+        $finalInvoice = $this->getFinalInvoiceThroughProforma();
+        return $finalInvoice !== null;
     }
 
     /**
@@ -511,7 +541,7 @@ class Delivery extends Model
         return $proforma && 
                $proforma->canConvertToFinalInvoice() && 
                $proforma->payment_status !== 'pending' &&
-               !$this->finalInvoice()->exists();
+               !$this->hasFinalInvoice();
     }
 
     /**
@@ -556,7 +586,7 @@ class Delivery extends Model
         }
 
         // Check if final invoice already exists
-        if ($this->finalInvoice()->exists()) {
+        if ($this->hasFinalInvoice()) {
             return false;
         }
 
@@ -592,12 +622,13 @@ class Delivery extends Model
             ];
         }
 
-        if ($this->finalInvoice()->exists()) {
+        if ($this->hasFinalInvoice()) {
+            $finalInvoice = $this->getFinalInvoiceThroughProforma() ?? $this->finalInvoice()->first();
             return [
                 'ready' => false,
                 'reason' => 'Final invoice already exists',
                 'details' => [
-                    'final_invoice_id' => $this->finalInvoice()->first()->id ?? null
+                    'final_invoice_id' => $finalInvoice->id ?? null
                 ]
             ];
         }

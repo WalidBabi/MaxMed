@@ -65,7 +65,7 @@
                                 @php
                                     $proformaInvoice = $delivery->getProformaInvoice();
                                     $canConvert = $delivery->isReadyForFinalInvoice();
-                                    $hasFinalInvoice = $delivery->finalInvoice()->exists();
+                                    $hasFinalInvoice = $delivery->hasFinalInvoice();
                                 @endphp
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-6 py-4 whitespace-nowrap">

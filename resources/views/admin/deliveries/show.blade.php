@@ -321,7 +321,7 @@
             @endif
 
             <!-- Final Invoice Information -->
-            @if($delivery->finalInvoice()->exists())
+            @if($delivery->hasFinalInvoice())
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                     <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
                         <h3 class="text-lg font-semibold text-gray-900 flex items-center">
@@ -332,7 +332,7 @@
                         </h3>
                     </div>
                     <div class="p-6">
-                        @php $finalInvoice = $delivery->finalInvoice()->first(); @endphp
+                        @php $finalInvoice = $delivery->getFinalInvoiceThroughProforma() ?? $delivery->finalInvoice()->first(); @endphp
                         <div class="space-y-3 text-sm">
                             <div class="flex justify-between">
                                 <span class="font-medium text-gray-500">Invoice #:</span>
