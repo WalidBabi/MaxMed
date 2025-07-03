@@ -484,14 +484,16 @@ class Invoice extends Model
             $newItem->save();
         }
 
-        // Only recalculate totals if we're dealing with partial amounts or custom adjustments
-        // For "on_delivery" or when preserving original amounts, skip calculateTotals()
-        $shouldRecalculate = ($this->payment_terms !== 'on_delivery' && $finalInvoice->total_amount != $this->total_amount) ||
+        // Always recalculate totals if there are discount amounts to ensure proper total_amount calculation
+        // Also recalculate if we're dealing with partial amounts or custom adjustments
+        $hasDiscounts = ($this->discount_amount > 0) || $this->items->sum('calculated_discount_amount') > 0;
+        $shouldRecalculate = $hasDiscounts || 
+                            ($this->payment_terms !== 'on_delivery' && $finalInvoice->total_amount != $this->total_amount) ||
                             ($finalInvoice->total_amount == 0);
                             
         if ($shouldRecalculate) {
             $finalInvoice->calculateTotals();
-            Log::info("Recalculated totals for final invoice {$finalInvoice->id}");
+            Log::info("Recalculated totals for final invoice {$finalInvoice->id}" . ($hasDiscounts ? " (has discount amounts)" : ""));
         } else {
             Log::info("Preserved original amounts for final invoice {$finalInvoice->id} - skipped calculateTotals()");
         }
