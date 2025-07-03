@@ -31,37 +31,50 @@
                 
                 <div class="space-y-6">
                     <p class="text-sm text-gray-500">
-                        Select the categories that best match your products and services. This will help us connect you with relevant customers.
+                        Select the categories that best match your products and services. Main categories with subcategories are shown as section headers, while standalone categories can be selected directly.
                     </p>
 
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         @foreach($categories as $category)
-                            <div class="relative flex items-start">
-                                <div class="flex items-center h-5">
-                                    <input type="checkbox" name="categories[]" value="{{ $category->id }}"
-                                           class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                           id="category-{{ $category->id }}">
-                                </div>
-                                <div class="ml-3 text-sm">
-                                    <label for="category-{{ $category->id }}" class="font-medium text-gray-700">{{ $category->name }}</label>
-                                    @if($category->children->count() > 0)
-                                        <div class="mt-1 ml-6">
-                                            @foreach($category->children as $child)
-                                                <div class="flex items-start mt-2">
-                                                    <div class="flex items-center h-5">
-                                                        <input type="checkbox" name="categories[]" value="{{ $child->id }}"
-                                                               class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                                               id="category-{{ $child->id }}">
-                                                    </div>
-                                                    <div class="ml-3">
-                                                        <label for="category-{{ $child->id }}" class="text-sm text-gray-600">{{ $child->name }}</label>
-                                                    </div>
+                            @if($category->children->count() > 0)
+                                <!-- Main Category with Subcategories (Section Header) -->
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <div class="mb-3">
+                                        <h3 class="text-lg font-semibold text-gray-900 border-b border-gray-200 pb-2">{{ $category->name }}</h3>
+                                        <p class="text-xs text-gray-500 mt-1">Select specific subcategories below</p>
+                                    </div>
+                                    
+                                    <div class="space-y-2">
+                                        @foreach($category->children as $child)
+                                            <div class="flex items-start">
+                                                <div class="flex items-center h-5">
+                                                    <input type="checkbox" name="categories[]" value="{{ $child->id }}"
+                                                           class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                                           id="category-{{ $child->id }}">
                                                 </div>
-                                            @endforeach
-                                        </div>
-                                    @endif
+                                                <div class="ml-3">
+                                                    <label for="category-{{ $child->id }}" class="text-sm text-gray-700">{{ $child->name }}</label>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
-                            </div>
+                            @else
+                                <!-- Standalone Main Category (with checkbox) -->
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <div class="flex items-start">
+                                        <div class="flex items-center h-5">
+                                            <input type="checkbox" name="categories[]" value="{{ $category->id }}"
+                                                   class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                                   id="category-{{ $category->id }}">
+                                        </div>
+                                        <div class="ml-3">
+                                            <label for="category-{{ $category->id }}" class="text-lg font-semibold text-gray-900">{{ $category->name }}</label>
+                                            <p class="text-xs text-gray-500 mt-1">Standalone category</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         @endforeach
                     </div>
                     @error('categories')
@@ -120,23 +133,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const specializationsTextarea = document.getElementById('specializations');
     const suggestedCategoriesTextarea = document.getElementById('suggested_categories');
     const form = specializationsTextarea.closest('form');
-    
-    // Add event listeners to parent category checkboxes only (not subcategories)
-    document.querySelectorAll('.relative > .flex > .flex.items-center > input[type="checkbox"][name="categories[]"]').forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            // Find the parent div that contains subcategories
-            const parentDiv = this.closest('.relative');
-            if (!parentDiv) return;
-            
-            // Find all subcategory checkboxes within this parent
-            const subcategoryCheckboxes = parentDiv.querySelectorAll('.mt-1.ml-6 input[type="checkbox"]');
-            
-            // Set all subcategory checkboxes to match the parent's checked state
-            subcategoryCheckboxes.forEach(subCheckbox => {
-                subCheckbox.checked = this.checked;
-            });
-        });
-    });
     
     form.addEventListener('submit', function(e) {
         e.preventDefault();
