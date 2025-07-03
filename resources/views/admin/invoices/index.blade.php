@@ -387,7 +387,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                             </svg>
                                         </a>
-                                        @if($invoice->type === 'proforma' && $invoice->canConvertToFinalInvoice())
+                                        @if($invoice->type === 'proforma' && $invoice->canConvertToFinalInvoice() && !$hasChildInvoice)
                                             <form action="{{ route('admin.invoices.convert-to-final', $invoice) }}" method="POST" class="inline" onsubmit="return confirm('Convert this proforma invoice to final invoice?');">
                                                 @csrf
                                                 <button type="submit" class="text-yellow-600 hover:text-yellow-900" title="Convert to Final Invoice">
@@ -396,7 +396,7 @@
                                                     </svg>
                                                 </button>
                                             </form>
-                                        @elseif($invoice->type === 'proforma' && $invoice->status !== 'cancelled')
+                                        @elseif($invoice->type === 'proforma' && $invoice->status !== 'cancelled' && !$hasChildInvoice)
                                             <span class="text-gray-400 cursor-help" title="Status: {{ ucfirst($invoice->status) }} - Click invoice to view details and update status">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"></path>
