@@ -280,6 +280,9 @@ class Invoice extends Model
 
     public function convertToFinalInvoice($deliveryId = null, $userId = null)
     {
+        // Ensure items are loaded to avoid 0 unit_price/line_total
+        $this->loadMissing('items');
+
         if (!$this->canConvertToFinalInvoice()) {
             throw new \Exception('Cannot convert this proforma invoice to final invoice');
         }
