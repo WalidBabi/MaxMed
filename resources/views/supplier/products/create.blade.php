@@ -224,24 +224,44 @@
 
                     <!-- Additional Images -->
                     <div>
-                        <label for="additional_images" class="block text-sm font-medium text-gray-700 mb-2">
-                            Additional Product Images
-                        </label>
-                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-gray-400 transition-colors">
-                            <div class="space-y-1 text-center">
-                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 48 48">
-                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-sm font-medium text-gray-700">
+                                Additional Product Images
+                            </label>
+                            <button type="button" id="add-image-field" 
+                                    class="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                 </svg>
-                                <div class="flex text-sm text-gray-600">
-                                    <label for="additional_images" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-                                        <span>Select multiple files</span>
-                                        <input id="additional_images" name="additional_images[]" type="file" class="sr-only" multiple accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/avif">
-                                    </label>
+                                Add More
+                            </button>
+                        </div>
+                        
+                        <div id="additional-images-container" class="space-y-4">
+                            <!-- Initial image upload field -->
+                            <div class="image-upload-field">
+                                <div class="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-gray-400 transition-colors">
+                                    <div class="space-y-1 text-center">
+                                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 48 48">
+                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        <div class="flex text-sm text-gray-600">
+                                            <label class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                                <span>Upload image</span>
+                                                <input name="additional_images[]" type="file" class="sr-only" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/avif">
+                                            </label>
+                                            <p class="pl-1">or drag and drop</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500">PNG, JPG, WEBP, AVIF up to 5MB</p>
+                                    </div>
                                 </div>
-                                <p class="text-xs text-gray-500">Hold Ctrl/Cmd to select multiple images</p>
                             </div>
                         </div>
+                        
                         @error('additional_images')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        @error('additional_images.*')
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
@@ -556,6 +576,73 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+    });
+
+    // Additional images dynamic functionality
+    const addImageFieldBtn = document.getElementById('add-image-field');
+    const additionalImagesContainer = document.getElementById('additional-images-container');
+    let imageFieldCounter = 1;
+
+    if (addImageFieldBtn && additionalImagesContainer) {
+        addImageFieldBtn.addEventListener('click', function() {
+            const newImageField = document.createElement('div');
+            newImageField.className = 'image-upload-field relative';
+            newImageField.innerHTML = `
+                <div class="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-gray-400 transition-colors">
+                    <div class="space-y-1 text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 48 48">
+                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <div class="flex text-sm text-gray-600">
+                            <label class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                <span>Upload image</span>
+                                <input name="additional_images[]" type="file" class="sr-only" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/avif">
+                            </label>
+                            <p class="pl-1">or drag and drop</p>
+                        </div>
+                        <p class="text-xs text-gray-500">PNG, JPG, WEBP, AVIF up to 5MB</p>
+                    </div>
+                </div>
+                <button type="button" class="remove-image-field absolute -top-2 -right-2 inline-flex items-center justify-center w-6 h-6 bg-red-500 text-white rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            `;
+            
+            additionalImagesContainer.appendChild(newImageField);
+            imageFieldCounter++;
+            
+            // Attach event listener to the new remove button
+            const removeBtn = newImageField.querySelector('.remove-image-field');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', function() {
+                    newImageField.remove();
+                });
+            }
+            
+            // Attach file input change event to the new field
+            const newFileInput = newImageField.querySelector('input[type="file"]');
+            if (newFileInput) {
+                newFileInput.addEventListener('change', function() {
+                    const files = this.files;
+                    if (files.length > 0) {
+                        const fileName = files[0].name;
+                        const label = this.closest('.border-dashed').querySelector('label span');
+                        if (label) {
+                            label.textContent = fileName.length > 30 ? fileName.substring(0, 30) + '...' : fileName;
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    // Attach event listeners to existing remove buttons (if any)
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-image-field')) {
+            e.target.closest('.image-upload-field').remove();
+        }
     });
 });
 </script>
