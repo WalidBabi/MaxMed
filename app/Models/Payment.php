@@ -106,7 +106,23 @@ class Payment extends Model
         
         $totalPaid = $invoice->payments()->where('status', 'completed')->sum('amount');
         
-        Log::info("Processing payment for invoice {$invoice->id}: total_amount={$invoice->total_amount}, total_paid={$totalPaid}, payment_terms={$invoice->payment_terms}");
+        // Verify that total_amount is post-discount amount
+        $calculatedSubtotal = $invoice->items->sum(function($item) {
+            return $item->quantity * $item->unit_price;
+        });
+        $itemDiscounts = $invoice->items->sum('calculated_discount_amount');
+        $invoiceDiscount = $invoice->discount_amount ?? 0;
+        $totalDiscount = $itemDiscounts + $invoiceDiscount;
+        $expectedTotal = $calculatedSubtotal - $totalDiscount + ($invoice->tax_amount ?? 0);
+        
+        // Log if there's a discrepancy in totals
+        if (abs($invoice->total_amount - $expectedTotal) > 0.01) {
+            Log::warning("Invoice {$invoice->id} total amount discrepancy: stored={$invoice->total_amount}, calculated={$expectedTotal}, forcing recalculation");
+            $invoice->calculateTotals();
+            $invoice->refresh();
+        }
+        
+        Log::info("Processing payment for invoice {$invoice->id}: total_amount={$invoice->total_amount}, total_paid={$totalPaid}, payment_terms={$invoice->payment_terms}, discount_amount={$invoice->discount_amount}");
         
         $oldPaymentStatus = $invoice->payment_status;
         $newPaymentStatus = $this->determinePaymentStatus($invoice->total_amount, $totalPaid);
