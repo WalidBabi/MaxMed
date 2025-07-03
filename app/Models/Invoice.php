@@ -331,11 +331,11 @@ class Invoice extends Model
 
             case 'advance_100':
                 if ($this->paid_amount >= $this->total_amount) {
-                    // Full payment was made on proforma, final invoice is for record keeping
-                    $finalInvoice->total_amount = 0;
-                    $finalInvoice->subtotal = 0;
+                    // Full payment was made on proforma, final invoice shows actual transaction amounts for record keeping
+                    $finalInvoice->total_amount = $this->total_amount;
+                    $finalInvoice->subtotal = $this->subtotal; // Preserve original subtotal structure
                     $finalInvoice->payment_status = 'paid';
-                    $finalInvoice->paid_amount = 0;
+                    $finalInvoice->paid_amount = $this->total_amount; // Show actual amount paid
                     $finalInvoice->paid_at = now();
                     $finalInvoice->description = 'Final Invoice - Delivery Completed (Full payment received on proforma)';
                 } else {
