@@ -84,9 +84,9 @@
                         </svg>
                     </a>
                     <!-- WeChat Button -->
-                    <a href="weixin://dl/chat?+971554602500" class="social-link wechat" aria-label="WeChat">
+                    <button type="button" onclick="document.getElementById('wechatModalFooter').classList.remove('hidden');" class="social-link wechat" aria-label="WeChat">
                         <img src="/Images/wechat.png" alt="WeChat" class="h-5 w-5" />
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -107,6 +107,17 @@
         </div>
     </div>
 </footer>
+
+<!-- WeChat Modal Footer -->
+<div id="wechatModalFooter" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-xs w-full text-center relative">
+        <button onclick="document.getElementById('wechatModalFooter').classList.add('hidden');" class="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-2xl">&times;</button>
+        <h3 class="text-lg font-semibold mb-4 text-gray-800">Scan to add us on WeChat</h3>
+        <img src="/Images/wechatqrcode.jpg" alt="WeChat QR Code" class="mx-auto mb-2 w-40 h-40 rounded" />
+        <p class="text-gray-600">Open WeChat and scan this QR code to connect with us.</p>
+    </div>
+</div>
+
 <style>
     /* Footer Styling */
     .wave-top {
