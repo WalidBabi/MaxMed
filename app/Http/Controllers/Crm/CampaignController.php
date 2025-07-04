@@ -906,154 +906,88 @@ class CampaignController extends Controller
      */
     private function generateHtmlFromText(string $textContent, string $bannerImage = null): string
     {
-        // Create a professional email template
+        // Create a professional, business-focused email template
         $htmlContent = '<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Preview</title>
+    <meta name="x-apple-disable-message-reformatting">
+    <title>Business Communication - ' . config('app.name') . '</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-        }
-        .email-container {
-            background-color: #ffffff;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        p {
-            margin: 0 0 16px 0;
-        }
-        .header {
-            border-bottom: 2px solid #e9ecef;
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-        }
-        .signature {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e9ecef;
-            font-size: 14px;
-            color: #2c3e50;
-        }
-        .signature-name {
-            font-weight: bold;
-            color: #1a365d;
-        }
-        .signature-title {
-            color: #2d3748;
-            font-style: italic;
-            margin-bottom: 10px;
-        }
-        .company-info {
-            color: #4a5568;
-            line-height: 1.5;
-        }
-        .contact-info a {
-            color: #3182ce;
-            text-decoration: none;
-        }
-        .contact-info a:hover {
-            text-decoration: underline;
-        }
-        .banner-section {
-            text-align: center;
-            margin: 20px 0;
-        }
-        .footer {
-            border-top: 1px solid #e9ecef;
-            padding-top: 20px;
-            margin-top: 30px;
-            font-size: 12px;
-            color: #6c757d;
-            text-align: center;
-        }
-        .unsubscribe-link {
-            color: #6c757d;
-            text-decoration: none;
-        }
-        .unsubscribe-link:hover {
-            text-decoration: underline;
-        }
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; line-height: 1.6; background-color: #f8f9fa; }
+        .email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
+        .header { background-color: #ffffff; padding: 20px; border-bottom: 1px solid #e9ecef; }
+        .logo { max-width: 150px; height: auto; }
+        .content { padding: 30px 20px; }
+        .footer { background-color: #f8f9fa; padding: 20px; font-size: 12px; color: #6c757d; border-top: 1px solid #e9ecef; }
+        .company-info { margin-bottom: 10px; }
+        .unsubscribe { margin-top: 15px; }
+        .business-header { font-size: 18px; font-weight: 600; color: #343a40; margin-bottom: 20px; }
+        p { margin: 0 0 15px 0; color: #495057; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .divider { border-top: 1px solid #e9ecef; margin: 20px 0; }
     </style>
 </head>
 <body>
     <div class="email-container">
         <div class="header">
-            <h1 style="margin: 0; color: #2c3e50; font-size: 24px;">' . config('app.name', 'MaxMed') . '</h1>
+            <div class="company-info">
+                <strong>' . config('app.name') . '</strong><br>
+                Business Communication
+            </div>
         </div>
         
-        <!-- Banner Section - At the beginning -->
-        ' . ($bannerImage ? '<div class="banner-section" style="text-align: center; margin: 0 0 30px 0;"><img src="' . asset('storage/' . $bannerImage) . '" alt="Company Banner" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"></div>' : '') . '
+        <div class="content">
+            <div class="business-header">Important Business Communication</div>';
+            
+        // Add banner image if provided
+        if ($bannerImage) {
+            $bannerUrl = asset('storage/' . $bannerImage);
+            $htmlContent .= '<div style="text-align: center; margin-bottom: 25px;">
+                <img src="' . $bannerUrl . '" alt="' . config('app.name') . '" style="max-width: 100%; height: auto; border-radius: 4px;">
+            </div>';
+        }
         
-        <div class="content">';
-        
-        // Convert line breaks to paragraphs
+        // Convert text to professional HTML paragraphs
         $paragraphs = explode("\n\n", $textContent);
         foreach ($paragraphs as $paragraph) {
-            $paragraph = trim($paragraph);
-            if (!empty($paragraph)) {
-                // Auto-convert emails to trackable mailto links
+            if (trim($paragraph)) {
+                // Make links clickable
                 $paragraph = preg_replace(
-                    '/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/',
-                    '<a href="mailto:$1">$1</a>',
-                    $paragraph
+                    '/(https?:\/\/[^\s]+)/', 
+                    '<a href="$1" style="color: #007bff;">$1</a>', 
+                    trim($paragraph)
                 );
-                
-                // Auto-convert websites to trackable links (but not emails that might look like domains)
-                $paragraph = preg_replace(
-                    '/(?<!\w)(?:https?:\/\/)?(?:www\.)?([a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?)\b/i',
-                    '<a href="https://$1">$1</a>',
-                    $paragraph
-                );
-                
-                // Auto-convert phone numbers to trackable tel links
-                $paragraph = preg_replace(
-                    '/(\+?[\d\s\-\(\)]{10,})/',
-                    '<a href="tel:$1">$1</a>',
-                    $paragraph
-                );
-                
-                // Convert single line breaks to <br> tags
-                $paragraph = nl2br($paragraph);
-                $htmlContent .= '<p>' . $paragraph . '</p>';
+                $htmlContent .= '<p>' . nl2br($paragraph) . '</p>';
             }
         }
         
         $htmlContent .= '
-        </div>
-        
-        <!-- Signature Section -->
-        <div class="signature">
-            <div class="signature-name">Walid Babi</div>
-            <div class="signature-title">Sales Specialist</div>
-            <br>
-            <div class="company-info">
-                <strong>MaxMed Scientific and Laboratory Equipment Trading CO.LLC</strong><br>
-                Dubai, P.O Box 448945 | Tel: <a href="tel:+971554602500">+971 55 4602500</a><br>
-                United Arab Emirates<br>
-                <div class="contact-info">
-                    <a href="mailto:wbabi@maxmedme.com">wbabi@maxmedme.com</a> | 
-                    <a href="https://www.maxmedme.com" target="_blank">www.maxmedme.com</a>
-                </div>
-            </div>
+            <div class="divider"></div>
+            <p style="font-size: 14px; color: #6c757d;">
+                This is a business communication from ' . config('app.name') . '. 
+                We are reaching out regarding our products and services that may be relevant to your business needs.
+            </p>
         </div>
         
         <div class="footer">
-            <p><a href="{{unsubscribe_url}}" class="unsubscribe-link">Unsubscribe from this list</a></p>
+            <div class="company-info">
+                <strong>' . config('app.name') . '</strong><br>
+                Medical Equipment & Laboratory Solutions<br>
+                Business Communication Department<br>
+                Website: <a href="' . config('app.url') . '">' . config('app.url') . '</a>
+            </div>
+            
+            <div class="unsubscribe">
+                <a href="{{unsubscribe_url}}" style="color: #6c757d;">Update Communication Preferences</a>
+            </div>
         </div>
     </div>
 </body>
 </html>';
-        
+
         return $htmlContent;
     }
 

@@ -1,6 +1,13 @@
+Dear {{ $contact->first_name ?? 'Valued Customer' }},
+
 {!! $content !!}
 
----
-If you wish to unsubscribe from our emails, please visit: {{ $unsubscribe_url }}
+Best regards,
+{{ config('app.name') }} Team
 
-{{ config('app.name') }} 
+---
+Business Communication
+{{ config('app.name') }}
+{{ config('app.url') }}
+
+To update your communication preferences: {{ $unsubscribe_url }} 
