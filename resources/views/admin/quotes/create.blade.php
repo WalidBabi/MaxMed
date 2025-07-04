@@ -303,8 +303,8 @@
                         </div>
                         <div class="p-6">
                             <textarea id="terms_conditions" name="terms_conditions" rows="4"
-                                      placeholder="Enter the terms and conditions of your business to be displayed in your transaction"
-                                      class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('terms_conditions') border-red-300 @enderror">{{ old('terms_conditions') }}</textarea>
+                                      placeholder="These products require 2-4 weeks to supply and ship to your company directly."
+                                      class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('terms_conditions') border-red-300 @enderror">{{ old('terms_conditions','These products require 2-4 weeks to supply and ship to your company directly.') }}</textarea>
                             @error('terms_conditions')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
