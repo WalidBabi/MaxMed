@@ -489,52 +489,95 @@ class SendCampaignJob implements ShouldQueue
     }
 
     /**
-     * Get the appropriate subject line for a contact based on A/B testing
+     * Improve subject line to avoid spam filters and promotions tab
      */
     private function getSubjectForContact(MarketingContact $contact): string
     {
-        // Get the assigned variant for this contact
-        $pivotData = $this->campaign->contacts()
-            ->where('marketing_contacts.id', $contact->id)
-            ->first();
-
-        if (!$pivotData || !$pivotData->pivot->ab_test_variant) {
-            // Fallback to variant A if no assignment found
-            $subject = $this->campaign->subject;
-            return !empty($subject) ? $subject : 'MaxMed Campaign - ' . $this->campaign->name;
-        }
-
-        $variant = $pivotData->pivot->ab_test_variant;
+        $originalSubject = '';
         
-        if ($variant === 'variant_b') {
-            $subject = $this->campaign->subject_variant_b;
-            if (empty($subject)) {
-                $subject = $this->campaign->subject;
-            }
-            if (empty($subject)) {
-                $subject = 'MaxMed Campaign - ' . $this->campaign->name;
-            }
-            
-            Log::debug("Using variant B subject", [
-                'campaign_id' => $this->campaign->id,
-                'contact_id' => $contact->id,
-                'subject' => $subject
-            ]);
-            return $subject;
+        // Handle A/B testing subjects
+        if ($this->campaign->isAbTest() && $this->campaign->isSubjectLineTest()) {
+            $variant = $this->getContactVariant($contact);
+            $originalSubject = $variant === 'A' ? $this->campaign->subject : $this->campaign->subject_variant_b;
+        } else {
+            $originalSubject = $this->campaign->subject;
         }
 
-        // Default to variant A
-        $subject = $this->campaign->subject;
-        if (empty($subject)) {
-            $subject = 'MaxMed Campaign - ' . $this->campaign->name;
+        // If no subject, get from template or create default
+        if (empty($originalSubject)) {
+            if ($this->campaign->emailTemplate) {
+                $originalSubject = $this->campaign->emailTemplate->subject;
+            } else {
+                $originalSubject = 'Business Update from ' . config('app.name');
+            }
         }
-        
-        Log::debug("Using variant A subject", [
-            'campaign_id' => $this->campaign->id,
-            'contact_id' => $contact->id,
-            'subject' => $subject
-        ]);
-        return $subject;
+
+        // Apply deliverability improvements to subject line
+        return $this->optimizeSubjectForDeliverability($originalSubject, $contact);
+    }
+
+    /**
+     * Optimize subject line for better deliverability
+     */
+    private function optimizeSubjectForDeliverability(string $subject, MarketingContact $contact): string
+    {
+        // Remove spam trigger words and replace with business-friendly alternatives
+        $spamWords = [
+            'FREE' => 'Complimentary',
+            'URGENT' => 'Time-Sensitive',
+            'LIMITED TIME' => 'Available Now',
+            'SALE' => 'Offer',
+            'DISCOUNT' => 'Special Pricing',
+            'AMAZING' => 'Notable',
+            'INCREDIBLE' => 'Remarkable',
+            'SAVE MONEY' => 'Cost-Effective',
+            'CLICK HERE' => 'Learn More',
+            'ACT NOW' => 'Review Now',
+            'WINNER' => 'Selected',
+            'CONGRATULATIONS' => 'Notice',
+        ];
+
+        foreach ($spamWords as $spam => $replacement) {
+            $subject = str_ireplace($spam, $replacement, $subject);
+        }
+
+        // Make subject more business-focused and personal
+        $businessPrefixes = [
+            'Business Update: ',
+            'Important Notice: ',
+            'Product Information: ',
+            'Service Update: ',
+            'Professional Notice: ',
+        ];
+
+        // If subject doesn't start with business language, make it more professional
+        $startsWithBusiness = false;
+        foreach ($businessPrefixes as $prefix) {
+            if (stripos($subject, rtrim($prefix, ': ')) === 0) {
+                $startsWithBusiness = true;
+                break;
+            }
+        }
+
+        if (!$startsWithBusiness && !empty($contact->company)) {
+            // Personalize with company name for better engagement
+            $subject = 'Business Communication for ' . $contact->company . ': ' . $subject;
+        } elseif (!$startsWithBusiness) {
+            // Add professional prefix
+            $subject = 'Professional Update: ' . $subject;
+        }
+
+        // Ensure subject is not too long (50-60 characters is optimal)
+        if (strlen($subject) > 60) {
+            $subject = substr($subject, 0, 57) . '...';
+        }
+
+        // Personalize if possible
+        if (!empty($contact->first_name) && strlen($subject) < 50) {
+            $subject = $contact->first_name . ', ' . lcfirst($subject);
+        }
+
+        return trim($subject);
     }
 
     /**
