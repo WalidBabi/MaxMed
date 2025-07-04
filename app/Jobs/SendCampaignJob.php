@@ -44,7 +44,7 @@ class SendCampaignJob implements ShouldQueue
         try {
             Log::info("Starting campaign send", ['campaign_id' => $this->campaign->id]);
 
-            // Validate campaign has required content - improved logic for A/B testing
+            // Validate campaign has required content - improved logic for A/B testing and regular campaigns
             $hasContent = false;
             
             if ($this->campaign->isAbTest()) {
@@ -68,12 +68,29 @@ class SendCampaignJob implements ShouldQueue
                     $hasContent = !empty($this->campaign->text_content) || !empty($this->campaign->html_content) || $this->campaign->emailTemplate;
                 }
             } else {
-                // For regular campaigns, check standard content
-                $hasContent = !empty($this->campaign->text_content) || !empty($this->campaign->html_content) || $this->campaign->emailTemplate;
+                // For regular campaigns (non-A/B testing), check standard content
+                $hasContent = !empty($this->campaign->text_content) || 
+                             !empty($this->campaign->html_content) || 
+                             $this->campaign->emailTemplate || 
+                             !empty($this->campaign->subject); // Allow campaigns with just subject for basic text generation
             }
             
+            // Additional debug logging to help troubleshoot content issues
+            Log::info("Campaign content validation", [
+                'campaign_id' => $this->campaign->id,
+                'is_ab_test' => $this->campaign->isAbTest(),
+                'has_text_content' => !empty($this->campaign->text_content),
+                'has_html_content' => !empty($this->campaign->html_content),
+                'has_email_template' => !!$this->campaign->emailTemplate,
+                'has_subject' => !empty($this->campaign->subject),
+                'has_content' => $hasContent,
+                'text_content_length' => strlen($this->campaign->text_content ?? ''),
+                'html_content_length' => strlen($this->campaign->html_content ?? ''),
+                'template_id' => $this->campaign->email_template_id
+            ]);
+            
             if (!$hasContent) {
-                throw new \Exception('Campaign has no content or template to send');
+                throw new \Exception('Campaign has no content or template to send. Please add text content, HTML content, or select an email template.');
             }
 
             // Get all contacts for this campaign that haven't been sent yet
