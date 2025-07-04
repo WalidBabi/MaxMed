@@ -711,12 +711,21 @@
                 </div>
             </a>
             <!-- WeChat Floating Widget -->
-            <a href="weixin://dl/chat?+971554602500" target="_blank" class="flex items-center justify-center w-14 h-14 bg-green-600 rounded-full shadow-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 group" aria-label="Contact us on WeChat">
+            <button type="button" onclick="document.getElementById('wechatModal').classList.remove('hidden');" class="flex items-center justify-center w-14 h-14 bg-green-600 rounded-full shadow-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 group" aria-label="Contact us on WeChat">
                 <img src="/Images/wechat.png" alt="WeChat" class="h-7 w-7" />
                 <div class="absolute right-16 bg-white text-gray-700 px-4 py-2 rounded-lg shadow-lg opacity-0 invisible transform translate-x-2 group-hover:opacity-100 group-hover:visible group-hover:translate-x-0 transition-all duration-300 whitespace-nowrap">
                     Chat with us on WeChat
                 </div>
-            </a>
+            </button>
+        </div>
+        <!-- WeChat Modal -->
+        <div id="wechatModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+            <div class="bg-white rounded-lg shadow-lg p-6 max-w-xs w-full text-center relative">
+                <button onclick="document.getElementById('wechatModal').classList.add('hidden');" class="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-2xl">&times;</button>
+                <h3 class="text-lg font-semibold mb-4 text-gray-800">Scan to add us on WeChat</h3>
+                <img src="/Images/wechatqrcode.jpg" alt="WeChat QR Code" class="mx-auto mb-2 w-40 h-40 rounded" />
+                <p class="text-gray-600">Open WeChat and scan this QR code to connect with us.</p>
+            </div>
         </div>
         
         <!-- Google One Tap Sign-in -->
