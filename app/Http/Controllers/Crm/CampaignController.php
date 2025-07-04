@@ -299,11 +299,31 @@ class CampaignController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'subject' => 'nullable|string|max:255',
+            'subject_variant_b' => 'nullable|string|max:255',
+            'text_content' => 'nullable|string|min:10',
+            'email_template_id' => 'nullable|exists:email_templates,id',
             'scheduled_at' => 'nullable|date|after:now',
             'recipient_type' => 'required|in:all,lists,custom',
             'contact_lists' => 'required_if:recipient_type,lists|array',
             'contact_lists.*' => 'exists:contact_lists,id',
             'recipient_criteria' => 'required_if:recipient_type,custom|array',
+            'is_ab_test' => 'boolean',
+            'ab_test_type' => 'required_if:is_ab_test,1|in:subject_line,cta,template,send_time',
+            'ab_test_split_percentage' => 'required_if:is_ab_test,1|integer|min:10|max:90',
+            
+            // CTA variant fields
+            'cta_text_variant_a' => 'nullable|string|max:255',
+            'cta_url_variant_a' => 'nullable|url',
+            'cta_color_variant_a' => 'nullable|in:indigo,green,orange,red,purple',
+            'cta_text_variant_b' => 'nullable|string|max:255',
+            'cta_url_variant_b' => 'nullable|url',
+            'cta_color_variant_b' => 'nullable|in:indigo,green,orange,red,purple',
+            
+            // Template variant fields
+            'email_template_variant_a_id' => 'nullable|exists:email_templates,id',
+            'text_content_variant_a' => 'nullable|string',
+            'email_template_variant_b_id' => 'nullable|exists:email_templates,id',
+            'text_content_variant_b' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -312,20 +332,53 @@ class CampaignController extends Controller
                            ->withInput();
         }
 
-        $campaign->update([
-            'name' => $request->name,
-            'subject' => $request->subject,
-            'status' => $request->filled('scheduled_at') ? 'scheduled' : 'draft',
-            'scheduled_at' => $request->scheduled_at,
-            'recipients_criteria' => $this->buildRecipientsCriteria($request),
-        ]);
+        try {
+            // Generate HTML content from text content if no template is selected
+            $htmlContent = $campaign->html_content; // Keep existing HTML content
+            if (!$request->email_template_id && $request->text_content) {
+                $htmlContent = $this->generateHtmlFromText($request->text_content);
+            }
 
-        // Update recipients
-        $campaign->contacts()->detach();
-        $this->attachRecipients($campaign, $request);
+            // Prepare variant data based on A/B test type
+            $variantData = [];
+            if ($request->boolean('is_ab_test')) {
+                $variantData = $this->buildVariantData($request);
+            }
 
-        return redirect()->route('crm.marketing.campaigns.show', $campaign)
-                        ->with('success', 'Campaign updated successfully.');
+            $campaign->update([
+                'name' => $request->name,
+                'subject' => $request->subject,
+                'subject_variant_b' => $request->subject_variant_b,
+                'text_content' => $request->text_content,
+                'html_content' => $htmlContent,
+                'email_template_id' => $request->email_template_id,
+                'status' => $request->filled('scheduled_at') ? 'scheduled' : 'draft',
+                'scheduled_at' => $request->scheduled_at,
+                'is_ab_test' => $request->boolean('is_ab_test'),
+                'ab_test_type' => $request->is_ab_test ? $request->ab_test_type : null,
+                'ab_test_split_percentage' => $request->is_ab_test ? $request->ab_test_split_percentage : null,
+                'ab_test_variant_data' => !empty($variantData) ? json_encode($variantData) : null,
+                'recipients_criteria' => $this->buildRecipientsCriteria($request),
+            ]);
+
+            // Update recipients
+            $campaign->contacts()->detach();
+            $this->attachRecipients($campaign, $request);
+
+            return redirect()->route('crm.marketing.campaigns.show', $campaign)
+                            ->with('success', 'Campaign updated successfully.');
+
+        } catch (\Exception $e) {
+            \Log::error('Campaign update failed', [
+                'campaign_id' => $campaign->id,
+                'error' => $e->getMessage(),
+                'input' => $request->all()
+            ]);
+            
+            return redirect()->back()
+                           ->with('error', 'Failed to update campaign: ' . $e->getMessage())
+                           ->withInput();
+        }
     }
 
     public function destroy(Campaign $campaign)
@@ -347,22 +400,33 @@ class CampaignController extends Controller
             'name' => $campaign->name . ' (Copy)',
             'description' => $campaign->description,
             'subject' => $campaign->subject,
+            'subject_variant_b' => $campaign->subject_variant_b,
             'text_content' => $campaign->text_content,
             'html_content' => $campaign->html_content,
             'email_template_id' => $campaign->email_template_id,
             'type' => $campaign->type,
             'status' => 'draft',
+            'is_ab_test' => $campaign->is_ab_test,
+            'ab_test_type' => $campaign->ab_test_type,
+            'ab_test_split_percentage' => $campaign->ab_test_split_percentage,
+            'ab_test_variant_data' => $campaign->ab_test_variant_data,
             'recipients_criteria' => $campaign->recipients_criteria,
             'created_by' => auth()->id(),
         ]);
 
         // Copy recipients
         $recipientIds = $campaign->contacts()->pluck('marketing_contacts.id')->toArray();
-        $newCampaign->contacts()->attach($recipientIds);
-        $newCampaign->update(['total_recipients' => count($recipientIds)]);
+        if (!empty($recipientIds)) {
+            $newCampaign->contacts()->attach($recipientIds, [
+                'status' => 'pending',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            $newCampaign->update(['total_recipients' => count($recipientIds)]);
+        }
 
         return redirect()->route('crm.marketing.campaigns.edit', $newCampaign)
-                        ->with('success', 'Campaign duplicated successfully.');
+                        ->with('success', 'Campaign duplicated successfully. You can now edit and customize your copy.');
     }
 
     public function schedule(Request $request, Campaign $campaign)
