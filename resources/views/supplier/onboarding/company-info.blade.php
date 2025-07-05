@@ -26,7 +26,7 @@
         <div class="px-4 py-5 sm:p-6">
             <h2 class="text-lg font-medium text-gray-900 mb-5">Company Information</h2>
             
-            <form action="{{ route('supplier.onboarding.company') }}" method="POST" class="space-y-6">
+            <form action="{{ route('supplier.onboarding.company') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 
                 <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
