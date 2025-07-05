@@ -21,22 +21,16 @@ Allow: /about
 Allow: /contact
 Allow: /quotation/
 Allow: /quotation/*/form
-Allow: /product/
 
 # Sitemaps
 Sitemap: https://maxmedme.com/sitemap.xml
 Sitemap: https://maxmedme.com/sitemap-clean.xml
-Sitemap: https://maxmedme.com/sitemap-products.xml
-Sitemap: https://maxmedme.com/sitemap-categories.xml
-Sitemap: https://maxmedme.com/sitemap-news.xml
-Sitemap: https://maxmedme.com/sitemap-quotation.xml
-Sitemap: https://maxmedme.com/sitemap-quotation-form.xml
 Sitemap: https://maxmedme.com/rss/feed.xml
 
-# Crawl delay for respectful crawling (reduced from 1 to encourage faster crawling)
+# Crawl delay for respectful crawling
 Crawl-delay: 0.5
 
-# Block AI training bots (optional)
+# Block AI training bots
 User-agent: ChatGPT-User
 Disallow: /
 
@@ -48,9 +42,3 @@ Disallow: /
 
 User-agent: Claude-Web
 Disallow: /
-# Prevent crawling of duplicate URLs
-Disallow: /product/
-Disallow: /*?page=*
-Disallow: /*?category=*
-Disallow: /*?sort=*
-Disallow: /*?filter=*
