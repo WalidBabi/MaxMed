@@ -31,6 +31,9 @@
             <div class="p-6">
                 <div class="flex items-center space-x-6 mb-6">
                     <div class="flex-shrink-0">
+                        @if(optional($user->supplierInformation->brand)->logo_url)
+                            <img class="h-20 w-20 object-contain bg-white border rounded mb-2" src="{{ asset($user->supplierInformation->brand->logo_url) }}" alt="Brand Logo">
+                        @endif
                         @if($user->profile_photo)
                             <img class="h-20 w-20 rounded-full object-cover border-4 border-white shadow-lg" src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}">
                         @else
