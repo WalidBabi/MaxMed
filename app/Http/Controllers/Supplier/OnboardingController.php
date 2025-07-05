@@ -86,6 +86,8 @@ class OnboardingController extends Controller
             'primary_contact_position' => 'required|string|max:255',
             'primary_contact_email' => 'required|email|max:255',
             'primary_contact_phone' => 'required|string|max:20',
+            'brand_name' => 'nullable|string|max:255',
+            'brand_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         // Process website URL to add protocol if missing
@@ -99,6 +101,34 @@ class OnboardingController extends Controller
         $supplierInfo = $user->supplierInformation ?? new SupplierInformation();
         $supplierInfo->fill($validated);
         $supplierInfo->user_id = $user->id;
+        $supplierInfo->save();
+
+        // Handle brand name and logo
+        $brandName = $request->input('brand_name') ?: $supplierInfo->company_name;
+        $brandData = ['name' => $brandName];
+        if ($request->hasFile('brand_logo')) {
+            $logoFile = $request->file('brand_logo');
+            if ($logoFile->isValid()) {
+                $logoPath = $logoFile->store('brand-logos', 'public');
+                $brandData['logo_url'] = $logoPath;
+            }
+        }
+        $brand = null;
+        if ($supplierInfo->brand_id) {
+            $brand = \App\Models\Brand::find($supplierInfo->brand_id);
+            if ($brand) {
+                $brand->fill($brandData);
+                $brand->save();
+            }
+        }
+        if (!$brand) {
+            $brand = \App\Models\Brand::firstOrCreate(['name' => $brandName], $brandData);
+            if (isset($brandData['logo_url'])) {
+                $brand->logo_url = $brandData['logo_url'];
+                $brand->save();
+            }
+        }
+        $supplierInfo->brand_id = $brand->id;
         $supplierInfo->save();
 
         return Redirect::route('supplier.onboarding.documents')

@@ -92,7 +92,7 @@
                         <p class="text-sm text-gray-500 mt-1">Contact support to change your email address</p>
                     </div>
 
-                    <!-- Brand Section -->
+                    <!-- Brand Section (FORCED) -->
                     <div class="mt-8">
                         <h4 class="text-md font-semibold text-gray-800 mb-4">Brand Information</h4>
                         <!-- Brand Name -->

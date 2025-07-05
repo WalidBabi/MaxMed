@@ -42,6 +42,33 @@
                         @enderror
                     </div>
 
+                    <!-- Brand Name -->
+                    <div class="sm:col-span-2">
+                        <label for="brand_name" class="block text-sm font-medium text-gray-700">Brand Name</label>
+                        <input type="text" name="brand_name" id="brand_name"
+                               value="{{ old('brand_name', $supplierInfo->brand ? $supplierInfo->brand->name : '') }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <p class="text-sm text-gray-500 mt-1">This will be shown as your product brand. Leave blank to use your company name.</p>
+                        @error('brand_name')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Brand Logo -->
+                    <div class="sm:col-span-2">
+                        <label for="brand_logo" class="block text-sm font-medium text-gray-700">Brand Logo</label>
+                        <div class="flex items-center space-x-4">
+                            @if($supplierInfo->brand && $supplierInfo->brand->logo_url)
+                                <img src="{{ asset($supplierInfo->brand->logo_url) }}" alt="Brand Logo" class="h-16 w-16 object-contain bg-white border rounded">
+                            @endif
+                            <input type="file" name="brand_logo" id="brand_logo" accept="image/*" class="block">
+                        </div>
+                        <p class="text-sm text-gray-500 mt-1">JPG, PNG, GIF, or WEBP. Max size 2MB.</p>
+                        @error('brand_logo')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Registration Numbers -->
                     <div>
                         <label for="business_registration_number" class="block text-sm font-medium text-gray-700">Business Registration Number</label>
