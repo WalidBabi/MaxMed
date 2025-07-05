@@ -109,7 +109,7 @@ class OnboardingController extends Controller
         if ($request->hasFile('brand_logo')) {
             $logoFile = $request->file('brand_logo');
             if ($logoFile->isValid()) {
-                $logoPath = $logoFile->store('brand-logos', 'public');
+                $logoPath = $logoFile->store('brands', 'public');
                 $brandData['logo_url'] = $logoPath;
             }
         }
