@@ -87,7 +87,7 @@ class OnboardingController extends Controller
             'primary_contact_email' => 'required|email|max:255',
             'primary_contact_phone' => 'required|string|max:20',
             'brand_name' => 'nullable|string|max:255',
-            'brand_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'brand_logo' => 'nullable|mimes:jpeg,png,jpg,gif,webp,svg|max:4096',
         ]);
 
         // Process website URL to add protocol if missing
