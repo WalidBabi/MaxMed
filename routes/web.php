@@ -132,8 +132,8 @@ Route::get('/product/186', function() {
     return redirect('/products', 301);
 });
 
-// Handle all remaining product IDs found in the CSV
-$problematicProductIds = [224, 314, 43, 64, 276, 226, 219, 304, 230, 307, 309, 303, 280, 229, 85, 103, 37, 379, 359, 331, 279, 40, 274, 312, 305, 311, 257, 399, 396, 347, 389, 69, 363, 283, 420, 60, 249, 62, 95, 200, 422];
+// Handle ALL problematic product IDs found in Google Search Console CSV
+$problematicProductIds = [238, 368, 369, 370, 424, 374, 342, 359, 71, 125, 360, 47, 313, 58, 367, 93, 69, 56, 70, 146, 165, 404, 192, 128, 381, 100, 383, 423, 422, 414, 396, 391, 425, 361, 39, 222, 386, 91, 278, 257, 154, 382, 259, 237, 213, 317, 111, 384, 243, 232, 53, 57, 220, 94, 392, 64, 332, 375, 344, 250, 88, 420, 338, 84, 207, 115, 102, 337, 43, 211, 42, 242, 235, 240, 319, 188, 78, 74, 224, 314, 276, 226, 219, 304, 230, 307, 309, 303, 280, 229, 85, 103, 37, 379, 331, 279, 40, 274, 312, 305, 311, 399, 347, 389, 363, 283, 60, 249, 62, 95, 200, 117, 186, 82, 255, 234, 263, 187, 265, 90, 133, 46, 153, 52, 106, 38, 164, 228, 175, 249, 124, 233, 256, 248, 259, 86, 61, 271, 264, 166, 190, 274, 277, 276, 281, 283, 189, 270, 187, 185, 140, 137, 87, 114, 89, 136, 141, 59, 51, 104, 98, 107, 110, 49, 50, 284, 206, 285, 109, 207, 209, 76, 280, 135, 48, 112, 108, 105, 99, 129, 171, 116, 275, 97, 236, 282, 177, 54, 156, 143, 167, 101, 139, 173, 142, 163, 134, 168, 131, 159, 130, 157, 88, 128, 138, 165, 150, 111, 35, 36];
 
 foreach ($problematicProductIds as $productId) {
     Route::get("/product/{$productId}", function() use ($productId) {
@@ -187,19 +187,18 @@ Route::get('/quotation/{id}', function($id) {
 // Comprehensive redirects for all problematic URLs from Google Search Console CSV
 // These URLs are being blocked by robots.txt and need proper 301 redirects
 
-// Quotation form redirects for specific IDs found in CSV
-// TEMPORARILY COMMENTED OUT TO TEST MAIN ROUTES
+// Quotation form redirects for specific IDs found in CSV - ACTIVE
 $quotationFormIds = [80, 45, 307, 309, 303, 315, 310, 314, 47, 79, 74, 75, 72, 82, 311, 221, 230, 44, 225, 224, 223, 227, 229, 222, 92, 81, 233, 226, 219, 312, 306, 71, 43, 316, 70, 175, 228, 115, 117, 118, 123, 122, 127, 249, 124, 119, 120, 255, 125, 126, 245, 212, 121, 250, 145, 73, 64, 57, 261, 266, 78, 263, 267, 63, 96, 246, 273, 279, 272, 254, 93, 258, 252, 260, 253, 247, 244, 251, 256, 234, 257, 248, 259, 86, 61, 271, 264, 166, 278, 190, 274, 277, 276, 281, 283, 189, 270, 91, 187, 185, 140, 137, 90, 87, 114, 94, 89, 136, 141, 59, 51, 133, 113, 104, 98, 107, 103, 102, 100, 55, 110, 49, 52, 50, 60, 284, 206, 265, 285, 109, 207, 209, 69, 76, 85, 56, 280, 135, 48, 112, 108, 105, 99, 129, 186, 171, 188, 116, 275, 97, 58, 236, 282, 177, 54, 156, 143, 167, 101, 139, 173, 142, 163, 134, 164, 168, 131, 159, 130, 157, 88, 53, 128, 138, 165, 153, 150, 111, 38, 35, 40, 37, 42, 46, 36];
 
-// foreach ($quotationFormIds as $formId) {
-//     Route::get("/quotation/{$formId}/form", function($formId) {
-//         $product = \App\Models\Product::find($formId);
-//         if ($product && $product->slug) {
-//             return redirect()->route('quotation.form', $product->slug, 301);
-//         }
-//         return redirect('/quotation/form', 301);
-//     })->where('formId', '[0-9]+');
-// }
+foreach ($quotationFormIds as $formId) {
+    Route::get("/quotation/{$formId}/form", function($formId) {
+        $product = \App\Models\Product::find($formId);
+        if ($product && $product->slug) {
+            return redirect()->route('quotation.form', $product->slug, 301);
+        }
+        return redirect('/quotation/form', 301);
+    })->where('formId', '[0-9]+');
+}
 
 // Quotation page redirects (without /form)
 // TEMPORARILY COMMENTED OUT TO TEST MAIN ROUTES
