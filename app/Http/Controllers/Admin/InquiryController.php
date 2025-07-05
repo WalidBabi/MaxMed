@@ -97,23 +97,25 @@ class InquiryController extends Controller
             // Base validation rules
             $rules = [
                 'product_type' => 'required|in:listed,unlisted',
-                'quantity' => 'required|integer|min:1',
+                'quantity' => 'nullable|integer|min:1',
                 'requirements' => 'nullable|string',
                 'notes' => 'nullable|string',
                 'internal_notes' => 'nullable|string',
                 'customer_reference' => 'nullable|string|max:255',
                 'supplier_broadcast' => 'required|in:all,categories',
                 'target_supplier_categories' => 'required_if:supplier_broadcast,categories|array',
-                'target_supplier_categories.*' => 'exists:supplier_categories,id'
+                'target_supplier_categories.*' => 'exists:supplier_categories,id',
+                'attachments' => 'nullable|array',
+                'attachments.*' => 'file|mimes:pdf|max:10240' // 10MB max per file
             ];
 
             // Add conditional rules based on product type
             if ($request->input('product_type') === 'listed') {
-                $rules['product_id'] = 'required|exists:products,id';
+                $rules['product_id'] = 'nullable|exists:products,id';
             } else {
-                $rules['product_name'] = 'required|string|max:255';
-                $rules['product_description'] = 'required|string';
-                $rules['product_category'] = 'required|exists:categories,id';
+                $rules['product_name'] = 'nullable|string|max:255';
+                $rules['product_description'] = 'nullable|string';
+                $rules['product_category'] = 'nullable|exists:categories,id';
                 $rules['product_brand'] = 'nullable|string|max:255';
                 $rules['product_specifications'] = 'nullable|string';
             }
@@ -158,6 +160,24 @@ class InquiryController extends Controller
                 $inquiry->internal_notes = $request->internal_notes;
                 $inquiry->customer_reference = $request->customer_reference;
                 $inquiry->status = 'pending';
+                
+                // Handle file uploads
+                $attachments = [];
+                if ($request->hasFile('attachments')) {
+                    foreach ($request->file('attachments') as $file) {
+                        $filename = time() . '_' . $file->getClientOriginalName();
+                        $path = $file->storeAs('inquiry_attachments', $filename, 'public');
+                        $attachments[] = [
+                            'original_name' => $file->getClientOriginalName(),
+                            'stored_name' => $filename,
+                            'path' => $path,
+                            'size' => $file->getSize(),
+                            'mime_type' => $file->getClientMimeType(),
+                            'uploaded_at' => now()->toDateTimeString()
+                        ];
+                    }
+                }
+                $inquiry->attachments = $attachments;
                 
                 // Always broadcast to all relevant suppliers
                 $inquiry->broadcast_to_all_suppliers = true;

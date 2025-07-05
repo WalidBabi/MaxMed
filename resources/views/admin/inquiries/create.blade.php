@@ -83,7 +83,7 @@
         @endif
 
         <div class="bg-white shadow-md rounded-lg">
-            <form action="{{ route('admin.inquiries.store') }}" method="POST" class="divide-y divide-gray-200" id="inquiryForm">
+            <form action="{{ route('admin.inquiries.store') }}" method="POST" enctype="multipart/form-data" class="divide-y divide-gray-200" id="inquiryForm">
                 @csrf
                 <div class="p-6 space-y-6">
                     <!-- Product Selection Type -->
@@ -108,7 +108,7 @@
 
                     <!-- Listed Product Fields -->
                     <div id="listed_product_fields">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Select Product</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Select Product (Optional)</label>
                         <select name="product_id" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                             <option value="">Select a product</option>
                             @foreach($products as $product)
@@ -126,7 +126,7 @@
                     <div id="unlisted_product_fields" class="hidden">
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Product Name</label>
+                                <label class="block text-sm font-medium text-gray-700">Product Name (Optional)</label>
                                 <input type="text" name="product_name" value="{{ old('product_name') }}"
                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                 @error('product_name')
@@ -135,7 +135,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Product Description</label>
+                                <label class="block text-sm font-medium text-gray-700">Product Description (Optional)</label>
                                 <textarea name="product_description" rows="3"
                                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('product_description') }}</textarea>
                                 @error('product_description')
@@ -144,7 +144,7 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Product Category</label>
+                                <label class="block text-sm font-medium text-gray-700">Product Category (Optional)</label>
                                 <select name="product_category" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                                     <option value="">Select a category</option>
                                     @foreach($categories as $category)
@@ -163,7 +163,7 @@
                     <!-- Common Fields -->
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Quantity</label>
+                            <label class="block text-sm font-medium text-gray-700">Quantity (Optional)</label>
                             <input type="number" name="quantity" value="{{ old('quantity') }}" min="1"
                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             @error('quantity')
@@ -172,7 +172,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Requirements</label>
+                            <label class="block text-sm font-medium text-gray-700">Requirements (Optional)</label>
                             <textarea name="requirements" rows="3"
                                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('requirements') }}</textarea>
                             @error('requirements')
@@ -181,7 +181,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Notes</label>
+                            <label class="block text-sm font-medium text-gray-700">Notes (Optional)</label>
                             <textarea name="notes" rows="3"
                                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('notes') }}</textarea>
                             @error('notes')
@@ -190,7 +190,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Internal Notes</label>
+                            <label class="block text-sm font-medium text-gray-700">Internal Notes (Optional)</label>
                             <textarea name="internal_notes" rows="3"
                                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('internal_notes') }}</textarea>
                             @error('internal_notes')
@@ -203,6 +203,33 @@
                             <input type="text" name="customer_reference" value="{{ old('customer_reference') }}"
                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             @error('customer_reference')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- PDF Upload Field -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Upload PDF Files (Optional)</label>
+                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                <div class="space-y-1 text-center">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <div class="flex text-sm text-gray-600">
+                                        <label for="attachments" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                            <span>Upload PDF files</span>
+                                            <input id="attachments" name="attachments[]" type="file" class="sr-only" multiple accept=".pdf" onchange="updateFileList(this)">
+                                        </label>
+                                        <p class="pl-1">or drag and drop</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500">PDF files only, max 10MB each</p>
+                                </div>
+                            </div>
+                            <div id="file-list" class="mt-2 space-y-1"></div>
+                            @error('attachments')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                            @error('attachments.*')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
@@ -255,6 +282,44 @@ function toggleProductFields(type) {
     }
 }
 
+function updateFileList(input) {
+    const fileList = document.getElementById('file-list');
+    fileList.innerHTML = '';
+    
+    if (input.files && input.files.length > 0) {
+        for (let i = 0; i < input.files.length; i++) {
+            const file = input.files[i];
+            const fileItem = document.createElement('div');
+            fileItem.className = 'flex items-center justify-between p-2 bg-gray-50 rounded-md';
+            
+            const fileInfo = document.createElement('div');
+            fileInfo.className = 'flex items-center space-x-2';
+            
+            const fileIcon = document.createElement('div');
+            fileIcon.innerHTML = `
+                <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"></path>
+                </svg>
+            `;
+            
+            const fileName = document.createElement('span');
+            fileName.className = 'text-sm text-gray-700';
+            fileName.textContent = file.name;
+            
+            const fileSize = document.createElement('span');
+            fileSize.className = 'text-xs text-gray-500';
+            fileSize.textContent = `(${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+            
+            fileInfo.appendChild(fileIcon);
+            fileInfo.appendChild(fileName);
+            fileInfo.appendChild(fileSize);
+            
+            fileItem.appendChild(fileInfo);
+            fileList.appendChild(fileItem);
+        }
+    }
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('inquiryForm');
@@ -266,27 +331,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add form submission handler
     form.addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevent form from submitting immediately
-        
-        const productType = document.querySelector('input[name="product_type"]:checked').value;
-        console.log('Submitting form with product type:', productType);
-        
-        if (productType === 'unlisted') {
-            const productName = document.querySelector('input[name="product_name"]').value.trim();
-            const productDescription = document.querySelector('textarea[name="product_description"]').value.trim();
-            const productCategory = document.querySelector('select[name="product_category"]').value;
-            
-            console.log('Unlisted product data:', {
-                productName,
-                productDescription,
-                productCategory
-            });
-            
-            if (!productName || !productDescription || !productCategory) {
-                alert('Please fill in all required fields for unlisted product');
-                return;
-            }
-        }
+        // Since all fields are now optional, we don't need to validate them
+        // Just submit the form directly
+        console.log('Submitting form...');
         
         // Log all form data before submission
         const formData = new FormData(form);
@@ -295,8 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(key + ':', value);
         }
         
-        // Submit the form
-        form.submit();
+        // The form will submit normally since we're not preventing default
     });
 });
 </script>

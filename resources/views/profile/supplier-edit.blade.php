@@ -92,6 +92,34 @@
                         <p class="text-sm text-gray-500 mt-1">Contact support to change your email address</p>
                     </div>
 
+                    <!-- Brand Section (FORCED) -->
+                    <div class="mt-8">
+                        <h4 class="text-md font-semibold text-gray-800 mb-4">Brand Information</h4>
+                        <!-- Brand Name -->
+                        <div class="mb-4">
+                            <label for="brand_name" class="block text-sm font-medium text-gray-700 mb-2">Brand Name</label>
+                            <input type="text" name="brand_name" id="brand_name" value="{{ old('brand_name', optional($user->supplierInformation->brand)->name ?? '') }}" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            <p class="text-sm text-gray-500 mt-1">This will be shown as your product brand. Leave blank to use your company name.</p>
+                            @error('brand_name')
+                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <!-- Brand Logo -->
+                        <div class="mb-4">
+                            <label for="brand_logo" class="block text-sm font-medium text-gray-700 mb-2">Brand Logo</label>
+                            <div class="flex items-center space-x-4">
+                                @if(optional($user->supplierInformation->brand)->logo_url)
+                                    <img src="{{ asset(optional($user->supplierInformation->brand)->logo_url) }}" alt="Brand Logo" class="h-16 w-16 object-contain bg-white border rounded">
+                                @endif
+                                <input type="file" name="brand_logo" id="brand_logo" accept="image/*" class="block">
+                            </div>
+                            <p class="text-sm text-gray-500 mt-1">JPG, PNG, GIF, or WEBP. Max size 2MB.</p>
+                            @error('brand_logo')
+                                <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
                     <!-- Save Button -->
                     <div class="flex items-center justify-end space-x-4">
                         <a href="{{ route('profile.show') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">

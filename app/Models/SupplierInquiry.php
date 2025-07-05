@@ -31,7 +31,8 @@ class SupplierInquiry extends Model
         'broadcast_at',
         'expires_at',
         'supplier_id',
-        'forwarded_at'
+        'forwarded_at',
+        'attachments'
     ];
 
     protected $casts = [
@@ -39,7 +40,8 @@ class SupplierInquiry extends Model
         'target_supplier_categories' => 'array',
         'product_specifications' => 'array',
         'broadcast_at' => 'datetime',
-        'expires_at' => 'datetime'
+        'expires_at' => 'datetime',
+        'attachments' => 'array'
     ];
 
     // Status constants

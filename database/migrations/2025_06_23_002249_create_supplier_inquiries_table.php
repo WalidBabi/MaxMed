@@ -30,6 +30,7 @@ return new class extends Migration
                 $table->text('internal_notes')->nullable();
                 $table->string('customer_reference')->nullable();
                 $table->string('reference_number')->unique(); // INQ-YYYY-XXXXX
+                $table->json('attachments')->nullable(); // Store PDF file paths
                 
                 // Supplier Targeting
                 $table->boolean('broadcast_to_all_suppliers')->default(false);
@@ -104,6 +105,9 @@ return new class extends Migration
                 }
                 if (!Schema::hasColumn('supplier_inquiries', 'reference_number')) {
                     $table->string('reference_number')->unique();
+                }
+                if (!Schema::hasColumn('supplier_inquiries', 'attachments')) {
+                    $table->json('attachments')->nullable();
                 }
                 if (!Schema::hasColumn('supplier_inquiries', 'broadcast_to_all_suppliers')) {
                     $table->boolean('broadcast_to_all_suppliers')->default(false);

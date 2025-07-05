@@ -103,6 +103,45 @@ class ProfileController extends Controller
             }
         }
 
+        // Handle brand name and logo for suppliers
+        if ($user->role && $user->role->name === 'supplier') {
+            $supplierInfo = $user->supplierInformation;
+            if ($supplierInfo) {
+                $brandName = $request->input('brand_name') ?: $supplierInfo->company_name;
+                $brandData = ['name' => $brandName];
+
+                // Handle brand logo upload
+                if ($request->hasFile('brand_logo')) {
+                    $logoFile = $request->file('brand_logo');
+                    if ($logoFile->isValid()) {
+                        $logoPath = $logoFile->store('brand-logos', 'public');
+                        $brandData['logo_url'] = $logoPath;
+                    }
+                }
+
+                // Create or update brand
+                $brand = null;
+                if ($supplierInfo->brand_id) {
+                    $brand = \App\Models\Brand::find($supplierInfo->brand_id);
+                    if ($brand) {
+                        $brand->fill($brandData);
+                        $brand->save();
+                    }
+                }
+                if (!$brand) {
+                    $brand = \App\Models\Brand::firstOrCreate(['name' => $brandName], $brandData);
+                    // If logo was uploaded, update it
+                    if (isset($brandData['logo_url'])) {
+                        $brand->logo_url = $brandData['logo_url'];
+                        $brand->save();
+                    }
+                }
+                // Set brand_id in supplier_information
+                $supplierInfo->brand_id = $brand->id;
+                $supplierInfo->save();
+            }
+        }
+
         $user->save();
         Log::info('Profile updated successfully', ['user_id' => $user->id]);
 
