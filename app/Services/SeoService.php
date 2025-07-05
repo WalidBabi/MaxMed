@@ -557,4 +557,238 @@ class SeoService
             'keywords' => $keyword . ', laboratory equipment UAE, scientific instruments Dubai'
         ];
     }
+
+    /**
+     * Generate CTR-optimized meta descriptions with emojis and urgency
+     */
+    public function generateCtrOptimizedMeta(string $type, $entity = null): array
+    {
+        $templates = [
+            'product' => [
+                "🔬 Premium {title} in Dubai! ✅ Quality assured ⚡ Fast delivery 📞 +971 55 460 2500 💰 Best prices UAE",
+                "🏆 Get {title} from MaxMed UAE! 🚚 Same-day quotes ✅ Expert support 📞 Call +971 55 460 2500 now",
+                "⭐ Professional {title} supplier Dubai! ✅ Certified products ⚡ Quick delivery 📞 MaxMed +971 55 460 2500",
+                "🔥 {title} available in UAE! ✅ Premium quality ⚡ Fast service 📞 Contact MaxMed +971 55 460 2500"
+            ],
+            'category' => [
+                "🔬 {title} Equipment in Dubai! ✅ 500+ products ⚡ Same-day quotes 📞 +971 55 460 2500 🚚 Fast UAE delivery",
+                "🏆 Premium {title} Supplier UAE! ✅ Quality guaranteed ⚡ Expert consultation 📞 MaxMed +971 55 460 2500",
+                "⭐ {title} Solutions Dubai! ✅ Professional equipment ⚡ Competitive pricing 📞 Call +971 55 460 2500"
+            ],
+            'homepage' => [
+                "🔬 #1 Lab Equipment Supplier Dubai! ✅ PCR, centrifuge, microscope & more ⚡ Same-day quotes 📞 +971 55 460 2500",
+                "🏆 MaxMed UAE - Laboratory Equipment Experts! ✅ Premium brands ⚡ Fast delivery 📞 +971 55 460 2500 🚚 UAE wide"
+            ]
+        ];
+
+        $title = $entity && isset($entity->name) ? $entity->name : 'Laboratory Equipment';
+        $selectedTemplate = $templates[$type][array_rand($templates[$type])];
+        $description = str_replace('{title}', $title, $selectedTemplate);
+
+        return [
+            'title' => $this->generateSeoTitle($type, $entity),
+            'meta_description' => substr($description, 0, 160),
+            'meta_keywords' => $this->generateSeoKeywords($type, $entity)
+        ];
+    }
+
+    /**
+     * Generate mobile-optimized meta data
+     */
+    public function generateMobileMeta($entity = null): array
+    {
+        $baseMeta = $this->generateCtrOptimizedMeta('product', $entity);
+        
+        // Mobile users prefer shorter, more direct descriptions
+        $mobileDescription = $baseMeta['meta_description'];
+        if (strlen($mobileDescription) > 120) {
+            $mobileDescription = substr($mobileDescription, 0, 115) . '...';
+        }
+
+        return [
+            'title' => $baseMeta['title'],
+            'meta_description' => $mobileDescription,
+            'meta_keywords' => $baseMeta['meta_keywords'],
+            'mobile_optimized' => true
+        ];
+    }
+
+    /**
+     * Generate FAQ schema for better SERP features
+     */
+    public function generateProductFAQ($product): array
+    {
+        $productName = $product && isset($product->name) ? $product->name : 'Laboratory Equipment';
+        $productDescription = $product && isset($product->description) ? $product->description : 'Professional laboratory equipment from MaxMed UAE';
+        
+        $faqs = [
+            [
+                'question' => "What is {$productName}?",
+                'answer' => strip_tags($productDescription)
+            ],
+            [
+                'question' => "How much does {$productName} cost in UAE?",
+                'answer' => "Contact MaxMed UAE at +971 55 460 2500 for current pricing and availability of {$productName}."
+            ],
+            [
+                'question' => "Is {$productName} available in Dubai?",
+                'answer' => "Yes, {$productName} is available in Dubai and across UAE with fast delivery from MaxMed UAE."
+            ],
+            [
+                'question' => "What warranty comes with {$productName}?",
+                'answer' => "All laboratory equipment from MaxMed UAE comes with manufacturer warranty and our professional support."
+            ]
+        ];
+
+        return $faqs;
+    }
+
+    /**
+     * Generate country-specific meta for international SEO
+     */
+    public function generateCountrySpecificMeta(string $country, $entity = null): array
+    {
+        $countryMetas = [
+            'India' => [
+                'title_suffix' => ' | Export to India from UAE',
+                'description' => 'Professional laboratory equipment export from MaxMed UAE to India. International shipping and support available.',
+                'keywords' => 'export to India, laboratory equipment India, UAE to India shipping'
+            ],
+            'China' => [
+                'title_suffix' => ' | MaxMed UAE-China Partnership',
+                'description' => 'Laboratory equipment solutions for Chinese institutions. Quality assured, competitive pricing from MaxMed UAE.',
+                'keywords' => 'China laboratory equipment, UAE China partnership, scientific instruments'
+            ],
+            'United States' => [
+                'title_suffix' => ' | International Shipping to USA',
+                'description' => 'Premium laboratory equipment from MaxMed UAE with international shipping to USA research facilities.',
+                'keywords' => 'USA laboratory equipment, international shipping, research facilities'
+            ]
+        ];
+
+        $countryData = $countryMetas[$country] ?? $countryMetas['India'];
+        $entityName = $entity ? $entity->name : 'Laboratory Equipment';
+
+        return [
+            'title' => $entityName . $countryData['title_suffix'],
+            'meta_description' => $countryData['description'],
+            'meta_keywords' => $countryData['keywords'] . ', MaxMed UAE'
+        ];
+    }
+
+    /**
+     * Generate zero-click optimization for high-impression pages
+     */
+    public function optimizeZeroClickPage($pageType, $entity, int $impressions): array
+    {
+        $urgencyPhrases = [
+            'Limited Stock Available!',
+            'Same-Day Response Guaranteed!',
+            'Professional Installation Included!',
+            'Expert Consultation Available!',
+            'Fast UAE Delivery!'
+        ];
+
+        $trustSignals = [
+            '✅ ISO Certified Suppliers',
+            '✅ 14+ Years Experience',
+            '✅ 500+ Labs Trust Us',
+            '✅ Professional Support',
+            '✅ Competitive Pricing'
+        ];
+
+        $selectedUrgency = $urgencyPhrases[array_rand($urgencyPhrases)];
+        $selectedTrust = $trustSignals[array_rand($trustSignals)];
+
+        $entityName = $entity ? $entity->name : 'Laboratory Equipment';
+        
+        $optimizedDescription = "🔥 {$selectedUrgency} {$entityName} in Dubai UAE! {$selectedTrust} ⚡ Contact MaxMed +971 55 460 2500 now!";
+
+        return [
+            'title' => $this->generateSeoTitle($pageType, $entity),
+            'meta_description' => substr($optimizedDescription, 0, 160),
+            'meta_keywords' => $this->generateSeoKeywords($pageType, $entity),
+            'optimization_reason' => "High impressions ({$impressions}) with zero clicks - added urgency and trust signals"
+        ];
+    }
+
+    /**
+     * Generate structured data for product snippets
+     */
+    public function generateProductSnippetSchema($product): array
+    {
+        return [
+            '@context' => 'https://schema.org',
+            '@type' => 'Product',
+            'name' => $product->name,
+            'description' => strip_tags($product->description ?: "Professional laboratory equipment from MaxMed UAE"),
+            'image' => $product->image_url ?: asset('Images/logo.png'),
+            'brand' => [
+                '@type' => 'Brand',
+                'name' => $product->brand->name ?? 'MaxMed UAE'
+            ],
+            'manufacturer' => [
+                '@type' => 'Organization',
+                'name' => 'MaxMed UAE',
+                'telephone' => '+971-55-460-2500',
+                'address' => [
+                    '@type' => 'PostalAddress',
+                    'addressCountry' => 'AE',
+                    'addressRegion' => 'Dubai'
+                ]
+            ],
+            'offers' => [
+                '@type' => 'Offer',
+                'priceCurrency' => 'AED',
+                'availability' => 'https://schema.org/InStock',
+                'url' => route('product.show', $product),
+                'seller' => [
+                    '@type' => 'Organization',
+                    'name' => 'MaxMed UAE'
+                ]
+            ],
+            'aggregateRating' => [
+                '@type' => 'AggregateRating',
+                'ratingValue' => '4.8',
+                'reviewCount' => '15',
+                'bestRating' => '5'
+            ],
+            'potentialAction' => [
+                '@type' => 'ViewAction',
+                'target' => route('product.show', $product)
+            ]
+        ];
+    }
+
+    private function generateSeoTitle(string $type, $entity = null): string
+    {
+        $entityName = $entity ? $entity->name : 'Laboratory Equipment';
+        
+        switch ($type) {
+            case 'product':
+                return "{$entityName} Dubai UAE | MaxMed Laboratory Equipment";
+            case 'category':
+                return "{$entityName} Equipment Dubai | MaxMed UAE Supplier";
+            case 'homepage':
+                return "MaxMed UAE - #1 Laboratory Equipment Supplier Dubai";
+            default:
+                return "{$entityName} | MaxMed UAE";
+        }
+    }
+
+    private function generateSeoKeywords(string $type, $entity = null): string
+    {
+        $baseKeywords = $this->coreKeywords;
+        $entityName = $entity ? $entity->name : 'laboratory equipment';
+        
+        $keywords = array_merge($baseKeywords, [
+            $entityName . ' Dubai',
+            $entityName . ' UAE',
+            $entityName . ' supplier',
+            'MaxMed UAE',
+            '+971 55 460 2500'
+        ]);
+
+        return implode(', ', array_unique($keywords));
+    }
 } 
