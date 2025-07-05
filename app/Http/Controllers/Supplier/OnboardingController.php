@@ -110,7 +110,7 @@ class OnboardingController extends Controller
             $logoFile = $request->file('brand_logo');
             if ($logoFile->isValid()) {
                 $logoPath = $logoFile->store('brands', 'public');
-                $brandData['logo_url'] = $logoPath;
+                $brandData['logo_url'] = 'https://maxmedme.com/storage/' . $logoPath;
             }
         }
         $brand = null;
