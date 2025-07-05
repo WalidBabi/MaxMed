@@ -177,6 +177,37 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Get the supplier's brand (based on company name)
+     */
+    public function supplierBrand()
+    {
+        return $this->hasOne(Brand::class, 'name', 'supplierInformation.company_name');
+    }
+
+    /**
+     * Get or create the supplier's brand based on their company name
+     */
+    public function getOrCreateSupplierBrand()
+    {
+        if (!$this->isSupplier() || !$this->supplierInformation) {
+            return null;
+        }
+
+        // First check if supplier has a specific brand assigned
+        if ($this->supplierInformation->brand_id) {
+            return $this->supplierInformation->brand;
+        }
+
+        // Fall back to company name
+        $companyName = $this->supplierInformation->company_name;
+        if (empty($companyName)) {
+            return null;
+        }
+
+        return Brand::firstOrCreate(['name' => $companyName]);
+    }
+
+    /**
      * Check if user is a supplier
      */
     public function isSupplier(): bool

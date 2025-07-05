@@ -95,10 +95,16 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                             </div>
-                            <input type="text" id="brand" value="Yooning" readonly
+                            <input type="text" id="brand" value="{{ $supplierBrand ? $supplierBrand->name : 'No Brand Set' }}" readonly
                                    class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-500 sm:text-sm">
                         </div>
-                        <p class="mt-2 text-sm text-gray-500">Brand is automatically set to Yooning for all supplier products</p>
+                        <p class="mt-2 text-sm text-gray-500">
+                            @if($supplierBrand)
+                                Brand is automatically set to your company name: {{ $supplierBrand->name }}
+                            @else
+                                Please complete your company profile to set your brand name
+                            @endif
+                        </p>
                     </div>
 
                     <!-- SKU -->

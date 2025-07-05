@@ -144,6 +144,41 @@
                         </div>
                     @endif
 
+                    @if($inquiry->attachments && count($inquiry->attachments) > 0)
+                        <div class="mt-6">
+                            <dt class="text-sm font-medium text-gray-500">Attachments</dt>
+                            <dd class="mt-1">
+                                <div class="space-y-2">
+                                    @foreach($inquiry->attachments as $attachment)
+                                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="flex-shrink-0">
+                                                    <svg class="h-6 w-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                </div>
+                                                <div class="min-w-0 flex-1">
+                                                    <p class="text-sm font-medium text-gray-900">{{ $attachment['original_name'] }}</p>
+                                                    <p class="text-sm text-gray-500">{{ round($attachment['size'] / 1024 / 1024, 2) }} MB</p>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <a href="{{ asset('storage/' . $attachment['path']) }}" target="_blank" 
+                                                   class="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-indigo-600 bg-indigo-100 hover:bg-indigo-200">
+                                                    View
+                                                </a>
+                                                <a href="{{ asset('storage/' . $attachment['path']) }}" download="{{ $attachment['original_name'] }}"
+                                                   class="inline-flex items-center px-3 py-1 border border-transparent text-sm font-medium rounded-md text-gray-600 bg-gray-100 hover:bg-gray-200">
+                                                    Download
+                                                </a>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </dd>
+                        </div>
+                    @endif
+
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 mt-6">
                         <div>
                             <dt class="text-sm font-medium text-gray-500">Created</dt>

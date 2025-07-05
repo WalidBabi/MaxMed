@@ -33,6 +33,7 @@ class SupplierInformation extends Model
     protected $fillable = [
         'user_id',
         'company_name',
+        'brand_id',
         'business_registration_number',
         'tax_registration_number',
         'trade_license_number',
@@ -109,6 +110,14 @@ class SupplierInformation extends Model
     public function approver(): BelongsTo
     {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    /**
+     * Get the brand associated with this supplier
+     */
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class);
     }
 
     /**

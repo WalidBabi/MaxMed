@@ -50,10 +50,10 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         @if($brand->logo_url)
                                             <img src="{{ $brand->logo_url }}" alt="{{ $brand->name }}" 
-                                                 class="h-12 w-12 rounded-lg object-cover">
+                                                 class="h-20 w-20 rounded-lg object-contain bg-white border border-gray-200 shadow-sm">
                                         @else
-                                            <div class="h-12 w-12 rounded-lg bg-gray-100 flex items-center justify-center">
-                                                <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                            <div class="h-20 w-20 rounded-lg bg-gray-100 flex items-center justify-center border border-gray-200">
+                                                <svg class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                                                 </svg>
                                             </div>

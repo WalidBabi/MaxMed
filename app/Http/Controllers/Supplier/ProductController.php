@@ -102,10 +102,10 @@ class ProductController extends Controller
         $assignedCategoryIds = Auth::user()->activeAssignedCategories->pluck('id');
         $categories = Category::whereIn('id', $assignedCategoryIds)->get();
         
-        // Get or create "Yooning" brand
-        $yooningBrand = Brand::firstOrCreate(['name' => 'Yooning']);
+        // Get or create supplier's brand based on their company name
+        $supplierBrand = Auth::user()->getOrCreateSupplierBrand();
         
-        return view('supplier.products.create', compact('categories', 'yooningBrand'));
+        return view('supplier.products.create', compact('categories', 'supplierBrand'));
     }
 
     /**
@@ -133,15 +133,15 @@ class ProductController extends Controller
         ]);
 
         DB::transaction(function () use ($validated, $request) {
-            // Get or create "Yooning" brand
-            $yooningBrand = Brand::firstOrCreate(['name' => 'Yooning']);
+            // Get or create supplier's brand based on their company name
+            $supplierBrand = Auth::user()->getOrCreateSupplierBrand();
 
-            // Create product with supplier_id and fixed brand
+            // Create product with supplier_id and supplier's brand
             $product = Product::create([
                 'name' => $validated['name'],
                 'description' => $validated['description'],
                 'category_id' => $validated['category_id'],
-                'brand_id' => $yooningBrand->id,
+                'brand_id' => $supplierBrand ? $supplierBrand->id : null,
                 'supplier_id' => Auth::id(),
                 'price' => 0, // Default price for supplier products
                 'price_aed' => 0, // Default price for supplier products
@@ -234,7 +234,8 @@ class ProductController extends Controller
         $assignedCategoryIds = Auth::user()->activeAssignedCategories->pluck('id');
         $categories = Category::whereIn('id', $assignedCategoryIds)->get();
         
-        $yooningBrand = Brand::firstOrCreate(['name' => 'Yooning']);
+        // Get or create supplier's brand based on their company name
+        $supplierBrand = Auth::user()->getOrCreateSupplierBrand();
         
         // Get existing specifications and index them by specification_key for easy access
         $existingSpecsCollection = $this->specificationService->getExistingSpecifications($product->id);
@@ -243,7 +244,7 @@ class ProductController extends Controller
         // Get category-specific templates
         $templates = $this->specificationService->getCategorySpecificationTemplates($product->category_id);
         
-        return view('supplier.products.edit', compact('product', 'categories', 'yooningBrand', 'existingSpecs', 'templates'));
+        return view('supplier.products.edit', compact('product', 'categories', 'supplierBrand', 'existingSpecs', 'templates'));
     }
 
     /**
