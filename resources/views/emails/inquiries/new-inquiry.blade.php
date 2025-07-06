@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Product Inquiry - {{ $inquiry->inquiry_number }}</title>
+    <title>New Product Inquiry - {{ $inquiry->reference_number }}</title>
     <!--[if mso]>
     <noscript>
         <xml>
@@ -132,7 +132,7 @@
                                         <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">Inquiry Number</td>
-                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ $inquiry->inquiry_number }}</td>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ $inquiry->reference_number }}</td>
                                             </tr>
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">Created Date</td>
