@@ -19,7 +19,6 @@ class SupplierInquiry extends Model
         'product_category',
         'product_brand',
         'product_specifications',
-        'quantity',
         'requirements',
         'notes',
         'internal_notes',
@@ -75,6 +74,11 @@ class SupplierInquiry extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(SupplierInquiryItem::class)->orderBy('sort_order');
     }
 
     public function supplierResponses()
@@ -160,39 +164,44 @@ class SupplierInquiry extends Model
             $q->where('name', 'supplier');
         });
 
-        // Always filter by relevant product categories
-        $productCategoryId = null;
+        // Collect all product category IDs from inquiry items
+        $productCategoryIds = collect();
         
-        // Get the product category ID
-        if ($this->product_id) {
-            // For listed products, get category from product relationship
-            $productCategoryId = $this->product?->category_id;
-        } elseif ($this->product_category_id) {
-            // For unlisted products, use the stored category ID
-            $productCategoryId = $this->product_category_id;
-        } else {
-            // Fallback: try to find category by name for legacy unlisted products
-            if ($this->product_category) {
-                $category = \App\Models\Category::where('name', 'like', '%' . $this->product_category . '%')->first();
-                $productCategoryId = $category?->id;
+        // Load items with their products
+        $this->load('items.product');
+        
+        foreach ($this->items as $item) {
+            if ($item->product_id && $item->product) {
+                // For listed products, get category from product relationship
+                if ($item->product->category_id) {
+                    $productCategoryIds->push($item->product->category_id);
+                }
+            } elseif ($item->product_category) {
+                // For unlisted products, try to find category by name
+                $category = \App\Models\Category::where('name', 'like', '%' . $item->product_category . '%')->first();
+                if ($category) {
+                    $productCategoryIds->push($category->id);
+                }
             }
         }
+        
+        // Remove duplicates
+        $productCategoryIds = $productCategoryIds->unique();
 
-        // Filter suppliers by category assignment
-        if ($productCategoryId) {
-            $query->whereHas('activeSupplierCategories', function ($q) use ($productCategoryId) {
-                $q->where('category_id', $productCategoryId);
+        // Filter suppliers by category assignment - suppliers who can handle ANY of the categories
+        if ($productCategoryIds->isNotEmpty()) {
+            $query->whereHas('activeSupplierCategories', function ($q) use ($productCategoryIds) {
+                $q->whereIn('category_id', $productCategoryIds->toArray());
             });
             
-            \Log::info("Filtering suppliers by product category", [
-                'product_category_id' => $productCategoryId,
+            \Log::info("Filtering suppliers by product categories", [
+                'product_category_ids' => $productCategoryIds->toArray(),
                 'inquiry_id' => $this->id
             ]);
         } else {
-            \Log::warning("No product category found for inquiry filtering", [
+            \Log::warning("No product categories found for inquiry filtering", [
                 'inquiry_id' => $this->id,
-                'product_id' => $this->product_id,
-                'product_category' => $this->product_category
+                'items_count' => $this->items->count()
             ]);
         }
 
@@ -200,7 +209,7 @@ class SupplierInquiry extends Model
         
         \Log::info("Targeted suppliers found", [
             'inquiry_id' => $this->id,
-            'product_category_id' => $productCategoryId,
+            'product_category_ids' => $productCategoryIds->toArray(),
             'supplier_count' => $suppliers->count(),
             'supplier_ids' => $suppliers->pluck('id')->toArray()
         ]);

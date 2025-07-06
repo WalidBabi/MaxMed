@@ -43,7 +43,10 @@ class SupplierCategoryController extends Controller
         }
 
         $supplier->load('supplierInformation');
-        $categories = Category::all();
+        // Filter to show only leaf categories (categories that have no subcategories of their own)
+        $categories = Category::whereNotNull('parent_id')
+            ->whereDoesntHave('subcategories')
+            ->get();
         $assignedCategoryIds = $supplier->activeAssignedCategories->pluck('id')->toArray();
 
         return view('admin.supplier-categories.edit', compact('supplier', 'categories', 'assignedCategoryIds'));

@@ -165,19 +165,54 @@
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-900">
-                                            @if($inquiry->product_id)
-                                                <div class="font-medium">{{ $inquiry->product->name ?? 'Product Not Found' }}</div>
-                                                @if($inquiry->product && $inquiry->product->sku)
-                                                    <div class="text-gray-500 text-xs">SKU: {{ $inquiry->product->sku }}</div>
+                                            @if($inquiry->items && $inquiry->items->count() > 0)
+                                                @if($inquiry->items->count() == 1)
+                                                    @php $item = $inquiry->items->first(); @endphp
+                                                    @if($item->product_id)
+                                                        <div class="font-medium">{{ $item->product->name ?? 'Product Not Found' }}</div>
+                                                        @if($item->product && $item->product->sku)
+                                                            <div class="text-gray-500 text-xs">SKU: {{ $item->product->sku }}</div>
+                                                        @endif
+                                                    @else
+                                                        <div class="font-medium">{{ $item->product_name }}</div>
+                                                        @if($item->product_category)
+                                                            <div class="text-gray-500 text-xs">Category: {{ $item->product_category }}</div>
+                                                        @endif
+                                                    @endif
+                                                @else
+                                                    <div class="font-medium">{{ $inquiry->items->count() }} Products</div>
+                                                    <div class="text-gray-500 text-xs space-y-1 mt-1">
+                                                        @foreach($inquiry->items->take(2) as $item)
+                                                            <div>• {{ $item->product_id ? ($item->product->name ?? 'Product Not Found') : $item->product_name }}</div>
+                                                        @endforeach
+                                                        @if($inquiry->items->count() > 2)
+                                                            <div class="text-gray-400">+ {{ $inquiry->items->count() - 2 }} more...</div>
+                                                        @endif
+                                                    </div>
                                                 @endif
                                             @else
-                                                <div class="font-medium">{{ $inquiry->product_name }}</div>
-                                                @if($inquiry->product_category)
-                                                    <div class="text-gray-500 text-xs">Category: {{ $inquiry->product_category }}</div>
+                                                <!-- Fallback for legacy inquiries -->
+                                                @if($inquiry->product_id)
+                                                    <div class="font-medium">{{ $inquiry->product->name ?? 'Product Not Found' }}</div>
+                                                    @if($inquiry->product && $inquiry->product->sku)
+                                                        <div class="text-gray-500 text-xs">SKU: {{ $inquiry->product->sku }}</div>
+                                                    @endif
+                                                @else
+                                                    <div class="font-medium">{{ $inquiry->product_name }}</div>
+                                                    @if($inquiry->product_category)
+                                                        <div class="text-gray-500 text-xs">Category: {{ $inquiry->product_category }}</div>
+                                                    @endif
                                                 @endif
                                             @endif
                                         </td>
-                                        <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-900">{{ number_format($inquiry->quantity) }}</td>
+                                        <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                                            @if($inquiry->items && $inquiry->items->count() > 0)
+                                                @php $totalQty = $inquiry->items->sum('quantity'); @endphp
+                                                {{ $totalQty > 0 ? number_format($totalQty, 2) : '-' }}
+                                            @else
+                                                {{ $inquiry->quantity ? number_format($inquiry->quantity) : '-' }}
+                                            @endif
+                                        </td>
                                         <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
                                             @php
                                                 $statusColors = [

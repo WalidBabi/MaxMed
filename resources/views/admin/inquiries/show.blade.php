@@ -94,25 +94,84 @@
                                 </span>
                             </dd>
                         </div>
-                        <div>
-                            <dt class="text-sm font-medium text-gray-500">Product</dt>
-                            <dd class="mt-1 text-sm text-gray-900">
-                                @if($inquiry->product_id)
-                                    <div class="font-medium">{{ $inquiry->product->name ?? 'Product Not Found' }}</div>
-                                    @if($inquiry->product && $inquiry->product->sku)
-                                        <div class="text-gray-500 text-xs">SKU: {{ $inquiry->product->sku }}</div>
-                                    @endif
+                        <div class="col-span-2">
+                            <dt class="text-sm font-medium text-gray-500">Products</dt>
+                            <dd class="mt-1">
+                                @if($inquiry->items && $inquiry->items->count() > 0)
+                                    <div class="space-y-3">
+                                        @foreach($inquiry->items as $item)
+                                            <div class="bg-gray-50 rounded-lg p-4">
+                                                <div class="flex justify-between items-start">
+                                                    <div class="flex-1">
+                                                        @if($item->product_id)
+                                                            <div class="font-medium text-gray-900">{{ $item->product->name ?? 'Product Not Found' }}</div>
+                                                            @if($item->product && $item->product->sku)
+                                                                <div class="text-gray-500 text-xs">SKU: {{ $item->product->sku }}</div>
+                                                            @endif
+                                                        @else
+                                                            <div class="font-medium text-gray-900">{{ $item->product_name }}</div>
+                                                            @if($item->product_category)
+                                                                <div class="text-gray-500 text-xs">Category: {{ $item->product_category }}</div>
+                                                            @endif
+                                                            @if($item->product_brand)
+                                                                <div class="text-gray-500 text-xs">Brand: {{ $item->product_brand }}</div>
+                                                            @endif
+                                                        @endif
+                                                        
+                                                        @if($item->product_description)
+                                                            <div class="text-gray-600 text-sm mt-1">{{ $item->product_description }}</div>
+                                                        @endif
+                                                        
+                                                        @if($item->product_specifications)
+                                                            <div class="text-gray-500 text-xs mt-1">Specifications: {{ $item->product_specifications }}</div>
+                                                        @endif
+                                                    </div>
+                                                    
+                                                    @if($item->quantity)
+                                                        <div class="ml-4 text-right">
+                                                            <div class="text-sm font-medium text-gray-900">Qty: {{ number_format($item->quantity, 2) }}</div>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                
+                                                @if($item->requirements)
+                                                    <div class="mt-2 pt-2 border-t border-gray-200">
+                                                        <div class="text-xs font-medium text-gray-500">Requirements:</div>
+                                                        <div class="text-sm text-gray-600">{{ $item->requirements }}</div>
+                                                    </div>
+                                                @endif
+                                                
+                                                @if($item->notes)
+                                                    <div class="mt-2 pt-2 border-t border-gray-200">
+                                                        <div class="text-xs font-medium text-gray-500">Notes:</div>
+                                                        <div class="text-sm text-gray-600">{{ $item->notes }}</div>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 @else
-                                    <div class="font-medium">{{ $inquiry->product_name }}</div>
-                                    @if($inquiry->product_category)
-                                        <div class="text-gray-500 text-xs">Category: {{ $inquiry->product_category }}</div>
+                                    <!-- Fallback for legacy inquiries -->
+                                    @if($inquiry->product_id)
+                                        <div class="font-medium">{{ $inquiry->product->name ?? 'Product Not Found' }}</div>
+                                        @if($inquiry->product && $inquiry->product->sku)
+                                            <div class="text-gray-500 text-xs">SKU: {{ $inquiry->product->sku }}</div>
+                                        @endif
+                                    @else
+                                        <div class="font-medium">{{ $inquiry->product_name }}</div>
+                                        @if($inquiry->product_category)
+                                            <div class="text-gray-500 text-xs">Category: {{ $inquiry->product_category }}</div>
+                                        @endif
+                                    @endif
+                                    
+                                    @if($inquiry->quantity)
+                                        <div class="mt-2">
+                                            <span class="text-sm font-medium text-gray-500">Quantity:</span>
+                                            <span class="text-sm text-gray-900 font-semibold">{{ number_format($inquiry->quantity) }}</span>
+                                        </div>
                                     @endif
                                 @endif
                             </dd>
-                        </div>
-                        <div>
-                            <dt class="text-sm font-medium text-gray-500">Quantity</dt>
-                            <dd class="mt-1 text-sm text-gray-900 font-semibold">{{ number_format($inquiry->quantity) }}</dd>
                         </div>
                     </div>
 

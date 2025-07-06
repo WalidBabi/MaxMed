@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\View as ViewFacade;
 use App\Models\SupplierInquiry;
 use App\Models\SupplierCategoryType;
 use Illuminate\Http\JsonResponse;
+use App\Models\SupplierInquiryItem;
 
 class InquiryController extends Controller
 {
@@ -35,7 +36,7 @@ class InquiryController extends Controller
      */
     public function index(Request $request)
     {
-        $query = SupplierInquiry::with(['product', 'supplierResponses'])
+        $query = SupplierInquiry::with(['product', 'items.product', 'supplierResponses'])
             ->latest();
 
         // Filter by status
@@ -84,40 +85,64 @@ class InquiryController extends Controller
         // Detailed request logging
         Log::info('Raw request data:', [
             'all' => $request->all(),
-            'product_type' => $request->input('product_type'),
-            'product_name' => $request->input('product_name'),
-            'product_description' => $request->input('product_description'),
-            'product_category' => $request->input('product_category'),
-            'has_product_name' => $request->has('product_name'),
-            'has_product_description' => $request->has('product_description'),
-            'has_product_category' => $request->has('product_category'),
+            'has_items' => $request->has('items'),
+            'items_count' => $request->has('items') ? count($request->items) : 0,
+            'items_detail' => $request->get('items', [])
         ]);
         
         try {
+            // Filter out empty items (items with no product_type or empty product_type)
+            $items = $request->get('items', []);
+            $filteredItems = array_filter($items, function($item) {
+                // Only keep items that have a product_type AND either a product_id (for listed) or product_name (for unlisted)
+                if (empty($item['product_type'])) {
+                    return false;
+                }
+                
+                if ($item['product_type'] === 'listed') {
+                    return !empty($item['product_id']);
+                } else {
+                    return !empty($item['product_name']);
+                }
+            });
+            
+            // Replace the items in the request with filtered items
+            $request->merge(['items' => array_values($filteredItems)]);
+            
+            // Log the filtered items for debugging
+            Log::info('Filtered items:', ['filtered_items' => $filteredItems]);
+            
             // Base validation rules
             $rules = [
-                'product_type' => 'required|in:listed,unlisted',
-                'quantity' => 'nullable|integer|min:1',
                 'requirements' => 'nullable|string',
-                'notes' => 'nullable|string',
-                'internal_notes' => 'nullable|string',
                 'customer_reference' => 'nullable|string|max:255',
-                'supplier_broadcast' => 'required|in:all,categories',
-                'target_supplier_categories' => 'required_if:supplier_broadcast,categories|array',
-                'target_supplier_categories.*' => 'exists:supplier_categories,id',
+                'internal_notes' => 'nullable|string',
                 'attachments' => 'nullable|array',
-                'attachments.*' => 'file|mimes:pdf|max:10240' // 10MB max per file
+                'attachments.*' => 'file|mimes:pdf|max:10240', // 10MB max per file
+                'items' => 'nullable|array',
             ];
 
-            // Add conditional rules based on product type
-            if ($request->input('product_type') === 'listed') {
-                $rules['product_id'] = 'nullable|exists:products,id';
-            } else {
-                $rules['product_name'] = 'nullable|string|max:255';
-                $rules['product_description'] = 'nullable|string';
-                $rules['product_category'] = 'nullable|exists:categories,id';
-                $rules['product_brand'] = 'nullable|string|max:255';
-                $rules['product_specifications'] = 'nullable|string';
+            // If no items are provided, we need at least attachments or requirements
+            if (empty($filteredItems) && empty($request->file('attachments')) && empty($request->get('requirements'))) {
+                $rules['items'] = 'required|array|min:1';
+            }
+
+            // Add conditional rules for each item based on product type
+            foreach ($filteredItems as $index => $item) {
+                $rules["items.{$index}.product_type"] = 'required|in:listed,unlisted';
+                $rules["items.{$index}.quantity"] = 'nullable|numeric|min:0';
+                $rules["items.{$index}.requirements"] = 'nullable|string';
+                $rules["items.{$index}.notes"] = 'nullable|string';
+                
+                if (($item['product_type'] ?? '') === 'listed') {
+                    $rules["items.{$index}.product_id"] = 'required|exists:products,id';
+                } else {
+                    $rules["items.{$index}.product_name"] = 'required|string|max:255';
+                    $rules["items.{$index}.product_description"] = 'nullable|string';
+                    $rules["items.{$index}.product_brand"] = 'nullable|string|max:255';
+                    $rules["items.{$index}.product_category"] = 'nullable|string|max:255';
+                    $rules["items.{$index}.product_specifications"] = 'nullable|string';
+                }
             }
 
             $validated = $request->validate($rules);
@@ -128,38 +153,12 @@ class InquiryController extends Controller
             try {
                 $inquiry = new SupplierInquiry();
                 
-                // Handle product information based on type
-                if ($request->product_type === 'listed') {
-                    $inquiry->product_id = $request->product_id;
-                    Log::info('Using listed product', ['product_id' => $request->product_id]);
-                } else {
-                    $inquiry->product_name = $request->product_name;
-                    $inquiry->product_description = $request->product_description;
-                    $inquiry->product_category = $request->product_category;
-                    $inquiry->product_brand = $request->product_brand;
-                    $inquiry->product_specifications = $request->product_specifications;
-                    
-                    // For unlisted products, store the category ID for proper filtering
-                    if ($request->product_category) {
-                        $category = Category::find($request->product_category);
-                        if ($category) {
-                            $inquiry->product_category_id = $category->id;
-                            Log::info('Using unlisted product with category', [
-                                'product_name' => $request->product_name,
-                                'product_category' => $category->name,
-                                'category_id' => $category->id
-                            ]);
-                        }
-                    }
-                }
-
-                // Set other fields
-                $inquiry->quantity = $request->quantity;
+                // Set main inquiry fields
                 $inquiry->requirements = $request->requirements;
-                $inquiry->notes = $request->notes;
-                $inquiry->internal_notes = $request->internal_notes;
                 $inquiry->customer_reference = $request->customer_reference;
+                $inquiry->internal_notes = $request->internal_notes;
                 $inquiry->status = 'pending';
+                $inquiry->broadcast_to_all_suppliers = true;
                 
                 // Handle file uploads
                 $attachments = [];
@@ -179,16 +178,51 @@ class InquiryController extends Controller
                 }
                 $inquiry->attachments = $attachments;
                 
-                // Always broadcast to all relevant suppliers
-                $inquiry->broadcast_to_all_suppliers = true;
-                
                 Log::info('Creating new inquiry', [
-                    'product_type' => $request->product_type,
-                    'quantity' => $request->quantity
+                    'items_count' => count($request->items ?? [])
                 ]);
 
                 $inquiry->save();
-                Log::info('Inquiry saved successfully', ['inquiry_id' => $inquiry->id, 'reference_number' => $inquiry->reference_number]);
+                
+                // Create inquiry items (if any provided)
+                if (!empty($request->items)) {
+                    foreach ($request->items as $index => $itemData) {
+                        $item = new SupplierInquiryItem();
+                        $item->supplier_inquiry_id = $inquiry->id;
+                        $item->sort_order = $index;
+                        
+                        if ($itemData['product_type'] === 'listed') {
+                            $item->product_id = $itemData['product_id'];
+                            Log::info('Adding listed product item', [
+                                'product_id' => $itemData['product_id'],
+                                'index' => $index
+                            ]);
+                        } else {
+                            $item->product_name = $itemData['product_name'];
+                            $item->product_description = $itemData['product_description'] ?? null;
+                            $item->product_brand = $itemData['product_brand'] ?? null;
+                            $item->product_category = $itemData['product_category'] ?? null;
+                            $item->product_specifications = $itemData['product_specifications'] ?? null;
+                            
+                            Log::info('Adding unlisted product item', [
+                                'product_name' => $itemData['product_name'],
+                                'index' => $index
+                            ]);
+                        }
+                        
+                        $item->quantity = $itemData['quantity'] ?? null;
+                        $item->requirements = $itemData['requirements'] ?? null;
+                        $item->notes = $itemData['notes'] ?? null;
+                        
+                        $item->save();
+                    }
+                }
+                
+                Log::info('Inquiry saved successfully', [
+                    'inquiry_id' => $inquiry->id, 
+                    'reference_number' => $inquiry->reference_number,
+                    'items_count' => count($request->items ?? [])
+                ]);
 
                 DB::commit();
 
@@ -230,7 +264,7 @@ class InquiryController extends Controller
      */
     public function show(SupplierInquiry $inquiry)
     {
-        $inquiry->load(['product', 'supplierResponses.supplier', 'quotations']);
+        $inquiry->load(['product', 'items.product', 'supplierResponses.supplier', 'quotations']);
         
         // Get smart supplier recommendations for this product
         $smartRecommendations = $this->getSmartSupplierRecommendations($inquiry);
