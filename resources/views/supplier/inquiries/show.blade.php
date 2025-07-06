@@ -22,16 +22,26 @@
                 @php
                     $showResponseActions = false;
                     $isQuoted = false;
-                    $response = $inquiry->supplierResponses->where('user_id', auth()->id())->first();
                     
-                    if ($response) {
-                        $showResponseActions = in_array($response->status, ['pending', 'viewed']) && $response->status !== 'quoted';
-                        $isQuoted = $response->status === 'quoted';
-                        $responseStatus = $response->status;
+                    // Handle both QuotationRequest (legacy) and SupplierInquiry (new) models
+                    if ($inquiry instanceof \App\Models\QuotationRequest) {
+                        // Legacy QuotationRequest model
+                        $responseStatus = $inquiry->supplier_response ?? 'pending';
+                        $isQuoted = $responseStatus === 'available';
+                        $showResponseActions = in_array($responseStatus, ['pending']) && !$isQuoted;
                     } else {
-                        $showResponseActions = false;
-                        $isQuoted = false;
-                        $responseStatus = 'pending';
+                        // New SupplierInquiry model
+                        $response = $inquiry->supplierResponses->where('user_id', auth()->id())->first();
+                        
+                        if ($response) {
+                            $showResponseActions = in_array($response->status, ['pending', 'viewed']) && $response->status !== 'quoted';
+                            $isQuoted = $response->status === 'quoted';
+                            $responseStatus = $response->status;
+                        } else {
+                            $showResponseActions = false;
+                            $isQuoted = false;
+                            $responseStatus = 'pending';
+                        }
                     }
 
                     $statusClass = match($responseStatus) {
@@ -40,6 +50,7 @@
                         'quoted' => 'bg-green-100 text-green-800',
                         'accepted' => 'bg-indigo-100 text-indigo-800',
                         'not_available', 'not_interested' => 'bg-red-100 text-red-800',
+                        'available' => 'bg-green-100 text-green-800',
                         default => 'bg-gray-100 text-gray-800'
                     };
                     
@@ -49,6 +60,7 @@
                         'quoted' => 'Quotation Submitted',
                         'accepted' => 'Accepted',
                         'not_available', 'not_interested' => 'Not Available',
+                        'available' => 'Quotation Submitted',
                         default => ucfirst($inquiry->status)
                     };
                 @endphp
@@ -124,8 +136,20 @@
             @endif
 
             <!-- My Quotation -->
-            @if($response && $response->quotation)
-                @php $myQuotation = $response->quotation; @endphp
+            @php
+                $myQuotation = null;
+                if ($inquiry instanceof \App\Models\QuotationRequest) {
+                    // For legacy QuotationRequest, get quotation directly
+                    $myQuotation = $inquiry->supplierQuotations->where('supplier_id', auth()->id())->first();
+                } else {
+                    // For new SupplierInquiry, get quotation through response
+                    if ($response && $response->quotation) {
+                        $myQuotation = $response->quotation;
+                    }
+                }
+            @endphp
+            
+            @if($myQuotation)
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                     <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
                         <div class="flex items-center justify-between">
@@ -327,6 +351,45 @@
                     @endif
                 </div>
             </div>
+
+            {{-- Attachments Section --}}
+            @if(!empty($inquiry->attachments) && is_array($inquiry->attachments) && count($inquiry->attachments) > 0)
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 mt-8">
+                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                            <svg class="w-5 h-5 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Attachments
+                        </h3>
+                    </div>
+                    <div class="p-6 space-y-6">
+                        @foreach($inquiry->attachments as $attachment)
+                            <div class="bg-gray-50 rounded-xl shadow p-6 flex flex-col items-center">
+                                <div class="w-full flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                                    <div>
+                                        <div class="font-medium text-gray-800 text-lg">{{ $attachment['original_name'] ?? 'Attachment' }}</div>
+                                        <div class="text-xs text-gray-500 mb-2">{{ $attachment['mime_type'] ?? '' }} | {{ isset($attachment['size']) ? number_format($attachment['size']/1024, 2) . ' KB' : '' }}</div>
+                                    </div>
+                                    <div class="flex space-x-2 mt-2 md:mt-0">
+                                        <a href="{{ asset('storage/' . $attachment['path']) }}" target="_blank" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-600 bg-indigo-100 hover:bg-indigo-200">
+                                            View
+                                        </a>
+                                        <a href="{{ asset('storage/' . $attachment['path']) }}" download="{{ $attachment['original_name'] ?? '' }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-600 bg-gray-100 hover:bg-gray-200">
+                                            Download
+                                        </a>
+                                    </div>
+                                </div>
+                                @if(isset($attachment['mime_type']) && Str::startsWith($attachment['mime_type'], 'application/pdf'))
+                                    <div class="w-full flex justify-center">
+                                        <iframe src="{{ asset('storage/' . $attachment['path']) }}" width="100%" height="700px" style="border:1px solid #e5e7eb; border-radius: 0.75rem; background: white;"></iframe>
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </div>
 
         <!-- Sidebar -->

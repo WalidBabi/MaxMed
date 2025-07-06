@@ -164,52 +164,67 @@ class SupplierInquiry extends Model
             $q->where('name', 'supplier');
         });
 
-        // Collect all product category IDs from inquiry items
-        $productCategoryIds = collect();
-        
-        // Load items with their products
-        $this->load('items.product');
-        
-        foreach ($this->items as $item) {
-            if ($item->product_id && $item->product) {
-                // For listed products, get category from product relationship
-                if ($item->product->category_id) {
-                    $productCategoryIds->push($item->product->category_id);
-                }
-            } elseif ($item->product_category) {
-                // For unlisted products, try to find category by name
-                $category = \App\Models\Category::where('name', 'like', '%' . $item->product_category . '%')->first();
-                if ($category) {
-                    $productCategoryIds->push($category->id);
-                }
-            }
-        }
-        
-        // Remove duplicates
-        $productCategoryIds = $productCategoryIds->unique();
-
-        // Filter suppliers by category assignment - suppliers who can handle ANY of the categories
-        if ($productCategoryIds->isNotEmpty()) {
-            $query->whereHas('activeSupplierCategories', function ($q) use ($productCategoryIds) {
-                $q->whereIn('category_id', $productCategoryIds->toArray());
+        // If targeting specific categories is set, use those
+        if (!$this->broadcast_to_all_suppliers && $this->target_supplier_categories) {
+            $categoryIds = $this->target_supplier_categories;
+            
+            $query->whereHas('activeSupplierCategories', function ($q) use ($categoryIds) {
+                $q->whereIn('category_id', $categoryIds);
             });
             
-            \Log::info("Filtering suppliers by product categories", [
-                'product_category_ids' => $productCategoryIds->toArray(),
+            \Log::info("Filtering suppliers by targeted categories", [
+                'target_category_ids' => $categoryIds,
                 'inquiry_id' => $this->id
             ]);
         } else {
-            \Log::warning("No product categories found for inquiry filtering", [
-                'inquiry_id' => $this->id,
-                'items_count' => $this->items->count()
-            ]);
+            // Fall back to product-based category detection
+            $productCategoryIds = collect();
+            
+            // Load items with their products
+            $this->load('items.product');
+            
+            foreach ($this->items as $item) {
+                if ($item->product_id && $item->product) {
+                    // For listed products, get category from product relationship
+                    if ($item->product->category_id) {
+                        $productCategoryIds->push($item->product->category_id);
+                    }
+                } elseif ($item->product_category) {
+                    // For unlisted products, try to find category by name
+                    $category = \App\Models\Category::where('name', 'like', '%' . $item->product_category . '%')->first();
+                    if ($category) {
+                        $productCategoryIds->push($category->id);
+                    }
+                }
+            }
+            
+            // Remove duplicates
+            $productCategoryIds = $productCategoryIds->unique();
+
+            // Filter suppliers by category assignment - suppliers who can handle ANY of the categories
+            if ($productCategoryIds->isNotEmpty()) {
+                $query->whereHas('activeSupplierCategories', function ($q) use ($productCategoryIds) {
+                    $q->whereIn('category_id', $productCategoryIds->toArray());
+                });
+                
+                \Log::info("Filtering suppliers by product categories", [
+                    'product_category_ids' => $productCategoryIds->toArray(),
+                    'inquiry_id' => $this->id
+                ]);
+            } else {
+                \Log::warning("No product categories found for inquiry filtering", [
+                    'inquiry_id' => $this->id,
+                    'items_count' => $this->items->count()
+                ]);
+            }
         }
 
         $suppliers = $query->get();
         
         \Log::info("Targeted suppliers found", [
             'inquiry_id' => $this->id,
-            'product_category_ids' => $productCategoryIds->toArray(),
+            'broadcast_to_all_suppliers' => $this->broadcast_to_all_suppliers,
+            'target_supplier_categories' => $this->target_supplier_categories,
             'supplier_count' => $suppliers->count(),
             'supplier_ids' => $suppliers->pluck('id')->toArray()
         ]);

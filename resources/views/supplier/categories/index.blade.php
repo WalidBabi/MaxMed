@@ -90,10 +90,6 @@
                                         <span class="text-gray-600">Response Time:</span>
                                         <span class="font-medium text-gray-900">{{ number_format($assignment->avg_response_time_hours, 1) }}h</span>
                                     </div>
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-gray-600">Customer Rating:</span>
-                                        <span class="font-medium text-gray-900">{{ number_format($assignment->avg_customer_rating, 1) }}/5</span>
-                                    </div>
                                 </div>
 
                                 <!-- Recent Activity -->

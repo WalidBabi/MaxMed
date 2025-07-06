@@ -116,6 +116,27 @@ class SupplierCategory extends Model
     }
 
     /**
+     * Calculate performance score based on various metrics
+     */
+    public function getPerformanceScoreAttribute(): float
+    {
+        $score = 0;
+        
+        // Win rate (40% weight)
+        $score += ($this->quotation_win_rate ?? 0) * 0.4;
+        
+        // Response time (35% weight) - faster is better
+        $responseTimeScore = max(0, 100 - (($this->avg_response_time_hours ?? 48) / 48 * 100));
+        $score += $responseTimeScore * 0.35;
+        
+        // Experience/total quotations (25% weight)
+        $experienceScore = min(100, ($this->total_quotations ?? 0) * 2);
+        $score += $experienceScore * 0.25;
+        
+        return round($score, 1);
+    }
+
+    /**
      * Update quotation statistics
      */
     public function updateQuotationStats(bool $won = false): void

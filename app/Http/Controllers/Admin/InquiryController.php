@@ -144,6 +144,13 @@ class InquiryController extends Controller
                     $rules["items.{$index}.product_specifications"] = 'nullable|string';
                 }
             }
+            
+            // Add validation for targeting method
+            $rules['targeting_method'] = 'required|in:all,categories';
+            if ($request->input('targeting_method') === 'categories') {
+                $rules['target_categories'] = 'required|array|min:1';
+                $rules['target_categories.*'] = 'exists:categories,id';
+            }
 
             $validated = $request->validate($rules);
 
@@ -158,7 +165,15 @@ class InquiryController extends Controller
                 $inquiry->customer_reference = $request->customer_reference;
                 $inquiry->internal_notes = $request->internal_notes;
                 $inquiry->status = 'pending';
-                $inquiry->broadcast_to_all_suppliers = true;
+                
+                // Handle supplier targeting
+                if ($request->input('targeting_method') === 'categories') {
+                    $inquiry->broadcast_to_all_suppliers = false;
+                    $inquiry->target_supplier_categories = $request->input('target_categories');
+                } else {
+                    $inquiry->broadcast_to_all_suppliers = true;
+                    $inquiry->target_supplier_categories = null;
+                }
                 
                 // Handle file uploads
                 $attachments = [];

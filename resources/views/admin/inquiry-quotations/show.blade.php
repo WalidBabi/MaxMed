@@ -2,6 +2,8 @@
 
 @section('title', 'Inquiry Details')
 
+@php use Illuminate\Support\Str; @endphp
+
 @section('content')
 <div class="px-4 sm:px-6 lg:px-8">
     <!-- Header -->
@@ -94,6 +96,28 @@
             </div>
         </div>
     </div>
+
+    <!-- PDF Attachments -->
+    @if($inquiry->attachments && is_array($inquiry->attachments) && count($inquiry->attachments) > 0)
+        <div class="mt-8 bg-white shadow-sm rounded-lg border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">Submitted PDF Attachments</h3>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    @foreach($inquiry->attachments as $attachment)
+                        @if(isset($attachment['path']) && Str::endsWith(strtolower($attachment['path']), '.pdf'))
+                            <div>
+                                <div class="mb-2 font-medium text-gray-700">PDF File</div>
+                                <iframe src="{{ asset('storage/' . $attachment['path']) }}" width="100%" height="500px" class="border rounded"></iframe>
+                              
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    @endif
 
     <!-- Supplier Response Statistics -->
     <div class="mt-8 bg-white shadow-sm rounded-lg border border-gray-200">
@@ -222,6 +246,72 @@
             </div>
         @endif
     </div>
+
+    <!-- Not Available Responses -->
+    @php
+        $notAvailableResponses = $inquiry->supplierResponses->where('status', 'not_available');
+    @endphp
+    @if($notAvailableResponses->count() > 0)
+        <div class="mt-8 bg-white shadow-sm rounded-lg border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                    <i class="fas fa-times-circle text-red-600 mr-2"></i>
+                    Not Available Responses ({{ $notAvailableResponses->count() }})
+                </h3>
+            </div>
+            <div class="overflow-hidden">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Supplier
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Reason
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Status
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Responded
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach($notAvailableResponses as $response)
+                            <tr class="hover:bg-red-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ $response->supplier->name }}
+                                    </div>
+                                    <div class="text-sm text-gray-500">
+                                        {{ $response->supplier->email }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-red-700">
+                                        @if($response->notes)
+                                            {{ $response->notes }}
+                                        @else
+                                            <span class="text-gray-400">No reason provided</span>
+                                        @endif
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold bg-red-100 text-red-800">
+                                        Not Available
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ $response->updated_at->format('M d, Y H:i') }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
 </div>
 
 <!-- Approve Modal -->

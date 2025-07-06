@@ -114,6 +114,21 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Not Available Responses -->
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200 hover:border-red-500 transition-colors duration-200">
+                <div class="px-4 py-5 sm:p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Not Available</dt>
+                            <dd class="mt-1 text-2xl font-semibold text-red-600">{{ $stats['not_available_responses'] ?? 0 }}</dd>
+                        </div>
+                        <div class="flex-shrink-0 bg-red-100 rounded-md p-2">
+                            <i class="fas fa-times-circle text-red-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -297,6 +312,58 @@
                                 </div>
                             </div>
                         @endif
+
+                        <!-- Not Available Responses -->
+                        @php
+                            $notAvailableResponses = $inquiry->supplierResponses->where('status', 'not_available');
+                        @endphp
+                        @if($notAvailableResponses->count() > 0)
+                            <div class="px-6 py-4 border-t border-gray-200">
+                                <h4 class="text-sm font-medium text-red-900 mb-3 flex items-center">
+                                    <i class="fas fa-times-circle mr-2"></i>
+                                    Not Available Responses ({{ $notAvailableResponses->count() }})
+                                </h4>
+                                <div class="space-y-3">
+                                    @foreach($notAvailableResponses->take(3) as $response)
+                                        <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
+                                            <div class="flex items-center space-x-4">
+                                                <div class="flex-shrink-0">
+                                                    <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                                                        <i class="fas fa-times text-red-600 text-xs"></i>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <p class="text-sm font-medium text-red-900">{{ $response->supplier->name }}</p>
+                                                    <p class="text-sm text-red-600">
+                                                        @if($response->notes)
+                                                            {{ Str::limit($response->notes, 60) }}
+                                                        @else
+                                                            No reason provided
+                                                        @endif
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center space-x-3">
+                                                <span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold bg-red-100 text-red-800">
+                                                    Not Available
+                                                </span>
+                                                <span class="text-xs text-red-500">
+                                                    {{ $response->updated_at->diffForHumans() }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                    @if($notAvailableResponses->count() > 3)
+                                        <div class="text-center">
+                                            <a href="{{ route('admin.inquiry-quotations.show', $inquiry) }}" 
+                                               class="text-red-600 hover:text-red-900 text-sm font-medium">
+                                                View all {{ $notAvailableResponses->count() }} not available responses
+                                            </a>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 @endforeach
             </div>
@@ -350,8 +417,6 @@
         </div>
     </div>
 </div>
-
-
 
 <script>
 function approveQuotation(quotationId) {
