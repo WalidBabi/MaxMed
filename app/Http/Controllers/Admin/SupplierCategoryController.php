@@ -279,4 +279,63 @@ class SupplierCategoryController extends Controller
 
         return redirect()->back()->with('success', 'Category request rejected. An email notification has been sent to the supplier.');
     }
+
+    /**
+     * Display supplier response times
+     */
+    public function responseTimes()
+    {
+        $suppliers = User::whereHas('role', function($q) {
+            $q->where('name', 'supplier');
+        })->with(['activeSupplierCategories.category', 'role', 'supplierInformation'])->get();
+
+        // Calculate response times for each supplier
+        foreach ($suppliers as $supplier) {
+            foreach ($supplier->activeSupplierCategories as $assignment) {
+                $this->calculateSupplierResponseTime($assignment);
+            }
+        }
+
+        // Sort suppliers by average response time
+        $suppliers = $suppliers->sortBy(function($supplier) {
+            $avgResponseTime = $supplier->activeSupplierCategories->avg('avg_response_time_hours');
+            return $avgResponseTime ?? 999; // Put suppliers with no data at the end
+        });
+
+        return view('admin.supplier-categories.response-times', compact('suppliers'));
+    }
+
+    /**
+     * Calculate response time for a supplier category assignment
+     */
+    private function calculateSupplierResponseTime($assignment)
+    {
+        // Get quotation requests for this supplier and category
+        $quotationRequests = \App\Models\QuotationRequest::where('supplier_id', $assignment->supplier_id)
+            ->whereHas('product', function($query) use ($assignment) {
+                $query->where('category_id', $assignment->category_id);
+            })
+            ->whereNotNull('forwarded_at')
+            ->whereNotNull('supplier_responded_at')
+            ->get();
+
+        if ($quotationRequests->count() > 0) {
+            $totalResponseTime = 0;
+            $validResponses = 0;
+
+            foreach ($quotationRequests as $request) {
+                $responseTime = $request->forwarded_at->diffInHours($request->supplier_responded_at);
+                if ($responseTime >= 0 && $responseTime <= 168) { // Max 1 week, reasonable range
+                    $totalResponseTime += $responseTime;
+                    $validResponses++;
+                }
+            }
+
+            if ($validResponses > 0) {
+                $avgResponseTime = $totalResponseTime / $validResponses;
+                $assignment->avg_response_time_hours = round($avgResponseTime, 1);
+                $assignment->save();
+            }
+        }
+    }
 } 

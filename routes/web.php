@@ -480,6 +480,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         // Supplier Category Management
         Route::get('supplier-categories', [SupplierCategoryController::class, 'index'])->name('supplier-categories.index');
+        Route::get('supplier-categories/response-times', [SupplierCategoryController::class, 'responseTimes'])->name('supplier-categories.response-times');
         Route::get('supplier-categories/{supplier}/edit', [SupplierCategoryController::class, 'edit'])->name('supplier-categories.edit');
         Route::post('supplier-categories/{supplier}/categories', [SupplierCategoryController::class, 'update'])->name('supplier-categories.update');
         Route::post('supplier-categories/{supplier}/{category}/approve', [SupplierCategoryController::class, 'approve'])->name('supplier-categories.approve');

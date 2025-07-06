@@ -341,6 +341,14 @@
                                                 <div class="text-sm text-gray-600 max-w-xs truncate" title="{{ $quotation->notes }}">
                                                     {{ $quotation->notes }}
                                                 </div>
+                                            @elseif($response->status === 'not_available' && $response->notes)
+                                                <div class="text-sm text-red-600 max-w-xs truncate" title="{{ $response->notes }}">
+                                                    <strong>Reason:</strong> {{ $response->notes }}
+                                                </div>
+                                            @elseif($response->status === 'not_available')
+                                                <div class="text-sm text-red-600 max-w-xs">
+                                                    <strong>Not Available</strong>
+                                                </div>
                                             @else
                                                 <span class="text-gray-400">-</span>
                                             @endif
@@ -359,6 +367,61 @@
                                 @endforeach
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Not Available Responses -->
+            @php
+                $notAvailableResponses = $inquiry->supplierResponses->where('status', 'not_available');
+            @endphp
+            @if($notAvailableResponses->count() > 0)
+                <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                            <svg class="h-5 w-5 text-red-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Not Available Responses ({{ $notAvailableResponses->count() }})
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            @foreach($notAvailableResponses as $response)
+                                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="flex-shrink-0">
+                                                    <svg class="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <h4 class="text-sm font-medium text-red-800">{{ $response->supplier->name }}</h4>
+                                                    <p class="text-sm text-red-600">{{ $response->supplier->email }}</p>
+                                                </div>
+                                            </div>
+                                            @if($response->notes)
+                                                <div class="mt-3">
+                                                    <p class="text-sm text-red-700">
+                                                        <strong>Reason:</strong> {{ $response->notes }}
+                                                    </p>
+                                                </div>
+                                            @endif
+                                            <div class="mt-2 text-xs text-red-500">
+                                                Responded {{ $response->updated_at->diffForHumans() }}
+                                            </div>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            <span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold bg-red-100 text-red-800">
+                                                Not Available
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             @endif

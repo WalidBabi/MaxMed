@@ -363,6 +363,11 @@ class InquiryQuotationController extends Controller
             // Combined metrics
             'avg_quotations_per_inquiry' => SupplierInquiry::withCount('quotations')->get()->avg('quotations_count'),
             'response_rate' => $this->calculateResponseRate(),
+            
+            // Not available responses
+            'not_available_responses' => DB::table('supplier_inquiry_responses')
+                ->where('status', 'not_available')
+                ->count(),
         ];
     }
 

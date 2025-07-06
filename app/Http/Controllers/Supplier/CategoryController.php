@@ -38,10 +38,49 @@ class CategoryController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->get();
 
+            // Calculate and update response times from actual quotation data
+            foreach ($activeCategories as $assignment) {
+                $this->updateResponseTimeFromQuotations($assignment);
+            }
+
             $performanceData = [];
         }
 
         return view('supplier.categories.index', compact('activeCategories', 'performanceData'));
+    }
+
+    /**
+     * Update response time based on actual quotation data
+     */
+    private function updateResponseTimeFromQuotations($assignment)
+    {
+        // Get quotation requests for this supplier and category
+        $quotationRequests = \App\Models\QuotationRequest::where('supplier_id', $assignment->supplier_id)
+            ->whereHas('product', function($query) use ($assignment) {
+                $query->where('category_id', $assignment->category_id);
+            })
+            ->whereNotNull('forwarded_at')
+            ->whereNotNull('supplier_responded_at')
+            ->get();
+
+        if ($quotationRequests->count() > 0) {
+            $totalResponseTime = 0;
+            $validResponses = 0;
+
+            foreach ($quotationRequests as $request) {
+                $responseTime = $request->forwarded_at->diffInHours($request->supplier_responded_at);
+                if ($responseTime >= 0 && $responseTime <= 168) { // Max 1 week, reasonable range
+                    $totalResponseTime += $responseTime;
+                    $validResponses++;
+                }
+            }
+
+            if ($validResponses > 0) {
+                $avgResponseTime = $totalResponseTime / $validResponses;
+                $assignment->avg_response_time_hours = round($avgResponseTime, 1);
+                $assignment->save();
+            }
+        }
     }
 
     /**
@@ -85,8 +124,6 @@ class CategoryController extends Controller
             'assignment', 'recentQuotations', 'monthlyPerformance'
         ));
     }
-
-
 
     /**
      * Request assignment to a new category

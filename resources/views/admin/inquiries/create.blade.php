@@ -223,12 +223,59 @@
                     <h3 class="text-lg font-semibold text-gray-900">Supplier Targeting</h3>
                 </div>
                 <div class="p-6">
-                        <div class="text-sm text-gray-600">
-                            This inquiry will be sent to all suppliers with relevant product categories.
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Targeting Method</label>
+                        <div class="space-y-3">
+                            <div class="flex items-center">
+                                <input type="radio" id="target_all" name="targeting_method" value="all" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300" checked>
+                                <label for="target_all" class="ml-3 block text-sm font-medium text-gray-700">
+                                    Send to all suppliers
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" id="target_categories" name="targeting_method" value="categories" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300">
+                                <label for="target_categories" class="ml-3 block text-sm font-medium text-gray-700">
+                                    Send to specific categories only
+                                </label>
+                            </div>
                         </div>
-                        <input type="hidden" name="supplier_broadcast" value="all">
+                    </div>
+                    
+                    <div id="category-selection" class="hidden">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Select Product Categories</label>
+                        <p class="text-sm text-gray-600 mb-4">Choose the categories that best match your inquiry requirements. Suppliers assigned to these categories will receive this inquiry.</p>
+                        <div id="pdf-only-notice" class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 hidden">
+                            <div class="flex">
+                                <svg class="h-5 w-5 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div>
+                                    <h4 class="text-sm font-medium text-blue-800">PDF-Only Inquiry</h4>
+                                    <p class="mt-1 text-sm text-blue-700">
+                                        Since you're uploading PDFs without specific products, please select the relevant categories to ensure the right suppliers receive this inquiry.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            @foreach($categories as $category)
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="category_{{ $category->id }}" name="target_categories[]" value="{{ $category->id }}" 
+                                           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                    <label for="category_{{ $category->id }}" class="ml-3 block text-sm font-medium text-gray-700">
+                                        {{ $category->name }}
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                        
+                        @error('target_categories')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
+            </div>
 
             <!-- Submit -->
             <div class="bg-white shadow-md rounded-lg">
@@ -770,8 +817,20 @@ function handleFileSelection(files) {
                 alert(`File "${file.name}" is not a valid PDF or exceeds 10MB limit.`);
             }
         });
+        
+        // Trigger category selection update if targeting categories is selected
+        const targetCategoriesRadio = document.getElementById('target_categories');
+        if (targetCategoriesRadio && targetCategoriesRadio.checked) {
+            updateCategorySelection();
+        }
     } else {
         filePreview.classList.add('hidden');
+        
+        // Trigger category selection update if targeting categories is selected
+        const targetCategoriesRadio = document.getElementById('target_categories');
+        if (targetCategoriesRadio && targetCategoriesRadio.checked) {
+            updateCategorySelection();
+        }
     }
 }
 
@@ -787,5 +846,39 @@ function removeFile(index) {
     
     handleFileSelection(fileInput.files);
 }
+
+// Targeting method radio button functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const targetAllRadio = document.getElementById('target_all');
+    const targetCategoriesRadio = document.getElementById('target_categories');
+    const categorySelection = document.getElementById('category-selection');
+    const pdfOnlyNotice = document.getElementById('pdf-only-notice');
+    const productsTable = document.getElementById('productsTable');
+    
+    function updateCategorySelection() {
+        if (targetCategoriesRadio.checked) {
+            categorySelection.classList.remove('hidden');
+            
+            // Show PDF-only notice if there are no products but there are files
+            const hasProducts = productsTable && productsTable.children.length > 0;
+            const hasFiles = document.getElementById('file-preview') && !document.getElementById('file-preview').classList.contains('hidden');
+            
+            if (!hasProducts && hasFiles) {
+                pdfOnlyNotice.classList.remove('hidden');
+            } else {
+                pdfOnlyNotice.classList.add('hidden');
+            }
+        } else {
+            categorySelection.classList.add('hidden');
+            pdfOnlyNotice.classList.add('hidden');
+        }
+    }
+    
+    targetAllRadio.addEventListener('change', updateCategorySelection);
+    targetCategoriesRadio.addEventListener('change', updateCategorySelection);
+    
+    // Initialize on page load
+    updateCategorySelection();
+});
 </script>
 @endpush 

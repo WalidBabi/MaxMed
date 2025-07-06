@@ -348,11 +348,17 @@ class InquiryController extends Controller
     {
         if (is_numeric($inquiry)) {
             // Try to find as QuotationRequest first
-            $inquiryModel = QuotationRequest::with(['product', 'user', 'supplierQuotations'])->find($inquiry);
+            $inquiryModel = QuotationRequest::with(['product', 'user', 'supplierQuotations' => function($query) {
+                $query->where('supplier_id', auth()->id());
+            }])->find($inquiry);
             
             if (!$inquiryModel) {
                 // Try to find as SupplierInquiry
-                $inquiryModel = SupplierInquiry::with(['product', 'supplierResponses', 'quotations'])->find($inquiry);
+                $inquiryModel = SupplierInquiry::with(['product', 'supplierResponses' => function($query) {
+                    $query->where('user_id', auth()->id());
+                }, 'quotations' => function($query) {
+                    $query->where('supplier_id', auth()->id());
+                }])->find($inquiry);
             }
             
             if (!$inquiryModel) {
