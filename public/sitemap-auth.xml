@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
     <url>
-        <loc>https://maxmedme.com/rss/feed.xml</loc>
+        <loc>https://maxmedme.com/login</loc>
         <lastmod>2025-07-07T22:50:46+04:00</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.8</priority>
+        <changefreq>yearly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>https://maxmedme.com/rss/products.xml</loc>
+        <loc>https://maxmedme.com/register</loc>
         <lastmod>2025-07-07T22:50:46+04:00</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.75</priority>
+        <changefreq>yearly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
-        <loc>https://maxmedme.com/rss/news.xml</loc>
+        <loc>https://maxmedme.com/forgot-password</loc>
         <lastmod>2025-07-07T22:50:46+04:00</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.7</priority>
+        <changefreq>yearly</changefreq>
+        <priority>0.4</priority>
     </url>
 </urlset>

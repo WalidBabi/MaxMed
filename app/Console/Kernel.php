@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('reservations:cleanup')->everyMinute();
-        $schedule->command('sitemap:generate')->daily();
+        $schedule->command('sitemap:ultimate --images')->daily();
         $schedule->command('campaigns:send-scheduled')->everyMinute();
         $schedule->command('users:cleanup-unverified --days=30')->daily();
         $schedule->command('users:send-verification-reminders --reminder-after=10')->daily();

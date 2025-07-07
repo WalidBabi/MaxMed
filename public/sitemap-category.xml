@@ -2,43 +2,49 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
     <url>
         <loc>https://maxmedme.com/categories/molecular-clinical-diagnostics</loc>
-        <lastmod>2025-04-11T21:07:38+00:00</lastmod>
+        <lastmod>2025-04-11T21:07:38+04:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://maxmedme.com/categories/technology-ai-solutions</loc>
-        <lastmod>2025-04-11T21:13:02+00:00</lastmod>
+        <lastmod>2025-04-11T21:13:02+04:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://maxmedme.com/categories/medical-consumables</loc>
-        <lastmod>2025-04-03T21:03:47+00:00</lastmod>
+        <lastmod>2025-04-03T21:03:47+04:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://maxmedme.com/categories/life-science-research</loc>
-        <lastmod>2025-04-11T21:05:11+00:00</lastmod>
+        <lastmod>2025-04-11T21:05:11+04:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://maxmedme.com/categories/lab-consumables</loc>
-        <lastmod>2025-04-14T16:48:21+00:00</lastmod>
+        <lastmod>2025-04-14T16:48:21+04:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://maxmedme.com/categories/lab-equipment</loc>
-        <lastmod>2025-04-11T20:37:02+00:00</lastmod>
+        <lastmod>2025-04-11T20:37:02+04:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://maxmedme.com/categories/veterinary</loc>
-        <lastmod>2025-04-23T14:50:28+00:00</lastmod>
+        <lastmod>2025-04-23T14:50:28+04:00</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://maxmedme.com/categories/advanced-motion-scientific-imaging-systems</loc>
+        <lastmod>2025-06-30T14:54:59+04:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>

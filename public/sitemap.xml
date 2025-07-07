@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <sitemap>
-        <loc>https://maxmedme.com/sitemap-clean.xml</loc>
-        <lastmod>2025-07-05T12:06:09+04:00</lastmod>
-    </sitemap>
+  <sitemap>
+    <loc>https://maxmedme.com/sitemap-product.xml</loc>
+    <lastmod>2025-07-07T18:51:16.395860Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://maxmedme.com/sitemap-categories.xml</loc>
+    <lastmod>2025-07-07T18:51:16.396384Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://maxmedme.com/sitemap-news.xml</loc>
+    <lastmod>2025-07-07T18:51:16.396420Z</lastmod>
+  </sitemap>
 </sitemapindex>
