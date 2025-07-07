@@ -40,7 +40,18 @@ class AdminQuotationSubmitted extends Mailable
             ? ($this->inquiry->reference_number ?? 'INQ-' . str_pad($this->inquiry->id, 6, '0', STR_PAD_LEFT))
             : 'QR-' . str_pad($this->inquiry->id, 6, '0', STR_PAD_LEFT);
 
-        return $this->subject('🚨 Admin Alert: New Quotation Submitted for ' . $referenceNumber)
+        // Check if this is a PDF-only quotation
+        $hasAttachments = $this->quotation->attachments && is_array($this->quotation->attachments) && count($this->quotation->attachments) > 0;
+        $hasProductInfo = ($this->quotation->product_id && $this->quotation->product && $this->quotation->product->name) || 
+                         ($this->inquiry && $this->inquiry->product_name) || 
+                         ($this->inquiry && $this->inquiry->product_description);
+        $isPdfOnly = $hasAttachments && !$hasProductInfo && $this->quotation->unit_price == 0;
+
+        $subject = $isPdfOnly 
+            ? '📄 PDF Quotation Submitted for ' . $referenceNumber
+            : '🚨 Admin Alert: New Quotation Submitted for ' . $referenceNumber;
+
+        return $this->subject($subject)
                     ->view('emails.admin.quotation-submitted')
                     ->with([
                         'inquiry' => $this->inquiry,

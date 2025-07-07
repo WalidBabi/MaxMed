@@ -67,25 +67,28 @@ class CampaignEmail extends Mailable
     }
 
     /**
-     * Add headers that improve deliverability and reduce spam filtering
+     * Add headers that improve deliverability and mark emails as important
      */
     private function addDeliverabilityHeaders($mail)
     {
-        // Add headers that make email appear more transactional
+        // Add headers that make email appear as important business communication
         $mail->withSwiftMessage(function ($message) {
             $headers = $message->getHeaders();
             
-            // Mark as transactional (not promotional)
-            $headers->addTextHeader('X-Mailer', config('app.name') . ' Notification System');
-            $headers->addTextHeader('X-Priority', '3'); // Normal priority
-            $headers->addTextHeader('X-MSMail-Priority', 'Normal');
+            // Mark as important business communication
+            $headers->addTextHeader('X-Mailer', config('app.name') . ' Business Communication System');
+            $headers->addTextHeader('X-Priority', '1'); // High priority (1=High, 3=Normal, 5=Low)
+            $headers->addTextHeader('X-MSMail-Priority', 'High');
+            $headers->addTextHeader('Importance', 'High');
             
-            // Prevent email from being categorized as marketing
+            // Mark as important business communication (not promotional)
             $headers->addTextHeader('X-Auto-Response-Suppress', 'All');
-            $headers->addTextHeader('X-Entity-Type', 'Transactional');
+            $headers->addTextHeader('X-Entity-Type', 'Business');
+            $headers->addTextHeader('X-Message-Type', 'Business-Important');
             
-            // Add proper message categorization
+            // Add proper message categorization for business communications
             $headers->addTextHeader('X-Message-Source', 'MaxMed Business Communication');
+            $headers->addTextHeader('X-Business-Type', 'Healthcare-Supplies');
             
             // Add reply-to header for better engagement signals
             $headers->addMailboxHeader('Reply-To', config('mail.campaign_from.address'));
@@ -100,8 +103,9 @@ class CampaignEmail extends Mailable
             // Add organization header
             $headers->addTextHeader('Organization', config('app.name'));
             
-            // Indicate this is a business communication
-            $headers->addTextHeader('X-Auto-Category', 'business');
+            // Indicate this is an important business communication
+            $headers->addTextHeader('X-Auto-Category', 'business-important');
+            $headers->addTextHeader('X-Content-Type', 'business-notification');
             
             // Add Message-ID for better tracking
             $messageId = sprintf('<%s.%s.%s@%s>', 
@@ -111,6 +115,11 @@ class CampaignEmail extends Mailable
                 parse_url(config('app.url'), PHP_URL_HOST)
             );
             $headers->addIdHeader('Message-ID', $messageId);
+            
+            // Add additional headers to signal importance
+            $headers->addTextHeader('X-Importance', 'High');
+            $headers->addTextHeader('X-Business-Communication', 'true');
+            $headers->addTextHeader('X-Healthcare-Supplies', 'true');
         });
     }
 }

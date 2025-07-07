@@ -61,12 +61,11 @@ class SupplierInquiryResponse extends Model
             return;
         }
 
-        if (!$this->viewed_at) {
-            $this->update([
-                'status' => self::STATUS_VIEWED,
-                'viewed_at' => now()
-            ]);
-        }
+        // Always update viewed_at timestamp and status to viewed
+        $this->update([
+            'status' => self::STATUS_VIEWED,
+            'viewed_at' => now()
+        ]);
     }
 
     public function markAsNotAvailable()

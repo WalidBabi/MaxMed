@@ -90,45 +90,7 @@
         </div>
     </div>
 
-    <!-- Bulk Actions Section -->
-    <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-8">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-900">Bulk Actions</h3>
-            <p class="text-sm text-gray-600 mt-1">Select suppliers and apply category assignments in bulk</p>
-        </div>
-        <div class="p-6">
-            <form id="bulkActionForm" action="{{ route('admin.supplier-categories.bulk-assign') }}" method="POST">
-                @csrf
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    <div>
-                        <label for="bulk_categories" class="block text-sm font-medium text-gray-700 mb-2">Select Categories</label>
-                        <select name="category_ids[]" id="bulk_categories" multiple class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label for="bulk_action" class="block text-sm font-medium text-gray-700 mb-2">Action</label>
-                        <select name="action" id="bulk_action" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                            <option value="assign">Assign Categories</option>
-                            <option value="remove">Remove Categories</option>
-                        </select>
-                    </div>
-                    <div class="sm:col-span-2 flex items-end space-x-3">
-                        <button type="submit" disabled id="bulkActionBtn" class="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:bg-gray-300 disabled:cursor-not-allowed">
-                            <svg class="-ml-0.5 mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.343 3.94c.09-.542.56-.94 1.11-.94h1.093c.55 0 1.02.398 1.11.94l.149.894c.07.424.384.764.78.93.398.164.855.142 1.205-.108l.737-.527a1.125 1.125 0 011.45.12l.773.774c.39.389.44 1.002.12 1.45l-.527.737c-.25.35-.272.806-.107 1.204.165.397.505.71.93.78l.893.15c.543.09.94.56.94 1.109v1.094c0 .55-.397 1.02-.94 1.11l-.893.149c-.425.07-.765.383-.93.78-.165.398-.143.854.107 1.204l.527.738c.32.447.269 1.06-.12 1.45l-.774.773a1.125 1.125 0 01-1.449.12l-.738-.527c-.35-.25-.806-.272-1.203-.107-.397.165-.71.505-.781.929l-.149.894c-.09.542-.56.94-1.11.94h-1.094c-.55 0-1.019-.398-1.11-.94l-.148-.894c-.071-.424-.384-.764-.781-.93-.398-.164-.854-.142-1.204.108l-.738.527c-.447.32-1.06.269-1.45-.12l-.773-.774a1.125 1.125 0 01-.12-1.45l.527-.737c.25-.35.273-.806.108-1.204-.165-.397-.505-.71-.93-.78l-.894-.15c-.542-.09-.94-.56-.94-1.109v-1.094c0-.55.398-1.02.94-1.11l.894-.149c.424-.07.765-.383.93-.78.165-.398.143-.854-.107-1.204l-.527-.738a1.125 1.125 0 01.12-1.45l.773-.773a1.125 1.125 0 011.45-.12l.737.527c.35.25.807.272 1.204.107.397-.165.71-.505.78-.929l.15-.894z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            Apply to Selected
-                        </button>
-                        <span class="text-sm text-gray-500" id="selectedCount">No suppliers selected</span>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+
 
     <!-- Suppliers Table -->
     <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
@@ -147,9 +109,6 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left">
-                                    <input type="checkbox" id="selectAll" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supplier</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned Categories</th>
@@ -163,9 +122,6 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach($suppliers as $supplier)
                                 <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <input type="checkbox" name="supplier_ids[]" value="{{ $supplier->id }}" class="supplier-checkbox rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 h-10 w-10">
@@ -263,82 +219,5 @@
     </div>
 </div>
 
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const selectAllCheckbox = document.getElementById('selectAll');
-    const supplierCheckboxes = document.querySelectorAll('.supplier-checkbox');
-    const bulkActionBtn = document.getElementById('bulkActionBtn');
-    const selectedCountSpan = document.getElementById('selectedCount');
-    const bulkActionForm = document.getElementById('bulkActionForm');
 
-    // Handle select all functionality
-    selectAllCheckbox.addEventListener('change', function() {
-        supplierCheckboxes.forEach(checkbox => {
-            checkbox.checked = this.checked;
-        });
-        updateBulkActionState();
-    });
-
-    // Handle individual checkbox changes
-    supplierCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            updateBulkActionState();
-            
-            // Update select all checkbox state
-            const checkedCount = document.querySelectorAll('.supplier-checkbox:checked').length;
-            selectAllCheckbox.checked = checkedCount === supplierCheckboxes.length;
-            selectAllCheckbox.indeterminate = checkedCount > 0 && checkedCount < supplierCheckboxes.length;
-        });
-    });
-
-    function updateBulkActionState() {
-        const checkedBoxes = document.querySelectorAll('.supplier-checkbox:checked');
-        const count = checkedBoxes.length;
-        
-        bulkActionBtn.disabled = count === 0;
-        
-        if (count === 0) {
-            selectedCountSpan.textContent = 'No suppliers selected';
-        } else if (count === 1) {
-            selectedCountSpan.textContent = '1 supplier selected';
-        } else {
-            selectedCountSpan.textContent = `${count} suppliers selected`;
-        }
-    }
-
-    // Handle bulk action form submission
-    bulkActionForm.addEventListener('submit', function(e) {
-        const checkedBoxes = document.querySelectorAll('.supplier-checkbox:checked');
-        const categorySelect = document.getElementById('bulk_categories');
-        const actionSelect = document.getElementById('bulk_action');
-        
-        if (checkedBoxes.length === 0) {
-            e.preventDefault();
-            alert('Please select at least one supplier.');
-            return;
-        }
-        
-        if (categorySelect.selectedOptions.length === 0) {
-            e.preventDefault();
-            alert('Please select at least one category.');
-            return;
-        }
-        
-        const action = actionSelect.value === 'assign' ? 'assign' : 'remove';
-        const supplierCount = checkedBoxes.length;
-        const categoryCount = categorySelect.selectedOptions.length;
-        
-        const message = `Are you sure you want to ${action} ${categoryCount} ${categoryCount === 1 ? 'category' : 'categories'} ${action === 'assign' ? 'to' : 'from'} ${supplierCount} ${supplierCount === 1 ? 'supplier' : 'suppliers'}?`;
-        
-        if (!confirm(message)) {
-            e.preventDefault();
-        }
-    });
-
-    // Initialize state
-    updateBulkActionState();
-});
-</script>
-@endpush
 @endsection 

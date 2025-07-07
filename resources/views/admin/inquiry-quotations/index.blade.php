@@ -7,8 +7,8 @@
     <!-- Header -->
     <div class="sm:flex sm:items-center">
         <div class="sm:flex-auto">
-            <h1 class="text-2xl font-semibold leading-6 text-gray-900">Inquiries & Quotations</h1>
-            <p class="mt-2 text-sm text-gray-700">Unified view of product inquiries and supplier quotations. Track the complete lifecycle from inquiry to quotation.</p>
+            <h1 class="text-2xl font-semibold leading-6 text-gray-900">Inquiries & Quotations - Card View</h1>
+            <p class="mt-2 text-sm text-gray-700">Card-based view of product inquiries and supplier quotations. Track the complete lifecycle from inquiry to quotation with visual cards.</p>
         </div>
         <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none header-actions space-x-3">
             <a href="{{ route('admin.inquiries.create') }}" 
@@ -16,15 +16,19 @@
                 <i class="fas fa-plus mr-2"></i> Create Inquiry
             </a>
             <a href="{{ route('admin.inquiries.index') }}" 
-               class="inline-flex items-center rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500">
-                <i class="fas fa-list mr-2"></i> Legacy Inquiries
+               class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                <i class="fas fa-table mr-2"></i> Table View
+            </a>
+            <a href="{{ route('admin.inquiry-quotations.index') }}" 
+               class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                <i class="fas fa-th-large mr-2"></i> Card View
             </a>
         </div>
     </div>
 
     <!-- Quick Statistics -->
     <div class="mt-8 mb-8">
-        <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-7 gap-4">
             <!-- Total Inquiries -->
             <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200 hover:border-indigo-500 transition-colors duration-200">
                 <div class="px-4 py-5 sm:p-4">
@@ -100,6 +104,21 @@
                 </div>
             </div>
 
+            <!-- Partially Quoted Inquiries -->
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200 hover:border-orange-500 transition-colors duration-200">
+                <div class="px-4 py-5 sm:p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500 truncate">Partially Quoted</dt>
+                            <dd class="mt-1 text-2xl font-semibold text-orange-600">{{ $stats['partially_quoted_inquiries'] ?? 0 }}</dd>
+                        </div>
+                        <div class="flex-shrink-0 bg-orange-100 rounded-md p-2">
+                            <i class="fas fa-clock text-orange-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Avg Quotations per Inquiry -->
             <div class="bg-white overflow-hidden shadow-sm rounded-lg border border-gray-200 hover:border-purple-500 transition-colors duration-200">
                 <div class="px-4 py-5 sm:p-4">
@@ -147,6 +166,7 @@
                         <option value="broadcast" {{ request('status') == 'broadcast' ? 'selected' : '' }}>Broadcast</option>
                         <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>In Progress</option>
                         <option value="quoted" {{ request('status') == 'quoted' ? 'selected' : '' }}>Quoted</option>
+                        <option value="partially_quoted" {{ request('status') == 'partially_quoted' ? 'selected' : '' }}>Partially Quoted</option>
                         <option value="converted" {{ request('status') == 'converted' ? 'selected' : '' }}>Converted</option>
                         <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                     </select>
@@ -207,6 +227,7 @@
                                                 'broadcast' => 'bg-indigo-100 text-indigo-800',
                                                 'in_progress' => 'bg-blue-100 text-blue-800',
                                                 'quoted' => 'bg-green-100 text-green-800',
+                                                'partially_quoted' => 'bg-orange-100 text-orange-800',
                                                 'converted' => 'bg-green-100 text-green-800',
                                                 'cancelled' => 'bg-red-100 text-red-800',
                                             ];
@@ -227,6 +248,53 @@
                             </div>
                         </div>
 
+                        <!-- Suppliers Sent To -->
+                        @if($inquiry->supplierResponses->count() > 0)
+                            <div class="px-6 py-4 border-b border-gray-200">
+                                <h4 class="text-sm font-medium text-gray-900 mb-3 flex items-center">
+                                    <i class="fas fa-users mr-2 text-indigo-600"></i>
+                                    Suppliers Sent To ({{ $inquiry->supplierResponses->count() }})
+                                </h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    @foreach($inquiry->supplierResponses as $response)
+                                        @php
+                                            $responseColors = [
+                                                'pending' => 'bg-yellow-100 text-yellow-800',
+                                                'viewed' => 'bg-blue-100 text-blue-800',
+                                                'quoted' => 'bg-green-100 text-green-800',
+                                                'accepted' => 'bg-green-100 text-green-800',
+                                                'not_available' => 'bg-red-100 text-red-800'
+                                            ];
+                                            $responseColor = $responseColors[$response->status] ?? 'bg-gray-100 text-gray-800';
+                                        @endphp
+                                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="flex-shrink-0">
+                                                    <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                                                        <i class="fas fa-building text-indigo-600 text-xs"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="min-w-0 flex-1">
+                                                    <p class="text-sm font-medium text-gray-900 truncate">{{ $response->supplier->name }}</p>
+                                                    <p class="text-xs text-gray-500 truncate">{{ $response->supplier->email }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold {{ $responseColor }}">
+                                                    {{ ucfirst(str_replace('_', ' ', $response->status)) }}
+                                                </span>
+                                                @if($response->viewed_at)
+                                                    <span class="text-xs text-gray-500" title="Viewed {{ $response->viewed_at->format('M d, Y H:i') }}">
+                                                        <i class="fas fa-eye"></i>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
                         <!-- Quotations for this Inquiry -->
                         @if($inquiry->quotations->count() > 0)
                             <div class="px-6 py-4">
@@ -245,9 +313,26 @@
                                                 <div>
                                                     <p class="text-sm font-medium text-gray-900">{{ $quotation->supplier->name }}</p>
                                                     <p class="text-sm text-gray-500">
-                                                        {{ $quotation->currency }} {{ number_format($quotation->unit_price, 2) }}
-                                                        @if($quotation->shipping_cost > 0)
-                                                            + {{ $quotation->currency }} {{ number_format($quotation->shipping_cost, 2) }} shipping
+                                                        @php
+                                                            if ($quotation->items && $quotation->items->count() > 0) {
+                                                                $total = $quotation->items->sum(function($item) {
+                                                                    return ($item->unit_price ?? 0) * ($item->quantity ?? 1);
+                                                                });
+                                                                $currency = $quotation->items->first()->currency ?? 'AED';
+                                                                echo $currency . ' ' . number_format($total, 2);
+                                                            } else {
+                                                                echo ($quotation->currency ?? 'AED') . ' ' . number_format($quotation->unit_price ?? 0, 2);
+                                                            }
+                                                        @endphp
+                                                        @if($quotation->items && $quotation->items->count() > 0)
+                                                            @php $shipping = $quotation->items->sum('shipping_cost'); @endphp
+                                                            @if($shipping > 0)
+                                                                + {{ $currency }} {{ number_format($shipping, 2) }} shipping
+                                                            @endif
+                                                        @else
+                                                            @if($quotation->shipping_cost > 0)
+                                                                + {{ $quotation->currency }} {{ number_format($quotation->shipping_cost, 2) }} shipping
+                                                            @endif
                                                         @endif
                                                     </p>
                                                 </div>

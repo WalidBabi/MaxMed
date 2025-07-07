@@ -44,6 +44,10 @@
             <div class="flex items-center justify-center p-8 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
                 <img src="{{ asset('Images/Partners/Yooninglogo.png') }}" alt="Yooning" class="max-h-40 w-auto">
             </div>
+            <!-- Supplier 5 -->
+            <div class="flex items-center justify-center p-8 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
+                <img src="{{ asset('Images/Partners/EcalBiologo.png') }}" alt="EcalBio" class="max-h-40 w-auto">
+            </div>
         </div>
     </div>
 </div>

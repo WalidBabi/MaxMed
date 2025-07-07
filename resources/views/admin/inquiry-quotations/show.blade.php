@@ -146,6 +146,88 @@
         </div>
     </div>
 
+    <!-- Suppliers Sent To -->
+    @if($inquiry->supplierResponses->count() > 0)
+        <div class="mt-8 bg-white shadow-sm rounded-lg border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                    <i class="fas fa-users mr-2 text-indigo-600"></i>
+                    Suppliers Sent To ({{ $inquiry->supplierResponses->count() }})
+                </h3>
+            </div>
+            <div class="overflow-hidden">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Supplier
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Email
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Status
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Viewed At
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Notes
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach($inquiry->supplierResponses as $response)
+                            @php
+                                $responseColors = [
+                                    'pending' => 'bg-yellow-100 text-yellow-800',
+                                    'viewed' => 'bg-blue-100 text-blue-800',
+                                    'quoted' => 'bg-green-100 text-green-800',
+                                    'accepted' => 'bg-green-100 text-green-800',
+                                    'not_available' => 'bg-red-100 text-red-800'
+                                ];
+                                $responseColor = $responseColors[$response->status] ?? 'bg-gray-100 text-gray-800';
+                            @endphp
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ $response->supplier->name }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-500">
+                                        {{ $response->supplier->email }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold {{ $responseColor }}">
+                                        {{ ucfirst(str_replace('_', ' ', $response->status)) }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    @if($response->viewed_at)
+                                        {{ $response->viewed_at->format('M d, Y H:i') }}
+                                    @else
+                                        <span class="text-gray-400">Not viewed</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-900">
+                                        @if($response->notes)
+                                            {{ Str::limit($response->notes, 100) }}
+                                        @else
+                                            <span class="text-gray-400">No notes</span>
+                                        @endif
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
+
     <!-- Quotations -->
     <div class="mt-8 bg-white shadow-sm rounded-lg border border-gray-200">
         <div class="px-6 py-4 border-b border-gray-200">
@@ -170,6 +252,9 @@
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Status
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Attachments
                             </th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Submitted
@@ -212,6 +297,68 @@
                                     <span class="inline-flex rounded-full px-2 py-1 text-xs font-semibold {{ $quotationColor }}">
                                         {{ ucfirst($quotation->status) }}
                                     </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @php
+                                        // Handle attachments data - ensure it's always an array
+                                        $attachmentsData = $quotation->attachments;
+                                        $attachmentsArray = [];
+                                        
+                                        if (is_array($attachmentsData)) {
+                                            $attachmentsArray = $attachmentsData;
+                                        } elseif (is_string($attachmentsData) && !empty($attachmentsData)) {
+                                            $decoded = json_decode($attachmentsData, true);
+                                            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                                                $attachmentsArray = $decoded;
+                                            }
+                                        }
+                                        
+                                        // Normalize paths by fixing escaped forward slashes
+                                        foreach ($attachmentsArray as &$attachment) {
+                                            if (isset($attachment['path'])) {
+                                                $attachment['path'] = str_replace('\\/', '/', $attachment['path']);
+                                            }
+                                        }
+                                    @endphp
+                                    @if(!empty($attachmentsArray) && count($attachmentsArray) > 0)
+                                        <div class="flex items-center space-x-2">
+                                            <div class="flex items-center space-x-1">
+                                                <i class="fas fa-paperclip text-blue-500"></i>
+                                                <span class="text-sm font-medium text-gray-900">{{ count($attachmentsArray) }}</span>
+                                            </div>
+                                            <div class="flex items-center space-x-1">
+                                                @php
+                                                    $fileTypes = collect($attachmentsArray)->map(function($attachment) {
+                                                        $fileName = $attachment['name'] ?? '';
+                                                        return strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                                                    })->unique()->take(3);
+                                                @endphp
+                                                @foreach($fileTypes as $fileType)
+                                                    @php
+                                                        $fileIcon = 'fas fa-file text-gray-500';
+                                                        if ($fileType === 'pdf') {
+                                                            $fileIcon = 'fas fa-file-pdf text-red-500';
+                                                        } elseif (in_array($fileType, ['doc', 'docx'])) {
+                                                            $fileIcon = 'fas fa-file-word text-blue-500';
+                                                        } elseif (in_array($fileType, ['xls', 'xlsx'])) {
+                                                            $fileIcon = 'fas fa-file-excel text-green-500';
+                                                        } elseif (in_array($fileType, ['jpg', 'jpeg', 'png', 'gif'])) {
+                                                            $fileIcon = 'fas fa-file-image text-purple-500';
+                                                        }
+                                                    @endphp
+                                                    <i class="{{ $fileIcon }} text-xs" title="{{ strtoupper($fileType) }}"></i>
+                                                @endforeach
+                                                @if(count($attachmentsArray) > 3)
+                                                    <span class="text-xs text-gray-400">+{{ count($attachmentsArray) - 3 }}</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="flex items-center space-x-1">
+                                            <i class="fas fa-file-alt text-gray-300"></i>
+                                            <span class="text-sm text-gray-400">No attachments</span>
+                                        </div>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {{ $quotation->created_at->format('M d, Y') }}

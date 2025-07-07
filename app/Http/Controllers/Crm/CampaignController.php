@@ -977,21 +977,23 @@ class CampaignController extends Controller
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="x-apple-disable-message-reformatting">
-    <title>Business Communication - ' . config('app.name') . '</title>
+    <title>Important Business Communication - ' . config('app.name') . '</title>
     <style>
         body { margin: 0; padding: 0; font-family: Arial, sans-serif; line-height: 1.6; background-color: #f8f9fa; }
         .email-container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
-        .header { background-color: #ffffff; padding: 20px; border-bottom: 1px solid #e9ecef; }
+        .header { background-color: #ffffff; padding: 20px; border-bottom: 2px solid #007bff; }
         .logo { max-width: 150px; height: auto; }
         .content { padding: 30px 20px; }
         .footer { background-color: #f8f9fa; padding: 20px; font-size: 12px; color: #6c757d; border-top: 1px solid #e9ecef; }
         .company-info { margin-bottom: 10px; }
         .unsubscribe { margin-top: 15px; }
-        .business-header { font-size: 18px; font-weight: 600; color: #343a40; margin-bottom: 20px; }
+        .business-header { font-size: 20px; font-weight: 700; color: #007bff; margin-bottom: 20px; text-align: center; }
+        .importance-badge { background-color: #007bff; color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; margin-bottom: 15px; }
         p { margin: 0 0 15px 0; color: #495057; }
         a { color: #007bff; text-decoration: none; }
         a:hover { text-decoration: underline; }
         .divider { border-top: 1px solid #e9ecef; margin: 20px 0; }
+        .business-notice { background-color: #e3f2fd; border-left: 4px solid #007bff; padding: 15px; margin: 20px 0; }
     </style>
 </head>
 <body>
@@ -999,12 +1001,15 @@ class CampaignController extends Controller
         <div class="header">
             <div class="company-info">
                 <strong>' . config('app.name') . '</strong><br>
-                Business Communication
+                <span style="color: #007bff; font-weight: 600;">Important Business Communication</span>
             </div>
         </div>
         
         <div class="content">
-            <div class="business-header">Important Business Communication</div>';
+            <div class="business-header">Important Business Communication</div>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <span class="importance-badge">BUSINESS PRIORITY</span>
+            </div>';
             
         // Add banner image if provided
         if ($bannerImage) {
@@ -1030,17 +1035,18 @@ class CampaignController extends Controller
         
         $htmlContent .= '
             <div class="divider"></div>
-            <p style="font-size: 14px; color: #6c757d;">
-                This is a business communication from ' . config('app.name') . '. 
-                We are reaching out regarding our products and services that may be relevant to your business needs.
-            </p>
+            <div class="business-notice">
+                <strong>Business Communication Notice:</strong><br>
+                This is an important business communication from ' . config('app.name') . ' regarding 
+                medical equipment and laboratory solutions that may be relevant to your business operations.
+            </div>
         </div>
         
         <div class="footer">
             <div class="company-info">
                 <strong>' . config('app.name') . '</strong><br>
                 Medical Equipment & Laboratory Solutions<br>
-                Business Communication Department<br>
+                <span style="color: #007bff; font-weight: 600;">Business Communication Department</span><br>
                 Website: <a href="' . config('app.url') . '">' . config('app.url') . '</a>
             </div>
             

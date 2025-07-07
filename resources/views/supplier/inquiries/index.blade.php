@@ -4,38 +4,18 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
-    <!-- Header with View Toggle -->
+    <!-- Header -->
     <div class="flex justify-between items-center mb-8">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">Product Inquiries Pipeline</h1>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Product Inquiries</h1>
             <p class="text-gray-600">Manage and respond to product inquiries from customers</p>
         </div>
-        <div class="flex items-center space-x-4">
-            <!-- View Toggle -->
-            <div class="bg-gray-100 p-1 rounded-lg">
-                <a href="{{ route('supplier.inquiries.index', array_merge(request()->query(), ['view' => 'pipeline'])) }}" 
-                   class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md {{ (!isset($viewType) || $viewType === 'pipeline') ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 17h6m0 0v-6m0 6h2a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 7h6"></path>
-                    </svg>
-                    Pipeline
-                </a>
-                <a href="{{ route('supplier.inquiries.index', array_merge(request()->query(), ['view' => 'table'])) }}"
-                   class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md {{ (isset($viewType) && $viewType === 'table') ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0V4a2 2 0 012-2h14a2 2 0 012 2v16a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path>
-                    </svg>
-                    Table
-                </a>
-            </div>
-        </div>
-                </div>
+    </div>
 
     <!-- Filters -->
     <div class="bg-white rounded-lg shadow mb-6">
         <div class="p-6">
-            <form method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                <input type="hidden" name="view" value="{{ $viewType ?? 'pipeline' }}">
+            <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
                     <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by product, reference number..." class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
@@ -87,11 +67,7 @@
         </div>
     </div>
 
-    @if(!isset($viewType) || $viewType === 'pipeline')
-        @include('supplier.inquiries.partials.pipeline-view')
-    @else
-        @include('supplier.inquiries.partials.table-view')
-    @endif
+    @include('supplier.inquiries.partials.table-view')
                 </div>
 
 <!-- Inquiry Quick Actions Modal -->
@@ -148,118 +124,6 @@
 
 @push('styles')
 <style>
-/* Pipeline specific styles */
-.inquiry-card {
-    transition: all 0.3s ease;
-    cursor: move; /* Fallback for older browsers */
-    cursor: grab;
-    position: relative;
-    background: white;
-    border-radius: 0.75rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: none;
-}
-
-.inquiry-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-}
-
-.inquiry-card[draggable="true"] {
-    cursor: grab;
-}
-
-.inquiry-card[draggable="true"]:active {
-    cursor: grabbing;
-}
-
-.drop-zone {
-    transition: background-color 0.2s ease;
-    border-radius: 0.75rem;
-    background: rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(8px);
-    min-height: 400px;
-}
-
-.drop-zone.bg-opacity-50 {
-    background-color: rgba(59, 130, 246, 0.1) !important;
-    border: 2px dashed #3b82f6;
-}
-
-/* Pipeline auto-scroll container */
-.pipeline-scroll-container {
-    scroll-behavior: smooth;
-    position: relative;
-}
-
-.pipeline-scroll-container::-webkit-scrollbar {
-    height: 8px;
-}
-
-.pipeline-scroll-container::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 4px;
-}
-
-.pipeline-scroll-container::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 4px;
-}
-
-.pipeline-scroll-container::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-}
-
-/* Auto-scroll edge indicators */
-.pipeline-scroll-container::before,
-.pipeline-scroll-container::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100px;
-    pointer-events: none;
-    z-index: 10;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-/* Scroll zone cursors */
-.pipeline-scroll-container.scroll-left-active {
-    cursor: w-resize;
-}
-
-.pipeline-scroll-container.scroll-right-active {
-    cursor: e-resize;
-}
-
-.pipeline-scroll-container::before {
-    left: 0;
-    background: linear-gradient(to right, rgba(59, 130, 246, 0.1), transparent);
-}
-
-.pipeline-scroll-container::after {
-    right: 0;
-    background: linear-gradient(to left, rgba(59, 130, 246, 0.1), transparent);
-}
-
-.pipeline-scroll-container.scroll-left-active::before,
-.pipeline-scroll-container.scroll-right-active::after {
-    opacity: 1;
-}
-
-/* Pipeline statistics animations */
-@keyframes countUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.metric-card {
-    animation: countUp 0.6s ease-out;
-}
-
 /* Status badge colors */
 .status-pending { @apply bg-yellow-100 text-yellow-800; }
 .status-viewed { @apply bg-blue-100 text-blue-800; }
@@ -268,60 +132,6 @@
 .status-accepted { @apply bg-green-100 text-green-800; }
 .status-not_available { @apply bg-red-100 text-red-800; }
 .status-not_interested { @apply bg-red-100 text-red-800; }
-
-/* Column Headers */
-.kanban-column-header {
-    border-top-left-radius: 0.75rem;
-    border-top-right-radius: 0.75rem;
-    backdrop-filter: blur(8px);
-}
-
-/* Mobile responsiveness for pipeline */
-@media (max-width: 768px) {
-    .pipeline-container {
-        flex-direction: column;
-    }
-    
-    .pipeline-column {
-        width: 100% !important;
-        margin-bottom: 1rem;
-    }
-}
-
-/* Loading State */
-.inquiry-card.opacity-50 {
-    position: relative;
-    overflow: hidden;
-}
-
-.inquiry-card.opacity-50::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.4),
-        transparent
-    );
-    animation: shimmer 1.5s infinite;
-}
-
-@keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-}
-
-/* Dragging State */
-.inquiry-card.dragging {
-    opacity: 0.9;
-    cursor: grabbing !important;
-    transform: scale(1.02);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
 </style>
 @endpush
 

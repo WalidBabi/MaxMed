@@ -2,6 +2,8 @@
 
 @section('title', 'Quotation Details')
 
+@php use Illuminate\Support\Str; @endphp
+
 @section('content')
 <div class="px-4 sm:px-6 lg:px-8">
     <!-- Header -->
@@ -67,8 +69,27 @@
                             <dd class="mt-1 text-sm text-gray-900">{{ $quotation->created_at->format('M d, Y H:i') }}</dd>
                         </div>
                         <div>
-                            <dt class="text-sm font-medium text-gray-500">Unit Price</dt>
-                            <dd class="mt-1 text-sm text-gray-900">{{ number_format($quotation->unit_price, 2) }} {{ $quotation->currency }}</dd>
+                            <dt class="text-sm font-medium text-gray-500">Total Quotation Amount</dt>
+                            @php
+                                $total = $quotation->items->sum(function($item) {
+                                    return ($item->unit_price ?? 0) * ($item->quantity ?? 1);
+                                });
+                                $currency = $quotation->items->first()->currency ?? 'AED';
+                            @endphp
+                            <dd class="mt-1 text-sm text-gray-900">{{ number_format($total, 2) }} {{ $currency }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-gray-500">Products</dt>
+                            <dd class="mt-1 text-sm text-gray-900">
+                                @foreach($quotation->items as $item)
+                                    <div>
+                                        {{ $item->product_name ?? ($item->product->name ?? 'Product') }}
+                                        @if($item->quantity)
+                                            <span class="text-xs text-gray-500">× {{ $item->quantity }}</span>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </dd>
                         </div>
                         @if($quotation->delivery_time)
                             <div>
@@ -84,12 +105,7 @@
                             <dt class="text-sm font-medium text-gray-500">Supplier</dt>
                             <dd class="mt-1 text-sm text-gray-900">{{ $quotation->supplier->name }}</dd>
                         </div>
-                        <div>
-                            <dt class="text-sm font-medium text-gray-500">Product</dt>
-                            <dd class="mt-1 text-sm text-gray-900">
-                                {{ $quotation->product ? $quotation->product->name : 'N/A' }}
-                            </dd>
-                        </div>
+
                         @if($quotation->notes)
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">Notes</dt>
@@ -108,6 +124,117 @@
             </div>
         </div>
     </div>
+
+    <!-- Quoted Products and Uploaded Files -->
+    @if($quotation->items && $quotation->items->count() > 0)
+        <div class="mt-8 bg-white shadow-sm rounded-lg border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">
+                    <i class="fas fa-boxes mr-2"></i>
+                    Quoted Products ({{ $quotation->items->count() }})
+                </h3>
+            </div>
+            <div class="p-6 space-y-8">
+                @foreach($quotation->items as $item)
+                    <div class="border border-gray-100 rounded-lg p-4 bg-gray-50">
+                        <div class="flex items-start space-x-6">
+                            @if($item->product_id && $item->product)
+                                @if($item->product->primaryImage)
+                                    <img class="w-24 h-24 object-contain rounded-lg border border-gray-200 bg-white" src="{{ $item->product->primaryImage->image_url }}" alt="{{ $item->product->name }}">
+                                @elseif($item->product->image_url)
+                                    <img class="w-24 h-24 object-contain rounded-lg border border-gray-200 bg-white" src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}">
+                                @elseif($item->product->images && $item->product->images->count() > 0)
+                                    <img class="w-24 h-24 object-contain rounded-lg border border-gray-200 bg-white" src="{{ $item->product->images->first()->image_url }}" alt="{{ $item->product->name }}">
+                                @else
+                                    <div class="w-24 h-24 flex items-center justify-center rounded-lg border border-gray-200 bg-gray-100 text-gray-400">
+                                        <span class="text-sm font-medium text-gray-600">{{ substr($item->product->name, 0, 2) }}</span>
+                                    </div>
+                                @endif
+                            @elseif($item->product_name)
+                                <div class="w-24 h-24 flex items-center justify-center rounded-lg border border-gray-200 bg-orange-100 text-orange-600">
+                                    <svg class="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                    </svg>
+                                </div>
+                            @else
+                                <div class="w-24 h-24 flex items-center justify-center rounded-lg border border-gray-200 bg-gray-100 text-gray-400">
+                                    <svg class="h-14 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                    </svg>
+                                </div>
+                            @endif
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2 mb-1">
+                                    <span class="text-md font-semibold text-gray-900">{{ $item->product_name ?? ($item->product->name ?? 'Product') }}</span>
+                                    @if($item->size)
+                                        <span class="text-xs bg-blue-100 text-blue-800 rounded px-2 py-0.5 ml-2">Size: {{ $item->size }}</span>
+                                    @endif
+                                </div>
+                                @if($item->product_description)
+                                    <div class="text-xs text-gray-600 mb-1">{{ $item->product_description }}</div>
+                                @endif
+                                <div class="text-xs text-gray-500 mb-1">
+                                    <span>Unit Price:</span> <span class="font-semibold">{{ $item->currency }} {{ number_format($item->unit_price, 2) }}</span>
+                                    @if($item->shipping_cost)
+                                        <span class="ml-2">+ Shipping: {{ $item->currency }} {{ number_format($item->shipping_cost, 2) }}</span>
+                                    @endif
+                                </div>
+                                <div class="text-xs text-gray-500 mb-1">
+                                    <span>Quantity:</span> <span class="font-semibold">{{ $item->quantity ?? 1 }}</span>
+                                </div>
+                                @if($item->notes)
+                                    <div class="text-xs text-gray-700 mt-1"><span class="font-semibold">Notes:</span> {{ $item->notes }}</div>
+                                @endif
+                            </div>
+                        </div>
+                        @if($item->attachments && is_array($item->attachments) && count($item->attachments) > 0)
+                            <div class="mt-4">
+                                <div class="font-semibold text-xs text-gray-700 mb-2 flex items-center">
+                                    <i class="fas fa-paperclip mr-2"></i> Uploaded Files ({{ count($item->attachments) }})
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    @foreach($item->attachments as $index => $attachment)
+                                        @if(isset($attachment['path']))
+                                            @php
+                                                $fileName = $attachment['name'] ?? 'Document ' . ($index + 1);
+                                                $filePath = $attachment['path'];
+                                                $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                                                $isPdf = $fileExtension === 'pdf';
+                                                $isImage = in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                                                $fileIcon = 'fas fa-file text-gray-500';
+                                                if ($fileExtension === 'pdf') {
+                                                    $fileIcon = 'fas fa-file-pdf text-red-500';
+                                                } elseif (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                                                    $fileIcon = 'fas fa-file-image text-purple-500';
+                                                }
+                                            @endphp
+                                            <div class="border border-gray-200 rounded-lg p-3 bg-white">
+                                                <div class="flex items-center mb-2">
+                                                    <i class="{{ $fileIcon }} mr-2"></i>
+                                                    <span class="text-xs font-medium text-gray-900 truncate" title="{{ $fileName }}">{{ $fileName }}</span>
+                                                    <a href="{{ asset('storage/' . $filePath) }}" target="_blank" class="ml-auto text-xs text-blue-600 hover:underline">Open</a>
+                                                    <a href="{{ asset('storage/' . $filePath) }}" download="{{ $fileName }}" class="ml-2 text-xs text-gray-500 hover:underline">Download</a>
+                                                </div>
+                                                @if($isPdf)
+                                                    <iframe src="{{ asset('storage/' . $filePath) }}" width="100%" height="200px" class="border-0 rounded"></iframe>
+                                                @elseif($isImage)
+                                                    <img src="{{ asset('storage/' . $filePath) }}" alt="{{ $fileName }}" class="w-full h-32 object-contain rounded border">
+                                                @endif
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
+
+    
+
 
     <!-- Related Inquiry Information -->
     @if($quotation->supplierInquiry)

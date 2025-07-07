@@ -93,7 +93,7 @@ class CashReceiptController extends Controller
             'amount' => 'required|numeric|min:0.01',
             'receipt_date' => 'required|date',
             'payment_method' => 'required|in:' . implode(',', array_keys(CashReceipt::$paymentMethods)),
-            'currency' => 'required|in:AED,USD,EUR',
+            'currency' => 'required|in:AED,CNY,USD,EUR',
             'description' => 'nullable|string|max:1000',
             'reference_number' => 'nullable|string|max:255',
             'status' => 'required|in:draft,issued',

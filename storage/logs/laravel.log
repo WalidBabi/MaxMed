@@ -1,0 +1,12 @@
+[2025-07-07 22:44:38] local.INFO: Raw request data: {"all":{"_token":"Bvgcab9XNAzR8Qy4uQJ5Yas8qPFmZ26ob1CON8RQ","customer_reference":null,"internal_notes":null,"requirements":null,"items":[{"product_type":"unlisted","product_id":null,"product_name":null,"product_description":null,"product_brand":null,"product_category":null,"product_specifications":null,"specifications":null,"size":null,"quantity":"1.00","requirements":null,"notes":null}],"targeting_method":"categories","target_categories":["94"],"attachments":[{"Illuminate\\Http\\UploadedFile":"C:\\xampp\\tmp\\phpCEF8.tmp"}]},"has_items":true,"items_count":1,"items_detail":[{"product_type":"unlisted","product_id":null,"product_name":null,"product_description":null,"product_brand":null,"product_category":null,"product_specifications":null,"specifications":null,"size":null,"quantity":"1.00","requirements":null,"notes":null}]} 
+[2025-07-07 22:44:38] local.INFO: Filtered items: {"filtered_items":[]} 
+[2025-07-07 22:44:38] local.INFO: Validation passed {"validated_data":{"requirements":null,"customer_reference":null,"internal_notes":null,"items":[],"targeting_method":"categories","attachments":[{"Illuminate\\Http\\UploadedFile":"C:\\xampp\\tmp\\phpCEF8.tmp"}],"target_categories":["94"]}} 
+[2025-07-07 22:44:38] local.INFO: Creating new inquiry {"items_count":0} 
+[2025-07-07 22:44:38] local.INFO: Inquiry saved successfully {"inquiry_id":6,"reference_number":"INQ-2025-00002","items_count":0} 
+[2025-07-07 22:44:38] local.INFO: Filtering suppliers by targeted categories {"target_category_ids":["94"],"inquiry_id":6} 
+[2025-07-07 22:44:38] local.INFO: Targeted suppliers found {"inquiry_id":6,"broadcast_to_all_suppliers":false,"target_supplier_categories":["94"],"supplier_count":2,"supplier_ids":[660,661]} 
+[2025-07-07 22:44:41] local.INFO: Email notification sent successfully to supplier 660 (walid.babi.dubai@gmail.com)  
+[2025-07-07 22:44:41] local.INFO: Email notification sent successfully to supplier 661 (supplier@localhost.com)  
+[2025-07-07 22:44:41] local.INFO: Inquiry broadcast successful {"inquiry_id":6} 
+[2025-07-07 22:44:55] local.INFO: Supplier login notification sent for user 661 via Email  
+[2025-07-07 22:44:55] local.INFO: Login notification skipped for user 661 - cooldown period active  

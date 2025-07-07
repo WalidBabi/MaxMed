@@ -39,6 +39,14 @@ Route::get('/login/google', [GoogleController::class, 'redirect'])->name('login.
 Route::get('/login/google/callback', [GoogleController::class, 'callback']);
 Route::post('/google/one-tap', [GoogleController::class, 'handleOneTap'])->name('google.one-tap');
 
+// Test custom logging route
+Route::get('/test-custom-log', function() {
+    $customLog = app('App\Services\CustomLogService');
+    $customLog->info('Test custom log entry from route');
+    $customLog->error('Test error from custom log');
+    return response()->json(['message' => 'Custom log entries written successfully']);
+})->name('test.custom.log');
+
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('welcome');
 Route::get('/privacy-policy', function() {
@@ -486,7 +494,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('supplier-categories/{supplier}/{category}/approve', [SupplierCategoryController::class, 'approve'])->name('supplier-categories.approve');
         Route::post('supplier-categories/{supplier}/{category}/reject', [SupplierCategoryController::class, 'reject'])->name('supplier-categories.reject');
         Route::get('supplier-categories/export', [SupplierCategoryController::class, 'export'])->name('supplier-categories.export');
-        Route::post('supplier-categories/bulk-assign', [SupplierCategoryController::class, 'bulkAssign'])->name('supplier-categories.bulk-assign');
         
         // Feedback Management
         Route::resource('feedback', \App\Http\Controllers\Admin\FeedbackController::class)->only(['index', 'show', 'update']);

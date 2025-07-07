@@ -93,56 +93,7 @@ class SupplierCategoryController extends Controller
             ->with('success', "Category assignments updated for {$supplier->name}.");
     }
 
-    /**
-     * Bulk assign categories to multiple suppliers.
-     */
-    public function bulkAssign(Request $request)
-    {
-        $request->validate([
-            'supplier_ids' => 'required|array',
-            'supplier_ids.*' => 'exists:users,id',
-            'category_ids' => 'required|array',
-            'category_ids.*' => 'exists:categories,id',
-            'action' => 'required|in:assign,remove',
-        ]);
 
-        DB::transaction(function () use ($request) {
-            foreach ($request->supplier_ids as $supplierId) {
-                $supplier = User::find($supplierId);
-                
-                // Ensure user is a supplier
-                if (!$supplier || !$supplier->isSupplier()) {
-                    continue;
-                }
-
-                foreach ($request->category_ids as $categoryId) {
-                    if ($request->action === 'assign') {
-                        SupplierCategory::updateOrCreate(
-                            [
-                                'supplier_id' => $supplierId,
-                                'category_id' => $categoryId,
-                            ],
-                            [
-                                'status' => 'active',
-                                'assigned_at' => now(),
-                            ]
-                        );
-                    } else {
-                        SupplierCategory::where('supplier_id', $supplierId)
-                            ->where('category_id', $categoryId)
-                            ->update(['status' => 'inactive']);
-                    }
-                }
-            }
-        });
-
-        $action = $request->action === 'assign' ? 'assigned to' : 'removed from';
-        $supplierCount = count($request->supplier_ids);
-        $categoryCount = count($request->category_ids);
-
-        return redirect()->route('admin.supplier-categories.index')
-            ->with('success', "Categories {$action} {$supplierCount} supplier(s) successfully.");
-    }
 
     /**
      * Get category statistics for dashboard.

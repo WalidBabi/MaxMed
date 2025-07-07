@@ -16,6 +16,8 @@ class SupplierInquiryItem extends Model
         'product_category',
         'product_brand',
         'product_specifications',
+        'specifications',
+        'size',
         'quantity',
         'requirements',
         'notes',

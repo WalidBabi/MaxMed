@@ -122,8 +122,28 @@
                                                             <div class="text-gray-600 text-sm mt-1">{{ $item->product_description }}</div>
                                                         @endif
                                                         
+                                                        @if($item->specifications)
+                                                            <div class="text-gray-500 text-xs mt-1">
+                                                                <span class="font-medium">Selected Specifications:</span>
+                                                                @php
+                                                                    $specs = json_decode($item->specifications, true);
+                                                                    if (is_array($specs)) {
+                                                                        echo implode(', ', $specs);
+                                                                    } else {
+                                                                        echo $item->specifications;
+                                                                    }
+                                                                @endphp
+                                                            </div>
+                                                        @endif
+                                                        
+                                                        @if($item->size)
+                                                            <div class="text-gray-500 text-xs">
+                                                                <span class="font-medium">Size:</span> {{ $item->size }}
+                                                            </div>
+                                                        @endif
+                                                        
                                                         @if($item->product_specifications)
-                                                            <div class="text-gray-500 text-xs mt-1">Specifications: {{ $item->product_specifications }}</div>
+                                                            <div class="text-gray-500 text-xs mt-1">Product Specifications: {{ $item->product_specifications }}</div>
                                                         @endif
                                                     </div>
                                                     
@@ -321,16 +341,41 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             @if($quotation)
-                                                <div class="text-sm font-medium text-gray-900">{{ $quotation->currency }} {{ number_format($quotation->unit_price, 2) }}</div>
+                                                @if($quotation->items && $quotation->items->count() > 0)
+                                                    <div class="text-sm text-gray-600">{{ $quotation->items->count() }} items</div>
+                                                    <div class="text-xs text-gray-500">
+                                                        @foreach($quotation->items->take(2) as $item)
+                                                            {{ $item->product_name ?? $item->product->name ?? 'Product' }}: {{ $item->currency }} {{ number_format($item->unit_price, 2) }}<br>
+                                                        @endforeach
+                                                        @if($quotation->items->count() > 2)
+                                                            <span class="text-gray-400">+{{ $quotation->items->count() - 2 }} more</span>
+                                                        @endif
+                                                    </div>
+                                                @else
+                                                    <div class="text-sm font-medium text-gray-900">{{ $quotation->currency }} {{ number_format($quotation->unit_price ?? 0, 2) }}</div>
+                                                @endif
                                             @else
                                                 <span class="text-gray-400">-</span>
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             @if($quotation)
-                                                <div class="text-sm font-medium text-gray-900">{{ $quotation->currency }} {{ number_format($quotation->total_amount, 2) }}</div>
-                                                @if($quotation->shipping_cost)
-                                                    <div class="text-sm text-gray-500">+ {{ $quotation->currency }} {{ number_format($quotation->shipping_cost, 2) }} shipping</div>
+                                                @if($quotation->items && $quotation->items->count() > 0)
+                                                    @php
+                                                        $totalAmount = $quotation->items->sum(function($item) {
+                                                            return ($item->unit_price ?? 0) * ($item->quantity ?? 1);
+                                                        });
+                                                        $totalShipping = $quotation->items->sum('shipping_cost');
+                                                    @endphp
+                                                    <div class="text-sm font-medium text-gray-900">{{ $quotation->items->first()->currency ?? 'AED' }} {{ number_format($totalAmount, 2) }}</div>
+                                                    @if($totalShipping > 0)
+                                                        <div class="text-sm text-gray-500">+ {{ $quotation->items->first()->currency ?? 'AED' }} {{ number_format($totalShipping, 2) }} shipping</div>
+                                                    @endif
+                                                @else
+                                                    <div class="text-sm font-medium text-gray-900">{{ $quotation->currency }} {{ number_format($quotation->total_amount ?? 0, 2) }}</div>
+                                                    @if($quotation->shipping_cost)
+                                                        <div class="text-sm text-gray-500">+ {{ $quotation->currency }} {{ number_format($quotation->shipping_cost, 2) }} shipping</div>
+                                                    @endif
                                                 @endif
                                             @else
                                                 <span class="text-gray-400">-</span>

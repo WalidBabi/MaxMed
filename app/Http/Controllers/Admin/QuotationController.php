@@ -90,17 +90,15 @@ class QuotationController extends Controller
                 'approved_at' => now(),
             ]);
 
-            // Update related inquiry status
+            // Update related inquiry status based on all quotations
             if ($quotation->quotationRequest) {
                 $quotation->quotationRequest->update([
                     'status' => 'quote_created'
                 ]);
             } elseif ($quotation->supplierInquiry) {
-                $quotation->supplierInquiry->update([
-                    'status' => 'quoted'
-                ]);
+                $this->updateInquiryStatusBasedOnQuotations($quotation->supplierInquiry);
                 
-                // Update the supplier response status to 'accepted'
+                // Update the supplier response status to 'accepted' for this specific product
                 if ($quotation->supplier_inquiry_response_id) {
                     $response = $quotation->supplierInquiryResponse;
                     if ($response) {
@@ -162,17 +160,15 @@ class QuotationController extends Controller
                     'admin_notes' => $validated['notes'] ?? null,
                 ]);
                 
-                // Update related inquiry status
+                // Update related inquiry status based on all quotations
                 if ($quotation->quotationRequest) {
                     $quotation->quotationRequest->update([
                         'status' => 'quote_created'
                     ]);
                 } elseif ($quotation->supplierInquiry) {
-                    $quotation->supplierInquiry->update([
-                        'status' => 'quoted'
-                    ]);
+                    $this->updateInquiryStatusBasedOnQuotations($quotation->supplierInquiry);
                     
-                    // Update the supplier response status to 'accepted'
+                    // Update the supplier response status to 'accepted' for this specific product
                     if ($quotation->supplier_inquiry_response_id) {
                         $response = $quotation->supplierInquiryResponse;
                         if ($response) {
@@ -202,6 +198,49 @@ class QuotationController extends Controller
             Log::error('Error in bulk quotation action: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed to perform bulk action. Please try again.');
         }
+    }
+
+    /**
+     * Update inquiry status based on the status of all its quotations
+     */
+    private function updateInquiryStatusBasedOnQuotations(\App\Models\SupplierInquiry $inquiry)
+    {
+        // Get all quotations for this inquiry
+        $allQuotations = $inquiry->quotations;
+        
+        if ($allQuotations->isEmpty()) {
+            return;
+        }
+
+        // Count quotations by status
+        $totalQuotations = $allQuotations->count();
+        $acceptedQuotations = $allQuotations->where('status', 'accepted')->count();
+        $rejectedQuotations = $allQuotations->where('status', 'rejected')->count();
+        $pendingQuotations = $allQuotations->where('status', 'submitted')->count();
+
+        // Determine inquiry status based on quotation statuses
+        $newStatus = 'in_progress'; // Default status
+
+        if ($acceptedQuotations > 0) {
+            if ($acceptedQuotations === $totalQuotations) {
+                // All products have approved quotations
+                $newStatus = 'converted';
+            } else {
+                // Some products have approved quotations, others are pending
+                $newStatus = 'partially_quoted';
+            }
+        } elseif ($rejectedQuotations === $totalQuotations) {
+            // All quotations were rejected
+            $newStatus = 'cancelled';
+        } elseif ($pendingQuotations > 0) {
+            // Some quotations are still pending
+            $newStatus = 'in_progress';
+        }
+
+        // Update inquiry status
+        $inquiry->update(['status' => $newStatus]);
+
+        Log::info("Updated inquiry {$inquiry->id} status to '{$newStatus}' based on quotations: {$acceptedQuotations} accepted, {$rejectedQuotations} rejected, {$pendingQuotations} pending out of {$totalQuotations} total");
     }
 
     /**

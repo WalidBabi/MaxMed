@@ -29,6 +29,31 @@
             <form action="{{ route('supplier.onboarding.company') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 
+                <!-- General Validation Errors -->
+                @if ($errors->any())
+                    <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-red-800">
+                                    There were some errors with your submission:
+                                </h3>
+                                <div class="mt-2 text-sm text-red-700">
+                                    <ul class="list-disc pl-5 space-y-1">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                
                 <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
                     <!-- Company Name -->
                     <div class="sm:col-span-2">
@@ -271,4 +296,228 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const submitButton = form.querySelector('button[type="submit"]');
+    
+    // Form validation and feedback
+    form.addEventListener('submit', function(e) {
+        // Show loading state
+        submitButton.disabled = true;
+        submitButton.innerHTML = `
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Processing...
+        `;
+        
+        // Basic client-side validation
+        const requiredFields = form.querySelectorAll('[required]');
+        let hasErrors = false;
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                hasErrors = true;
+                field.classList.add('border-red-500');
+                
+                // Add error message if not already present
+                if (!field.nextElementSibling || !field.nextElementSibling.classList.contains('text-red-600')) {
+                    const errorDiv = document.createElement('p');
+                    errorDiv.className = 'mt-1 text-sm text-red-600';
+                    errorDiv.textContent = 'This field is required.';
+                    field.parentNode.appendChild(errorDiv);
+                }
+            } else {
+                field.classList.remove('border-red-500');
+                // Remove error message if field is now valid
+                const errorDiv = field.parentNode.querySelector('.text-red-600');
+                if (errorDiv) {
+                    errorDiv.remove();
+                }
+            }
+        });
+        
+        // Email validation
+        const emailField = document.getElementById('primary_contact_email');
+        if (emailField && emailField.value) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailField.value)) {
+                hasErrors = true;
+                emailField.classList.add('border-red-500');
+                
+                if (!emailField.nextElementSibling || !emailField.nextElementSibling.classList.contains('text-red-600')) {
+                    const errorDiv = document.createElement('p');
+                    errorDiv.className = 'mt-1 text-sm text-red-600';
+                    errorDiv.textContent = 'Please enter a valid email address.';
+                    emailField.parentNode.appendChild(errorDiv);
+                }
+            }
+        }
+        
+        // Website validation
+        const websiteField = document.getElementById('website');
+        if (websiteField && websiteField.value) {
+            const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+            if (!urlRegex.test(websiteField.value)) {
+                hasErrors = true;
+                websiteField.classList.add('border-red-500');
+                
+                if (!websiteField.nextElementSibling || !websiteField.nextElementSibling.classList.contains('text-red-600')) {
+                    const errorDiv = document.createElement('p');
+                    errorDiv.className = 'mt-1 text-sm text-red-600';
+                    errorDiv.textContent = 'Please enter a valid website URL.';
+                    websiteField.parentNode.appendChild(errorDiv);
+                }
+            }
+        }
+        
+        if (hasErrors) {
+            e.preventDefault();
+            submitButton.disabled = false;
+            submitButton.innerHTML = 'Continue to Documents';
+            
+            // Scroll to first error
+            const firstError = form.querySelector('.border-red-500');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            // Show error message
+            showNotification('Please correct the errors above and try again.', 'error');
+        }
+    });
+    
+    // Real-time validation feedback
+    const inputs = form.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            validateField(this);
+        });
+        
+        input.addEventListener('input', function() {
+            // Remove error styling on input
+            this.classList.remove('border-red-500');
+            const errorDiv = this.parentNode.querySelector('.text-red-600');
+            if (errorDiv) {
+                errorDiv.remove();
+            }
+        });
+    });
+    
+    function validateField(field) {
+        const value = field.value.trim();
+        
+        // Required field validation
+        if (field.hasAttribute('required') && !value) {
+            field.classList.add('border-red-500');
+            if (!field.nextElementSibling || !field.nextElementSibling.classList.contains('text-red-600')) {
+                const errorDiv = document.createElement('p');
+                errorDiv.className = 'mt-1 text-sm text-red-600';
+                errorDiv.textContent = 'This field is required.';
+                field.parentNode.appendChild(errorDiv);
+            }
+            return false;
+        }
+        
+        // Email validation
+        if (field.type === 'email' && value) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                field.classList.add('border-red-500');
+                if (!field.nextElementSibling || !field.nextElementSibling.classList.contains('text-red-600')) {
+                    const errorDiv = document.createElement('p');
+                    errorDiv.className = 'mt-1 text-sm text-red-600';
+                    errorDiv.textContent = 'Please enter a valid email address.';
+                    field.parentNode.appendChild(errorDiv);
+                }
+                return false;
+            }
+        }
+        
+        // Website validation
+        if (field.id === 'website' && value) {
+            const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+            if (!urlRegex.test(value)) {
+                field.classList.add('border-red-500');
+                if (!field.nextElementSibling || !field.nextElementSibling.classList.contains('text-red-600')) {
+                    const errorDiv = document.createElement('p');
+                    errorDiv.className = 'mt-1 text-sm text-red-600';
+                    errorDiv.textContent = 'Please enter a valid website URL.';
+                    field.parentNode.appendChild(errorDiv);
+                }
+                return false;
+            }
+        }
+        
+        // Years in business validation
+        if (field.id === 'years_in_business' && value) {
+            const years = parseInt(value);
+            if (isNaN(years) || years < 0) {
+                field.classList.add('border-red-500');
+                if (!field.nextElementSibling || !field.nextElementSibling.classList.contains('text-red-600')) {
+                    const errorDiv = document.createElement('p');
+                    errorDiv.className = 'mt-1 text-sm text-red-600';
+                    errorDiv.textContent = 'Please enter a valid number of years.';
+                    field.parentNode.appendChild(errorDiv);
+                }
+                return false;
+            }
+        }
+        
+        // Remove error styling if field is valid
+        field.classList.remove('border-red-500');
+        const errorDiv = field.parentNode.querySelector('.text-red-600');
+        if (errorDiv) {
+            errorDiv.remove();
+        }
+        
+        return true;
+    }
+    
+    // Notification function
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 z-50 p-4 rounded-md shadow-lg ${
+            type === 'error' ? 'bg-red-500 text-white' : 
+            type === 'success' ? 'bg-green-500 text-white' : 
+            'bg-blue-500 text-white'
+        }`;
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <span>${message}</span>
+                <button class="ml-4 text-white hover:text-gray-200" onclick="this.parentElement.parentElement.remove()">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 5000);
+    }
+    
+    // Show success message if redirected with success
+    @if(session('success'))
+        showNotification('{{ session('success') }}', 'success');
+    @endif
+    
+    // Show error message if redirected with error
+    @if(session('error'))
+        showNotification('{{ session('error') }}', 'error');
+    @endif
+});
+</script>
+@endpush
+
 @endsection 

@@ -133,10 +133,17 @@
                                                     @endif
                                                 </td>
                                             </tr>
+                                            @if($inquiry->quantity && $inquiry->quantity > 0)
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">Quantity</td>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; font-weight: 500; font-size: 15px;">{{ number_format($inquiry->quantity) }} units</td>
                                             </tr>
+                                            @elseif($inquiry->attachments && is_array($inquiry->attachments) && count($inquiry->attachments) > 0)
+                                            <tr>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">Document Type</td>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; font-weight: 500; font-size: 15px;">📄 PDF Document Inquiry</td>
+                                            </tr>
+                                            @endif
                                             <tr>
                                                 <td style="padding: 12px 0; font-weight: 600; color: #4A5568; font-size: 15px;">Inquiry Date</td>
                                                 <td style="padding: 12px 0; color: #1A202C; font-weight: 500; font-size: 15px;">{{ $inquiry->created_at->format('M j, Y \a\t g:i A T') }}</td>

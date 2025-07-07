@@ -17,6 +17,7 @@ use App\Models\Product;
 use App\Models\QuotationRequest;
 use App\Models\SupplierInquiry;
 use App\Models\SupplierInquiryResponse;
+use App\Models\SupplierQuotationItem;
 
 class SupplierQuotation extends Model
 {
@@ -36,17 +37,66 @@ class SupplierQuotation extends Model
         'status',
         'quotation_number',
         'admin_notes',
-        'rejection_reason'
+        'rejection_reason',
+        'attachments'
     ];
 
     protected $casts = [
         'unit_price' => 'decimal:2',
-        'shipping_cost' => 'decimal:2',
+        'shipping_cost' => 'decimal:2,nullable',
     ];
+
+    /**
+     * Get the attachments attribute with proper handling
+     */
+    public function getAttachmentsAttribute($value)
+    {
+        // If it's already an array, return it
+        if (is_array($value)) {
+            return $this->normalizeAttachmentPaths($value);
+        }
+        // If it's a JSON string, decode it
+        if (is_string($value) && !empty($value)) {
+            $decoded = json_decode($value, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                return $this->normalizeAttachmentPaths($decoded);
+            }
+        }
+        // Return empty array if nothing valid
+        return [];
+    }
+
+    /**
+     * Normalize attachment paths by fixing escaped forward slashes
+     */
+    private function normalizeAttachmentPaths($attachments)
+    {
+        if (!is_array($attachments)) {
+            return [];
+        }
+        foreach ($attachments as &$attachment) {
+            if (isset($attachment['path'])) {
+                $attachment['path'] = str_replace('\\/', '/', $attachment['path']);
+            }
+        }
+        return $attachments;
+    }
+
+    /**
+     * Set the attachments attribute
+     */
+    public function setAttachmentsAttribute($value)
+    {
+        if (is_array($value)) {
+            $this->attributes['attachments'] = json_encode($value);
+        } else {
+            $this->attributes['attachments'] = $value;
+        }
+    }
 
     // Status constants
     const STATUS_DRAFT = 'draft';
-    const STATUS_PENDING = 'pending';
+    const STATUS_PENDING = 'submitted';
     const STATUS_SUBMITTED = 'submitted';
     const STATUS_ACCEPTED = 'accepted';
     const STATUS_APPROVED = 'approved';
@@ -86,6 +136,11 @@ class SupplierQuotation extends Model
     public function supplierInquiryResponse(): BelongsTo
     {
         return $this->belongsTo(SupplierInquiryResponse::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(SupplierQuotationItem::class, 'supplier_quotation_id');
     }
 
     // Helper Methods
@@ -368,4 +423,4 @@ class SupplierQuotation extends Model
             default => 'bg-gray-100 text-gray-800'
         };
     }
-} 
+}

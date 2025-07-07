@@ -1,12 +1,17 @@
 Dear {{ $contact->first_name ?? 'Valued Customer' }},
 
+IMPORTANT BUSINESS COMMUNICATION
+
 {!! $content !!}
 
 Best regards,
 {{ config('app.name') }} Team
+Business Communication Department
 
 ---
-Business Communication
+This is an important business communication from {{ config('app.name') }} 
+regarding medical equipment and laboratory solutions relevant to your business operations.
+
 {{ config('app.name') }}
 {{ config('app.url') }}
 

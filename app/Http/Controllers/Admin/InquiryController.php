@@ -36,7 +36,7 @@ class InquiryController extends Controller
      */
     public function index(Request $request)
     {
-        $query = SupplierInquiry::with(['product', 'items.product', 'supplierResponses'])
+        $query = SupplierInquiry::with(['product', 'items.product', 'supplierResponses.supplier'])
             ->latest();
 
         // Filter by status
@@ -71,7 +71,10 @@ class InquiryController extends Controller
      */
     public function create(): ViewContract
     {
-        $products = Product::orderBy('name')->get();
+        $products = Product::with(['specifications', 'brand', 'category'])
+            ->orderBy('name')
+            ->get();
+        
         $categories = Category::orderBy('name')->get();
 
         return ViewFacade::make('admin.inquiries.create', compact('products', 'categories'));
@@ -133,9 +136,12 @@ class InquiryController extends Controller
                 $rules["items.{$index}.quantity"] = 'nullable|numeric|min:0';
                 $rules["items.{$index}.requirements"] = 'nullable|string';
                 $rules["items.{$index}.notes"] = 'nullable|string';
+                $rules["items.{$index}.specifications"] = 'nullable|string';
+                $rules["items.{$index}.size"] = 'nullable|string|max:255';
                 
                 if (($item['product_type'] ?? '') === 'listed') {
                     $rules["items.{$index}.product_id"] = 'required|exists:products,id';
+                    $rules["items.{$index}.product_name"] = 'nullable|string|max:255';
                 } else {
                     $rules["items.{$index}.product_name"] = 'required|string|max:255';
                     $rules["items.{$index}.product_description"] = 'nullable|string';
@@ -208,8 +214,10 @@ class InquiryController extends Controller
                         
                         if ($itemData['product_type'] === 'listed') {
                             $item->product_id = $itemData['product_id'];
+                            $item->product_name = $itemData['product_name'] ?? null;
                             Log::info('Adding listed product item', [
                                 'product_id' => $itemData['product_id'],
+                                'product_name' => $itemData['product_name'] ?? null,
                                 'index' => $index
                             ]);
                         } else {
@@ -228,6 +236,8 @@ class InquiryController extends Controller
                         $item->quantity = $itemData['quantity'] ?? null;
                         $item->requirements = $itemData['requirements'] ?? null;
                         $item->notes = $itemData['notes'] ?? null;
+                        $item->specifications = $itemData['specifications'] ?? null;
+                        $item->size = $itemData['size'] ?? null;
                         
                         $item->save();
                     }

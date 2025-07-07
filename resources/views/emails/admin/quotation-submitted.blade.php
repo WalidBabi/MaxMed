@@ -154,13 +154,24 @@
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #fecaca; font-weight: 600; color: #4A5568; font-size: 15px;">Supplier Email</td>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #fecaca; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ $quotation->supplier->email }}</td>
                                             </tr>
+                                            @php
+                                                // Check if this is a PDF-only quotation
+                                                $hasAttachments = $quotation->attachments && is_array($quotation->attachments) && count($quotation->attachments) > 0;
+                                                $hasProductInfo = ($quotation->product_id && $quotation->product && $quotation->product->name) || 
+                                                                 ($quotation->inquiry && $quotation->inquiry->product_name) || 
+                                                                 ($quotation->inquiry && $quotation->inquiry->product_description);
+                                                $isPdfOnly = $hasAttachments && !$hasProductInfo && $quotation->unit_price == 0;
+                                            @endphp
+                                            
+                                            @if(!$isPdfOnly)
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #fecaca; font-weight: 600; color: #4A5568; font-size: 15px;">Unit Price</td>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #fecaca; color: #1A202C; text-align: right; font-weight: 600; font-size: 15px;">
                                                     {{ $quotation->currency }} {{ number_format($quotation->unit_price, 2) }}
                                                 </td>
                                             </tr>
-                                            @if($quotation->shipping_cost)
+                                            @endif
+                                            @if($quotation->shipping_cost && !$isPdfOnly)
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #fecaca; font-weight: 600; color: #4A5568; font-size: 15px;">Shipping Cost</td>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #fecaca; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">
@@ -168,7 +179,7 @@
                                                 </td>
                                             </tr>
                                             @endif
-                                            @if($quotation->size)
+                                            @if($quotation->size && !$isPdfOnly)
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #fecaca; font-weight: 600; color: #4A5568; font-size: 15px;">Size/Specifications</td>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #fecaca; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ $quotation->size }}</td>
@@ -187,6 +198,41 @@
                                 </tr>
                             </table>
 
+                            @if($isPdfOnly)
+                            <!-- PDF-Only Quotation Notice -->
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; margin: 25px 0;">
+                                <tr>
+                                    <td style="padding: 20px; background-color: #fef3c7; border-radius: 8px; border-left: 3px solid #f59e0b;">
+                                        <p style="margin: 0; font-size: 16px; color: #92400e;"><span style="font-weight: 600; color: #d97706;">📄 PDF-Only Quotation:</span> This quotation contains uploaded documents with pricing details. Please review the attached files for complete pricing information.</p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Uploaded Files Section -->
+                            @if($quotation->attachments && is_array($quotation->attachments) && count($quotation->attachments) > 0)
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #f0f9ff; margin: 25px 0; border-radius: 8px; border-left: 3px solid #0ea5e9; overflow: hidden;">
+                                <tr>
+                                    <td style="padding: 20px;">
+                                        <h4 style="margin: 0 0 15px 0; color: #0ea5e9; font-size: 16px; font-weight: 600;">📎 Uploaded Quotation Files</h4>
+                                        <div style="margin: 0;">
+                                            @foreach($quotation->attachments as $attachment)
+                                                @if(isset($attachment['name']))
+                                                <div style="margin-bottom: 8px; padding: 8px; background-color: #ffffff; border-radius: 4px; border: 1px solid #e0e7ff;">
+                                                    <p style="margin: 0; font-size: 14px; color: #2D3748;">
+                                                        <span style="font-weight: 600; color: #0ea5e9;">📄</span> 
+                                                        {{ $attachment['name'] }}
+                                                    </p>
+                                                </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                        <p style="margin: 10px 0 0 0; font-size: 13px; color: #64748b;">These files contain the complete quotation details and pricing information.</p>
+                                    </td>
+                                </tr>
+                            </table>
+                            @endif
+                            @endif
+
                             @if($quotation->notes)
                             <!-- Supplier Notes Section -->
                             <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; margin: 25px 0;">
@@ -198,7 +244,31 @@
                             </table>
                             @endif
 
-                            <!-- Total Amount - Outlook Compatible -->
+                            @if($isPdfOnly)
+                            <!-- PDF-Only Total Amount - Outlook Compatible -->
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #f59e0b; margin: 30px 0; border-radius: 12px; overflow: hidden;">
+                                <tr>
+                                    <td style="padding: 30px; text-align: center;">
+                                        <!--[if gte mso 9]>
+                                        <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #f59e0b;">
+                                            <tr>
+                                                <td style="padding: 30px; text-align: center;">
+                                        <![endif]-->
+                                                    <div style="color: #FFFFFF;">
+                                                        <div style="font-size: 16px; margin-bottom: 5px; opacity: 0.9; font-weight: 300; text-transform: uppercase; letter-spacing: 1px;">📄 PDF Quotation Submitted</div>
+                                                        <div style="font-size: 24px; font-weight: 700; margin: 0; letter-spacing: -1px;">Pricing in Attached Files</div>
+                                                        <div style="font-size: 14px; margin-top: 5px; opacity: 0.8;">Please review uploaded documents for complete pricing details</div>
+                                                    </div>
+                                        <!--[if gte mso 9]>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <![endif]-->
+                                    </td>
+                                </tr>
+                            </table>
+                            @else
+                            <!-- Regular Total Amount - Outlook Compatible -->
                             <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #dc2626; margin: 30px 0; border-radius: 12px; overflow: hidden;">
                                 <tr>
                                     <td style="padding: 30px; text-align: center;">
@@ -222,6 +292,7 @@
                                     </td>
                                 </tr>
                             </table>
+                            @endif
 
                             <!-- Action Buttons -->
                             <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; margin: 30px 0;">

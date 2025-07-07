@@ -179,13 +179,24 @@
                             </table>
                             @endif
 
-                            @if($inquiry->quantity)
+                            @if($inquiry->quantity && $inquiry->quantity > 0)
                             <!-- Quantity Information -->
                             <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #EBF8FF; margin: 25px 0; border-radius: 8px;">
                                 <tr>
                                     <td style="padding: 20px; text-align: center;">
                                         <div style="font-size: 16px; color: #2B6CB0; font-weight: 600;">
                                             📦 Requested Quantity: {{ $inquiry->quantity }} {{ $inquiry->unit ?? 'units' }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            @elseif($inquiry->attachments && is_array($inquiry->attachments) && count($inquiry->attachments) > 0)
+                            <!-- PDF Document Information -->
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #FEF2F2; margin: 25px 0; border-radius: 8px;">
+                                <tr>
+                                    <td style="padding: 20px; text-align: center;">
+                                        <div style="font-size: 16px; color: #DC2626; font-weight: 600;">
+                                            📄 PDF Document Inquiry: {{ count($inquiry->attachments) }} document(s) attached
                                         </div>
                                     </td>
                                 </tr>
