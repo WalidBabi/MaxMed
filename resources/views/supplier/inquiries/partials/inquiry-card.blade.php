@@ -29,24 +29,39 @@ $currentStatus = $inquiry instanceof \App\Models\QuotationRequest
         <!-- Product Info -->
         <div class="mb-3">
             <h4 class="text-sm font-medium text-gray-900 line-clamp-2">
-                @if($inquiry->product)
+                @if($inquiry->product && $inquiry->product->name)
                     {{ $inquiry->product->name }}
-                @else
+                @elseif($inquiry->product_name)
                     {{ $inquiry->product_name }}
+                @elseif($inquiry->requirements)
+                    {{ Str::limit($inquiry->requirements, 50) }}
+                @elseif($inquiry->product_description)
+                    {{ Str::limit($inquiry->product_description, 50) }}
+                @else
+                    Product Inquiry
                 @endif
             </h4>
-            @if($inquiry->product_description)
+            @if($inquiry->product_description && $inquiry->product_description !== $inquiry->product_name)
                 <p class="text-xs text-gray-600 mt-1 line-clamp-2">{{ $inquiry->product_description }}</p>
             @endif
         </div>
 
         <!-- Quantity -->
-        <div class="flex items-center text-sm text-gray-600 mb-3">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-            </svg>
-            <span>{{ number_format($inquiry->quantity) }} units</span>
-        </div>
+        @if($inquiry->quantity && $inquiry->quantity > 0)
+            <div class="flex items-center text-sm text-gray-600 mb-3">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                </svg>
+                <span>{{ number_format($inquiry->quantity) }} units</span>
+            </div>
+        @elseif($inquiry->attachments && is_array($inquiry->attachments) && count($inquiry->attachments) > 0)
+            <div class="flex items-center text-sm text-red-600 mb-3">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                </svg>
+                <span>PDF Document</span>
+            </div>
+        @endif
 
         <!-- Actions -->
         <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
@@ -80,6 +95,26 @@ $currentStatus = $inquiry instanceof \App\Models\QuotationRequest
                     View Quotation
                 </a>
             @endif
+        </div>
+
+        <div class="flex items-start space-x-3">
+            <!-- Removed avatar/circle area -->
+            <div class="min-w-0 flex-1">
+                <p class="text-sm font-medium text-gray-900 truncate">{{ $inquiry->customer_name }}</p>
+                <p class="text-sm text-gray-500 truncate">{{ $inquiry->email }}</p>
+                @if(!empty($inquiry->product_description))
+                    <p class="text-xs text-gray-700 mt-1">{{ Str::limit($inquiry->product_description, 80) }}</p>
+                @elseif(!empty($inquiry->notes))
+                    <p class="text-xs text-gray-700 mt-1">{{ Str::limit($inquiry->notes, 80) }}</p>
+                @elseif(!empty($inquiry->attachments) && is_array($inquiry->attachments) && count($inquiry->attachments) > 0)
+                    <div class="flex items-center mt-1">
+                        <svg class="w-4 h-4 text-red-600 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19V6m0 0l-7 7m7-7l7 7" />
+                        </svg>
+                        <a href="{{ asset('storage/' . $inquiry->attachments[0]) }}" target="_blank" class="text-xs text-red-700 underline">View PDF</a>
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
 </div> 

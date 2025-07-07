@@ -177,6 +177,23 @@
                         </a>
                     @endif
                     
+                    @if($isPendingApproval)
+                        <div class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-400 bg-gray-100 cursor-not-allowed">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            View Inquiries (Pending Approval)
+                        </div>
+                    @else
+                        <a href="{{ route('supplier.inquiries.index') }}" 
+                           class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            View Inquiries
+                        </a>
+                    @endif
+                    
                     <a href="{{ route('supplier.feedback.create') }}" 
                        class="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -184,6 +201,133 @@
                         </svg>
                         Send Feedback
                     </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inquiry Management Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <!-- Inquiry Statistics -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                        <svg class="w-5 h-5 text-indigo-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Inquiry Management
+                    </h3>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-orange-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-orange-900">{{ $inquiryStats['pending'] }}</div>
+                            <div class="text-sm text-orange-600">Pending</div>
+                        </div>
+                        
+                        <div class="bg-blue-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-blue-900">{{ $inquiryStats['viewed'] }}</div>
+                            <div class="text-sm text-blue-600">Viewed</div>
+                        </div>
+                        
+                        <div class="bg-green-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-green-900">{{ $inquiryStats['quoted'] }}</div>
+                            <div class="text-sm text-green-600">Quoted</div>
+                        </div>
+                        
+                        <div class="bg-gray-50 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-gray-900">{{ $inquiryStats['not_available'] }}</div>
+                            <div class="text-sm text-gray-600">Not Available</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center">
+                        @if($isPendingApproval)
+                            <p class="text-gray-600">Inquiry management will be available once your profile is approved</p>
+                            <div class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-400 bg-gray-100 cursor-not-allowed">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Manage Inquiries (Pending Approval)
+                            </div>
+                        @else
+                            <p class="text-gray-600">Respond to customer inquiries and quotation requests</p>
+                            <a href="{{ route('supplier.inquiries.index') }}" 
+                               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Manage Inquiries
+                            </a>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Inquiries Requiring Attention -->
+        <div>
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <h3 class="text-lg font-semibold text-gray-900">
+                        @if($isPendingApproval)
+                            Inquiries (Pending Approval)
+                        @else
+                            Inquiries Requiring Attention
+                        @endif
+                    </h3>
+                </div>
+                <div class="p-6">
+                    @if($isPendingApproval)
+                        <div class="text-center py-8">
+                            <svg class="mx-auto h-12 w-12 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                            </svg>
+                            <p class="text-sm text-gray-500 mt-2">Inquiries will appear here once your profile is approved</p>
+                            <p class="text-xs text-gray-400 mt-1">You'll be able to receive and respond to customer inquiries</p>
+                        </div>
+                    @elseif($recentInquiries->count() > 0)
+                        <div class="space-y-3">
+                            @foreach($recentInquiries as $inquiry)
+                                @php
+                                    $response = $inquiry->supplierResponses->where('user_id', auth()->id())->first();
+                                    $statusClasses = [
+                                        'pending' => 'bg-orange-100 text-orange-800',
+                                        'viewed' => 'bg-blue-100 text-blue-800',
+                                        'quoted' => 'bg-green-100 text-green-800',
+                                        'not_available' => 'bg-gray-100 text-gray-800',
+                                    ];
+                                    $statusClass = $statusClasses[$response->status ?? 'pending'] ?? 'bg-gray-100 text-gray-800';
+                                    $statusText = ucfirst(str_replace('_', ' ', $response->status ?? 'pending'));
+                                @endphp
+                                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">{{ $inquiry->reference_number }}</div>
+                                        <div class="text-xs text-gray-500">{{ $inquiry->product_name ?: ($inquiry->product->name ?? 'Product Inquiry') }}</div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium {{ $statusClass }}">
+                                            {{ $statusText }}
+                                        </span>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="mt-4">
+                            <a href="{{ route('supplier.inquiries.index', ['status' => 'pending']) }}" 
+                               class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
+                                View all pending inquiries →
+                            </a>
+                        </div>
+                    @else
+                        <div class="text-center py-4">
+                            <svg class="mx-auto h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p class="text-sm text-gray-500 mt-2">All caught up!</p>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

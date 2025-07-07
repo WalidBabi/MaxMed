@@ -7,13 +7,21 @@
     <!-- Header -->
     <div class="sm:flex sm:items-center">
         <div class="sm:flex-auto">
-            <h1 class="text-2xl font-semibold leading-6 text-gray-900">Supplier Inquiries</h1>
-            <p class="mt-2 text-sm text-gray-700">Manage product inquiries sent to suppliers and track responses. Inquiries are automatically sent to suppliers who are registered for the relevant product categories.</p>
+            <h1 class="text-2xl font-semibold leading-6 text-gray-900">Supplier Inquiries - Table View</h1>
+            <p class="mt-2 text-sm text-gray-700">Table-based view of product inquiries sent to suppliers. Track responses and manage inquiry lifecycle in a structured table format.</p>
         </div>
-        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none header-actions">
+        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none header-actions space-x-3">
             <a href="{{ route('admin.inquiries.create') }}" 
                class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
                 <i class="fas fa-plus mr-2"></i> Create Inquiry
+            </a>
+            <a href="{{ route('admin.inquiries.index') }}" 
+               class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                <i class="fas fa-table mr-2"></i> Table View
+            </a>
+            <a href="{{ route('admin.inquiry-quotations.index') }}" 
+               class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                <i class="fas fa-th-large mr-2"></i> Card View
             </a>
         </div>
     </div>
@@ -141,11 +149,11 @@
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Status</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide group relative">
                                         <div class="flex items-center">
-                                            Broadcast To
+                                            Suppliers Sent To
                                             <span class="ml-1 cursor-help">
                                                 <i class="fas fa-info-circle"></i>
                                                 <div class="hidden group-hover:block absolute z-10 top-full left-0 mt-1 w-64 p-2 bg-gray-800 text-white text-xs rounded shadow-lg normal-case">
-                                                    Inquiries are sent to all suppliers with matching product categories.
+                                                    Shows the actual suppliers that received this inquiry and their response status.
                                                 </div>
                                             </span>
                                         </div>
@@ -173,17 +181,60 @@
                                                         @if($item->product && $item->product->sku)
                                                             <div class="text-gray-500 text-xs">SKU: {{ $item->product->sku }}</div>
                                                         @endif
+                                                        @if($item->specifications)
+                                                            <div class="text-gray-500 text-xs mt-1">
+                                                                <span class="font-medium">Specs:</span> 
+                                                                @php
+                                                                    $specs = json_decode($item->specifications, true);
+                                                                    echo is_array($specs) ? implode(', ', array_slice($specs, 0, 3)) . (count($specs) > 3 ? '...' : '') : $item->specifications;
+                                                                @endphp
+                                                            </div>
+                                                        @endif
+                                                        @if($item->size)
+                                                            <div class="text-gray-500 text-xs">
+                                                                <span class="font-medium">Size:</span> {{ $item->size }}
+                                                            </div>
+                                                        @endif
                                                     @else
                                                         <div class="font-medium">{{ $item->product_name }}</div>
                                                         @if($item->product_category)
                                                             <div class="text-gray-500 text-xs">Category: {{ $item->product_category }}</div>
+                                                        @endif
+                                                        @if($item->specifications)
+                                                            <div class="text-gray-500 text-xs mt-1">
+                                                                <span class="font-medium">Specs:</span> 
+                                                                @php
+                                                                    $specs = json_decode($item->specifications, true);
+                                                                    echo is_array($specs) ? implode(', ', array_slice($specs, 0, 3)) . (count($specs) > 3 ? '...' : '') : $item->specifications;
+                                                                @endphp
+                                                            </div>
+                                                        @endif
+                                                        @if($item->size)
+                                                            <div class="text-gray-500 text-xs">
+                                                                <span class="font-medium">Size:</span> {{ $item->size }}
+                                                            </div>
                                                         @endif
                                                     @endif
                                                 @else
                                                     <div class="font-medium">{{ $inquiry->items->count() }} Products</div>
                                                     <div class="text-gray-500 text-xs space-y-1 mt-1">
                                                         @foreach($inquiry->items->take(2) as $item)
-                                                            <div>• {{ $item->product_id ? ($item->product->name ?? 'Product Not Found') : $item->product_name }}</div>
+                                                            <div>• {{ $item->product_id ? ($item->product->name ?? 'Product Not Found') : $item->product_name }}
+                                                                @if($item->specifications || $item->size)
+                                                                    <span class="text-gray-400">
+                                                                        @if($item->specifications)
+                                                                            @php
+                                                                                $specs = json_decode($item->specifications, true);
+                                                                                $specText = is_array($specs) ? implode(', ', array_slice($specs, 0, 2)) . (count($specs) > 2 ? '...' : '') : $item->specifications;
+                                                                            @endphp
+                                                                            ({{ $specText }})
+                                                                        @endif
+                                                                        @if($item->size)
+                                                                            {{ $item->size }}
+                                                                        @endif
+                                                                    </span>
+                                                                @endif
+                                                            </div>
                                                         @endforeach
                                                         @if($inquiry->items->count() > 2)
                                                             <div class="text-gray-400">+ {{ $inquiry->items->count() - 2 }} more...</div>
@@ -232,7 +283,41 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-900">
-                                            <span class="text-indigo-600 font-medium">Suppliers with relevant categories</span>
+                                            @if($inquiry->supplierResponses->count() > 0)
+                                                <div class="space-y-1">
+                                                    <div class="text-xs font-medium text-gray-700 uppercase tracking-wide">
+                                                        Suppliers Sent To ({{ $inquiry->supplierResponses->count() }})
+                                                    </div>
+                                                    <div class="max-h-20 overflow-y-auto">
+                                                        @foreach($inquiry->supplierResponses->take(3) as $response)
+                                                            <div class="flex items-center justify-between text-xs">
+                                                                <span class="text-gray-600 truncate max-w-32">
+                                                                    {{ $response->supplier->name ?? 'Unknown Supplier' }}
+                                                                </span>
+                                                                @php
+                                                                    $statusColors = [
+                                                                        'pending' => 'bg-yellow-100 text-yellow-800',
+                                                                        'viewed' => 'bg-blue-100 text-blue-800',
+                                                                        'quoted' => 'bg-green-100 text-green-800',
+                                                                        'not_available' => 'bg-red-100 text-red-800'
+                                                                    ];
+                                                                    $statusColor = $statusColors[$response->status] ?? 'bg-gray-100 text-gray-800';
+                                                                @endphp
+                                                                <span class="inline-flex rounded-full px-1.5 py-0.5 text-xs font-medium {{ $statusColor }}">
+                                                                    {{ ucfirst($response->status) }}
+                                                                </span>
+                                                            </div>
+                                                        @endforeach
+                                                        @if($inquiry->supplierResponses->count() > 3)
+                                                            <div class="text-xs text-gray-500 italic">
+                                                                +{{ $inquiry->supplierResponses->count() - 3 }} more suppliers
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <span class="text-gray-500 italic">Not broadcast yet</span>
+                                            @endif
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-900">
                                             <div class="status-display space-y-2">
@@ -350,8 +435,9 @@
                                         <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                             <div class="flex items-center justify-end gap-2">
                                                 <a href="{{ route('admin.inquiries.show', $inquiry) }}" 
-                                                   class="inline-flex items-center rounded px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200">
-                                                    <i class="fas fa-eye mr-1"></i>View
+                                                   class="inline-flex items-center rounded px-2 py-1 text-xs font-medium text-gray-700 bg-gray-100 hover:bg-gray-200"
+                                                   title="View Inquiry">
+                                                    <i class="fas fa-eye"></i>
                                                 </a>
 
                                                 @if($inquiry->status === 'pending')
@@ -360,8 +446,9 @@
                                                         @method('PUT')
                                                         <input type="hidden" name="status" value="broadcast">
                                                         <button type="submit" 
-                                                                class="inline-flex items-center rounded px-2.5 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                                            <i class="fas fa-broadcast-tower mr-1"></i>Broadcast
+                                                                class="inline-flex items-center rounded px-2.5 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                                                title="Broadcast Inquiry">
+                                                            <i class="fas fa-broadcast-tower"></i>
                                                         </button>
                                                     </form>
                                                 @endif
@@ -374,8 +461,9 @@
                                                         @method('PUT')
                                                         <input type="hidden" name="status" value="cancelled">
                                                         <button type="submit" 
-                                                                class="inline-flex items-center rounded px-2.5 py-1.5 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                                            <i class="fas fa-times mr-1"></i>Cancel
+                                                                class="inline-flex items-center rounded px-2.5 py-1.5 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                                                title="Cancel Inquiry">
+                                                            <i class="fas fa-times"></i>
                                                         </button>
                                                     </form>
                                                 @endif

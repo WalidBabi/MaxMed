@@ -49,6 +49,7 @@ class SupplierInquiry extends Model
     const STATUS_BROADCAST = 'broadcast';
     const STATUS_IN_PROGRESS = 'in_progress';
     const STATUS_QUOTED = 'quoted';
+    const STATUS_PARTIALLY_QUOTED = 'partially_quoted';
     const STATUS_CONVERTED = 'converted';
     const STATUS_CANCELLED = 'cancelled';
     const STATUS_EXPIRED = 'expired';

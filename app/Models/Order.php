@@ -574,7 +574,7 @@ class Order extends Model
             $totalQuotations = $quotations->count();
             $approvedQuotations = $quotations->where('status', SupplierQuotation::STATUS_APPROVED)->count();
             $rejectedQuotations = $quotations->where('status', SupplierQuotation::STATUS_REJECTED)->count();
-            $pendingQuotations = $quotations->where('status', SupplierQuotation::STATUS_PENDING)->count();
+            $pendingQuotations = $quotations->where('status', 'submitted')->count();
 
             // Determine new quotation status
             $newQuotationStatus = match(true) {

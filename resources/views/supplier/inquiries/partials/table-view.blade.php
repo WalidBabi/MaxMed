@@ -1,6 +1,35 @@
 <!-- Table View -->
 <div class="bg-white shadow-sm rounded-lg overflow-hidden">
     <!-- Statistics Cards -->
+    @php
+        $supplierId = auth()->id();
+        $counts = [
+            'all' => $allInquiries->count(),
+            'pending' => $allInquiries->filter(function($inquiry) use ($supplierId) {
+                $response = $inquiry->supplierResponses->where('user_id', $supplierId)->first();
+                $quotation = $inquiry->quotations->where('supplier_id', $supplierId)->first();
+                return !$quotation && $response && $response->status === 'pending';
+            })->count(),
+            'viewed' => $allInquiries->filter(function($inquiry) use ($supplierId) {
+                $response = $inquiry->supplierResponses->where('user_id', $supplierId)->first();
+                $quotation = $inquiry->quotations->where('supplier_id', $supplierId)->first();
+                return !$quotation && $response && $response->status === 'viewed';
+            })->count(),
+            'quoted' => $allInquiries->filter(function($inquiry) use ($supplierId) {
+                $quotation = $inquiry->quotations->where('supplier_id', $supplierId)->first();
+                return $quotation && !in_array($quotation->status, ['approved', 'accepted']);
+            })->count(),
+            'accepted' => $allInquiries->filter(function($inquiry) use ($supplierId) {
+                $quotation = $inquiry->quotations->where('supplier_id', $supplierId)->first();
+                return $quotation && in_array($quotation->status, ['approved', 'accepted']);
+            })->count(),
+            'not_available' => $allInquiries->filter(function($inquiry) use ($supplierId) {
+                $response = $inquiry->supplierResponses->where('user_id', $supplierId)->first();
+                return $response && $response->status === 'not_available';
+            })->count()
+        ];
+    @endphp
+    
     <div class="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         <!-- Total Card -->
         <div class="bg-white rounded-lg shadow p-4 border border-gray-200 hover:shadow-lg transition-shadow duration-200">
@@ -122,59 +151,241 @@
                 @forelse($allInquiries as $inquiry)
                     <tr class="hover:bg-gray-50 transition-colors duration-200">
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 h-10 w-10">
-                                    <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
-                                        <span class="text-sm font-medium text-gray-700">
-                                            {{ substr($inquiry->reference_number ?? 'N/A', 0, 2) }}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="ml-4">
-                                    <div class="text-sm font-medium text-gray-900">
-                                        {{ $inquiry->reference_number ?? 'N/A' }}
-                                    </div>
-                                </div>
+                            <div class="text-sm font-medium text-gray-900">
+                                @if($inquiry instanceof \App\Models\QuotationRequest)
+                                    {{ $inquiry->request_number ?? 'N/A' }}
+                                @else
+                                    {{ $inquiry->reference_number ?? 'N/A' }}
+                                @endif
                             </div>
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center">
-                                @if($inquiry->product && $inquiry->product->primaryImage)
-                                    <img src="{{ asset('storage/' . $inquiry->product->primaryImage->image_path) }}" 
-                                         alt="{{ $inquiry->product->name }}" 
-                                         class="h-10 w-10 rounded-lg object-cover mr-3">
+                                @if($inquiry instanceof \App\Models\QuotationRequest)
+                                    {{-- Legacy QuotationRequest --}}
+                                    @if($inquiry->product && $inquiry->product->primaryImage)
+                                        <img src="{{ $inquiry->product->primaryImage->image_url }}" 
+                                             alt="{{ $inquiry->product->name }}" 
+                                             class="h-10 w-10 rounded-lg object-cover mr-3">
+                                    @elseif($inquiry->product && $inquiry->product->image_url)
+                                        <img src="{{ $inquiry->product->image_url }}" 
+                                             alt="{{ $inquiry->product->name }}" 
+                                             class="h-10 w-10 rounded-lg object-cover mr-3">
+                                    @elseif($inquiry->product && $inquiry->product->images && $inquiry->product->images->count() > 0)
+                                        <img src="{{ $inquiry->product->images->first()->image_url }}" 
+                                             alt="{{ $inquiry->product->name }}" 
+                                             class="h-10 w-10 rounded-lg object-cover mr-3">
+                                    @elseif($inquiry->product)
+                                        <div class="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center mr-3">
+                                            <span class="text-xs font-medium text-gray-600">{{ substr($inquiry->product->name, 0, 2) }}</span>
+                                        </div>
+                                    @elseif($inquiry->product_name)
+                                        {{ $inquiry->product_name }}
+                                        <span class="inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 ml-1">
+                                            Unlisted
+                                        </span>
+                                    @elseif($inquiry->attachments && is_array($inquiry->attachments) && count($inquiry->attachments) > 0)
+                                        PDF Document Inquiry
+                                        <span class="inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 ml-1">
+                                            PDF
+                                        </span>
+                                    @elseif($inquiry->requirements)
+                                        {{ Str::limit($inquiry->requirements, 50) }}
+                                    @elseif($inquiry->product_description)
+                                        {{ Str::limit($inquiry->product_description, 50) }}
+                                    @else
+                                        Product Inquiry
+                                    @endif
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">
+                                            @if($inquiry->product && $inquiry->product->name)
+                                                {{ $inquiry->product->name }}
+                                            @elseif($inquiry->product_name)
+                                                {{ $inquiry->product_name }}
+                                                <span class="inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 ml-1">
+                                                    Unlisted
+                                                </span>
+                                            @elseif($inquiry->attachments && is_array($inquiry->attachments) && count($inquiry->attachments) > 0)
+                                                PDF Document Inquiry
+                                                <span class="inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 ml-1">
+                                                    PDF
+                                                </span>
+                                            @elseif($inquiry->requirements)
+                                                {{ Str::limit($inquiry->requirements, 40) }}
+                                            @elseif($inquiry->product_description)
+                                                {{ Str::limit($inquiry->product_description, 40) }}
+                                            @else
+                                                Product Inquiry
+                                            @endif
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-mono text-xs">{{ $inquiry->request_number }}</span>
+                                            @if($inquiry->special_requirements)
+                                                • {{ Str::limit($inquiry->special_requirements, 40) }}
+                                            @endif
+                                        </div>
+                                    </div>
                                 @else
-                                    <div class="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center mr-3">
-                                        <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                    </div>
+                                    {{-- New SupplierInquiry --}}
+                                    @if($inquiry->items && $inquiry->items->count() > 1)
+                                        {{-- Multiple products --}}
+                                        @php
+                                            $firstItem = $inquiry->items->first();
+                                            $firstProduct = $firstItem ? $firstItem->product : null;
+                                        @endphp
+                                        @if($firstProduct && $firstProduct->primaryImage)
+                                            <img src="{{ $firstProduct->primaryImage->image_url }}" 
+                                                 alt="{{ $firstProduct->name }}" 
+                                                 class="h-10 w-10 rounded-lg object-cover mr-3">
+                                        @elseif($firstProduct && $firstProduct->image_url)
+                                            <img src="{{ $firstProduct->image_url }}" 
+                                                 alt="{{ $firstProduct->name }}" 
+                                                 class="h-10 w-10 rounded-lg object-cover mr-3">
+                                        @elseif($firstProduct && $firstProduct->images && $firstProduct->images->count() > 0)
+                                            <img src="{{ $firstProduct->images->first()->image_url }}" 
+                                                 alt="{{ $firstProduct->name }}" 
+                                                 class="h-10 w-10 rounded-lg object-cover mr-3">
+                                        @elseif($firstProduct)
+                                            <div class="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center mr-3">
+                                                <span class="text-xs font-medium text-gray-600">{{ substr($firstProduct->name, 0, 2) }}</span>
+                                            </div>
+                                        @else
+                                            <div class="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
+                                                <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                                </svg>
+                                            </div>
+                                        @endif
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900">
+                                                Multiple Products ({{ $inquiry->items->count() }} items)
+                                            </div>
+                                            <div class="text-sm text-gray-500">
+                                                <span class="font-mono text-xs">{{ $inquiry->reference_number }}</span>
+                                                @if($inquiry->requirements)
+                                                    • {{ Str::limit($inquiry->requirements, 40) }}
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @else
+                                        {{-- Single product --}}
+                                        @if($inquiry->product && $inquiry->product->primaryImage)
+                                            <img src="{{ $inquiry->product->primaryImage->image_url }}" 
+                                                 alt="{{ $inquiry->product->name }}" 
+                                                 class="h-10 w-10 rounded-lg object-cover mr-3">
+                                        @elseif($inquiry->product && $inquiry->product->image_url)
+                                            <img src="{{ $inquiry->product->image_url }}" 
+                                                 alt="{{ $inquiry->product->name }}" 
+                                                 class="h-10 w-10 rounded-lg object-cover mr-3">
+                                        @elseif($inquiry->product && $inquiry->product->images && $inquiry->product->images->count() > 0)
+                                            <img src="{{ $inquiry->product->images->first()->image_url }}" 
+                                                 alt="{{ $inquiry->product->name }}" 
+                                                 class="h-10 w-10 rounded-lg object-cover mr-3">
+                                        @elseif($inquiry->product)
+                                            <div class="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center mr-3">
+                                                <span class="text-xs font-medium text-gray-600">{{ substr($inquiry->product->name, 0, 2) }}</span>
+                                            </div>
+                                        @elseif($inquiry->items && $inquiry->items->first() && $inquiry->items->first()->product && $inquiry->items->first()->product->primaryImage)
+                                            <img src="{{ $inquiry->items->first()->product->primaryImage->image_url }}" 
+                                                 alt="{{ $inquiry->items->first()->product->name }}" 
+                                                 class="h-10 w-10 rounded-lg object-cover mr-3">
+                                        @elseif($inquiry->items && $inquiry->items->first() && $inquiry->items->first()->product && $inquiry->items->first()->product->image_url)
+                                            <img src="{{ $inquiry->items->first()->product->image_url }}" 
+                                                 alt="{{ $inquiry->items->first()->product->name }}" 
+                                                 class="h-10 w-10 rounded-lg object-cover mr-3">
+                                        @elseif($inquiry->items && $inquiry->items->first() && $inquiry->items->first()->product && $inquiry->items->first()->product->images && $inquiry->items->first()->product->images->count() > 0)
+                                            <img src="{{ $inquiry->items->first()->product->images->first()->image_url }}" 
+                                                 alt="{{ $inquiry->items->first()->product->name }}" 
+                                                 class="h-10 w-10 rounded-lg object-cover mr-3">
+                                        @elseif($inquiry->items && $inquiry->items->first() && $inquiry->items->first()->product)
+                                            <div class="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center mr-3">
+                                                <span class="text-xs font-medium text-gray-600">{{ substr($inquiry->items->first()->product->name, 0, 2) }}</span>
+                                            </div>
+                                        @elseif($inquiry->product_name)
+                                            {{-- Unlisted product --}}
+                                            <div class="h-10 w-10 rounded-lg bg-orange-100 flex items-center justify-center mr-3">
+                                                <svg class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                                </svg>
+                                            </div>
+                                        @elseif($inquiry->attachments && is_array($inquiry->attachments) && count($inquiry->attachments) > 0)
+                                            {{-- PDF-only inquiry --}}
+                                            <div class="h-10 w-10 rounded-lg bg-red-100 flex items-center justify-center mr-3">
+                                                <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                                </svg>
+                                            </div>
+                                        @else
+                                            <div class="h-10 w-10 rounded-lg bg-gray-200 flex items-center justify-center mr-3">
+                                                <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                </svg>
+                                            </div>
+                                        @endif
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900">
+                                                @if($inquiry->product && $inquiry->product->name)
+                                                    {{ $inquiry->product->name }}
+                                                @elseif($inquiry->items && $inquiry->items->first() && $inquiry->items->first()->product)
+                                                    {{ $inquiry->items->first()->product->name }}
+                                                @elseif($inquiry->product_name)
+                                                    {{ $inquiry->product_name }}
+                                                    <span class="inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 ml-1">
+                                                        Unlisted
+                                                    </span>
+                                                @elseif($inquiry->attachments && is_array($inquiry->attachments) && count($inquiry->attachments) > 0)
+                                                    PDF Document Inquiry
+                                                    <span class="inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 ml-1">
+                                                        PDF
+                                                    </span>
+                                                @elseif($inquiry->requirements)
+                                                    {{ Str::limit($inquiry->requirements, 50) }}
+                                                @elseif($inquiry->product_description)
+                                                    {{ Str::limit($inquiry->product_description, 50) }}
+                                                @else
+                                                    Product Inquiry
+                                                @endif
+                                            </div>
+                                            <div class="text-sm text-gray-500">
+                                                <span class="font-mono text-xs">{{ $inquiry->reference_number }}</span>
+                                                @if($inquiry->requirements)
+                                                    • {{ Str::limit($inquiry->requirements, 40) }}
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endif
                                 @endif
-                                <div>
-                                    <div class="text-sm font-medium text-gray-900">
-                                        {{ $inquiry->product->name ?? $inquiry->product_name ?? 'N/A' }}
-                                    </div>
-                                    <div class="text-sm text-gray-500">
-                                        {{ Str::limit($inquiry->requirements ?? '', 50) }}
-                                    </div>
-                                </div>
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @php
-                                $response = $inquiry->supplierResponses->where('user_id', auth()->id())->first();
-                                $quotation = $inquiry->quotations->where('supplier_id', auth()->id())->first();
-                                
-                                // Determine the actual status by checking both response and quotation
-                                $actualStatus = 'pending';
-                                if ($quotation) {
-                                    if ($quotation->status === 'approved') {
-                                        $actualStatus = 'accepted';
+                                if ($inquiry instanceof \App\Models\QuotationRequest) {
+                                    // Legacy QuotationRequest status handling
+                                    $quotation = $inquiry->supplierQuotations->where('supplier_id', auth()->id())->first();
+                                    
+                                    if ($quotation) {
+                                        if ($quotation->status === 'approved' || $quotation->status === 'accepted') {
+                                            $actualStatus = 'accepted';
+                                        } else {
+                                            $actualStatus = 'quoted';
+                                        }
                                     } else {
-                                        $actualStatus = 'quoted';
+                                        $actualStatus = $inquiry->supplier_response ?? 'pending';
                                     }
-                                } elseif ($response) {
-                                    $actualStatus = $response->status;
+                                } else {
+                                    // New SupplierInquiry status handling
+                                    $response = $inquiry->supplierResponses->where('user_id', auth()->id())->first();
+                                    $quotation = $inquiry->quotations->where('supplier_id', auth()->id())->first();
+                                    
+                                    if ($quotation) {
+                                        if ($quotation->status === 'approved' || $quotation->status === 'accepted') {
+                                            $actualStatus = 'accepted';
+                                        } else {
+                                            $actualStatus = 'quoted';
+                                        }
+                                    } else {
+                                        $actualStatus = $response ? $response->status : 'pending';
+                                    }
                                 }
 
                                 $statusClass = match($actualStatus) {
@@ -183,6 +394,7 @@
                                     'quoted' => 'bg-green-100 text-green-800',
                                     'accepted' => 'bg-indigo-100 text-indigo-800',
                                     'not_available' => 'bg-red-100 text-red-800',
+                                    'available' => 'bg-green-100 text-green-800',
                                     default => 'bg-gray-100 text-gray-800'
                                 };
                                 
@@ -192,6 +404,7 @@
                                     'quoted' => 'Quoted',
                                     'accepted' => 'Accepted',
                                     'not_available' => 'Not Available',
+                                    'available' => 'Available',
                                     default => ucfirst($actualStatus)
                                 };
                             @endphp
@@ -200,8 +413,47 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ number_format($inquiry->quantity ?? 0) }}
-                            <span class="text-gray-500 text-xs">units</span>
+                            @if($inquiry instanceof \App\Models\QuotationRequest)
+                                {{-- Legacy QuotationRequest --}}
+                                @if($inquiry->quantity && $inquiry->quantity > 0)
+                                    {{ number_format($inquiry->quantity) }}
+                                    <span class="text-gray-500 text-xs">units</span>
+                                @elseif($inquiry->attachments && is_array($inquiry->attachments) && count($inquiry->attachments) > 0)
+                                    <span class="text-gray-500 text-xs">PDF Only</span>
+                                @else
+                                    <span class="text-gray-500 text-xs">-</span>
+                                @endif
+                            @else
+                                {{-- New SupplierInquiry --}}
+                                @if($inquiry->items && $inquiry->items->count() > 1)
+                                    {{-- Multiple products --}}
+                                    <div class="flex flex-col">
+                                        <span class="font-medium">{{ $inquiry->items->count() }} items</span>
+                                        <span class="text-xs text-gray-500">
+                                            Total: {{ number_format($inquiry->items->sum('quantity')) }} units
+                                        </span>
+                                    </div>
+                                @else
+                                    {{-- Single product --}}
+                                    @if($inquiry->items && $inquiry->items->first())
+                                        @if($inquiry->items->first()->quantity && $inquiry->items->first()->quantity > 0)
+                                            {{ number_format($inquiry->items->first()->quantity) }}
+                                            <span class="text-gray-500 text-xs">units</span>
+                                        @else
+                                            <span class="text-gray-500 text-xs">-</span>
+                                        @endif
+                                    @else
+                                        @if($inquiry->quantity && $inquiry->quantity > 0)
+                                            {{ number_format($inquiry->quantity) }}
+                                            <span class="text-gray-500 text-xs">units</span>
+                                        @elseif($inquiry->attachments && is_array($inquiry->attachments) && count($inquiry->attachments) > 0)
+                                            <span class="text-gray-500 text-xs">PDF Only</span>
+                                        @else
+                                            <span class="text-gray-500 text-xs">-</span>
+                                        @endif
+                                    @endif
+                                @endif
+                            @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <div>{{ $inquiry->created_at->format('M d, Y') }}</div>

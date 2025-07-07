@@ -94,8 +94,9 @@ class OrderController extends Controller
                                ->where('requires_quotation', true);
                       });
                 })
-                ->whereDoesntHave('supplierQuotations', function($sq) {
-                    $sq->where('supplier_id', Auth::id());
+                ->whereHas('supplierQuotations', function($sq) {
+                    $sq->where('supplier_id', Auth::id())
+                        ->where('status', 'submitted');
                 })
                 ->latest();
 
@@ -116,7 +117,7 @@ class OrderController extends Controller
                 ->where('requires_quotation', true)
                 ->whereHas('supplierQuotations', function($sq) {
                     $sq->where('supplier_id', Auth::id())
-                        ->where('status', SupplierQuotation::STATUS_PENDING);
+                        ->where('status', 'submitted');
                 })
                 ->latest();
 
@@ -544,7 +545,7 @@ class OrderController extends Controller
                 'currency' => $validated['currency'],
                 'shipping_cost' => $validated['shipping_cost'] ?? null,
                 'notes' => $validated['notes'],
-                'status' => SupplierQuotation::STATUS_PENDING
+                'status' => 'submitted'
             ]);
 
             // Update order quotation status

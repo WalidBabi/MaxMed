@@ -166,6 +166,8 @@
                                 <tr>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 60px;">Order</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 300px;">Product Details</th>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 200px;">Specifications</th>
+                                    <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Size</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Quantity</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 200px;">Requirements</th>
                                     <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Notes</th>
@@ -368,26 +370,42 @@
         max-width: 400px;
     }
     
+    /* Specifications Dropdown Styles */
+    .specifications-dropdown-list {
+        position: absolute !important;
+        top: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        max-height: 300px;
+        overflow-y: auto;
+        background: white;
+        z-index: 99999 !important;
+        margin-top: 4px;
+        min-width: 250px;
+    }
+    
+    .specifications-dropdown-list .specifications-content {
+        max-height: 250px;
+        overflow-y: auto;
+    }
+    
+    .specifications-dropdown-list .spec-checkbox {
+        margin-right: 8px;
+    }
+    
+    .specifications-dropdown-list .select-all-checkbox {
+        margin-right: 8px;
+    }
+    
     .products-table {
         overflow: visible !important;
     }
     
     .table-container {
         overflow: visible !important;
-    }
-    
-    .product-dropdown-list .dropdown-item {
-        padding: 8px 12px;
-        cursor: pointer;
-        border-bottom: 1px solid #f3f4f6;
-    }
-    
-    .product-dropdown-list .dropdown-item:hover {
-        background-color: #f3f4f6;
-    }
-    
-    .product-dropdown-list .dropdown-item:last-child {
-        border-bottom: none;
     }
     
     .product-dropdown-list .dropdown-item {
@@ -431,21 +449,25 @@
     }
     
     /* Fix scrollbars */
-    .product-dropdown-list::-webkit-scrollbar {
+    .product-dropdown-list::-webkit-scrollbar,
+    .specifications-dropdown-list::-webkit-scrollbar {
         width: 6px;
     }
     
-    .product-dropdown-list::-webkit-scrollbar-track {
+    .product-dropdown-list::-webkit-scrollbar-track,
+    .specifications-dropdown-list::-webkit-scrollbar-track {
         background: #f1f5f9;
         border-radius: 3px;
     }
     
-    .product-dropdown-list::-webkit-scrollbar-thumb {
+    .product-dropdown-list::-webkit-scrollbar-thumb,
+    .specifications-dropdown-list::-webkit-scrollbar-thumb {
         background: #cbd5e1;
         border-radius: 3px;
     }
     
-    .product-dropdown-list::-webkit-scrollbar-thumb:hover {
+    .product-dropdown-list::-webkit-scrollbar-thumb:hover,
+    .specifications-dropdown-list::-webkit-scrollbar-thumb:hover {
         background: #94a3b8;
     }
 </style>
@@ -455,10 +477,27 @@
 <script>
 let productCounter = 0;
 let products = @json($products);
+console.log('Products loaded:', products.length);
+console.log('Sample product:', products[0]);
+if (products.length > 0) {
+    console.log('Sample product specifications:', products[0].specifications);
+    console.log('Sample product size options:', products[0].size_options);
+    console.log('Sample product has_size_options:', products[0].has_size_options);
+    console.log('Sample product specifications type:', typeof products[0].specifications);
+    console.log('Sample product specifications JSON:', JSON.stringify(products[0].specifications));
+}
 
 // Add initial product row
 document.addEventListener('DOMContentLoaded', function() {
     addProduct();
+    
+    // Add event listeners for size changes on existing items
+    document.querySelectorAll('.size-options-select').forEach(sizeSelect => {
+        sizeSelect.addEventListener('change', function() {
+            const row = this.closest('tr');
+            updateSelectedSpecificationsForRow(row);
+        });
+    });
 });
 
 function addProduct() {
@@ -491,20 +530,32 @@ function addProduct() {
                                placeholder="Search products..." 
                                autocomplete="off">
                         <input type="hidden" name="items[${productCounter}][product_id]" class="product-id-input">
+                        <input type="hidden" name="items[${productCounter}][product_name]" class="product-name-hidden">
                         
                         <!-- Dropdown List -->
                         <div class="product-dropdown-list hidden">
                             <div class="dropdown-items">
-                                ${products.map(product => `
-                                    <div class="dropdown-item" 
-                                         data-id="${product.id}" 
-                                         data-name="${product.name}" 
-                                         data-sku="${product.sku || ''}"
-                                         data-search-text="${product.name.toLowerCase()} ${(product.sku || '').toLowerCase()}">
-                                        <div class="font-medium text-gray-900">${product.name}</div>
-                                        ${product.sku ? `<div class="text-sm text-gray-500">SKU: ${product.sku}</div>` : ''}
+                                @foreach($products as $product)
+                                    <div class="dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0" 
+                                         data-id="{{ $product->id }}"
+                                         data-name="{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}"
+                                         data-description="{{ $product->description }}"
+                                         data-price-aed="{{ $product->price_aed ?? $product->price }}"
+                                         data-price-usd="{{ $product->price }}"
+                                         data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
+                                         data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
+                                         data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
+                                         data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
+                                        <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
+                                        @if($product->description)
+                                            <div class="text-gray-600 text-xs mt-1">{{ Str::limit($product->description, 80) }}</div>
+                                        @endif
+                                        @if($product->price_aed ?? $product->price)
+                                            <div class="price-display-aed text-indigo-600 text-sm font-medium mt-1">AED {{ number_format($product->price_aed ?? $product->price, 2) }}</div>
+                                            <div class="price-display-usd text-indigo-600 text-sm font-medium mt-1 hidden">USD {{ number_format($product->price, 2) }}</div>
+                                        @endif
                                     </div>
-                                `).join('')}
+                                @endforeach
                             </div>
                             <div class="dropdown-no-results hidden">
                                 <div class="text-center py-4 text-gray-500">No products found</div>
@@ -539,6 +590,29 @@ function addProduct() {
                     </div>
                 </div>
             </div>
+        </td>
+        <td class="px-3 py-4">
+            <!-- Specifications Dropdown -->
+            <div class="relative">
+                <input type="text" 
+                       class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 specifications-input" 
+                       placeholder="Click to select specifications..." 
+                       readonly>
+                <input type="hidden" name="items[${productCounter}][specifications]" class="specifications-hidden">
+                
+                <!-- Specifications Dropdown List -->
+                <div class="specifications-dropdown-list hidden absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto" style="position: absolute !important; z-index: 9999 !important; min-width: 250px;">
+                    <div class="specifications-content">
+                        <div class="p-2 text-sm text-gray-500">No specifications available</div>
+                    </div>
+                </div>
+            </div>
+        </td>
+        <td class="px-3 py-4">
+            <!-- Size Dropdown -->
+            <select name="items[${productCounter}][size]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 size-options-select">
+                <option value="">Select Size (if applicable)</option>
+            </select>
         </td>
         <td class="px-3 py-4">
             <input type="number" step="0.01" name="items[${productCounter}][quantity]" value="1.00" min="0"
@@ -595,6 +669,33 @@ function initializeRowEventListeners(row) {
     const productIdInput = row.querySelector('.product-id-input');
     
     initializeProductSearch(searchInput, dropdownList, dropdownItems, dropdownNoResults, productIdInput);
+    
+    // Specifications dropdown functionality
+    const specificationsInput = row.querySelector('.specifications-input');
+    const specificationsDropdown = row.querySelector('.specifications-dropdown-list');
+    
+    if (specificationsInput && specificationsDropdown) {
+        specificationsInput.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Specifications input clicked');
+            console.log('Current dropdown state:', specificationsDropdown.classList.contains('hidden'));
+            specificationsDropdown.classList.toggle('hidden');
+            console.log('New dropdown state:', specificationsDropdown.classList.contains('hidden'));
+        });
+        
+        // Hide dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!specificationsInput.contains(e.target) && !specificationsDropdown.contains(e.target)) {
+                specificationsDropdown.classList.add('hidden');
+            }
+        });
+        
+        // Prevent dropdown from closing when clicking inside it
+        specificationsDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
 }
 
 function initializeProductSearch(searchInput, dropdownList, dropdownItems, dropdownNoResults, productIdInput) {
@@ -696,17 +797,102 @@ function initializeProductSearch(searchInput, dropdownList, dropdownItems, dropd
     function selectProduct(item) {
         const productId = item.dataset.id;
         const productName = item.dataset.name;
+        const specifications = item.dataset.specifications;
         
-        console.log('Product selected:', { productId, productName });
+        console.log('Product selected:', { productId, productName, specifications });
         
+        // Get the row that contains this product selection
+        const row = searchInput.closest('tr');
+        
+        // Get all the necessary elements from the row
+        const productIdInput = row.querySelector('.product-id-input');
+        const productNameHidden = row.querySelector('.product-name-hidden');
+        
+        // Set basic product info
         searchInput.value = productName;
         productIdInput.value = productId;
-        dropdownList.classList.add('hidden');
-        selectedIndex = -1;
+        productNameHidden.value = productName;
         
-        // Trigger change event
-        const changeEvent = new Event('change', { bubbles: true });
-        productIdInput.dispatchEvent(changeEvent);
+        // Handle specifications
+        const specificationsInput = row.querySelector('.specifications-input');
+        const specificationsHidden = row.querySelector('.specifications-hidden');
+        const specificationsContent = row.querySelector('.specifications-content');
+        
+        if (specifications && specifications !== '[]') {
+            try {
+                const specsArray = JSON.parse(specifications);
+                if (specsArray.length > 0) {
+                    specificationsInput.value = 'Click to select specifications...';
+                    specificationsHidden.value = JSON.stringify(specsArray);
+                    
+                    // Create checkboxes for specifications
+                    let checkboxesHtml = '';
+                    specsArray.forEach(spec => {
+                        checkboxesHtml += `
+                            <label class="flex items-center p-2 hover:bg-gray-50">
+                                <input type="checkbox" class="spec-checkbox h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" data-spec="${spec}">
+                                <span class="ml-2 text-sm text-gray-700">${spec}</span>
+                            </label>
+                        `;
+                    });
+                    specificationsContent.innerHTML = checkboxesHtml;
+                    
+                    // Add event listeners to checkboxes
+                    const checkboxes = specificationsContent.querySelectorAll('.spec-checkbox');
+                    checkboxes.forEach(checkbox => {
+                        checkbox.addEventListener('change', updateSelectedSpecifications);
+                    });
+                }
+            } catch (e) {
+                console.error('Error parsing specifications:', e);
+                specificationsInput.value = '';
+                specificationsHidden.value = '';
+                specificationsContent.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
+            }
+        } else {
+            specificationsInput.value = '';
+            specificationsHidden.value = '';
+            specificationsContent.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
+        }
+        
+        // Handle size options
+        const sizeSelect = row.querySelector('.size-options-select');
+        if (sizeSelect) {
+            const hasSizeOptions = item.dataset.hasSizeOptions === 'true';
+            const sizeOptions = item.dataset.sizeOptions ? JSON.parse(item.dataset.sizeOptions) : [];
+            
+            if (hasSizeOptions && sizeOptions && sizeOptions.length > 0) {
+                let options = '<option value="">Select Size (if applicable)</option>';
+                sizeOptions.forEach(size => {
+                    options += `<option value="${size}">${size}</option>`;
+                });
+                sizeSelect.innerHTML = options;
+                
+                // Add event listener for size changes
+                sizeSelect.addEventListener('change', updateSelectedSpecifications);
+            } else {
+                sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
+            }
+        }
+        
+        // Hide dropdown
+        dropdownList.classList.add('hidden');
+    }
+}
+
+// Global function to update selected specifications for a specific row
+function updateSelectedSpecificationsForRow(row) {
+    const specificationsInput = row.querySelector('.specifications-input');
+    const specificationsHidden = row.querySelector('.specifications-hidden');
+    const checkboxes = row.querySelectorAll('.spec-checkbox:checked');
+    const selectedSpecs = Array.from(checkboxes).map(cb => cb.dataset.spec);
+    
+    if (selectedSpecs.length > 0) {
+        specificationsInput.value = selectedSpecs.join(', ');
+        specificationsHidden.value = JSON.stringify(selectedSpecs);
+    } else {
+        specificationsInput.value = 'Click to select specifications...';
+        specificationsHidden.value = '';
     }
 }
 
@@ -880,5 +1066,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize on page load
     updateCategorySelection();
 });
+
+// Update selected specifications display
+function updateSelectedSpecifications() {
+    const row = this.closest('tr');
+    const specificationsInput = row.querySelector('.specifications-input');
+    const specificationsHidden = row.querySelector('.specifications-hidden');
+    const checkboxes = row.querySelectorAll('.spec-checkbox:checked');
+    
+    if (checkboxes.length > 0) {
+        const selectedSpecs = Array.from(checkboxes).map(cb => cb.dataset.spec);
+        specificationsInput.value = selectedSpecs.join(', ');
+        specificationsHidden.value = JSON.stringify(selectedSpecs);
+    } else {
+        specificationsInput.value = 'Click to select specifications...';
+        specificationsHidden.value = '';
+    }
+}
 </script>
 @endpush 

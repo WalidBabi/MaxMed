@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\QuotationRequest;
 use App\Models\PurchaseOrder;
+use App\Models\SupplierInquiry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -70,6 +71,33 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // Inquiry statistics
+        $inquiryStats = [
+            'pending' => SupplierInquiry::whereHas('supplierResponses', function($q) use ($user) {
+                $q->where('user_id', $user->id)->where('status', 'pending');
+            })->count(),
+            'viewed' => SupplierInquiry::whereHas('supplierResponses', function($q) use ($user) {
+                $q->where('user_id', $user->id)->where('status', 'viewed');
+            })->count(),
+            'quoted' => SupplierInquiry::whereHas('supplierResponses', function($q) use ($user) {
+                $q->where('user_id', $user->id)->where('status', 'quoted');
+            })->count(),
+            'not_available' => SupplierInquiry::whereHas('supplierResponses', function($q) use ($user) {
+                $q->where('user_id', $user->id)->where('status', 'not_available');
+            })->count(),
+        ];
+
+        // Recent inquiries requiring attention
+        $recentInquiries = SupplierInquiry::with(['product', 'supplierResponses' => function($q) use ($user) {
+            $q->where('user_id', $user->id);
+        }])
+        ->whereHas('supplierResponses', function($q) use ($user) {
+            $q->where('user_id', $user->id)->whereIn('status', ['pending', 'viewed']);
+        })
+        ->latest()
+        ->take(5)
+        ->get();
+
         // Badge counts for navigation
         $pendingInquiriesCount = QuotationRequest::where('supplier_id', $user->id)
             ->where('status', 'forwarded')
@@ -93,6 +121,8 @@ class DashboardController extends Controller
             'assignedCategories',
             'orderStats',
             'recentOrders',
+            'inquiryStats',
+            'recentInquiries',
             'pendingInquiriesCount',
             'activeOrdersCount',
             'isPendingApproval'

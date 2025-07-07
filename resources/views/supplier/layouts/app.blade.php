@@ -267,30 +267,50 @@
             <main class="py-10">
                 <div class="px-4 sm:px-6 lg:px-8">
                     @if(session('success'))
-                        <div class="mb-6 rounded-md bg-green-50 p-4">
-                            <div class="flex">
+                        <div class="mb-6 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 p-6 border border-green-200 shadow-lg" x-data="{ show: true }" x-show="show" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100">
+                            <div class="flex items-start">
                                 <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.236 4.53L7.53 10.53a.75.75 0 00-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
-                                    </svg>
+                                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                        <svg class="h-6 w-6 text-green-600" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.236 4.53L7.53 10.53a.75.75 0 00-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
                                 </div>
-                                <div class="ml-3">
-                                    <p class="text-sm font-medium text-green-800">{{ session('success') }}</p>
+                                <div class="ml-4 flex-1">
+                                    <h3 class="text-lg font-semibold text-green-800 mb-1">Success!</h3>
+                                    <p class="text-sm text-green-700">{{ session('success') }}</p>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <button @click="show = false" class="text-green-400 hover:text-green-600 transition-colors">
+                                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     @endif
 
                     @if(session('error'))
-                        <div class="mb-6 rounded-md bg-red-50 p-4">
-                            <div class="flex">
+                        <div class="mb-6 rounded-xl bg-gradient-to-r from-red-50 to-pink-50 p-6 border border-red-200 shadow-lg" x-data="{ show: true }" x-show="show" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95" x-transition:enter-end="opacity-100 transform scale-100">
+                            <div class="flex items-start">
                                 <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
-                                    </svg>
+                                    <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                                        <svg class="h-6 w-6 text-red-600" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
                                 </div>
-                                <div class="ml-3">
-                                    <p class="text-sm font-medium text-red-800">{{ session('error') }}</p>
+                                <div class="ml-4 flex-1">
+                                    <h3 class="text-lg font-semibold text-red-800 mb-1">Error</h3>
+                                    <p class="text-sm text-red-700">{{ session('error') }}</p>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <button @click="show = false" class="text-red-400 hover:text-red-600 transition-colors">
+                                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         </div>

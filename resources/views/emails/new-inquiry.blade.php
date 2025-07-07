@@ -157,10 +157,17 @@
                                         </div>
 
                                         <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                                            @if($inquiry->quantity && $inquiry->quantity > 0)
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #F3E8FF; font-weight: 600; color: #92400E; font-size: 15px; width: 150px;">Quantity Required</td>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #F3E8FF; color: #1A202C; font-weight: 700; font-size: 18px;">{{ number_format($inquiry->quantity) }} units</td>
                                             </tr>
+                                            @elseif($inquiry->attachments && is_array($inquiry->attachments) && count($inquiry->attachments) > 0)
+                                            <tr>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #F3E8FF; font-weight: 600; color: #92400E; font-size: 15px; width: 150px;">Document Type</td>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #F3E8FF; color: #1A202C; font-weight: 700; font-size: 18px;">📄 PDF Document Inquiry</td>
+                                            </tr>
+                                            @endif
                                             @if($inquiry->requirements)
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #F3E8FF; font-weight: 600; color: #92400E; font-size: 15px;">Special Requirements</td>

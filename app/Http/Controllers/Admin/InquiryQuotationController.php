@@ -120,6 +120,7 @@ class InquiryQuotationController extends Controller
      */
     public function showQuotation(SupplierQuotation $quotation)
     {
+        // Load the quotation with all necessary relationships
         $quotation->load(['supplier', 'product', 'supplierInquiry', 'quotationRequest']);
         
         return view('admin.inquiry-quotations.quotation-show', compact('quotation'));
@@ -143,20 +144,11 @@ class InquiryQuotationController extends Controller
                 'admin_notes' => $validated['notes'] ?? null,
             ]);
 
-            // Update related inquiry status
+            // Update related inquiry status based on all quotations
             if ($quotation->supplierInquiry) {
-                // Check if this is the first approved quotation for this inquiry
-                $approvedQuotationsCount = $quotation->supplierInquiry->quotations()
-                    ->where('status', 'accepted')
-                    ->count();
-                
-                if ($approvedQuotationsCount === 1) {
-                    $quotation->supplierInquiry->update([
-                        'status' => 'quoted'
-                    ]);
-                }
+                $this->updateInquiryStatusBasedOnQuotations($quotation->supplierInquiry);
 
-                // Update the supplier's inquiry response status to 'accepted'
+                // Update the supplier's inquiry response status to 'accepted' for this specific product
                 $supplierResponse = $quotation->supplierInquiry->supplierResponses()
                     ->where('user_id', $quotation->supplier_id)
                     ->first();
@@ -167,8 +159,7 @@ class InquiryQuotationController extends Controller
                     ]);
                 }
                 
-                // CREATE PURCHASE ORDER DIRECTLY FROM APPROVED QUOTATION
-                // No internal order needed for supplier inquiries
+                // CREATE PURCHASE ORDER FOR THIS SPECIFIC PRODUCT QUOTATION
                 $purchaseOrder = $this->createPurchaseOrderFromSupplierInquiry($quotation, $validated['notes'] ?? null);
                 
                 if ($purchaseOrder) {
@@ -187,6 +178,49 @@ class InquiryQuotationController extends Controller
             Log::error('Error approving quotation: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed to approve quotation.');
         }
+    }
+
+    /**
+     * Update inquiry status based on the status of all its quotations
+     */
+    private function updateInquiryStatusBasedOnQuotations(SupplierInquiry $inquiry)
+    {
+        // Get all quotations for this inquiry
+        $allQuotations = $inquiry->quotations;
+        
+        if ($allQuotations->isEmpty()) {
+            return;
+        }
+
+        // Count quotations by status
+        $totalQuotations = $allQuotations->count();
+        $acceptedQuotations = $allQuotations->where('status', 'accepted')->count();
+        $rejectedQuotations = $allQuotations->where('status', 'rejected')->count();
+        $pendingQuotations = $allQuotations->where('status', 'submitted')->count();
+
+        // Determine inquiry status based on quotation statuses
+        $newStatus = 'in_progress'; // Default status
+
+        if ($acceptedQuotations > 0) {
+            if ($acceptedQuotations === $totalQuotations) {
+                // All products have approved quotations
+                $newStatus = 'converted';
+            } else {
+                // Some products have approved quotations, others are pending
+                $newStatus = 'partially_quoted';
+            }
+        } elseif ($rejectedQuotations === $totalQuotations) {
+            // All quotations were rejected
+            $newStatus = 'cancelled';
+        } elseif ($pendingQuotations > 0) {
+            // Some quotations are still pending
+            $newStatus = 'in_progress';
+        }
+
+        // Update inquiry status
+        $inquiry->update(['status' => $newStatus]);
+
+        Log::info("Updated inquiry {$inquiry->id} status to '{$newStatus}' based on quotations: {$acceptedQuotations} accepted, {$rejectedQuotations} rejected, {$pendingQuotations} pending out of {$totalQuotations} total");
     }
 
     /**
@@ -315,6 +349,8 @@ class InquiryQuotationController extends Controller
         
         DB::beginTransaction();
         try {
+            $processedInquiries = collect();
+            
             foreach ($quotations as $quotation) {
                 $quotation->update([
                     'status' => 'accepted',
@@ -322,7 +358,17 @@ class InquiryQuotationController extends Controller
                     'approved_by' => auth()->id(),
                     'admin_notes' => $validated['notes'] ?? null,
                 ]);
+
+                // Track inquiries that need status updates
+                if ($quotation->supplierInquiry) {
+                    $processedInquiries->push($quotation->supplierInquiry);
+                }
             }
+
+            // Update status for all affected inquiries
+            $processedInquiries->unique('id')->each(function ($inquiry) {
+                $this->updateInquiryStatusBasedOnQuotations($inquiry);
+            });
 
             DB::commit();
 
@@ -349,6 +395,7 @@ class InquiryQuotationController extends Controller
             'pending_inquiries' => SupplierInquiry::where('status', 'pending')->count(),
             'broadcast_inquiries' => SupplierInquiry::where('status', 'broadcast')->count(),
             'quoted_inquiries' => SupplierInquiry::where('status', 'quoted')->count(),
+            'partially_quoted_inquiries' => SupplierInquiry::where('status', 'partially_quoted')->count(),
             'inquiries_today' => SupplierInquiry::whereDate('created_at', $today)->count(),
             'inquiries_this_month' => SupplierInquiry::where('created_at', '>=', $thisMonth)->count(),
             

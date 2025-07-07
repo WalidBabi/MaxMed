@@ -32,22 +32,42 @@
                 <div class="p-6">
                     <div class="flex items-center">
                         <div class="flex-1">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-mono text-gray-500">{{ $inquiry->reference_number }}</span>
+                            </div>
                             <h4 class="text-xl font-medium text-gray-900">
-                                @if($inquiry->product_id && $inquiry->product)
+                                @if($inquiry->product_id && $inquiry->product && $inquiry->product->name)
                                     {{ $inquiry->product->name }}
-                                @else
+                                @elseif($inquiry->product_name)
                                     {{ $inquiry->product_name }}
+                                @elseif($inquiry->requirements)
+                                    {{ Str::limit($inquiry->requirements, 100) }}
+                                @elseif($inquiry->product_description)
+                                    {{ Str::limit($inquiry->product_description, 100) }}
+                                @else
+                                    Product Inquiry
                                 @endif
                             </h4>
                             @if($inquiry->product_description)
                                 <p class="text-gray-600 mt-2">{{ $inquiry->product_description }}</p>
                             @endif
-                            <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <dt class="text-sm font-medium text-gray-500">Quantity Requested</dt>
-                                    <dd class="mt-1 text-lg font-semibold text-gray-900">{{ number_format($inquiry->quantity) }} units</dd>
+                            @if($inquiry->quantity && $inquiry->quantity > 0)
+                                <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <dt class="text-sm font-medium text-gray-500">Quantity Requested</dt>
+                                        <dd class="mt-1 text-lg font-semibold text-gray-900">{{ number_format($inquiry->quantity) }} units</dd>
+                                    </div>
                                 </div>
-                            </div>
+                            @elseif($inquiry->attachments && is_array($inquiry->attachments) && count($inquiry->attachments) > 0)
+                                <div class="mt-4">
+                                    <div class="flex items-center p-3 bg-red-50 border border-red-200 rounded-lg">
+                                        <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                        </svg>
+                                        <span class="text-sm font-medium text-red-800">PDF Document Inquiry</span>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -73,7 +93,7 @@
                                     </div>
                                     <select name="currency" class="relative -ml-px inline-flex items-center rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                                         <option value="AED">AED</option>
-                                        <option value="AED">CNY</option>
+                                        <option value="CNY">CNY</option>
                                         <option value="USD">USD</option>
                                         <option value="EUR">EUR</option>
                                     </select>

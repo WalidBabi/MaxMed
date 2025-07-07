@@ -122,9 +122,10 @@
                                             id="currency" 
                                             class="focus:ring-indigo-500 focus:border-indigo-500 -ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none"
                                             onchange="document.getElementById('currency-symbol').textContent = this.value">
-                                        <option value="AED" {{ old('currency') == 'AED' ? 'selected' : '' }}>AED</option>
-                                        <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>USD</option>
-                                        <option value="EUR" {{ old('currency') == 'EUR' ? 'selected' : '' }}>EUR</option>
+                                                                        <option value="AED" {{ old('currency') == 'AED' ? 'selected' : '' }}>AED</option>
+                                <option value="CNY" {{ old('currency') == 'CNY' ? 'selected' : '' }}>CNY</option>
+                                <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>USD</option>
+                                <option value="EUR" {{ old('currency') == 'EUR' ? 'selected' : '' }}>EUR</option>
                                         <option value="GBP" {{ old('currency') == 'GBP' ? 'selected' : '' }}>GBP</option>
                                         <option value="SAR" {{ old('currency') == 'SAR' ? 'selected' : '' }}>SAR</option>
                                         <option value="QAR" {{ old('currency') == 'QAR' ? 'selected' : '' }}>QAR</option>

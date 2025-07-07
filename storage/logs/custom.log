@@ -1,0 +1,3 @@
+[2025-07-07 12:47:45] INFO: Test custom log entry
+[2025-07-07 12:48:04] INFO: Test custom log entry from route
+[2025-07-07 12:48:04] ERROR: Test error from custom log
