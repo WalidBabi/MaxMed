@@ -2,13 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
     <url>
         <loc>https://maxmedme.com/categories/lab-equipment/lab-equipment-analytical-instruments/analytical-instruments-chromatography-consumables/chromatography-consumables-ion-chromatographyic</loc>
-        <lastmod>2025-04-17T22:47:52+00:00</lastmod>
+        <lastmod>2025-04-17T22:47:52+04:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.65</priority>
     </url>
     <url>
         <loc>https://maxmedme.com/categories/lab-equipment/lab-equipment-analytical-instruments/analytical-instruments-chromatography-consumables/chromatography-consumables-liquid-chromatograph-hplc</loc>
-        <lastmod>2025-04-17T23:23:18+00:00</lastmod>
+        <lastmod>2025-04-17T23:23:18+04:00</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.65</priority>
+    </url>
+    <url>
+        <loc>https://maxmedme.com/categories/lab-equipment/lab-equipment-analytical-instruments/analytical-instruments-chromatography-consumables/chromatography-consumables-uplc-system-maintenance-kits</loc>
+        <lastmod>2025-06-30T18:23:56+04:00</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.65</priority>
+    </url>
+    <url>
+        <loc>https://maxmedme.com/categories/lab-equipment/lab-equipment-analytical-instruments/analytical-instruments-water-quality-analysis/water-quality-analysis-portable-analyzers</loc>
+        <lastmod>2025-07-06T18:50:44+04:00</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.65</priority>
+    </url>
+    <url>
+        <loc>https://maxmedme.com/categories/lab-equipment/lab-equipment-analytical-instruments/analytical-instruments-water-quality-analysis/water-quality-analysis-benchtop-analyzers</loc>
+        <lastmod>2025-07-06T18:50:54+04:00</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.65</priority>
     </url>
