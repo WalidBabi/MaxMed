@@ -1,29 +1,64 @@
+# Laravel Framework
 bootstrap/cache/events.php
 bootstrap/cache/routes-v7.php
-/.phpunit.cache
+bootstrap/cache/config.php
+bootstrap/cache/
+
+# Dependencies
 /node_modules
+/vendor
+
+# Build files
 /public/build
 /public/hot
 /public/storage
-/storage/*.key
-/storage/pail
-/vendor
+
+# Environment files
 .env
 .env.backup
 .env.production
-.phpactor.json
+.env.local
+.env.*.local
+
+# Storage
+/storage/*.key
+/storage/pail
+
+# Log files
+/storage/logs/*.log
+/storage/logs/laravel.log
+/storage/logs/critical-errors.log
+/storage/logs/production-debug.log
+*.log
+
+# Cache and temporary files
+/.phpunit.cache
 .phpunit.result.cache
-Homestead.json
-Homestead.yaml
-npm-debug.log
-yarn-error.log
-/auth.json
+.phpactor.json
+
+# IDE files
 /.fleet
 /.idea
 /.nova
 /.vscode
 /.zed
-maxmed_credentials.csv
-bootstrap/cache/config.php
+
+# Homestead
+Homestead.json
+Homestead.yaml
+
+# Package manager logs
+npm-debug.log
+yarn-error.log
+
+# Authentication
+/auth.json
 git_access_token
-bootstrap/cache/
+
+# Custom files
+maxmed_credentials.csv
+
+# SEO and audit files
+/storage/seo/
+/storage/seo-audit/
+/storage/seo-reports/

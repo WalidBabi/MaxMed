@@ -244,31 +244,113 @@ class CampaignController extends Controller
 
     public function show(Campaign $campaign)
     {
-        $campaign->load(['creator', 'emailTemplate', 'contacts', 'emailLogs']);
-        
-        // Update statistics
-        $campaign->updateStatistics();
-        
-        // Update A/B test results if this is an A/B test campaign
-        if ($campaign->isAbTest()) {
-            $campaign->updateAbTestResults();
+        try {
+            $campaign->load(['creator', 'emailTemplate', 'contacts', 'emailLogs']);
+            
+            // Update statistics with error handling
+            try {
+                $campaign->updateStatistics();
+            } catch (\Exception $e) {
+                \Log::error('Failed to update campaign statistics in show method', [
+                    'campaign_id' => $campaign->id,
+                    'error' => $e->getMessage()
+                ]);
+                // Continue with the page load even if statistics update fails
+            }
+            
+            // Update A/B test results if this is an A/B test campaign
+            if ($campaign->isAbTest()) {
+                try {
+                    $campaign->updateAbTestResults();
+                } catch (\Exception $e) {
+                    \Log::error('Failed to update A/B test results in show method', [
+                        'campaign_id' => $campaign->id,
+                        'error' => $e->getMessage()
+                    ]);
+                    // Continue with the page load even if A/B test update fails
+                }
+            }
+            
+            // Get recent email logs with error handling
+            $recentLogs = collect();
+            try {
+                $recentLogs = $campaign->emailLogs()
+                                     ->with('contact')
+                                     ->latest()
+                                     ->limit(10)
+                                     ->get();
+            } catch (\Exception $e) {
+                \Log::error('Failed to load email logs in show method', [
+                    'campaign_id' => $campaign->id,
+                    'error' => $e->getMessage()
+                ]);
+            }
+
+            // Get performance data for charts with error handling
+            $performanceData = [];
+            try {
+                $performanceData = $this->getCampaignPerformanceData($campaign);
+            } catch (\Exception $e) {
+                \Log::error('Failed to get campaign performance data in show method', [
+                    'campaign_id' => $campaign->id,
+                    'error' => $e->getMessage()
+                ]);
+                // Provide default performance data
+                $performanceData = [
+                    'overview' => [
+                        'total_recipients' => $campaign->total_recipients ?? 0,
+                        'sent_count' => $campaign->sent_count ?? 0,
+                        'delivered_count' => $campaign->delivered_count ?? 0,
+                        'opened_count' => $campaign->opened_count ?? 0,
+                        'clicked_count' => $campaign->clicked_count ?? 0,
+                        'bounced_count' => $campaign->bounced_count ?? 0,
+                        'unsubscribed_count' => $campaign->unsubscribed_count ?? 0,
+                        'delivery_rate' => $campaign->delivery_rate ?? 0,
+                        'open_rate' => $campaign->open_rate ?? 0,
+                        'click_rate' => $campaign->click_rate ?? 0,
+                        'bounce_rate' => $campaign->bounce_rate ?? 0,
+                        'unsubscribe_rate' => $campaign->unsubscribe_rate ?? 0,
+                    ],
+                    'timeline' => [],
+                ];
+            }
+
+            return view('crm.marketing.campaigns.show', compact(
+                'campaign', 
+                'recentLogs', 
+                'performanceData'
+            ));
+        } catch (\Exception $e) {
+            \Log::error('Campaign show method failed', [
+                'campaign_id' => $campaign->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            // Return a basic view with error information
+            return view('crm.marketing.campaigns.show', [
+                'campaign' => $campaign,
+                'recentLogs' => collect(),
+                'performanceData' => [
+                    'overview' => [
+                        'total_recipients' => 0,
+                        'sent_count' => 0,
+                        'delivered_count' => 0,
+                        'opened_count' => 0,
+                        'clicked_count' => 0,
+                        'bounced_count' => 0,
+                        'unsubscribed_count' => 0,
+                        'delivery_rate' => 0,
+                        'open_rate' => 0,
+                        'click_rate' => 0,
+                        'bounce_rate' => 0,
+                        'unsubscribe_rate' => 0,
+                    ],
+                    'timeline' => [],
+                ],
+                'error' => 'Unable to load campaign statistics. Please try refreshing the page.'
+            ]);
         }
-        
-        // Get recent email logs
-        $recentLogs = $campaign->emailLogs()
-                             ->with('contact')
-                             ->latest()
-                             ->limit(10)
-                             ->get();
-
-        // Get performance data for charts
-        $performanceData = $this->getCampaignPerformanceData($campaign);
-
-        return view('crm.marketing.campaigns.show', compact(
-            'campaign', 
-            'recentLogs', 
-            'performanceData'
-        ));
     }
 
     public function edit(Campaign $campaign)

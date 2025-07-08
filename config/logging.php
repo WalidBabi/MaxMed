@@ -4,6 +4,7 @@ use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
 use Monolog\Processor\PsrLogMessageProcessor;
+use Monolog\Formatter\LineFormatter;
 
 return [
 
@@ -63,13 +64,14 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'replace_placeholders' => true,
-            'formatter' => \Monolog\Formatter\LineFormatter::class,
+            'formatter' => LineFormatter::class,
             'formatter_with' => [
                 'format' => "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n",
                 'dateFormat' => 'Y-m-d H:i:s',
                 'allowInlineLineBreaks' => true,
                 'ignoreEmptyContextAndExtra' => true,
             ],
+            'tap' => [App\Logging\CustomizeFormatter::class],
         ],
 
         'daily' => [
@@ -78,6 +80,14 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => env('LOG_DAILY_DAYS', 14),
             'replace_placeholders' => true,
+            'formatter' => LineFormatter::class,
+            'formatter_with' => [
+                'format' => "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n",
+                'dateFormat' => 'Y-m-d H:i:s',
+                'allowInlineLineBreaks' => true,
+                'ignoreEmptyContextAndExtra' => true,
+            ],
+            'tap' => [App\Logging\CustomizeFormatter::class],
         ],
 
         // Production debugging log - captures all levels including debug
@@ -87,13 +97,14 @@ return [
             'level' => 'debug',
             'days' => 7,
             'replace_placeholders' => true,
-            'formatter' => \Monolog\Formatter\LineFormatter::class,
+            'formatter' => LineFormatter::class,
             'formatter_with' => [
                 'format' => "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n",
                 'dateFormat' => 'Y-m-d H:i:s',
                 'allowInlineLineBreaks' => true,
                 'ignoreEmptyContextAndExtra' => true,
             ],
+            'tap' => [App\Logging\CustomizeFormatter::class],
         ],
 
         'slack' => [

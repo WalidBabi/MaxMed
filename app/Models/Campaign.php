@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class Campaign extends Model
 {
@@ -308,31 +309,64 @@ class Campaign extends Model
             return;
         }
 
-        // Fix missing A/B test variant assignments for existing campaigns
-        $this->fixMissingAbTestVariants();
+        try {
+            // Check if campaign_contacts table exists
+            if (!Schema::hasTable('campaign_contacts')) {
+                \Log::warning('campaign_contacts table does not exist for A/B test results', ['campaign_id' => $this->id]);
+                return;
+            }
 
-        // Calculate variant statistics from campaign contacts using direct DB queries
-        $variantAResults = \DB::table('campaign_contacts')
-            ->where('campaign_id', $this->id)
-            ->where('ab_test_variant', 'variant_a')
-            ->selectRaw('
-                COUNT(*) as sent_count,
-                SUM(CASE WHEN delivered_at IS NOT NULL THEN 1 ELSE 0 END) as delivered_count,
-                SUM(CASE WHEN opened_at IS NOT NULL THEN 1 ELSE 0 END) as opened_count,
-                SUM(CASE WHEN clicked_at IS NOT NULL THEN 1 ELSE 0 END) as clicked_count
-            ')
-            ->first();
+            // Fix missing A/B test variant assignments for existing campaigns
+            $this->fixMissingAbTestVariants();
 
-        $variantBResults = \DB::table('campaign_contacts')
-            ->where('campaign_id', $this->id)
-            ->where('ab_test_variant', 'variant_b')
-            ->selectRaw('
-                COUNT(*) as sent_count,
-                SUM(CASE WHEN delivered_at IS NOT NULL THEN 1 ELSE 0 END) as delivered_count,
-                SUM(CASE WHEN opened_at IS NOT NULL THEN 1 ELSE 0 END) as opened_count,
-                SUM(CASE WHEN clicked_at IS NOT NULL THEN 1 ELSE 0 END) as clicked_count
-            ')
-            ->first();
+            // Calculate variant statistics from campaign contacts using direct DB queries
+            $variantAResults = \DB::table('campaign_contacts')
+                ->where('campaign_id', $this->id)
+                ->where('ab_test_variant', 'variant_a')
+                ->selectRaw('
+                    COUNT(*) as sent_count,
+                    SUM(CASE WHEN delivered_at IS NOT NULL THEN 1 ELSE 0 END) as delivered_count,
+                    SUM(CASE WHEN opened_at IS NOT NULL THEN 1 ELSE 0 END) as opened_count,
+                    SUM(CASE WHEN clicked_at IS NOT NULL THEN 1 ELSE 0 END) as clicked_count
+                ')
+                ->first();
+
+            $variantBResults = \DB::table('campaign_contacts')
+                ->where('campaign_id', $this->id)
+                ->where('ab_test_variant', 'variant_b')
+                ->selectRaw('
+                    COUNT(*) as sent_count,
+                    SUM(CASE WHEN delivered_at IS NOT NULL THEN 1 ELSE 0 END) as delivered_count,
+                    SUM(CASE WHEN opened_at IS NOT NULL THEN 1 ELSE 0 END) as opened_count,
+                    SUM(CASE WHEN clicked_at IS NOT NULL THEN 1 ELSE 0 END) as clicked_count
+                ')
+                ->first();
+
+            // Update A/B test results
+            $abTestResults = [
+                'variant_a' => [
+                    'sent_count' => $variantAResults->sent_count ?? 0,
+                    'delivered_count' => $variantAResults->delivered_count ?? 0,
+                    'opened_count' => $variantAResults->opened_count ?? 0,
+                    'clicked_count' => $variantAResults->clicked_count ?? 0,
+                ],
+                'variant_b' => [
+                    'sent_count' => $variantBResults->sent_count ?? 0,
+                    'delivered_count' => $variantBResults->delivered_count ?? 0,
+                    'opened_count' => $variantBResults->opened_count ?? 0,
+                    'clicked_count' => $variantBResults->clicked_count ?? 0,
+                ],
+            ];
+
+            $this->update(['ab_test_results' => $abTestResults]);
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to update A/B test results', [
+                'campaign_id' => $this->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
 
         $results = [
             'variant_a' => [
@@ -361,32 +395,46 @@ class Campaign extends Model
             return;
         }
 
-        // Check if any contacts are missing variant assignments
-        $contactsWithoutVariants = $this->contacts()
-            ->whereNull('campaign_contacts.ab_test_variant')
-            ->get();
+        try {
+            // Check if campaign_contacts table exists
+            if (!Schema::hasTable('campaign_contacts')) {
+                \Log::warning('campaign_contacts table does not exist for fixing A/B test variants', ['campaign_id' => $this->id]);
+                return;
+            }
 
-        if ($contactsWithoutVariants->isEmpty()) {
-            return; // All contacts already have variants assigned
-        }
+            // Check if any contacts are missing variant assignments
+            $contactsWithoutVariants = $this->contacts()
+                ->whereNull('campaign_contacts.ab_test_variant')
+                ->get();
 
-        \Log::info('Fixing missing A/B test variants for campaign', [
-            'campaign_id' => $this->id,
-            'contacts_without_variants' => $contactsWithoutVariants->count()
-        ]);
+            if ($contactsWithoutVariants->isEmpty()) {
+                return; // All contacts already have variants assigned
+            }
 
-        // Assign variants to contacts without assignments
-        $splitPercentage = $this->ab_test_split_percentage ?? 50;
-        $totalContacts = $contactsWithoutVariants->count();
-        $variantASampleSize = (int) ceil(($splitPercentage / 100) * $totalContacts);
-
-        $contactsWithoutVariants->each(function ($contact, $index) use ($variantASampleSize) {
-            $variant = $index < $variantASampleSize ? 'variant_a' : 'variant_b';
-            
-            $this->contacts()->updateExistingPivot($contact->id, [
-                'ab_test_variant' => $variant
+            \Log::info('Fixing missing A/B test variants for campaign', [
+                'campaign_id' => $this->id,
+                'contacts_without_variants' => $contactsWithoutVariants->count()
             ]);
-        });
+
+            // Assign variants to contacts without assignments
+            $splitPercentage = $this->ab_test_split_percentage ?? 50;
+            $totalContacts = $contactsWithoutVariants->count();
+            $variantASampleSize = (int) ceil(($splitPercentage / 100) * $totalContacts);
+
+            $contactsWithoutVariants->each(function ($contact, $index) use ($variantASampleSize) {
+                $variant = $index < $variantASampleSize ? 'variant_a' : 'variant_b';
+                
+                $this->contacts()->updateExistingPivot($contact->id, [
+                    'ab_test_variant' => $variant
+                ]);
+            });
+        } catch (\Exception $e) {
+            \Log::error('Failed to fix missing A/B test variants', [
+                'campaign_id' => $this->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
     }
 
     // Statistics calculations
@@ -488,75 +536,69 @@ class Campaign extends Model
 
     public function updateStatistics(): void
     {
-        $stats = DB::table('campaign_contacts')
-            ->where('campaign_id', $this->id)
-            ->selectRaw('
-                COUNT(*) as total,
-                SUM(CASE WHEN status = "sent" THEN 1 ELSE 0 END) as sent,
-                SUM(CASE WHEN status = "delivered" THEN 1 ELSE 0 END) as delivered,
-                SUM(CASE WHEN opened_at IS NOT NULL THEN 1 ELSE 0 END) as opened,
-                SUM(CASE WHEN clicked_at IS NOT NULL THEN 1 ELSE 0 END) as clicked,
-                SUM(CASE WHEN status = "bounced" THEN 1 ELSE 0 END) as bounced
-            ')
-            ->first();
+        try {
+            // Check if campaign_contacts table exists
+            if (!Schema::hasTable('campaign_contacts')) {
+                \Log::warning('campaign_contacts table does not exist for campaign', ['campaign_id' => $this->id]);
+                return;
+            }
 
-        // Also get sent count from email_logs to capture emails that were sent but then marked as delivered
-        $sentFromLogs = DB::table('email_logs')
-            ->where('campaign_id', $this->id)
-            ->whereNotNull('sent_at')
-            ->count();
+            $stats = DB::table('campaign_contacts')
+                ->where('campaign_id', $this->id)
+                ->selectRaw('
+                    COUNT(*) as total,
+                    SUM(CASE WHEN status = "sent" THEN 1 ELSE 0 END) as sent,
+                    SUM(CASE WHEN status = "delivered" THEN 1 ELSE 0 END) as delivered,
+                    SUM(CASE WHEN opened_at IS NOT NULL THEN 1 ELSE 0 END) as opened,
+                    SUM(CASE WHEN clicked_at IS NOT NULL THEN 1 ELSE 0 END) as clicked,
+                    SUM(CASE WHEN status = "bounced" THEN 1 ELSE 0 END) as bounced
+                ')
+                ->first();
 
-        // Get delivered count from email_logs (more accurate than campaign_contacts)
-        $deliveredFromLogs = DB::table('email_logs')
-            ->where('campaign_id', $this->id)
-            ->where('status', 'delivered')
-            ->count();
+            // Check if email_logs table exists
+            $sentFromLogs = 0;
+            $deliveredFromLogs = 0;
+            $bouncedFromLogs = 0;
 
-        // Get unsubscribed count from marketing_contacts
-        $unsubscribedCount = DB::table('campaign_contacts')
-            ->join('marketing_contacts', 'campaign_contacts.marketing_contact_id', '=', 'marketing_contacts.id')
-            ->where('campaign_contacts.campaign_id', $this->id)
-            ->where('marketing_contacts.status', 'unsubscribed')
-            ->count();
+            if (Schema::hasTable('email_logs')) {
+                // Also get sent count from email_logs to capture emails that were sent but then marked as delivered
+                $sentFromLogs = DB::table('email_logs')
+                    ->where('campaign_id', $this->id)
+                    ->whereNotNull('sent_at')
+                    ->count();
 
-        // Also check bounced emails from email_logs table for more accurate bounced count
-        $bouncedFromLogs = DB::table('email_logs')
-            ->where('campaign_id', $this->id)
-            ->where('status', 'bounced')
-            ->count();
+                // Get delivered count from email_logs (more accurate than campaign_contacts)
+                $deliveredFromLogs = DB::table('email_logs')
+                    ->where('campaign_id', $this->id)
+                    ->where('status', 'delivered')
+                    ->count();
 
-        // Use the higher bounced count (from campaign_contacts or email_logs)
-        $finalBouncedCount = max($stats->bounced ?? 0, $bouncedFromLogs);
+                // Also check bounced emails from email_logs table for more accurate bounced count
+                $bouncedFromLogs = DB::table('email_logs')
+                    ->where('campaign_id', $this->id)
+                    ->where('status', 'bounced')
+                    ->count();
+            }
 
-        // Use email_logs data for sent/delivered counts as it's more accurate
-        $finalSentCount = max($stats->sent ?? 0, $sentFromLogs);
-        $finalDeliveredCount = max($stats->delivered ?? 0, $deliveredFromLogs);
+            // Check if marketing_contacts table exists
+            $unsubscribedCount = 0;
+            if (Schema::hasTable('marketing_contacts')) {
+                // Get unsubscribed count from marketing_contacts
+                $unsubscribedCount = DB::table('campaign_contacts')
+                    ->join('marketing_contacts', 'campaign_contacts.marketing_contact_id', '=', 'marketing_contacts.id')
+                    ->where('campaign_contacts.campaign_id', $this->id)
+                    ->where('marketing_contacts.status', 'unsubscribed')
+                    ->count();
+            }
 
-        $previousStats = [
-            'total_recipients' => $this->total_recipients,
-            'sent_count' => $this->sent_count,
-            'delivered_count' => $this->delivered_count,
-            'opened_count' => $this->opened_count,
-            'clicked_count' => $this->clicked_count,
-            'bounced_count' => $this->bounced_count,
-            'unsubscribed_count' => $this->unsubscribed_count,
-        ];
+            // Use the higher bounced count (from campaign_contacts or email_logs)
+            $finalBouncedCount = max($stats->bounced ?? 0, $bouncedFromLogs);
 
-        $this->update([
-            'total_recipients' => $stats->total ?? 0,
-            'sent_count' => $finalSentCount,
-            'delivered_count' => $finalDeliveredCount,
-            'opened_count' => $stats->opened ?? 0,
-            'clicked_count' => $stats->clicked ?? 0,
-            'bounced_count' => $finalBouncedCount,
-            'unsubscribed_count' => $unsubscribedCount,
-        ]);
+            // Use email_logs data for sent/delivered counts as it's more accurate
+            $finalSentCount = max($stats->sent ?? 0, $sentFromLogs);
+            $finalDeliveredCount = max($stats->delivered ?? 0, $deliveredFromLogs);
 
-        // Log statistics changes for debugging
-        \Log::debug('Campaign statistics updated', [
-            'campaign_id' => $this->id,
-            'previous' => $previousStats,
-            'current' => [
+            $previousStats = [
                 'total_recipients' => $this->total_recipients,
                 'sent_count' => $this->sent_count,
                 'delivered_count' => $this->delivered_count,
@@ -564,14 +606,56 @@ class Campaign extends Model
                 'clicked_count' => $this->clicked_count,
                 'bounced_count' => $this->bounced_count,
                 'unsubscribed_count' => $this->unsubscribed_count,
-            ],
-            'source_data' => [
-                'campaign_contacts_sent' => $stats->sent ?? 0,
-                'email_logs_sent' => $sentFromLogs,
-                'campaign_contacts_delivered' => $stats->delivered ?? 0,
-                'email_logs_delivered' => $deliveredFromLogs,
-            ]
-        ]);
+            ];
+
+            $this->update([
+                'total_recipients' => $stats->total ?? 0,
+                'sent_count' => $finalSentCount,
+                'delivered_count' => $finalDeliveredCount,
+                'opened_count' => $stats->opened ?? 0,
+                'clicked_count' => $stats->clicked ?? 0,
+                'bounced_count' => $finalBouncedCount,
+                'unsubscribed_count' => $unsubscribedCount,
+            ]);
+
+            // Log statistics changes for debugging
+            \Log::debug('Campaign statistics updated', [
+                'campaign_id' => $this->id,
+                'previous' => $previousStats,
+                'current' => [
+                    'total_recipients' => $this->total_recipients,
+                    'sent_count' => $this->sent_count,
+                    'delivered_count' => $this->delivered_count,
+                    'opened_count' => $this->opened_count,
+                    'clicked_count' => $this->clicked_count,
+                    'bounced_count' => $this->bounced_count,
+                    'unsubscribed_count' => $this->unsubscribed_count,
+                ],
+                'source_data' => [
+                    'campaign_contacts_sent' => $stats->sent ?? 0,
+                    'email_logs_sent' => $sentFromLogs,
+                    'campaign_contacts_delivered' => $stats->delivered ?? 0,
+                    'email_logs_delivered' => $deliveredFromLogs,
+                ]
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Failed to update campaign statistics', [
+                'campaign_id' => $this->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            // Set default values to prevent further errors
+            $this->update([
+                'total_recipients' => 0,
+                'sent_count' => 0,
+                'delivered_count' => 0,
+                'opened_count' => 0,
+                'clicked_count' => 0,
+                'bounced_count' => 0,
+                'unsubscribed_count' => 0,
+            ]);
+        }
     }
 
     // Scopes
