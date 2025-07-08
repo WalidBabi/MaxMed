@@ -249,17 +249,10 @@ class Product extends Model
         static::addGlobalScope('active', function ($query) {
             // Check if the is_active column exists before applying the filter
             try {
-                \Log::info('Product global scope: applying is_active filter');
                 $query->where('is_active', true);
-                \Log::info('Product global scope: is_active filter applied successfully');
             } catch (\Exception $e) {
                 // If the column doesn't exist, don't apply the filter
                 // This prevents the 500 error during login
-                \Log::warning('Product global scope: is_active column not found, skipping filter', [
-                    'error' => $e->getMessage(),
-                    'file' => $e->getFile(),
-                    'line' => $e->getLine()
-                ]);
             }
         });
 
