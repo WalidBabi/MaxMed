@@ -1138,6 +1138,85 @@ Route::get('/test-notification', function () {
     return response()->json(['error' => 'Only available in development'], 403);
 })->name('test.notification');
 
+// Health check endpoint for production debugging
+Route::get('/health', function () {
+    try {
+        $health = [
+            'status' => 'healthy',
+            'timestamp' => now()->toISOString(),
+            'environment' => app()->environment(),
+            'database' => 'disconnected',
+            'cache' => 'not working',
+            'sessions' => 'not working',
+            'admin_users' => 0,
+            'errors' => []
+        ];
+
+        // Check database connection
+        try {
+            DB::connection()->getPdo();
+            $health['database'] = 'connected';
+        } catch (\Exception $e) {
+            $health['database'] = 'disconnected';
+            $health['errors'][] = 'Database: ' . $e->getMessage();
+        }
+
+        // Check cache
+        try {
+            Cache::put('health_check', 'working', 1);
+            if (Cache::get('health_check') === 'working') {
+                $health['cache'] = 'working';
+                Cache::forget('health_check');
+            }
+        } catch (\Exception $e) {
+            $health['errors'][] = 'Cache: ' . $e->getMessage();
+        }
+
+        // Check sessions table
+        try {
+            if (Schema::hasTable('sessions')) {
+                $sessionCount = DB::table('sessions')->count();
+                $health['sessions'] = 'working (' . $sessionCount . ' sessions)';
+            } else {
+                $health['sessions'] = 'table missing';
+                $health['errors'][] = 'Sessions table does not exist';
+            }
+        } catch (\Exception $e) {
+            $health['errors'][] = 'Sessions: ' . $e->getMessage();
+        }
+
+        // Check admin users
+        try {
+            $adminCount = User::whereHas('role', function($q) {
+                $q->where('name', 'admin');
+            })->count();
+            $health['admin_users'] = $adminCount;
+            
+            if ($adminCount === 0) {
+                $health['errors'][] = 'No admin users found';
+            }
+        } catch (\Exception $e) {
+            $health['errors'][] = 'Admin users: ' . $e->getMessage();
+        }
+
+        // Determine overall status
+        if (!empty($health['errors'])) {
+            $health['status'] = 'unhealthy';
+        }
+
+        $statusCode = $health['status'] === 'healthy' ? 200 : 503;
+        
+        return response()->json($health, $statusCode);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Health check failed: ' . $e->getMessage(),
+            'timestamp' => now()->toISOString()
+        ], 500);
+    }
+})->name('health.check');
+
 // Public notification status endpoint (no auth required)
 Route::get('/api/notification-status', function () {
     try {
