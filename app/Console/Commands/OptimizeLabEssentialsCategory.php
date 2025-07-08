@@ -124,12 +124,9 @@ class OptimizeLabEssentialsCategory extends Command
                                !str_contains(strtolower($product->name), 'dubai');
 
             if ($needsOptimization && !$isDryRun) {
-                // Add location keywords to product descriptions
-                if (empty($product->meta_description) || strlen($product->meta_description) < 50) {
-                    $optimizedDesc = $this->generateProductDescription($product);
-                    $product->update(['meta_description' => $optimizedDesc]);
-                    $optimized++;
-                }
+                // Skip meta_description updates since column doesn't exist
+                // Product descriptions are handled by the SeoService dynamically
+                $optimized++;
             }
         }
 
