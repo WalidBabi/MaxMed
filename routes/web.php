@@ -358,7 +358,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
     // Admin Routes
-    Route::middleware(['web', 'auth', 'verified', 'admin'])->name('admin.')->prefix('admin')->group(function () {
+    Route::middleware(['web', 'auth', 'verified', \App\Http\Middleware\AdminMiddleware::class])->name('admin.')->prefix('admin')->group(function () {
         Route::get('/dashboard', fn() => view('admin.dashboard'));
 
         // Inquiry Management
