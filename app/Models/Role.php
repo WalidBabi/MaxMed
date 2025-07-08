@@ -48,7 +48,18 @@ class Role extends Model
      */
     public function hasPermission(string $permission): bool
     {
-        return in_array($permission, $this->permissions ?? []);
+        $hasPermission = in_array($permission, $this->permissions ?? []);
+        
+        \Log::debug('Role::hasPermission() - Permission check', [
+            'role_id' => $this->id,
+            'role_name' => $this->name,
+            'permission' => $permission,
+            'role_permissions' => $this->permissions ?? [],
+            'has_permission_result' => $hasPermission,
+            'timestamp' => now()->toISOString()
+        ]);
+        
+        return $hasPermission;
     }
 
     /**

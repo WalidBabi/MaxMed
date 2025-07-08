@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -29,14 +30,38 @@ class AuthenticatedSessionController extends Controller
             Log::info('Login attempt started', [
                 'email' => $request->email,
                 'ip' => $request->ip(),
-                'user_agent' => $request->userAgent()
+                'user_agent' => $request->userAgent(),
+                'environment' => app()->environment()
             ]);
+
+            // Check database connection
+            try {
+                DB::connection()->getPdo();
+                Log::info('Database connection successful');
+            } catch (\Exception $e) {
+                Log::error('Database connection failed', [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine()
+                ]);
+                throw new \Exception('Database connection failed: ' . $e->getMessage());
+            }
 
             $request->authenticate();
             Log::info('Authentication successful', ['email' => $request->email]);
 
-            $request->session()->regenerate();
-            Log::info('Session regenerated successfully');
+            // Check session configuration
+            try {
+                $request->session()->regenerate();
+                Log::info('Session regenerated successfully');
+            } catch (\Exception $e) {
+                Log::error('Session regeneration failed', [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine()
+                ]);
+                throw new \Exception('Session regeneration failed: ' . $e->getMessage());
+            }
             
             // Clear any problematic intended URLs that might redirect to API endpoints
             $this->clearProblematicIntendedUrls($request);
@@ -45,6 +70,21 @@ class AuthenticatedSessionController extends Controller
             $request->session()->put('show_orders_hint', true);
             
             $user = Auth::user();
+            
+            // Validate user and role
+            if (!$user) {
+                Log::error('User not found after authentication');
+                throw new \Exception('User not found after authentication');
+            }
+
+            // Check if user has a role
+            if (!$user->role) {
+                Log::warning('User has no role assigned', [
+                    'user_id' => $user->id,
+                    'email' => $user->email
+                ]);
+            }
+
             Log::info('User retrieved from Auth', [
                 'user_id' => $user->id,
                 'user_email' => $user->email,
@@ -104,8 +144,16 @@ class AuthenticatedSessionController extends Controller
                 'error' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
+                'environment' => app()->environment()
             ]);
+            
+            // In production, don't expose detailed error messages
+            if (app()->environment('production')) {
+                return back()->withErrors([
+                    'email' => 'Login failed. Please check your credentials and try again.'
+                ]);
+            }
             
             throw $e; // Re-throw the exception to maintain the original error handling
         }
