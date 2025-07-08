@@ -74,20 +74,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isAdmin(): bool
     {
-        $isAdmin = $this->role && $this->role->hasPermission('dashboard.view');
-        
-        \Log::debug('User::isAdmin() - Role check', [
-            'user_id' => $this->id,
-            'user_email' => $this->email,
-            'has_role' => $this->role ? true : false,
-            'role_name' => $this->role ? $this->role->name : 'no role',
-            'role_permissions' => $this->role ? $this->role->permissions : [],
-            'has_dashboard_permission' => $this->role ? $this->role->hasPermission('dashboard.view') : false,
-            'is_admin_result' => $isAdmin,
-            'timestamp' => now()->toISOString()
-        ]);
-        
-        return $isAdmin;
+        return $this->role && $this->role->hasPermission('dashboard.view');
     }
 
     /**
@@ -98,19 +85,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasPermission(string $permission): bool
     {
-        $hasPermission = $this->role && $this->role->hasPermission($permission);
-        
-        \Log::debug('User::hasPermission() - Permission check', [
-            'user_id' => $this->id,
-            'user_email' => $this->email,
-            'permission' => $permission,
-            'has_role' => $this->role ? true : false,
-            'role_name' => $this->role ? $this->role->name : 'no role',
-            'has_permission_result' => $hasPermission,
-            'timestamp' => now()->toISOString()
-        ]);
-        
-        return $hasPermission;
+        return $this->role && $this->role->hasPermission($permission);
     }
 
     /**

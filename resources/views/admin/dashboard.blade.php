@@ -105,6 +105,26 @@
                     </div>
                 </a>
             </div>
+
+            <!-- Sales Targets -->
+            <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
+                <a href="{{ route('admin.sales-targets.index') }}" class="block text-decoration-none">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500">
+                                <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Sales Targets</p>
+                            <p class="text-lg font-semibold text-gray-900">Goals & Analytics</p>
+                            <p class="text-xs text-gray-500 mt-1">Track performance</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
 
