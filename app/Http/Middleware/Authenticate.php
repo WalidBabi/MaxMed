@@ -19,36 +19,14 @@ class Authenticate extends Middleware
      */
     public function handle($request, Closure $next, ...$guards)
     {
-        Log::debug('Authenticate::handle() - Starting authentication check', [
-            'url' => $request->url(),
-            'method' => $request->method(),
-            'ip' => $request->ip(),
-            'user_agent' => $request->userAgent(),
-            'guards' => $guards,
-            'is_authenticated' => auth()->check(),
-            'timestamp' => now()->toISOString()
-        ]);
-
         // Allow search engines to crawl authenticated pages
         $userAgent = $request->header('User-Agent');
         if ($this->isSearchEngine($userAgent)) {
-            Log::debug('Authenticate::handle() - Allowing search engine bot', [
-                'user_agent' => $userAgent,
-                'url' => $request->url()
-            ]);
             return $next($request);
         }
         
         try {
             $result = parent::handle($request, $next, ...$guards);
-            
-            Log::debug('Authenticate::handle() - Authentication check completed', [
-                'url' => $request->url(),
-                'is_authenticated' => auth()->check(),
-                'user_id' => auth()->id(),
-                'timestamp' => now()->toISOString()
-            ]);
-            
             return $result;
         } catch (\Exception $e) {
             Log::error('Authenticate::handle() - Authentication failed', [
@@ -67,16 +45,7 @@ class Authenticate extends Middleware
      */
     protected function redirectTo(Request $request): ?string
     {
-        $redirectPath = $request->expectsJson() ? null : route('login');
-        
-        Log::debug('Authenticate::redirectTo() - Determining redirect path', [
-            'url' => $request->url(),
-            'expects_json' => $request->expectsJson(),
-            'redirect_path' => $redirectPath,
-            'timestamp' => now()->toISOString()
-        ]);
-        
-        return $redirectPath;
+        return $request->expectsJson() ? null : route('login');
     }
     
     /**

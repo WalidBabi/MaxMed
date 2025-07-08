@@ -148,6 +148,38 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Email Deliverability Settings
+    |--------------------------------------------------------------------------
+    |
+    | These settings help improve email deliverability and reduce the chance
+    | of emails being marked as spam or going to promotions tab.
+    |
+    */
+
+    'deliverability' => [
+        // Maximum emails per hour to avoid rate limiting
+        'max_emails_per_hour' => env('MAIL_MAX_PER_HOUR', 1000),
+        
+        // Delay between emails in seconds
+        'delay_between_emails' => env('MAIL_DELAY_BETWEEN', 1),
+        
+        // Business communication settings
+        'business_communication' => [
+            'enabled' => env('MAIL_BUSINESS_COMMUNICATION', true),
+            'industry' => env('MAIL_INDUSTRY_TYPE', 'Healthcare-Supplies'),
+            'communication_type' => env('MAIL_COMMUNICATION_TYPE', 'Business-Important'),
+        ],
+        
+        // Spam prevention settings
+        'spam_prevention' => [
+            'avoid_promotional_words' => env('MAIL_AVOID_PROMOTIONAL', true),
+            'max_subject_length' => env('MAIL_MAX_SUBJECT_LENGTH', 60),
+            'require_business_header' => env('MAIL_REQUIRE_BUSINESS_HEADER', true),
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Admin Email Address
     |--------------------------------------------------------------------------
     |

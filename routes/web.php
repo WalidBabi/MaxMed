@@ -1450,6 +1450,11 @@ Route::middleware(['auth', \App\Http\Middleware\AdminMiddleware::class])->prefix
     Route::post('supplier-invitations/{supplierInvitation}/resend', [\App\Http\Controllers\Admin\SupplierInvitationController::class, 'resend'])->name('supplier-invitations.resend');
     Route::match(['post', 'delete'], 'supplier-invitations/{supplierInvitation}/cancel', [\App\Http\Controllers\Admin\SupplierInvitationController::class, 'cancel'])->name('supplier-invitations.cancel');
     Route::post('supplier-invitations/bulk-action', [\App\Http\Controllers\Admin\SupplierInvitationController::class, 'bulkAction'])->name('supplier-invitations.bulk-action');
+    
+    // Sales Targets Routes
+    Route::resource('sales-targets', \App\Http\Controllers\Admin\SalesTargetController::class);
+    Route::get('sales-targets/analytics', [\App\Http\Controllers\Admin\SalesTargetController::class, 'analytics'])->name('sales-targets.analytics');
+    Route::post('sales-targets/update-all-achievements', [\App\Http\Controllers\Admin\SalesTargetController::class, 'updateAllAchievedAmounts'])->name('sales-targets.update-all-achievements');
 });
 
 // Apply prevent-back middleware to auth routes

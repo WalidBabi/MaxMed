@@ -60,39 +60,48 @@ class CampaignEmail extends Mailable
         $mail->mailer('campaign')
              ->from(config('mail.campaign_from.address'), config('mail.campaign_from.name'));
 
-        // Add deliverability headers to avoid promotions tab
+        // Add comprehensive deliverability headers to avoid promotions tab
         $this->addDeliverabilityHeaders($mail);
 
         return $mail;
     }
 
     /**
-     * Add headers that improve deliverability and mark emails as important
+     * Add comprehensive headers that improve deliverability and mark emails as important
+     * This helps emails go to the inbox instead of promotions tab
      */
     private function addDeliverabilityHeaders($mail)
     {
-        // Add headers that make email appear as important business communication
         $mail->withSwiftMessage(function ($message) {
             $headers = $message->getHeaders();
             
-            // Mark as important business communication
-            $headers->addTextHeader('X-Mailer', config('app.name') . ' Business Communication System');
+            // ===== PRIORITY AND IMPORTANCE HEADERS =====
+            // Mark as high priority business communication
             $headers->addTextHeader('X-Priority', '1'); // High priority (1=High, 3=Normal, 5=Low)
             $headers->addTextHeader('X-MSMail-Priority', 'High');
             $headers->addTextHeader('Importance', 'High');
+            $headers->addTextHeader('X-Importance', 'High');
             
-            // Mark as important business communication (not promotional)
-            $headers->addTextHeader('X-Auto-Response-Suppress', 'All');
+            // ===== BUSINESS COMMUNICATION IDENTIFICATION =====
+            // Identify as important business communication, not promotional
+            $headers->addTextHeader('X-Mailer', config('app.name') . ' Business Communication System');
             $headers->addTextHeader('X-Entity-Type', 'Business');
             $headers->addTextHeader('X-Message-Type', 'Business-Important');
+            $headers->addTextHeader('X-Business-Communication', 'true');
+            $headers->addTextHeader('X-Healthcare-Supplies', 'true');
             
-            // Add proper message categorization for business communications
+            // ===== CONTENT CATEGORIZATION =====
+            // Categorize as business notification, not marketing
+            $headers->addTextHeader('X-Auto-Category', 'business-important');
+            $headers->addTextHeader('X-Content-Type', 'business-notification');
             $headers->addTextHeader('X-Message-Source', 'MaxMed Business Communication');
             $headers->addTextHeader('X-Business-Type', 'Healthcare-Supplies');
             
+            // ===== ENGAGEMENT SIGNALS =====
             // Add reply-to header for better engagement signals
             $headers->addMailboxHeader('Reply-To', config('mail.campaign_from.address'));
             
+            // ===== RFC COMPLIANT UNSUBSCRIBE HEADERS =====
             // Add proper List-Unsubscribe header (RFC compliant)
             $unsubscribeUrl = route('email.track.unsubscribe', [
                 'token' => base64_encode($this->contact->id . '|' . $this->contact->email . '|' . $this->campaign->id)
@@ -100,14 +109,11 @@ class CampaignEmail extends Mailable
             $headers->addTextHeader('List-Unsubscribe', '<' . $unsubscribeUrl . '>');
             $headers->addTextHeader('List-Unsubscribe-Post', 'List-Unsubscribe=One-Click');
             
+            // ===== ORGANIZATION AND IDENTIFICATION =====
             // Add organization header
             $headers->addTextHeader('Organization', config('app.name'));
             
-            // Indicate this is an important business communication
-            $headers->addTextHeader('X-Auto-Category', 'business-important');
-            $headers->addTextHeader('X-Content-Type', 'business-notification');
-            
-            // Add Message-ID for better tracking
+            // Add Message-ID for better tracking and deliverability
             $messageId = sprintf('<%s.%s.%s@%s>', 
                 $this->campaign->id,
                 $this->contact->id,
@@ -116,10 +122,49 @@ class CampaignEmail extends Mailable
             );
             $headers->addIdHeader('Message-ID', $messageId);
             
-            // Add additional headers to signal importance
-            $headers->addTextHeader('X-Importance', 'High');
-            $headers->addTextHeader('X-Business-Communication', 'true');
-            $headers->addTextHeader('X-Healthcare-Supplies', 'true');
+            // ===== ANTI-SPAM AND DELIVERABILITY HEADERS =====
+            // Suppress auto-responses to avoid spam triggers
+            $headers->addTextHeader('X-Auto-Response-Suppress', 'All');
+            
+            // Add Precedence header to indicate business communication
+            $headers->addTextHeader('Precedence', 'business');
+            
+            // Add X-Report-Abuse header for better reputation
+            $headers->addTextHeader('X-Report-Abuse', 'Please report abuse to ' . config('mail.campaign_from.address'));
+            
+            // ===== GMAIL SPECIFIC HEADERS =====
+            // Headers that help with Gmail categorization
+            $headers->addTextHeader('X-Gmail-Labels', 'Important,Business');
+            $headers->addTextHeader('X-Gmail-Category', 'Primary');
+            
+            // ===== OUTLOOK SPECIFIC HEADERS =====
+            // Headers that help with Outlook categorization
+            $headers->addTextHeader('X-Message-Delivery', 'Business');
+            $headers->addTextHeader('X-Message-Info', 'Business Communication');
+            
+            // ===== ADDITIONAL BUSINESS SIGNALS =====
+            // Signal that this is a legitimate business transaction
+            $headers->addTextHeader('X-Business-Transaction', 'true');
+            $headers->addTextHeader('X-Legitimate-Business', 'true');
+            $headers->addTextHeader('X-Healthcare-Industry', 'true');
+            
+            // ===== TECHNICAL DELIVERABILITY HEADERS =====
+            // Add DKIM and SPF friendly headers
+            $headers->addTextHeader('X-Mailer-Version', '1.0');
+            $headers->addTextHeader('X-Sender', config('mail.campaign_from.address'));
+            $headers->addTextHeader('X-Originating-IP', request()->ip());
+            
+            // ===== CONTENT FILTERING HEADERS =====
+            // Indicate this is not bulk marketing
+            $headers->addTextHeader('X-Bulk-Mail', 'false');
+            $headers->addTextHeader('X-Marketing-Mail', 'false');
+            $headers->addTextHeader('X-Promotional-Mail', 'false');
+            
+            // ===== CUSTOM BUSINESS HEADERS =====
+            // Add custom headers specific to healthcare supplies business
+            $headers->addTextHeader('X-MaxMed-Business-Type', 'Healthcare-Supplies');
+            $headers->addTextHeader('X-MaxMed-Communication-Type', 'Business-Important');
+            $headers->addTextHeader('X-MaxMed-Industry', 'Medical-Equipment');
         });
     }
 }
