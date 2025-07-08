@@ -74,25 +74,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isAdmin(): bool
     {
-        try {
-            $result = $this->role && $this->role->hasPermission('dashboard.view');
-            \Log::info('isAdmin check', [
-                'user_id' => $this->id,
-                'has_role' => $this->role ? 'yes' : 'no',
-                'role_name' => $this->role ? $this->role->name : 'no role',
-                'has_permission' => $this->role ? $this->role->hasPermission('dashboard.view') : 'no role',
-                'result' => $result
-            ]);
-            return $result;
-        } catch (\Exception $e) {
-            \Log::error('isAdmin check failed', [
-                'user_id' => $this->id,
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine()
-            ]);
-            return false;
-        }
+        return $this->role && $this->role->hasPermission('dashboard.view');
     }
 
     /**
@@ -230,24 +212,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isSupplier(): bool
     {
-        try {
-            $result = $this->role && $this->role->name === 'supplier';
-            \Log::info('isSupplier check', [
-                'user_id' => $this->id,
-                'has_role' => $this->role ? 'yes' : 'no',
-                'role_name' => $this->role ? $this->role->name : 'no role',
-                'result' => $result
-            ]);
-            return $result;
-        } catch (\Exception $e) {
-            \Log::error('isSupplier check failed', [
-                'user_id' => $this->id,
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine()
-            ]);
-            return false;
-        }
+        return $this->role && $this->role->name === 'supplier';
     }
 
     /**
