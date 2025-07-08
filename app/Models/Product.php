@@ -245,7 +245,9 @@ class Product extends Model
     {
         parent::boot();
 
-        // Add global scope to safely handle is_active column
+        // Temporarily disable global scope to prevent 500 errors
+        // This will be re-enabled once the is_active column is properly added to production
+        /*
         static::addGlobalScope('active', function ($query) {
             // Check if the is_active column exists before applying the filter
             try {
@@ -255,6 +257,7 @@ class Product extends Model
                 // This prevents the 500 error during login
             }
         });
+        */
 
         // Auto-generate SKU when creating a new product (if not provided)
         static::creating(function ($product) {
