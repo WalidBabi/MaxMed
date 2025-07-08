@@ -184,11 +184,43 @@ class SeoService
 
     private function generateCategoryTitle(Category $category): string
     {
-        // Special optimization for Lab Essentials category
-        if (str_contains($category->name, 'Lab Essentials') || str_contains($category->name, 'Tubes, Pipettes, Glassware')) {
-            return "Laboratory Tubes, Pipettes & Glassware | Lab Essentials Dubai UAE | MaxMed";
+        // Special optimizations for major categories
+        $categoryOptimizations = [
+            'Lab Essentials (Tubes, Pipettes, Glassware)' => "Laboratory Tubes, Pipettes & Glassware | Lab Essentials Dubai UAE | MaxMed",
+            'Molecular & Clinical Diagnostics' => "Molecular & Clinical Diagnostic Equipment Dubai UAE | PCR Machines | MaxMed",
+            'Lab Equipment' => "Laboratory Equipment Dubai UAE | Scientific Instruments | MaxMed",
+            'Medical Consumables' => "Medical Consumables Dubai UAE | Healthcare Supplies | MaxMed",
+            'Life Science & Research' => "Life Science Research Equipment Dubai UAE | Scientific Instruments | MaxMed",
+            'Technology & AI Solutions' => "Technology & AI Solutions Dubai UAE | Laboratory Automation | MaxMed",
+            'Lab Consumables' => "Laboratory Consumables Dubai UAE | Lab Supplies | MaxMed",
+            'Rapid Test Kits RDT' => "Rapid Test Kits Dubai UAE | Point of Care Testing | MaxMed",
+            'Analytical Instruments' => "Analytical Instruments Dubai UAE | Laboratory Analysis Equipment | MaxMed",
+            'Thermal & Process Equipment' => "Thermal Process Equipment Dubai UAE | Laboratory Heating | MaxMed",
+            'Mixing & Shaking Equipment' => "Mixing & Shaking Equipment Dubai UAE | Laboratory Mixers | MaxMed",
+            'Veterinary' => "Veterinary Equipment Dubai UAE | Animal Diagnostic Tools | MaxMed",
+            'PPE & Safety Gear' => "PPE & Safety Gear Dubai UAE | Personal Protective Equipment | MaxMed",
+            'Dental Consumables' => "Dental Consumables Dubai UAE | Dental Supplies | MaxMed",
+            'Chemical & Reagents' => "Chemical Reagents Dubai UAE | Laboratory Chemicals | MaxMed",
+            'PCR & Molecular Analysis' => "PCR Machines Dubai UAE | Molecular Analysis Equipment | MaxMed",
+            'Centrifuges' => "Centrifuges Dubai UAE | Laboratory Centrifuges | MaxMed",
+            'UV-Vis Spectrophotometers' => "UV-Vis Spectrophotometers Dubai UAE | Analytical Instruments | MaxMed",
+            'Incubators & Ovens' => "Incubators & Ovens Dubai UAE | Laboratory Heating Equipment | MaxMed",
+            'Microbiology Equipment' => "Microbiology Equipment Dubai UAE | Microbial Analysis Tools | MaxMed"
+        ];
+
+        // Check for exact match first
+        if (isset($categoryOptimizations[$category->name])) {
+            return $categoryOptimizations[$category->name];
         }
-        
+
+        // Check for partial matches
+        foreach ($categoryOptimizations as $key => $title) {
+            if (str_contains($category->name, $key) || str_contains($key, $category->name)) {
+                return $title;
+            }
+        }
+
+        // Default optimization
         $title = $category->name;
         
         // Add descriptive context
@@ -203,20 +235,76 @@ class SeoService
 
     private function generateCategoryDescription(Category $category): string
     {
-        // Special optimization for Lab Essentials category
-        if (str_contains($category->name, 'Lab Essentials') || str_contains($category->name, 'Tubes, Pipettes, Glassware')) {
+        // Special optimizations for major categories
+        $categoryDescriptions = [
+            'Lab Essentials (Tubes, Pipettes, Glassware)' => "🔬 Premium laboratory tubes, pipettes & glassware in Dubai UAE. Comprehensive range of lab essentials including borosilicate glass beakers, measuring cylinders, volumetric flasks, serological pipettes, test tubes, and laboratory consumables. Trusted by research institutions, hospitals, universities, and diagnostic centers across the UAE. Contact MaxMed at +971 55 460 2500 for expert consultation and competitive pricing on laboratory supplies.",
+            
+            'Molecular & Clinical Diagnostics' => "🧬 Advanced molecular and clinical diagnostic equipment in Dubai UAE. Professional PCR machines, real-time PCR systems, thermal cyclers, and molecular analysis instruments for accurate medical testing and research applications. Trusted by hospitals, research laboratories, and diagnostic centers across the Middle East. Contact MaxMed at +971 55 460 2500 for expert consultation.",
+            
+            'Lab Equipment' => "🔬 Professional laboratory equipment and scientific instruments in Dubai UAE. Complete solutions for analytical chemistry, materials testing, quality control, and research applications. Premium equipment from leading manufacturers for universities, research institutions, and industrial laboratories. Contact MaxMed at +971 55 460 2500 for expert consultation.",
+            
+            'Medical Consumables' => "🏥 High-quality medical consumables and healthcare supplies in Dubai UAE. Sterile products, diagnostic kits, medical devices, and clinical supplies for healthcare facilities, hospitals, and medical centers. Professional-grade medical equipment and consumables for patient care and clinical applications. Contact MaxMed at +971 55 460 2500.",
+            
+            'Life Science & Research' => "🧪 Comprehensive life science and research equipment in Dubai UAE. Advanced instruments for biological and chemical analysis, cell culture, protein research, and molecular biology applications. Professional research equipment for universities, biotechnology companies, and research institutions. Contact MaxMed at +971 55 460 2500.",
+            
+            'Technology & AI Solutions' => "🤖 Cutting-edge technology and AI solutions for laboratory automation in Dubai UAE. Smart laboratory equipment, automated systems, and artificial intelligence applications for research and diagnostic laboratories. Advanced technology solutions for modern laboratory operations. Contact MaxMed at +971 55 460 2500.",
+            
+            'Lab Consumables' => "🧪 Laboratory consumables and supplies in Dubai UAE. Professional-grade lab glassware, chemicals, reagents, and essential supplies for research and analytical work. Complete range of laboratory consumables for accurate and reliable laboratory operations. Contact MaxMed at +971 55 460 2500.",
+            
+            'Rapid Test Kits RDT' => "⚡ Rapid diagnostic test kits and point-of-care testing solutions in Dubai UAE. Professional rapid test kits for infectious diseases, cardiac markers, tumor markers, and various medical conditions. High-quality diagnostic tools for healthcare facilities and clinical laboratories. Contact MaxMed at +971 55 460 2500.",
+            
+            'Analytical Instruments' => "🔬 Advanced analytical instruments and laboratory analysis equipment in Dubai UAE. Precision instruments for chemical analysis, spectroscopy, chromatography, and quality control applications. Professional analytical equipment for research laboratories and industrial testing. Contact MaxMed at +971 55 460 2500.",
+            
+            'Thermal & Process Equipment' => "🔥 Thermal process equipment and laboratory heating solutions in Dubai UAE. Professional incubators, ovens, autoclaves, and thermal processing equipment for research and industrial applications. High-quality thermal equipment for precise temperature control and sterilization processes. Contact MaxMed at +971 55 460 2500.",
+            
+            'Mixing & Shaking Equipment' => "🔄 Professional mixing and shaking equipment in Dubai UAE. Laboratory mixers, shakers, centrifuges, and agitation equipment for research and industrial applications. High-quality mixing equipment for sample preparation and processing. Contact MaxMed at +971 55 460 2500.",
+            
+            'Veterinary' => "🐾 Veterinary equipment and animal diagnostic tools in Dubai UAE. Professional veterinary diagnostic equipment, animal testing kits, and veterinary supplies for veterinary clinics and animal research facilities. Complete veterinary solutions for animal healthcare and research. Contact MaxMed at +971 55 460 2500.",
+            
+            'PPE & Safety Gear' => "🛡️ Personal protective equipment and safety gear in Dubai UAE. Professional PPE including lab coats, gloves, masks, safety glasses, and protective clothing for laboratory and healthcare environments. High-quality safety equipment for workplace protection. Contact MaxMed at +971 55 460 2500.",
+            
+            'Dental Consumables' => "🦷 Dental consumables and dental supplies in Dubai UAE. Professional dental materials, impression materials, dental burs, disposables, and dental equipment for dental clinics and laboratories. High-quality dental supplies for dental healthcare professionals. Contact MaxMed at +971 55 460 2500.",
+            
+            'Chemical & Reagents' => "🧪 Chemical reagents and laboratory chemicals in Dubai UAE. Professional-grade chemicals, reagents, standards, and analytical chemicals for research and industrial applications. High-quality chemical supplies for accurate laboratory analysis. Contact MaxMed at +971 55 460 2500.",
+            
+            'PCR & Molecular Analysis' => "🧬 PCR machines and molecular analysis equipment in Dubai UAE. Professional thermal cyclers, real-time PCR systems, and molecular biology equipment for genetic analysis and research applications. Advanced molecular analysis tools for research laboratories. Contact MaxMed at +971 55 460 2500.",
+            
+            'Centrifuges' => "🔄 Laboratory centrifuges and centrifugation equipment in Dubai UAE. Professional benchtop centrifuges, floor-standing centrifuges, and refrigerated centrifuges for sample processing and separation. High-quality centrifugation equipment for laboratory applications. Contact MaxMed at +971 55 460 2500.",
+            
+            'UV-Vis Spectrophotometers' => "🔬 UV-Vis spectrophotometers and analytical instruments in Dubai UAE. Professional spectrophotometers for chemical analysis, quality control, and research applications. High-precision analytical instruments for accurate measurements. Contact MaxMed at +971 55 460 2500.",
+            
+            'Incubators & Ovens' => "🔥 Laboratory incubators and ovens in Dubai UAE. Professional CO2 incubators, drying ovens, and temperature-controlled equipment for research and industrial applications. High-quality heating equipment for precise temperature control. Contact MaxMed at +971 55 460 2500.",
+            
+            'Microbiology Equipment' => "🦠 Microbiology equipment and microbial analysis tools in Dubai UAE. Professional equipment for bacterial culture, microbial testing, and microbiological research applications. Advanced microbiology tools for research and diagnostic laboratories. Contact MaxMed at +971 55 460 2500."
+        ];
+
+        // Check for exact match first
+        if (isset($categoryDescriptions[$category->name])) {
             $productCount = $category->products()->count();
-            $description = "🔬 Premium laboratory tubes, pipettes & glassware in Dubai UAE. ";
+            $description = $categoryDescriptions[$category->name];
             
             if ($productCount > 0) {
-                $description .= "{$productCount}+ lab essentials from trusted brands. ";
+                $description = str_replace('Contact MaxMed at +971 55 460 2500', "{$productCount}+ products available. Contact MaxMed at +971 55 460 2500", $description);
             }
-            
-            $description .= "Glass beakers, measuring cylinders, volumetric flasks, serological pipettes & more. ☎️ +971 55 460 2500";
             
             return Str::limit($description, 160);
         }
-        
+
+        // Check for partial matches
+        foreach ($categoryDescriptions as $key => $desc) {
+            if (str_contains($category->name, $key) || str_contains($key, $category->name)) {
+                $productCount = $category->products()->count();
+                $description = $desc;
+                
+                if ($productCount > 0) {
+                    $description = str_replace('Contact MaxMed at +971 55 460 2500', "{$productCount}+ products available. Contact MaxMed at +971 55 460 2500", $description);
+                }
+                
+                return Str::limit($description, 160);
+            }
+        }
+
+        // Default description
         $productCount = $category->products()->count();
         $description = "Explore our comprehensive range of {$category->name} equipment in Dubai, UAE.";
         
@@ -231,20 +319,121 @@ class SeoService
 
     private function generateCategoryKeywords(Category $category): string
     {
-        // Special optimization for Lab Essentials category
-        if (str_contains($category->name, 'Lab Essentials') || str_contains($category->name, 'Tubes, Pipettes, Glassware')) {
-            $keywords = [
+        // Special keyword optimizations for major categories
+        $categoryKeywords = [
+            'Lab Essentials (Tubes, Pipettes, Glassware)' => [
                 'laboratory tubes Dubai', 'pipettes UAE', 'laboratory glassware Dubai', 
                 'lab essentials Dubai', 'glass beakers UAE', 'measuring cylinders Dubai',
                 'volumetric flasks', 'serological pipettes', 'lab consumables Dubai',
                 'scientific glassware UAE', 'laboratory supplies Dubai', 'borosilicate glassware',
                 'micropipettes Dubai', 'test tubes UAE', 'laboratory equipment Dubai',
                 'MaxMed UAE', 'lab glassware supplier', 'Dubai laboratory supplies'
-            ];
+            ],
             
-            return implode(', ', array_merge($this->coreKeywords, $keywords));
+            'Molecular & Clinical Diagnostics' => [
+                'molecular diagnostics Dubai', 'clinical diagnostic equipment UAE',
+                'PCR machines Dubai', 'molecular analysis equipment UAE',
+                'real-time PCR Dubai', 'thermal cyclers UAE', 'diagnostic instruments Dubai',
+                'clinical laboratory equipment UAE', 'molecular biology equipment Dubai',
+                'diagnostic tools UAE', 'PCR equipment Dubai', 'molecular testing UAE',
+                'clinical diagnostics Dubai', 'laboratory diagnostics UAE'
+            ],
+            
+            'Lab Equipment' => [
+                'laboratory equipment Dubai', 'scientific instruments UAE',
+                'lab equipment suppliers Dubai', 'scientific equipment UAE',
+                'laboratory instruments Dubai', 'research equipment UAE',
+                'analytical equipment Dubai', 'lab technology UAE',
+                'scientific instruments Dubai', 'laboratory supplies UAE',
+                'research instruments Dubai', 'lab equipment Dubai'
+            ],
+            
+            'Medical Consumables' => [
+                'medical consumables Dubai', 'healthcare supplies UAE',
+                'medical supplies Dubai', 'healthcare consumables UAE',
+                'medical equipment Dubai', 'clinical supplies UAE',
+                'healthcare equipment Dubai', 'medical devices UAE',
+                'clinical consumables Dubai', 'medical products UAE',
+                'healthcare products Dubai', 'medical supplies UAE'
+            ],
+            
+            'Life Science & Research' => [
+                'life science equipment Dubai', 'research equipment UAE',
+                'biological research Dubai', 'scientific research UAE',
+                'cell culture equipment Dubai', 'protein research UAE',
+                'molecular biology Dubai', 'biotechnology equipment UAE',
+                'research instruments Dubai', 'life science UAE',
+                'biological instruments Dubai', 'research tools UAE'
+            ],
+            
+            'Technology & AI Solutions' => [
+                'laboratory automation Dubai', 'AI solutions UAE',
+                'smart laboratory Dubai', 'automation equipment UAE',
+                'laboratory technology Dubai', 'AI laboratory UAE',
+                'automated systems Dubai', 'smart equipment UAE',
+                'laboratory AI Dubai', 'automation UAE',
+                'smart lab Dubai', 'AI technology UAE'
+            ],
+            
+            'Rapid Test Kits RDT' => [
+                'rapid test kits Dubai', 'point of care testing UAE',
+                'diagnostic kits Dubai', 'rapid testing UAE',
+                'medical test kits Dubai', 'diagnostic testing UAE',
+                'rapid diagnostic Dubai', 'test kits UAE',
+                'point of care Dubai', 'diagnostic equipment UAE',
+                'rapid tests Dubai', 'medical diagnostics UAE'
+            ],
+            
+            'Analytical Instruments' => [
+                'analytical instruments Dubai', 'laboratory analysis UAE',
+                'chemical analysis Dubai', 'spectroscopy equipment UAE',
+                'chromatography Dubai', 'analytical equipment UAE',
+                'quality control Dubai', 'analysis instruments UAE',
+                'spectrophotometers Dubai', 'analytical tools UAE',
+                'laboratory analysis Dubai', 'chemical instruments UAE'
+            ],
+            
+            'Centrifuges' => [
+                'centrifuges Dubai', 'laboratory centrifuges UAE',
+                'benchtop centrifuges Dubai', 'floor-standing centrifuges UAE',
+                'refrigerated centrifuges Dubai', 'centrifugation equipment UAE',
+                'lab centrifuges Dubai', 'centrifuge machines UAE',
+                'centrifugation Dubai', 'centrifuge equipment UAE',
+                'laboratory centrifuge Dubai', 'centrifuge UAE'
+            ],
+            
+            'Dental Consumables' => [
+                'dental consumables Dubai', 'dental supplies UAE',
+                'dental materials Dubai', 'dental equipment UAE',
+                'dental products Dubai', 'dental instruments UAE',
+                'dental disposables Dubai', 'dental supplies UAE',
+                'dental laboratory Dubai', 'dental equipment UAE',
+                'dental materials Dubai', 'dental products UAE'
+            ],
+            
+            'Veterinary' => [
+                'veterinary equipment Dubai', 'animal diagnostic UAE',
+                'veterinary supplies Dubai', 'animal testing UAE',
+                'veterinary diagnostics Dubai', 'animal equipment UAE',
+                'veterinary instruments Dubai', 'animal supplies UAE',
+                'veterinary tools Dubai', 'animal diagnostics UAE',
+                'veterinary equipment UAE', 'animal testing Dubai'
+            ]
+        ];
+
+        // Check for exact match first
+        if (isset($categoryKeywords[$category->name])) {
+            return implode(', ', array_merge($this->coreKeywords, $categoryKeywords[$category->name]));
         }
-        
+
+        // Check for partial matches
+        foreach ($categoryKeywords as $key => $keywords) {
+            if (str_contains($category->name, $key) || str_contains($key, $category->name)) {
+                return implode(', ', array_merge($this->coreKeywords, $keywords));
+            }
+        }
+
+        // Default keywords
         $keywords = $this->coreKeywords;
         
         $keywords[] = $category->name;

@@ -462,43 +462,254 @@
                 <div class="lab-essentials-content">
                     <h1 class="lab-essentials-title">Laboratory Tubes, Pipettes & Glassware in Dubai UAE</h1>
                     <p class="lab-essentials-description">
-                        Premium laboratory essentials for scientific research and analysis. Our comprehensive range includes borosilicate glassware, precision pipettes, laboratory tubes, and essential lab consumables from trusted international brands. Perfect for research institutions, hospitals, universities, and diagnostic centers across the UAE.
+                        Premium laboratory essentials for scientific research and analysis. Our comprehensive range includes borosilicate glassware, precision pipettes, laboratory tubes, and essential consumables trusted by research institutions, hospitals, universities, and diagnostic centers across the UAE.
                     </p>
-                    
                     <div class="lab-essentials-features">
-                        <div class="feature-item">
-                            <div class="feature-icon">🧪</div>
-                            <div>
-                                <strong>Borosilicate Glassware</strong><br>
-                                <small>Heat-resistant, precision glass equipment</small>
-                            </div>
+                        <div class="feature">
+                            <span class="feature-icon">🔬</span>
+                            <span>Borosilicate Glassware</span>
                         </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">🔬</div>
-                            <div>
-                                <strong>Precision Pipettes</strong><br>
-                                <small>Accurate liquid handling solutions</small>
-                            </div>
+                        <div class="feature">
+                            <span class="feature-icon">📏</span>
+                            <span>Precision Pipettes</span>
                         </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">⚗️</div>
-                            <div>
-                                <strong>Laboratory Tubes</strong><br>
-                                <small>Sample collection & storage solutions</small>
-                            </div>
+                        <div class="feature">
+                            <span class="feature-icon">🧪</span>
+                            <span>Laboratory Tubes</span>
                         </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">📞</div>
-                            <div>
-                                <strong>Expert Support</strong><br>
-                                <small>Call +971 55 460 2500 for quotes</small>
-                            </div>
+                        <div class="feature">
+                            <span class="feature-icon">⚡</span>
+                            <span>Fast Delivery</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @elseif(isset($category) && $category->name === 'Molecular & Clinical Diagnostics')
+            <!-- Enhanced Molecular & Clinical Diagnostics Hero Section -->
+            <div class="category-hero molecular-diagnostics-hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Molecular & Clinical Diagnostic Equipment Dubai UAE</h1>
+                    <p class="hero-description">
+                        Advanced molecular and clinical diagnostic equipment for accurate medical testing and research applications. Professional PCR machines, real-time PCR systems, thermal cyclers, and molecular analysis instruments trusted by hospitals, research laboratories, and diagnostic centers across the Middle East.
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature">
+                            <span class="feature-icon">🧬</span>
+                            <span>PCR Machines</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">⚡</span>
+                            <span>Real-time PCR</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🔬</span>
+                            <span>Molecular Analysis</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🏥</span>
+                            <span>Clinical Diagnostics</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @elseif(isset($category) && $category->name === 'Lab Equipment')
+            <!-- Enhanced Lab Equipment Hero Section -->
+            <div class="category-hero lab-equipment-hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Laboratory Equipment Dubai UAE | Scientific Instruments</h1>
+                    <p class="hero-description">
+                        Professional laboratory equipment and scientific instruments for analytical chemistry, materials testing, quality control, and research applications. Premium equipment from leading manufacturers for universities, research institutions, and industrial laboratories.
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature">
+                            <span class="feature-icon">🔬</span>
+                            <span>Analytical Equipment</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🧪</span>
+                            <span>Research Instruments</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">⚡</span>
+                            <span>Quality Control</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🎓</span>
+                            <span>University Grade</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @elseif(isset($category) && $category->name === 'Medical Consumables')
+            <!-- Enhanced Medical Consumables Hero Section -->
+            <div class="category-hero medical-consumables-hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Medical Consumables Dubai UAE | Healthcare Supplies</h1>
+                    <p class="hero-description">
+                        High-quality medical consumables and healthcare supplies for healthcare facilities, hospitals, and medical centers. Sterile products, diagnostic kits, medical devices, and clinical supplies for patient care and clinical applications.
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature">
+                            <span class="feature-icon">🏥</span>
+                            <span>Sterile Products</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🔬</span>
+                            <span>Diagnostic Kits</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">⚡</span>
+                            <span>Medical Devices</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🛡️</span>
+                            <span>Clinical Supplies</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @elseif(isset($category) && $category->name === 'Life Science & Research')
+            <!-- Enhanced Life Science & Research Hero Section -->
+            <div class="category-hero life-science-hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Life Science Research Equipment Dubai UAE</h1>
+                    <p class="hero-description">
+                        Comprehensive life science and research equipment for biological and chemical analysis, cell culture, protein research, and molecular biology applications. Professional research equipment for universities, biotechnology companies, and research institutions.
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature">
+                            <span class="feature-icon">🧬</span>
+                            <span>Biological Analysis</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🧪</span>
+                            <span>Cell Culture</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">⚡</span>
+                            <span>Protein Research</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🔬</span>
+                            <span>Molecular Biology</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @elseif(isset($category) && $category->name === 'Technology & AI Solutions')
+            <!-- Enhanced Technology & AI Solutions Hero Section -->
+            <div class="category-hero technology-ai-hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Technology & AI Solutions Dubai UAE | Laboratory Automation</h1>
+                    <p class="hero-description">
+                        Cutting-edge technology and AI solutions for laboratory automation in Dubai UAE. Smart laboratory equipment, automated systems, and artificial intelligence applications for research and diagnostic laboratories.
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature">
+                            <span class="feature-icon">🤖</span>
+                            <span>AI Solutions</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">⚡</span>
+                            <span>Laboratory Automation</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🔬</span>
+                            <span>Smart Equipment</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">📊</span>
+                            <span>Advanced Technology</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @elseif(isset($category) && $category->name === 'Rapid Test Kits RDT')
+            <!-- Enhanced Rapid Test Kits Hero Section -->
+            <div class="category-hero rapid-tests-hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Rapid Test Kits Dubai UAE | Point of Care Testing</h1>
+                    <p class="hero-description">
+                        Rapid diagnostic test kits and point-of-care testing solutions for healthcare facilities and clinical laboratories. Professional rapid test kits for infectious diseases, cardiac markers, tumor markers, and various medical conditions.
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature">
+                            <span class="feature-icon">⚡</span>
+                            <span>Rapid Testing</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🏥</span>
+                            <span>Point of Care</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🔬</span>
+                            <span>Diagnostic Kits</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🩺</span>
+                            <span>Clinical Testing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @elseif(isset($category) && $category->name === 'Analytical Instruments')
+            <!-- Enhanced Analytical Instruments Hero Section -->
+            <div class="category-hero analytical-instruments-hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Analytical Instruments Dubai UAE | Laboratory Analysis Equipment</h1>
+                    <p class="hero-description">
+                        Advanced analytical instruments and laboratory analysis equipment for chemical analysis, spectroscopy, chromatography, and quality control applications. Professional analytical equipment for research laboratories and industrial testing.
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature">
+                            <span class="feature-icon">🔬</span>
+                            <span>Chemical Analysis</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">📊</span>
+                            <span>Spectroscopy</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">⚡</span>
+                            <span>Chromatography</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🎯</span>
+                            <span>Quality Control</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @elseif(isset($category) && $category->name === 'Veterinary')
+            <!-- Enhanced Veterinary Hero Section -->
+            <div class="category-hero veterinary-hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Veterinary Equipment Dubai UAE | Animal Diagnostic Tools</h1>
+                    <p class="hero-description">
+                        Veterinary equipment and animal diagnostic tools for veterinary clinics and animal research facilities. Professional veterinary diagnostic equipment, animal testing kits, and veterinary supplies for animal healthcare and research.
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature">
+                            <span class="feature-icon">🐾</span>
+                            <span>Animal Diagnostics</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🏥</span>
+                            <span>Veterinary Equipment</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🔬</span>
+                            <span>Testing Kits</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">⚡</span>
+                            <span>Animal Healthcare</span>
                         </div>
                     </div>
                 </div>
             </div>
             @else
-            <!-- Standard Category Header -->
+            <!-- Default Category Header -->
             <div class="category-header">
                 <h1 class="category-title">{{ isset($category) ? $category->name : 'All Products' }}</h1>
                 <p class="category-description">{{ isset($category) && $category->description ? $category->description : 'Browse our selection of high-quality products' }}</p>
