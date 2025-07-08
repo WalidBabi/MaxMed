@@ -20,3 +20,38 @@
 [2025-07-08 11:30:47] local.ERROR: The "--dry-run" option does not exist. {"exception":"[object] (Symfony\\Component\\Console\\Exception\\RuntimeException(code: 0): The \"--dry-run\" option does not exist. at C:\\Users\\Walid\\OneDrive\\Desktop\\MaxMed\\vendor\\symfony\\console\\Input\\ArgvInput.php:226)"} 
 [2025-07-08 11:34:32] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR on line 1 at C:\\Users\\Walid\\OneDrive\\Desktop\\MaxMed\\vendor\\psy\\psysh\\src\\Exception\\ParseErrorException.php:44)"} 
 [2025-07-08 11:34:37] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR on line 1 at C:\\Users\\Walid\\OneDrive\\Desktop\\MaxMed\\vendor\\psy\\psysh\\src\\Exception\\ParseErrorException.php:44)"} 
+[2025-07-08 13:20:57] local.ERROR: Command "seo:generate-comprehensive-sitemap" is not defined.
+
+Did you mean one of these?
+    seo:audit
+    seo:audit-advanced
+    seo:discover-urls
+    seo:enhance-from-console
+    seo:fix-canonical-urls
+    seo:fix-issues
+    seo:fix-page-indexing
+    seo:fix-search-console-urls
+    seo:local-business-schema
+    seo:monitor-search-console
+    seo:optimize-advanced
+    seo:optimize-lab-essentials
+    seo:optimize-search-console
+    seo:quick-wins {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"seo:generate-comprehensive-sitemap\" is not defined.
+
+Did you mean one of these?
+    seo:audit
+    seo:audit-advanced
+    seo:discover-urls
+    seo:enhance-from-console
+    seo:fix-canonical-urls
+    seo:fix-issues
+    seo:fix-page-indexing
+    seo:fix-search-console-urls
+    seo:local-business-schema
+    seo:monitor-search-console
+    seo:optimize-advanced
+    seo:optimize-lab-essentials
+    seo:optimize-search-console
+    seo:quick-wins at C:\\Users\\Walid\\OneDrive\\Desktop\\MaxMed\\vendor\\symfony\\console\\Application.php:725)"} 
+[2025-07-08 13:21:09] local.ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'meta_description' in 'where clause' (Connection: mysql, SQL: select * from `products` where `meta_description` is null or `meta_description` =  limit 50) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'meta_description' in 'where clause' (Connection: mysql, SQL: select * from `products` where `meta_description` is null or `meta_description` =  limit 50) at C:\\Users\\Walid\\OneDrive\\Desktop\\MaxMed\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:825)
+[previous exception] [object] (PDOException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'meta_description' in 'where clause' at C:\\Users\\Walid\\OneDrive\\Desktop\\MaxMed\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:407)"} 

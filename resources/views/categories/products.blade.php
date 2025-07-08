@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
-@if(isset($category))
+@if(isset($seoData))
+    @section('title', $seoData['title'])
+    @section('meta_description', $seoData['meta_description'])
+    @section('meta_keywords', $seoData['meta_keywords'])
+@elseif(isset($category))
     @section('title', $category->name . ' Laboratory Equipment | MaxMed UAE')
     @section('meta_description', 'Browse ' . $category->name . ' laboratory equipment at MaxMed UAE. Find high-quality scientific instruments and lab supplies in Dubai.')
 @elseif(isset($subcategory))
@@ -19,15 +23,123 @@
 @endif
 
 @section('content')
+
+@php
+    $currentCategory = $category ?? $subcategory ?? $subsubcategory ?? $subsubsubcategory ?? null;
+    $isLabEssentials = $currentCategory && (str_contains($currentCategory->name, 'Lab Essentials') || str_contains($currentCategory->name, 'Tubes, Pipettes, Glassware'));
+@endphp
+
+{{-- Structured Data for Lab Essentials Category --}}
+@if($isLabEssentials && isset($seoData))
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "{{ $seoData['title'] }}",
+  "description": "{{ $seoData['meta_description'] }}",
+  "url": "{{ $seoData['canonical_url'] }}",
+  "provider": {
+    "@type": "Organization",
+    "name": "MaxMed UAE",
+    "url": "https://maxmedme.com",
+    "telephone": "+971 55 460 2500",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "AE",
+      "addressRegion": "Dubai"
+    }
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "name": "Laboratory Tubes, Pipettes & Glassware",
+    "description": "Premium laboratory glassware, tubes, and pipettes for scientific research and analysis in Dubai UAE",
+    "numberOfItems": {{ $products->total() ?? 0 }}
+  }
+}
+</script>
+@endif
+
 <div class="container-fluid py-4">
     <style>
-        /* Page Layout */
+        /* Enhanced styles for Lab Essentials */
         .category-header {
             margin-bottom: 2rem;
             position: relative;
             border-left: 4px solid #171e60;
             padding-left: 15px;
         }
+        
+        @if($isLabEssentials)
+        .lab-essentials-hero {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .lab-essentials-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23dee2e6" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>') repeat;
+            opacity: 0.3;
+            z-index: 1;
+        }
+        
+        .lab-essentials-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .lab-essentials-title {
+            font-size: 2rem;
+            color: #171e60;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .lab-essentials-description {
+            font-size: 1.1rem;
+            color: #495057;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .lab-essentials-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: #171e60;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: white;
+            font-size: 18px;
+        }
+        @endif
+        
         .category-title {
             font-size: 1.5rem;
             color: #171e60;
@@ -344,10 +456,54 @@
             @include('layouts.sidebar')
         </div>
         <div class="col-md-9 mt-2 main-content-column transition-all duration-300">
+            @if($isLabEssentials)
+            <!-- Enhanced Lab Essentials Hero Section -->
+            <div class="lab-essentials-hero">
+                <div class="lab-essentials-content">
+                    <h1 class="lab-essentials-title">Laboratory Tubes, Pipettes & Glassware in Dubai UAE</h1>
+                    <p class="lab-essentials-description">
+                        Premium laboratory essentials for scientific research and analysis. Our comprehensive range includes borosilicate glassware, precision pipettes, laboratory tubes, and essential lab consumables from trusted international brands. Perfect for research institutions, hospitals, universities, and diagnostic centers across the UAE.
+                    </p>
+                    
+                    <div class="lab-essentials-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">🧪</div>
+                            <div>
+                                <strong>Borosilicate Glassware</strong><br>
+                                <small>Heat-resistant, precision glass equipment</small>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🔬</div>
+                            <div>
+                                <strong>Precision Pipettes</strong><br>
+                                <small>Accurate liquid handling solutions</small>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">⚗️</div>
+                            <div>
+                                <strong>Laboratory Tubes</strong><br>
+                                <small>Sample collection & storage solutions</small>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">📞</div>
+                            <div>
+                                <strong>Expert Support</strong><br>
+                                <small>Call +971 55 460 2500 for quotes</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @else
+            <!-- Standard Category Header -->
             <div class="category-header">
                 <h1 class="category-title">{{ isset($category) ? $category->name : 'All Products' }}</h1>
                 <p class="category-description">{{ isset($category) && $category->description ? $category->description : 'Browse our selection of high-quality products' }}</p>
             </div>
+            @endif
             
             <div class="filters-row">
                 <div class="product-counter">

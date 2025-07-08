@@ -4,12 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\SeoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 
 class CategoryController extends Controller
 {
+    protected $seoService;
+
+    public function __construct(SeoService $seoService)
+    {
+        $this->seoService = $seoService;
+    }
+
     public function index()
     {
         $categories = Category::whereNull('parent_id')
@@ -25,6 +33,9 @@ class CategoryController extends Controller
             return redirect()->to('https://maxmedme.com' . $request->getRequestUri(), 301);
         }
         
+        // Generate SEO metadata
+        $seoData = $this->seoService->generateCategoryMeta($category);
+        
         // Check if this category has subcategories or products
         $hasContent = $category->subcategories->isNotEmpty() || 
                      Product::where('category_id', $category->id)->exists();
@@ -37,7 +48,7 @@ class CategoryController extends Controller
         if ($category->subcategories->isNotEmpty()) {
             // Eager load products for subcategories
             $category->load(['subcategories.products']);
-            return view('categories.subcategories', compact('category'));
+            return view('categories.subcategories', compact('category', 'seoData'));
         }
 
         // Start building the query
@@ -50,7 +61,7 @@ class CategoryController extends Controller
         $products = $query->paginate(16);
         $products->appends($request->all());
         
-        return view('categories.products', compact('category', 'products'));
+        return view('categories.products', compact('category', 'products', 'seoData'));
     }
 
     public function showSubcategory(Request $request, $category_slug, $subcategory_slug)
@@ -64,6 +75,9 @@ class CategoryController extends Controller
         $category = Category::where('slug', $category_slug)->firstOrFail();
         $subcategory = Category::where('slug', $subcategory_slug)->where('parent_id', $category->id)->firstOrFail();
         
+        // Generate SEO metadata for subcategory
+        $seoData = $this->seoService->generateCategoryMeta($subcategory);
+        
         // Check if this subcategory has content
         $hasContent = $subcategory->subcategories->isNotEmpty() || 
                      Product::where('category_id', $subcategory->id)->exists();
@@ -76,7 +90,7 @@ class CategoryController extends Controller
         if ($subcategory->subcategories->isNotEmpty()) {
             // Eager load products for subsubcategories
             $subcategory->load(['subcategories.products']);
-            return view('categories.subsubcategories', compact('category', 'subcategory'));
+            return view('categories.subsubcategories', compact('category', 'subcategory', 'seoData'));
         }
         
         // Start building the query
@@ -89,7 +103,7 @@ class CategoryController extends Controller
         $products = $query->paginate(16);
         $products->appends($request->all());
         
-        return view('categories.products', compact('subcategory', 'products'));
+        return view('categories.products', compact('subcategory', 'products', 'seoData'));
     }
 
     public function showSubSubcategory(Request $request, $category_slug, $subcategory_slug, $subsubcategory_slug)

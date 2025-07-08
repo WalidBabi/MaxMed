@@ -8,29 +8,24 @@ Disallow: /register
 Disallow: /password/
 Disallow: /cart/
 Disallow: /checkout/
-Disallow: /search?*
-Disallow: /*?sort=*
-Disallow: /*?filter=*
-Disallow: /*?page=*
-
-# Explicitly allow important pages
+Disallow: /search?
+Disallow: /*?sort=
+Disallow: /*?filter=
+Disallow: /*?page=
 Allow: /products/
 Allow: /categories/
 Allow: /news/
 Allow: /about
 Allow: /contact
-Allow: /quotation/
-Allow: /quotation/*/form
 
 # Sitemaps
 Sitemap: https://maxmedme.com/sitemap.xml
-Sitemap: https://maxmedme.com/sitemap-clean.xml
 Sitemap: https://maxmedme.com/rss/feed.xml
 
 # Crawl delay for respectful crawling
-Crawl-delay: 0.5
+Crawl-delay: 1
 
-# Block AI training bots
+# Block AI training bots (optional)
 User-agent: ChatGPT-User
 Disallow: /
 

@@ -184,6 +184,11 @@ class SeoService
 
     private function generateCategoryTitle(Category $category): string
     {
+        // Special optimization for Lab Essentials category
+        if (str_contains($category->name, 'Lab Essentials') || str_contains($category->name, 'Tubes, Pipettes, Glassware')) {
+            return "Laboratory Tubes, Pipettes & Glassware | Lab Essentials Dubai UAE | MaxMed";
+        }
+        
         $title = $category->name;
         
         // Add descriptive context
@@ -198,6 +203,20 @@ class SeoService
 
     private function generateCategoryDescription(Category $category): string
     {
+        // Special optimization for Lab Essentials category
+        if (str_contains($category->name, 'Lab Essentials') || str_contains($category->name, 'Tubes, Pipettes, Glassware')) {
+            $productCount = $category->products()->count();
+            $description = "🔬 Premium laboratory tubes, pipettes & glassware in Dubai UAE. ";
+            
+            if ($productCount > 0) {
+                $description .= "{$productCount}+ lab essentials from trusted brands. ";
+            }
+            
+            $description .= "Glass beakers, measuring cylinders, volumetric flasks, serological pipettes & more. ☎️ +971 55 460 2500";
+            
+            return Str::limit($description, 160);
+        }
+        
         $productCount = $category->products()->count();
         $description = "Explore our comprehensive range of {$category->name} equipment in Dubai, UAE.";
         
@@ -212,6 +231,20 @@ class SeoService
 
     private function generateCategoryKeywords(Category $category): string
     {
+        // Special optimization for Lab Essentials category
+        if (str_contains($category->name, 'Lab Essentials') || str_contains($category->name, 'Tubes, Pipettes, Glassware')) {
+            $keywords = [
+                'laboratory tubes Dubai', 'pipettes UAE', 'laboratory glassware Dubai', 
+                'lab essentials Dubai', 'glass beakers UAE', 'measuring cylinders Dubai',
+                'volumetric flasks', 'serological pipettes', 'lab consumables Dubai',
+                'scientific glassware UAE', 'laboratory supplies Dubai', 'borosilicate glassware',
+                'micropipettes Dubai', 'test tubes UAE', 'laboratory equipment Dubai',
+                'MaxMed UAE', 'lab glassware supplier', 'Dubai laboratory supplies'
+            ];
+            
+            return implode(', ', array_merge($this->coreKeywords, $keywords));
+        }
+        
         $keywords = $this->coreKeywords;
         
         $keywords[] = $category->name;
