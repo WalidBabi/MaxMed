@@ -48,7 +48,27 @@ class Role extends Model
      */
     public function hasPermission(string $permission): bool
     {
-        return in_array($permission, $this->permissions ?? []);
+        try {
+            $result = in_array($permission, $this->permissions ?? []);
+            \Log::info('Role hasPermission check', [
+                'role_id' => $this->id,
+                'role_name' => $this->name,
+                'permission' => $permission,
+                'permissions_array' => $this->permissions ?? [],
+                'result' => $result
+            ]);
+            return $result;
+        } catch (\Exception $e) {
+            \Log::error('Role hasPermission check failed', [
+                'role_id' => $this->id,
+                'role_name' => $this->name,
+                'permission' => $permission,
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+            return false;
+        }
     }
 
     /**

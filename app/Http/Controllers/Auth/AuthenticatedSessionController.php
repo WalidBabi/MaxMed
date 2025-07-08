@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -24,48 +25,90 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        try {
+            Log::info('Login attempt started', [
+                'email' => $request->email,
+                'ip' => $request->ip(),
+                'user_agent' => $request->userAgent()
+            ]);
 
-        $request->session()->regenerate();
-        
-        // Clear any problematic intended URLs that might redirect to API endpoints
-        $this->clearProblematicIntendedUrls($request);
-        
-        // Set a session flag to show orders hint
-        $request->session()->put('show_orders_hint', true);
-        
-        $user = Auth::user();
-        
-        // Clear the intended URL if it's an API endpoint or notification check
-        $intendedUrl = session()->get('url.intended');
-        $shouldClearIntended = $intendedUrl && (
-            str_contains($intendedUrl, '/notifications/check-new') ||
-            str_contains($intendedUrl, '/api/') ||
-            str_contains($intendedUrl, '.json') ||
-            str_contains($intendedUrl, '/count') ||
-            str_contains($intendedUrl, '/stream')
-        );
-        
-        if ($shouldClearIntended) {
-            session()->forget('url.intended');
-        }
-        
-        if ($user->isAdmin()) {
+            $request->authenticate();
+            Log::info('Authentication successful', ['email' => $request->email]);
+
+            $request->session()->regenerate();
+            Log::info('Session regenerated successfully');
+            
+            // Clear any problematic intended URLs that might redirect to API endpoints
+            $this->clearProblematicIntendedUrls($request);
+            
+            // Set a session flag to show orders hint
+            $request->session()->put('show_orders_hint', true);
+            
+            $user = Auth::user();
+            Log::info('User retrieved from Auth', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'user_role' => $user->role ? $user->role->name : 'no role',
+                'is_admin' => $user->isAdmin(),
+                'is_supplier' => $user->isSupplier()
+            ]);
+            
+            // Clear the intended URL if it's an API endpoint or notification check
+            $intendedUrl = session()->get('url.intended');
+            $shouldClearIntended = $intendedUrl && (
+                str_contains($intendedUrl, '/notifications/check-new') ||
+                str_contains($intendedUrl, '/api/') ||
+                str_contains($intendedUrl, '.json') ||
+                str_contains($intendedUrl, '/count') ||
+                str_contains($intendedUrl, '/stream')
+            );
+            
+            if ($shouldClearIntended) {
+                session()->forget('url.intended');
+                Log::info('Cleared problematic intended URL', ['intended_url' => $intendedUrl]);
+            }
+            
+            Log::info('Determining redirect route', [
+                'user_id' => $user->id,
+                'is_admin' => $user->isAdmin(),
+                'is_supplier' => $user->isSupplier(),
+                'should_clear_intended' => $shouldClearIntended
+            ]);
+            
+            if ($user->isAdmin()) {
+                $route = $shouldClearIntended ? 'admin.dashboard' : 'admin.dashboard';
+                Log::info('Redirecting admin user', ['route' => $route, 'user_id' => $user->id]);
+                return $shouldClearIntended ? 
+                    redirect()->route('admin.dashboard') : 
+                    redirect()->intended(route('admin.dashboard'));
+            }
+
+            // Check if user is a supplier
+            if ($user->isSupplier()) {
+                $route = $shouldClearIntended ? 'supplier.dashboard' : 'supplier.dashboard';
+                Log::info('Redirecting supplier user', ['route' => $route, 'user_id' => $user->id]);
+                return $shouldClearIntended ? 
+                    redirect()->route('supplier.dashboard') : 
+                    redirect()->intended(route('supplier.dashboard'));
+            }
+
+            $route = $shouldClearIntended ? 'dashboard' : 'dashboard';
+            Log::info('Redirecting regular user', ['route' => $route, 'user_id' => $user->id]);
             return $shouldClearIntended ? 
-                redirect()->route('admin.dashboard') : 
-                redirect()->intended(route('admin.dashboard'));
+                redirect()->route('dashboard') : 
+                redirect()->intended(route('dashboard'));
+                
+        } catch (\Exception $e) {
+            Log::error('Login error occurred', [
+                'email' => $request->email,
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            throw $e; // Re-throw the exception to maintain the original error handling
         }
-
-        // Check if user is a supplier
-        if ($user->isSupplier()) {
-            return $shouldClearIntended ? 
-                redirect()->route('supplier.dashboard') : 
-                redirect()->intended(route('supplier.dashboard'));
-        }
-
-        return $shouldClearIntended ? 
-            redirect()->route('dashboard') : 
-            redirect()->intended(route('dashboard'));
     }
 
     /**
