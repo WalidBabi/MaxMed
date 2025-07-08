@@ -175,27 +175,21 @@ class OptimizeSearchConsoleKeywords extends Command
         $this->info('✨ Optimizing meta descriptions for better CTR...');
         $optimizations = 0;
 
-        // Find products with generic or missing meta descriptions
-        $products = Product::whereNull('meta_description')
-                          ->orWhere('meta_description', '')
-                          ->orWhere('meta_description', 'NOT LIKE', '%✅%')
-                          ->orWhere('meta_description', 'NOT LIKE', '%☎️%')
-                          ->limit(50)->get();
-
-        foreach ($products as $product) {
-            $originalMeta = $product->meta_description;
-            $optimizedMeta = $this->generateCTROptimizedMetaDescription($product);
-            
-            if ($optimizedMeta !== $originalMeta) {
-                $this->line("   📦 {$product->name}");
-                $this->line("   ➡️  Enhanced meta description for CTR");
-                
-                if (!$isDryRun) {
-                    $product->update(['meta_description' => $optimizedMeta]);
-                }
-                $optimizations++;
-            }
-        }
+        // Remove meta_description queries and updates
+        // $products = Product::whereNull('meta_description')
+        //     ->orWhere('meta_description', '')
+        //     ->orWhere('meta_description', 'NOT LIKE', '%✅%')
+        //     ->orWhere('meta_description', 'NOT LIKE', '%☎️%')
+        //     ->limit(50)
+        //     ->get();
+        // foreach ($products as $product) {
+        //     $originalMeta = $product->meta_description;
+        //     $optimizedMeta = $this->generateProductMetaDescription($product);
+        //     if (!$isDryRun) {
+        //         $product->update(['meta_description' => $optimizedMeta]);
+        //     }
+        // }
+        $this->line('   ⚡ Skipping product meta_description updates (column not available)');
 
         return $optimizations;
     }
