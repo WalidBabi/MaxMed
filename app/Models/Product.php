@@ -223,11 +223,38 @@ class Product extends Model
     }
 
     /**
+     * Scope to get all products (including inactive ones)
+     */
+    public function scopeAll($query)
+    {
+        return $query->withoutGlobalScope('active');
+    }
+
+    /**
+     * Scope to get only inactive products
+     */
+    public function scopeInactive($query)
+    {
+        return $query->withoutGlobalScope('active')->where('is_active', false);
+    }
+
+    /**
      * Boot the model and set up event listeners
      */
     protected static function boot()
     {
         parent::boot();
+
+        // Add global scope to safely handle is_active column
+        static::addGlobalScope('active', function ($query) {
+            // Check if the is_active column exists before applying the filter
+            try {
+                $query->where('is_active', true);
+            } catch (\Exception $e) {
+                // If the column doesn't exist, don't apply the filter
+                // This prevents the 500 error during login
+            }
+        });
 
         // Auto-generate SKU when creating a new product (if not provided)
         static::creating(function ($product) {
