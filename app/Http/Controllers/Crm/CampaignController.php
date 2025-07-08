@@ -10,6 +10,7 @@ use App\Models\ContactList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CampaignController extends Controller
 {
@@ -244,16 +245,58 @@ class CampaignController extends Controller
 
     public function show(Campaign $campaign)
     {
+        Log::info('Campaign show method called', [
+            'campaign_id' => $campaign->id ?? 'null',
+            'campaign_name' => $campaign->name ?? 'null',
+            'user_id' => auth()->id(),
+            'request_url' => request()->url(),
+            'request_method' => request()->method(),
+            'user_agent' => request()->header('User-Agent'),
+            'ip_address' => request()->ip(),
+            'route_param_campaign' => request()->route('campaign')
+        ]);
+
+        // Check if campaign exists
+        if (!$campaign || !$campaign->exists) {
+            Log::error('Campaign not found in show method', [
+                'campaign_id' => $campaign->id ?? 'null',
+                'campaign_exists' => $campaign ? $campaign->exists : 'campaign is null',
+                'user_id' => auth()->id()
+            ]);
+            abort(404, 'Campaign not found');
+        }
+
         try {
+            \Log::info('Starting campaign data loading', [
+                'campaign_id' => $campaign->id,
+                'campaign_exists' => $campaign->exists
+            ]);
+
             $campaign->load(['creator', 'emailTemplate', 'contacts', 'emailLogs']);
+            
+            \Log::info('Campaign relationships loaded successfully', [
+                'campaign_id' => $campaign->id,
+                'creator_loaded' => $campaign->relationLoaded('creator'),
+                'emailTemplate_loaded' => $campaign->relationLoaded('emailTemplate'),
+                'contacts_loaded' => $campaign->relationLoaded('contacts'),
+                'emailLogs_loaded' => $campaign->relationLoaded('emailLogs')
+            ]);
             
             // Update statistics with error handling
             try {
-                $campaign->updateStatistics();
-            } catch (\Exception $e) {
-                \Log::error('Failed to update campaign statistics in show method', [
+                Log::info('About to update campaign statistics', [
                     'campaign_id' => $campaign->id,
-                    'error' => $e->getMessage()
+                    'campaign_status' => $campaign->status
+                ]);
+                $campaign->updateStatistics();
+                Log::info('Campaign statistics updated successfully', [
+                    'campaign_id' => $campaign->id
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Failed to update campaign statistics in show method', [
+                    'campaign_id' => $campaign->id,
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
                 ]);
                 // Continue with the page load even if statistics update fails
             }
@@ -315,16 +358,25 @@ class CampaignController extends Controller
                 ];
             }
 
+            Log::info('About to render campaign show view', [
+                'campaign_id' => $campaign->id,
+                'recentLogs_count' => $recentLogs->count(),
+                'performanceData_keys' => array_keys($performanceData)
+            ]);
+
             return view('crm.marketing.campaigns.show', compact(
                 'campaign', 
                 'recentLogs', 
                 'performanceData'
             ));
         } catch (\Exception $e) {
-            \Log::error('Campaign show method failed', [
-                'campaign_id' => $campaign->id,
+            Log::error('Campaign show method failed', [
+                'campaign_id' => $campaign->id ?? 'unknown',
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'user_id' => auth()->id()
             ]);
             
             // Return a basic view with error information
