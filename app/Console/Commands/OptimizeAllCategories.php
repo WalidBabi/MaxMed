@@ -69,10 +69,8 @@ class OptimizeAllCategories extends Command
         }
         
         // Generate enhanced sitemaps
-        if (!$isDryRun) {
-            $this->info("\n🗺️ Generating enhanced sitemaps...");
-            $this->call('seo:generate-comprehensive-sitemap');
-        }
+        // $this->info("\n🗺️ Generating enhanced sitemaps...");
+        // $this->call('seo:generate-comprehensive-sitemap');
         
         // Clear caches
         if (!$isDryRun) {
