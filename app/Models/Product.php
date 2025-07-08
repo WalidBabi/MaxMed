@@ -235,7 +235,9 @@ class Product extends Model
      */
     public function scopeInactive($query)
     {
-        return $query->withoutGlobalScope('active')->where('is_active', false);
+        // Temporarily disabled until is_active column is added to products table
+        return $query->withoutGlobalScope('active');
+        // return $query->withoutGlobalScope('active')->where('is_active', false);
     }
 
     /**
