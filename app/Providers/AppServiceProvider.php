@@ -34,14 +34,33 @@ class AppServiceProvider extends ServiceProvider
         
         // Share navigation categories with all views
         View::composer('*', function ($view) {
-            $navCategories = Category::whereNull('parent_id')
-                ->with(['subcategories' => function($query) {
-                    $query->orderBy('name', 'asc');
-                }])
-                ->orderBy('name', 'asc')
-                ->get();
-            
-            $view->with('navCategories', $navCategories);
+            try {
+                Log::info('Loading navigation categories for view', ['view' => $view->getName()]);
+                
+                $navCategories = Category::whereNull('parent_id')
+                    ->with(['subcategories' => function($query) {
+                        $query->orderBy('name', 'asc');
+                    }])
+                    ->orderBy('name', 'asc')
+                    ->get();
+                
+                Log::info('Navigation categories loaded successfully', [
+                    'count' => $navCategories->count(),
+                    'view' => $view->getName()
+                ]);
+                
+                $view->with('navCategories', $navCategories);
+            } catch (\Exception $e) {
+                Log::error('Failed to load navigation categories', [
+                    'view' => $view->getName(),
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine()
+                ]);
+                
+                // Provide empty collection as fallback
+                $view->with('navCategories', collect());
+            }
         });
         
 
