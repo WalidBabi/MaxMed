@@ -359,7 +359,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Admin Routes
     Route::middleware(['web', 'auth', 'verified', 'admin'])->name('admin.')->prefix('admin')->group(function () {
-        Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
+        Route::get('/dashboard', fn() => view('admin.dashboard'));
 
         // Inquiry Management
         Route::resource('inquiries', \App\Http\Controllers\Admin\InquiryController::class)->names([
