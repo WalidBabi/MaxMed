@@ -1217,6 +1217,127 @@ Route::get('/health', function () {
     }
 })->name('health.check');
 
+// Emergency diagnostic route - bypasses all middleware
+Route::get('/emergency-diagnostic', function () {
+    try {
+        $diagnostic = [
+            'timestamp' => now()->toISOString(),
+            'environment' => app()->environment(),
+            'php_version' => PHP_VERSION,
+            'laravel_version' => app()->version(),
+            'app_debug' => config('app.debug'),
+            'app_env' => config('app.env'),
+            'database_connection' => config('database.default'),
+            'session_driver' => config('session.driver'),
+            'cache_store' => config('cache.default'),
+            'tests' => []
+        ];
+
+        // Test 1: Basic PHP functionality
+        try {
+            $diagnostic['tests']['php_basic'] = 'working';
+        } catch (\Exception $e) {
+            $diagnostic['tests']['php_basic'] = 'failed: ' . $e->getMessage();
+        }
+
+        // Test 2: Laravel basic functionality
+        try {
+            $diagnostic['tests']['laravel_basic'] = 'working';
+        } catch (\Exception $e) {
+            $diagnostic['tests']['laravel_basic'] = 'failed: ' . $e->getMessage();
+        }
+
+        // Test 3: Database connection
+        try {
+            DB::connection()->getPdo();
+            $diagnostic['tests']['database'] = 'connected';
+        } catch (\Exception $e) {
+            $diagnostic['tests']['database'] = 'failed: ' . $e->getMessage();
+        }
+
+        // Test 4: Sessions table
+        try {
+            if (Schema::hasTable('sessions')) {
+                $diagnostic['tests']['sessions_table'] = 'exists';
+            } else {
+                $diagnostic['tests']['sessions_table'] = 'missing';
+            }
+        } catch (\Exception $e) {
+            $diagnostic['tests']['sessions_table'] = 'error: ' . $e->getMessage();
+        }
+
+        // Test 5: Users table
+        try {
+            if (Schema::hasTable('users')) {
+                $userCount = DB::table('users')->count();
+                $diagnostic['tests']['users_table'] = 'exists (' . $userCount . ' users)';
+            } else {
+                $diagnostic['tests']['users_table'] = 'missing';
+            }
+        } catch (\Exception $e) {
+            $diagnostic['tests']['users_table'] = 'error: ' . $e->getMessage();
+        }
+
+        // Test 6: Roles table
+        try {
+            if (Schema::hasTable('roles')) {
+                $roleCount = DB::table('roles')->count();
+                $diagnostic['tests']['roles_table'] = 'exists (' . $roleCount . ' roles)';
+            } else {
+                $diagnostic['tests']['roles_table'] = 'missing';
+            }
+        } catch (\Exception $e) {
+            $diagnostic['tests']['roles_table'] = 'error: ' . $e->getMessage();
+        }
+
+        // Test 7: Cache functionality
+        try {
+            Cache::put('test_key', 'test_value', 1);
+            if (Cache::get('test_key') === 'test_value') {
+                $diagnostic['tests']['cache'] = 'working';
+                Cache::forget('test_key');
+            } else {
+                $diagnostic['tests']['cache'] = 'not working';
+            }
+        } catch (\Exception $e) {
+            $diagnostic['tests']['cache'] = 'failed: ' . $e->getMessage();
+        }
+
+        // Test 8: File permissions
+        try {
+            $storageWritable = is_writable(storage_path());
+            $logsWritable = is_writable(storage_path('logs'));
+            $diagnostic['tests']['file_permissions'] = [
+                'storage_writable' => $storageWritable,
+                'logs_writable' => $logsWritable
+            ];
+        } catch (\Exception $e) {
+            $diagnostic['tests']['file_permissions'] = 'error: ' . $e->getMessage();
+        }
+
+        // Test 9: Environment variables
+        $diagnostic['tests']['env_variables'] = [
+            'app_key_set' => !empty(config('app.key')),
+            'app_key_length' => strlen(config('app.key')),
+            'db_host' => config('database.connections.mysql.host'),
+            'db_database' => config('database.connections.mysql.database'),
+            'db_username' => config('database.connections.mysql.username') ? 'set' : 'not set',
+            'db_password' => config('database.connections.mysql.password') ? 'set' : 'not set'
+        ];
+
+        return response()->json($diagnostic, 200);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Diagnostic failed: ' . $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => $e->getTraceAsString(),
+            'timestamp' => now()->toISOString()
+        ], 500);
+    }
+})->name('emergency.diagnostic');
+
 // Public notification status endpoint (no auth required)
 Route::get('/api/notification-status', function () {
     try {
