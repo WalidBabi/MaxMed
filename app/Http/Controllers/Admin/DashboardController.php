@@ -52,6 +52,32 @@ class DashboardController extends Controller
     
     private function getDashboardStats()
     {
+        // Temporary fix: Return empty stats to prevent server errors
+        // This will be reverted once the table issues are resolved
+        return [
+            'quotation_stats' => [
+                'total_quotations' => 0,
+                'pending_quotations' => 0,
+                'quotations_this_week' => 0,
+                'approved_quotations' => 0
+            ],
+            'order_stats' => [
+                'total_orders' => 0,
+                'pending_orders' => 0,
+                'completed_orders' => 0
+            ],
+            'customer_stats' => [
+                'total_customers' => 0,
+                'new_customers_this_month' => 0
+            ],
+            'revenue_stats' => [
+                'total_revenue' => 0,
+                'revenue_this_month' => 0
+            ]
+        ];
+        
+        // Original code commented out for now
+        /*
         $stats = [
             'quotation_stats' => [
                 'total_quotations' => 0,
@@ -148,5 +174,6 @@ class DashboardController extends Controller
         }
         
         return $stats;
+        */
     }
 } 

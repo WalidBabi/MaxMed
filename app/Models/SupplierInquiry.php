@@ -96,7 +96,7 @@ class SupplierInquiry extends Model
 
     public function quotations()
     {
-        return $this->hasMany(SupplierQuotation::class);
+        return $this->hasMany(SupplierQuotation::class, 'supplier_inquiry_id');
     }
 
     // Helper Methods

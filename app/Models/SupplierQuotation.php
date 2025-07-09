@@ -23,6 +23,13 @@ class SupplierQuotation extends Model
 {
     use HasFactory;
 
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'supplier_quotations';
+
     protected $fillable = [
         'quotation_request_id',
         'supplier_inquiry_id',
