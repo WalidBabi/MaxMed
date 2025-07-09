@@ -1748,3 +1748,8 @@ Route::get('/test-supplier-invitation', function () {
         return 'Error: ' . $e->getMessage();
     }
 })->name('test.supplier.invitation');
+
+// Debug route for authentication issues
+Route::get('/debug-auth', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'debug'])
+    ->middleware('auth')
+    ->name('debug.auth');
