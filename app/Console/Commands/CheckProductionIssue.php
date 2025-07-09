@@ -89,7 +89,7 @@ class CheckProductionIssue extends Command
         try {
             $adminUsers = User::whereHas('role', function($q) {
                 $q->where('name', 'admin');
-            })->orWhere('is_admin', true)->get();
+            })->get();
             
             if ($adminUsers->count() > 0) {
                 $this->info("✅ Found {$adminUsers->count()} admin users");
