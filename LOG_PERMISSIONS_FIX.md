@@ -62,6 +62,11 @@ chmod +x deploy-fix-logs.sh
 php fix-log-permissions.php
 ```
 
+### Option 4: Test Logging Functionality
+```bash
+php test-logging.php
+```
+
 ## Prevention
 
 ### 1. Always Check .gitignore
