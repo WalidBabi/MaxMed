@@ -72,6 +72,7 @@ return [
                 'ignoreEmptyContextAndExtra' => true,
             ],
             'tap' => [App\Logging\CustomizeFormatter::class],
+            'permission' => 0664,
         ],
 
         'daily' => [
@@ -88,6 +89,7 @@ return [
                 'ignoreEmptyContextAndExtra' => true,
             ],
             'tap' => [App\Logging\CustomizeFormatter::class],
+            'permission' => 0664,
         ],
 
         // Production debugging log - captures all levels including debug
@@ -159,6 +161,24 @@ return [
 
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
+        ],
+
+        // Fallback channel for production when file permissions fail
+        'fallback' => [
+            'driver' => 'monolog',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'handler' => StreamHandler::class,
+            'formatter' => LineFormatter::class,
+            'formatter_with' => [
+                'format' => "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n",
+                'dateFormat' => 'Y-m-d H:i:s',
+                'allowInlineLineBreaks' => true,
+                'ignoreEmptyContextAndExtra' => true,
+            ],
+            'with' => [
+                'stream' => 'php://stderr',
+            ],
+            'processors' => [PsrLogMessageProcessor::class],
         ],
 
     ],

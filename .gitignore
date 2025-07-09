@@ -25,10 +25,13 @@ bootstrap/cache/
 /storage/pail
 
 # Log files
+/storage/logs/
 /storage/logs/*.log
 /storage/logs/laravel.log
 /storage/logs/critical-errors.log
 /storage/logs/production-debug.log
+/storage/logs/custom.log
+/storage/logs/test.log
 *.log
 
 # Cache and temporary files
