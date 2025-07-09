@@ -1753,3 +1753,110 @@ Route::get('/test-supplier-invitation', function () {
 Route::get('/debug-auth', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'debug'])
     ->middleware('auth')
     ->name('debug.auth');
+
+// Test logging route for production
+Route::get('/test-logging', function () {
+    $output = "🔍 Logging Test Results\n\n";
+    
+    try {
+        // Get current logging configuration
+        $logChannel = config('logging.default');
+        $logPath = storage_path('logs/laravel.log');
+        
+        $output .= "Current Log Channel: {$logChannel}\n";
+        $output .= "Log Path: {$logPath}\n";
+        $output .= "Environment: " . app()->environment() . "\n";
+        $output .= "APP_DEBUG: " . (config('app.debug') ? 'true' : 'false') . "\n";
+        $output .= "LOG_LEVEL: " . (env('LOG_LEVEL') ?? 'not set') . "\n";
+        $output .= "LOG_CHANNEL: " . (env('LOG_CHANNEL') ?? 'not set') . "\n\n";
+        
+        // Check file permissions
+        $logDir = dirname($logPath);
+        $output .= "Log Directory: {$logDir}\n";
+        $output .= "Directory Exists: " . (is_dir($logDir) ? 'Yes' : 'No') . "\n";
+        $output .= "Directory Writable: " . (is_writable($logDir) ? 'Yes' : 'No') . "\n";
+        
+        if (file_exists($logPath)) {
+            $output .= "Log File Exists: Yes\n";
+            $output .= "Log File Writable: " . (is_writable($logPath) ? 'Yes' : 'No') . "\n";
+            $output .= "Log File Size: " . number_format(filesize($logPath)) . " bytes\n";
+        } else {
+            $output .= "Log File Exists: No\n";
+        }
+        
+        $output .= "\n";
+        
+        // Test logging at different levels
+        $testId = uniqid();
+        $testMessage = "Test logging entry {$testId}";
+        
+        $output .= "Testing logging with ID: {$testId}\n\n";
+        
+        Log::emergency($testMessage . ' [EMERGENCY]');
+        Log::alert($testMessage . ' [ALERT]');
+        Log::critical($testMessage . ' [CRITICAL]');
+        Log::error($testMessage . ' [ERROR]');
+        Log::warning($testMessage . ' [WARNING]');
+        Log::notice($testMessage . ' [NOTICE]');
+        Log::info($testMessage . ' [INFO]');
+        Log::debug($testMessage . ' [DEBUG]');
+        
+        $output .= "Log entries written. Checking if they appear in log file...\n\n";
+        
+        // Check if logs were written
+        if (file_exists($logPath)) {
+            $logContent = file_get_contents($logPath);
+            $matchCount = substr_count($logContent, $testId);
+            
+            if ($matchCount > 0) {
+                $output .= "✅ SUCCESS: Found {$matchCount} log entries in the file\n";
+                
+                // Show last few lines of the log
+                $lines = explode("\n", $logContent);
+                $lastLines = array_slice($lines, -10);
+                $output .= "\nLast 10 lines of log file:\n";
+                $output .= "================================\n";
+                foreach ($lastLines as $line) {
+                    if (!empty(trim($line))) {
+                        $output .= $line . "\n";
+                    }
+                }
+            } else {
+                $output .= "❌ FAILED: No test entries found in log file\n";
+                $output .= "This means logging is not working properly.\n";
+            }
+        } else {
+            $output .= "❌ FAILED: Log file was not created\n";
+        }
+        
+        // Try alternative log locations
+        $output .= "\nChecking alternative log locations:\n";
+        $altPaths = [
+            '/var/log/laravel.log',
+            '/var/log/nginx/error.log',
+            '/var/log/apache2/error.log',
+            storage_path('logs/production-debug.log'),
+            storage_path('logs/laravel-' . date('Y-m-d') . '.log')
+        ];
+        
+        foreach ($altPaths as $altPath) {
+            if (file_exists($altPath)) {
+                $output .= "✅ Found: {$altPath} (" . number_format(filesize($altPath)) . " bytes)\n";
+            } else {
+                $output .= "❌ Not found: {$altPath}\n";
+            }
+        }
+        
+    } catch (\Exception $e) {
+        $output .= "❌ ERROR: " . $e->getMessage() . "\n";
+        $output .= "File: " . $e->getFile() . "\n";
+        $output .= "Line: " . $e->getLine() . "\n";
+    }
+    
+    return response("<pre>{$output}</pre>", 200, ['Content-Type' => 'text/html']);
+})->name('test.logging');
+
+// Authenticated Routes
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Additional authenticated routes can be added here
+});

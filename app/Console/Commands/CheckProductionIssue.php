@@ -188,6 +188,87 @@ class CheckProductionIssue extends Command
             }
         }
         
+        // Check 10: Logging Configuration
+        $this->info('10. Checking logging configuration...');
+        try {
+            $logChannel = config('logging.default');
+            $logLevel = config('logging.channels.' . $logChannel . '.level', env('LOG_LEVEL', 'debug'));
+            $logPath = config('logging.channels.' . $logChannel . '.path', storage_path('logs/laravel.log'));
+            
+            $this->info("Log Channel: {$logChannel}");
+            $this->info("Log Level: {$logLevel}");
+            $this->info("Log Path: {$logPath}");
+            
+            // Check if log directory exists and is writable
+            $logDir = dirname($logPath);
+            if (!is_dir($logDir)) {
+                $this->error("❌ Log directory does not exist: {$logDir}");
+                $issues[] = 'Log directory missing';
+            } elseif (!is_writable($logDir)) {
+                $this->error("❌ Log directory is not writable: {$logDir}");
+                $issues[] = 'Log directory not writable';
+            } else {
+                $this->info("✅ Log directory is writable: {$logDir}");
+            }
+            
+            // Check if log file exists and is writable
+            if (file_exists($logPath)) {
+                if (is_writable($logPath)) {
+                    $fileSize = filesize($logPath);
+                    $this->info("✅ Log file is writable: {$logPath} (Size: " . number_format($fileSize) . " bytes)");
+                } else {
+                    $this->error("❌ Log file is not writable: {$logPath}");
+                    $issues[] = 'Log file not writable';
+                }
+            } else {
+                $this->info("ℹ️ Log file does not exist yet: {$logPath}");
+            }
+            
+            // Test logging
+            $this->info('Testing logging...');
+            $testMessage = 'Production diagnostic test log entry - ' . now()->toISOString();
+            
+            Log::emergency($testMessage . ' [EMERGENCY]');
+            Log::alert($testMessage . ' [ALERT]');
+            Log::critical($testMessage . ' [CRITICAL]');
+            Log::error($testMessage . ' [ERROR]');
+            Log::warning($testMessage . ' [WARNING]');
+            Log::notice($testMessage . ' [NOTICE]');
+            Log::info($testMessage . ' [INFO]');
+            Log::debug($testMessage . ' [DEBUG]');
+            
+            // Check if the test log was written
+            if (file_exists($logPath)) {
+                $logContent = file_get_contents($logPath);
+                if (strpos($logContent, $testMessage) !== false) {
+                    $this->info('✅ Logging test successful - entries written to log file');
+                } else {
+                    $this->error('❌ Logging test failed - entries not found in log file');
+                    $issues[] = 'Logging test failed';
+                }
+            } else {
+                $this->error('❌ Logging test failed - log file not created');
+                $issues[] = 'Log file not created';
+            }
+            
+            // Check environment variables affecting logging
+            $logEnvVars = [
+                'LOG_CHANNEL' => env('LOG_CHANNEL'),
+                'LOG_LEVEL' => env('LOG_LEVEL'),
+                'LOG_STACK' => env('LOG_STACK'),
+                'LOG_DAILY_DAYS' => env('LOG_DAILY_DAYS')
+            ];
+            
+            $this->info('Environment variables:');
+            foreach ($logEnvVars as $var => $value) {
+                $this->info("  {$var} = " . ($value ?? 'not set'));
+            }
+            
+        } catch (\Exception $e) {
+            $this->error('❌ Logging check failed: ' . $e->getMessage());
+            $issues[] = 'Logging check failed';
+        }
+        
         // Summary
         $this->newLine();
         $this->info('📊 SUMMARY:');
