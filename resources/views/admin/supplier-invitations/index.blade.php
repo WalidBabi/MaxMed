@@ -14,11 +14,11 @@
         <!-- Right: Actions -->
         <div>
             <a href="{{ route('admin.supplier-invitations.create') }}" 
-               class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
+                    <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
                 </svg>
-                Send New Invitation
+                <span class="ml-2">Send New Invitation</span>
             </a>
         </div>
     </div>
@@ -73,7 +73,7 @@
                             <option value="cancel">Cancel Invitations</option>
                             <option value="delete">Delete Invitations</option>
                         </select>
-                        <button type="submit" id="bulkActionBtn" disabled class="inline-flex items-center px-3 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <button type="submit" id="bulkActionBtn" disabled class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed">
                             Apply
                         </button>
                     </div>
@@ -183,14 +183,14 @@
                                 @if($invitation->status === 'pending')
                                 <form action="{{ route('admin.supplier-invitations.resend', $invitation) }}" method="POST" class="inline">
                                     @csrf
-                                    <button type="submit" class="inline-flex items-center px-3 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    <button type="submit" class="btn-sm bg-indigo-100 hover:bg-indigo-200 text-indigo-600">
                                         Resend
                                     </button>
                                 </form>
                                 
                                 <form action="{{ route('admin.supplier-invitations.cancel', $invitation) }}" method="POST" class="inline">
                                     @csrf
-                                    <button type="submit" class="inline-flex items-center px-3 py-2 bg-yellow-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-700 focus:bg-yellow-700 active:bg-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition ease-in-out duration-150" 
+                                    <button type="submit" class="btn-sm bg-red-100 hover:bg-red-200 text-red-600" 
                                             onclick="return confirm('Are you sure you want to cancel this invitation?')">
                                         Cancel
                                     </button>
@@ -200,7 +200,7 @@
                                 <form action="{{ route('admin.supplier-invitations.destroy', $invitation) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="inline-flex items-center px-3 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150" 
+                                    <button type="submit" class="btn-sm bg-red-100 hover:bg-red-200 text-red-600" 
                                             onclick="return confirm('Are you sure you want to delete this invitation? This action cannot be undone.')">
                                         Delete
                                     </button>
