@@ -532,4 +532,4 @@ chmod +x emergency-fix.sh
 ./emergency-fix.sh
 
 
-make as much as you can sitemaps to put on googlesearch console to make the website appear in first page in google search for every category and keyword
+php artisan sitemap:generate-all
