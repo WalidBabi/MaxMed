@@ -43,7 +43,5 @@ class AppServiceProvider extends ServiceProvider
             
             $view->with('navCategories', $navCategories);
         });
-        
-
     }
 }

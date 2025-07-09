@@ -44,6 +44,13 @@ class AuthenticatedSessionController extends Controller
                     'file' => $e->getFile(),
                     'line' => $e->getLine()
                 ]);
+                
+                if (app()->environment('production')) {
+                    return back()->withErrors([
+                        'email' => 'Service temporarily unavailable. Please try again later.'
+                    ]);
+                }
+                
                 throw new \Exception('Database connection failed: ' . $e->getMessage());
             }
 
@@ -60,6 +67,13 @@ class AuthenticatedSessionController extends Controller
                     'file' => $e->getFile(),
                     'line' => $e->getLine()
                 ]);
+                
+                if (app()->environment('production')) {
+                    return back()->withErrors([
+                        'email' => 'Session error. Please try again.'
+                    ]);
+                }
+                
                 throw new \Exception('Session regeneration failed: ' . $e->getMessage());
             }
             
@@ -74,6 +88,13 @@ class AuthenticatedSessionController extends Controller
             // Validate user and role
             if (!$user) {
                 Log::error('User not found after authentication');
+                
+                if (app()->environment('production')) {
+                    return back()->withErrors([
+                        'email' => 'Authentication failed. Please try again.'
+                    ]);
+                }
+                
                 throw new \Exception('User not found after authentication');
             }
 

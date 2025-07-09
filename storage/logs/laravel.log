@@ -18,3 +18,23 @@
 [2025-07-09 18:44:58] local.INFO: Determining redirect route {"user_id":7,"is_admin":true,"is_supplier":false,"should_clear_intended":false} 
 [2025-07-09 18:44:58] local.INFO: Redirecting admin user {"route":"admin.dashboard","user_id":7} 
 [2025-07-09 18:45:02] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR on line 1 at C:\\Users\\Walid\\OneDrive\\Desktop\\MaxMed\\vendor\\psy\\psysh\\src\\Exception\\ParseErrorException.php:44)"} 
+[2025-07-09 20:32:31] local.ERROR: Method Illuminate\Mail\Mailer::beforeSending does not exist. {"exception":"[object] (BadMethodCallException(code: 0): Method Illuminate\\Mail\\Mailer::beforeSending does not exist. at C:\\Users\\Walid\\OneDrive\\Desktop\\MaxMed\\vendor\\laravel\\framework\\src\\Illuminate\\Macroable\\Traits\\Macroable.php:115)"} 
+[2025-07-09 20:34:14] local.INFO: Login attempt started {"email":"wbabi@localhost.com","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0","environment":"local"} 
+[2025-07-09 20:34:14] local.INFO: Database connection successful  
+[2025-07-09 20:34:14] local.INFO: LoginRequest::authenticate() - Starting authentication process {"email":"wbabi@localhost.com","ip":"127.0.0.1","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0","timestamp":"2025-07-09T16:34:14.752088Z"} 
+[2025-07-09 20:34:14] local.DEBUG: LoginRequest::throttleKey() - Generated throttle key {"email":"wbabi@localhost.com","ip":"127.0.0.1","throttle_key":"wbabi@localhost.com|127.0.0.1"} 
+[2025-07-09 20:34:14] local.INFO: LoginRequest::ensureIsNotRateLimited() - Checking rate limits {"email":"wbabi@localhost.com","ip":"127.0.0.1","throttle_key":"wbabi@localhost.com|127.0.0.1"} 
+[2025-07-09 20:34:14] local.DEBUG: LoginRequest::throttleKey() - Generated throttle key {"email":"wbabi@localhost.com","ip":"127.0.0.1","throttle_key":"wbabi@localhost.com|127.0.0.1"} 
+[2025-07-09 20:34:14] local.DEBUG: LoginRequest::throttleKey() - Generated throttle key {"email":"wbabi@localhost.com","ip":"127.0.0.1","throttle_key":"wbabi@localhost.com|127.0.0.1"} 
+[2025-07-09 20:34:14] local.INFO: LoginRequest::ensureIsNotRateLimited() - Rate limit check passed {"email":"wbabi@localhost.com","attempts":0} 
+[2025-07-09 20:34:14] local.INFO: LoginRequest::authenticate() - Rate limiting check passed {"email":"wbabi@localhost.com","ip":"127.0.0.1"} 
+[2025-07-09 20:34:14] local.INFO: LoginRequest::authenticate() - Attempting authentication {"email":"wbabi@localhost.com","has_password":true,"remember":false,"credentials_keys":["email","password"]} 
+[2025-07-09 20:34:19] local.ERROR: Failed to send auth notification: Connection could not be established with host "localhost:25": stream_socket_client(): Unable to connect to localhost:25 (No connection could be made because the target machine actively refused it)  
+[2025-07-09 20:34:23] local.ERROR: Failed to send auth notification: Connection could not be established with host "localhost:25": stream_socket_client(): Unable to connect to localhost:25 (No connection could be made because the target machine actively refused it)  
+[2025-07-09 20:34:23] local.INFO: LoginRequest::authenticate() - Authentication successful {"email":"wbabi@localhost.com","user_id":7,"timestamp":"2025-07-09T16:34:23.331655Z"} 
+[2025-07-09 20:34:23] local.DEBUG: LoginRequest::throttleKey() - Generated throttle key {"email":"wbabi@localhost.com","ip":"127.0.0.1","throttle_key":"wbabi@localhost.com|127.0.0.1"} 
+[2025-07-09 20:34:23] local.INFO: Authentication successful {"email":"wbabi@localhost.com"} 
+[2025-07-09 20:34:23] local.INFO: Session regenerated successfully  
+[2025-07-09 20:34:23] local.INFO: User retrieved from Auth {"user_id":7,"user_email":"wbabi@localhost.com","user_role":"admin","is_admin":true,"is_supplier":false} 
+[2025-07-09 20:34:23] local.INFO: Determining redirect route {"user_id":7,"is_admin":true,"is_supplier":false,"should_clear_intended":false} 
+[2025-07-09 20:34:23] local.INFO: Redirecting admin user {"route":"admin.dashboard","user_id":7} 
