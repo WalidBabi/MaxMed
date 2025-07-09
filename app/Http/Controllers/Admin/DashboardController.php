@@ -75,31 +75,70 @@ class DashboardController extends Controller
         ];
         
         try {
-            // Get quotation stats
-            $stats['quotation_stats']['total_quotations'] = DB::table('quotations')->count();
-            $stats['quotation_stats']['pending_quotations'] = DB::table('quotations')->where('status', 'pending')->count();
-            $stats['quotation_stats']['quotations_this_week'] = DB::table('quotations')
-                ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
-                ->count();
-            $stats['quotation_stats']['approved_quotations'] = DB::table('quotations')->where('status', 'approved')->count();
+            // Check if tables exist before querying them
+            $tables = ['quotes', 'orders', 'customers', 'invoices'];
+            $existingTables = [];
             
-            // Get order stats
-            $stats['order_stats']['total_orders'] = DB::table('orders')->count();
-            $stats['order_stats']['pending_orders'] = DB::table('orders')->where('status', 'pending')->count();
-            $stats['order_stats']['completed_orders'] = DB::table('orders')->where('status', 'completed')->count();
+            foreach ($tables as $table) {
+                try {
+                    DB::select("SELECT 1 FROM {$table} LIMIT 1");
+                    $existingTables[] = $table;
+                } catch (\Exception $e) {
+                    Log::info("Table {$table} does not exist, skipping stats");
+                }
+            }
             
-            // Get customer stats
-            $stats['customer_stats']['total_customers'] = DB::table('customers')->count();
-            $stats['customer_stats']['new_customers_this_month'] = DB::table('customers')
-                ->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])
-                ->count();
+            Log::info('Available tables for stats', ['tables' => $existingTables]);
             
-            // Get revenue stats
-            $stats['revenue_stats']['total_revenue'] = DB::table('invoices')->where('status', 'paid')->sum('total_amount');
-            $stats['revenue_stats']['revenue_this_month'] = DB::table('invoices')
-                ->where('status', 'paid')
-                ->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])
-                ->sum('total_amount');
+            // Get quotation stats only if table exists
+            if (in_array('quotes', $existingTables)) {
+                try {
+                    $stats['quotation_stats']['total_quotations'] = DB::table('quotes')->count();
+                    $stats['quotation_stats']['pending_quotations'] = DB::table('quotes')->where('status', 'pending')->count();
+                    $stats['quotation_stats']['quotations_this_week'] = DB::table('quotes')
+                        ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
+                        ->count();
+                    $stats['quotation_stats']['approved_quotations'] = DB::table('quotes')->where('status', 'approved')->count();
+                } catch (\Exception $e) {
+                    Log::error('Error getting quotation stats', ['error' => $e->getMessage()]);
+                }
+            }
+            
+            // Get order stats only if table exists
+            if (in_array('orders', $existingTables)) {
+                try {
+                    $stats['order_stats']['total_orders'] = DB::table('orders')->count();
+                    $stats['order_stats']['pending_orders'] = DB::table('orders')->where('status', 'pending')->count();
+                    $stats['order_stats']['completed_orders'] = DB::table('orders')->where('status', 'completed')->count();
+                } catch (\Exception $e) {
+                    Log::error('Error getting order stats', ['error' => $e->getMessage()]);
+                }
+            }
+            
+            // Get customer stats only if table exists
+            if (in_array('customers', $existingTables)) {
+                try {
+                    $stats['customer_stats']['total_customers'] = DB::table('customers')->count();
+                    $stats['customer_stats']['new_customers_this_month'] = DB::table('customers')
+                        ->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])
+                        ->count();
+                } catch (\Exception $e) {
+                    Log::error('Error getting customer stats', ['error' => $e->getMessage()]);
+                }
+            }
+            
+            // Get revenue stats only if table exists
+            if (in_array('invoices', $existingTables)) {
+                try {
+                    $stats['revenue_stats']['total_revenue'] = DB::table('invoices')->where('status', 'paid')->sum('total_amount');
+                    $stats['revenue_stats']['revenue_this_month'] = DB::table('invoices')
+                        ->where('status', 'paid')
+                        ->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])
+                        ->sum('total_amount');
+                } catch (\Exception $e) {
+                    Log::error('Error getting revenue stats', ['error' => $e->getMessage()]);
+                }
+            }
                 
         } catch (\Exception $e) {
             Log::error('Error getting dashboard stats', [

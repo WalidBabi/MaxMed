@@ -59,9 +59,18 @@ class SupplierRegistrationController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        try {
-            Log::info('Supplier registration attempt', $request->all());
+        Log::info('=== SUPPLIER REGISTRATION PROCESS STARTED ===', [
+            'email' => $request->email ?? 'unknown',
+            'name' => $request->name ?? 'unknown',
+            'company_name' => $request->company_name ?? 'unknown',
+            'ip' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'environment' => app()->environment(),
+            'timestamp' => now()->toISOString()
+        ]);
 
+        try {
+            Log::info('Step 1: Starting supplier registration validation');
             // Validate based on whether this is invitation-based or public registration
             $validationRules = [
                 'name' => ['required', 'string', 'max:255'],
@@ -86,19 +95,20 @@ class SupplierRegistrationController extends Controller
                         }
                         
                         try {
+                            Log::info('Step 1.1: Validating reCAPTCHA for supplier registration');
                             $response = Http::timeout(10)->asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
                                 'secret' => config('services.recaptcha.secret_key'),
                                 'response' => $value,
                                 'remoteip' => request()->ip(),
                             ]);
                             
-                            Log::info('reCAPTCHA response', ['success' => $response->json('success')]);
+                            Log::info('Step 1.1: reCAPTCHA response for supplier', ['success' => $response->json('success')]);
                             
                             if (!$response->json('success')) {
                                 $fail('The reCAPTCHA verification failed. Please try again.');
                             }
                         } catch (\Exception $e) {
-                            Log::error('reCAPTCHA verification failed', [
+                            Log::error('Step 1.1: reCAPTCHA verification failed for supplier', [
                                 'error' => $e->getMessage(),
                                 'environment' => app()->environment()
                             ]);
@@ -114,8 +124,10 @@ class SupplierRegistrationController extends Controller
             $invitation = null;
             $isInvitationBased = false;
 
+            Log::info('Step 1.2: Checking for invitation-based registration');
             // Check if this is invitation-based registration
             if ($request->has('token') && $request->token) {
+                Log::info('Step 1.2: Invitation-based registration detected', ['token' => $request->token]);
                 $validationRules['token'] = ['required', 'string'];
                 $isInvitationBased = true;
                 
@@ -126,35 +138,52 @@ class SupplierRegistrationController extends Controller
                     ->first();
 
                 if (!$invitation) {
+                    Log::error('Step 1.2: Invalid or expired invitation token', ['token' => $request->token]);
                     return back()->withErrors(['error' => 'Invalid or expired invitation token.']);
                 }
 
+                Log::info('Step 1.2: Valid invitation found', ['invitation_id' => $invitation->id]);
+
                 // For invitation-based registration, verify email matches invitation
                 if ($invitation->email !== $request->email) {
+                    Log::error('Step 1.2: Email does not match invitation', [
+                        'invitation_email' => $invitation->email,
+                        'provided_email' => $request->email
+                    ]);
                     return back()->withErrors(['error' => 'The email address does not match the invitation.']);
                 }
+            } else {
+                Log::info('Step 1.2: Public registration (no invitation)');
             }
 
+            Log::info('Step 1.3: Running validation');
             $request->validate($validationRules);
+            Log::info('Step 1.3: Validation passed');
 
+            Log::info('Step 2: Getting supplier role');
             // Get supplier role
             $supplierRole = Role::where('name', 'supplier')->first();
             if (!$supplierRole) {
-                Log::error('Supplier role not found');
+                Log::error('Step 2: Supplier role not found');
                 return back()->withErrors(['error' => 'Supplier role not found. Please contact administrator.']);
             }
+            Log::info('Step 2: Supplier role found', ['role_id' => $supplierRole->id]);
 
             try {
+                Log::info('Step 3: Starting database transaction');
                 // Start transaction
                 DB::beginTransaction();
 
+                Log::info('Step 3.1: Creating user');
                 $user = User::create([
                     'name' => $request->name,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
                     'role_id' => $supplierRole->id,
                 ]);
+                Log::info('Step 3.1: User created successfully', ['user_id' => $user->id]);
 
+                Log::info('Step 3.2: Creating supplier information');
                 // Create supplier information
                 SupplierInformation::create([
                     'user_id' => $user->id,
@@ -163,12 +192,16 @@ class SupplierRegistrationController extends Controller
                     'phone_primary' => $request->phone_primary,
                     'status' => 'pending_approval',
                 ]);
+                Log::info('Step 3.2: Supplier information created successfully', ['user_id' => $user->id]);
 
                 // Update invitation status only if this is invitation-based registration
                 if ($isInvitationBased && $invitation) {
+                    Log::info('Step 3.3: Updating invitation status', ['invitation_id' => $invitation->id]);
                     $invitation->accept($user);
+                    Log::info('Step 3.3: Invitation accepted successfully');
                 }
 
+                Log::info('Step 4: Sending admin notification');
                 // Send notification to admin
                 try {
                     $adminEmail = Config::get('mail.admin_email');
@@ -191,28 +224,37 @@ class SupplierRegistrationController extends Controller
                     
                     if ($admin) {
                         Notification::send($admin, new SupplierAuthNotification($user, 'registered', 'Email'));
-                        Log::info('Admin supplier notification sent successfully', ['user_id' => $user->id]);
+                        Log::info('Step 4: Admin supplier notification sent successfully', ['user_id' => $user->id]);
+                    } else {
+                        Log::warning('Step 4: No admin found to send supplier notification to', ['user_id' => $user->id]);
                     }
                 } catch (\Exception $e) {
-                    Log::error('Failed to send supplier registration notification: ' . $e->getMessage(), [
+                    Log::error('Step 4: Failed to send supplier registration notification', [
                         'user_id' => $user->id,
+                        'error' => $e->getMessage(),
                         'environment' => app()->environment()
                     ]);
                     // Don't fail registration if admin notification fails
                 }
 
+                Log::info('Step 5: Committing database transaction');
                 // Commit transaction
                 DB::commit();
+                Log::info('Step 5: Database transaction committed successfully');
 
                 // Log for debugging duplicate emails
-                Log::info('Supplier registered, firing Registered event', ['user_id' => $user->id, 'email' => $user->email, 'type' => $isInvitationBased ? 'invitation' : 'public']);
+                Log::info('Step 6: Sending email verification notification', [
+                    'user_id' => $user->id, 
+                    'email' => $user->email, 
+                    'type' => $isInvitationBased ? 'invitation' : 'public'
+                ]);
 
                 // Send verification email manually instead of using event to avoid duplicates
                 try {
                     $user->sendEmailVerificationNotification();
-                    Log::info('Supplier email verification notification sent successfully', ['user_id' => $user->id]);
+                    Log::info('Step 6: Supplier email verification notification sent successfully', ['user_id' => $user->id]);
                 } catch (\Exception $e) {
-                    Log::error('Failed to send supplier email verification notification', [
+                    Log::error('Step 6: Failed to send supplier email verification notification', [
                         'user_id' => $user->id,
                         'error' => $e->getMessage(),
                         'environment' => app()->environment()
@@ -223,27 +265,35 @@ class SupplierRegistrationController extends Controller
                 // Note: Commenting out event firing to prevent duplicate emails
                 // event(new Registered($user));
 
+                Log::info('Step 7: Logging in supplier user');
                 Auth::login($user);
+                Log::info('Step 7: Supplier user logged in successfully', ['user_id' => $user->id]);
                 
                 // Set a session flag to show orders hint
                 session()->put('show_orders_hint', true);
+                Log::info('Step 7: Session flag set');
 
+                Log::info('Step 8: Checking email verification status');
                 // Redirect to email verification notice if email is not verified
                 if (!$user->hasVerifiedEmail()) {
+                    Log::info('Step 8: Supplier email not verified, redirecting to verification notice', ['user_id' => $user->id]);
                     return redirect()->route('verification.notice')
                         ->with('message', 'Please verify your email address to complete your registration.');
                 }
 
+                Log::info('Step 8: Supplier email verified, redirecting to supplier dashboard', ['user_id' => $user->id]);
                 return redirect(route('supplier.dashboard', absolute: false));
                 
             } catch (\Exception $e) {
-                DB::rollBack();
-                Log::error('Supplier registration database error', [
+                Log::error('Step 3-8: Database transaction failed', [
                     'error' => $e->getMessage(),
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
                     'environment' => app()->environment()
                 ]);
+                
+                DB::rollBack();
+                Log::info('Database transaction rolled back');
                 
                 if (app()->environment('production')) {
                     return back()->withErrors(['error' => 'Registration failed. Please try again.'])->withInput($request->except('password'));
@@ -253,7 +303,7 @@ class SupplierRegistrationController extends Controller
             }
             
         } catch (\Exception $e) {
-            Log::error('Supplier registration error occurred', [
+            Log::error('=== SUPPLIER REGISTRATION PROCESS FAILED ===', [
                 'email' => $request->email ?? 'unknown',
                 'error' => $e->getMessage(),
                 'file' => $e->getFile(),

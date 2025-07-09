@@ -26,20 +26,27 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        Log::info('=== LOGIN PROCESS STARTED ===', [
+            'email' => $request->email,
+            'ip' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'environment' => app()->environment(),
+            'timestamp' => now()->toISOString()
+        ]);
+
         try {
-            Log::info('Login attempt started', [
+            Log::info('Step 1: Starting login validation', [
                 'email' => $request->email,
-                'ip' => $request->ip(),
-                'user_agent' => $request->userAgent(),
-                'environment' => app()->environment()
+                'has_password' => !empty($request->password)
             ]);
 
             // Check database connection
             try {
+                Log::info('Step 2: Testing database connection');
                 DB::connection()->getPdo();
-                Log::info('Database connection successful');
+                Log::info('Step 2: Database connection successful');
             } catch (\Exception $e) {
-                Log::error('Database connection failed', [
+                Log::error('Step 2: Database connection failed', [
                     'error' => $e->getMessage(),
                     'file' => $e->getFile(),
                     'line' => $e->getLine()
@@ -54,15 +61,17 @@ class AuthenticatedSessionController extends Controller
                 throw new \Exception('Database connection failed: ' . $e->getMessage());
             }
 
+            Log::info('Step 3: Starting authentication process');
             $request->authenticate();
-            Log::info('Authentication successful', ['email' => $request->email]);
+            Log::info('Step 3: Authentication successful', ['email' => $request->email]);
 
             // Check session configuration
             try {
+                Log::info('Step 4: Testing session regeneration');
                 $request->session()->regenerate();
-                Log::info('Session regenerated successfully');
+                Log::info('Step 4: Session regenerated successfully');
             } catch (\Exception $e) {
-                Log::error('Session regeneration failed', [
+                Log::error('Step 4: Session regeneration failed', [
                     'error' => $e->getMessage(),
                     'file' => $e->getFile(),
                     'line' => $e->getLine()
@@ -77,17 +86,19 @@ class AuthenticatedSessionController extends Controller
                 throw new \Exception('Session regeneration failed: ' . $e->getMessage());
             }
             
+            Log::info('Step 5: Clearing problematic intended URLs');
             // Clear any problematic intended URLs that might redirect to API endpoints
             $this->clearProblematicIntendedUrls($request);
             
             // Set a session flag to show orders hint
             $request->session()->put('show_orders_hint', true);
             
+            Log::info('Step 6: Getting authenticated user');
             $user = Auth::user();
             
             // Validate user and role
             if (!$user) {
-                Log::error('User not found after authentication');
+                Log::error('Step 6: User not found after authentication');
                 
                 if (app()->environment('production')) {
                     return back()->withErrors([
@@ -98,15 +109,22 @@ class AuthenticatedSessionController extends Controller
                 throw new \Exception('User not found after authentication');
             }
 
+            Log::info('Step 6: User retrieved successfully', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'has_role' => $user->role ? 'yes' : 'no',
+                'role_name' => $user->role ? $user->role->name : 'no role'
+            ]);
+
             // Check if user has a role
             if (!$user->role) {
-                Log::warning('User has no role assigned', [
+                Log::warning('Step 6: User has no role assigned', [
                     'user_id' => $user->id,
                     'email' => $user->email
                 ]);
             }
 
-            Log::info('User retrieved from Auth', [
+            Log::info('Step 7: Checking user permissions', [
                 'user_id' => $user->id,
                 'user_email' => $user->email,
                 'user_role' => $user->role ? $user->role->name : 'no role',
@@ -126,10 +144,10 @@ class AuthenticatedSessionController extends Controller
             
             if ($shouldClearIntended) {
                 session()->forget('url.intended');
-                Log::info('Cleared problematic intended URL', ['intended_url' => $intendedUrl]);
+                Log::info('Step 7: Cleared problematic intended URL', ['intended_url' => $intendedUrl]);
             }
             
-            Log::info('Determining redirect route', [
+            Log::info('Step 8: Determining redirect route', [
                 'user_id' => $user->id,
                 'is_admin' => $user->isAdmin(),
                 'is_supplier' => $user->isSupplier(),
@@ -138,29 +156,80 @@ class AuthenticatedSessionController extends Controller
             
             if ($user->isAdmin()) {
                 $route = $shouldClearIntended ? 'admin.dashboard' : 'admin.dashboard';
-                Log::info('Redirecting admin user', ['route' => $route, 'user_id' => $user->id]);
-                return $shouldClearIntended ? 
-                    redirect()->route('admin.dashboard') : 
-                    redirect()->intended(route('admin.dashboard'));
+                Log::info('Step 8: Redirecting admin user', ['route' => $route, 'user_id' => $user->id]);
+                
+                try {
+                    $redirect = $shouldClearIntended ? 
+                        redirect()->route('admin.dashboard') : 
+                        redirect()->intended(route('admin.dashboard'));
+                    
+                    Log::info('Step 8: Admin redirect created successfully', [
+                        'route' => $route,
+                        'user_id' => $user->id
+                    ]);
+                    
+                    return $redirect;
+                } catch (\Exception $e) {
+                    Log::error('Step 8: Admin redirect failed', [
+                        'error' => $e->getMessage(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine()
+                    ]);
+                    throw $e;
+                }
             }
 
             // Check if user is a supplier
             if ($user->isSupplier()) {
                 $route = $shouldClearIntended ? 'supplier.dashboard' : 'supplier.dashboard';
-                Log::info('Redirecting supplier user', ['route' => $route, 'user_id' => $user->id]);
-                return $shouldClearIntended ? 
-                    redirect()->route('supplier.dashboard') : 
-                    redirect()->intended(route('supplier.dashboard'));
+                Log::info('Step 8: Redirecting supplier user', ['route' => $route, 'user_id' => $user->id]);
+                
+                try {
+                    $redirect = $shouldClearIntended ? 
+                        redirect()->route('supplier.dashboard') : 
+                        redirect()->intended(route('supplier.dashboard'));
+                    
+                    Log::info('Step 8: Supplier redirect created successfully', [
+                        'route' => $route,
+                        'user_id' => $user->id
+                    ]);
+                    
+                    return $redirect;
+                } catch (\Exception $e) {
+                    Log::error('Step 8: Supplier redirect failed', [
+                        'error' => $e->getMessage(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine()
+                    ]);
+                    throw $e;
+                }
             }
 
             $route = $shouldClearIntended ? 'dashboard' : 'dashboard';
-            Log::info('Redirecting regular user', ['route' => $route, 'user_id' => $user->id]);
-            return $shouldClearIntended ? 
-                redirect()->route('dashboard') : 
-                redirect()->intended(route('dashboard'));
+            Log::info('Step 8: Redirecting regular user', ['route' => $route, 'user_id' => $user->id]);
+            
+            try {
+                $redirect = $shouldClearIntended ? 
+                    redirect()->route('dashboard') : 
+                    redirect()->intended(route('dashboard'));
+                
+                Log::info('Step 8: Regular user redirect created successfully', [
+                    'route' => $route,
+                    'user_id' => $user->id
+                ]);
+                
+                return $redirect;
+            } catch (\Exception $e) {
+                Log::error('Step 8: Regular user redirect failed', [
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine()
+                ]);
+                throw $e;
+            }
                 
         } catch (\Exception $e) {
-            Log::error('Login error occurred', [
+            Log::error('=== LOGIN PROCESS FAILED ===', [
                 'email' => $request->email,
                 'error' => $e->getMessage(),
                 'file' => $e->getFile(),

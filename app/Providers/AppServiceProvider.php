@@ -32,6 +32,13 @@ class AppServiceProvider extends ServiceProvider
         // Set default timezone for Carbon
         date_default_timezone_set('Asia/Dubai');
         
+        // Set mail driver to log in development to prevent connection errors
+        if (app()->environment('local')) {
+            config(['mail.default' => 'log']);
+            config(['mail.mailers.log.transport' => 'log']);
+            config(['mail.mailers.log.channel' => 'single']);
+        }
+        
         // Share navigation categories with all views
         View::composer('*', function ($view) {
             $navCategories = Category::whereNull('parent_id')
