@@ -14,11 +14,11 @@
         <!-- Right: Actions -->
         <div>
             <a href="{{ route('admin.supplier-invitations.create') }}" 
-               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
-                    <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
+               class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
-                <span class="ml-2">Send New Invitation</span>
+                Send New Invitation
             </a>
         </div>
     </div>
@@ -56,12 +56,46 @@
         </div>
     </div>
 
+    <!-- Bulk Actions -->
+    <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-4">
+        <div class="p-4">
+            <form id="bulkActionForm" action="{{ route('admin.supplier-invitations.bulk-action') }}" method="POST" class="flex items-center justify-between">
+                @csrf
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="selectAll" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <label for="selectAll" class="ml-2 text-sm font-medium text-gray-700">Select All</label>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <select name="action" id="bulkAction" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <option value="">Choose Action</option>
+                            <option value="resend">Resend Invitations</option>
+                            <option value="cancel">Cancel Invitations</option>
+                            <option value="delete">Delete Invitations</option>
+                        </select>
+                        <button type="submit" id="bulkActionBtn" disabled class="inline-flex items-center px-3 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
+                            Apply
+                        </button>
+                    </div>
+                </div>
+                <div class="text-sm text-gray-500">
+                    <span id="selectedCount">0</span> invitation(s) selected
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Table -->
     <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
         <div class="overflow-x-auto">
             <table class="table-auto w-full">
                 <thead class="text-xs font-semibold uppercase text-gray-500 bg-gray-50 border-t border-b border-gray-200">
                     <tr>
+                        <th class="px-6 py-3 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="selectAllHeader" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+                        </th>
                         <th class="px-6 py-3 whitespace-nowrap">
                             <div class="font-semibold text-left">Name</div>
                         </th>
@@ -91,6 +125,11 @@
                 <tbody class="text-sm divide-y divide-gray-200">
                     @forelse($invitations as $invitation)
                     <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <input type="checkbox" name="invitation_ids[]" value="{{ $invitation->id }}" class="invitation-checkbox rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            </div>
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="font-medium text-gray-800">{{ $invitation->contact_name }}</div>
                         </td>
@@ -144,25 +183,34 @@
                                 @if($invitation->status === 'pending')
                                 <form action="{{ route('admin.supplier-invitations.resend', $invitation) }}" method="POST" class="inline">
                                     @csrf
-                                    <button type="submit" class="btn-sm bg-indigo-100 hover:bg-indigo-200 text-indigo-600">
+                                    <button type="submit" class="inline-flex items-center px-3 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                                         Resend
                                     </button>
                                 </form>
                                 
                                 <form action="{{ route('admin.supplier-invitations.cancel', $invitation) }}" method="POST" class="inline">
                                     @csrf
-                                    <button type="submit" class="btn-sm bg-red-100 hover:bg-red-200 text-red-600" 
+                                    <button type="submit" class="inline-flex items-center px-3 py-2 bg-yellow-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-700 focus:bg-yellow-700 active:bg-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 transition ease-in-out duration-150" 
                                             onclick="return confirm('Are you sure you want to cancel this invitation?')">
                                         Cancel
                                     </button>
                                 </form>
                                 @endif
+                                
+                                <form action="{{ route('admin.supplier-invitations.destroy', $invitation) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="inline-flex items-center px-3 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150" 
+                                            onclick="return confirm('Are you sure you want to delete this invitation? This action cannot be undone.')">
+                                        Delete
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" class="px-6 py-8 text-center">
+                        <td colspan="9" class="px-6 py-8 text-center">
                             <div class="text-gray-500">No invitations found.</div>
                         </td>
                     </tr>
@@ -195,4 +243,101 @@
     {{ session('error') }}
 </div>
 @endif
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const selectAllHeaderCheckbox = document.getElementById('selectAllHeader');
+    const invitationCheckboxes = document.querySelectorAll('.invitation-checkbox');
+    const bulkActionSelect = document.getElementById('bulkAction');
+    const bulkActionBtn = document.getElementById('bulkActionBtn');
+    const selectedCountSpan = document.getElementById('selectedCount');
+    const bulkActionForm = document.getElementById('bulkActionForm');
+
+    // Function to update selected count
+    function updateSelectedCount() {
+        const checkedBoxes = document.querySelectorAll('.invitation-checkbox:checked');
+        const count = checkedBoxes.length;
+        selectedCountSpan.textContent = count;
+        
+        // Enable/disable bulk action button
+        bulkActionBtn.disabled = count === 0 || bulkActionSelect.value === '';
+        
+        // Update select all checkboxes
+        const allCheckboxes = document.querySelectorAll('.invitation-checkbox');
+        const allChecked = allCheckboxes.length > 0 && allCheckboxes.length === checkedBoxes.length;
+        const someChecked = count > 0;
+        
+        selectAllCheckbox.checked = allChecked;
+        selectAllHeaderCheckbox.checked = allChecked;
+        selectAllCheckbox.indeterminate = someChecked && !allChecked;
+        selectAllHeaderCheckbox.indeterminate = someChecked && !allChecked;
+    }
+
+    // Select all functionality
+    function setupSelectAll(checkbox, isHeader = false) {
+        checkbox.addEventListener('change', function() {
+            const isChecked = this.checked;
+            invitationCheckboxes.forEach(cb => {
+                cb.checked = isChecked;
+            });
+            updateSelectedCount();
+        });
+    }
+
+    // Individual checkbox functionality
+    invitationCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateSelectedCount);
+    });
+
+    // Bulk action select change
+    bulkActionSelect.addEventListener('change', function() {
+        const checkedBoxes = document.querySelectorAll('.invitation-checkbox:checked');
+        bulkActionBtn.disabled = checkedBoxes.length === 0 || this.value === '';
+    });
+
+    // Form submission confirmation
+    bulkActionForm.addEventListener('submit', function(e) {
+        const action = bulkActionSelect.value;
+        const checkedBoxes = document.querySelectorAll('.invitation-checkbox:checked');
+        
+        if (checkedBoxes.length === 0) {
+            e.preventDefault();
+            alert('Please select at least one invitation.');
+            return false;
+        }
+        
+        if (!action) {
+            e.preventDefault();
+            alert('Please select an action.');
+            return false;
+        }
+        
+        let confirmMessage = '';
+        switch(action) {
+            case 'resend':
+                confirmMessage = `Are you sure you want to resend ${checkedBoxes.length} invitation(s)?`;
+                break;
+            case 'cancel':
+                confirmMessage = `Are you sure you want to cancel ${checkedBoxes.length} invitation(s)?`;
+                break;
+            case 'delete':
+                confirmMessage = `Are you sure you want to delete ${checkedBoxes.length} invitation(s)? This action cannot be undone.`;
+                break;
+        }
+        
+        if (!confirm(confirmMessage)) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // Setup select all checkboxes
+    setupSelectAll(selectAllCheckbox);
+    setupSelectAll(selectAllHeaderCheckbox, true);
+    
+    // Initial count update
+    updateSelectedCount();
+});
+</script>
 @endsection 
