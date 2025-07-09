@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Log;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -74,7 +75,53 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isAdmin(): bool
     {
-        return $this->role && $this->role->hasPermission('dashboard.view');
+        Log::info('User::isAdmin() - Starting admin check', [
+            'user_id' => $this->id,
+            'user_email' => $this->email,
+            'role_id' => $this->role_id,
+            'has_role_relation' => $this->role ? 'yes' : 'no'
+        ]);
+        
+        try {
+            if (!$this->role) {
+                Log::info('User::isAdmin() - No role found', [
+                    'user_id' => $this->id,
+                    'role_id' => $this->role_id,
+                    'result' => false
+                ]);
+                return false;
+            }
+            
+            Log::info('User::isAdmin() - Role found, checking permissions', [
+                'user_id' => $this->id,
+                'role_name' => $this->role->name,
+                'role_id' => $this->role->id,
+                'role_permissions' => $this->role->permissions
+            ]);
+            
+            $hasPermission = $this->role->hasPermission('dashboard.view');
+            
+            Log::info('User::isAdmin() - Permission check completed', [
+                'user_id' => $this->id,
+                'role_name' => $this->role->name,
+                'has_dashboard_view' => $hasPermission,
+                'result' => $hasPermission
+            ]);
+            
+            return $hasPermission;
+            
+        } catch (\Exception $e) {
+            Log::error('User::isAdmin() - Exception occurred', [
+                'user_id' => $this->id,
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            // Return false as fallback
+            return false;
+        }
     }
 
     /**
@@ -212,7 +259,52 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isSupplier(): bool
     {
-        return $this->role && $this->role->name === 'supplier';
+        Log::info('User::isSupplier() - Starting supplier check', [
+            'user_id' => $this->id,
+            'user_email' => $this->email,
+            'role_id' => $this->role_id,
+            'has_role_relation' => $this->role ? 'yes' : 'no'
+        ]);
+
+        try {
+            if (!$this->role) {
+                Log::info('User::isSupplier() - No role found', [
+                    'user_id' => $this->id,
+                    'role_id' => $this->role_id,
+                    'result' => false
+                ]);
+                return false;
+            }
+
+            Log::info('User::isSupplier() - Role found, checking role name', [
+                'user_id' => $this->id,
+                'role_name' => $this->role->name,
+                'role_id' => $this->role->id
+            ]);
+
+            $isSupplier = $this->role->name === 'supplier';
+
+            Log::info('User::isSupplier() - Supplier check completed', [
+                'user_id' => $this->id,
+                'role_name' => $this->role->name,
+                'is_supplier' => $isSupplier,
+                'result' => $isSupplier
+            ]);
+
+            return $isSupplier;
+
+        } catch (\Exception $e) {
+            Log::error('User::isSupplier() - Exception occurred', [
+                'user_id' => $this->id,
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            // Return false as fallback
+            return false;
+        }
     }
 
     /**
