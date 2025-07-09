@@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Throwable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Auth;
 
 class Handler extends ExceptionHandler
 {
@@ -32,8 +33,22 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-            // Log all exceptions with detailed information
-            $this->logException($e);
+            // Log all exceptions with detailed context
+            Log::error('Exception caught in global handler', [
+                'exception_type' => get_class($e),
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'url' => request()->url(),
+                'method' => request()->method(),
+                'ip' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+                'user_id' => Auth::id(),
+                'session_id' => session()->getId(),
+                'timestamp' => now()->toISOString(),
+                'environment' => app()->environment()
+            ]);
         });
 
         // Handle specific exceptions

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Role extends Model
 {
@@ -48,7 +49,52 @@ class Role extends Model
      */
     public function hasPermission(string $permission): bool
     {
-        return in_array($permission, $this->permissions ?? []);
+        Log::info('Role::hasPermission() - Starting permission check', [
+            'role_id' => $this->id,
+            'role_name' => $this->name,
+            'checking_permission' => $permission,
+            'role_permissions' => $this->permissions,
+            'permissions_type' => gettype($this->permissions)
+        ]);
+        
+        try {
+            if (!$this->permissions) {
+                Log::info('Role::hasPermission() - No permissions found', [
+                    'role_id' => $this->id,
+                    'role_name' => $this->name,
+                    'permission' => $permission,
+                    'result' => false
+                ]);
+                return false;
+            }
+            
+            $hasPermission = in_array($permission, $this->permissions ?? []);
+            
+            Log::info('Role::hasPermission() - Permission check completed', [
+                'role_id' => $this->id,
+                'role_name' => $this->name,
+                'permission' => $permission,
+                'permissions_array' => $this->permissions,
+                'has_permission' => $hasPermission,
+                'result' => $hasPermission
+            ]);
+            
+            return $hasPermission;
+            
+        } catch (\Exception $e) {
+            Log::error('Role::hasPermission() - Exception occurred', [
+                'role_id' => $this->id,
+                'role_name' => $this->name,
+                'permission' => $permission,
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            // Return false as fallback
+            return false;
+        }
     }
 
     /**

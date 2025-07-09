@@ -31,25 +31,34 @@ class AuthenticatedSessionController extends Controller
             'ip' => $request->ip(),
             'user_agent' => $request->userAgent(),
             'environment' => app()->environment(),
-            'timestamp' => now()->toISOString()
+            'timestamp' => now()->toISOString(),
+            'session_id' => session()->getId(),
+            'app_debug' => config('app.debug'),
+            'app_env' => config('app.env')
         ]);
 
         try {
             Log::info('Step 1: Starting login validation', [
                 'email' => $request->email,
-                'has_password' => !empty($request->password)
+                'has_password' => !empty($request->password),
+                'request_method' => $request->method(),
+                'request_path' => $request->path()
             ]);
 
             // Check database connection
             try {
                 Log::info('Step 2: Testing database connection');
-                DB::connection()->getPdo();
-                Log::info('Step 2: Database connection successful');
+                $pdo = DB::connection()->getPdo();
+                Log::info('Step 2: Database connection successful', [
+                    'connection_name' => DB::connection()->getName(),
+                    'database_name' => DB::connection()->getDatabaseName()
+                ]);
             } catch (\Exception $e) {
                 Log::error('Step 2: Database connection failed', [
                     'error' => $e->getMessage(),
                     'file' => $e->getFile(),
-                    'line' => $e->getLine()
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString()
                 ]);
                 
                 if (app()->environment('production')) {
@@ -62,19 +71,42 @@ class AuthenticatedSessionController extends Controller
             }
 
             Log::info('Step 3: Starting authentication process');
+            
+            // Add pre-authentication logging
+            Log::info('Step 3a: Before calling authenticate method', [
+                'email' => $request->email,
+                'auth_guard' => config('auth.defaults.guard'),
+                'auth_provider' => config('auth.guards.web.provider'),
+                'user_model' => config('auth.providers.users.model')
+            ]);
+            
             $request->authenticate();
-            Log::info('Step 3: Authentication successful', ['email' => $request->email]);
+            
+            Log::info('Step 3b: Authentication successful', [
+                'email' => $request->email,
+                'auth_id' => Auth::id(),
+                'auth_check' => Auth::check()
+            ]);
 
             // Check session configuration
             try {
-                Log::info('Step 4: Testing session regeneration');
+                Log::info('Step 4: Testing session regeneration', [
+                    'session_driver' => config('session.driver'),
+                    'session_lifetime' => config('session.lifetime'),
+                    'session_id_before' => session()->getId()
+                ]);
+                
                 $request->session()->regenerate();
-                Log::info('Step 4: Session regenerated successfully');
+                
+                Log::info('Step 4: Session regenerated successfully', [
+                    'session_id_after' => session()->getId()
+                ]);
             } catch (\Exception $e) {
                 Log::error('Step 4: Session regeneration failed', [
                     'error' => $e->getMessage(),
                     'file' => $e->getFile(),
-                    'line' => $e->getLine()
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString()
                 ]);
                 
                 if (app()->environment('production')) {
@@ -98,7 +130,10 @@ class AuthenticatedSessionController extends Controller
             
             // Validate user and role
             if (!$user) {
-                Log::error('Step 6: User not found after authentication');
+                Log::error('Step 6: User not found after authentication', [
+                    'auth_id' => Auth::id(),
+                    'auth_check' => Auth::check()
+                ]);
                 
                 if (app()->environment('production')) {
                     return back()->withErrors([
@@ -112,6 +147,7 @@ class AuthenticatedSessionController extends Controller
             Log::info('Step 6: User retrieved successfully', [
                 'user_id' => $user->id,
                 'user_email' => $user->email,
+                'user_role_id' => $user->role_id,
                 'has_role' => $user->role ? 'yes' : 'no',
                 'role_name' => $user->role ? $user->role->name : 'no role'
             ]);
@@ -120,16 +156,50 @@ class AuthenticatedSessionController extends Controller
             if (!$user->role) {
                 Log::warning('Step 6: User has no role assigned', [
                     'user_id' => $user->id,
-                    'email' => $user->email
+                    'email' => $user->email,
+                    'role_id' => $user->role_id
                 ]);
+            }
+
+            // Test role methods before using them
+            try {
+                Log::info('Step 7: Testing role methods', [
+                    'user_id' => $user->id,
+                    'testing_isAdmin' => 'about to call isAdmin()'
+                ]);
+                
+                $isAdmin = $user->isAdmin();
+                
+                Log::info('Step 7: isAdmin() method completed', [
+                    'user_id' => $user->id,
+                    'is_admin' => $isAdmin,
+                    'testing_isSupplier' => 'about to call isSupplier()'
+                ]);
+                
+                $isSupplier = $user->isSupplier();
+                
+                Log::info('Step 7: isSupplier() method completed', [
+                    'user_id' => $user->id,
+                    'is_supplier' => $isSupplier
+                ]);
+                
+            } catch (\Exception $e) {
+                Log::error('Step 7: Role method test failed', [
+                    'user_id' => $user->id,
+                    'error' => $e->getMessage(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString()
+                ]);
+                throw $e;
             }
 
             Log::info('Step 7: Checking user permissions', [
                 'user_id' => $user->id,
                 'user_email' => $user->email,
                 'user_role' => $user->role ? $user->role->name : 'no role',
-                'is_admin' => $user->isAdmin(),
-                'is_supplier' => $user->isSupplier()
+                'is_admin' => $isAdmin,
+                'is_supplier' => $isSupplier
             ]);
             
             // Clear the intended URL if it's an API endpoint or notification check
@@ -149,12 +219,12 @@ class AuthenticatedSessionController extends Controller
             
             Log::info('Step 8: Determining redirect route', [
                 'user_id' => $user->id,
-                'is_admin' => $user->isAdmin(),
-                'is_supplier' => $user->isSupplier(),
+                'is_admin' => $isAdmin,
+                'is_supplier' => $isSupplier,
                 'should_clear_intended' => $shouldClearIntended
             ]);
             
-            if ($user->isAdmin()) {
+            if ($isAdmin) {
                 $route = $shouldClearIntended ? 'admin.dashboard' : 'admin.dashboard';
                 Log::info('Step 8: Redirecting admin user', ['route' => $route, 'user_id' => $user->id]);
                 
@@ -165,7 +235,8 @@ class AuthenticatedSessionController extends Controller
                     
                     Log::info('Step 8: Admin redirect created successfully', [
                         'route' => $route,
-                        'user_id' => $user->id
+                        'user_id' => $user->id,
+                        'redirect_url' => $redirect->getTargetUrl()
                     ]);
                     
                     return $redirect;
@@ -173,14 +244,15 @@ class AuthenticatedSessionController extends Controller
                     Log::error('Step 8: Admin redirect failed', [
                         'error' => $e->getMessage(),
                         'file' => $e->getFile(),
-                        'line' => $e->getLine()
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString()
                     ]);
                     throw $e;
                 }
             }
 
             // Check if user is a supplier
-            if ($user->isSupplier()) {
+            if ($isSupplier) {
                 $route = $shouldClearIntended ? 'supplier.dashboard' : 'supplier.dashboard';
                 Log::info('Step 8: Redirecting supplier user', ['route' => $route, 'user_id' => $user->id]);
                 
@@ -191,7 +263,8 @@ class AuthenticatedSessionController extends Controller
                     
                     Log::info('Step 8: Supplier redirect created successfully', [
                         'route' => $route,
-                        'user_id' => $user->id
+                        'user_id' => $user->id,
+                        'redirect_url' => $redirect->getTargetUrl()
                     ]);
                     
                     return $redirect;
@@ -199,7 +272,8 @@ class AuthenticatedSessionController extends Controller
                     Log::error('Step 8: Supplier redirect failed', [
                         'error' => $e->getMessage(),
                         'file' => $e->getFile(),
-                        'line' => $e->getLine()
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString()
                     ]);
                     throw $e;
                 }
@@ -215,7 +289,8 @@ class AuthenticatedSessionController extends Controller
                 
                 Log::info('Step 8: Regular user redirect created successfully', [
                     'route' => $route,
-                    'user_id' => $user->id
+                    'user_id' => $user->id,
+                    'redirect_url' => $redirect->getTargetUrl()
                 ]);
                 
                 return $redirect;
@@ -223,7 +298,8 @@ class AuthenticatedSessionController extends Controller
                 Log::error('Step 8: Regular user redirect failed', [
                     'error' => $e->getMessage(),
                     'file' => $e->getFile(),
-                    'line' => $e->getLine()
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString()
                 ]);
                 throw $e;
             }
@@ -235,7 +311,10 @@ class AuthenticatedSessionController extends Controller
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
-                'environment' => app()->environment()
+                'environment' => app()->environment(),
+                'session_id' => session()->getId(),
+                'auth_check' => Auth::check(),
+                'auth_id' => Auth::id()
             ]);
             
             // In production, don't expose detailed error messages

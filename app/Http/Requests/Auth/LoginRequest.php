@@ -44,7 +44,9 @@ class LoginRequest extends FormRequest
             'email' => $this->email,
             'ip' => $this->ip(),
             'user_agent' => $this->userAgent(),
-            'timestamp' => now()->toISOString()
+            'timestamp' => now()->toISOString(),
+            'session_id' => session()->getId(),
+            'auth_guard' => config('auth.defaults.guard')
         ]);
 
         $this->ensureIsNotRateLimited();
@@ -62,7 +64,8 @@ class LoginRequest extends FormRequest
                 'email' => $this->email,
                 'has_password' => !empty($this->password),
                 'remember' => $remember,
-                'credentials_keys' => array_keys($credentials)
+                'credentials_keys' => array_keys($credentials),
+                'auth_model' => config('auth.providers.users.model')
             ]);
 
             if (! Auth::attempt($credentials, $remember)) {
@@ -70,7 +73,8 @@ class LoginRequest extends FormRequest
                     'email' => $this->email,
                     'ip' => $this->ip(),
                     'user_agent' => $this->userAgent(),
-                    'timestamp' => now()->toISOString()
+                    'timestamp' => now()->toISOString(),
+                    'credentials_provided' => array_keys($credentials)
                 ]);
 
                 RateLimiter::hit($this->throttleKey());
@@ -83,7 +87,8 @@ class LoginRequest extends FormRequest
             Log::info('LoginRequest::authenticate() - Authentication successful', [
                 'email' => $this->email,
                 'user_id' => Auth::id(),
-                'timestamp' => now()->toISOString()
+                'timestamp' => now()->toISOString(),
+                'auth_check' => Auth::check()
             ]);
 
             RateLimiter::clear($this->throttleKey());
@@ -95,7 +100,8 @@ class LoginRequest extends FormRequest
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
-                'timestamp' => now()->toISOString()
+                'timestamp' => now()->toISOString(),
+                'exception_type' => get_class($e)
             ]);
             throw $e;
         }
