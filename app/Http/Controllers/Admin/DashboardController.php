@@ -3,80 +3,111 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Order;
-use App\Models\Product;
-use App\Models\User;
-use App\Models\News;
-use App\Models\SupplierQuotation;
-use App\Models\QuotationRequest;
-use App\Models\SupplierInquiry;
-use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Get statistics
+        try {
+            $stats = $this->getDashboardStats();
+            
+            return view('admin.dashboard', compact('stats'));
+        } catch (\Exception $e) {
+            Log::error('Dashboard error', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'environment' => app()->environment()
+            ]);
+            
+            // Return a simplified dashboard without stats if there's an error
+            $stats = [
+                'quotation_stats' => [
+                    'total_quotations' => 0,
+                    'pending_quotations' => 0,
+                    'quotations_this_week' => 0,
+                    'approved_quotations' => 0
+                ],
+                'order_stats' => [
+                    'total_orders' => 0,
+                    'pending_orders' => 0,
+                    'completed_orders' => 0
+                ],
+                'customer_stats' => [
+                    'total_customers' => 0,
+                    'new_customers_this_month' => 0
+                ],
+                'revenue_stats' => [
+                    'total_revenue' => 0,
+                    'revenue_this_month' => 0
+                ]
+            ];
+            
+            return view('admin.dashboard', compact('stats'));
+        }
+    }
+    
+    private function getDashboardStats()
+    {
         $stats = [
-            'total_orders' => Order::count(),
-            'total_products' => Product::count(),
-            'total_users' => User::count(),
-            'total_news' => News::count(),
-            'recent_orders' => Order::with('user')->latest()->take(5)->get(),
-            'low_stock_products' => Product::whereHas('inventory', function($query) {
-                $query->where('quantity', '<', 10);
-            })->with('category')->take(5)->get(),
-            'monthly_revenue' => $this->getMonthlyRevenue(),
-            'popular_products' => $this->getPopularProducts(),
-            'quotation_stats' => $this->getQuotationStats(),
+            'quotation_stats' => [
+                'total_quotations' => 0,
+                'pending_quotations' => 0,
+                'quotations_this_week' => 0,
+                'approved_quotations' => 0
+            ],
+            'order_stats' => [
+                'total_orders' => 0,
+                'pending_orders' => 0,
+                'completed_orders' => 0
+            ],
+            'customer_stats' => [
+                'total_customers' => 0,
+                'new_customers_this_month' => 0
+            ],
+            'revenue_stats' => [
+                'total_revenue' => 0,
+                'revenue_this_month' => 0
+            ]
         ];
-
-        return view('admin.dashboard', compact('stats'));
-    }
-
-    private function getMonthlyRevenue()
-    {
-        return Order::where('status', 'completed')
-            ->where('created_at', '>=', Carbon::now()->subMonths(6))
-            ->select(
-                DB::raw('sum(total_amount) as revenue'),
-                DB::raw("DATE_FORMAT(created_at, '%M %Y') as month")
-            )
-            ->groupBy('month')
-            ->orderBy('created_at', 'DESC')
-            ->get();
-    }
-
-    private function getPopularProducts()
-    {
-        return Product::withCount('orders')
-            ->orderBy('orders_count', 'desc')
-            ->take(5)
-            ->get();
-    }
-
-    private function getQuotationStats()
-    {
-        $today = Carbon::today();
-        $thisWeek = Carbon::now()->startOfWeek();
-        $thisMonth = Carbon::now()->startOfMonth();
-
-        return [
-            'total_quotations' => SupplierQuotation::count(),
-            'pending_quotations' => SupplierQuotation::where('status', 'submitted')->count(),
-            'approved_quotations' => SupplierQuotation::where('status', 'accepted')->count(),
-            'rejected_quotations' => SupplierQuotation::where('status', 'rejected')->count(),
-            'quotations_today' => SupplierQuotation::whereDate('created_at', $today)->count(),
-            'quotations_this_week' => SupplierQuotation::where('created_at', '>=', $thisWeek)->count(),
-            'quotations_this_month' => SupplierQuotation::where('created_at', '>=', $thisMonth)->count(),
-            'total_inquiries' => QuotationRequest::count() + SupplierInquiry::count(),
-            'pending_inquiries' => QuotationRequest::where('status', 'pending')->count() + 
-                                 SupplierInquiry::where('status', 'pending')->count(),
-            'recent_quotations' => SupplierQuotation::with(['supplier', 'product'])
-                ->latest()
-                ->take(5)
-                ->get(),
-        ];
+        
+        try {
+            // Get quotation stats
+            $stats['quotation_stats']['total_quotations'] = DB::table('quotations')->count();
+            $stats['quotation_stats']['pending_quotations'] = DB::table('quotations')->where('status', 'pending')->count();
+            $stats['quotation_stats']['quotations_this_week'] = DB::table('quotations')
+                ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
+                ->count();
+            $stats['quotation_stats']['approved_quotations'] = DB::table('quotations')->where('status', 'approved')->count();
+            
+            // Get order stats
+            $stats['order_stats']['total_orders'] = DB::table('orders')->count();
+            $stats['order_stats']['pending_orders'] = DB::table('orders')->where('status', 'pending')->count();
+            $stats['order_stats']['completed_orders'] = DB::table('orders')->where('status', 'completed')->count();
+            
+            // Get customer stats
+            $stats['customer_stats']['total_customers'] = DB::table('customers')->count();
+            $stats['customer_stats']['new_customers_this_month'] = DB::table('customers')
+                ->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])
+                ->count();
+            
+            // Get revenue stats
+            $stats['revenue_stats']['total_revenue'] = DB::table('invoices')->where('status', 'paid')->sum('total_amount');
+            $stats['revenue_stats']['revenue_this_month'] = DB::table('invoices')
+                ->where('status', 'paid')
+                ->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])
+                ->sum('total_amount');
+                
+        } catch (\Exception $e) {
+            Log::error('Error getting dashboard stats', [
+                'error' => $e->getMessage(),
+                'environment' => app()->environment()
+            ]);
+        }
+        
+        return $stats;
     }
 } 
