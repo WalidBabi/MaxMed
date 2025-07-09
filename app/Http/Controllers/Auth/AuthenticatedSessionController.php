@@ -355,6 +355,131 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
+     * Debug method to test authentication flow
+     */
+    public function debug(Request $request)
+    {
+        Log::info('=== AUTHENTICATION DEBUG START ===');
+        
+        try {
+            // Test 1: Check if user is authenticated
+            Log::info('Debug Step 1: Authentication check', [
+                'auth_check' => Auth::check(),
+                'auth_id' => Auth::id()
+            ]);
+            
+            if (!Auth::check()) {
+                return response()->json(['error' => 'User not authenticated']);
+            }
+            
+            // Test 2: Get user and role
+            $user = Auth::user();
+            Log::info('Debug Step 2: User retrieval', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'user_role_id' => $user->role_id
+            ]);
+            
+            // Test 3: Check role relationship
+            Log::info('Debug Step 3: Role relationship check', [
+                'has_role' => $user->role ? 'yes' : 'no',
+                'role_id' => $user->role_id,
+                'role_name' => $user->role ? $user->role->name : 'no role'
+            ]);
+            
+            // Test 4: Test role methods
+            try {
+                $isAdmin = $user->isAdmin();
+                Log::info('Debug Step 4a: isAdmin() method', [
+                    'result' => $isAdmin,
+                    'user_id' => $user->id
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Debug Step 4a: isAdmin() failed', [
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ]);
+                return response()->json(['error' => 'isAdmin() method failed: ' . $e->getMessage()]);
+            }
+            
+            try {
+                $isSupplier = $user->isSupplier();
+                Log::info('Debug Step 4b: isSupplier() method', [
+                    'result' => $isSupplier,
+                    'user_id' => $user->id
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Debug Step 4b: isSupplier() failed', [
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ]);
+                return response()->json(['error' => 'isSupplier() method failed: ' . $e->getMessage()]);
+            }
+            
+            // Test 5: Check route existence
+            Log::info('Debug Step 5: Route existence check');
+            
+            $routes = [];
+            try {
+                $routes['dashboard'] = route('dashboard');
+                Log::info('Debug Step 5a: dashboard route exists', ['url' => $routes['dashboard']]);
+            } catch (\Exception $e) {
+                Log::error('Debug Step 5a: dashboard route missing', ['error' => $e->getMessage()]);
+                $routes['dashboard'] = 'MISSING';
+            }
+            
+            try {
+                $routes['admin.dashboard'] = route('admin.dashboard');
+                Log::info('Debug Step 5b: admin.dashboard route exists', ['url' => $routes['admin.dashboard']]);
+            } catch (\Exception $e) {
+                Log::error('Debug Step 5b: admin.dashboard route missing', ['error' => $e->getMessage()]);
+                $routes['admin.dashboard'] = 'MISSING';
+            }
+            
+            try {
+                $routes['supplier.dashboard'] = route('supplier.dashboard');
+                Log::info('Debug Step 5c: supplier.dashboard route exists', ['url' => $routes['supplier.dashboard']]);
+            } catch (\Exception $e) {
+                Log::error('Debug Step 5c: supplier.dashboard route missing', ['error' => $e->getMessage()]);
+                $routes['supplier.dashboard'] = 'MISSING';
+            }
+            
+            // Test 6: Test redirect logic
+            Log::info('Debug Step 6: Redirect logic test', [
+                'is_admin' => $isAdmin,
+                'is_supplier' => $isSupplier,
+                'expected_route' => $isAdmin ? 'admin.dashboard' : ($isSupplier ? 'supplier.dashboard' : 'dashboard')
+            ]);
+            
+            Log::info('=== AUTHENTICATION DEBUG END ===');
+            
+            return response()->json([
+                'success' => true,
+                'user' => [
+                    'id' => $user->id,
+                    'email' => $user->email,
+                    'role' => $user->role ? $user->role->name : 'no role'
+                ],
+                'permissions' => [
+                    'is_admin' => $isAdmin,
+                    'is_supplier' => $isSupplier
+                ],
+                'routes' => $routes
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('=== AUTHENTICATION DEBUG FAILED ===', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json(['error' => 'Debug failed: ' . $e->getMessage()]);
+        }
+    }
+
+    /**
      * Destroy an authenticated session.
      */
     public function destroy(Request $request): RedirectResponse
