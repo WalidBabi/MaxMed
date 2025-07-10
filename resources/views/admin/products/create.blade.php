@@ -235,7 +235,7 @@
 
                         <div id="size_options_container" class="space-y-4" style="{{ old('has_size_options') ? '' : 'display: none;' }}">
                             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                <p class="text-sm text-gray-600 mb-4">Add the available size options for this product.</p>
+                                <p class="text-sm text-gray-600 mb-4">Add the available size options for this product. You can enter detailed specifications with commas, such as "capacity: 500ml Ø (mm): 140 hint(mm): 75 htotal (mm): 100".</p>
                                 <div id="size_options_list" class="space-y-3">
                                     @if(old('size_options'))
                                         @foreach(old('size_options') as $index => $option)
@@ -244,7 +244,7 @@
                                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                                     <i class="fas fa-ruler-combined text-gray-400"></i>
                                                 </div>
-                                                <input type="text" name="size_options[]" value="{{ $option }}" placeholder="Size option (e.g., Small, Medium, Large)"
+                                                <input type="text" name="size_options[]" value="{{ $option }}" placeholder="Size option (e.g., Small, Medium, Large, or detailed specs like 'capacity: 500ml Ø (mm): 140')"
                                                        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                             </div>
                                             <button type="button" class="px-3 py-2 border border-red-300 rounded-md text-red-700 bg-red-50 hover:bg-red-100 remove-size-option">
@@ -607,7 +607,7 @@ Weight
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-ruler-combined text-gray-400"></i>
                         </div>
-                        <input type="text" name="size_options[]" placeholder="Size option (e.g., Small, Medium, Large)"
+                        <input type="text" name="size_options[]" placeholder="Size option (e.g., Small, Medium, Large, or detailed specs like 'capacity: 500ml Ø (mm): 140')"
                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
                     <button type="button" class="px-3 py-2 border border-red-300 rounded-md text-red-700 bg-red-50 hover:bg-red-100 remove-size-option">

@@ -114,7 +114,7 @@ class ProductController extends Controller
             'pdf_file' => 'nullable|file|mimes:pdf|max:10000',
             'has_size_options' => 'nullable|boolean',
             'size_options' => 'nullable|array',
-            'size_options.*' => 'nullable|string|max:50',
+            'size_options.*' => 'nullable|string|max:255',
             'specifications' => 'nullable|array',
             'specifications.*' => 'nullable|string'
         ]);
@@ -133,7 +133,9 @@ class ProductController extends Controller
                 'image_url' => null, // Will be replaced by primary image
                 'has_size_options' => $request->has('has_size_options'),
                 'size_options' => $request->has('has_size_options') && $request->filled('size_options') ? 
-                                  json_encode(array_filter($request->size_options)) : null,
+                                  array_filter($request->size_options, function($value) {
+                                      return !empty(trim($value));
+                                  }) : null,
             ]);
 
             // Create inventory record
@@ -243,7 +245,7 @@ class ProductController extends Controller
             'delete_pdf' => 'nullable|boolean',
             'has_size_options' => 'nullable|boolean',
             'size_options' => 'nullable|array',
-            'size_options.*' => 'nullable|string|max:50',
+            'size_options.*' => 'nullable|string|max:255',
             'specifications' => 'nullable|array',
             'specifications.*' => 'nullable|string'
         ]);
@@ -263,7 +265,9 @@ class ProductController extends Controller
                     'brand_id' => $validated['brand_id'],
                     'has_size_options' => $request->has('has_size_options'),
                     'size_options' => $request->has('has_size_options') && $request->filled('size_options') ? 
-                                    json_encode(array_filter($request->size_options)) : null,
+                                    array_filter($request->size_options, function($value) {
+                                        return !empty(trim($value));
+                                    }) : null,
                 ]);
 
                 // If brand changed, regenerate SKU
