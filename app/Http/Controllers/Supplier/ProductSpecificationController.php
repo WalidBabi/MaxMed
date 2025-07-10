@@ -60,6 +60,8 @@ class ProductSpecificationController extends Controller
             return $this->getThermalCyclerSpecifications();
         } elseif (str_contains($categoryName, 'lab equipment')) {
             return $this->getLabEquipmentSpecifications();
+        } elseif (str_contains($categoryName, 'grinding') || str_contains($categoryName, 'homogenization')) {
+            return $this->getGrindingHomogenizationSpecifications();
         } else {
             // Default specifications for unknown categories
             return $this->getDefaultSpecifications();
@@ -294,6 +296,88 @@ class ProductSpecificationController extends Controller
                     'required' => false,
                 ],
             ],
+        ];
+    }
+
+    private function getGrindingHomogenizationSpecifications()
+    {
+        return [
+            'Performance' => [
+                [
+                    'key' => 'capacity',
+                    'name' => 'Capacity',
+                    'type' => 'text',
+                    'unit' => '',
+                    'required' => false,
+                ],
+                [
+                    'key' => 'diameter_mm',
+                    'name' => 'Ø (mm)',
+                    'type' => 'decimal',
+                    'unit' => 'mm',
+                    'required' => false,
+                ],
+                [
+                    'key' => 'hint_mm',
+                    'name' => 'hint (mm)',
+                    'type' => 'decimal',
+                    'unit' => 'mm',
+                    'required' => false,
+                ],
+                [
+                    'key' => 'htotal_mm',
+                    'name' => 'htotal (mm)',
+                    'type' => 'decimal',
+                    'unit' => 'mm',
+                    'required' => false,
+                ],
+            ],
+            'Physical' => [
+                [
+                    'key' => 'dimensions',
+                    'name' => 'Dimensions',
+                    'type' => 'text',
+                    'unit' => 'mm',
+                    'required' => false,
+                ],
+                [
+                    'key' => 'weight',
+                    'name' => 'Weight',
+                    'type' => 'decimal',
+                    'unit' => 'kg',
+                    'required' => false,
+                ],
+                [
+                    'key' => 'material',
+                    'name' => 'Material',
+                    'type' => 'text',
+                    'unit' => '',
+                    'required' => false,
+                ],
+            ],
+            'Technical' => [
+                [
+                    'key' => 'power_consumption',
+                    'name' => 'Power Consumption',
+                    'type' => 'number',
+                    'unit' => 'W',
+                    'required' => false,
+                ],
+                [
+                    'key' => 'voltage',
+                    'name' => 'Voltage',
+                    'type' => 'text',
+                    'unit' => 'V',
+                    'required' => false,
+                ],
+                [
+                    'key' => 'speed_range',
+                    'name' => 'Speed Range',
+                    'type' => 'text',
+                    'unit' => 'rpm',
+                    'required' => false,
+                ],
+            ]
         ];
     }
 
