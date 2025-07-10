@@ -127,7 +127,7 @@ class ProductController extends Controller
             'pdf_file' => 'nullable|file|mimes:pdf|max:10000',
             'has_size_options' => 'nullable|boolean',
             'size_options' => 'nullable|array',
-            'size_options.*' => 'nullable|string|max:50',
+            'size_options.*' => 'nullable|string|max:255',
             'specifications' => 'nullable|array',
             'specifications.*' => 'nullable|string'
         ]);
@@ -274,7 +274,7 @@ class ProductController extends Controller
             'delete_pdf' => 'nullable|boolean',
             'has_size_options' => 'nullable|boolean',
             'size_options' => 'nullable|array',
-            'size_options.*' => 'nullable|string|max:50',
+            'size_options.*' => 'nullable|string|max:255',
             'specifications' => 'nullable|array',
             'specifications.*' => 'nullable|string'
         ]);

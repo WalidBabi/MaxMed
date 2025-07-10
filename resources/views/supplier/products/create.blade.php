@@ -173,6 +173,9 @@
                 </div>
 
                 <div id="size-options-container" class="hidden">
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600 mb-4">Add the available size options for this product. You can enter detailed specifications with commas, such as "capacity: 500ml Ø (mm): 140 hint(mm): 75 htotal (mm): 100".</p>
+                    </div>
                     <div class="flex justify-between items-center mb-4">
                         <label class="block text-sm font-medium text-gray-700">Size Options</label>
                         <button type="button" id="add-size-option"
@@ -541,7 +544,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         <input type="text" name="size_options[]" 
                                class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
-                               placeholder="Size option (e.g., Small, Medium, Large)">
+                               placeholder="Size option (e.g., Small, Medium, Large, or detailed specs like 'capacity: 500ml Ø (mm): 140')">
                     </div>
                 </div>
                 <button type="button" class="remove-size-option inline-flex items-center p-2 border border-transparent rounded-md text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
