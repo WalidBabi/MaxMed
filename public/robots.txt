@@ -18,6 +18,7 @@ Allow: /categories/
 Allow: /news/
 Allow: /about
 Allow: /contact
+Allow: /quotation/*/form
 
 # Sitemaps
 Sitemap: https://maxmedme.com/sitemap.xml
