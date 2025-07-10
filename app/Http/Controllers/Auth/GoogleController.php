@@ -103,6 +103,14 @@ class GoogleController extends Controller
             ], 401);
         }
     }
+
+    public function handleOneTapGet()
+    {
+        return response()->json([
+            'error' => 'This endpoint only accepts POST requests for Google One Tap authentication.',
+            'message' => 'Please use the POST method with proper authentication credentials.'
+        ], 405);
+    }
     
     protected function findOrCreateUser($googleUser)
     {

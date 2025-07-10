@@ -12,6 +12,7 @@ Disallow: /search?
 Disallow: /*?sort=
 Disallow: /*?filter=
 Disallow: /*?page=
+Disallow: /google/one-tap
 Allow: /products/
 Allow: /categories/
 Allow: /news/
