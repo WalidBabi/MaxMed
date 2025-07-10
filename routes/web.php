@@ -39,6 +39,9 @@ Route::get('/login/google', [GoogleController::class, 'redirect'])->name('login.
 Route::get('/login/google/callback', [GoogleController::class, 'callback']);
 Route::post('/google/one-tap', [GoogleController::class, 'handleOneTap'])->name('google.one-tap');
 
+// Handle GET requests to /google/one-tap (for crawlers)
+Route::get('/google/one-tap', [GoogleController::class, 'handleOneTapGet'])->name('google.one-tap.get');
+
 // Test custom logging route
 Route::get('/test-custom-log', function() {
     $customLog = app('App\Services\CustomLogService');
