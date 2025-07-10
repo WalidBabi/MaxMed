@@ -409,8 +409,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete('/{order}', [\App\Http\Controllers\Admin\OrderController::class, 'destroy'])->name('destroy');
         });
 
-        // Category Management
-        Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+        // Category Management - Using slug-based routing
+        Route::get('categories', [\App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('categories.index');
+        Route::get('categories/create', [\App\Http\Controllers\Admin\CategoryController::class, 'create'])->name('categories.create');
+        Route::post('categories', [\App\Http\Controllers\Admin\CategoryController::class, 'store'])->name('categories.store');
+        Route::get('categories/{category:slug}/edit', [\App\Http\Controllers\Admin\CategoryController::class, 'edit'])->name('categories.edit');
+        Route::put('categories/{category:slug}', [\App\Http\Controllers\Admin\CategoryController::class, 'update'])->name('categories.update');
+        Route::delete('categories/{category:slug}', [\App\Http\Controllers\Admin\CategoryController::class, 'destroy'])->name('categories.destroy');
         
         // Brand Management
         Route::resource('brands', \App\Http\Controllers\Admin\BrandController::class);

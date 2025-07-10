@@ -57,12 +57,12 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <a href="{{ route('admin.categories.edit', $category->id) }}" class="text-green-600 hover:text-green-900" title="Edit Category">
+                                    <a href="{{ route('admin.categories.edit', $category->slug) }}" class="text-green-600 hover:text-green-900" title="Edit Category">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                         </svg>
                                     </a>
-                                    <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this category?')">
+                                    <form action="{{ route('admin.categories.destroy', $category->slug) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this category?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-600 hover:text-red-900" title="Delete Category">
@@ -95,12 +95,12 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center space-x-2">
-                                        <a href="{{ route('admin.categories.edit', $subcategory->id) }}" class="text-green-600 hover:text-green-900" title="Edit Subcategory">
+                                        <a href="{{ route('admin.categories.edit', $subcategory->slug) }}" class="text-green-600 hover:text-green-900" title="Edit Subcategory">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                             </svg>
                                         </a>
-                                        <form action="{{ route('admin.categories.destroy', $subcategory->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this subcategory?')">
+                                        <form action="{{ route('admin.categories.destroy', $subcategory->slug) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this subcategory?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:text-red-900" title="Delete Subcategory">
@@ -133,12 +133,12 @@
                                             </div>
                                         </div>
                                         <div class="flex items-center space-x-2">
-                                            <a href="{{ route('admin.categories.edit', $subsubcategory->id) }}" class="text-green-600 hover:text-green-900" title="Edit Sub-subcategory">
+                                            <a href="{{ route('admin.categories.edit', $subsubcategory->slug) }}" class="text-green-600 hover:text-green-900" title="Edit Sub-subcategory">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                 </svg>
                                             </a>
-                                            <form action="{{ route('admin.categories.destroy', $subsubcategory->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this sub-subcategory?')">
+                                            <form action="{{ route('admin.categories.destroy', $subsubcategory->slug) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this sub-subcategory?')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-red-600 hover:text-red-900" title="Delete Sub-subcategory">
@@ -171,12 +171,12 @@
                                                 </div>
                                             </div>
                                             <div class="flex items-center space-x-2">
-                                                <a href="{{ route('admin.categories.edit', $subsubsubcategory->id) }}" class="text-green-600 hover:text-green-900" title="Edit Sub-sub-subcategory">
+                                                <a href="{{ route('admin.categories.edit', $subsubsubcategory->slug) }}" class="text-green-600 hover:text-green-900" title="Edit Sub-sub-subcategory">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                     </svg>
                                                 </a>
-                                                <form action="{{ route('admin.categories.destroy', $subsubsubcategory->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this subsubsub-category?')">
+                                                <form action="{{ route('admin.categories.destroy', $subsubsubcategory->slug) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this subsubsub-category?')">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="text-red-600 hover:text-red-900" title="Delete Sub-sub-subcategory">
