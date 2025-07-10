@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
 <title><![CDATA[MaxMed UAE - Latest Products]]></title>
-<link>http://localhost/products</link>
+<link>https://maxmedme.com/products</link>
 <description><![CDATA[Discover latest laboratory equipment and medical supplies from MaxMed UAE]]></description>
 <language>en-us</language>
 <pubDate>Wed, 18 Jun 2025 04:55:19 +0000</pubDate>
@@ -12,14 +12,14 @@
 <generator>MaxMed UAE RSS Generator</generator>
 <image>
 <title>MaxMed UAE</title>
-<url>http://localhost/Images/logo.png</url>
-<link>http://localhost</link>
+<url>https://maxmedme.com/Images/logo.png</url>
+<link>https://maxmedme.com</link>
 <description>MaxMed UAE - Laboratory Equipment Supplier</description>
 </image>
-<atom:link href="http://localhost/products" rel="self" type="application/rss+xml" />
+<atom:link href="https://maxmedme.com/products" rel="self" type="application/rss+xml" />
 <item>
 <title><![CDATA[ALP Rapid Test Strip - Veterinary Diagnostics]]></title>
-<link>http://localhost/products/alp-rapid-test-strip-mt-0123-maxtest-dubai-uae</link>
+<link>https://maxmedme.com/products/alp-rapid-test-strip-mt-0123-maxtest-dubai-uae</link>
 <description><![CDATA[Alkaline Phosphatase (ALP) is an enzyme naturally present in all raw milks, which is used as
  an indicator of proper milk pasteurization. Complete pasteurization will inactivate the enzyme
  to below levels which are detectable by conventional methods. Because the heat stability of
@@ -35,7 +35,7 @@
 </item>
 <item>
 <title><![CDATA[Aflatoxin M1 Rapid Test Kit 0.05ppb - Veterinary Diagnostics]]></title>
-<link>http://localhost/products/aflatoxin-m1-rapid-test-kit-005ppb-mt-0121-maxtest-dubai-uae</link>
+<link>https://maxmedme.com/products/aflatoxin-m1-rapid-test-kit-005ppb-mt-0121-maxtest-dubai-uae</link>
 <description><![CDATA[Aflatoxins are naturally occurring mycotoxins, which are extremely toxic and among the most carcinogenic 
 substances known. After entering the animal body, aflatoxins may be metabolized by the liver t a new substance - 
 aflatoxin M1. Thus it is of great importance to monitor the residue of aflatoxin M1 in foods, especially in daily 
@@ -51,7 +51,7 @@ when use properly. | Category: Veterinary Diagnostics | Contact MaxMed UAE for p
 </item>
 <item>
 <title><![CDATA[Melamine Rapid Test Kit - Veterinary Diagnostics]]></title>
-<link>http://localhost/products/melamine-rapid-test-kit-mt-0122-maxtest-dubai-uae</link>
+<link>https://maxmedme.com/products/melamine-rapid-test-kit-mt-0122-maxtest-dubai-uae</link>
 <description><![CDATA[Melamine is a common industry chemical, which was used illegally in milk to increase the protein content 
 measured by classic Kjeldahl method. Milk products prepared from milk contaminated with melamine will directly 
 damage the urinary system, for instance, it will cause kidney stone in infant, whose main food is milk powder. FAO 
@@ -66,7 +66,7 @@ contamination in samples without any instrument. The detection limit of the kit 
 </item>
 <item>
 <title><![CDATA[SARS-CoV-2 and Influenza A+B Antigen Combo Rapid Test - Infectious Disease Rapid Tests]]></title>
-<link>http://localhost/products/sars-cov-2-and-influenza-ab-antigen-combo-rapid-test-mt-0120-maxtest-dubai-uae</link>
+<link>https://maxmedme.com/products/sars-cov-2-and-influenza-ab-antigen-combo-rapid-test-mt-0120-maxtest-dubai-uae</link>
 <description><![CDATA[The SARS-CoV-2 and Influenza A+B Antigen Combo Rapid Test is a lateral flow immunoassay designed for the qualitative detection of nucleocapsid protein antigens from SARS-CoV-2, Influenza A, and Influenza B in human nasal swab specimens. This single-use test enables simultaneous screening for COVID-19 and influenza viruses, helping healthcare providers and individuals quickly differentiate between infections with overlapping symptoms. | Category: Infectious Disease Rapid Tests | Contact MaxMed UAE for pricing.]]></description>
 <pubDate>Sat, 14 Jun 2025 14:02:16 +0000</pubDate>
 <author>sales@maxmedme.com (MaxMed UAE)</author>
@@ -76,7 +76,7 @@ contamination in samples without any instrument. The detection limit of the kit 
 </item>
 <item>
 <title><![CDATA[Glass Measuring Cup - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/glass-measuring-cup-mw-0124-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/glass-measuring-cup-mw-0124-maxware-dubai-uae</link>
 <description><![CDATA[Measuring Cup Boro3.3	   5ml 10ml 20ml 50ml 100ml 125ml 250ml 500ml 1000ml 2000ml | Category: Lab Essentials (Tubes, Pipettes, Glassware) | Contact MaxMed UAE for pricing.]]></description>
 <pubDate>Sat, 03 May 2025 20:35:23 +0000</pubDate>
 <author>sales@maxmedme.com (MaxMed UAE)</author>
@@ -86,7 +86,7 @@ contamination in samples without any instrument. The detection limit of the kit 
 </item>
 <item>
 <title><![CDATA[Glass Funnel - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/glass-funnel-mw-0123-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/glass-funnel-mw-0123-maxware-dubai-uae</link>
 <description><![CDATA[Funnel Machine Made Boro 3.3 Thin Thickness	    40ml 50ml 60ml 75ml 90ml 100ml
 
 Separating Funnel Roundness Glass Stopcok/ Glass And Plastic Stopcok/PTEF Stopcock Glass Stopper/Plastic Stopper	    60ml 125ml 250ml 500ml 1000ml 2000ml
@@ -100,7 +100,7 @@ Separating Funnel Pyriform Glass Stopcok/ Glass And Plastic Stopcok/PTEF Stopcoc
 </item>
 <item>
 <title><![CDATA[Glass Funnel - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/glass-funnel-mw-0122-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/glass-funnel-mw-0122-maxware-dubai-uae</link>
 <description><![CDATA[Standard Funnel Long Tube	   50ml 60ml 75ml 90ml 100ml
 
 
@@ -119,7 +119,7 @@ Standard Funnel Short Tube With Flow Mark	40ml 50ml 60ml 75ml 90ml 120ml 150ml |
 </item>
 <item>
 <title><![CDATA[Erlenmeyer Flask - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/erlenmeyer-flask-mw-0121-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/erlenmeyer-flask-mw-0121-maxware-dubai-uae</link>
 <description><![CDATA[Erlenmeyer Flask Narrow Neck Boro 3.3	        10ml 25ml 50ml 100ml 150ml 200ml 250ml 300ml 500ml 1000ml 2000ml 3000ml 5000ml
 
 Erlenmeyer Flask Wide Neck Boro 3.3
@@ -135,7 +135,7 @@ Erlenmeyer Flask With Stopper Boro 3.3	10ml 25ml 50ml 100ml 250ml 500ml 1000ml
 </item>
 <item>
 <title><![CDATA[Glass Flask - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/glass-flask-mw-0120-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/glass-flask-mw-0120-maxware-dubai-uae</link>
 <description><![CDATA[Flask With Flat Bottom Boro 3.3	50ml 100ml 150ml 200ml 250ml 300ml 500ml 1000ml 2000ml 3000ml 5000ml 10000ml
 Flask With Round Bottom Boro 3.3	5ml 10ml 25ml 50ml 100ml 150ml 200ml 250ml 300ml 500ml 1000ml 2000ml 3000ml 5000ml 10000ml 15000ml 20000ml | Category: Lab Essentials (Tubes, Pipettes, Glassware) | Contact MaxMed UAE for pricing.]]></description>
 <pubDate>Sat, 03 May 2025 20:15:04 +0000</pubDate>
@@ -146,7 +146,7 @@ Flask With Round Bottom Boro 3.3	5ml 10ml 25ml 50ml 100ml 150ml 200ml 250ml 300m
 </item>
 <item>
 <title><![CDATA[Glass Beaker - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/glass-beaker-mw-0119-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/glass-beaker-mw-0119-maxware-dubai-uae</link>
 <description><![CDATA[Glass Beaker Lower Form Boro 3.3	    10ml 25ml 50ml 100ml 150ml 200ml 300ml 400ml 500ml 600ml 800ml 1000ml 2000ml 3000ml 5000ml
 Glass Beaker High Form Boro 3.3	    10ml 25ml 50ml 100ml 150ml 200ml 300ml 400ml 500ml 600ml 800ml 1000ml 2000ml 3000ml 5000ml | Category: Lab Essentials (Tubes, Pipettes, Glassware) | Contact MaxMed UAE for pricing.]]></description>
 <pubDate>Sat, 03 May 2025 20:13:52 +0000</pubDate>
@@ -157,7 +157,7 @@ Glass Beaker High Form Boro 3.3	    10ml 25ml 50ml 100ml 150ml 200ml 300ml 400ml
 </item>
 <item>
 <title><![CDATA[Gas wash bottle - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/gas-wash-bottle-mw-0118-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/gas-wash-bottle-mw-0118-maxware-dubai-uae</link>
 <description><![CDATA[Mutil Channel Gas Wash Bottle | Category: Lab Essentials (Tubes, Pipettes, Glassware) | Contact MaxMed UAE for pricing.]]></description>
 <pubDate>Sat, 03 May 2025 20:12:09 +0000</pubDate>
 <author>sales@maxmedme.com (MaxMed UAE)</author>
@@ -167,7 +167,7 @@ Glass Beaker High Form Boro 3.3	    10ml 25ml 50ml 100ml 150ml 200ml 300ml 400ml
 </item>
 <item>
 <title><![CDATA[Gas Generator - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/gas-generator-mw-0117-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/gas-generator-mw-0117-maxware-dubai-uae</link>
 <description><![CDATA[Gas Generator	125ml 250ml 500ml | Category: Lab Essentials (Tubes, Pipettes, Glassware) | Contact MaxMed UAE for pricing.]]></description>
 <pubDate>Sat, 03 May 2025 20:10:39 +0000</pubDate>
 <author>sales@maxmedme.com (MaxMed UAE)</author>
@@ -177,7 +177,7 @@ Glass Beaker High Form Boro 3.3	    10ml 25ml 50ml 100ml 150ml 200ml 300ml 400ml
 </item>
 <item>
 <title><![CDATA[Filtrating equipment - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/filtrating-equipment-mw-0116-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/filtrating-equipment-mw-0116-maxware-dubai-uae</link>
 <description><![CDATA[Filtrating equipment | Category: Lab Essentials (Tubes, Pipettes, Glassware) | Contact MaxMed UAE for pricing.]]></description>
 <pubDate>Sat, 03 May 2025 20:10:08 +0000</pubDate>
 <author>sales@maxmedme.com (MaxMed UAE)</author>
@@ -187,7 +187,7 @@ Glass Beaker High Form Boro 3.3	    10ml 25ml 50ml 100ml 150ml 200ml 300ml 400ml
 </item>
 <item>
 <title><![CDATA[Drying Tower - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/drying-tower-mw-0115-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/drying-tower-mw-0115-maxware-dubai-uae</link>
 <description><![CDATA[Drying Tower	250ml 500ml | Category: Lab Essentials (Tubes, Pipettes, Glassware) | Contact MaxMed UAE for pricing.]]></description>
 <pubDate>Sat, 03 May 2025 20:09:33 +0000</pubDate>
 <author>sales@maxmedme.com (MaxMed UAE)</author>
@@ -197,7 +197,7 @@ Glass Beaker High Form Boro 3.3	    10ml 25ml 50ml 100ml 150ml 200ml 300ml 400ml
 </item>
 <item>
 <title><![CDATA[Crystallizing Dish - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/crystallizing-dish-mw-0114-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/crystallizing-dish-mw-0114-maxware-dubai-uae</link>
 <description><![CDATA[Crystallizing Dish	   60mm 90mm 100mm 125mm 150mm 180mm | Category: Lab Essentials (Tubes, Pipettes, Glassware) | Contact MaxMed UAE for pricing.]]></description>
 <pubDate>Sat, 03 May 2025 20:08:52 +0000</pubDate>
 <author>sales@maxmedme.com (MaxMed UAE)</author>
@@ -207,7 +207,7 @@ Glass Beaker High Form Boro 3.3	    10ml 25ml 50ml 100ml 150ml 200ml 300ml 400ml
 </item>
 <item>
 <title><![CDATA[DISH - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/dish-mw-0113-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/dish-mw-0113-maxware-dubai-uae</link>
 <description><![CDATA[Evaporting Dish Flat Bottom	60mm 90mm 120mm 150mm
 Evaporting Dish Round Bottom	60mm 90mm 120mm 150mm | Category: Lab Essentials (Tubes, Pipettes, Glassware) | Contact MaxMed UAE for pricing.]]></description>
 <pubDate>Sat, 03 May 2025 20:07:41 +0000</pubDate>
@@ -218,7 +218,7 @@ Evaporting Dish Round Bottom	60mm 90mm 120mm 150mm | Category: Lab Essentials (T
 </item>
 <item>
 <title><![CDATA[Dessciator - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/dessciator-mw-0112-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/dessciator-mw-0112-maxware-dubai-uae</link>
 <description><![CDATA[Dessciator White	100mm
 Dessciator White	150mm
 Dessciator White	180mm
@@ -258,7 +258,7 @@ Dessciator Amber Vacuum	400mm | Category: Lab Essentials (Tubes, Pipettes, Glass
 </item>
 <item>
 <title><![CDATA[Culture flask - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/culture-flask-mw-0111-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/culture-flask-mw-0111-maxware-dubai-uae</link>
 <description><![CDATA[Culture Flask	60mm 90mm 120mm 150mm | Category: Lab Essentials (Tubes, Pipettes, Glassware) | Contact MaxMed UAE for pricing.]]></description>
 <pubDate>Sat, 03 May 2025 20:04:01 +0000</pubDate>
 <author>sales@maxmedme.com (MaxMed UAE)</author>
@@ -268,7 +268,7 @@ Dessciator Amber Vacuum	400mm | Category: Lab Essentials (Tubes, Pipettes, Glass
 </item>
 <item>
 <title><![CDATA[Bell Jar - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/bell-jar-mw-0110-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/bell-jar-mw-0110-maxware-dubai-uae</link>
 <description><![CDATA[Bell Jar	      120x180 150x200 150x250 200x300
 	Bell Jar With Stopper	       120x180 150x200 150x250 200x300 | Category: Lab Essentials (Tubes, Pipettes, Glassware) | Contact MaxMed UAE for pricing.]]></description>
 <pubDate>Sat, 03 May 2025 20:02:39 +0000</pubDate>
@@ -279,7 +279,7 @@ Dessciator Amber Vacuum	400mm | Category: Lab Essentials (Tubes, Pipettes, Glass
 </item>
 <item>
 <title><![CDATA[Alcohol Lamp - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/alcohol-lamp-mw-0109-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/alcohol-lamp-mw-0109-maxware-dubai-uae</link>
 <description><![CDATA[Alcohol Lamp | Category: Lab Essentials (Tubes, Pipettes, Glassware) | Contact MaxMed UAE for pricing.]]></description>
 <pubDate>Sat, 03 May 2025 19:59:12 +0000</pubDate>
 <author>sales@maxmedme.com (MaxMed UAE)</author>
@@ -289,7 +289,7 @@ Dessciator Amber Vacuum	400mm | Category: Lab Essentials (Tubes, Pipettes, Glass
 </item>
 <item>
 <title><![CDATA[StepMate Stepper - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/stepmate-stepper-mm-0045-dlab-dubai-uae</link>
+<link>https://maxmedme.com/products/stepmate-stepper-mm-0045-dlab-dubai-uae</link>
 <description><![CDATA[Slim, light and robust
 Wide dispensing volume from 10μL to 5mL
 Up to 48 dispensing steps in succession
@@ -303,7 +303,7 @@ Fits different sizes of disposable polypropylene dispenser tips from 0.5mL to 50
 </item>
 <item>
 <title><![CDATA[Mini Pipette （Standard Model） - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/mini-pipette-standard-model-mm-0044-dlab-dubai-uae</link>
+<link>https://maxmedme.com/products/mini-pipette-standard-model-mm-0044-dlab-dubai-uae</link>
 <description><![CDATA[Ergonomic design provides excellent operation experience;
 Smart body size ideal to be packed into IVD assay kits;
 The mini pipette has a volume range of 10-200μL, with different colors indicating different ranges. It can be used with standard 200μL tips. | Category: Lab Essentials (Tubes, Pipettes, Glassware) | Contact MaxMed UAE for pricing.]]></description>
@@ -315,7 +315,7 @@ The mini pipette has a volume range of 10-200μL, with different colors indicati
 </item>
 <item>
 <title><![CDATA[Mini Pipette（Premium Model） - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/mini-pipettepremium-model-mm-0043-dlab-dubai-uae</link>
+<link>https://maxmedme.com/products/mini-pipettepremium-model-mm-0043-dlab-dubai-uae</link>
 <description><![CDATA[Ergonomic design provides excellent operation experience;
 Smart body size ideal to be packed into IVD assay kits;
 The mini pipette has a volume range of 10-300μL, with different colors indicating different ranges. It can be used with standard 200μL/300μL tips. | Category: Lab Essentials (Tubes, Pipettes, Glassware) | Contact MaxMed UAE for pricing.]]></description>
@@ -327,7 +327,7 @@ The mini pipette has a volume range of 10-300μL, with different colors indicati
 </item>
 <item>
 <title><![CDATA[Levo Pipette Controller - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/levo-pipette-controller-mm-0042-dlab-dubai-uae</link>
+<link>https://maxmedme.com/products/levo-pipette-controller-mm-0042-dlab-dubai-uae</link>
 <description><![CDATA[Reduce hands-on time .
 Can realize the midway refill .
 Drip by drip drainage, precise control .
@@ -346,7 +346,7 @@ Five color designs: blue, green, red, yellow, North Carolina blue, easy to disti
 </item>
 <item>
 <title><![CDATA[Levo E Pipette Pump - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/levo-e-pipette-pump-mm-0041-dlab-dubai-uae</link>
+<link>https://maxmedme.com/products/levo-e-pipette-pump-mm-0041-dlab-dubai-uae</link>
 <description><![CDATA[Volume capacity 2mL, 5mL,10mL and 25mL
 Colour-coded by volume with green, blue and red
 Thumb wheel guarantees precise operation
@@ -360,7 +360,7 @@ Easy for cleaning and maintenance | Category: Lab Essentials (Tubes, Pipettes, G
 </item>
 <item>
 <title><![CDATA[Levo ME Pipette Filler - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/levo-me-pipette-filler-mw-0108-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/levo-me-pipette-filler-mw-0108-maxware-dubai-uae</link>
 <description><![CDATA[Enables single-handed operation with minimum effort
 Speed adjustment simply with finger tips
 Individually set aspiration (upper button) and dispensing(lower button) speeds
@@ -381,7 +381,7 @@ Aspiration Speed
 </item>
 <item>
 <title><![CDATA[Levo Plus Pipette Filler - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/levo-plus-pipette-filler-mw-0107-maxware-dubai-uae</link>
+<link>https://maxmedme.com/products/levo-plus-pipette-filler-mw-0107-maxware-dubai-uae</link>
 <description><![CDATA[6-speed settings for intuitive and convenient adjustment of speed
 Lightweight and high-capacity electric pipette suitable for glass or plastic serological pipettes (0.1-100mL)
 Ergonomic design for efficient and fatigue-resistant continuous pipetting
@@ -402,7 +402,7 @@ Aspiration Speed
 </item>
 <item>
 <title><![CDATA[dPette Simple Electronic Pipette - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/dpette-simple-electronic-pipette-mm-0040-dlab-dubai-uae</link>
+<link>https://maxmedme.com/products/dpette-simple-electronic-pipette-mm-0040-dlab-dubai-uae</link>
 <description><![CDATA[The dPette is a single-channel electric pipette developed by DLAB that combines the advantages of both manual and electric pipettes. It has a lightweight and ergonomic design similar to a manual pipette, while also providing the high performance and effortless operation of an electric pipette, delivering a new and improved pipetting experience for laboratory users.
 
 
@@ -424,7 +424,7 @@ Automatic Calibration: The dPette can be calibrated automatically by connecting 
 </item>
 <item>
 <title><![CDATA[dPette+ Multi functional Electronic Pipette - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/dpette-multi-functional-electronic-pipette-mm-0039-dlab-dubai-uae</link>
+<link>https://maxmedme.com/products/dpette-multi-functional-electronic-pipette-mm-0039-dlab-dubai-uae</link>
 <description><![CDATA[Motor driven digitally control pipette with multifunctions
 Easy Operations and Handling
 Intuitive menu interface settings: functions and operations
@@ -443,7 +443,7 @@ Self-calibration applicable | Category: Lab Essentials (Tubes, Pipettes, Glasswa
 </item>
 <item>
 <title><![CDATA[dPette+ Multi-functional 8-channel Electronic Pipette - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/dpette-multi-functional-8-channel-electronic-pipette-mm-0038-dlab-dubai-uae</link>
+<link>https://maxmedme.com/products/dpette-multi-functional-8-channel-electronic-pipette-mm-0038-dlab-dubai-uae</link>
 <description><![CDATA[Introducing the DLAB Multi-channel Electric Pipette - a versatile and efficient eight-channel electric pipetting device that simplifies the process of accurate and fast pipetting of multiple samples.
 
 
@@ -461,7 +461,7 @@ User-Friendly Interface: Its large | Category: Lab Essentials (Tubes, Pipettes, 
 </item>
 <item>
 <title><![CDATA[MicroPette Plus 12-channel Adjustable Volume Mechanical Pipettes - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/micropette-plus-12-channel-adjustable-volume-mechanical-pipettes-mm-0037-dlab-dubai-uae</link>
+<link>https://maxmedme.com/products/micropette-plus-12-channel-adjustable-volume-mechanical-pipettes-mm-0037-dlab-dubai-uae</link>
 <description><![CDATA[Introducing the MicroPette Plus - a high-performance manual pipette designed for exceptional comfort and ease of use.
 
 
@@ -485,7 +485,7 @@ Overall, the MicroPette Plus is a reliable, easy-to-use, and versatile manual pi
 </item>
 <item>
 <title><![CDATA[MicroPette Plus 8-channel Adjustable Volume Mechanical Pipettes - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/micropette-plus-8-channel-adjustable-volume-mechanical-pipettes-mm-0036-dlab-dubai-uae</link>
+<link>https://maxmedme.com/products/micropette-plus-8-channel-adjustable-volume-mechanical-pipettes-mm-0036-dlab-dubai-uae</link>
 <description><![CDATA[Introducing the MicroPette Plus - a high-performance manual pipette designed for exceptional comfort and ease of use.
 
 
@@ -511,7 +511,7 @@ Overall, the MicroPette Plus is a reliable, easy-to-use, and versatile manual pi
 </item>
 <item>
 <title><![CDATA[MicroPette Plus 12-channel Adjustable Volume Mechanical Pipettes(magnetic suction model) - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/micropette-plus-12-channel-adjustable-volume-mechanical-pipettesmagnetic-suction-model-mm-0035-dlab</link>
+<link>https://maxmedme.com/products/micropette-plus-12-channel-adjustable-volume-mechanical-pipettesmagnetic-suction-model-mm-0035-dlab</link>
 <description><![CDATA[Introducing the MicroPette Plus - a high-performance manual pipette designed for exceptional comfort and ease of use.
 
 
@@ -535,7 +535,7 @@ Overall, the MicroPette Plus is a reliable, easy-to-use, and versatile manual pi
 </item>
 <item>
 <title><![CDATA[MicroPette Plus 8-channel Adjustable Volume Mechanical Pipettes(magnetic suction model) - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/micropette-plus-8-channel-adjustable-volume-mechanical-pipettesmagnetic-suction-model-mm-0034-dlab-d</link>
+<link>https://maxmedme.com/products/micropette-plus-8-channel-adjustable-volume-mechanical-pipettesmagnetic-suction-model-mm-0034-dlab-d</link>
 <description><![CDATA[Introducing the MicroPette Plus - a high-performance manual pipette designed for exceptional comfort and ease of use.
 
 ﻿Ergonomic Design: With a light touch plunger, relaxed finger rest, and an overall user-friendly design, the MicroPette Plus is designed to make pipetting more comfortable and efficient.
@@ -555,7 +555,7 @@ Overall, the MicroPette Plus is a reliable, easy-to-use, and versatile manual pi
 </item>
 <item>
 <title><![CDATA[MicroPette Plus Fully Autoclavable Fixed Volume Mechanical Pipette - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/micropette-plus-fully-autoclavable-fixed-volume-mechanical-pipette-mm-0033-dlab-dubai-uae</link>
+<link>https://maxmedme.com/products/micropette-plus-fully-autoclavable-fixed-volume-mechanical-pipette-mm-0033-dlab-dubai-uae</link>
 <description><![CDATA[Introducing the MicroPette Plus - a high-performance manual pipette designed for exceptional comfort and ease of use.
 Ergonomic Design: With a light touch plunger, relaxed finger rest, and an overall user-friendly design, the MicroPette Plus is designed to make pipetting more comfortable and efficient.
 Volume Range: The MicroPette Plus offers a volume range of 5 μl to 5000 μl, with a total of 12 fixed volume settings.
@@ -573,7 +573,7 @@ Overall, the MicroPette Plus is a reliable, easy-to-use, and versatile manual pi
 </item>
 <item>
 <title><![CDATA[MicroPette Plus Fully Autoclavable Adjustable Volume Mechanical Pipette - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/micropette-plus-fully-autoclavable-adjustable-volume-mechanical-pipette-mm-0032-dlab-dubai-uae</link>
+<link>https://maxmedme.com/products/micropette-plus-fully-autoclavable-adjustable-volume-mechanical-pipette-mm-0032-dlab-dubai-uae</link>
 <description><![CDATA[Introducing the MicroPette Plus - a high-performance manual pipette designed for exceptional comfort and ease of use.
 Ergonomic Design: With a light touch plunger, relaxed finger rest, and an overall user-friendly design, the MicroPette Plus is designed to make pipetting more comfortable and efficient.
 Volume Range: The MicroPette Plus offers a volume range of 0.1 µl to 10 ml, and comes in single-channel adjustable, single-channel fixed, and multi-channel adjustable models, providing exceptional versatility for a range of laboratory applications.
@@ -592,7 +592,7 @@ Overall, the MicroPette Plus is a reliable, easy-to-use, and versatile manual pi
 </item>
 <item>
 <title><![CDATA[HiPette Fully Autoclavable Mechanical Pipette - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/hipette-fully-autoclavable-mechanical-pipette-mm-0031-dlab-dubai-uae</link>
+<link>https://maxmedme.com/products/hipette-fully-autoclavable-mechanical-pipette-mm-0031-dlab-dubai-uae</link>
 <description><![CDATA[Introducing the new generation of fully autoclavable manual pipettes - the DLAB pipette.
 Ergonomic Design: The DLAB pipette is designed with excellent ergonomics that reduce fatigue and provide a smoother and easier pipetting experience.
 Smooth and Effortless Operation: With a one-stop point of 4N and two-stop points of 10N, the DLAB pipette offers a comfortable single-handed pipetting experience with smooth and effortless operation.
@@ -614,7 +614,7 @@ Overall, the DLAB pipette is a reliable, easy-to-use, and precise manual pipette
 </item>
 <item>
 <title><![CDATA[HiPette Colorful Fully Autoclavable Mechanical Pipette - Lab Essentials (Tubes, Pipettes, Glassware)]]></title>
-<link>http://localhost/products/hipette-colorful-fully-autoclavable-mechanical-pipette-mm-0030-dlab-dubai-uae</link>
+<link>https://maxmedme.com/products/hipette-colorful-fully-autoclavable-mechanical-pipette-mm-0030-dlab-dubai-uae</link>
 <description><![CDATA[Using different color scales to mark the pipettes helps users quickly identify the required pipetter, reducing the risk of choosing the wrong range and improving experimental efficiency and accuracy.
 For novice experimental personnel, identifying different colors makes it easier to understand and remember, simplifying the training process.
 Different colors also help organize and manage pipettes within the laboratory, making it more orderly.
@@ -635,7 +635,7 @@ Easy to disassemble for maintenance; with the accessory tools provided, calibrat
 </item>
 <item>
 <title><![CDATA[Drying Oven/Incubator (Dual Purpose) - Incubators & Ovens]]></title>
-<link>http://localhost/products/drying-ovenincubator-dual-purpose-mm-0029-biobase-dubai-uae</link>
+<link>https://maxmedme.com/products/drying-ovenincubator-dual-purpose-mm-0029-biobase-dubai-uae</link>
 <description><![CDATA[Application:
 This product has a wide application for both drying and culturing. Being a product of high quality and reliability, it can be of direct help in colleges & universities, scientific research institutes and production. It makes it possible for the users to save the space and enhance work efficiency.
 
@@ -658,7 +658,7 @@ Optional RS-485 portal for connection with embedded printer, enabling record of 
 </item>
 <item>
 <title><![CDATA[Forced Air Drying Oven(BOV-TF) - Incubators & Ovens]]></title>
-<link>http://localhost/products/forced-air-drying-ovenbov-tf-mm-0028-biobase-dubai-uae</link>
+<link>https://maxmedme.com/products/forced-air-drying-ovenbov-tf-mm-0028-biobase-dubai-uae</link>
 <description><![CDATA[Features:
 
 * External material: cold-rolled steel with anti-bacteria powder coating.
@@ -678,7 +678,7 @@ Optional RS-485 portal for connection with embedded printer, enabling record of 
 </item>
 <item>
 <title><![CDATA[Drying Oven/Incubator (Dual Purpose) BOV-D35S BOV-D50S BOV-D70S BOV-D140S BOV-D240S - Incubators & Ovens]]></title>
-<link>http://localhost/products/drying-ovenincubator-dual-purpose-bov-d35s-bov-d50s-bov-d70s-bov-d140s-bov-d240s-mm-0027-biobase-dub</link>
+<link>https://maxmedme.com/products/drying-ovenincubator-dual-purpose-bov-d35s-bov-d50s-bov-d70s-bov-d140s-bov-d240s-mm-0027-biobase-dub</link>
 <description><![CDATA[Application:
 This product has a wide application for both drying and culturing. Being a product of high quality and reliability, it can be of direct help in colleges & universities, scientific research institutes and production. It makes it possible for the users to save the space and enhance work efficiency.
 
@@ -701,7 +701,7 @@ Optional RS-485 portal for connection with embedded printer, enabling record of 
 </item>
 <item>
 <title><![CDATA[Drying Oven/Incubator (Dual Purpose) BOV-D20P BOV-D45P BOV-D72P BOV-D125P BOV-D210P - Incubators & Ovens]]></title>
-<link>http://localhost/products/drying-ovenincubator-dual-purpose-bov-d20p-bov-d45p-bov-d72p-bov-d125p-bov-d210p-mm-0026-biobase-dub</link>
+<link>https://maxmedme.com/products/drying-ovenincubator-dual-purpose-bov-d20p-bov-d45p-bov-d72p-bov-d125p-bov-d210p-mm-0026-biobase-dub</link>
 <description><![CDATA[Thickened double layer toughened glass observation window, easy to observe the changes of the items in the chamber.
 
 Features
@@ -729,7 +729,7 @@ Features
 </item>
 <item>
 <title><![CDATA[Forced Air Drying Oven BJPX-HGZ30L - Incubators & Ovens]]></title>
-<link>http://localhost/products/forced-air-drying-oven-bjpx-hgz30l-mm-0025-biobase-dubai-uae</link>
+<link>https://maxmedme.com/products/forced-air-drying-oven-bjpx-hgz30l-mm-0025-biobase-dubai-uae</link>
 <description><![CDATA[Introduction:
 This product is used for drying, disinfection, wax melting and sterilization of non-flammable and explosive items and non-volatile items. For example, drying of experimental samples, food, glassware, thermal hardening, thermal denaturation, thermal softening, and moisture removal of chemical substances; dry heat sterilization of utensils and utensils in bioengineering; aging and drying of electronic components. Widely used in enterprises, scientific research, food processing, medical units and various laboratories, etc.
 
@@ -780,7 +780,7 @@ Features：
 </item>
 <item>
 <title><![CDATA[Constant-Temperature Drying Oven(BOV-TC) - Incubators & Ovens]]></title>
-<link>http://localhost/products/constant-temperature-drying-ovenbov-tc-mm-0024-biobase-dubai-uae</link>
+<link>https://maxmedme.com/products/constant-temperature-drying-ovenbov-tc-mm-0024-biobase-dubai-uae</link>
 <description><![CDATA[Introduction:
 It is suitable for drying samples of powders, insects and other tiny objects to avoid the samples flying up due to wind. This product is used for drying and melting wax of non-flammable and non-explosive items and non-volatile items in industrial and mining enterprises, colleges and universities, scientific research units, food processing, medical units and various laboratories.
 
@@ -807,7 +807,7 @@ Features:
 </item>
 <item>
 <title><![CDATA[Constant-temperature Drying Oven BJPX-HDO Series - Incubators & Ovens]]></title>
-<link>http://localhost/products/constant-temperature-drying-oven-bjpx-hdo-series-mm-0023-biobase-dubai-uae</link>
+<link>https://maxmedme.com/products/constant-temperature-drying-oven-bjpx-hdo-series-mm-0023-biobase-dubai-uae</link>
 <description><![CDATA[Introduction:
 It is suitable for drying samples of powders, insects and other tiny objects to avoid the samples flying up due to wind. This product is used for drying and melting wax of non-flammable and non-explosive items and non-volatile items in industrial and mining enterprises, colleges and universities, scientific research units, food processing, medical units and various laboratories.
 
@@ -834,7 +834,7 @@ Features:
 </item>
 <item>
 <title><![CDATA[High Temperature Drying Oven - Incubators & Ovens]]></title>
-<link>http://localhost/products/high-temperature-drying-oven-mm-0022-biobase-dubai-uae</link>
+<link>https://maxmedme.com/products/high-temperature-drying-oven-mm-0022-biobase-dubai-uae</link>
 <description><![CDATA[Introduction:
 The High Temperature Drying Oven is an advanced laboratory oven designed for precise drying, curing, and heat treatment applications at elevated temperatures. It is ideal for use in industries such as materials research, electronics, and manufacturing, where controlled drying and heat processes are critical.
 
@@ -855,7 +855,7 @@ Features:
 </item>
 <item>
 <title><![CDATA[Dual-use Drying Oven B0V-D series - Incubators & Ovens]]></title>
-<link>http://localhost/products/dual-use-drying-oven-b0v-d-series-mm-0021-biobase-dubai-uae</link>
+<link>https://maxmedme.com/products/dual-use-drying-oven-b0v-d-series-mm-0021-biobase-dubai-uae</link>
 <description><![CDATA[Introduction:
 The drying oven/incubator can be used as an incubator for the incubation of bacteria, molds, microorganisms, and tissue cells. As a drying oven, it can be used for baking, drying, heat treatment, disinfection and sterilization. Applicable to universities, research and production department.
 
@@ -878,7 +878,7 @@ Features:
 </item>
 <item>
 <title><![CDATA[Forced Air Drying Oven BJPX-HG Series - Incubators & Ovens]]></title>
-<link>http://localhost/products/forced-air-drying-oven-bjpx-hg-series-mm-0020-biobase-dubai-uae</link>
+<link>https://maxmedme.com/products/forced-air-drying-oven-bjpx-hg-series-mm-0020-biobase-dubai-uae</link>
 <description><![CDATA[Application:
 This product is used for drying, disinfecting, melting wax and sterilizing non-flammable and non-explosive items and non-volatile items in industrial and mining colleges and universities, enterprises, scientific research, food processing, medical institutions and various laboratories. For example, drying of experimental samples, food, glassware, thermal hardening, thermal denaturation, thermal softening and water removal of chemical substances, dry heat sterilization of instruments and utensils in bioengineering, aging and drying of electronic components, etc.
 
@@ -903,7 +903,7 @@ Features：
 </item>
 <item>
 <title><![CDATA[Vacuum Drying Oven(BOV-V/VL) - Incubators & Ovens]]></title>
-<link>http://localhost/products/vacuum-drying-ovenbov-vvl-mm-0019-biobase-dubai-uae</link>
+<link>https://maxmedme.com/products/vacuum-drying-ovenbov-vvl-mm-0019-biobase-dubai-uae</link>
 <description><![CDATA[Introduction:
 Vacuum drying oven is a kind of laboratory equipment for drying and heating treatment under vacuum environment, specially designed for drying heat-sensitive, easy to decompose and easy to oxidize substances, when working, it can keep a certain degree of vacuum in the working chamber, especially some items with complex composition can also be dried quickly.
 
@@ -928,7 +928,7 @@ Features:
 </item>
 <item>
 <title><![CDATA[-86℃ ultra-low temperature freezer - Cold Chain Products]]></title>
-<link>http://localhost/products/86-ultra-low-temperature-freezer-mm-0018-biobase-dubai-uae</link>
+<link>https://maxmedme.com/products/86-ultra-low-temperature-freezer-mm-0018-biobase-dubai-uae</link>
 <description><![CDATA[Introduction:
 The -86℃ Freezer is specifically designed for the long-term preservation of highly temperature-sensitive samples. It maintains sample viability and stability at extremely low temperatures, widely used in biobanking and food safety.
 
