@@ -38,7 +38,7 @@ class QuotationController extends Controller
             $validatedData = $request->validate([
                 'product_id' => 'required|exists:products,id',
                 'quantity' => 'required|integer|min:1',
-                'size' => 'nullable|string|max:50',
+                'size' => 'nullable|string|max:100',
                 'requirements' => 'nullable|string',
                 'notes' => 'nullable|string',
                 'delivery_timeline' => 'nullable|string|in:urgent,standard,flexible',

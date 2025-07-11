@@ -173,6 +173,9 @@
                 </div>
 
                 <div id="size-options-container" class="{{ old('has_size_options', $product->has_size_options) ? '' : 'hidden' }}">
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600 mb-4">Add the available size options for this product. You can enter detailed specifications with commas, such as "capacity: 500ml Ø (mm): 140 hint(mm): 75 htotal (mm): 100".</p>
+                    </div>
                     <div class="flex justify-between items-center mb-4">
                         <label class="block text-sm font-medium text-gray-700">Size Options</label>
                         <button type="button" id="add-size-option"
@@ -190,7 +193,7 @@
                                     <div>
                                         <input type="text" name="size_options[{{ $index }}][size]" value="{{ $option['size'] }}"
                                                class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                               placeholder="Size (e.g., Small, 10ml, etc.)">
+                                               placeholder="Size (e.g., Small, 10ml, or detailed specs like 'capacity: 500ml Ø (mm): 140')">
                                     </div>
                                     <div>
                                         <input type="number" name="size_options[{{ $index }}][price]" value="{{ $option['price'] }}"
@@ -922,6 +925,64 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target.closest('.remove-image-field')) {
             e.target.closest('.image-upload-field').remove();
         }
+    });
+
+    // Size options functionality
+    const hasSizeOptions = document.getElementById('has_size_options');
+    const sizeOptionsContainer = document.getElementById('size-options-container');
+    const addSizeOptionBtn = document.getElementById('add-size-option');
+    const sizeOptionsList = document.getElementById('size-options-list');
+
+    if (hasSizeOptions && sizeOptionsContainer) {
+        hasSizeOptions.addEventListener('change', function() {
+            if (this.checked) {
+                sizeOptionsContainer.classList.remove('hidden');
+            } else {
+                sizeOptionsContainer.classList.add('hidden');
+            }
+        });
+    }
+
+    if (addSizeOptionBtn && sizeOptionsList) {
+        addSizeOptionBtn.addEventListener('click', function() {
+            const newRow = document.createElement('div');
+            newRow.className = 'size-option-row grid grid-cols-3 gap-4';
+            newRow.innerHTML = `
+                <div>
+                    <input type="text" name="size_options[new][size]" 
+                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+                           placeholder="Size (e.g., Small, 10ml, or detailed specs like 'capacity: 500ml Ø (mm): 140')">
+                </div>
+                <div>
+                    <input type="number" name="size_options[new][price]" 
+                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+                           placeholder="Price" step="0.01">
+                </div>
+                <div class="flex items-center">
+                    <button type="button" class="remove-size-option text-red-600 hover:text-red-800">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            sizeOptionsList.appendChild(newRow);
+            
+            // Attach event listener to the new remove button
+            const removeBtn = newRow.querySelector('.remove-size-option');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', function() {
+                    newRow.remove();
+                });
+            }
+        });
+    }
+
+    // Attach event listeners to existing remove buttons
+    document.querySelectorAll('.remove-size-option').forEach(button => {
+        button.addEventListener('click', function() {
+            this.closest('.size-option-row').remove();
+        });
     });
 
     // File input preview functionality for existing fields
