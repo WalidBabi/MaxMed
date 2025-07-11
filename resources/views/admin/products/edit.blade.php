@@ -270,7 +270,7 @@
 
                 <div id="size_options_container" class="mt-6" style="{{ old('has_size_options', $product->has_size_options) ? '' : 'display: none;' }}">
                     <div class="rounded-lg border border-gray-200 bg-gray-50 p-4">
-                        <p class="text-sm text-gray-600 mb-4">Add the available size options for this product.</p>
+                        <p class="text-sm text-gray-600 mb-4">Add the available size options for this product. You can enter detailed specifications with commas, such as "capacity: 500ml Ø (mm): 140 hint(mm): 75 htotal (mm): 100".</p>
                         <div id="size_options_list">
                             @php
                                 $sizeOptions = old('size_options', $product->size_options ?? []);
@@ -289,7 +289,7 @@
                                     <div class="size-option-item flex items-center space-x-3 mb-3">
                                         <input type="text" name="size_options[]" 
                                                value="{{ $option }}" 
-                                               placeholder="Size (e.g., S, M, L, XL)"
+                                               placeholder="Size (e.g., S, M, L, XL, or detailed specs like 'capacity: 500ml Ø (mm): 140')"
                                                class="block flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         <button type="button" class="remove-size-option inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500">
                                             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -757,7 +757,7 @@
                 newOption.className = 'size-option-item flex items-center space-x-3 mb-3';
                 newOption.innerHTML = `
                     <input type="text" name="size_options[]" 
-                           placeholder="Size (e.g., S, M, L, XL)"
+                           placeholder="Size (e.g., S, M, L, XL, or detailed specs like 'capacity: 500ml Ø (mm): 140')"
                            class="block flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     <button type="button" class="remove-size-option inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500">
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
