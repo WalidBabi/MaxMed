@@ -1,0 +1,180 @@
+{
+    "entity_type": "product",
+    "entity_name": "Bowie Dick Test Pack",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Bowie-Dick (Air-Removal) tests evaluate the performance of pre vacuum sterilizers by confirming adequate air removal from the sterilizer chamber. These gases act like a shield between the steam and the item, potentially shielding bacteria and preventing proper sterilization. GENC-1007 BOWIE DICK TEST PACK 11.5×12.5cm 100pcs\/ctn MaxMed UAE is the leading supplier of Dental Consumables in Dubai and across the United Arab Emirates. We provide professional Dental Consumables with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Bowie Dick Test Pack",
+        "description": "Bowie-Dick (Air-Removal) tests evaluate the performance of pre vacuum sterilizers by confirming adequate air removal from the sterilizer chamber. These gases act like a shield between the steam and the item, potentially shielding bacteria and preventing proper sterilization. GENC-1007 BOWIE DICK TEST PACK 11.5×12.5cm 100pcs\/ctn MaxMed UAE is the leading supplier of Dental Consumables in Dubai and across the United Arab Emirates. We provide professional Dental Consumables with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0103"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Dental Consumables",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "bowie",
+            "bowie Dubai",
+            "bowie UAE",
+            "dick",
+            "dick Dubai",
+            "dick UAE",
+            "test",
+            "test Dubai",
+            "test UAE",
+            "pack",
+            "pack Dubai",
+            "pack UAE",
+            "dental",
+            "dental equipment",
+            "dental supplier",
+            "consumables",
+            "consumables equipment",
+            "consumables supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.537500Z",
+            "validThrough": "2026-01-11T08:02:41.537553Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/bowie-dick-test-pack-mw-0103-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/bowie-dick-test-pack-mw-0103-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "bowie",
+        "bowie Dubai",
+        "bowie UAE",
+        "dick",
+        "dick Dubai",
+        "dick UAE",
+        "test",
+        "test Dubai",
+        "test UAE",
+        "pack",
+        "pack Dubai",
+        "pack UAE",
+        "dental",
+        "dental equipment",
+        "dental supplier",
+        "consumables",
+        "consumables equipment",
+        "consumables supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Dental Consumables",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Yankauer Suction Tube",
+            "Suction Tips",
+            "Wooden Tongue Depressor",
+            "Sterilization Reel Heat Sealing Flat Reel Paper + Blue Film",
+            "Sterilization Pouch (Self Sealing Flat Pouch)"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.538374Z"
+}

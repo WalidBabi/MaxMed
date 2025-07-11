@@ -1,0 +1,180 @@
+{
+    "entity_type": "product",
+    "entity_name": "Glass Funnel",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Funnel Machine Made Boro 3.3 Thin Thickness\t    40ml 50ml 60ml 75ml 90ml 100ml\r\n\r\nSeparating Funnel Roundness Glass Stopcok\/ Glass And Plastic Stopcok\/PTEF Stopcock Glass Stopper\/Plastic Stopper\t    60ml 125ml 250ml 500ml 1000ml 2000ml\r\n\r\nSeparating Funnel Pyriform Glass Stopcok\/ Glass And Plastic Stopcok\/PTEF Stopcock Glass Stopper\/Plastic Stopper\t     60ml 125ml 250ml 500ml 1000ml 2000ml MaxMed UAE is the leading supplier of Lab Essentials (Tubes, Pipettes, Glassware) in Dubai and across the United Arab Emirates. We provide professional Lab Essentials (Tubes, Pipettes, Glassware) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Glass Funnel",
+        "description": "Funnel Machine Made Boro 3.3 Thin Thickness\t    40ml 50ml 60ml 75ml 90ml 100ml\r\n\r\nSeparating Funnel Roundness Glass Stopcok\/ Glass And Plastic Stopcok\/PTEF Stopcock Glass Stopper\/Plastic Stopper\t    60ml 125ml 250ml 500ml 1000ml 2000ml\r\n\r\nSeparating Funnel Pyriform Glass Stopcok\/ Glass And Plastic Stopcok\/PTEF Stopcock Glass Stopper\/Plastic Stopper\t     60ml 125ml 250ml 500ml 1000ml 2000ml MaxMed UAE is the leading supplier of Lab Essentials (Tubes, Pipettes, Glassware) in Dubai and across the United Arab Emirates. We provide professional Lab Essentials (Tubes, Pipettes, Glassware) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0123"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Lab Essentials (Tubes, Pipettes, Glassware)",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "glass",
+            "glass Dubai",
+            "glass UAE",
+            "funnel",
+            "funnel Dubai",
+            "funnel UAE",
+            "essentials",
+            "essentials equipment",
+            "essentials supplier",
+            "(tubes,",
+            "(tubes, equipment",
+            "(tubes, supplier",
+            "pipettes,",
+            "pipettes, equipment",
+            "pipettes, supplier",
+            "glassware)",
+            "glassware) equipment",
+            "glassware) supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.785970Z",
+            "validThrough": "2026-01-11T08:02:41.786083Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/glass-funnel-mw-0123-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/glass-funnel-mw-0123-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "glass",
+        "glass Dubai",
+        "glass UAE",
+        "funnel",
+        "funnel Dubai",
+        "funnel UAE",
+        "essentials",
+        "essentials equipment",
+        "essentials supplier",
+        "(tubes,",
+        "(tubes, equipment",
+        "(tubes, supplier",
+        "pipettes,",
+        "pipettes, equipment",
+        "pipettes, supplier",
+        "glassware)",
+        "glassware) equipment",
+        "glassware) supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Lab Essentials (Tubes, Pipettes, Glassware)",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "HiPette Colorful Fully Autoclavable Mechanical Pipette",
+            "HiPette Fully Autoclavable Mechanical Pipette",
+            "MicroPette Plus Fully Autoclavable Adjustable Volume Mechanical Pipette",
+            "MicroPette Plus Fully Autoclavable Fixed Volume Mechanical Pipette",
+            "MicroPette Plus 8-channel Adjustable Volume Mechanical Pipettes(magnetic suction model)"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.787008Z"
+}

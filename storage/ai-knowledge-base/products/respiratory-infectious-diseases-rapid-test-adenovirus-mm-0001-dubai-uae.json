@@ -1,0 +1,196 @@
+{
+    "entity_type": "product",
+    "entity_name": "Respiratory Infectious Diseases Rapid Test (Adenovirus)",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The Respiratory Infectious Diseases Rapid Test is a rapid chromatographic immunoassay for the qualitative detection of respiratory infectious diseases in human nasopharyngeal swab or nasal swab specimens as an aid in the diagnostic of Respiratory Infectious Diseases.\r\n\r\nProduct Features\r\n\r\nFast results  \r\n\r\nEasy visually interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Infectious Disease Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Infectious Disease Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Respiratory Infectious Diseases Rapid Test (Adenovirus)",
+        "description": "The Respiratory Infectious Diseases Rapid Test is a rapid chromatographic immunoassay for the qualitative detection of respiratory infectious diseases in human nasopharyngeal swab or nasal swab specimens as an aid in the diagnostic of Respiratory Infectious Diseases.\r\n\r\nProduct Features\r\n\r\nFast results  \r\n\r\nEasy visually interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Infectious Disease Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Infectious Disease Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0001"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxMed UAE",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Infectious Disease Rapid Tests",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "respiratory",
+            "1": "respiratory Dubai",
+            "2": "respiratory UAE",
+            "3": "infectious",
+            "4": "infectious Dubai",
+            "5": "infectious UAE",
+            "6": "diseases",
+            "7": "diseases Dubai",
+            "8": "diseases UAE",
+            "9": "rapid",
+            "10": "rapid Dubai",
+            "11": "rapid UAE",
+            "12": "test",
+            "13": "test Dubai",
+            "14": "test UAE",
+            "15": "(adenovirus)",
+            "16": "(adenovirus) Dubai",
+            "17": "(adenovirus) UAE",
+            "19": "infectious equipment",
+            "20": "infectious supplier",
+            "21": "disease",
+            "22": "disease equipment",
+            "23": "disease supplier",
+            "25": "rapid equipment",
+            "26": "rapid supplier",
+            "27": "tests",
+            "28": "tests equipment",
+            "29": "tests supplier",
+            "30": "laboratory equipment",
+            "31": "medical equipment",
+            "32": "scientific instruments",
+            "33": "diagnostic tools",
+            "34": "research equipment",
+            "35": "lab supplies",
+            "36": "analytical instruments",
+            "37": "laboratory technology",
+            "38": "Dubai",
+            "39": "UAE",
+            "40": "Middle East",
+            "41": "MaxMed",
+            "42": "laboratory supplier Dubai",
+            "43": "medical equipment UAE",
+            "44": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.245656Z",
+            "validThrough": "2026-01-11T08:02:41.245708Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/respiratory-infectious-diseases-rapid-test-adenovirus-mm-0001-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/respiratory-infectious-diseases-rapid-test-adenovirus-mm-0001-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "respiratory",
+        "1": "respiratory Dubai",
+        "2": "respiratory UAE",
+        "3": "infectious",
+        "4": "infectious Dubai",
+        "5": "infectious UAE",
+        "6": "diseases",
+        "7": "diseases Dubai",
+        "8": "diseases UAE",
+        "9": "rapid",
+        "10": "rapid Dubai",
+        "11": "rapid UAE",
+        "12": "test",
+        "13": "test Dubai",
+        "14": "test UAE",
+        "15": "(adenovirus)",
+        "16": "(adenovirus) Dubai",
+        "17": "(adenovirus) UAE",
+        "19": "infectious equipment",
+        "20": "infectious supplier",
+        "21": "disease",
+        "22": "disease equipment",
+        "23": "disease supplier",
+        "25": "rapid equipment",
+        "26": "rapid supplier",
+        "27": "tests",
+        "28": "tests equipment",
+        "29": "tests supplier",
+        "30": "laboratory equipment",
+        "31": "medical equipment",
+        "32": "scientific instruments",
+        "33": "diagnostic tools",
+        "34": "research equipment",
+        "35": "lab supplies",
+        "36": "analytical instruments",
+        "37": "laboratory technology",
+        "38": "Dubai",
+        "39": "UAE",
+        "40": "Middle East",
+        "41": "MaxMed",
+        "42": "laboratory supplier Dubai",
+        "43": "medical equipment UAE",
+        "44": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Infectious Disease Rapid Tests",
+        "manufactured_by": "MaxMed UAE",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Respiratory Infectious Diseases Rapid Test (Adeno\/HPIV\/RSV\/COVID-19\/MP\/RhV\/Flu B\/Flu A\/HMPV)",
+            "Respiratory Infectious Diseases Rapid Test (RhV)",
+            "Respiratory Infectious Diseases Rapid Test (HMPV)",
+            "Respiratory Infectious Diseases Rapid Test (HPIV)",
+            "Respiratory Infectious Diseases Rapid Test (Influenza A+B)"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.247386Z"
+}

@@ -1,0 +1,198 @@
+{
+    "entity_type": "product",
+    "entity_name": "Zorbax Bonus-RP (Reversed Phase) RR (Rapid Resolution)",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Reversed-Phase UHPLC Column for Polar Analytes\r\n\r\nThe ZORBAX Bonus-RP RR column features an embedded amide linkage within a C14-alkyl chain, offering enhanced selectivity for polar compounds and excellent performance in 100% aqueous mobile phases. Designed for Rapid Resolution High Definition (RRHD) applications, this column utilizes 1.8 µm fully porous silica particles, delivering exceptional peak shapes and high efficiency—even for challenging analytes. MaxMed UAE is the leading supplier of Liquid Chromatograph (HPLC) in Dubai and across the United Arab Emirates. We provide professional Liquid Chromatograph (HPLC) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Zorbax Bonus-RP (Reversed Phase) RR (Rapid Resolution)",
+        "description": "Reversed-Phase UHPLC Column for Polar Analytes\r\n\r\nThe ZORBAX Bonus-RP RR column features an embedded amide linkage within a C14-alkyl chain, offering enhanced selectivity for polar compounds and excellent performance in 100% aqueous mobile phases. Designed for Rapid Resolution High Definition (RRHD) applications, this column utilizes 1.8 µm fully porous silica particles, delivering exceptional peak shapes and high efficiency—even for challenging analytes. MaxMed UAE is the leading supplier of Liquid Chromatograph (HPLC) in Dubai and across the United Arab Emirates. We provide professional Liquid Chromatograph (HPLC) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0068"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "Agilent Technologies",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Liquid Chromatograph (HPLC)",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "zorbax",
+            "zorbax Dubai",
+            "zorbax UAE",
+            "bonus-rp",
+            "bonus-rp Dubai",
+            "bonus-rp UAE",
+            "(reversed",
+            "(reversed Dubai",
+            "(reversed UAE",
+            "phase)",
+            "phase) Dubai",
+            "phase) UAE",
+            "(rapid",
+            "(rapid Dubai",
+            "(rapid UAE",
+            "resolution)",
+            "resolution) Dubai",
+            "resolution) UAE",
+            "liquid",
+            "liquid equipment",
+            "liquid supplier",
+            "chromatograph",
+            "chromatograph equipment",
+            "chromatograph supplier",
+            "(hplc)",
+            "(hplc) equipment",
+            "(hplc) supplier",
+            "agilent technologies",
+            "agilent technologies UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "5439.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.885263Z",
+            "validThrough": "2026-01-11T08:02:41.885380Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/zorbax-bonus-rp-reversed-phase-rr-rapid-resolution-mm-0068-agilent-technologies-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/zorbax-bonus-rp-reversed-phase-rr-rapid-resolution-mm-0068-agilent-technologies-dubai-uae"
+        }
+    },
+    "keywords": [
+        "zorbax",
+        "zorbax Dubai",
+        "zorbax UAE",
+        "bonus-rp",
+        "bonus-rp Dubai",
+        "bonus-rp UAE",
+        "(reversed",
+        "(reversed Dubai",
+        "(reversed UAE",
+        "phase)",
+        "phase) Dubai",
+        "phase) UAE",
+        "(rapid",
+        "(rapid Dubai",
+        "(rapid UAE",
+        "resolution)",
+        "resolution) Dubai",
+        "resolution) UAE",
+        "liquid",
+        "liquid equipment",
+        "liquid supplier",
+        "chromatograph",
+        "chromatograph equipment",
+        "chromatograph supplier",
+        "(hplc)",
+        "(hplc) equipment",
+        "(hplc) supplier",
+        "agilent technologies",
+        "agilent technologies UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Liquid Chromatograph (HPLC)",
+        "manufactured_by": "Agilent Technologies",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "HPLC Column Nova Atom Liquid Chromatography",
+            "HPLC Column Nova Element Liquid Chromatography",
+            "Liquid Chromatography Columns for Special Industries (HPLC)",
+            "PL aquagel-OH 20",
+            "Sugar KS-802"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.887278Z"
+}

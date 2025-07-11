@@ -1,0 +1,180 @@
+{
+    "entity_type": "product",
+    "entity_name": "SK-O180-Pro Multifunctional Orbital Decolorizing Shaker",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Independent LCD display for speed and time\r\n\r\n• Compact footprint\r\n\r\n•  Provides smooth and uniform shaking\r\n\r\n•  2.5kg with platform speed range  100-800 rpm\r\n\r\n•  Continuous or timer operation mode\r\n\r\n• Maintenance- free brushless DC motor\r\n\r\n• Over speed detection and protection\r\n\r\n• Wide range of optional platform for flasks, and other popular vessels\r\n\r\n•  Remote function provides PC control and data transmission\r\n\r\n•  Free software for PC control & data logging\r\n\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8032210100\r\nMotion type\r\nOrbital Shaker\r\nAmplitude\r\n4mm\r\nTilt angle\r\n-\r\nSpeed range\r\n100-800rpm\r\nSpeed display\r\nLCD\r\nTimer display\r\nLCD\r\nTime settings range\r\n1min-99h59min\r\nData connector\r\nRS232\r\nMax. load capacity (with platform)\r\n2.5kg\r\nMotor type\r\nBrushless DC motor\r\nMotor rating input\r\n28W\r\nMotor rating output\r\n15W\r\nPower\r\n30W\r\nVoltage\r\n100-240V\r\nFrequency\r\n50\/60Hz\r\nDimension[W×D×H]\r\n300×340×100mm\r\nWork plate Dimension[W x D]\r\n250×245mm\r\nWeight\r\n8.1kg\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible ambient humidity\r\n80% RH\r\nProtection class\r\nIP20 MaxMed UAE is the leading supplier of Shakers in Dubai and across the United Arab Emirates. We provide professional Shakers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "SK-O180-Pro Multifunctional Orbital Decolorizing Shaker",
+        "description": "Independent LCD display for speed and time\r\n\r\n• Compact footprint\r\n\r\n•  Provides smooth and uniform shaking\r\n\r\n•  2.5kg with platform speed range  100-800 rpm\r\n\r\n•  Continuous or timer operation mode\r\n\r\n• Maintenance- free brushless DC motor\r\n\r\n• Over speed detection and protection\r\n\r\n• Wide range of optional platform for flasks, and other popular vessels\r\n\r\n•  Remote function provides PC control and data transmission\r\n\r\n•  Free software for PC control & data logging\r\n\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8032210100\r\nMotion type\r\nOrbital Shaker\r\nAmplitude\r\n4mm\r\nTilt angle\r\n-\r\nSpeed range\r\n100-800rpm\r\nSpeed display\r\nLCD\r\nTimer display\r\nLCD\r\nTime settings range\r\n1min-99h59min\r\nData connector\r\nRS232\r\nMax. load capacity (with platform)\r\n2.5kg\r\nMotor type\r\nBrushless DC motor\r\nMotor rating input\r\n28W\r\nMotor rating output\r\n15W\r\nPower\r\n30W\r\nVoltage\r\n100-240V\r\nFrequency\r\n50\/60Hz\r\nDimension[W×D×H]\r\n300×340×100mm\r\nWork plate Dimension[W x D]\r\n250×245mm\r\nWeight\r\n8.1kg\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible ambient humidity\r\n80% RH\r\nProtection class\r\nIP20 MaxMed UAE is the leading supplier of Shakers in Dubai and across the United Arab Emirates. We provide professional Shakers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0002"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Shakers",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "sk-o180-pro",
+            "sk-o180-pro Dubai",
+            "sk-o180-pro UAE",
+            "multifunctional",
+            "multifunctional Dubai",
+            "multifunctional UAE",
+            "orbital",
+            "orbital Dubai",
+            "orbital UAE",
+            "decolorizing",
+            "decolorizing Dubai",
+            "decolorizing UAE",
+            "shaker",
+            "shaker Dubai",
+            "shaker UAE",
+            "shakers",
+            "shakers equipment",
+            "shakers supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:40.855930Z",
+            "validThrough": "2026-01-11T08:02:40.855990Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/sk-o180-pro-multifunctional-orbital-decolorizing-shaker-mw-0002-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/sk-o180-pro-multifunctional-orbital-decolorizing-shaker-mw-0002-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "sk-o180-pro",
+        "sk-o180-pro Dubai",
+        "sk-o180-pro UAE",
+        "multifunctional",
+        "multifunctional Dubai",
+        "multifunctional UAE",
+        "orbital",
+        "orbital Dubai",
+        "orbital UAE",
+        "decolorizing",
+        "decolorizing Dubai",
+        "decolorizing UAE",
+        "shaker",
+        "shaker Dubai",
+        "shaker UAE",
+        "shakers",
+        "shakers equipment",
+        "shakers supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Shakers",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "SK-O330-Pro Large Multifunctional Orbital Decolorizing Shaker",
+            "SK-O330-M Orbital Decolorizing Shaker",
+            "SK-O180-S Intelligent Decolorizing Shaker (Multi-functional）",
+            "SK-L180-S Intelligent Linear Decolorizing Shaker",
+            "SK-O180-S Intelligent Decolorizing Shaker（Basic model）"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:40.856572Z"
+}

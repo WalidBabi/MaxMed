@@ -1,0 +1,180 @@
+{
+    "entity_type": "product",
+    "entity_name": "TC1000-S Thermal Cycler Standard",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "High performance Peltier and independent heating segments improving temperature control\r\nAuxiliary heating mechanism diminishes the \"edge effect\" and enhance the temperature uniformity\r\nWide touchdown PCR temperature range (-9.9°C~+9.9°C) and Long PCR time range (-9min 59s~+9min 59s)\r\nGradient temperature setting optimizes temperature easily in the single run\r\nColor touch screen with user friendly interface helps to edit programs easily\r\nWide options of consumables: common PCR tubes, 8-well PCR strips and 96-well PCR plates can be used\r\nFile customization, multi-file storage \r\nPower failure protection function, automatic program recovery\r\nHot lid auto-off function: If module temperature is lower than 30 °C, the hot lid function will automatically turn off\r\nElegant design, excellent precision and accurate, reproducible results and precise PCR optimization\r\nState of the art electronics, precision peltier device and flexible user interface.\r\nThe TC1000G is an essential laboratory instrument for molecular biology with applications such as sequencing, gene cloning, gene expression,mutagensis, and it is also used in areas such as drug discovery, agriculture, food industry, etc.\r\n\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n5064101300\r\nSample Capacity\r\n96×0.2mL PCR tube | 12×0.2mL PCR-8 strips | 0.2mL 96 PCR Microplate\r\nHeating Temperature Range\r\n4-105℃\r\nLid Temperature Range\r\n30-110℃\r\nTemperature Display Accuracy\r\n±0.1℃\r\nTemperature Control Accuracy\r\n±0.3℃\r\nTemperature uniformity\r\n MaxMed UAE is the leading supplier of PCR & Molecular Analysis in Dubai and across the United Arab Emirates. We provide professional PCR & Molecular Analysis with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "TC1000-S Thermal Cycler Standard",
+        "description": "High performance Peltier and independent heating segments improving temperature control\r\nAuxiliary heating mechanism diminishes the \"edge effect\" and enhance the temperature uniformity\r\nWide touchdown PCR temperature range (-9.9°C~+9.9°C) and Long PCR time range (-9min 59s~+9min 59s)\r\nGradient temperature setting optimizes temperature easily in the single run\r\nColor touch screen with user friendly interface helps to edit programs easily\r\nWide options of consumables: common PCR tubes, 8-well PCR strips and 96-well PCR plates can be used\r\nFile customization, multi-file storage \r\nPower failure protection function, automatic program recovery\r\nHot lid auto-off function: If module temperature is lower than 30 °C, the hot lid function will automatically turn off\r\nElegant design, excellent precision and accurate, reproducible results and precise PCR optimization\r\nState of the art electronics, precision peltier device and flexible user interface.\r\nThe TC1000G is an essential laboratory instrument for molecular biology with applications such as sequencing, gene cloning, gene expression,mutagensis, and it is also used in areas such as drug discovery, agriculture, food industry, etc.\r\n\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n5064101300\r\nSample Capacity\r\n96×0.2mL PCR tube | 12×0.2mL PCR-8 strips | 0.2mL 96 PCR Microplate\r\nHeating Temperature Range\r\n4-105℃\r\nLid Temperature Range\r\n30-110℃\r\nTemperature Display Accuracy\r\n±0.1℃\r\nTemperature Control Accuracy\r\n±0.3℃\r\nTemperature uniformity\r\n MaxMed UAE is the leading supplier of PCR & Molecular Analysis in Dubai and across the United Arab Emirates. We provide professional PCR & Molecular Analysis with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0043"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "PCR & Molecular Analysis",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "tc1000-s",
+            "tc1000-s Dubai",
+            "tc1000-s UAE",
+            "thermal",
+            "thermal Dubai",
+            "thermal UAE",
+            "cycler",
+            "cycler Dubai",
+            "cycler UAE",
+            "standard",
+            "standard Dubai",
+            "standard UAE",
+            "molecular",
+            "molecular equipment",
+            "molecular supplier",
+            "analysis",
+            "analysis equipment",
+            "analysis supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Molecular biology",
+            "DNA analysis",
+            "Gene research",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.015153Z",
+            "validThrough": "2026-01-11T08:02:41.015208Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/tc1000-s-thermal-cycler-standard-mw-0043-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/tc1000-s-thermal-cycler-standard-mw-0043-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "tc1000-s",
+        "tc1000-s Dubai",
+        "tc1000-s UAE",
+        "thermal",
+        "thermal Dubai",
+        "thermal UAE",
+        "cycler",
+        "cycler Dubai",
+        "cycler UAE",
+        "standard",
+        "standard Dubai",
+        "standard UAE",
+        "molecular",
+        "molecular equipment",
+        "molecular supplier",
+        "analysis",
+        "analysis equipment",
+        "analysis supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "PCR & Molecular Analysis",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "TC1000-G-Pro Thermal Cycler Gradient",
+            "PC-32 Gradient thermal cycler",
+            "PC-96 Gradient thermal cycler",
+            "PC-96P Gradient thermal cycler",
+            "T200 Gradient thermal cycler"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.016280Z"
+}

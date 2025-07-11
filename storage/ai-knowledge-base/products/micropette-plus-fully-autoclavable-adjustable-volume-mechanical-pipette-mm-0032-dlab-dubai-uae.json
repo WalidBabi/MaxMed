@@ -1,0 +1,216 @@
+{
+    "entity_type": "product",
+    "entity_name": "MicroPette Plus Fully Autoclavable Adjustable Volume Mechanical Pipette",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Introducing the MicroPette Plus - a high-performance manual pipette designed for exceptional comfort and ease of use.\r\nErgonomic Design: With a light touch plunger, relaxed finger rest, and an overall user-friendly design, the MicroPette Plus is designed to make pipetting more comfortable and efficient.\r\nVolume Range: The MicroPette Plus offers a volume range of 0.1 µl to 10 ml, and comes in single-channel adjustable, single-channel fixed, and multi-channel adjustable models, providing exceptional versatility for a range of laboratory applications.\r\n8\/12 Channel Pipettes: The MicroPette Plus's 8\/12 channel pipettes are suitable for use with standard 96-well plates, making them ideal for high-throughput applications.\r\nRotating Counter Knob: The MicroPette Plus features an easy-to-use rotating counter knob and digital display, allowing for quick and accurate volume setting, with the volume range clearly visible in the digital display.\r\nHigh-Quality Materials: The MicroPette Plus is made of high-quality heat-resistant materials, allowing it to be autoclaved or UV-disinfected without disassembly. Its design is also resistant to harsh chemicals.\r\nQuick Release Pipette Tip Ejector: The MicroPette Plus features a quick-release pipette tip ejector, making it easy to switch between different tips.\r\nMaintenance: The MicroPette Plus's components are easily replaceable and can be calibrated and maintained using standard tools in the laboratory. It also has ISO 9001:2008 and ISO 13485:2003 certificates, as well as CE marking.\r\nOnline Calibration: The MicroPette Plus can be calibrated online via the official website, ensuring that it is always in top working condition.\r\nOverall, the MicroPette Plus is a reliable, easy-to-use, and versatile manual pipette that is perfect for various laboratory applications. With its ergonomic design, intuitive controls, and high-quality materials, the MicroPette Plus is the ideal choice for any laboratory looking for a reliable and efficient pipette. MaxMed UAE is the leading supplier of Lab Essentials (Tubes, Pipettes, Glassware) in Dubai and across the United Arab Emirates. We provide professional Lab Essentials (Tubes, Pipettes, Glassware) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "MicroPette Plus Fully Autoclavable Adjustable Volume Mechanical Pipette",
+        "description": "Introducing the MicroPette Plus - a high-performance manual pipette designed for exceptional comfort and ease of use.\r\nErgonomic Design: With a light touch plunger, relaxed finger rest, and an overall user-friendly design, the MicroPette Plus is designed to make pipetting more comfortable and efficient.\r\nVolume Range: The MicroPette Plus offers a volume range of 0.1 µl to 10 ml, and comes in single-channel adjustable, single-channel fixed, and multi-channel adjustable models, providing exceptional versatility for a range of laboratory applications.\r\n8\/12 Channel Pipettes: The MicroPette Plus's 8\/12 channel pipettes are suitable for use with standard 96-well plates, making them ideal for high-throughput applications.\r\nRotating Counter Knob: The MicroPette Plus features an easy-to-use rotating counter knob and digital display, allowing for quick and accurate volume setting, with the volume range clearly visible in the digital display.\r\nHigh-Quality Materials: The MicroPette Plus is made of high-quality heat-resistant materials, allowing it to be autoclaved or UV-disinfected without disassembly. Its design is also resistant to harsh chemicals.\r\nQuick Release Pipette Tip Ejector: The MicroPette Plus features a quick-release pipette tip ejector, making it easy to switch between different tips.\r\nMaintenance: The MicroPette Plus's components are easily replaceable and can be calibrated and maintained using standard tools in the laboratory. It also has ISO 9001:2008 and ISO 13485:2003 certificates, as well as CE marking.\r\nOnline Calibration: The MicroPette Plus can be calibrated online via the official website, ensuring that it is always in top working condition.\r\nOverall, the MicroPette Plus is a reliable, easy-to-use, and versatile manual pipette that is perfect for various laboratory applications. With its ergonomic design, intuitive controls, and high-quality materials, the MicroPette Plus is the ideal choice for any laboratory looking for a reliable and efficient pipette. MaxMed UAE is the leading supplier of Lab Essentials (Tubes, Pipettes, Glassware) in Dubai and across the United Arab Emirates. We provide professional Lab Essentials (Tubes, Pipettes, Glassware) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0032"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "DLAB",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Lab Essentials (Tubes, Pipettes, Glassware)",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "micropette",
+            "micropette Dubai",
+            "micropette UAE",
+            "plus",
+            "plus Dubai",
+            "plus UAE",
+            "fully",
+            "fully Dubai",
+            "fully UAE",
+            "autoclavable",
+            "autoclavable Dubai",
+            "autoclavable UAE",
+            "adjustable",
+            "adjustable Dubai",
+            "adjustable UAE",
+            "volume",
+            "volume Dubai",
+            "volume UAE",
+            "mechanical",
+            "mechanical Dubai",
+            "mechanical UAE",
+            "pipette",
+            "pipette Dubai",
+            "pipette UAE",
+            "essentials",
+            "essentials equipment",
+            "essentials supplier",
+            "(tubes,",
+            "(tubes, equipment",
+            "(tubes, supplier",
+            "pipettes,",
+            "pipettes, equipment",
+            "pipettes, supplier",
+            "glassware)",
+            "glassware) equipment",
+            "glassware) supplier",
+            "dlab",
+            "dlab UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.672512Z",
+            "validThrough": "2026-01-11T08:02:41.672575Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/micropette-plus-fully-autoclavable-adjustable-volume-mechanical-pipette-mm-0032-dlab-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/micropette-plus-fully-autoclavable-adjustable-volume-mechanical-pipette-mm-0032-dlab-dubai-uae"
+        }
+    },
+    "keywords": [
+        "micropette",
+        "micropette Dubai",
+        "micropette UAE",
+        "plus",
+        "plus Dubai",
+        "plus UAE",
+        "fully",
+        "fully Dubai",
+        "fully UAE",
+        "autoclavable",
+        "autoclavable Dubai",
+        "autoclavable UAE",
+        "adjustable",
+        "adjustable Dubai",
+        "adjustable UAE",
+        "volume",
+        "volume Dubai",
+        "volume UAE",
+        "mechanical",
+        "mechanical Dubai",
+        "mechanical UAE",
+        "pipette",
+        "pipette Dubai",
+        "pipette UAE",
+        "essentials",
+        "essentials equipment",
+        "essentials supplier",
+        "(tubes,",
+        "(tubes, equipment",
+        "(tubes, supplier",
+        "pipettes,",
+        "pipettes, equipment",
+        "pipettes, supplier",
+        "glassware)",
+        "glassware) equipment",
+        "glassware) supplier",
+        "dlab",
+        "dlab UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Lab Essentials (Tubes, Pipettes, Glassware)",
+        "manufactured_by": "DLAB",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "HiPette Colorful Fully Autoclavable Mechanical Pipette",
+            "HiPette Fully Autoclavable Mechanical Pipette",
+            "MicroPette Plus Fully Autoclavable Fixed Volume Mechanical Pipette",
+            "MicroPette Plus 8-channel Adjustable Volume Mechanical Pipettes(magnetic suction model)",
+            "MicroPette Plus 12-channel Adjustable Volume Mechanical Pipettes(magnetic suction model)"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.673608Z"
+}

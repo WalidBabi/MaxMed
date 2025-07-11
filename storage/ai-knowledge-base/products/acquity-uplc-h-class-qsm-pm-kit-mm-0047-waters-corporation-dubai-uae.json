@@ -1,0 +1,183 @@
+{
+    "entity_type": "product",
+    "entity_name": "ACQUITY UPLC H-Class QSM PM kit",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The Waters™ Performance Maintenance Kit for the ACQUITY Quaternary Solvent Manager contains all the Waters Quality Parts™ necessary to keep your instrument operating at peak performance on an annual basis. The Waters™ Performance Maintenance Kit includes the following parts: mixer, plungers, check valves seals and filters. MaxMed UAE is the leading supplier of UPLC System Maintenance Kits in Dubai and across the United Arab Emirates. We provide professional UPLC System Maintenance Kits with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "ACQUITY UPLC H-Class QSM PM kit",
+        "description": "The Waters™ Performance Maintenance Kit for the ACQUITY Quaternary Solvent Manager contains all the Waters Quality Parts™ necessary to keep your instrument operating at peak performance on an annual basis. The Waters™ Performance Maintenance Kit includes the following parts: mixer, plungers, check valves seals and filters. MaxMed UAE is the leading supplier of UPLC System Maintenance Kits in Dubai and across the United Arab Emirates. We provide professional UPLC System Maintenance Kits with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0047"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "Waters Corporation.",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "UPLC System Maintenance Kits",
+        "additionalType": [
+            "https:\/\/schema.org\/Product",
+            "https:\/\/schema.org\/SoftwareApplication"
+        ],
+        "keywords": {
+            "0": "acquity",
+            "1": "acquity Dubai",
+            "2": "acquity UAE",
+            "3": "uplc",
+            "4": "uplc Dubai",
+            "5": "uplc UAE",
+            "6": "h-class",
+            "7": "h-class Dubai",
+            "8": "h-class UAE",
+            "10": "uplc equipment",
+            "11": "uplc supplier",
+            "12": "system",
+            "13": "system equipment",
+            "14": "system supplier",
+            "15": "maintenance",
+            "16": "maintenance equipment",
+            "17": "maintenance supplier",
+            "18": "kits",
+            "19": "kits equipment",
+            "20": "kits supplier",
+            "21": "waters corporation.",
+            "22": "waters corporation. UAE",
+            "23": "laboratory equipment",
+            "24": "medical equipment",
+            "25": "scientific instruments",
+            "26": "diagnostic tools",
+            "27": "research equipment",
+            "28": "lab supplies",
+            "29": "analytical instruments",
+            "30": "laboratory technology",
+            "31": "Dubai",
+            "32": "UAE",
+            "33": "Middle East",
+            "34": "MaxMed",
+            "35": "laboratory supplier Dubai",
+            "36": "medical equipment UAE",
+            "37": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "10730.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.813451Z",
+            "validThrough": "2026-01-11T08:02:41.813499Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/acquity-uplc-h-class-qsm-pm-kit-mm-0047-waters-corporation-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/acquity-uplc-h-class-qsm-pm-kit-mm-0047-waters-corporation-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "acquity",
+        "1": "acquity Dubai",
+        "2": "acquity UAE",
+        "3": "uplc",
+        "4": "uplc Dubai",
+        "5": "uplc UAE",
+        "6": "h-class",
+        "7": "h-class Dubai",
+        "8": "h-class UAE",
+        "10": "uplc equipment",
+        "11": "uplc supplier",
+        "12": "system",
+        "13": "system equipment",
+        "14": "system supplier",
+        "15": "maintenance",
+        "16": "maintenance equipment",
+        "17": "maintenance supplier",
+        "18": "kits",
+        "19": "kits equipment",
+        "20": "kits supplier",
+        "21": "waters corporation.",
+        "22": "waters corporation. UAE",
+        "23": "laboratory equipment",
+        "24": "medical equipment",
+        "25": "scientific instruments",
+        "26": "diagnostic tools",
+        "27": "research equipment",
+        "28": "lab supplies",
+        "29": "analytical instruments",
+        "30": "laboratory technology",
+        "31": "Dubai",
+        "32": "UAE",
+        "33": "Middle East",
+        "34": "MaxMed",
+        "35": "laboratory supplier Dubai",
+        "36": "medical equipment UAE",
+        "37": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "UPLC System Maintenance Kits",
+        "manufactured_by": "Waters Corporation.",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "ACQUITY UPLC H-Class SM-FTN PM Kit",
+            "ACQUITY TUV Performance Maintenance Kit",
+            "ACQUITY Fluorescence Detector PM Kit"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.814522Z"
+}

@@ -1,0 +1,202 @@
+{
+    "entity_type": "product",
+    "entity_name": "Toxo IgG\/IgM Rapid Test （S \/ P）",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The Toxo IgG\/IgM Rapid Test Cassette is a lateral flow chromatographic immunoassay for the simultaneous detection and differentiation of IgM anti-Toxoplasma Gondii (T.gondii) and IgG anti-T.gondii in human specimens. This kit is intended to be used as a screening test and as an aid in the diagnosis of infection with T.gondii. Any reactive specimen with the Toxo IgG\/IgM Rapid Test Cassette must be confirmed with alternative testing method(s) and clinical findings.\r\nProduct Features\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Women's Health Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Women's Health Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Toxo IgG\/IgM Rapid Test （S \/ P）",
+        "description": "The Toxo IgG\/IgM Rapid Test Cassette is a lateral flow chromatographic immunoassay for the simultaneous detection and differentiation of IgM anti-Toxoplasma Gondii (T.gondii) and IgG anti-T.gondii in human specimens. This kit is intended to be used as a screening test and as an aid in the diagnosis of infection with T.gondii. Any reactive specimen with the Toxo IgG\/IgM Rapid Test Cassette must be confirmed with alternative testing method(s) and clinical findings.\r\nProduct Features\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Women's Health Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Women's Health Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MT-0012"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxTest©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Women's Health Rapid Tests",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "toxo",
+            "1": "toxo Dubai",
+            "2": "toxo UAE",
+            "3": "igg\/igm",
+            "4": "igg\/igm Dubai",
+            "5": "igg\/igm UAE",
+            "6": "rapid",
+            "7": "rapid Dubai",
+            "8": "rapid UAE",
+            "9": "test",
+            "10": "test Dubai",
+            "11": "test UAE",
+            "12": "（s",
+            "13": "（s Dubai",
+            "14": "（s UAE",
+            "15": "p）",
+            "16": "p） Dubai",
+            "17": "p） UAE",
+            "18": "women's",
+            "19": "women's equipment",
+            "20": "women's supplier",
+            "21": "health",
+            "22": "health equipment",
+            "23": "health supplier",
+            "25": "rapid equipment",
+            "26": "rapid supplier",
+            "27": "tests",
+            "28": "tests equipment",
+            "29": "tests supplier",
+            "30": "maxtest©",
+            "31": "maxtest© UAE",
+            "32": "laboratory equipment",
+            "33": "medical equipment",
+            "34": "scientific instruments",
+            "35": "diagnostic tools",
+            "36": "research equipment",
+            "37": "lab supplies",
+            "38": "analytical instruments",
+            "39": "laboratory technology",
+            "40": "Dubai",
+            "41": "UAE",
+            "42": "Middle East",
+            "43": "MaxMed",
+            "44": "laboratory supplier Dubai",
+            "45": "medical equipment UAE",
+            "46": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.153732Z",
+            "validThrough": "2026-01-11T08:02:41.153799Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/toxo-iggigm-rapid-test-s-p-mt-0012-maxtest-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/toxo-iggigm-rapid-test-s-p-mt-0012-maxtest-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "toxo",
+        "1": "toxo Dubai",
+        "2": "toxo UAE",
+        "3": "igg\/igm",
+        "4": "igg\/igm Dubai",
+        "5": "igg\/igm UAE",
+        "6": "rapid",
+        "7": "rapid Dubai",
+        "8": "rapid UAE",
+        "9": "test",
+        "10": "test Dubai",
+        "11": "test UAE",
+        "12": "（s",
+        "13": "（s Dubai",
+        "14": "（s UAE",
+        "15": "p）",
+        "16": "p） Dubai",
+        "17": "p） UAE",
+        "18": "women's",
+        "19": "women's equipment",
+        "20": "women's supplier",
+        "21": "health",
+        "22": "health equipment",
+        "23": "health supplier",
+        "25": "rapid equipment",
+        "26": "rapid supplier",
+        "27": "tests",
+        "28": "tests equipment",
+        "29": "tests supplier",
+        "30": "maxtest©",
+        "31": "maxtest© UAE",
+        "32": "laboratory equipment",
+        "33": "medical equipment",
+        "34": "scientific instruments",
+        "35": "diagnostic tools",
+        "36": "research equipment",
+        "37": "lab supplies",
+        "38": "analytical instruments",
+        "39": "laboratory technology",
+        "40": "Dubai",
+        "41": "UAE",
+        "42": "Middle East",
+        "43": "MaxMed",
+        "44": "laboratory supplier Dubai",
+        "45": "medical equipment UAE",
+        "46": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Women's Health Rapid Tests",
+        "manufactured_by": "MaxTest©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Pregnancy (hCG) Rapid Test （Urine）",
+            "Pregnancy (hCG) Rapid Test （S\/P\/U）",
+            "Pregnancy (hCG) Rapid Test （WB\/S\/P）",
+            "Ovulation (LH) Rapid Test",
+            "Follicle-Stimulating Hormone (FSH) Rapid Test"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.154609Z"
+}

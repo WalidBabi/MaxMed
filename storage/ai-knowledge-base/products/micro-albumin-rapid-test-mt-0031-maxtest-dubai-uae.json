@@ -1,0 +1,178 @@
+{
+    "entity_type": "product",
+    "entity_name": "Micro-Albumin Rapid Test",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The Semi-quantitative Micro-Albumin Rapid Test is a rapid chromatographic immunoassay for the semi-quantitative detection of micro-albumin in human urine.\r\n\r\nProduct Features\r\n\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Other Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Other Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Micro-Albumin Rapid Test",
+        "description": "The Semi-quantitative Micro-Albumin Rapid Test is a rapid chromatographic immunoassay for the semi-quantitative detection of micro-albumin in human urine.\r\n\r\nProduct Features\r\n\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Other Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Other Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MT-0031"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxTest©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Other Rapid Tests",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "micro-albumin",
+            "1": "micro-albumin Dubai",
+            "2": "micro-albumin UAE",
+            "3": "rapid",
+            "4": "rapid Dubai",
+            "5": "rapid UAE",
+            "6": "test",
+            "7": "test Dubai",
+            "8": "test UAE",
+            "9": "other",
+            "10": "other equipment",
+            "11": "other supplier",
+            "13": "rapid equipment",
+            "14": "rapid supplier",
+            "15": "tests",
+            "16": "tests equipment",
+            "17": "tests supplier",
+            "18": "maxtest©",
+            "19": "maxtest© UAE",
+            "20": "laboratory equipment",
+            "21": "medical equipment",
+            "22": "scientific instruments",
+            "23": "diagnostic tools",
+            "24": "research equipment",
+            "25": "lab supplies",
+            "26": "analytical instruments",
+            "27": "laboratory technology",
+            "28": "Dubai",
+            "29": "UAE",
+            "30": "Middle East",
+            "31": "MaxMed",
+            "32": "laboratory supplier Dubai",
+            "33": "medical equipment UAE",
+            "34": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.227888Z",
+            "validThrough": "2026-01-11T08:02:41.227962Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/micro-albumin-rapid-test-mt-0031-maxtest-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/micro-albumin-rapid-test-mt-0031-maxtest-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "micro-albumin",
+        "1": "micro-albumin Dubai",
+        "2": "micro-albumin UAE",
+        "3": "rapid",
+        "4": "rapid Dubai",
+        "5": "rapid UAE",
+        "6": "test",
+        "7": "test Dubai",
+        "8": "test UAE",
+        "9": "other",
+        "10": "other equipment",
+        "11": "other supplier",
+        "13": "rapid equipment",
+        "14": "rapid supplier",
+        "15": "tests",
+        "16": "tests equipment",
+        "17": "tests supplier",
+        "18": "maxtest©",
+        "19": "maxtest© UAE",
+        "20": "laboratory equipment",
+        "21": "medical equipment",
+        "22": "scientific instruments",
+        "23": "diagnostic tools",
+        "24": "research equipment",
+        "25": "lab supplies",
+        "26": "analytical instruments",
+        "27": "laboratory technology",
+        "28": "Dubai",
+        "29": "UAE",
+        "30": "Middle East",
+        "31": "MaxMed",
+        "32": "laboratory supplier Dubai",
+        "33": "medical equipment UAE",
+        "34": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Other Rapid Tests",
+        "manufactured_by": "MaxTest©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Celiac Rapid Test Cassette",
+            "Thyroid Stimulating Hormone (TSH) Rapid Test",
+            "Rheumatoid Factor Rapid Test",
+            "Micro-Albumin Qualitative Rapid Test",
+            "ABO and RhD Blood Grouping Rapid Test"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.228979Z"
+}

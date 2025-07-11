@@ -1,0 +1,190 @@
+{
+    "entity_type": "product",
+    "entity_name": "Nitrile Examination Gloves Powder Free Purple",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "100Pcs Box \r\n\r\nNitrile gloves do not contain latex protein, so it won’t cause allergic reactions Compared with latex gloves, nitrile gloves are very thin, and they will not have the skin marks MaxMed UAE is the leading supplier of PPE & Safety Gear in Dubai and across the United Arab Emirates. We provide professional PPE & Safety Gear with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Nitrile Examination Gloves Powder Free Purple",
+        "description": "100Pcs Box \r\n\r\nNitrile gloves do not contain latex protein, so it won’t cause allergic reactions Compared with latex gloves, nitrile gloves are very thin, and they will not have the skin marks MaxMed UAE is the leading supplier of PPE & Safety Gear in Dubai and across the United Arab Emirates. We provide professional PPE & Safety Gear with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0091"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "PPE & Safety Gear",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "nitrile",
+            "nitrile Dubai",
+            "nitrile UAE",
+            "examination",
+            "examination Dubai",
+            "examination UAE",
+            "gloves",
+            "gloves Dubai",
+            "gloves UAE",
+            "powder",
+            "powder Dubai",
+            "powder UAE",
+            "free",
+            "free Dubai",
+            "free UAE",
+            "purple",
+            "purple Dubai",
+            "purple UAE",
+            "safety",
+            "safety equipment",
+            "safety supplier",
+            "gear",
+            "gear equipment",
+            "gear supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.501901Z",
+            "validThrough": "2026-01-11T08:02:41.501958Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/nitrile-examination-gloves-powder-free-purple-mw-0091-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/nitrile-examination-gloves-powder-free-purple-mw-0091-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "nitrile",
+        "nitrile Dubai",
+        "nitrile UAE",
+        "examination",
+        "examination Dubai",
+        "examination UAE",
+        "gloves",
+        "gloves Dubai",
+        "gloves UAE",
+        "powder",
+        "powder Dubai",
+        "powder UAE",
+        "free",
+        "free Dubai",
+        "free UAE",
+        "purple",
+        "purple Dubai",
+        "purple UAE",
+        "safety",
+        "safety equipment",
+        "safety supplier",
+        "gear",
+        "gear equipment",
+        "gear supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "PPE & Safety Gear",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Nitrile Examination Gloves Powder Free Black",
+            "Vinyl Examination Gloves Powder Free Clear",
+            "Latex Examination Gloves Powder Free Beige"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.502803Z"
+}

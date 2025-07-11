@@ -1,0 +1,174 @@
+{
+    "entity_type": "product",
+    "entity_name": "Constant-Temperature Drying Oven(BOV-TC)",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Introduction:\r\nIt is suitable for drying samples of powders, insects and other tiny objects to avoid the samples flying up due to wind. This product is used for drying and melting wax of non-flammable and non-explosive items and non-volatile items in industrial and mining enterprises, colleges and universities, scientific research units, food processing, medical units and various laboratories.\r\n\r\nFeatures:\r\n\r\n1. The top air outlet switch is convenient.\r\n\r\n2. With door observation window.\r\n\r\n3. LED digital tube display P. I. D temperature controller, precise temperature control.\r\n\r\n4. Continuous operation or timed operation.\r\n\r\n5. With parameter memory function, automatic recovery operation when the call comes.\r\n\r\n6. The inner box adopts arc structure design, which is easy to clean.\r\n\r\n7. Pull-out movable shelves with adjustable spacing. MaxMed UAE is the leading supplier of Incubators & Ovens in Dubai and across the United Arab Emirates. We provide professional Incubators & Ovens with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Constant-Temperature Drying Oven(BOV-TC)",
+        "description": "Introduction:\r\nIt is suitable for drying samples of powders, insects and other tiny objects to avoid the samples flying up due to wind. This product is used for drying and melting wax of non-flammable and non-explosive items and non-volatile items in industrial and mining enterprises, colleges and universities, scientific research units, food processing, medical units and various laboratories.\r\n\r\nFeatures:\r\n\r\n1. The top air outlet switch is convenient.\r\n\r\n2. With door observation window.\r\n\r\n3. LED digital tube display P. I. D temperature controller, precise temperature control.\r\n\r\n4. Continuous operation or timed operation.\r\n\r\n5. With parameter memory function, automatic recovery operation when the call comes.\r\n\r\n6. The inner box adopts arc structure design, which is easy to clean.\r\n\r\n7. Pull-out movable shelves with adjustable spacing. MaxMed UAE is the leading supplier of Incubators & Ovens in Dubai and across the United Arab Emirates. We provide professional Incubators & Ovens with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0024"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "BIOBASE",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Incubators & Ovens",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "constant-temperature",
+            "constant-temperature Dubai",
+            "constant-temperature UAE",
+            "drying",
+            "drying Dubai",
+            "drying UAE",
+            "oven(bov-tc)",
+            "oven(bov-tc) Dubai",
+            "oven(bov-tc) UAE",
+            "incubators",
+            "incubators equipment",
+            "incubators supplier",
+            "ovens",
+            "ovens equipment",
+            "ovens supplier",
+            "biobase",
+            "biobase UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.647572Z",
+            "validThrough": "2026-01-11T08:02:41.647624Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/constant-temperature-drying-ovenbov-tc-mm-0024-biobase-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/constant-temperature-drying-ovenbov-tc-mm-0024-biobase-dubai-uae"
+        }
+    },
+    "keywords": [
+        "constant-temperature",
+        "constant-temperature Dubai",
+        "constant-temperature UAE",
+        "drying",
+        "drying Dubai",
+        "drying UAE",
+        "oven(bov-tc)",
+        "oven(bov-tc) Dubai",
+        "oven(bov-tc) UAE",
+        "incubators",
+        "incubators equipment",
+        "incubators supplier",
+        "ovens",
+        "ovens equipment",
+        "ovens supplier",
+        "biobase",
+        "biobase UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Incubators & Ovens",
+        "manufactured_by": "BIOBASE",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Vacuum Drying Oven(BOV-V\/VL)",
+            "Forced Air Drying Oven BJPX-HG Series",
+            "Dual-use Drying Oven B0V-D series",
+            "High Temperature Drying Oven",
+            "Constant-temperature Drying Oven BJPX-HDO Series"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.648381Z"
+}

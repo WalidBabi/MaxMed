@@ -1,0 +1,184 @@
+{
+    "entity_type": "product",
+    "entity_name": "Dental Cotton Roll 10mm X 38mm",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Not easily be broken. Easy to grip and practical for teeth cleaning supplies Dental cotton rolls are used to absorb saliva and other fluids to help keep operative areas free of excess moisture. GENC-1015 Dental Cotton Rolls, Size: 2 10mm x 38mm, 50pc\/bndl,20bndl\/bx MaxMed UAE is the leading supplier of Dental Consumables in Dubai and across the United Arab Emirates. We provide professional Dental Consumables with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Dental Cotton Roll 10mm X 38mm",
+        "description": "Not easily be broken. Easy to grip and practical for teeth cleaning supplies Dental cotton rolls are used to absorb saliva and other fluids to help keep operative areas free of excess moisture. GENC-1015 Dental Cotton Rolls, Size: 2 10mm x 38mm, 50pc\/bndl,20bndl\/bx MaxMed UAE is the leading supplier of Dental Consumables in Dubai and across the United Arab Emirates. We provide professional Dental Consumables with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0106"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Dental Consumables",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "dental",
+            "1": "dental Dubai",
+            "2": "dental UAE",
+            "3": "cotton",
+            "4": "cotton Dubai",
+            "5": "cotton UAE",
+            "6": "roll",
+            "7": "roll Dubai",
+            "8": "roll UAE",
+            "9": "10mm",
+            "10": "10mm Dubai",
+            "11": "10mm UAE",
+            "12": "38mm",
+            "13": "38mm Dubai",
+            "14": "38mm UAE",
+            "16": "dental equipment",
+            "17": "dental supplier",
+            "18": "consumables",
+            "19": "consumables equipment",
+            "20": "consumables supplier",
+            "21": "maxware©",
+            "22": "maxware© UAE",
+            "23": "laboratory equipment",
+            "24": "medical equipment",
+            "25": "scientific instruments",
+            "26": "diagnostic tools",
+            "27": "research equipment",
+            "28": "lab supplies",
+            "29": "analytical instruments",
+            "30": "laboratory technology",
+            "31": "Dubai",
+            "32": "UAE",
+            "33": "Middle East",
+            "34": "MaxMed",
+            "35": "laboratory supplier Dubai",
+            "36": "medical equipment UAE",
+            "37": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.544772Z",
+            "validThrough": "2026-01-11T08:02:41.544865Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/dental-cotton-roll-10mm-x-38mm-mw-0106-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/dental-cotton-roll-10mm-x-38mm-mw-0106-maxware-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "dental",
+        "1": "dental Dubai",
+        "2": "dental UAE",
+        "3": "cotton",
+        "4": "cotton Dubai",
+        "5": "cotton UAE",
+        "6": "roll",
+        "7": "roll Dubai",
+        "8": "roll UAE",
+        "9": "10mm",
+        "10": "10mm Dubai",
+        "11": "10mm UAE",
+        "12": "38mm",
+        "13": "38mm Dubai",
+        "14": "38mm UAE",
+        "16": "dental equipment",
+        "17": "dental supplier",
+        "18": "consumables",
+        "19": "consumables equipment",
+        "20": "consumables supplier",
+        "21": "maxware©",
+        "22": "maxware© UAE",
+        "23": "laboratory equipment",
+        "24": "medical equipment",
+        "25": "scientific instruments",
+        "26": "diagnostic tools",
+        "27": "research equipment",
+        "28": "lab supplies",
+        "29": "analytical instruments",
+        "30": "laboratory technology",
+        "31": "Dubai",
+        "32": "UAE",
+        "33": "Middle East",
+        "34": "MaxMed",
+        "35": "laboratory supplier Dubai",
+        "36": "medical equipment UAE",
+        "37": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Dental Consumables",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Yankauer Suction Tube",
+            "Suction Tips",
+            "Wooden Tongue Depressor",
+            "Sterilization Reel Heat Sealing Flat Reel Paper + Blue Film",
+            "Sterilization Pouch (Self Sealing Flat Pouch)"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.546296Z"
+}

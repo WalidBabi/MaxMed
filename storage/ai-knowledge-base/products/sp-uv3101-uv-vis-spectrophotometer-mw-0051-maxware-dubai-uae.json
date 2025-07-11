@@ -1,0 +1,172 @@
+{
+    "entity_type": "product",
+    "entity_name": "SP-UV3101 UV-Vis Spectrophotometer",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The instrument is equipped with a 10.1-inch large color touch screen (1024*600), designed with an easy-to-use graphical user interface.\r\nThe main unit independently performs photometric measurement, quantitative analysis, spectrum scanning, kinetics, DNA\/protein testing, and multi-wavelength testing.\r\nWhen controlled via PC software, it provides richer extension applications. The software adheres to GLP\/GMP laboratory standards and includes comprehensive user management, log recording, data storage traceability, and report output functions.\r\nIt boasts powerful storage capabilities, able to save various types of data and spectra, equipped with a standard USB interface for direct data exportation for editing, measurement, and storage. The instrument also features a power-off data retention function.\r\nThe unique design provides excellent optical performance, utilizing a holographic grating monochromator and a digital photodiode detector, ensuring low stray light, low noise, and high photometric accuracy and stability.\r\nA new wavelength drive mechanism greatly improves wavelength accuracy and repeatability while significantly reducing operational noise.\r\nIt supports a wide range of optional accessories, including a wireless Bluetooth printer, automatic cell holder, film sample holder, tube cell holder, thermostatic bath holder, optical integrating sphere, reflectance attachment, variable path length sample holder, and variable angle solid sample holder, among other specialized accessories.\r\nPRODUCT PARAMETERS\r\nOptical System\r\nDouble Beam\r\nLight Source\r\nTungsten Lamp(Japan HYBEC) | Deuterium Lamp (Milaras)\r\nSpectral Bandwidth\r\n1.0nm\r\nWavelength Range\r\n190～1100nm\r\nWavelength Accuracy\r\n±0.1nm (at 656.1nm), ±0.3nm full range\r\nScanning Speed\r\nHigh | Medium | Slow\r\nWavelength Repeatability\r\n≤0.1nm\r\nPhotometric Range\r\n-0.3～3A,0～9999C(0～9999F)\r\nPhotometric Accuracy\r\n±0.0015A(0～0.5A)±0.002A(0.5A～1A)\r\nPhotometric Repeatability\r\n±0.001A(0～0.5A)±0.0015A(0.5A～1A)\r\nStability\r\n≤0.001 A\/h\/500nm(After 1 hour of preheating)\r\nStray Light\r\n≤0.02%T @ 220,360nm\r\nSample Compartment\r\nFixed cuvette holder 1cm\r\nDisplay\r\n10.1-inch large color touch screen(1024*600)\r\nOutput\r\nUSB Port Printer Port\r\nPower Requirements\r\n110\/220V,50\/60Hz,120W\r\nDimension[L×W×H]\r\n570*440*210mm\r\nWeight\r\n20KG MaxMed UAE is the leading supplier of UV-Vis Spectrophotometers in Dubai and across the United Arab Emirates. We provide professional UV-Vis Spectrophotometers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "SP-UV3101 UV-Vis Spectrophotometer",
+        "description": "The instrument is equipped with a 10.1-inch large color touch screen (1024*600), designed with an easy-to-use graphical user interface.\r\nThe main unit independently performs photometric measurement, quantitative analysis, spectrum scanning, kinetics, DNA\/protein testing, and multi-wavelength testing.\r\nWhen controlled via PC software, it provides richer extension applications. The software adheres to GLP\/GMP laboratory standards and includes comprehensive user management, log recording, data storage traceability, and report output functions.\r\nIt boasts powerful storage capabilities, able to save various types of data and spectra, equipped with a standard USB interface for direct data exportation for editing, measurement, and storage. The instrument also features a power-off data retention function.\r\nThe unique design provides excellent optical performance, utilizing a holographic grating monochromator and a digital photodiode detector, ensuring low stray light, low noise, and high photometric accuracy and stability.\r\nA new wavelength drive mechanism greatly improves wavelength accuracy and repeatability while significantly reducing operational noise.\r\nIt supports a wide range of optional accessories, including a wireless Bluetooth printer, automatic cell holder, film sample holder, tube cell holder, thermostatic bath holder, optical integrating sphere, reflectance attachment, variable path length sample holder, and variable angle solid sample holder, among other specialized accessories.\r\nPRODUCT PARAMETERS\r\nOptical System\r\nDouble Beam\r\nLight Source\r\nTungsten Lamp(Japan HYBEC) | Deuterium Lamp (Milaras)\r\nSpectral Bandwidth\r\n1.0nm\r\nWavelength Range\r\n190～1100nm\r\nWavelength Accuracy\r\n±0.1nm (at 656.1nm), ±0.3nm full range\r\nScanning Speed\r\nHigh | Medium | Slow\r\nWavelength Repeatability\r\n≤0.1nm\r\nPhotometric Range\r\n-0.3～3A,0～9999C(0～9999F)\r\nPhotometric Accuracy\r\n±0.0015A(0～0.5A)±0.002A(0.5A～1A)\r\nPhotometric Repeatability\r\n±0.001A(0～0.5A)±0.0015A(0.5A～1A)\r\nStability\r\n≤0.001 A\/h\/500nm(After 1 hour of preheating)\r\nStray Light\r\n≤0.02%T @ 220,360nm\r\nSample Compartment\r\nFixed cuvette holder 1cm\r\nDisplay\r\n10.1-inch large color touch screen(1024*600)\r\nOutput\r\nUSB Port Printer Port\r\nPower Requirements\r\n110\/220V,50\/60Hz,120W\r\nDimension[L×W×H]\r\n570*440*210mm\r\nWeight\r\n20KG MaxMed UAE is the leading supplier of UV-Vis Spectrophotometers in Dubai and across the United Arab Emirates. We provide professional UV-Vis Spectrophotometers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0051"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "UV-Vis Spectrophotometers",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "sp-uv3101",
+            "1": "sp-uv3101 Dubai",
+            "2": "sp-uv3101 UAE",
+            "3": "uv-vis",
+            "4": "uv-vis Dubai",
+            "5": "uv-vis UAE",
+            "6": "spectrophotometer",
+            "7": "spectrophotometer Dubai",
+            "8": "spectrophotometer UAE",
+            "10": "uv-vis equipment",
+            "11": "uv-vis supplier",
+            "12": "spectrophotometers",
+            "13": "spectrophotometers equipment",
+            "14": "spectrophotometers supplier",
+            "15": "maxware©",
+            "16": "maxware© UAE",
+            "17": "laboratory equipment",
+            "18": "medical equipment",
+            "19": "scientific instruments",
+            "20": "diagnostic tools",
+            "21": "research equipment",
+            "22": "lab supplies",
+            "23": "analytical instruments",
+            "24": "laboratory technology",
+            "25": "Dubai",
+            "26": "UAE",
+            "27": "Middle East",
+            "28": "MaxMed",
+            "29": "laboratory supplier Dubai",
+            "30": "medical equipment UAE",
+            "31": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.039606Z",
+            "validThrough": "2026-01-11T08:02:41.039686Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/sp-uv3101-uv-vis-spectrophotometer-mw-0051-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/sp-uv3101-uv-vis-spectrophotometer-mw-0051-maxware-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "sp-uv3101",
+        "1": "sp-uv3101 Dubai",
+        "2": "sp-uv3101 UAE",
+        "3": "uv-vis",
+        "4": "uv-vis Dubai",
+        "5": "uv-vis UAE",
+        "6": "spectrophotometer",
+        "7": "spectrophotometer Dubai",
+        "8": "spectrophotometer UAE",
+        "10": "uv-vis equipment",
+        "11": "uv-vis supplier",
+        "12": "spectrophotometers",
+        "13": "spectrophotometers equipment",
+        "14": "spectrophotometers supplier",
+        "15": "maxware©",
+        "16": "maxware© UAE",
+        "17": "laboratory equipment",
+        "18": "medical equipment",
+        "19": "scientific instruments",
+        "20": "diagnostic tools",
+        "21": "research equipment",
+        "22": "lab supplies",
+        "23": "analytical instruments",
+        "24": "laboratory technology",
+        "25": "Dubai",
+        "26": "UAE",
+        "27": "Middle East",
+        "28": "MaxMed",
+        "29": "laboratory supplier Dubai",
+        "30": "medical equipment UAE",
+        "31": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "UV-Vis Spectrophotometers",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "SP-V1000 Spectrophotometer",
+            "SP-UV1000 Spectrophotometer",
+            "SP-V1100 Spectrophotometer",
+            "SP-UV1100 Spectrophotometer",
+            "SP-UV2101 UV-Vis Spectrophotometer"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.041848Z"
+}

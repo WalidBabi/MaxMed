@@ -1,0 +1,21 @@
+{
+    "organization": {
+        "ai-entity-type": "organization",
+        "ai-entity-name": "MaxMed UAE",
+        "ai-entity-description": "Leading laboratory equipment supplier in Dubai, UAE",
+        "ai-location": "Dubai, UAE",
+        "ai-industry": "Laboratory Equipment, Medical Supplies",
+        "ai-services": "Equipment Supply, Installation, Training, Support",
+        "ai-coverage-area": "UAE, Middle East, GCC"
+    },
+    "contact": {
+        "ai-phone": "+971 55 460 2500",
+        "ai-email": "sales@maxmedme.com",
+        "ai-website": "https:\/\/maxmedme.com"
+    },
+    "keywords": {
+        "ai-primary-keywords": "laboratory equipment Dubai, medical equipment UAE, PCR machines, centrifuges, microscopes",
+        "ai-location-keywords": "Dubai lab equipment, UAE medical supplies, Middle East laboratory",
+        "ai-service-keywords": "equipment installation UAE, laboratory support Dubai, medical equipment maintenance"
+    }
+}

@@ -1,0 +1,174 @@
+{
+    "entity_type": "product",
+    "entity_name": "Yankauer Suction Tube",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "YST Yankauer Suction Set Suction Connecting Tube with Handle\r\nSuitable for removal of blood secretion etc\r\nSoft and kink resistant ribbed PVC tubing\r\nFunnel end connectors at both ends of tubing\r\n\r\nSpecification\r\nTube length: 2.1 mts\r\nTube size: I.Ø. 5.5mm. & O.Ø 8.5 mm\r\n\r\nGENC-1108 Yankaeur Suction Tube Size: 1\/4″x3m, Crown Tip with Vent EO sterile 1pc\/blister bag, 50pcs\/ctn MaxMed UAE is the leading supplier of Dental Consumables in Dubai and across the United Arab Emirates. We provide professional Dental Consumables with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Yankauer Suction Tube",
+        "description": "YST Yankauer Suction Set Suction Connecting Tube with Handle\r\nSuitable for removal of blood secretion etc\r\nSoft and kink resistant ribbed PVC tubing\r\nFunnel end connectors at both ends of tubing\r\n\r\nSpecification\r\nTube length: 2.1 mts\r\nTube size: I.Ø. 5.5mm. & O.Ø 8.5 mm\r\n\r\nGENC-1108 Yankaeur Suction Tube Size: 1\/4″x3m, Crown Tip with Vent EO sterile 1pc\/blister bag, 50pcs\/ctn MaxMed UAE is the leading supplier of Dental Consumables in Dubai and across the United Arab Emirates. We provide professional Dental Consumables with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0093"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Dental Consumables",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "yankauer",
+            "yankauer Dubai",
+            "yankauer UAE",
+            "suction",
+            "suction Dubai",
+            "suction UAE",
+            "tube",
+            "tube Dubai",
+            "tube UAE",
+            "dental",
+            "dental equipment",
+            "dental supplier",
+            "consumables",
+            "consumables equipment",
+            "consumables supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.508166Z",
+            "validThrough": "2026-01-11T08:02:41.508218Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/yankauer-suction-tube-mw-0093-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/yankauer-suction-tube-mw-0093-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "yankauer",
+        "yankauer Dubai",
+        "yankauer UAE",
+        "suction",
+        "suction Dubai",
+        "suction UAE",
+        "tube",
+        "tube Dubai",
+        "tube UAE",
+        "dental",
+        "dental equipment",
+        "dental supplier",
+        "consumables",
+        "consumables equipment",
+        "consumables supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Dental Consumables",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Suction Tips",
+            "Wooden Tongue Depressor",
+            "Sterilization Reel Heat Sealing Flat Reel Paper + Blue Film",
+            "Sterilization Pouch (Self Sealing Flat Pouch)",
+            "Saliva Ejector"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.509124Z"
+}

@@ -1,0 +1,180 @@
+{
+    "entity_type": "product",
+    "entity_name": "Table Top Autoclave Class N Series",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Introduction:\r\nBKM-K18\/23N sterilizer series is an N-level sterilizer. It discharges the cold air in the sterilization chamber by gravity displacement, saturates the internal steam, and reaches the set pressure and temperature. To achieve the purpose of sterilizing the items to be sterilized. Suitable for stomatology, ophthalmology, beauty, operating room and other places. It is suitable for sterilization of glassware, bare metal utensils, and unencapsulated solid instruments.\r\n\r\nFeatures:\r\n\r\n1. High-quality material: the sterilization chamber is made of high-quality S30408 stainless steel electropolished.\r\n\r\n2. Steam generation method: the main body is heated, no external steam source is required.\r\n\r\n3. Operation interface: 3.5-inch capacitive color display screen is used to display pressure, temperature, time, alarm code and other information in real time, which is convenient for users to observe. When the sterilization cycle is over, a buzzer will sound.\r\n\r\n4. Sterilization record: standard USB interface, optional printer, record program data.\r\n\r\n5. New storage rack: increase the utilization space of the sterilization chamber, and the selection space for sterilization load is larger.\r\n\r\n6. Control system: controlled by single chip microcomputer, automatic control of heating, sterilization and exhaust, without too much manual operation.\r\n\r\n7. One-key start on the operation panel, using mechanical keys, the number of actions≥100,000 times.\r\n\r\n8. Two sterilization procedures at 121°C and 134°C are selectable.\r\n\r\nSafety Protection:\r\n\r\nOver-temperature automatic protection, heating tube anti-dry protection, safety interlock device, double over-voltage protection, over-current leakage safety protection, door detection protection. MaxMed UAE is the leading supplier of Disinfection And Sterilization Equipment in Dubai and across the United Arab Emirates. We provide professional Disinfection And Sterilization Equipment with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Table Top Autoclave Class N Series",
+        "description": "Introduction:\r\nBKM-K18\/23N sterilizer series is an N-level sterilizer. It discharges the cold air in the sterilization chamber by gravity displacement, saturates the internal steam, and reaches the set pressure and temperature. To achieve the purpose of sterilizing the items to be sterilized. Suitable for stomatology, ophthalmology, beauty, operating room and other places. It is suitable for sterilization of glassware, bare metal utensils, and unencapsulated solid instruments.\r\n\r\nFeatures:\r\n\r\n1. High-quality material: the sterilization chamber is made of high-quality S30408 stainless steel electropolished.\r\n\r\n2. Steam generation method: the main body is heated, no external steam source is required.\r\n\r\n3. Operation interface: 3.5-inch capacitive color display screen is used to display pressure, temperature, time, alarm code and other information in real time, which is convenient for users to observe. When the sterilization cycle is over, a buzzer will sound.\r\n\r\n4. Sterilization record: standard USB interface, optional printer, record program data.\r\n\r\n5. New storage rack: increase the utilization space of the sterilization chamber, and the selection space for sterilization load is larger.\r\n\r\n6. Control system: controlled by single chip microcomputer, automatic control of heating, sterilization and exhaust, without too much manual operation.\r\n\r\n7. One-key start on the operation panel, using mechanical keys, the number of actions≥100,000 times.\r\n\r\n8. Two sterilization procedures at 121°C and 134°C are selectable.\r\n\r\nSafety Protection:\r\n\r\nOver-temperature automatic protection, heating tube anti-dry protection, safety interlock device, double over-voltage protection, over-current leakage safety protection, door detection protection. MaxMed UAE is the leading supplier of Disinfection And Sterilization Equipment in Dubai and across the United Arab Emirates. We provide professional Disinfection And Sterilization Equipment with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0008"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "BIOBASE",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Disinfection And Sterilization Equipment",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "table",
+            "table Dubai",
+            "table UAE",
+            "autoclave",
+            "autoclave Dubai",
+            "autoclave UAE",
+            "class",
+            "class Dubai",
+            "class UAE",
+            "series",
+            "series Dubai",
+            "series UAE",
+            "disinfection",
+            "disinfection equipment",
+            "disinfection supplier",
+            "sterilization",
+            "sterilization equipment",
+            "sterilization supplier",
+            "equipment",
+            "equipment equipment",
+            "equipment supplier",
+            "biobase",
+            "biobase UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.595719Z",
+            "validThrough": "2026-01-11T08:02:41.595855Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/table-top-autoclave-class-n-series-mm-0008-biobase-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/table-top-autoclave-class-n-series-mm-0008-biobase-dubai-uae"
+        }
+    },
+    "keywords": [
+        "table",
+        "table Dubai",
+        "table UAE",
+        "autoclave",
+        "autoclave Dubai",
+        "autoclave UAE",
+        "class",
+        "class Dubai",
+        "class UAE",
+        "series",
+        "series Dubai",
+        "series UAE",
+        "disinfection",
+        "disinfection equipment",
+        "disinfection supplier",
+        "sterilization",
+        "sterilization equipment",
+        "sterilization supplier",
+        "equipment",
+        "equipment equipment",
+        "equipment supplier",
+        "biobase",
+        "biobase UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Disinfection And Sterilization Equipment",
+        "manufactured_by": "BIOBASE",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": []
+    },
+    "last_updated": "2025-07-11T08:02:41.597352Z"
+}

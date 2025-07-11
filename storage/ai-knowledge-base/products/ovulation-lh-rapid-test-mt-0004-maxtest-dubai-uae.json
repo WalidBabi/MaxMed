@@ -1,0 +1,190 @@
+{
+    "entity_type": "product",
+    "entity_name": "Ovulation (LH) Rapid Test",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The LH Ovulation Rapid Test is a rapid chromatographic immunoassay for the qualitative detection of luteinizing hormone (LH) in urine to aid in the detection of ovulation.\r\nProduct Features\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Women's Health Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Women's Health Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Ovulation (LH) Rapid Test",
+        "description": "The LH Ovulation Rapid Test is a rapid chromatographic immunoassay for the qualitative detection of luteinizing hormone (LH) in urine to aid in the detection of ovulation.\r\nProduct Features\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Women's Health Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Women's Health Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MT-0004"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxTest©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Women's Health Rapid Tests",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "ovulation",
+            "1": "ovulation Dubai",
+            "2": "ovulation UAE",
+            "3": "(lh)",
+            "4": "(lh) Dubai",
+            "5": "(lh) UAE",
+            "6": "rapid",
+            "7": "rapid Dubai",
+            "8": "rapid UAE",
+            "9": "test",
+            "10": "test Dubai",
+            "11": "test UAE",
+            "12": "women's",
+            "13": "women's equipment",
+            "14": "women's supplier",
+            "15": "health",
+            "16": "health equipment",
+            "17": "health supplier",
+            "19": "rapid equipment",
+            "20": "rapid supplier",
+            "21": "tests",
+            "22": "tests equipment",
+            "23": "tests supplier",
+            "24": "maxtest©",
+            "25": "maxtest© UAE",
+            "26": "laboratory equipment",
+            "27": "medical equipment",
+            "28": "scientific instruments",
+            "29": "diagnostic tools",
+            "30": "research equipment",
+            "31": "lab supplies",
+            "32": "analytical instruments",
+            "33": "laboratory technology",
+            "34": "Dubai",
+            "35": "UAE",
+            "36": "Middle East",
+            "37": "MaxMed",
+            "38": "laboratory supplier Dubai",
+            "39": "medical equipment UAE",
+            "40": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.128486Z",
+            "validThrough": "2026-01-11T08:02:41.128596Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/ovulation-lh-rapid-test-mt-0004-maxtest-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/ovulation-lh-rapid-test-mt-0004-maxtest-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "ovulation",
+        "1": "ovulation Dubai",
+        "2": "ovulation UAE",
+        "3": "(lh)",
+        "4": "(lh) Dubai",
+        "5": "(lh) UAE",
+        "6": "rapid",
+        "7": "rapid Dubai",
+        "8": "rapid UAE",
+        "9": "test",
+        "10": "test Dubai",
+        "11": "test UAE",
+        "12": "women's",
+        "13": "women's equipment",
+        "14": "women's supplier",
+        "15": "health",
+        "16": "health equipment",
+        "17": "health supplier",
+        "19": "rapid equipment",
+        "20": "rapid supplier",
+        "21": "tests",
+        "22": "tests equipment",
+        "23": "tests supplier",
+        "24": "maxtest©",
+        "25": "maxtest© UAE",
+        "26": "laboratory equipment",
+        "27": "medical equipment",
+        "28": "scientific instruments",
+        "29": "diagnostic tools",
+        "30": "research equipment",
+        "31": "lab supplies",
+        "32": "analytical instruments",
+        "33": "laboratory technology",
+        "34": "Dubai",
+        "35": "UAE",
+        "36": "Middle East",
+        "37": "MaxMed",
+        "38": "laboratory supplier Dubai",
+        "39": "medical equipment UAE",
+        "40": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Women's Health Rapid Tests",
+        "manufactured_by": "MaxTest©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Pregnancy (hCG) Rapid Test （Urine）",
+            "Pregnancy (hCG) Rapid Test （S\/P\/U）",
+            "Pregnancy (hCG) Rapid Test （WB\/S\/P）",
+            "Follicle-Stimulating Hormone (FSH) Rapid Test",
+            "Fetal Fibronectin (fFN) Rapid Test"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.129943Z"
+}

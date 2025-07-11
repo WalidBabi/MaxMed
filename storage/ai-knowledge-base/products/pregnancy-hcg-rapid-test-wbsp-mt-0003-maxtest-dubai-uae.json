@@ -1,0 +1,196 @@
+{
+    "entity_type": "product",
+    "entity_name": "Pregnancy (hCG) Rapid Test （WB\/S\/P）",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The hCG Pregnancy Rapid Test (Whole Blood\/Serum\/Plasma) is a rapid chromatographic immunoassay for the qualitative detection of human chorionic gonadotropin in serum, plasma or whole blood to aid in the early detection of pregnancy.\r\nProduct Features\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Women's Health Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Women's Health Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Pregnancy (hCG) Rapid Test （WB\/S\/P）",
+        "description": "The hCG Pregnancy Rapid Test (Whole Blood\/Serum\/Plasma) is a rapid chromatographic immunoassay for the qualitative detection of human chorionic gonadotropin in serum, plasma or whole blood to aid in the early detection of pregnancy.\r\nProduct Features\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Women's Health Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Women's Health Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MT-0003"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxTest©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Women's Health Rapid Tests",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "pregnancy",
+            "1": "pregnancy Dubai",
+            "2": "pregnancy UAE",
+            "3": "(hcg)",
+            "4": "(hcg) Dubai",
+            "5": "(hcg) UAE",
+            "6": "rapid",
+            "7": "rapid Dubai",
+            "8": "rapid UAE",
+            "9": "test",
+            "10": "test Dubai",
+            "11": "test UAE",
+            "12": "（wb\/s\/p）",
+            "13": "（wb\/s\/p） Dubai",
+            "14": "（wb\/s\/p） UAE",
+            "15": "women's",
+            "16": "women's equipment",
+            "17": "women's supplier",
+            "18": "health",
+            "19": "health equipment",
+            "20": "health supplier",
+            "22": "rapid equipment",
+            "23": "rapid supplier",
+            "24": "tests",
+            "25": "tests equipment",
+            "26": "tests supplier",
+            "27": "maxtest©",
+            "28": "maxtest© UAE",
+            "29": "laboratory equipment",
+            "30": "medical equipment",
+            "31": "scientific instruments",
+            "32": "diagnostic tools",
+            "33": "research equipment",
+            "34": "lab supplies",
+            "35": "analytical instruments",
+            "36": "laboratory technology",
+            "37": "Dubai",
+            "38": "UAE",
+            "39": "Middle East",
+            "40": "MaxMed",
+            "41": "laboratory supplier Dubai",
+            "42": "medical equipment UAE",
+            "43": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.124902Z",
+            "validThrough": "2026-01-11T08:02:41.124964Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/pregnancy-hcg-rapid-test-wbsp-mt-0003-maxtest-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/pregnancy-hcg-rapid-test-wbsp-mt-0003-maxtest-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "pregnancy",
+        "1": "pregnancy Dubai",
+        "2": "pregnancy UAE",
+        "3": "(hcg)",
+        "4": "(hcg) Dubai",
+        "5": "(hcg) UAE",
+        "6": "rapid",
+        "7": "rapid Dubai",
+        "8": "rapid UAE",
+        "9": "test",
+        "10": "test Dubai",
+        "11": "test UAE",
+        "12": "（wb\/s\/p）",
+        "13": "（wb\/s\/p） Dubai",
+        "14": "（wb\/s\/p） UAE",
+        "15": "women's",
+        "16": "women's equipment",
+        "17": "women's supplier",
+        "18": "health",
+        "19": "health equipment",
+        "20": "health supplier",
+        "22": "rapid equipment",
+        "23": "rapid supplier",
+        "24": "tests",
+        "25": "tests equipment",
+        "26": "tests supplier",
+        "27": "maxtest©",
+        "28": "maxtest© UAE",
+        "29": "laboratory equipment",
+        "30": "medical equipment",
+        "31": "scientific instruments",
+        "32": "diagnostic tools",
+        "33": "research equipment",
+        "34": "lab supplies",
+        "35": "analytical instruments",
+        "36": "laboratory technology",
+        "37": "Dubai",
+        "38": "UAE",
+        "39": "Middle East",
+        "40": "MaxMed",
+        "41": "laboratory supplier Dubai",
+        "42": "medical equipment UAE",
+        "43": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Women's Health Rapid Tests",
+        "manufactured_by": "MaxTest©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Pregnancy (hCG) Rapid Test （Urine）",
+            "Pregnancy (hCG) Rapid Test （S\/P\/U）",
+            "Ovulation (LH) Rapid Test",
+            "Follicle-Stimulating Hormone (FSH) Rapid Test",
+            "Fetal Fibronectin (fFN) Rapid Test"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.126456Z"
+}

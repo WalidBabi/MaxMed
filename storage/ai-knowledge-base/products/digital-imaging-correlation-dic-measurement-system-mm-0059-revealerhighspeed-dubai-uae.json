@@ -1,0 +1,208 @@
+{
+    "entity_type": "product",
+    "entity_name": "Digital Imaging Correlation (DIC) Measurement System",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Based on non-contact optical measurement method, DIC strain measurement system measures the spatial three-dimensional coordinates of the object, displacement and strain data under load.\r\n\r\n\r\n\r\nProduct Line\tSKU\tNumber of Cameras\tResolution\tFrame Rate (fps)\tField of View (mm)\tDisplacement Accuracy\tStrain Accuracy\tStrain Range\tAdditional Features\r\nRDIC-HS\tRDIC-HS-S\t2\t1280×800\t16000\t50~500\t≤ 0.01pixel\t≤ 100µε\t0.005%~2000%\t-\r\n\tRDIC-HS-G_Pro\t2\t5120×4096\t1000\t10~1000\t≤ 0.01pixel\t≤ 50µε\t0.005%~2000%\t-\r\n\tRDIC-HS-M\t2\t1920×1080\t3000\/2000\/1000\t50~500\t≤ 0.01pixel\t≤ 100µε\t0.005%~2000%\t-\r\nRDIC-EDU\tRDIC-EDU\t-\t4096×3000 @30.5fps\t30.5\t200×150, 100×75\t5μm (in-plane), 10μm (off-plane)\t≤ 50µε\t0.005%~2000%\tReal-time image saving, tester communication\r\nRDIC-IR\tRDIC-IR\t2 (high-res), 1 (IR)\t2448×2048 (visible), 640×512 (IR)\t29 (visible), 25 (IR)\t-\t0.01pixel\t≤ 50µε\t0.005%~2000%\tTemperature range: -20°C to +550°C (1500°C optional), NETD ≤ 50mk\r\nRDIC-STD\tRDIC-STD-DH500\t2\t2448×2048\t75\t10~500\t≤ 0.01pixel\t≤ 100µε\t0.005%~2000%\t-\r\n\tRDIC-STD-DH1200\t2\t4096×3000\t30.5\t10~1000\t≤ 0.01pixel\t≤ 50µε\t0.005%~2000%\t-\r\n\tRDIC-STD-BM1200\t2\t4096×3000\t29\t10~1000\t≤ 0.01pixel\t≤ 50µε\t0.005%~2000%\t-\r\nRVE\tRVE-EDU\t-\t1.3M\t0~40\tMicro~500\t-\t-\t0.005%~500%\tSupports Poisson's ratio, tester communication, accuracy class: ISO 9513 Class 0.5\r\n\tRVE-STD\t-\t5M\t0~40\tMicro~1000\t-\t-\t0.002%~1000%\tSupports Poisson's ratio, tester communication, accuracy class: ISO 9513 Class 0.5\r\n\tRVE-PRO\t-\t8M\t0~40\tMicro~1000\t-\t-\t0.001%~2000%\tSupports Poisson's ratio, tester communication, accuracy class: ISO 9513 Class 0.5 MaxMed UAE is the leading supplier of Advanced Motion & Scientific Imaging Systems in Dubai and across the United Arab Emirates. We provide professional Advanced Motion & Scientific Imaging Systems with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Digital Imaging Correlation (DIC) Measurement System",
+        "description": "Based on non-contact optical measurement method, DIC strain measurement system measures the spatial three-dimensional coordinates of the object, displacement and strain data under load.\r\n\r\n\r\n\r\nProduct Line\tSKU\tNumber of Cameras\tResolution\tFrame Rate (fps)\tField of View (mm)\tDisplacement Accuracy\tStrain Accuracy\tStrain Range\tAdditional Features\r\nRDIC-HS\tRDIC-HS-S\t2\t1280×800\t16000\t50~500\t≤ 0.01pixel\t≤ 100µε\t0.005%~2000%\t-\r\n\tRDIC-HS-G_Pro\t2\t5120×4096\t1000\t10~1000\t≤ 0.01pixel\t≤ 50µε\t0.005%~2000%\t-\r\n\tRDIC-HS-M\t2\t1920×1080\t3000\/2000\/1000\t50~500\t≤ 0.01pixel\t≤ 100µε\t0.005%~2000%\t-\r\nRDIC-EDU\tRDIC-EDU\t-\t4096×3000 @30.5fps\t30.5\t200×150, 100×75\t5μm (in-plane), 10μm (off-plane)\t≤ 50µε\t0.005%~2000%\tReal-time image saving, tester communication\r\nRDIC-IR\tRDIC-IR\t2 (high-res), 1 (IR)\t2448×2048 (visible), 640×512 (IR)\t29 (visible), 25 (IR)\t-\t0.01pixel\t≤ 50µε\t0.005%~2000%\tTemperature range: -20°C to +550°C (1500°C optional), NETD ≤ 50mk\r\nRDIC-STD\tRDIC-STD-DH500\t2\t2448×2048\t75\t10~500\t≤ 0.01pixel\t≤ 100µε\t0.005%~2000%\t-\r\n\tRDIC-STD-DH1200\t2\t4096×3000\t30.5\t10~1000\t≤ 0.01pixel\t≤ 50µε\t0.005%~2000%\t-\r\n\tRDIC-STD-BM1200\t2\t4096×3000\t29\t10~1000\t≤ 0.01pixel\t≤ 50µε\t0.005%~2000%\t-\r\nRVE\tRVE-EDU\t-\t1.3M\t0~40\tMicro~500\t-\t-\t0.005%~500%\tSupports Poisson's ratio, tester communication, accuracy class: ISO 9513 Class 0.5\r\n\tRVE-STD\t-\t5M\t0~40\tMicro~1000\t-\t-\t0.002%~1000%\tSupports Poisson's ratio, tester communication, accuracy class: ISO 9513 Class 0.5\r\n\tRVE-PRO\t-\t8M\t0~40\tMicro~1000\t-\t-\t0.001%~2000%\tSupports Poisson's ratio, tester communication, accuracy class: ISO 9513 Class 0.5 MaxMed UAE is the leading supplier of Advanced Motion & Scientific Imaging Systems in Dubai and across the United Arab Emirates. We provide professional Advanced Motion & Scientific Imaging Systems with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0059"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "RevealerHighSpeed",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Advanced Motion & Scientific Imaging Systems",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "digital",
+            "1": "digital Dubai",
+            "2": "digital UAE",
+            "3": "imaging",
+            "4": "imaging Dubai",
+            "5": "imaging UAE",
+            "6": "correlation",
+            "7": "correlation Dubai",
+            "8": "correlation UAE",
+            "9": "(dic)",
+            "10": "(dic) Dubai",
+            "11": "(dic) UAE",
+            "12": "measurement",
+            "13": "measurement Dubai",
+            "14": "measurement UAE",
+            "15": "system",
+            "16": "system Dubai",
+            "17": "system UAE",
+            "18": "advanced",
+            "19": "advanced equipment",
+            "20": "advanced supplier",
+            "21": "motion",
+            "22": "motion equipment",
+            "23": "motion supplier",
+            "24": "scientific",
+            "25": "scientific equipment",
+            "26": "scientific supplier",
+            "28": "imaging equipment",
+            "29": "imaging supplier",
+            "30": "systems",
+            "31": "systems equipment",
+            "32": "systems supplier",
+            "33": "revealerhighspeed",
+            "34": "revealerhighspeed UAE",
+            "35": "laboratory equipment",
+            "36": "medical equipment",
+            "37": "scientific instruments",
+            "38": "diagnostic tools",
+            "39": "research equipment",
+            "40": "lab supplies",
+            "41": "analytical instruments",
+            "42": "laboratory technology",
+            "43": "Dubai",
+            "44": "UAE",
+            "45": "Middle East",
+            "46": "MaxMed",
+            "47": "laboratory supplier Dubai",
+            "48": "medical equipment UAE",
+            "49": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.850684Z",
+            "validThrough": "2026-01-11T08:02:41.850781Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/digital-imaging-correlation-dic-measurement-system-mm-0059-revealerhighspeed-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/digital-imaging-correlation-dic-measurement-system-mm-0059-revealerhighspeed-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "digital",
+        "1": "digital Dubai",
+        "2": "digital UAE",
+        "3": "imaging",
+        "4": "imaging Dubai",
+        "5": "imaging UAE",
+        "6": "correlation",
+        "7": "correlation Dubai",
+        "8": "correlation UAE",
+        "9": "(dic)",
+        "10": "(dic) Dubai",
+        "11": "(dic) UAE",
+        "12": "measurement",
+        "13": "measurement Dubai",
+        "14": "measurement UAE",
+        "15": "system",
+        "16": "system Dubai",
+        "17": "system UAE",
+        "18": "advanced",
+        "19": "advanced equipment",
+        "20": "advanced supplier",
+        "21": "motion",
+        "22": "motion equipment",
+        "23": "motion supplier",
+        "24": "scientific",
+        "25": "scientific equipment",
+        "26": "scientific supplier",
+        "28": "imaging equipment",
+        "29": "imaging supplier",
+        "30": "systems",
+        "31": "systems equipment",
+        "32": "systems supplier",
+        "33": "revealerhighspeed",
+        "34": "revealerhighspeed UAE",
+        "35": "laboratory equipment",
+        "36": "medical equipment",
+        "37": "scientific instruments",
+        "38": "diagnostic tools",
+        "39": "research equipment",
+        "40": "lab supplies",
+        "41": "analytical instruments",
+        "42": "laboratory technology",
+        "43": "Dubai",
+        "44": "UAE",
+        "45": "Middle East",
+        "46": "MaxMed",
+        "47": "laboratory supplier Dubai",
+        "48": "medical equipment UAE",
+        "49": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Advanced Motion & Scientific Imaging Systems",
+        "manufactured_by": "RevealerHighSpeed",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "S1315 M\/C Ultra High Speed Camera 15,000fps@1280*1024",
+            "M230 M\/C Ultra High Speed Camera 3,000fps@1920×1080",
+            "NEO25 M\/C Ultra High Speed Camera 25,000fps@1280x1024",
+            "G Pro High-Resolution High-Speed Camera 1,000fps@5120×4096",
+            "Gloria 4.2 sCMOS Extreme Low-Noise Scientific Camera"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.852455Z"
+}

@@ -1,0 +1,192 @@
+{
+    "entity_type": "product",
+    "entity_name": "dPette Simple Electronic Pipette",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The dPette is a single-channel electric pipette developed by DLAB that combines the advantages of both manual and electric pipettes. It has a lightweight and ergonomic design similar to a manual pipette, while also providing the high performance and effortless operation of an electric pipette, delivering a new and improved pipetting experience for laboratory users.\r\n\r\n\r\n\r\nPrecision and Parallelism: The dPette features a high-precision step motor that ensures accuracy and parallelism during pipetting, minimizing errors and improving data repeatability.\r\nRechargeable Battery: The dPette can be recharged via a desktop or power cord, providing users with the flexibility to choose the best charging method for their laboratory.\r\nProgrammable Volume Range: The dPette offers four programmable volume ranges: 0.5-10 µl, 5-50 µl, 30-300 µl, and 100-1000 µl, allowing for a wide range of liquid transfer needs.\r\nUser-Friendly Interface: Its large LCD screen provides a user-friendly interface that simulates manual pipetting operations and displays critical parameters, making it easy to use and set different functions.\r\nDual Rotary Knobs: The dPette features dual rotary knobs that enable all functions to be performed seamlessly, providing users with a simple and intuitive operation.\r\nAdjustable Speed: Users can adjust the aspiration and dispensing speeds to suit their specific requirements, enhancing the device's versatility.\r\nConvenient Mixing Function: The dPette provides a mixing function that is more convenient and effortless than a manual pipette.\r\nAutoclavable Components: The dPette features autoclavable components that allow users to sterilize the device at high temperatures and pressures.\r\nAutomatic Calibration: The dPette can be calibrated automatically by connecting it to a USB-enabled balance, eliminating the need to send the device for third-party calibration. MaxMed UAE is the leading supplier of Lab Essentials (Tubes, Pipettes, Glassware) in Dubai and across the United Arab Emirates. We provide professional Lab Essentials (Tubes, Pipettes, Glassware) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "dPette Simple Electronic Pipette",
+        "description": "The dPette is a single-channel electric pipette developed by DLAB that combines the advantages of both manual and electric pipettes. It has a lightweight and ergonomic design similar to a manual pipette, while also providing the high performance and effortless operation of an electric pipette, delivering a new and improved pipetting experience for laboratory users.\r\n\r\n\r\n\r\nPrecision and Parallelism: The dPette features a high-precision step motor that ensures accuracy and parallelism during pipetting, minimizing errors and improving data repeatability.\r\nRechargeable Battery: The dPette can be recharged via a desktop or power cord, providing users with the flexibility to choose the best charging method for their laboratory.\r\nProgrammable Volume Range: The dPette offers four programmable volume ranges: 0.5-10 µl, 5-50 µl, 30-300 µl, and 100-1000 µl, allowing for a wide range of liquid transfer needs.\r\nUser-Friendly Interface: Its large LCD screen provides a user-friendly interface that simulates manual pipetting operations and displays critical parameters, making it easy to use and set different functions.\r\nDual Rotary Knobs: The dPette features dual rotary knobs that enable all functions to be performed seamlessly, providing users with a simple and intuitive operation.\r\nAdjustable Speed: Users can adjust the aspiration and dispensing speeds to suit their specific requirements, enhancing the device's versatility.\r\nConvenient Mixing Function: The dPette provides a mixing function that is more convenient and effortless than a manual pipette.\r\nAutoclavable Components: The dPette features autoclavable components that allow users to sterilize the device at high temperatures and pressures.\r\nAutomatic Calibration: The dPette can be calibrated automatically by connecting it to a USB-enabled balance, eliminating the need to send the device for third-party calibration. MaxMed UAE is the leading supplier of Lab Essentials (Tubes, Pipettes, Glassware) in Dubai and across the United Arab Emirates. We provide professional Lab Essentials (Tubes, Pipettes, Glassware) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0040"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "DLAB",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Lab Essentials (Tubes, Pipettes, Glassware)",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "dpette",
+            "dpette Dubai",
+            "dpette UAE",
+            "simple",
+            "simple Dubai",
+            "simple UAE",
+            "electronic",
+            "electronic Dubai",
+            "electronic UAE",
+            "pipette",
+            "pipette Dubai",
+            "pipette UAE",
+            "essentials",
+            "essentials equipment",
+            "essentials supplier",
+            "(tubes,",
+            "(tubes, equipment",
+            "(tubes, supplier",
+            "pipettes,",
+            "pipettes, equipment",
+            "pipettes, supplier",
+            "glassware)",
+            "glassware) equipment",
+            "glassware) supplier",
+            "dlab",
+            "dlab UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.695488Z",
+            "validThrough": "2026-01-11T08:02:41.695551Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/dpette-simple-electronic-pipette-mm-0040-dlab-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/dpette-simple-electronic-pipette-mm-0040-dlab-dubai-uae"
+        }
+    },
+    "keywords": [
+        "dpette",
+        "dpette Dubai",
+        "dpette UAE",
+        "simple",
+        "simple Dubai",
+        "simple UAE",
+        "electronic",
+        "electronic Dubai",
+        "electronic UAE",
+        "pipette",
+        "pipette Dubai",
+        "pipette UAE",
+        "essentials",
+        "essentials equipment",
+        "essentials supplier",
+        "(tubes,",
+        "(tubes, equipment",
+        "(tubes, supplier",
+        "pipettes,",
+        "pipettes, equipment",
+        "pipettes, supplier",
+        "glassware)",
+        "glassware) equipment",
+        "glassware) supplier",
+        "dlab",
+        "dlab UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Lab Essentials (Tubes, Pipettes, Glassware)",
+        "manufactured_by": "DLAB",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "HiPette Colorful Fully Autoclavable Mechanical Pipette",
+            "HiPette Fully Autoclavable Mechanical Pipette",
+            "MicroPette Plus Fully Autoclavable Adjustable Volume Mechanical Pipette",
+            "MicroPette Plus Fully Autoclavable Fixed Volume Mechanical Pipette",
+            "MicroPette Plus 8-channel Adjustable Volume Mechanical Pipettes(magnetic suction model)"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.696482Z"
+}

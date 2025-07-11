@@ -1,0 +1,204 @@
+{
+    "entity_type": "product",
+    "entity_name": "Sterilization Reel Heat Sealing Flat Reel Paper + Blue Film",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "They assure reliable and effective protection of the medical instruments against contamination with bacteria from the time of sterilization until use of the sterile medical instruments.\r\n\r\nGENC-1073 Sterilization Reel Heat Sealing Flat Reel, Paper + Blue Film Size- 50mmx200m 12rolls\/ctn\r\nGENC-1066 Sterilization Reel Heat Sealing Flat Reel, Paper + Blue Film Size- 70mmx200m 8rolls\/ctn\r\nGENC-1062 Sterilization Reel Heat Sealing Flat Reel, Paper + Blue Film Size- 75mmx200m 8rolls\/ctn\r\nGENC-1070 Sterilization Reel Heat Sealing Flat Reel, Paper + Blue Film Size- 100mmx200m 6roll\/ctn\r\nGENC-1060 Sterilization Reel Heat Sealing Flat Reel, Paper + Blue Film Size- 150mmx200m 1roll\/pk, 4roll\/ctn\r\nGENC-1071 Sterilization Reel Heat Sealing Flat Reel, Paper + Blue Film Size- 200mmx200m 2rolls\/ctn\r\nGENC-1061 Sterilization Reel Heat Sealing Flat Reel, Paper + Blue Film Size- 250mmx200m 2rolls\/ctn\r\nGENC-1072 Sterilization Reel Heat Sealing Flat Reel, Paper + Blue Film Size- 300mmx200m 2rolls\/ctn MaxMed UAE is the leading supplier of Dental Consumables in Dubai and across the United Arab Emirates. We provide professional Dental Consumables with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Sterilization Reel Heat Sealing Flat Reel Paper + Blue Film",
+        "description": "They assure reliable and effective protection of the medical instruments against contamination with bacteria from the time of sterilization until use of the sterile medical instruments.\r\n\r\nGENC-1073 Sterilization Reel Heat Sealing Flat Reel, Paper + Blue Film Size- 50mmx200m 12rolls\/ctn\r\nGENC-1066 Sterilization Reel Heat Sealing Flat Reel, Paper + Blue Film Size- 70mmx200m 8rolls\/ctn\r\nGENC-1062 Sterilization Reel Heat Sealing Flat Reel, Paper + Blue Film Size- 75mmx200m 8rolls\/ctn\r\nGENC-1070 Sterilization Reel Heat Sealing Flat Reel, Paper + Blue Film Size- 100mmx200m 6roll\/ctn\r\nGENC-1060 Sterilization Reel Heat Sealing Flat Reel, Paper + Blue Film Size- 150mmx200m 1roll\/pk, 4roll\/ctn\r\nGENC-1071 Sterilization Reel Heat Sealing Flat Reel, Paper + Blue Film Size- 200mmx200m 2rolls\/ctn\r\nGENC-1061 Sterilization Reel Heat Sealing Flat Reel, Paper + Blue Film Size- 250mmx200m 2rolls\/ctn\r\nGENC-1072 Sterilization Reel Heat Sealing Flat Reel, Paper + Blue Film Size- 300mmx200m 2rolls\/ctn MaxMed UAE is the leading supplier of Dental Consumables in Dubai and across the United Arab Emirates. We provide professional Dental Consumables with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0096"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Dental Consumables",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "sterilization",
+            "1": "sterilization Dubai",
+            "2": "sterilization UAE",
+            "3": "reel",
+            "4": "reel Dubai",
+            "5": "reel UAE",
+            "6": "heat",
+            "7": "heat Dubai",
+            "8": "heat UAE",
+            "9": "sealing",
+            "10": "sealing Dubai",
+            "11": "sealing UAE",
+            "12": "flat",
+            "13": "flat Dubai",
+            "14": "flat UAE",
+            "18": "paper",
+            "19": "paper Dubai",
+            "20": "paper UAE",
+            "21": "blue",
+            "22": "blue Dubai",
+            "23": "blue UAE",
+            "24": "film",
+            "25": "film Dubai",
+            "26": "film UAE",
+            "27": "dental",
+            "28": "dental equipment",
+            "29": "dental supplier",
+            "30": "consumables",
+            "31": "consumables equipment",
+            "32": "consumables supplier",
+            "33": "maxware©",
+            "34": "maxware© UAE",
+            "35": "laboratory equipment",
+            "36": "medical equipment",
+            "37": "scientific instruments",
+            "38": "diagnostic tools",
+            "39": "research equipment",
+            "40": "lab supplies",
+            "41": "analytical instruments",
+            "42": "laboratory technology",
+            "43": "Dubai",
+            "44": "UAE",
+            "45": "Middle East",
+            "46": "MaxMed",
+            "47": "laboratory supplier Dubai",
+            "48": "medical equipment UAE",
+            "49": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.517504Z",
+            "validThrough": "2026-01-11T08:02:41.517632Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/sterilization-reel-heat-sealing-flat-reel-paper-blue-film-mw-0096-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/sterilization-reel-heat-sealing-flat-reel-paper-blue-film-mw-0096-maxware-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "sterilization",
+        "1": "sterilization Dubai",
+        "2": "sterilization UAE",
+        "3": "reel",
+        "4": "reel Dubai",
+        "5": "reel UAE",
+        "6": "heat",
+        "7": "heat Dubai",
+        "8": "heat UAE",
+        "9": "sealing",
+        "10": "sealing Dubai",
+        "11": "sealing UAE",
+        "12": "flat",
+        "13": "flat Dubai",
+        "14": "flat UAE",
+        "18": "paper",
+        "19": "paper Dubai",
+        "20": "paper UAE",
+        "21": "blue",
+        "22": "blue Dubai",
+        "23": "blue UAE",
+        "24": "film",
+        "25": "film Dubai",
+        "26": "film UAE",
+        "27": "dental",
+        "28": "dental equipment",
+        "29": "dental supplier",
+        "30": "consumables",
+        "31": "consumables equipment",
+        "32": "consumables supplier",
+        "33": "maxware©",
+        "34": "maxware© UAE",
+        "35": "laboratory equipment",
+        "36": "medical equipment",
+        "37": "scientific instruments",
+        "38": "diagnostic tools",
+        "39": "research equipment",
+        "40": "lab supplies",
+        "41": "analytical instruments",
+        "42": "laboratory technology",
+        "43": "Dubai",
+        "44": "UAE",
+        "45": "Middle East",
+        "46": "MaxMed",
+        "47": "laboratory supplier Dubai",
+        "48": "medical equipment UAE",
+        "49": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Dental Consumables",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Yankauer Suction Tube",
+            "Suction Tips",
+            "Wooden Tongue Depressor",
+            "Sterilization Pouch (Self Sealing Flat Pouch)",
+            "Saliva Ejector"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.520357Z"
+}

@@ -1,0 +1,202 @@
+{
+    "entity_type": "product",
+    "entity_name": "Adenovirus\/RSV\/HMPV\/Influenza A+B Combo Rapid Test (Nasopharyngeal Swab)",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The Adenovirus\/RSV\/HMPV\/Influenza A+B Combo Rapid Test is a rapid chromatographic immunoassay for the qualitative detection of Adenovirus antigens, Respiratory Syncytial Virus (RSV) antigens, human metapneumovirus (HMPV) antigens, Influenza A and B antigens in human nasopharyngeal swab specimens. It is intended to aid in the rapid differential diagnosis of Adenovirus, Respiratory Syncytial Virus viral, human metapneumovirus, Influenza A and B infections.\r\n\r\nProduct Features\r\n\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Infectious Disease Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Infectious Disease Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Adenovirus\/RSV\/HMPV\/Influenza A+B Combo Rapid Test (Nasopharyngeal Swab)",
+        "description": "The Adenovirus\/RSV\/HMPV\/Influenza A+B Combo Rapid Test is a rapid chromatographic immunoassay for the qualitative detection of Adenovirus antigens, Respiratory Syncytial Virus (RSV) antigens, human metapneumovirus (HMPV) antigens, Influenza A and B antigens in human nasopharyngeal swab specimens. It is intended to aid in the rapid differential diagnosis of Adenovirus, Respiratory Syncytial Virus viral, human metapneumovirus, Influenza A and B infections.\r\n\r\nProduct Features\r\n\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Infectious Disease Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Infectious Disease Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MT-0041"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxTest©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Infectious Disease Rapid Tests",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "adenovirus\/rsv\/hmpv\/influenza",
+            "1": "adenovirus\/rsv\/hmpv\/influenza Dubai",
+            "2": "adenovirus\/rsv\/hmpv\/influenza UAE",
+            "3": "combo",
+            "4": "combo Dubai",
+            "5": "combo UAE",
+            "6": "rapid",
+            "7": "rapid Dubai",
+            "8": "rapid UAE",
+            "9": "test",
+            "10": "test Dubai",
+            "11": "test UAE",
+            "12": "(nasopharyngeal",
+            "13": "(nasopharyngeal Dubai",
+            "14": "(nasopharyngeal UAE",
+            "15": "swab)",
+            "16": "swab) Dubai",
+            "17": "swab) UAE",
+            "18": "infectious",
+            "19": "infectious equipment",
+            "20": "infectious supplier",
+            "21": "disease",
+            "22": "disease equipment",
+            "23": "disease supplier",
+            "25": "rapid equipment",
+            "26": "rapid supplier",
+            "27": "tests",
+            "28": "tests equipment",
+            "29": "tests supplier",
+            "30": "maxtest©",
+            "31": "maxtest© UAE",
+            "32": "laboratory equipment",
+            "33": "medical equipment",
+            "34": "scientific instruments",
+            "35": "diagnostic tools",
+            "36": "research equipment",
+            "37": "lab supplies",
+            "38": "analytical instruments",
+            "39": "laboratory technology",
+            "40": "Dubai",
+            "41": "UAE",
+            "42": "Middle East",
+            "43": "MaxMed",
+            "44": "laboratory supplier Dubai",
+            "45": "medical equipment UAE",
+            "46": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.260128Z",
+            "validThrough": "2026-01-11T08:02:41.260186Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/adenovirusrsvhmpvinfluenza-ab-combo-rapid-test-nasopharyngeal-swab-mt-0041-maxtest-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/adenovirusrsvhmpvinfluenza-ab-combo-rapid-test-nasopharyngeal-swab-mt-0041-maxtest-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "adenovirus\/rsv\/hmpv\/influenza",
+        "1": "adenovirus\/rsv\/hmpv\/influenza Dubai",
+        "2": "adenovirus\/rsv\/hmpv\/influenza UAE",
+        "3": "combo",
+        "4": "combo Dubai",
+        "5": "combo UAE",
+        "6": "rapid",
+        "7": "rapid Dubai",
+        "8": "rapid UAE",
+        "9": "test",
+        "10": "test Dubai",
+        "11": "test UAE",
+        "12": "(nasopharyngeal",
+        "13": "(nasopharyngeal Dubai",
+        "14": "(nasopharyngeal UAE",
+        "15": "swab)",
+        "16": "swab) Dubai",
+        "17": "swab) UAE",
+        "18": "infectious",
+        "19": "infectious equipment",
+        "20": "infectious supplier",
+        "21": "disease",
+        "22": "disease equipment",
+        "23": "disease supplier",
+        "25": "rapid equipment",
+        "26": "rapid supplier",
+        "27": "tests",
+        "28": "tests equipment",
+        "29": "tests supplier",
+        "30": "maxtest©",
+        "31": "maxtest© UAE",
+        "32": "laboratory equipment",
+        "33": "medical equipment",
+        "34": "scientific instruments",
+        "35": "diagnostic tools",
+        "36": "research equipment",
+        "37": "lab supplies",
+        "38": "analytical instruments",
+        "39": "laboratory technology",
+        "40": "Dubai",
+        "41": "UAE",
+        "42": "Middle East",
+        "43": "MaxMed",
+        "44": "laboratory supplier Dubai",
+        "45": "medical equipment UAE",
+        "46": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Infectious Disease Rapid Tests",
+        "manufactured_by": "MaxTest©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Respiratory Infectious Diseases Rapid Test (Adeno\/HPIV\/RSV\/COVID-19\/MP\/RhV\/Flu B\/Flu A\/HMPV)",
+            "Respiratory Infectious Diseases Rapid Test (RhV)",
+            "Respiratory Infectious Diseases Rapid Test (HMPV)",
+            "Respiratory Infectious Diseases Rapid Test (HPIV)",
+            "Respiratory Infectious Diseases Rapid Test (Influenza A+B)"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.261182Z"
+}

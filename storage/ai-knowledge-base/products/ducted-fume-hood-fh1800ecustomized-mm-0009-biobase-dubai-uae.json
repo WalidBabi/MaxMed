@@ -1,0 +1,175 @@
+{
+    "entity_type": "product",
+    "entity_name": "Ducted Fume Hood FH1800(E)(Customized)",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Introduction:\r\nIn chemical laboratories, various harmful odorous gases, odors, moisture and corrosive substances are produced during experimental operations. In order to protect the safety of users and prevent the pollutants in the experiment from spreading to the laboratory, fume hoods should be used near the pollution source.\r\n\r\nStructural and Functional Characteristics：\r\n\r\n1. The shell of the fume hood is made of 1.0mm cold-rolled steel plate from Handan Iron and Steel, which has been treated with rust prevention and electrostatic spraying, and has good finish and corrosion resistance.\r\n\r\n2. The table panel is made of 1.2mm thick 316L stainless steel, which is corrosion-resistant and high-temperature resistant.\r\n\r\n3. The fume hood uses a PP centrifugal fan, and the shell and impeller are made of pp(polypropylene), which has good corrosion resistance and large air volume.\r\n\r\n4. The wind speed is adjustable in 9 gears, ranging from 0.3 to 0.6 m\/s.\r\n\r\n5. An activated carbon filter is installed inside the cabinet to filter harmful gases.\r\n\r\n6. The light source illumination is greater than 800lx.\r\n\r\n7. The fume hood uses a 5mm tempered glass front window, electric lifting, equipped with a foot switch control, and the bottom of the glass is equipped with a silicone gasket for safety protection.\r\n\r\n8. The control panel uses an LCD display with a power button, fan button, fan speed adjustment button, fluorescent light button, etc., which can monitor wind speed and temperature and humidity.\r\n\r\n9. The control system has sound and light alarm functions, including wind speed alarm and filter life alarm.\r\n\r\n10. The fume hood operation area adopts solid anti-bacterial board with a thickness of ≥5mm, which is resistant to pollution, easy to clean, antibacterial and impact-resistant. The three-stage diversion design can effectively discharge gases of different weights and is easy to disassemble, clean and replace.\r\n\r\n11. The fume hood is equipped with 2 European standard sockets, and the total power of the 2 sockets is 3kw.\r\n\r\n12. The fume hood is equipped with faucets and control valves, gas faucets and control valves, vacuum faucets and control valves, sinks and their pipe connectors MaxMed UAE is the leading supplier of Air Protection Equipment in Dubai and across the United Arab Emirates. We provide professional Air Protection Equipment with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Ducted Fume Hood FH1800(E)(Customized)",
+        "description": "Introduction:\r\nIn chemical laboratories, various harmful odorous gases, odors, moisture and corrosive substances are produced during experimental operations. In order to protect the safety of users and prevent the pollutants in the experiment from spreading to the laboratory, fume hoods should be used near the pollution source.\r\n\r\nStructural and Functional Characteristics：\r\n\r\n1. The shell of the fume hood is made of 1.0mm cold-rolled steel plate from Handan Iron and Steel, which has been treated with rust prevention and electrostatic spraying, and has good finish and corrosion resistance.\r\n\r\n2. The table panel is made of 1.2mm thick 316L stainless steel, which is corrosion-resistant and high-temperature resistant.\r\n\r\n3. The fume hood uses a PP centrifugal fan, and the shell and impeller are made of pp(polypropylene), which has good corrosion resistance and large air volume.\r\n\r\n4. The wind speed is adjustable in 9 gears, ranging from 0.3 to 0.6 m\/s.\r\n\r\n5. An activated carbon filter is installed inside the cabinet to filter harmful gases.\r\n\r\n6. The light source illumination is greater than 800lx.\r\n\r\n7. The fume hood uses a 5mm tempered glass front window, electric lifting, equipped with a foot switch control, and the bottom of the glass is equipped with a silicone gasket for safety protection.\r\n\r\n8. The control panel uses an LCD display with a power button, fan button, fan speed adjustment button, fluorescent light button, etc., which can monitor wind speed and temperature and humidity.\r\n\r\n9. The control system has sound and light alarm functions, including wind speed alarm and filter life alarm.\r\n\r\n10. The fume hood operation area adopts solid anti-bacterial board with a thickness of ≥5mm, which is resistant to pollution, easy to clean, antibacterial and impact-resistant. The three-stage diversion design can effectively discharge gases of different weights and is easy to disassemble, clean and replace.\r\n\r\n11. The fume hood is equipped with 2 European standard sockets, and the total power of the 2 sockets is 3kw.\r\n\r\n12. The fume hood is equipped with faucets and control valves, gas faucets and control valves, vacuum faucets and control valves, sinks and their pipe connectors MaxMed UAE is the leading supplier of Air Protection Equipment in Dubai and across the United Arab Emirates. We provide professional Air Protection Equipment with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0009"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "BIOBASE",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Air Protection Equipment",
+        "additionalType": [
+            "https:\/\/schema.org\/Product",
+            "https:\/\/schema.org\/SoftwareApplication"
+        ],
+        "keywords": [
+            "ducted",
+            "ducted Dubai",
+            "ducted UAE",
+            "fume",
+            "fume Dubai",
+            "fume UAE",
+            "hood",
+            "hood Dubai",
+            "hood UAE",
+            "fh1800(e)(customized)",
+            "fh1800(e)(customized) Dubai",
+            "fh1800(e)(customized) UAE",
+            "protection",
+            "protection equipment",
+            "protection supplier",
+            "equipment",
+            "equipment equipment",
+            "equipment supplier",
+            "biobase",
+            "biobase UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.600345Z",
+            "validThrough": "2026-01-11T08:02:41.600480Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/ducted-fume-hood-fh1800ecustomized-mm-0009-biobase-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/ducted-fume-hood-fh1800ecustomized-mm-0009-biobase-dubai-uae"
+        }
+    },
+    "keywords": [
+        "ducted",
+        "ducted Dubai",
+        "ducted UAE",
+        "fume",
+        "fume Dubai",
+        "fume UAE",
+        "hood",
+        "hood Dubai",
+        "hood UAE",
+        "fh1800(e)(customized)",
+        "fh1800(e)(customized) Dubai",
+        "fh1800(e)(customized) UAE",
+        "protection",
+        "protection equipment",
+        "protection supplier",
+        "equipment",
+        "equipment equipment",
+        "equipment supplier",
+        "biobase",
+        "biobase UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Air Protection Equipment",
+        "manufactured_by": "BIOBASE",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": []
+    },
+    "last_updated": "2025-07-11T08:02:41.602405Z"
+}

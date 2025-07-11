@@ -1,0 +1,160 @@
+{
+    "entity_type": "product",
+    "entity_name": "Dental Bib",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Disposable Patient Bibs, Dentist Bibs, Waterproof Tattoo Bibs, Dental Patient Bibs, Dental Bib, Dental Napkins Dental bibs and towels form an effective preliminary barrier against contamination. Perfect for the dental office or orthodontic clinic, stock up on these popular, affordable disposables 3ply(16+16+8g\/m2) without tie. MaxMed UAE is the leading supplier of Dental Consumables in Dubai and across the United Arab Emirates. We provide professional Dental Consumables with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Dental Bib",
+        "description": "Disposable Patient Bibs, Dentist Bibs, Waterproof Tattoo Bibs, Dental Patient Bibs, Dental Bib, Dental Napkins Dental bibs and towels form an effective preliminary barrier against contamination. Perfect for the dental office or orthodontic clinic, stock up on these popular, affordable disposables 3ply(16+16+8g\/m2) without tie. MaxMed UAE is the leading supplier of Dental Consumables in Dubai and across the United Arab Emirates. We provide professional Dental Consumables with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0102"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Dental Consumables",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "dental",
+            "1": "dental Dubai",
+            "2": "dental UAE",
+            "4": "dental equipment",
+            "5": "dental supplier",
+            "6": "consumables",
+            "7": "consumables equipment",
+            "8": "consumables supplier",
+            "9": "maxware©",
+            "10": "maxware© UAE",
+            "11": "laboratory equipment",
+            "12": "medical equipment",
+            "13": "scientific instruments",
+            "14": "diagnostic tools",
+            "15": "research equipment",
+            "16": "lab supplies",
+            "17": "analytical instruments",
+            "18": "laboratory technology",
+            "19": "Dubai",
+            "20": "UAE",
+            "21": "Middle East",
+            "22": "MaxMed",
+            "23": "laboratory supplier Dubai",
+            "24": "medical equipment UAE",
+            "25": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.535084Z",
+            "validThrough": "2026-01-11T08:02:41.535138Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/dental-bib-mw-0102-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/dental-bib-mw-0102-maxware-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "dental",
+        "1": "dental Dubai",
+        "2": "dental UAE",
+        "4": "dental equipment",
+        "5": "dental supplier",
+        "6": "consumables",
+        "7": "consumables equipment",
+        "8": "consumables supplier",
+        "9": "maxware©",
+        "10": "maxware© UAE",
+        "11": "laboratory equipment",
+        "12": "medical equipment",
+        "13": "scientific instruments",
+        "14": "diagnostic tools",
+        "15": "research equipment",
+        "16": "lab supplies",
+        "17": "analytical instruments",
+        "18": "laboratory technology",
+        "19": "Dubai",
+        "20": "UAE",
+        "21": "Middle East",
+        "22": "MaxMed",
+        "23": "laboratory supplier Dubai",
+        "24": "medical equipment UAE",
+        "25": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Dental Consumables",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Yankauer Suction Tube",
+            "Suction Tips",
+            "Wooden Tongue Depressor",
+            "Sterilization Reel Heat Sealing Flat Reel Paper + Blue Film",
+            "Sterilization Pouch (Self Sealing Flat Pouch)"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.536009Z"
+}

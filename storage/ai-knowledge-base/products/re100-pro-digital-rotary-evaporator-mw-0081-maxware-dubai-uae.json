@@ -1,0 +1,180 @@
+{
+    "entity_type": "product",
+    "entity_name": "RE100-Pro Digital Rotary Evaporator",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "•   Digital LCD display of both rotation speed and heating temperature allows for optimal control of all distillation processes\r\n\r\n•  Automatic motor lift releases the evaporating flask to a safe position in case of power failure\r\n\r\n•   5L heating bath with wide temperature range from room temperature to 180°C  Water\/oil heating mode can be  changed only through a switch\r\n\r\n•   Overheating protection temperature at 220 °C\r\n\r\n•   Boil-dry protection, automatically power off if heating without water\/oil in the heating bath\r\n\r\n•   Speed range from 20 to 280rpm, and interval operation in clockwise and anticlockwise directions for drying process\r\n\r\n•  Condenser (cooling surface 1700cm²) with excellent cooling effect\r\n\r\n•   Ejection mechanism ensures easy removal of evaporating flask\r\n\r\n•   Patented double spring sealing ring made of PTFE provides an excellent sealing performance\r\n\r\n•  Optional glassware with explosion proof film available\r\n\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n6030110111\r\nEvaporating flask volume\r\n50-3000mL\r\nTemperature range\r\nRoom temp.-180℃\r\nTemperature control accuracy\r\nwater: ± 1℃ ；oil: ±3℃\r\nSpeed range\r\n20-280rpm\r\nDirection of Rotation\r\nClockwise and counterclockwise\r\nEvaporation capacity\r\n1.56L\/h\r\nUltimate vacuum\r\n-\r\nTemperature control\r\nMicro processer PID control\r\nDisplay\r\nLCD\r\nTimer\r\nYes\r\nTime Setting Range\r\n1-999min\r\nLifting mode\r\nMotorized\r\nLifting stroke\r\n150mm\r\nHeating bath size\r\n-\r\nMotor Type\r\nBrushless DC motor\r\nHeating Power\r\n1300W\r\nPower\r\n1400W\r\nVoltage\/Frequency\r\n100-120\/200-240V，50\/60Hz\r\nDimension[D×W×H]\r\n465×457×583mm\r\nWeight\r\n15kg\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible ambient humidity\r\n≤80% RH\r\nProtection Class\r\nIP20\r\nUSB Interface\r\nYes\r\nSafety features\r\nMotor over-current protection, earth-leakage protection lifting overload protection, Boil-dry protection, Overheating protection\r\nApplications\r\nChemical research, pharmaceutical manufacturing, food processing, cosmetics manufacturing, and chemical laboratories. MaxMed UAE is the leading supplier of Distillation Systems in Dubai and across the United Arab Emirates. We provide professional Distillation Systems with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "RE100-Pro Digital Rotary Evaporator",
+        "description": "•   Digital LCD display of both rotation speed and heating temperature allows for optimal control of all distillation processes\r\n\r\n•  Automatic motor lift releases the evaporating flask to a safe position in case of power failure\r\n\r\n•   5L heating bath with wide temperature range from room temperature to 180°C  Water\/oil heating mode can be  changed only through a switch\r\n\r\n•   Overheating protection temperature at 220 °C\r\n\r\n•   Boil-dry protection, automatically power off if heating without water\/oil in the heating bath\r\n\r\n•   Speed range from 20 to 280rpm, and interval operation in clockwise and anticlockwise directions for drying process\r\n\r\n•  Condenser (cooling surface 1700cm²) with excellent cooling effect\r\n\r\n•   Ejection mechanism ensures easy removal of evaporating flask\r\n\r\n•   Patented double spring sealing ring made of PTFE provides an excellent sealing performance\r\n\r\n•  Optional glassware with explosion proof film available\r\n\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n6030110111\r\nEvaporating flask volume\r\n50-3000mL\r\nTemperature range\r\nRoom temp.-180℃\r\nTemperature control accuracy\r\nwater: ± 1℃ ；oil: ±3℃\r\nSpeed range\r\n20-280rpm\r\nDirection of Rotation\r\nClockwise and counterclockwise\r\nEvaporation capacity\r\n1.56L\/h\r\nUltimate vacuum\r\n-\r\nTemperature control\r\nMicro processer PID control\r\nDisplay\r\nLCD\r\nTimer\r\nYes\r\nTime Setting Range\r\n1-999min\r\nLifting mode\r\nMotorized\r\nLifting stroke\r\n150mm\r\nHeating bath size\r\n-\r\nMotor Type\r\nBrushless DC motor\r\nHeating Power\r\n1300W\r\nPower\r\n1400W\r\nVoltage\/Frequency\r\n100-120\/200-240V，50\/60Hz\r\nDimension[D×W×H]\r\n465×457×583mm\r\nWeight\r\n15kg\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible ambient humidity\r\n≤80% RH\r\nProtection Class\r\nIP20\r\nUSB Interface\r\nYes\r\nSafety features\r\nMotor over-current protection, earth-leakage protection lifting overload protection, Boil-dry protection, Overheating protection\r\nApplications\r\nChemical research, pharmaceutical manufacturing, food processing, cosmetics manufacturing, and chemical laboratories. MaxMed UAE is the leading supplier of Distillation Systems in Dubai and across the United Arab Emirates. We provide professional Distillation Systems with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0081"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Distillation Systems",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "re100-pro",
+            "re100-pro Dubai",
+            "re100-pro UAE",
+            "digital",
+            "digital Dubai",
+            "digital UAE",
+            "rotary",
+            "rotary Dubai",
+            "rotary UAE",
+            "evaporator",
+            "evaporator Dubai",
+            "evaporator UAE",
+            "distillation",
+            "distillation equipment",
+            "distillation supplier",
+            "systems",
+            "systems equipment",
+            "systems supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.278846Z",
+            "validThrough": "2026-01-11T08:02:41.278893Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/re100-pro-digital-rotary-evaporator-mw-0081-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/re100-pro-digital-rotary-evaporator-mw-0081-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "re100-pro",
+        "re100-pro Dubai",
+        "re100-pro UAE",
+        "digital",
+        "digital Dubai",
+        "digital UAE",
+        "rotary",
+        "rotary Dubai",
+        "rotary UAE",
+        "evaporator",
+        "evaporator Dubai",
+        "evaporator UAE",
+        "distillation",
+        "distillation equipment",
+        "distillation supplier",
+        "systems",
+        "systems equipment",
+        "systems supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Distillation Systems",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "RE200- Pro 20L Industrial Digital Rotary Evaporator",
+            "RE100-S LED Digital Rotary Evaporator",
+            "RE500-E Pilot Scale Digital Control Rotary Evaporator",
+            "RE1000-E Pilot Scale Digital Control Rotary Evaporator",
+            "RE2000-E Pilot Scale Digital Control Rotary Evaporator"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.280629Z"
+}

@@ -1,0 +1,180 @@
+{
+    "entity_type": "product",
+    "entity_name": "Allure Organic Acids",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Allure Organic Acids columns provide enhanced retention and selectivity for polar organic acids. An Allure Organic Acids column effectively resolves key organic acids such as tartaric and quinic acids using the chromatographic conditions specified in AOAC method 986.13. Retention is stable and reproducible, even with the 100% aqueous mobile phase specified in the AOAC method.\r\n\r\nParticle: 5 µm, spherical\r\nPore Size: 60 Å\r\nCarbon Load: proprietary\r\nEnd-Cap: no\r\nSurface Area: 450 m2\/g\r\npH Range: 2.5 to 8\r\nMaximum Temperature: 80 °C MaxMed UAE is the leading supplier of Liquid Chromatograph (HPLC) in Dubai and across the United Arab Emirates. We provide professional Liquid Chromatograph (HPLC) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Allure Organic Acids",
+        "description": "Allure Organic Acids columns provide enhanced retention and selectivity for polar organic acids. An Allure Organic Acids column effectively resolves key organic acids such as tartaric and quinic acids using the chromatographic conditions specified in AOAC method 986.13. Retention is stable and reproducible, even with the 100% aqueous mobile phase specified in the AOAC method.\r\n\r\nParticle: 5 µm, spherical\r\nPore Size: 60 Å\r\nCarbon Load: proprietary\r\nEnd-Cap: no\r\nSurface Area: 450 m2\/g\r\npH Range: 2.5 to 8\r\nMaximum Temperature: 80 °C MaxMed UAE is the leading supplier of Liquid Chromatograph (HPLC) in Dubai and across the United Arab Emirates. We provide professional Liquid Chromatograph (HPLC) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0053"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "Restek",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Liquid Chromatograph (HPLC)",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "allure",
+            "allure Dubai",
+            "allure UAE",
+            "organic",
+            "organic Dubai",
+            "organic UAE",
+            "acids",
+            "acids Dubai",
+            "acids UAE",
+            "liquid",
+            "liquid equipment",
+            "liquid supplier",
+            "chromatograph",
+            "chromatograph equipment",
+            "chromatograph supplier",
+            "(hplc)",
+            "(hplc) equipment",
+            "(hplc) supplier",
+            "restek",
+            "restek UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "4884.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.832689Z",
+            "validThrough": "2026-01-11T08:02:41.832745Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/allure-organic-acids-mm-0053-restek-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/allure-organic-acids-mm-0053-restek-dubai-uae"
+        }
+    },
+    "keywords": [
+        "allure",
+        "allure Dubai",
+        "allure UAE",
+        "organic",
+        "organic Dubai",
+        "organic UAE",
+        "acids",
+        "acids Dubai",
+        "acids UAE",
+        "liquid",
+        "liquid equipment",
+        "liquid supplier",
+        "chromatograph",
+        "chromatograph equipment",
+        "chromatograph supplier",
+        "(hplc)",
+        "(hplc) equipment",
+        "(hplc) supplier",
+        "restek",
+        "restek UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Liquid Chromatograph (HPLC)",
+        "manufactured_by": "Restek",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "HPLC Column Nova Atom Liquid Chromatography",
+            "HPLC Column Nova Element Liquid Chromatography",
+            "Liquid Chromatography Columns for Special Industries (HPLC)",
+            "PL aquagel-OH 20",
+            "Sugar KS-802"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.833553Z"
+}

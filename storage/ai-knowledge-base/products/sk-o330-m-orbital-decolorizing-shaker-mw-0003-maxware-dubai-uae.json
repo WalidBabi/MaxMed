@@ -1,0 +1,174 @@
+{
+    "entity_type": "product",
+    "entity_name": "SK-O330-M Orbital Decolorizing Shaker",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "• Double-screen display for time and speed respectively\r\n\r\n•  Compact footprint\r\n\r\n• Provides smooth and uniform shaking\r\n\r\n• 9.8kg(O330-M)and speed range 70-400rpm, \r\n\r\n• Continuous or timer operation mode\r\n\r\n• Maintenance- free brushless DC motor\r\n\r\n• Over speed detection and protection\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8032220101\r\nMotion type\r\nOrbital Shaker\r\nAmplitude\r\n10mm\r\nTilt angle\r\n-\r\nSpeed range\r\n70-400rpm\r\nSpeed display\r\nLCD\r\nTimer display\r\nLCD\r\nTime settings range\r\n1min-99h59min\r\nData connector\r\n-\r\nMax. load capacity (with platform)\r\n3kg\r\nMotor type\r\nBrushless DC motor\r\nMotor rating input\r\n20W\r\nMotor rating output\r\n15W\r\nPower\r\n25W\r\nVoltage\r\n100-240V\r\nFrequency\r\n50\/60Hz\r\nDimension[W×D×H]\r\n420×370×100mm\r\nWork plate Dimension[W x D]\r\n335×335mm\r\nWeight\r\n9.8kg\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible ambient humidity\r\n80% RH\r\nProtection class\r\nIP21 MaxMed UAE is the leading supplier of Shakers in Dubai and across the United Arab Emirates. We provide professional Shakers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "SK-O330-M Orbital Decolorizing Shaker",
+        "description": "• Double-screen display for time and speed respectively\r\n\r\n•  Compact footprint\r\n\r\n• Provides smooth and uniform shaking\r\n\r\n• 9.8kg(O330-M)and speed range 70-400rpm, \r\n\r\n• Continuous or timer operation mode\r\n\r\n• Maintenance- free brushless DC motor\r\n\r\n• Over speed detection and protection\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8032220101\r\nMotion type\r\nOrbital Shaker\r\nAmplitude\r\n10mm\r\nTilt angle\r\n-\r\nSpeed range\r\n70-400rpm\r\nSpeed display\r\nLCD\r\nTimer display\r\nLCD\r\nTime settings range\r\n1min-99h59min\r\nData connector\r\n-\r\nMax. load capacity (with platform)\r\n3kg\r\nMotor type\r\nBrushless DC motor\r\nMotor rating input\r\n20W\r\nMotor rating output\r\n15W\r\nPower\r\n25W\r\nVoltage\r\n100-240V\r\nFrequency\r\n50\/60Hz\r\nDimension[W×D×H]\r\n420×370×100mm\r\nWork plate Dimension[W x D]\r\n335×335mm\r\nWeight\r\n9.8kg\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible ambient humidity\r\n80% RH\r\nProtection class\r\nIP21 MaxMed UAE is the leading supplier of Shakers in Dubai and across the United Arab Emirates. We provide professional Shakers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0003"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Shakers",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "sk-o330-m",
+            "sk-o330-m Dubai",
+            "sk-o330-m UAE",
+            "orbital",
+            "orbital Dubai",
+            "orbital UAE",
+            "decolorizing",
+            "decolorizing Dubai",
+            "decolorizing UAE",
+            "shaker",
+            "shaker Dubai",
+            "shaker UAE",
+            "shakers",
+            "shakers equipment",
+            "shakers supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:40.858220Z",
+            "validThrough": "2026-01-11T08:02:40.858278Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/sk-o330-m-orbital-decolorizing-shaker-mw-0003-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/sk-o330-m-orbital-decolorizing-shaker-mw-0003-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "sk-o330-m",
+        "sk-o330-m Dubai",
+        "sk-o330-m UAE",
+        "orbital",
+        "orbital Dubai",
+        "orbital UAE",
+        "decolorizing",
+        "decolorizing Dubai",
+        "decolorizing UAE",
+        "shaker",
+        "shaker Dubai",
+        "shaker UAE",
+        "shakers",
+        "shakers equipment",
+        "shakers supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Shakers",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "SK-O330-Pro Large Multifunctional Orbital Decolorizing Shaker",
+            "SK-O180-Pro Multifunctional Orbital Decolorizing Shaker",
+            "SK-O180-S Intelligent Decolorizing Shaker (Multi-functional）",
+            "SK-L180-S Intelligent Linear Decolorizing Shaker",
+            "SK-O180-S Intelligent Decolorizing Shaker（Basic model）"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:40.858946Z"
+}

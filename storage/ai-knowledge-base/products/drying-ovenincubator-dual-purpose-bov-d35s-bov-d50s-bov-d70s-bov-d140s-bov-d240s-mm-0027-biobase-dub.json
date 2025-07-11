@@ -1,0 +1,210 @@
+{
+    "entity_type": "product",
+    "entity_name": "Drying Oven\/Incubator (Dual Purpose) BOV-D35S BOV-D50S BOV-D70S BOV-D140S BOV-D240S",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Application:\r\nThis product has a wide application for both drying and culturing. Being a product of high quality and reliability, it can be of direct help in colleges & universities, scientific research institutes and production. It makes it possible for the users to save the space and enhance work efficiency.\r\n\r\nFeature:\r\n\r\nInner bladder of mirror stainless steel, four corners rounded, easy for cleaning, space between shelves adjustable.\r\n\r\nMicrocomputer-based smart controller, temperature control of high prevision and reliability, protection against excessive temperature, sensor failure, creepage, over-current, etc., sound & light alarming, timing function.\r\n\r\nForced hot air circulation design to ensure temperature uniformity in the operating chamber.\r\n\r\nSilicon rubber sealing and double- -layer observation window, making observation easy.\r\n\r\nOptional RS-485 portal for connection with embedded printer, enabling record of variations of temperature parameters. (optional) MaxMed UAE is the leading supplier of Incubators & Ovens in Dubai and across the United Arab Emirates. We provide professional Incubators & Ovens with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Drying Oven\/Incubator (Dual Purpose) BOV-D35S BOV-D50S BOV-D70S BOV-D140S BOV-D240S",
+        "description": "Application:\r\nThis product has a wide application for both drying and culturing. Being a product of high quality and reliability, it can be of direct help in colleges & universities, scientific research institutes and production. It makes it possible for the users to save the space and enhance work efficiency.\r\n\r\nFeature:\r\n\r\nInner bladder of mirror stainless steel, four corners rounded, easy for cleaning, space between shelves adjustable.\r\n\r\nMicrocomputer-based smart controller, temperature control of high prevision and reliability, protection against excessive temperature, sensor failure, creepage, over-current, etc., sound & light alarming, timing function.\r\n\r\nForced hot air circulation design to ensure temperature uniformity in the operating chamber.\r\n\r\nSilicon rubber sealing and double- -layer observation window, making observation easy.\r\n\r\nOptional RS-485 portal for connection with embedded printer, enabling record of variations of temperature parameters. (optional) MaxMed UAE is the leading supplier of Incubators & Ovens in Dubai and across the United Arab Emirates. We provide professional Incubators & Ovens with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0027"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "BIOBASE",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Incubators & Ovens",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "drying",
+            "drying Dubai",
+            "drying UAE",
+            "oven\/incubator",
+            "oven\/incubator Dubai",
+            "oven\/incubator UAE",
+            "(dual",
+            "(dual Dubai",
+            "(dual UAE",
+            "purpose)",
+            "purpose) Dubai",
+            "purpose) UAE",
+            "bov-d35s",
+            "bov-d35s Dubai",
+            "bov-d35s UAE",
+            "bov-d50s",
+            "bov-d50s Dubai",
+            "bov-d50s UAE",
+            "bov-d70s",
+            "bov-d70s Dubai",
+            "bov-d70s UAE",
+            "bov-d140s",
+            "bov-d140s Dubai",
+            "bov-d140s UAE",
+            "bov-d240s",
+            "bov-d240s Dubai",
+            "bov-d240s UAE",
+            "incubators",
+            "incubators equipment",
+            "incubators supplier",
+            "ovens",
+            "ovens equipment",
+            "ovens supplier",
+            "biobase",
+            "biobase UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.655153Z",
+            "validThrough": "2026-01-11T08:02:41.655203Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/drying-ovenincubator-dual-purpose-bov-d35s-bov-d50s-bov-d70s-bov-d140s-bov-d240s-mm-0027-biobase-dub",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/drying-ovenincubator-dual-purpose-bov-d35s-bov-d50s-bov-d70s-bov-d140s-bov-d240s-mm-0027-biobase-dub"
+        }
+    },
+    "keywords": [
+        "drying",
+        "drying Dubai",
+        "drying UAE",
+        "oven\/incubator",
+        "oven\/incubator Dubai",
+        "oven\/incubator UAE",
+        "(dual",
+        "(dual Dubai",
+        "(dual UAE",
+        "purpose)",
+        "purpose) Dubai",
+        "purpose) UAE",
+        "bov-d35s",
+        "bov-d35s Dubai",
+        "bov-d35s UAE",
+        "bov-d50s",
+        "bov-d50s Dubai",
+        "bov-d50s UAE",
+        "bov-d70s",
+        "bov-d70s Dubai",
+        "bov-d70s UAE",
+        "bov-d140s",
+        "bov-d140s Dubai",
+        "bov-d140s UAE",
+        "bov-d240s",
+        "bov-d240s Dubai",
+        "bov-d240s UAE",
+        "incubators",
+        "incubators equipment",
+        "incubators supplier",
+        "ovens",
+        "ovens equipment",
+        "ovens supplier",
+        "biobase",
+        "biobase UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Incubators & Ovens",
+        "manufactured_by": "BIOBASE",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Vacuum Drying Oven(BOV-V\/VL)",
+            "Forced Air Drying Oven BJPX-HG Series",
+            "Dual-use Drying Oven B0V-D series",
+            "High Temperature Drying Oven",
+            "Constant-temperature Drying Oven BJPX-HDO Series"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.656175Z"
+}

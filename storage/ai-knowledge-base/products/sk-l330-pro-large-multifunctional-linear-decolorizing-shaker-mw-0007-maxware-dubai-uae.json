@@ -1,0 +1,186 @@
+{
+    "entity_type": "product",
+    "entity_name": "SK-L330-Pro Large Multifunctional Linear Decolorizing Shaker",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "•  Linear reciprocating shaking action\r\n\r\n• 7.5kg with platform\r\n\r\n• Independent LCD display for speed andtime\r\n\r\n• Speed range of 100-350 rpm\r\n\r\n• Maintenance-free brushless DC motor\r\n\r\n• Over speed detection and protection\r\n\r\n• Wide range of platforms for use with a variety of vessels\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8032120100\r\nMotion type\r\nLinear Shaker\r\nAmplitude\r\n10mm\r\nTilt angle\r\n-\r\nSpeed range\r\n100-350rpm\r\nSpeed display\r\nLCD\r\nTimer display\r\nLCD\r\nTime settings range\r\n1min-19h59min\r\nData connector\r\nRS232\r\nMax. load capacity (with platform)\r\n7.5kg\r\nMotor type\r\nBrushless DC motor\r\nMotor rating input\r\n28W\r\nMotor rating output\r\n15W\r\nPower\r\n30W\r\nVoltage\r\n100-240V\r\nFrequency\r\n50\/60Hz\r\nDimension[W×D×H]\r\n370×420×100mm\r\nWork plate Dimension[W x D]\r\n320×320mm\r\nWeight\r\n13.5kg\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible ambient humidity\r\n80% RH\r\nProtection class\r\nIP21 MaxMed UAE is the leading supplier of Shakers in Dubai and across the United Arab Emirates. We provide professional Shakers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "SK-L330-Pro Large Multifunctional Linear Decolorizing Shaker",
+        "description": "•  Linear reciprocating shaking action\r\n\r\n• 7.5kg with platform\r\n\r\n• Independent LCD display for speed andtime\r\n\r\n• Speed range of 100-350 rpm\r\n\r\n• Maintenance-free brushless DC motor\r\n\r\n• Over speed detection and protection\r\n\r\n• Wide range of platforms for use with a variety of vessels\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8032120100\r\nMotion type\r\nLinear Shaker\r\nAmplitude\r\n10mm\r\nTilt angle\r\n-\r\nSpeed range\r\n100-350rpm\r\nSpeed display\r\nLCD\r\nTimer display\r\nLCD\r\nTime settings range\r\n1min-19h59min\r\nData connector\r\nRS232\r\nMax. load capacity (with platform)\r\n7.5kg\r\nMotor type\r\nBrushless DC motor\r\nMotor rating input\r\n28W\r\nMotor rating output\r\n15W\r\nPower\r\n30W\r\nVoltage\r\n100-240V\r\nFrequency\r\n50\/60Hz\r\nDimension[W×D×H]\r\n370×420×100mm\r\nWork plate Dimension[W x D]\r\n320×320mm\r\nWeight\r\n13.5kg\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible ambient humidity\r\n80% RH\r\nProtection class\r\nIP21 MaxMed UAE is the leading supplier of Shakers in Dubai and across the United Arab Emirates. We provide professional Shakers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0007"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Shakers",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "sk-l330-pro",
+            "sk-l330-pro Dubai",
+            "sk-l330-pro UAE",
+            "large",
+            "large Dubai",
+            "large UAE",
+            "multifunctional",
+            "multifunctional Dubai",
+            "multifunctional UAE",
+            "linear",
+            "linear Dubai",
+            "linear UAE",
+            "decolorizing",
+            "decolorizing Dubai",
+            "decolorizing UAE",
+            "shaker",
+            "shaker Dubai",
+            "shaker UAE",
+            "shakers",
+            "shakers equipment",
+            "shakers supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:40.883520Z",
+            "validThrough": "2026-01-11T08:02:40.883593Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/sk-l330-pro-large-multifunctional-linear-decolorizing-shaker-mw-0007-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/sk-l330-pro-large-multifunctional-linear-decolorizing-shaker-mw-0007-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "sk-l330-pro",
+        "sk-l330-pro Dubai",
+        "sk-l330-pro UAE",
+        "large",
+        "large Dubai",
+        "large UAE",
+        "multifunctional",
+        "multifunctional Dubai",
+        "multifunctional UAE",
+        "linear",
+        "linear Dubai",
+        "linear UAE",
+        "decolorizing",
+        "decolorizing Dubai",
+        "decolorizing UAE",
+        "shaker",
+        "shaker Dubai",
+        "shaker UAE",
+        "shakers",
+        "shakers equipment",
+        "shakers supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Shakers",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "SK-O330-Pro Large Multifunctional Orbital Decolorizing Shaker",
+            "SK-O180-Pro Multifunctional Orbital Decolorizing Shaker",
+            "SK-O330-M Orbital Decolorizing Shaker",
+            "SK-O180-S Intelligent Decolorizing Shaker (Multi-functional）",
+            "SK-L180-S Intelligent Linear Decolorizing Shaker"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:40.884984Z"
+}

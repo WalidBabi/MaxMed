@@ -1,0 +1,168 @@
+{
+    "entity_type": "product",
+    "entity_name": "Capsaicin ELISA Kit",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "This test kit is a competitive ELISA for the quantitative analysis of Capsaicin in the rapeseed oil, soybean oil, peanut oil, corn oil, blended oil, etc. The coupling antigens are pre-coated on the micro-well stripes. The Capsaicin in the sample and the coupling antigens pre-coated on the micro-well stripes compete for the anti-Cap antibodies. After the addition of the enzyme conjugate, the TMB substrate is added for coloration. The optical density (OD) value of the sample has a negative correlation with Capsaicin concentration in the sample. This value is compared to the standard curve and the content of the corresponding Capsaicin is subsequently obtained. \r\n\r\nSensitivity : 1ppb     \r\nDetect time: Approx. 30 min MaxMed UAE is the leading supplier of Chemical & Reagents in Dubai and across the United Arab Emirates. We provide professional Chemical & Reagents with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Capsaicin ELISA Kit",
+        "description": "This test kit is a competitive ELISA for the quantitative analysis of Capsaicin in the rapeseed oil, soybean oil, peanut oil, corn oil, blended oil, etc. The coupling antigens are pre-coated on the micro-well stripes. The Capsaicin in the sample and the coupling antigens pre-coated on the micro-well stripes compete for the anti-Cap antibodies. After the addition of the enzyme conjugate, the TMB substrate is added for coloration. The optical density (OD) value of the sample has a negative correlation with Capsaicin concentration in the sample. This value is compared to the standard curve and the content of the corresponding Capsaicin is subsequently obtained. \r\n\r\nSensitivity : 1ppb     \r\nDetect time: Approx. 30 min MaxMed UAE is the leading supplier of Chemical & Reagents in Dubai and across the United Arab Emirates. We provide professional Chemical & Reagents with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0116"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "WUHAN ECALBIO CO., LTD",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Chemical & Reagents",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "capsaicin",
+            "capsaicin Dubai",
+            "capsaicin UAE",
+            "elisa",
+            "elisa Dubai",
+            "elisa UAE",
+            "chemical",
+            "chemical equipment",
+            "chemical supplier",
+            "reagents",
+            "reagents equipment",
+            "reagents supplier",
+            "wuhan ecalbio co., ltd",
+            "wuhan ecalbio co., ltd UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:42.041809Z",
+            "validThrough": "2026-01-11T08:02:42.041865Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/capsaicin-elisa-kit-mm-0116-ecalbio-coltd-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/capsaicin-elisa-kit-mm-0116-ecalbio-coltd-dubai-uae"
+        }
+    },
+    "keywords": [
+        "capsaicin",
+        "capsaicin Dubai",
+        "capsaicin UAE",
+        "elisa",
+        "elisa Dubai",
+        "elisa UAE",
+        "chemical",
+        "chemical equipment",
+        "chemical supplier",
+        "reagents",
+        "reagents equipment",
+        "reagents supplier",
+        "wuhan ecalbio co., ltd",
+        "wuhan ecalbio co., ltd UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Chemical & Reagents",
+        "manufactured_by": "WUHAN ECALBIO CO., LTD",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "AflatoxinB1 Standard Substance",
+            "Aflatoxin Total in Acetonitrile",
+            "Deoxynivalenol Standard Substance",
+            "Ochratoxin A Standard Substance",
+            "Microcystin-LR Standard Substance"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:42.042778Z"
+}

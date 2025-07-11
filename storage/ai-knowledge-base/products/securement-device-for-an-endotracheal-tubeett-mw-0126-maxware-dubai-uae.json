@@ -1,0 +1,183 @@
+{
+    "entity_type": "product",
+    "entity_name": "securement device for an Endotracheal Tube (ETT)",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "A specialized medical device designed to reliably secure endotracheal tubes in place during intubation and mechanical ventilation. This securement system minimizes the risk of tube displacement, accidental extubation, and associated complications—enhancing both patient safety and clinician confidence in critical care and surgical settings. MaxMed UAE is the leading supplier of Intubation & Airway Aids in Dubai and across the United Arab Emirates. We provide professional Intubation & Airway Aids with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "securement device for an Endotracheal Tube (ETT)",
+        "description": "A specialized medical device designed to reliably secure endotracheal tubes in place during intubation and mechanical ventilation. This securement system minimizes the risk of tube displacement, accidental extubation, and associated complications—enhancing both patient safety and clinician confidence in critical care and surgical settings. MaxMed UAE is the leading supplier of Intubation & Airway Aids in Dubai and across the United Arab Emirates. We provide professional Intubation & Airway Aids with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0126"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Intubation & Airway Aids",
+        "additionalType": [
+            "https:\/\/schema.org\/Product",
+            "https:\/\/schema.org\/SoftwareApplication"
+        ],
+        "keywords": [
+            "securement",
+            "securement Dubai",
+            "securement UAE",
+            "device",
+            "device Dubai",
+            "device UAE",
+            "endotracheal",
+            "endotracheal Dubai",
+            "endotracheal UAE",
+            "tube (ett)",
+            "tube (ett) Dubai",
+            "tube (ett) UAE",
+            "intubation",
+            "intubation equipment",
+            "intubation supplier",
+            "airway",
+            "airway equipment",
+            "airway supplier",
+            "aids",
+            "aids equipment",
+            "aids supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "15.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.878829Z",
+            "validThrough": "2026-01-11T08:02:41.878920Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/securement-device-for-an-endotracheal-tubeett-mw-0126-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/securement-device-for-an-endotracheal-tubeett-mw-0126-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "securement",
+        "securement Dubai",
+        "securement UAE",
+        "device",
+        "device Dubai",
+        "device UAE",
+        "endotracheal",
+        "endotracheal Dubai",
+        "endotracheal UAE",
+        "tube (ett)",
+        "tube (ett) Dubai",
+        "tube (ett) UAE",
+        "intubation",
+        "intubation equipment",
+        "intubation supplier",
+        "airway",
+        "airway equipment",
+        "airway supplier",
+        "aids",
+        "aids equipment",
+        "aids supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Intubation & Airway Aids",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Bougie Endotracheal Introducer"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.880095Z"
+}

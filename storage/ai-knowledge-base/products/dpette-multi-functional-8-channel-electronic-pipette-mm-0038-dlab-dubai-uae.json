@@ -1,0 +1,198 @@
+{
+    "entity_type": "product",
+    "entity_name": "dPette+ Multi-functional 8-channel Electronic Pipette",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Introducing the DLAB Multi-channel Electric Pipette - a versatile and efficient eight-channel electric pipetting device that simplifies the process of accurate and fast pipetting of multiple samples.\r\n\r\n\r\n\r\nPrecision and Parallelism: The DLAB pipette features a high-precision step motor that ensures accuracy and parallelism during pipetting, minimizing errors and improving data repeatability.\r\nErgonomic Design: Its lightweight streamlined design is ergonomically engineered to reduce fatigue and increase efficiency during extended use, ultimately enhancing the unit time of liquid transfer and experimental data reproducibility.\r\nRechargeable Battery: The DLAB pipette can be recharged via a desktop or power cord, providing users with the flexibility to choose the best charging method for their laboratory.\r\nProgrammable Volume Range: The DLAB pipette offers four programmable volume ranges: 0.5-10 µl, 5-50 µl, 15-300 µl, and 30-300 µl, allowing for a wide range of liquid transfer needs.\r\nUser-Friendly Interface: Its large MaxMed UAE is the leading supplier of Lab Essentials (Tubes, Pipettes, Glassware) in Dubai and across the United Arab Emirates. We provide professional Lab Essentials (Tubes, Pipettes, Glassware) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "dPette+ Multi-functional 8-channel Electronic Pipette",
+        "description": "Introducing the DLAB Multi-channel Electric Pipette - a versatile and efficient eight-channel electric pipetting device that simplifies the process of accurate and fast pipetting of multiple samples.\r\n\r\n\r\n\r\nPrecision and Parallelism: The DLAB pipette features a high-precision step motor that ensures accuracy and parallelism during pipetting, minimizing errors and improving data repeatability.\r\nErgonomic Design: Its lightweight streamlined design is ergonomically engineered to reduce fatigue and increase efficiency during extended use, ultimately enhancing the unit time of liquid transfer and experimental data reproducibility.\r\nRechargeable Battery: The DLAB pipette can be recharged via a desktop or power cord, providing users with the flexibility to choose the best charging method for their laboratory.\r\nProgrammable Volume Range: The DLAB pipette offers four programmable volume ranges: 0.5-10 µl, 5-50 µl, 15-300 µl, and 30-300 µl, allowing for a wide range of liquid transfer needs.\r\nUser-Friendly Interface: Its large MaxMed UAE is the leading supplier of Lab Essentials (Tubes, Pipettes, Glassware) in Dubai and across the United Arab Emirates. We provide professional Lab Essentials (Tubes, Pipettes, Glassware) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0038"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "DLAB",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Lab Essentials (Tubes, Pipettes, Glassware)",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "dpette+",
+            "dpette+ Dubai",
+            "dpette+ UAE",
+            "multi-functional",
+            "multi-functional Dubai",
+            "multi-functional UAE",
+            "8-channel",
+            "8-channel Dubai",
+            "8-channel UAE",
+            "electronic",
+            "electronic Dubai",
+            "electronic UAE",
+            "pipette",
+            "pipette Dubai",
+            "pipette UAE",
+            "essentials",
+            "essentials equipment",
+            "essentials supplier",
+            "(tubes,",
+            "(tubes, equipment",
+            "(tubes, supplier",
+            "pipettes,",
+            "pipettes, equipment",
+            "pipettes, supplier",
+            "glassware)",
+            "glassware) equipment",
+            "glassware) supplier",
+            "dlab",
+            "dlab UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "2900.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.689141Z",
+            "validThrough": "2026-01-11T08:02:41.689231Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/dpette-multi-functional-8-channel-electronic-pipette-mm-0038-dlab-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/dpette-multi-functional-8-channel-electronic-pipette-mm-0038-dlab-dubai-uae"
+        }
+    },
+    "keywords": [
+        "dpette+",
+        "dpette+ Dubai",
+        "dpette+ UAE",
+        "multi-functional",
+        "multi-functional Dubai",
+        "multi-functional UAE",
+        "8-channel",
+        "8-channel Dubai",
+        "8-channel UAE",
+        "electronic",
+        "electronic Dubai",
+        "electronic UAE",
+        "pipette",
+        "pipette Dubai",
+        "pipette UAE",
+        "essentials",
+        "essentials equipment",
+        "essentials supplier",
+        "(tubes,",
+        "(tubes, equipment",
+        "(tubes, supplier",
+        "pipettes,",
+        "pipettes, equipment",
+        "pipettes, supplier",
+        "glassware)",
+        "glassware) equipment",
+        "glassware) supplier",
+        "dlab",
+        "dlab UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Lab Essentials (Tubes, Pipettes, Glassware)",
+        "manufactured_by": "DLAB",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "HiPette Colorful Fully Autoclavable Mechanical Pipette",
+            "HiPette Fully Autoclavable Mechanical Pipette",
+            "MicroPette Plus Fully Autoclavable Adjustable Volume Mechanical Pipette",
+            "MicroPette Plus Fully Autoclavable Fixed Volume Mechanical Pipette",
+            "MicroPette Plus 8-channel Adjustable Volume Mechanical Pipettes(magnetic suction model)"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.690154Z"
+}

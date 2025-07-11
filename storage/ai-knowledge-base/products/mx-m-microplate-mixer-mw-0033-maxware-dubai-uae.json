@@ -1,0 +1,168 @@
+{
+    "entity_type": "product",
+    "entity_name": "MX-M Microplate Mixer",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Wide range of speed from 0 to 1,500 rpm (Double microplate:0-1,000 rpm)\r\n\r\n•  Excellent performance with electronic speed control\r\n\r\n•  High speed and effective mixing for microplates\r\n\r\n• With adapters for most popular vessels and microtiter plates\r\n\r\n•  Used for various mixing applications with optional adapters\r\n\r\n•  Maintenance-free brushless DC motor\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8031202000\r\nMotion type\r\nOrbital\r\nOrbital diameter\r\n4.5mm\r\nSpeed range\r\nSingle microplate: 0-1500rpm | Double microplate: 0-1000rpm\r\nSpeed display\r\nScale\r\nMax. load capacity (with platform)\r\n0.5kg\r\nMotor type\r\nBrushless DC motor\r\nMotor rating input\r\n18W\r\nMotor rating output\r\n10W\r\nPower\r\n20W\r\nVoltage\r\n100-240V\r\nFrequency\r\n50\/60Hz\r\nDimension [D×W×H]\r\n260×150×80mm\r\nWeight\r\n3kg\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible relative humidity\r\n80% RH\r\nProtection class\r\nIP20 MaxMed UAE is the leading supplier of Mixers in Dubai and across the United Arab Emirates. We provide professional Mixers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "MX-M Microplate Mixer",
+        "description": "Wide range of speed from 0 to 1,500 rpm (Double microplate:0-1,000 rpm)\r\n\r\n•  Excellent performance with electronic speed control\r\n\r\n•  High speed and effective mixing for microplates\r\n\r\n• With adapters for most popular vessels and microtiter plates\r\n\r\n•  Used for various mixing applications with optional adapters\r\n\r\n•  Maintenance-free brushless DC motor\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8031202000\r\nMotion type\r\nOrbital\r\nOrbital diameter\r\n4.5mm\r\nSpeed range\r\nSingle microplate: 0-1500rpm | Double microplate: 0-1000rpm\r\nSpeed display\r\nScale\r\nMax. load capacity (with platform)\r\n0.5kg\r\nMotor type\r\nBrushless DC motor\r\nMotor rating input\r\n18W\r\nMotor rating output\r\n10W\r\nPower\r\n20W\r\nVoltage\r\n100-240V\r\nFrequency\r\n50\/60Hz\r\nDimension [D×W×H]\r\n260×150×80mm\r\nWeight\r\n3kg\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible relative humidity\r\n80% RH\r\nProtection class\r\nIP20 MaxMed UAE is the leading supplier of Mixers in Dubai and across the United Arab Emirates. We provide professional Mixers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0033"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Mixers",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "mx-m",
+            "mx-m Dubai",
+            "mx-m UAE",
+            "microplate",
+            "microplate Dubai",
+            "microplate UAE",
+            "mixer",
+            "mixer Dubai",
+            "mixer UAE",
+            "mixers",
+            "mixers equipment",
+            "mixers supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:40.986749Z",
+            "validThrough": "2026-01-11T08:02:40.986806Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/mx-m-microplate-mixer-mw-0033-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/mx-m-microplate-mixer-mw-0033-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "mx-m",
+        "mx-m Dubai",
+        "mx-m UAE",
+        "microplate",
+        "microplate Dubai",
+        "microplate UAE",
+        "mixer",
+        "mixer Dubai",
+        "mixer UAE",
+        "mixers",
+        "mixers equipment",
+        "mixers supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Mixers",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "MX-S Variable speed Vortex Mixer",
+            "MX-F Fixed speed Vortex Mixer",
+            "MX-E Economic Vortex Mixer",
+            "MX-C Cell Disruptor",
+            "MX-RD-Pro LCD Digital Tube Rotator"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:40.987497Z"
+}

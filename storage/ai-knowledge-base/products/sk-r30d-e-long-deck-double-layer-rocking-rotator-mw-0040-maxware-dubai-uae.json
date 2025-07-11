@@ -1,0 +1,192 @@
+{
+    "entity_type": "product",
+    "entity_name": "SK-R30D-E Long Deck Double Layer Rocking Rotator",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Brushless DC motor\r\nContinuous mode of operation\r\nAvailable with various silicon mattress accessories\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8032560000\r\nAccessories type\r\n-\r\nTilt angle\r\n40±3°\r\nMotion type\r\nRocking Rotator Mixer\r\nRotation angle\r\n-\r\nAmplitude\r\n-\r\nSpeed range\r\n0~30rpm\r\nSpeed display\r\n-\r\nTimer display\r\n-\r\nTime setting range\r\n-\r\nRun type\r\nContinuous\r\nMax. load capacity\r\n1kg\r\nNumber of rollers\r\n-\r\nRoller size[length]\r\n-\r\nMotor type\r\nBrushless DC motor\r\nVoltage\r\n100-240V\r\nFrequency\r\n50\/60Hz\r\nPower\r\n15W\r\nDimension [D×W×H ]\r\n405×160×160mm\r\nWeight\r\n2.2kg\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible ambient humidity\r\n80% RH\r\nProtection class\r\n- MaxMed UAE is the leading supplier of Mixers in Dubai and across the United Arab Emirates. We provide professional Mixers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "SK-R30D-E Long Deck Double Layer Rocking Rotator",
+        "description": "Brushless DC motor\r\nContinuous mode of operation\r\nAvailable with various silicon mattress accessories\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8032560000\r\nAccessories type\r\n-\r\nTilt angle\r\n40±3°\r\nMotion type\r\nRocking Rotator Mixer\r\nRotation angle\r\n-\r\nAmplitude\r\n-\r\nSpeed range\r\n0~30rpm\r\nSpeed display\r\n-\r\nTimer display\r\n-\r\nTime setting range\r\n-\r\nRun type\r\nContinuous\r\nMax. load capacity\r\n1kg\r\nNumber of rollers\r\n-\r\nRoller size[length]\r\n-\r\nMotor type\r\nBrushless DC motor\r\nVoltage\r\n100-240V\r\nFrequency\r\n50\/60Hz\r\nPower\r\n15W\r\nDimension [D×W×H ]\r\n405×160×160mm\r\nWeight\r\n2.2kg\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible ambient humidity\r\n80% RH\r\nProtection class\r\n- MaxMed UAE is the leading supplier of Mixers in Dubai and across the United Arab Emirates. We provide professional Mixers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0040"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Mixers",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "sk-r30d-e",
+            "sk-r30d-e Dubai",
+            "sk-r30d-e UAE",
+            "long",
+            "long Dubai",
+            "long UAE",
+            "deck",
+            "deck Dubai",
+            "deck UAE",
+            "double",
+            "double Dubai",
+            "double UAE",
+            "layer",
+            "layer Dubai",
+            "layer UAE",
+            "rocking",
+            "rocking Dubai",
+            "rocking UAE",
+            "rotator",
+            "rotator Dubai",
+            "rotator UAE",
+            "mixers",
+            "mixers equipment",
+            "mixers supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.007971Z",
+            "validThrough": "2026-01-11T08:02:41.008066Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/sk-r30d-e-long-deck-double-layer-rocking-rotator-mw-0040-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/sk-r30d-e-long-deck-double-layer-rocking-rotator-mw-0040-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "sk-r30d-e",
+        "sk-r30d-e Dubai",
+        "sk-r30d-e UAE",
+        "long",
+        "long Dubai",
+        "long UAE",
+        "deck",
+        "deck Dubai",
+        "deck UAE",
+        "double",
+        "double Dubai",
+        "double UAE",
+        "layer",
+        "layer Dubai",
+        "layer UAE",
+        "rocking",
+        "rocking Dubai",
+        "rocking UAE",
+        "rotator",
+        "rotator Dubai",
+        "rotator UAE",
+        "mixers",
+        "mixers equipment",
+        "mixers supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Mixers",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "MX-S Variable speed Vortex Mixer",
+            "MX-F Fixed speed Vortex Mixer",
+            "MX-E Economic Vortex Mixer",
+            "MX-C Cell Disruptor",
+            "MX-M Microplate Mixer"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.009123Z"
+}

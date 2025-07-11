@@ -1,0 +1,57 @@
+{
+    "entity_type": "category",
+    "entity_name": "Life Science & Research",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Professional Life Science & Research equipment and supplies available in Dubai, UAE from MaxMed. We specialize in high-quality Life Science & Research for laboratories, hospitals, research institutions, and healthcare facilities across the Middle East. MaxMed UAE is the leading supplier of Life Science & Research in the United Arab Emirates. We serve hospitals, research laboratories, universities, and medical facilities throughout Dubai, Abu Dhabi, Sharjah, and the entire UAE region. Our Life Science & Research products meet international quality standards and come with comprehensive support services including installation, training, and maintenance. Contact MaxMed at +971 55 460 2500 for expert consultation and same-day quotes.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": "CollectionPage",
+        "name": "Life Science & Research",
+        "description": "Professional Life Science & Research equipment and supplies available in Dubai, UAE from MaxMed. We specialize in high-quality Life Science & Research for laboratories, hospitals, research institutions, and healthcare facilities across the Middle East. MaxMed UAE is the leading supplier of Life Science & Research in the United Arab Emirates. We serve hospitals, research laboratories, universities, and medical facilities throughout Dubai, Abu Dhabi, Sharjah, and the entire UAE region. Our Life Science & Research products meet international quality standards and come with comprehensive support services including installation, training, and maintenance. Contact MaxMed at +971 55 460 2500 for expert consultation and same-day quotes.",
+        "url": "http:\/\/localhost\/categories\/life-science-research",
+        "provider": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "telephone": "+971-55-460-2500",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai"
+            }
+        },
+        "mainEntity": {
+            "@type": "ItemList",
+            "name": "Life Science & Research Products",
+            "description": "Complete range of Life Science & Research available from MaxMed UAE"
+        },
+        "keywords": "life, life Dubai, life UAE, life equipment, life supplier, science, science Dubai, science UAE, science equipment, science supplier, research, research Dubai, research UAE, research equipment, research supplier, laboratory equipment, medical equipment, scientific instruments, diagnostic tools, lab supplies, analytical instruments, laboratory technology, Dubai, UAE, Middle East, MaxMed, laboratory supplier Dubai, medical equipment UAE, scientific equipment Middle East, Life Science & Research, Life Science & Research Dubai, Life Science & Research UAE, Life Science & Research equipment, Life Science & Research supplies, Life Science & Research supplier",
+        "areaServed": {
+            "@type": "Country",
+            "name": "United Arab Emirates"
+        }
+    },
+    "relationships": {
+        "part_of": "MaxMed UAE Product Catalog",
+        "available_from": "MaxMed UAE",
+        "serves_industry": [
+            "Healthcare",
+            "Medical Research",
+            "Pharmaceutical",
+            "Biotechnology"
+        ],
+        "location_coverage": "Dubai, UAE, Middle East",
+        "subcategories": [
+            "Recombinant Monoclonal Antibodies (recmAbTM)",
+            "Recombinant Proteins",
+            "Antibodies",
+            "Cell Lines",
+            "Ligands and Inhibitors",
+            "Immune-Check Point",
+            "Research Kits and Reagents",
+            "sdMAB ™ (Single Domain Monoclonal Antibody)"
+        ]
+    },
+    "product_count": 0,
+    "last_updated": "2025-07-11T08:02:42.078801Z"
+}

@@ -1,0 +1,166 @@
+{
+    "entity_type": "product",
+    "entity_name": "UV-Vis spectrophotometer",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "1.The host can independently accomplish photometric measurement and    quantitative  measurement,spectral  scanning,dynamics,DNA\/protein  test, wavelength testing and data printing function,etc.\r\n2.Using the latest ARM system,built-in double operating system in both     Chinese and English,can through the USB interface transfer data storage.\r\n\r\nFeatures:\r\n1.Adopt 1200 bar\/mm high-performance grating.New new light control system makes the instrument light switch more quickly.\r\n2.The instrument adopts 320*240 lattice highlighted LCD display,direct display scan map,the screen interface simple,convenient use.\r\n3.Socket xenon lamp and tungsten lamp design,after change light no need optical debugging\r\n4.Large sample chamber,Can accommodate 5-100mm various specifications of the cuvette\r\n5.Can be directly connected to the printer to print patterns and the experimental data\r\n6.Optional disk automatic 8 joint cuvettes holder. MaxMed UAE is the leading supplier of UV-Vis Spectrophotometers in Dubai and across the United Arab Emirates. We provide professional UV-Vis Spectrophotometers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "UV-Vis spectrophotometer",
+        "description": "1.The host can independently accomplish photometric measurement and    quantitative  measurement,spectral  scanning,dynamics,DNA\/protein  test, wavelength testing and data printing function,etc.\r\n2.Using the latest ARM system,built-in double operating system in both     Chinese and English,can through the USB interface transfer data storage.\r\n\r\nFeatures:\r\n1.Adopt 1200 bar\/mm high-performance grating.New new light control system makes the instrument light switch more quickly.\r\n2.The instrument adopts 320*240 lattice highlighted LCD display,direct display scan map,the screen interface simple,convenient use.\r\n3.Socket xenon lamp and tungsten lamp design,after change light no need optical debugging\r\n4.Large sample chamber,Can accommodate 5-100mm various specifications of the cuvette\r\n5.Can be directly connected to the printer to print patterns and the experimental data\r\n6.Optional disk automatic 8 joint cuvettes holder. MaxMed UAE is the leading supplier of UV-Vis Spectrophotometers in Dubai and across the United Arab Emirates. We provide professional UV-Vis Spectrophotometers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0118"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "WUHAN ECALBIO CO., LTD",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "UV-Vis Spectrophotometers",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "uv-vis",
+            "1": "uv-vis Dubai",
+            "2": "uv-vis UAE",
+            "3": "spectrophotometer",
+            "4": "spectrophotometer Dubai",
+            "5": "spectrophotometer UAE",
+            "7": "uv-vis equipment",
+            "8": "uv-vis supplier",
+            "9": "spectrophotometers",
+            "10": "spectrophotometers equipment",
+            "11": "spectrophotometers supplier",
+            "12": "wuhan ecalbio co., ltd",
+            "13": "wuhan ecalbio co., ltd UAE",
+            "14": "laboratory equipment",
+            "15": "medical equipment",
+            "16": "scientific instruments",
+            "17": "diagnostic tools",
+            "18": "research equipment",
+            "19": "lab supplies",
+            "20": "analytical instruments",
+            "21": "laboratory technology",
+            "22": "Dubai",
+            "23": "UAE",
+            "24": "Middle East",
+            "25": "MaxMed",
+            "26": "laboratory supplier Dubai",
+            "27": "medical equipment UAE",
+            "28": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:42.047747Z",
+            "validThrough": "2026-01-11T08:02:42.047801Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/uv-vis-spectrophotometer-mm-0118-ecalbio-coltd-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/uv-vis-spectrophotometer-mm-0118-ecalbio-coltd-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "uv-vis",
+        "1": "uv-vis Dubai",
+        "2": "uv-vis UAE",
+        "3": "spectrophotometer",
+        "4": "spectrophotometer Dubai",
+        "5": "spectrophotometer UAE",
+        "7": "uv-vis equipment",
+        "8": "uv-vis supplier",
+        "9": "spectrophotometers",
+        "10": "spectrophotometers equipment",
+        "11": "spectrophotometers supplier",
+        "12": "wuhan ecalbio co., ltd",
+        "13": "wuhan ecalbio co., ltd UAE",
+        "14": "laboratory equipment",
+        "15": "medical equipment",
+        "16": "scientific instruments",
+        "17": "diagnostic tools",
+        "18": "research equipment",
+        "19": "lab supplies",
+        "20": "analytical instruments",
+        "21": "laboratory technology",
+        "22": "Dubai",
+        "23": "UAE",
+        "24": "Middle East",
+        "25": "MaxMed",
+        "26": "laboratory supplier Dubai",
+        "27": "medical equipment UAE",
+        "28": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "UV-Vis Spectrophotometers",
+        "manufactured_by": "WUHAN ECALBIO CO., LTD",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "SP-V1000 Spectrophotometer",
+            "SP-UV1000 Spectrophotometer",
+            "SP-V1100 Spectrophotometer",
+            "SP-UV1100 Spectrophotometer",
+            "SP-UV2101 UV-Vis Spectrophotometer"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:42.048434Z"
+}

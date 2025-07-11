@@ -1,0 +1,203 @@
+{
+    "entity_type": "product",
+    "entity_name": "LS-2100 Dry Fluorescence Immunoassay Analyzer (8 channels）",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "LS-2100 uses the advanced method of Time-resolved Fluorescence Immunoassay (TRFIA), for the in-vitro quantitative detection of bio-markers for diabetes, infectious diseases, cardiovascular diseases, sex hormones, gastric diseases, thyroid function, tumors, COVID-19 and other diseases.\r\n\r\nApplication: laboratory, emergency , ICU, clinical laboratory, clinic, ambulance, field rescue and other clinical departments, etc. MaxMed UAE is the leading supplier of Point of Care Testing Platform (POCT) in Dubai and across the United Arab Emirates. We provide professional Point of Care Testing Platform (POCT) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "LS-2100 Dry Fluorescence Immunoassay Analyzer (8 channels）",
+        "description": "LS-2100 uses the advanced method of Time-resolved Fluorescence Immunoassay (TRFIA), for the in-vitro quantitative detection of bio-markers for diabetes, infectious diseases, cardiovascular diseases, sex hormones, gastric diseases, thyroid function, tumors, COVID-19 and other diseases.\r\n\r\nApplication: laboratory, emergency , ICU, clinical laboratory, clinic, ambulance, field rescue and other clinical departments, etc. MaxMed UAE is the leading supplier of Point of Care Testing Platform (POCT) in Dubai and across the United Arab Emirates. We provide professional Point of Care Testing Platform (POCT) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0003"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "lansionbiotech",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Point of Care Testing Platform (POCT)",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "ls-2100",
+            "ls-2100 Dubai",
+            "ls-2100 UAE",
+            "fluorescence",
+            "fluorescence Dubai",
+            "fluorescence UAE",
+            "immunoassay",
+            "immunoassay Dubai",
+            "immunoassay UAE",
+            "analyzer",
+            "analyzer Dubai",
+            "analyzer UAE",
+            "channels）",
+            "channels） Dubai",
+            "channels） UAE",
+            "point",
+            "point equipment",
+            "point supplier",
+            "care",
+            "care equipment",
+            "care supplier",
+            "testing",
+            "testing equipment",
+            "testing supplier",
+            "platform",
+            "platform equipment",
+            "platform supplier",
+            "(poct)",
+            "(poct) equipment",
+            "(poct) supplier",
+            "lansionbiotech",
+            "lansionbiotech UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.450843Z",
+            "validThrough": "2026-01-11T08:02:41.450913Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/ls-2100-dry-fluorescence-immunoassay-analyzer-8-channels-mm-0003-lansionbiotech-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/ls-2100-dry-fluorescence-immunoassay-analyzer-8-channels-mm-0003-lansionbiotech-dubai-uae"
+        }
+    },
+    "keywords": [
+        "ls-2100",
+        "ls-2100 Dubai",
+        "ls-2100 UAE",
+        "fluorescence",
+        "fluorescence Dubai",
+        "fluorescence UAE",
+        "immunoassay",
+        "immunoassay Dubai",
+        "immunoassay UAE",
+        "analyzer",
+        "analyzer Dubai",
+        "analyzer UAE",
+        "channels）",
+        "channels） Dubai",
+        "channels） UAE",
+        "point",
+        "point equipment",
+        "point supplier",
+        "care",
+        "care equipment",
+        "care supplier",
+        "testing",
+        "testing equipment",
+        "testing supplier",
+        "platform",
+        "platform equipment",
+        "platform supplier",
+        "(poct)",
+        "(poct) equipment",
+        "(poct) supplier",
+        "lansionbiotech",
+        "lansionbiotech UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Point of Care Testing Platform (POCT)",
+        "manufactured_by": "lansionbiotech",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "LS-1100 Dry Fluorescence Immunoassay Analyzer (Portable)",
+            "LS-4000 Dry Fluorescence Immunoassay Analyzer(Handheld)",
+            "LA-100 Handheld Coagulation Analyzer",
+            "Coagulation Analyzer Reagents"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.451986Z"
+}

@@ -1,0 +1,178 @@
+{
+    "entity_type": "product",
+    "entity_name": "T-2 toxin Immunoaffinity Column",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "A simple and efficient extraction and purification procedure for T-2 toxin was developed by means of the immunoaffinity column (IAC-SEP® T-2) as a cleanup tool．T-2 toxin content in grain, food, feed, nuts, peanuts, soy sauce, vinegar, chili, pepper, medicinal herbs and wine samples are cleaned up by IAC and determined by HPLC or LC-MS\/MS. It is a fast,simple, safe and highly accurate method for quantitatively measuring T-2 toxin. MaxMed UAE is the leading supplier of Toxin & Hygiene Detection in Dubai and across the United Arab Emirates. We provide professional Toxin & Hygiene Detection with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "T-2 toxin Immunoaffinity Column",
+        "description": "A simple and efficient extraction and purification procedure for T-2 toxin was developed by means of the immunoaffinity column (IAC-SEP® T-2) as a cleanup tool．T-2 toxin content in grain, food, feed, nuts, peanuts, soy sauce, vinegar, chili, pepper, medicinal herbs and wine samples are cleaned up by IAC and determined by HPLC or LC-MS\/MS. It is a fast,simple, safe and highly accurate method for quantitatively measuring T-2 toxin. MaxMed UAE is the leading supplier of Toxin & Hygiene Detection in Dubai and across the United Arab Emirates. We provide professional Toxin & Hygiene Detection with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0091"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "WUHAN ECALBIO CO., LTD",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Toxin & Hygiene Detection",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "toxin",
+            "1": "toxin Dubai",
+            "2": "toxin UAE",
+            "3": "immunoaffinity",
+            "4": "immunoaffinity Dubai",
+            "5": "immunoaffinity UAE",
+            "6": "column",
+            "7": "column Dubai",
+            "8": "column UAE",
+            "10": "toxin equipment",
+            "11": "toxin supplier",
+            "12": "hygiene",
+            "13": "hygiene equipment",
+            "14": "hygiene supplier",
+            "15": "detection",
+            "16": "detection equipment",
+            "17": "detection supplier",
+            "18": "wuhan ecalbio co., ltd",
+            "19": "wuhan ecalbio co., ltd UAE",
+            "20": "laboratory equipment",
+            "21": "medical equipment",
+            "22": "scientific instruments",
+            "23": "diagnostic tools",
+            "24": "research equipment",
+            "25": "lab supplies",
+            "26": "analytical instruments",
+            "27": "laboratory technology",
+            "28": "Dubai",
+            "29": "UAE",
+            "30": "Middle East",
+            "31": "MaxMed",
+            "32": "laboratory supplier Dubai",
+            "33": "medical equipment UAE",
+            "34": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.965462Z",
+            "validThrough": "2026-01-11T08:02:41.965587Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/t-2-toxin-immunoaffinity-column-mm-0091-ecalbio-coltd-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/t-2-toxin-immunoaffinity-column-mm-0091-ecalbio-coltd-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "toxin",
+        "1": "toxin Dubai",
+        "2": "toxin UAE",
+        "3": "immunoaffinity",
+        "4": "immunoaffinity Dubai",
+        "5": "immunoaffinity UAE",
+        "6": "column",
+        "7": "column Dubai",
+        "8": "column UAE",
+        "10": "toxin equipment",
+        "11": "toxin supplier",
+        "12": "hygiene",
+        "13": "hygiene equipment",
+        "14": "hygiene supplier",
+        "15": "detection",
+        "16": "detection equipment",
+        "17": "detection supplier",
+        "18": "wuhan ecalbio co., ltd",
+        "19": "wuhan ecalbio co., ltd UAE",
+        "20": "laboratory equipment",
+        "21": "medical equipment",
+        "22": "scientific instruments",
+        "23": "diagnostic tools",
+        "24": "research equipment",
+        "25": "lab supplies",
+        "26": "analytical instruments",
+        "27": "laboratory technology",
+        "28": "Dubai",
+        "29": "UAE",
+        "30": "Middle East",
+        "31": "MaxMed",
+        "32": "laboratory supplier Dubai",
+        "33": "medical equipment UAE",
+        "34": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Toxin & Hygiene Detection",
+        "manufactured_by": "WUHAN ECALBIO CO., LTD",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Aflatoxin M1 Immunoaffinity Column",
+            "AflatoxinB1 Immunoaffinity Column",
+            "Aflatoxins Immunoaffinity Column",
+            "Zearalenone Immunoaffinity Column",
+            "Fumonisins Immunoaffinity Column"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.966890Z"
+}

@@ -1,0 +1,174 @@
+{
+    "entity_type": "product",
+    "entity_name": "VC100 Vacuum Controller",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Wide range of measurement and control, 1-1,000mbar\r\nTwo control modes available Single-point control and programmed control\r\nStores up to 5 programs, each containing up to 5 steps of programming control\r\nLarge TFT touch screen display control provides easy operation\r\nAll parts in contact with vapor or liquid are made of PTFE, ceramics or other high-performance materials which effectively resists corrosion caused by organic solvents, water, acid and alkali\r\nBuilt-in vent valve can feed inert gas into system equipment\r\nOne-click decompression allows easy installation and dismantling of vacuum system\r\nCan be connected with pump power control for temporary shutdown of pump power supply after reaching stable degree of vacuum for energy conservation and environmental protection. \r\nCan also be operated in the normally open status of pump\r\nReliable and functional design to fulfill essential needs of precise vacuum regulation\r\n\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n6031100300\r\nVacuum setting range\r\n1-1000mbar\r\nControl mode\r\nSingle-point control mode, Programmed control mode\r\nControl program\r\nCan store up to 5 programs, each containing 5-step control (capable to set the degree of vacuum and time)\r\nSetting method\r\nTouch screen setting\r\nDisplay\r\n5'' TFT\r\nSensor overload pressure\r\n1,500mbar\r\nCompatible conditions with vacuum pump\r\nPower of 50Hz vacuum pump ≤400W；Power of 60Hz vacuum pump ≤500W\r\nConnector diameter\r\n8mm\r\nMaterials in contact with vapor\r\nPTFE, PP, silicone and ceramics\r\nPower\r\n600W\r\nVoltage,Frequency\r\n110-240V,50\/60Hz\r\nOverall dimensions [WxDxH]\r\n189x207x193mm\r\nWeight\r\n4.0kg\r\nPermissible ambient temperature\r\n10-40℃\r\nPermissible ambient humidity\r\n≤80% RH\r\nApplications\r\n- MaxMed UAE is the leading supplier of Distillation Systems in Dubai and across the United Arab Emirates. We provide professional Distillation Systems with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "VC100 Vacuum Controller",
+        "description": "Wide range of measurement and control, 1-1,000mbar\r\nTwo control modes available Single-point control and programmed control\r\nStores up to 5 programs, each containing up to 5 steps of programming control\r\nLarge TFT touch screen display control provides easy operation\r\nAll parts in contact with vapor or liquid are made of PTFE, ceramics or other high-performance materials which effectively resists corrosion caused by organic solvents, water, acid and alkali\r\nBuilt-in vent valve can feed inert gas into system equipment\r\nOne-click decompression allows easy installation and dismantling of vacuum system\r\nCan be connected with pump power control for temporary shutdown of pump power supply after reaching stable degree of vacuum for energy conservation and environmental protection. \r\nCan also be operated in the normally open status of pump\r\nReliable and functional design to fulfill essential needs of precise vacuum regulation\r\n\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n6031100300\r\nVacuum setting range\r\n1-1000mbar\r\nControl mode\r\nSingle-point control mode, Programmed control mode\r\nControl program\r\nCan store up to 5 programs, each containing 5-step control (capable to set the degree of vacuum and time)\r\nSetting method\r\nTouch screen setting\r\nDisplay\r\n5'' TFT\r\nSensor overload pressure\r\n1,500mbar\r\nCompatible conditions with vacuum pump\r\nPower of 50Hz vacuum pump ≤400W；Power of 60Hz vacuum pump ≤500W\r\nConnector diameter\r\n8mm\r\nMaterials in contact with vapor\r\nPTFE, PP, silicone and ceramics\r\nPower\r\n600W\r\nVoltage,Frequency\r\n110-240V,50\/60Hz\r\nOverall dimensions [WxDxH]\r\n189x207x193mm\r\nWeight\r\n4.0kg\r\nPermissible ambient temperature\r\n10-40℃\r\nPermissible ambient humidity\r\n≤80% RH\r\nApplications\r\n- MaxMed UAE is the leading supplier of Distillation Systems in Dubai and across the United Arab Emirates. We provide professional Distillation Systems with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0087"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Distillation Systems",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "vc100",
+            "vc100 Dubai",
+            "vc100 UAE",
+            "vacuum",
+            "vacuum Dubai",
+            "vacuum UAE",
+            "controller",
+            "controller Dubai",
+            "controller UAE",
+            "distillation",
+            "distillation equipment",
+            "distillation supplier",
+            "systems",
+            "systems equipment",
+            "systems supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.298456Z",
+            "validThrough": "2026-01-11T08:02:41.298517Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/vc100-vacuum-controller-mw-0087-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/vc100-vacuum-controller-mw-0087-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "vc100",
+        "vc100 Dubai",
+        "vc100 UAE",
+        "vacuum",
+        "vacuum Dubai",
+        "vacuum UAE",
+        "controller",
+        "controller Dubai",
+        "controller UAE",
+        "distillation",
+        "distillation equipment",
+        "distillation supplier",
+        "systems",
+        "systems equipment",
+        "systems supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Distillation Systems",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "RE200- Pro 20L Industrial Digital Rotary Evaporator",
+            "RE100-Pro Digital Rotary Evaporator",
+            "RE100-S LED Digital Rotary Evaporator",
+            "RE500-E Pilot Scale Digital Control Rotary Evaporator",
+            "RE1000-E Pilot Scale Digital Control Rotary Evaporator"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.299276Z"
+}

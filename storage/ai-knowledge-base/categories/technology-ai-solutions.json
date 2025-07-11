@@ -1,0 +1,47 @@
+{
+    "entity_type": "category",
+    "entity_name": "Technology & AI Solutions",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Professional Technology & AI Solutions equipment and supplies available in Dubai, UAE from MaxMed. We specialize in high-quality Technology & AI Solutions for laboratories, hospitals, research institutions, and healthcare facilities across the Middle East. MaxMed UAE is the leading supplier of Technology & AI Solutions in the United Arab Emirates. We serve hospitals, research laboratories, universities, and medical facilities throughout Dubai, Abu Dhabi, Sharjah, and the entire UAE region. Our Technology & AI Solutions products meet international quality standards and come with comprehensive support services including installation, training, and maintenance. Contact MaxMed at +971 55 460 2500 for expert consultation and same-day quotes.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": "CollectionPage",
+        "name": "Technology & AI Solutions",
+        "description": "Professional Technology & AI Solutions equipment and supplies available in Dubai, UAE from MaxMed. We specialize in high-quality Technology & AI Solutions for laboratories, hospitals, research institutions, and healthcare facilities across the Middle East. MaxMed UAE is the leading supplier of Technology & AI Solutions in the United Arab Emirates. We serve hospitals, research laboratories, universities, and medical facilities throughout Dubai, Abu Dhabi, Sharjah, and the entire UAE region. Our Technology & AI Solutions products meet international quality standards and come with comprehensive support services including installation, training, and maintenance. Contact MaxMed at +971 55 460 2500 for expert consultation and same-day quotes.",
+        "url": "http:\/\/localhost\/categories\/technology-ai-solutions",
+        "provider": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "telephone": "+971-55-460-2500",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai"
+            }
+        },
+        "mainEntity": {
+            "@type": "ItemList",
+            "name": "Technology & AI Solutions Products",
+            "description": "Complete range of Technology & AI Solutions available from MaxMed UAE"
+        },
+        "keywords": "technology, technology Dubai, technology UAE, technology equipment, technology supplier, solutions, solutions Dubai, solutions UAE, solutions equipment, solutions supplier, laboratory equipment, medical equipment, scientific instruments, diagnostic tools, research equipment, lab supplies, analytical instruments, laboratory technology, Dubai, UAE, Middle East, MaxMed, laboratory supplier Dubai, medical equipment UAE, scientific equipment Middle East, Technology & AI Solutions, Technology & AI Solutions Dubai, Technology & AI Solutions UAE, Technology & AI Solutions equipment, Technology & AI Solutions supplies, Technology & AI Solutions supplier",
+        "areaServed": {
+            "@type": "Country",
+            "name": "United Arab Emirates"
+        }
+    },
+    "relationships": {
+        "part_of": "MaxMed UAE Product Catalog",
+        "available_from": "MaxMed UAE",
+        "serves_industry": [
+            "Healthcare",
+            "Medical Research",
+            "Pharmaceutical",
+            "Biotechnology"
+        ],
+        "location_coverage": "Dubai, UAE, Middle East"
+    },
+    "product_count": 0,
+    "last_updated": "2025-07-11T08:02:42.071265Z"
+}

@@ -1,0 +1,190 @@
+{
+    "entity_type": "product",
+    "entity_name": "H-FABP and cTnI Combo Rapid Test",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The H-FABP\/Cardiac Troponin I Combo Rapid Test is a rapid chromatographic immunoassay for the qualitative detection of human H-FABP and cardiac Troponin I (cTnI) in whole blood, serum or plasma as an aid in the diagnosis of myocardial infarction (MI).\r\nProduct Features\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Cardiac Markers Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Cardiac Markers Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "H-FABP and cTnI Combo Rapid Test",
+        "description": "The H-FABP\/Cardiac Troponin I Combo Rapid Test is a rapid chromatographic immunoassay for the qualitative detection of human H-FABP and cardiac Troponin I (cTnI) in whole blood, serum or plasma as an aid in the diagnosis of myocardial infarction (MI).\r\nProduct Features\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Cardiac Markers Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Cardiac Markers Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MT-0025"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxTest©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Cardiac Markers Rapid Tests",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "h-fabp",
+            "1": "h-fabp Dubai",
+            "2": "h-fabp UAE",
+            "3": "ctni",
+            "4": "ctni Dubai",
+            "5": "ctni UAE",
+            "6": "combo",
+            "7": "combo Dubai",
+            "8": "combo UAE",
+            "9": "rapid",
+            "10": "rapid Dubai",
+            "11": "rapid UAE",
+            "12": "test",
+            "13": "test Dubai",
+            "14": "test UAE",
+            "15": "cardiac",
+            "16": "cardiac equipment",
+            "17": "cardiac supplier",
+            "18": "markers",
+            "19": "markers equipment",
+            "20": "markers supplier",
+            "22": "rapid equipment",
+            "23": "rapid supplier",
+            "24": "tests",
+            "25": "tests equipment",
+            "26": "tests supplier",
+            "27": "maxtest©",
+            "28": "maxtest© UAE",
+            "29": "laboratory equipment",
+            "30": "medical equipment",
+            "31": "scientific instruments",
+            "32": "diagnostic tools",
+            "33": "research equipment",
+            "34": "lab supplies",
+            "35": "analytical instruments",
+            "36": "laboratory technology",
+            "37": "Dubai",
+            "38": "UAE",
+            "39": "Middle East",
+            "40": "MaxMed",
+            "41": "laboratory supplier Dubai",
+            "42": "medical equipment UAE",
+            "43": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.192246Z",
+            "validThrough": "2026-01-11T08:02:41.192357Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/h-fabp-and-ctni-combo-rapid-test-mt-0025-maxtest-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/h-fabp-and-ctni-combo-rapid-test-mt-0025-maxtest-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "h-fabp",
+        "1": "h-fabp Dubai",
+        "2": "h-fabp UAE",
+        "3": "ctni",
+        "4": "ctni Dubai",
+        "5": "ctni UAE",
+        "6": "combo",
+        "7": "combo Dubai",
+        "8": "combo UAE",
+        "9": "rapid",
+        "10": "rapid Dubai",
+        "11": "rapid UAE",
+        "12": "test",
+        "13": "test Dubai",
+        "14": "test UAE",
+        "15": "cardiac",
+        "16": "cardiac equipment",
+        "17": "cardiac supplier",
+        "18": "markers",
+        "19": "markers equipment",
+        "20": "markers supplier",
+        "22": "rapid equipment",
+        "23": "rapid supplier",
+        "24": "tests",
+        "25": "tests equipment",
+        "26": "tests supplier",
+        "27": "maxtest©",
+        "28": "maxtest© UAE",
+        "29": "laboratory equipment",
+        "30": "medical equipment",
+        "31": "scientific instruments",
+        "32": "diagnostic tools",
+        "33": "research equipment",
+        "34": "lab supplies",
+        "35": "analytical instruments",
+        "36": "laboratory technology",
+        "37": "Dubai",
+        "38": "UAE",
+        "39": "Middle East",
+        "40": "MaxMed",
+        "41": "laboratory supplier Dubai",
+        "42": "medical equipment UAE",
+        "43": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Cardiac Markers Rapid Tests",
+        "manufactured_by": "MaxTest©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": []
+    },
+    "last_updated": "2025-07-11T08:02:41.193549Z"
+}

@@ -1,0 +1,47 @@
+{
+    "entity_type": "category",
+    "entity_name": "Advanced Motion & Scientific Imaging Systems",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Professional Advanced Motion & Scientific Imaging Systems equipment and supplies available in Dubai, UAE from MaxMed. We specialize in high-quality Advanced Motion & Scientific Imaging Systems for laboratories, hospitals, research institutions, and healthcare facilities across the Middle East. MaxMed UAE is the leading supplier of Advanced Motion & Scientific Imaging Systems in the United Arab Emirates. We serve hospitals, research laboratories, universities, and medical facilities throughout Dubai, Abu Dhabi, Sharjah, and the entire UAE region. Our Advanced Motion & Scientific Imaging Systems products meet international quality standards and come with comprehensive support services including installation, training, and maintenance. Contact MaxMed at +971 55 460 2500 for expert consultation and same-day quotes.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": "CollectionPage",
+        "name": "Advanced Motion & Scientific Imaging Systems",
+        "description": "Professional Advanced Motion & Scientific Imaging Systems equipment and supplies available in Dubai, UAE from MaxMed. We specialize in high-quality Advanced Motion & Scientific Imaging Systems for laboratories, hospitals, research institutions, and healthcare facilities across the Middle East. MaxMed UAE is the leading supplier of Advanced Motion & Scientific Imaging Systems in the United Arab Emirates. We serve hospitals, research laboratories, universities, and medical facilities throughout Dubai, Abu Dhabi, Sharjah, and the entire UAE region. Our Advanced Motion & Scientific Imaging Systems products meet international quality standards and come with comprehensive support services including installation, training, and maintenance. Contact MaxMed at +971 55 460 2500 for expert consultation and same-day quotes.",
+        "url": "http:\/\/localhost\/categories\/advanced-motion-scientific-imaging-systems",
+        "provider": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "telephone": "+971-55-460-2500",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai"
+            }
+        },
+        "mainEntity": {
+            "@type": "ItemList",
+            "name": "Advanced Motion & Scientific Imaging Systems Products",
+            "description": "Complete range of Advanced Motion & Scientific Imaging Systems available from MaxMed UAE"
+        },
+        "keywords": "advanced, advanced Dubai, advanced UAE, advanced equipment, advanced supplier, motion, motion Dubai, motion UAE, motion equipment, motion supplier, scientific, scientific Dubai, scientific UAE, scientific equipment, scientific supplier, imaging, imaging Dubai, imaging UAE, imaging equipment, imaging supplier, systems, systems Dubai, systems UAE, systems equipment, systems supplier, laboratory equipment, medical equipment, scientific instruments, diagnostic tools, research equipment, lab supplies, analytical instruments, laboratory technology, Dubai, UAE, Middle East, MaxMed, laboratory supplier Dubai, medical equipment UAE, scientific equipment Middle East, Advanced Motion & Scientific Imaging Systems, Advanced Motion & Scientific Imaging Systems Dubai, Advanced Motion & Scientific Imaging Systems UAE, Advanced Motion & Scientific Imaging Systems equipment, Advanced Motion & Scientific Imaging Systems supplies, Advanced Motion & Scientific Imaging Systems supplier",
+        "areaServed": {
+            "@type": "Country",
+            "name": "United Arab Emirates"
+        }
+    },
+    "relationships": {
+        "part_of": "MaxMed UAE Product Catalog",
+        "available_from": "MaxMed UAE",
+        "serves_industry": [
+            "Healthcare",
+            "Medical Research",
+            "Pharmaceutical",
+            "Biotechnology"
+        ],
+        "location_coverage": "Dubai, UAE, Middle East"
+    },
+    "product_count": 6,
+    "last_updated": "2025-07-11T08:02:42.092154Z"
+}

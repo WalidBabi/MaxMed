@@ -1,0 +1,174 @@
+{
+    "entity_type": "product",
+    "entity_name": "DPC1+ Pocket Tester(Bluetooth)",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Replaceable combined probe design, meeting different applications\r\nMulti-color backlight display, easy to read data in different modes\r\nData reading indicator and automatic data locking when the reading is stable\r\nLow voltage indication ensures timely battery replacement\r\nBuffers solutions: CH, USA, NIST standards are selectable\r\nAuto shut-off time, customized backlight display time\r\nSupplied with standard solution, sample vials and lanyard for convenient field test\r\nDual-control mode with mobile APP connection to achieve powerful data storage\r\nThe mobile APP provides four types of measurement display for different situations, including Graph mode, Table mode, Dial mode, and General mode\r\nProtection class: IP67\r\n\r\nPRODUCT PARAMETERS\r\nParameter\r\npH\/mV.℃ | mV(ORP).℃ | Cond\/TDS\/Sal.\/Res.℃\r\npH Measurement range\r\n(-2.00~16.00) pH\r\npH Resolution\r\n0.1\/0.01\r\npH Accuracy\r\n±0.01pH ±one digit\r\npH Calibration points\r\n1, 2, -3pts automatic\r\npH ATC range\r\n0~60℃ (32~140°F)\r\nORP Measurement range\r\n(-1000.0~+1000.0)mV\r\nORP Resolution\r\n0.1\/1\r\nORP Accuracy\r\n±0.1%F.S ±one digit\r\nConductivity Measurement range\r\n0~19.99mS\/cm, Auto-ranging:0~19.99μS\/cm;20.0~199.9μS\/cm;200~1999μS\/cm;2.00~19.99mS\/cm;TDS:0.0mg\/L~10.0g\/L(TDS factor adjustable);Resistivity:50Ω·cm~20MΩ·cm;Salinity:0~10ppt\r\nConductivity Resolution\r\n0.01\/0.1\/1\r\nConductivity Accuracy\r\n±1.0%F.S ±one digit\r\nTemperature Measurement range\r\n0~60℃(32~140°F)\r\nTemperature Accuracy\r\n±0.2℃\r\nCalibration reminder\r\nYes\r\nSample ID Classification\r\nYes\r\nTiming datalogging\r\nYes\r\nOperation guider\r\nYes\r\nVarious display modes\r\nYes\r\nTest Kit\r\nMeter;Probe:DPC1-S(pre-installed);3.0 mol KCl pH\/ORP soaking solution:10mL,1 bottle;Sample Vials:30mL*4;pH buffer solution:pH4.00\/7.00, 30mL,one for each;4X1.5V AAA alkaline batteries(pre-installed);Lanyard;Hard carrying case(L\/W\/H:28.0X23.0X8.2cm) MaxMed UAE is the leading supplier of Electrochemistry Equipment in Dubai and across the United Arab Emirates. We provide professional Electrochemistry Equipment with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "DPC1+ Pocket Tester(Bluetooth)",
+        "description": "Replaceable combined probe design, meeting different applications\r\nMulti-color backlight display, easy to read data in different modes\r\nData reading indicator and automatic data locking when the reading is stable\r\nLow voltage indication ensures timely battery replacement\r\nBuffers solutions: CH, USA, NIST standards are selectable\r\nAuto shut-off time, customized backlight display time\r\nSupplied with standard solution, sample vials and lanyard for convenient field test\r\nDual-control mode with mobile APP connection to achieve powerful data storage\r\nThe mobile APP provides four types of measurement display for different situations, including Graph mode, Table mode, Dial mode, and General mode\r\nProtection class: IP67\r\n\r\nPRODUCT PARAMETERS\r\nParameter\r\npH\/mV.℃ | mV(ORP).℃ | Cond\/TDS\/Sal.\/Res.℃\r\npH Measurement range\r\n(-2.00~16.00) pH\r\npH Resolution\r\n0.1\/0.01\r\npH Accuracy\r\n±0.01pH ±one digit\r\npH Calibration points\r\n1, 2, -3pts automatic\r\npH ATC range\r\n0~60℃ (32~140°F)\r\nORP Measurement range\r\n(-1000.0~+1000.0)mV\r\nORP Resolution\r\n0.1\/1\r\nORP Accuracy\r\n±0.1%F.S ±one digit\r\nConductivity Measurement range\r\n0~19.99mS\/cm, Auto-ranging:0~19.99μS\/cm;20.0~199.9μS\/cm;200~1999μS\/cm;2.00~19.99mS\/cm;TDS:0.0mg\/L~10.0g\/L(TDS factor adjustable);Resistivity:50Ω·cm~20MΩ·cm;Salinity:0~10ppt\r\nConductivity Resolution\r\n0.01\/0.1\/1\r\nConductivity Accuracy\r\n±1.0%F.S ±one digit\r\nTemperature Measurement range\r\n0~60℃(32~140°F)\r\nTemperature Accuracy\r\n±0.2℃\r\nCalibration reminder\r\nYes\r\nSample ID Classification\r\nYes\r\nTiming datalogging\r\nYes\r\nOperation guider\r\nYes\r\nVarious display modes\r\nYes\r\nTest Kit\r\nMeter;Probe:DPC1-S(pre-installed);3.0 mol KCl pH\/ORP soaking solution:10mL,1 bottle;Sample Vials:30mL*4;pH buffer solution:pH4.00\/7.00, 30mL,one for each;4X1.5V AAA alkaline batteries(pre-installed);Lanyard;Hard carrying case(L\/W\/H:28.0X23.0X8.2cm) MaxMed UAE is the leading supplier of Electrochemistry Equipment in Dubai and across the United Arab Emirates. We provide professional Electrochemistry Equipment with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0073"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Electrochemistry Equipment",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "dpc1+",
+            "dpc1+ Dubai",
+            "dpc1+ UAE",
+            "pocket",
+            "pocket Dubai",
+            "pocket UAE",
+            "tester(bluetooth)",
+            "tester(bluetooth) Dubai",
+            "tester(bluetooth) UAE",
+            "electrochemistry",
+            "electrochemistry equipment",
+            "electrochemistry supplier",
+            "equipment",
+            "equipment equipment",
+            "equipment supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.113619Z",
+            "validThrough": "2026-01-11T08:02:41.113673Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/dpc1-pocket-testerbluetooth-mw-0073-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/dpc1-pocket-testerbluetooth-mw-0073-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "dpc1+",
+        "dpc1+ Dubai",
+        "dpc1+ UAE",
+        "pocket",
+        "pocket Dubai",
+        "pocket UAE",
+        "tester(bluetooth)",
+        "tester(bluetooth) Dubai",
+        "tester(bluetooth) UAE",
+        "electrochemistry",
+        "electrochemistry equipment",
+        "electrochemistry supplier",
+        "equipment",
+        "equipment equipment",
+        "equipment supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Electrochemistry Equipment",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "pH Meter BENCHTOP-Classical series（Single parameter）",
+            "pH, Cond, DO, ATC MeterBENCHTOP-Classical series（Multi parameter）",
+            "pH BENCHTOP - Touch screen（Single parameter）",
+            "BENCHTOP - Touch screen（Multi parameter）",
+            "pH Portable Meter (Single parameter)"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.114872Z"
+}

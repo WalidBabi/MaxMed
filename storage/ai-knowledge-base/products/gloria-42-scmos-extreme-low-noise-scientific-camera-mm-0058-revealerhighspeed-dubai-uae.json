@@ -1,0 +1,208 @@
+{
+    "entity_type": "product",
+    "entity_name": "Gloria 4.2 sCMOS Extreme Low-Noise Scientific Camera",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Revealer Gloria series sCMOs cameras are desiqned with Gpixel’s leading CMOS image sensor, combinedwith backside illumination technology and deep cooling sealing process for QE of up to 95% and extreme lownoise, suitable for life sciences, quantum physics, astronomical observation and semiconductor inspection andothers. lt’s compact design is suitable for integration into the SlM and other optical inspection systems.\r\n\r\nSKUs: Gloria 4.2\r\nSensor type andmodel: sCMOS GpixeI GSENSE2020BSI\r\nResolution: 2048 (H)x 2048 (V)\r\nPixel size: 6.5 μm x 6.5 μm\r\nEffective area: 13.3 mm x 13.3 mm\r\nFull well capacity: 45 000 e-\r\nReadout noise: 1.2 e- @ Low Noise Mode\r\nPeak QE: 95 % @ 560 nm\r\nDynamic range: 90 dB\r\nDSNU: 0.2 e-\r\nPRNU:  MaxMed UAE is the leading supplier of Advanced Motion & Scientific Imaging Systems in Dubai and across the United Arab Emirates. We provide professional Advanced Motion & Scientific Imaging Systems with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Gloria 4.2 sCMOS Extreme Low-Noise Scientific Camera",
+        "description": "Revealer Gloria series sCMOs cameras are desiqned with Gpixel’s leading CMOS image sensor, combinedwith backside illumination technology and deep cooling sealing process for QE of up to 95% and extreme lownoise, suitable for life sciences, quantum physics, astronomical observation and semiconductor inspection andothers. lt’s compact design is suitable for integration into the SlM and other optical inspection systems.\r\n\r\nSKUs: Gloria 4.2\r\nSensor type andmodel: sCMOS GpixeI GSENSE2020BSI\r\nResolution: 2048 (H)x 2048 (V)\r\nPixel size: 6.5 μm x 6.5 μm\r\nEffective area: 13.3 mm x 13.3 mm\r\nFull well capacity: 45 000 e-\r\nReadout noise: 1.2 e- @ Low Noise Mode\r\nPeak QE: 95 % @ 560 nm\r\nDynamic range: 90 dB\r\nDSNU: 0.2 e-\r\nPRNU:  MaxMed UAE is the leading supplier of Advanced Motion & Scientific Imaging Systems in Dubai and across the United Arab Emirates. We provide professional Advanced Motion & Scientific Imaging Systems with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0058"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "RevealerHighSpeed",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Advanced Motion & Scientific Imaging Systems",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "gloria",
+            "1": "gloria Dubai",
+            "2": "gloria UAE",
+            "3": "scmos",
+            "4": "scmos Dubai",
+            "5": "scmos UAE",
+            "6": "extreme",
+            "7": "extreme Dubai",
+            "8": "extreme UAE",
+            "9": "low-noise",
+            "10": "low-noise Dubai",
+            "11": "low-noise UAE",
+            "12": "scientific",
+            "13": "scientific Dubai",
+            "14": "scientific UAE",
+            "15": "camera",
+            "16": "camera Dubai",
+            "17": "camera UAE",
+            "18": "advanced",
+            "19": "advanced equipment",
+            "20": "advanced supplier",
+            "21": "motion",
+            "22": "motion equipment",
+            "23": "motion supplier",
+            "25": "scientific equipment",
+            "26": "scientific supplier",
+            "27": "imaging",
+            "28": "imaging equipment",
+            "29": "imaging supplier",
+            "30": "systems",
+            "31": "systems equipment",
+            "32": "systems supplier",
+            "33": "revealerhighspeed",
+            "34": "revealerhighspeed UAE",
+            "35": "laboratory equipment",
+            "36": "medical equipment",
+            "37": "scientific instruments",
+            "38": "diagnostic tools",
+            "39": "research equipment",
+            "40": "lab supplies",
+            "41": "analytical instruments",
+            "42": "laboratory technology",
+            "43": "Dubai",
+            "44": "UAE",
+            "45": "Middle East",
+            "46": "MaxMed",
+            "47": "laboratory supplier Dubai",
+            "48": "medical equipment UAE",
+            "49": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.848322Z",
+            "validThrough": "2026-01-11T08:02:41.848385Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/gloria-42-scmos-extreme-low-noise-scientific-camera-mm-0058-revealerhighspeed-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/gloria-42-scmos-extreme-low-noise-scientific-camera-mm-0058-revealerhighspeed-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "gloria",
+        "1": "gloria Dubai",
+        "2": "gloria UAE",
+        "3": "scmos",
+        "4": "scmos Dubai",
+        "5": "scmos UAE",
+        "6": "extreme",
+        "7": "extreme Dubai",
+        "8": "extreme UAE",
+        "9": "low-noise",
+        "10": "low-noise Dubai",
+        "11": "low-noise UAE",
+        "12": "scientific",
+        "13": "scientific Dubai",
+        "14": "scientific UAE",
+        "15": "camera",
+        "16": "camera Dubai",
+        "17": "camera UAE",
+        "18": "advanced",
+        "19": "advanced equipment",
+        "20": "advanced supplier",
+        "21": "motion",
+        "22": "motion equipment",
+        "23": "motion supplier",
+        "25": "scientific equipment",
+        "26": "scientific supplier",
+        "27": "imaging",
+        "28": "imaging equipment",
+        "29": "imaging supplier",
+        "30": "systems",
+        "31": "systems equipment",
+        "32": "systems supplier",
+        "33": "revealerhighspeed",
+        "34": "revealerhighspeed UAE",
+        "35": "laboratory equipment",
+        "36": "medical equipment",
+        "37": "scientific instruments",
+        "38": "diagnostic tools",
+        "39": "research equipment",
+        "40": "lab supplies",
+        "41": "analytical instruments",
+        "42": "laboratory technology",
+        "43": "Dubai",
+        "44": "UAE",
+        "45": "Middle East",
+        "46": "MaxMed",
+        "47": "laboratory supplier Dubai",
+        "48": "medical equipment UAE",
+        "49": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Advanced Motion & Scientific Imaging Systems",
+        "manufactured_by": "RevealerHighSpeed",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "S1315 M\/C Ultra High Speed Camera 15,000fps@1280*1024",
+            "M230 M\/C Ultra High Speed Camera 3,000fps@1920×1080",
+            "NEO25 M\/C Ultra High Speed Camera 25,000fps@1280x1024",
+            "G Pro High-Resolution High-Speed Camera 1,000fps@5120×4096",
+            "Digital Imaging Correlation (DIC) Measurement System"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.849125Z"
+}

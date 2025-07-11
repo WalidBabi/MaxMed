@@ -1,0 +1,199 @@
+{
+    "entity_type": "product",
+    "entity_name": "Laboratory Refrigerator(Economic Type) 46L 150L 320L 400L",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Introduction:\r\nThe Laboratory Refrigerator (Economic Type) is a cost-effective cold storage solution designed for laboratories that require reliable temperature control without the high price tag of premium models. MaxMed UAE is the leading supplier of Cold Chain Products in Dubai and across the United Arab Emirates. We provide professional Cold Chain Products with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Laboratory Refrigerator(Economic Type) 46L 150L 320L 400L",
+        "description": "Introduction:\r\nThe Laboratory Refrigerator (Economic Type) is a cost-effective cold storage solution designed for laboratories that require reliable temperature control without the high price tag of premium models. MaxMed UAE is the leading supplier of Cold Chain Products in Dubai and across the United Arab Emirates. We provide professional Cold Chain Products with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0013"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "BIOBASE",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Cold Chain Products",
+        "additionalType": [
+            "https:\/\/schema.org\/Product",
+            "https:\/\/schema.org\/SoftwareApplication"
+        ],
+        "keywords": [
+            "laboratory",
+            "laboratory Dubai",
+            "laboratory UAE",
+            "refrigerator(economic",
+            "refrigerator(economic Dubai",
+            "refrigerator(economic UAE",
+            "type)",
+            "type) Dubai",
+            "type) UAE",
+            "150l",
+            "150l Dubai",
+            "150l UAE",
+            "320l",
+            "320l Dubai",
+            "320l UAE",
+            "400l",
+            "400l Dubai",
+            "400l UAE",
+            "cold",
+            "cold equipment",
+            "cold supplier",
+            "chain",
+            "chain equipment",
+            "chain supplier",
+            "products",
+            "products equipment",
+            "products supplier",
+            "biobase",
+            "biobase UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.614247Z",
+            "validThrough": "2026-01-11T08:02:41.614352Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/laboratory-refrigeratoreconomic-type-46l-150l-320l-400l-mm-0013-biobase-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/laboratory-refrigeratoreconomic-type-46l-150l-320l-400l-mm-0013-biobase-dubai-uae"
+        }
+    },
+    "keywords": [
+        "laboratory",
+        "laboratory Dubai",
+        "laboratory UAE",
+        "refrigerator(economic",
+        "refrigerator(economic Dubai",
+        "refrigerator(economic UAE",
+        "type)",
+        "type) Dubai",
+        "type) UAE",
+        "150l",
+        "150l Dubai",
+        "150l UAE",
+        "320l",
+        "320l Dubai",
+        "320l UAE",
+        "400l",
+        "400l Dubai",
+        "400l UAE",
+        "cold",
+        "cold equipment",
+        "cold supplier",
+        "chain",
+        "chain equipment",
+        "chain supplier",
+        "products",
+        "products equipment",
+        "products supplier",
+        "biobase",
+        "biobase UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Cold Chain Products",
+        "manufactured_by": "BIOBASE",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Chromatography Refrigerator 450L 1000L",
+            "-150℃ Freezer(Economic Type) 138L 226L",
+            "-86℃ Freezer(Economic Type) 90L",
+            "-20\/25℃ Freezer(Economic Type)",
+            "-40℃ Freezer(Economic Type)"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.615845Z"
+}

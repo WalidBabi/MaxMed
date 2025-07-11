@@ -1,0 +1,174 @@
+{
+    "entity_type": "product",
+    "entity_name": "Prestained Protein Ladder",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Prestained Protein Ladder is a prestained mixture of ten recombinant proteins ranging from 10 kDa to 180 kDa. Three different chromophores are bound to the proteins, producing a brightly colored ladder. The protein ladder is conveniently packaged and ready to use with no heating, diluting or additional reducing agent necessary. Lot-to-lot variation of the apparent molecular weight of prestained proteins is ~5 %. MaxMed UAE is the leading supplier of PCR & Molecular Analysis in Dubai and across the United Arab Emirates. We provide professional PCR & Molecular Analysis with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Prestained Protein Ladder",
+        "description": "Prestained Protein Ladder is a prestained mixture of ten recombinant proteins ranging from 10 kDa to 180 kDa. Three different chromophores are bound to the proteins, producing a brightly colored ladder. The protein ladder is conveniently packaged and ready to use with no heating, diluting or additional reducing agent necessary. Lot-to-lot variation of the apparent molecular weight of prestained proteins is ~5 %. MaxMed UAE is the leading supplier of PCR & Molecular Analysis in Dubai and across the United Arab Emirates. We provide professional PCR & Molecular Analysis with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0078"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "WUHAN ECALBIO CO., LTD",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "PCR & Molecular Analysis",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "prestained",
+            "prestained Dubai",
+            "prestained UAE",
+            "protein",
+            "protein Dubai",
+            "protein UAE",
+            "ladder",
+            "ladder Dubai",
+            "ladder UAE",
+            "molecular",
+            "molecular equipment",
+            "molecular supplier",
+            "analysis",
+            "analysis equipment",
+            "analysis supplier",
+            "wuhan ecalbio co., ltd",
+            "wuhan ecalbio co., ltd UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Molecular biology",
+            "DNA analysis",
+            "Gene research",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.920094Z",
+            "validThrough": "2026-01-11T08:02:41.920198Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/prestained-protein-ladder-mm-0078-ecalbio-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/prestained-protein-ladder-mm-0078-ecalbio-dubai-uae"
+        }
+    },
+    "keywords": [
+        "prestained",
+        "prestained Dubai",
+        "prestained UAE",
+        "protein",
+        "protein Dubai",
+        "protein UAE",
+        "ladder",
+        "ladder Dubai",
+        "ladder UAE",
+        "molecular",
+        "molecular equipment",
+        "molecular supplier",
+        "analysis",
+        "analysis equipment",
+        "analysis supplier",
+        "wuhan ecalbio co., ltd",
+        "wuhan ecalbio co., ltd UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "PCR & Molecular Analysis",
+        "manufactured_by": "WUHAN ECALBIO CO., LTD",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "TC1000-S Thermal Cycler Standard",
+            "TC1000-G-Pro Thermal Cycler Gradient",
+            "PC-32 Gradient thermal cycler",
+            "PC-96 Gradient thermal cycler",
+            "PC-96P Gradient thermal cycler"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.921883Z"
+}

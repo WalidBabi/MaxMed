@@ -1,0 +1,189 @@
+{
+    "entity_type": "product",
+    "entity_name": "Methane Sulfonic Acid Cation Exchange Chromatography Columns",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Cation Exchange Chromatography Column The combination of porous PS\/DVB microspheres with unique grafting techniques resultsin a high-capacity carboxylic acid functionalized chromatography packing material, enablingthis column to exhibit excellent separation performance for six common cations, while alsoproviding excellent peakshape for the separation ofother methylamines. MaxMed UAE is the leading supplier of Ion Chromatography(IC) in Dubai and across the United Arab Emirates. We provide professional Ion Chromatography(IC) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Methane Sulfonic Acid Cation Exchange Chromatography Columns",
+        "description": "Cation Exchange Chromatography Column The combination of porous PS\/DVB microspheres with unique grafting techniques resultsin a high-capacity carboxylic acid functionalized chromatography packing material, enablingthis column to exhibit excellent separation performance for six common cations, while alsoproviding excellent peakshape for the separation ofother methylamines. MaxMed UAE is the leading supplier of Ion Chromatography(IC) in Dubai and across the United Arab Emirates. We provide professional Ion Chromatography(IC) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0076"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Ion Chromatography(IC)",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "methane",
+            "methane Dubai",
+            "methane UAE",
+            "sulfonic",
+            "sulfonic Dubai",
+            "sulfonic UAE",
+            "acid",
+            "acid Dubai",
+            "acid UAE",
+            "cation",
+            "cation Dubai",
+            "cation UAE",
+            "exchange",
+            "exchange Dubai",
+            "exchange UAE",
+            "chromatography",
+            "chromatography Dubai",
+            "chromatography UAE",
+            "columns",
+            "columns Dubai",
+            "columns UAE",
+            "chromatography(ic)",
+            "chromatography(ic) equipment",
+            "chromatography(ic) supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.200850Z",
+            "validThrough": "2026-01-11T08:02:41.200912Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/methane-sulfonic-acid-cation-exchange-chromatography-columns-mw-0076-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/methane-sulfonic-acid-cation-exchange-chromatography-columns-mw-0076-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "methane",
+        "methane Dubai",
+        "methane UAE",
+        "sulfonic",
+        "sulfonic Dubai",
+        "sulfonic UAE",
+        "acid",
+        "acid Dubai",
+        "acid UAE",
+        "cation",
+        "cation Dubai",
+        "cation UAE",
+        "exchange",
+        "exchange Dubai",
+        "exchange UAE",
+        "chromatography",
+        "chromatography Dubai",
+        "chromatography UAE",
+        "columns",
+        "columns Dubai",
+        "columns UAE",
+        "chromatography(ic)",
+        "chromatography(ic) equipment",
+        "chromatography(ic) supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Ion Chromatography(IC)",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Hydroxide Anion Exchange Chromatography Columns",
+            "Carbonate Anion Exchange Chromatography Columns"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.201995Z"
+}

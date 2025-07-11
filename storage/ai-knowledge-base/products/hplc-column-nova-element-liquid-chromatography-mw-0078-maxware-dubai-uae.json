@@ -1,0 +1,196 @@
+{
+    "entity_type": "product",
+    "entity_name": "HPLC Column Nova Element Liquid Chromatography",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The Nova Element series is a hybrid particle chromatographic column developed by NovaChrom. It exhibits excellent pH tolerance and stability, achieved through triple bonding technology followed by endcapping, which reduces silanol activity and results in superior peak shapes for basic compounds. With a broad pH range for mobile phases and extended column lifespan, it offers enhanced selectivity for method development. This series is suitable for common liquid chromatography analyses across various industries, including food, traditional Chinese medicine, chemical pharmaceuticals, environmental testing, water quality, and healthcare. MaxMed UAE is the leading supplier of Liquid Chromatograph (HPLC) in Dubai and across the United Arab Emirates. We provide professional Liquid Chromatograph (HPLC) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "HPLC Column Nova Element Liquid Chromatography",
+        "description": "The Nova Element series is a hybrid particle chromatographic column developed by NovaChrom. It exhibits excellent pH tolerance and stability, achieved through triple bonding technology followed by endcapping, which reduces silanol activity and results in superior peak shapes for basic compounds. With a broad pH range for mobile phases and extended column lifespan, it offers enhanced selectivity for method development. This series is suitable for common liquid chromatography analyses across various industries, including food, traditional Chinese medicine, chemical pharmaceuticals, environmental testing, water quality, and healthcare. MaxMed UAE is the leading supplier of Liquid Chromatograph (HPLC) in Dubai and across the United Arab Emirates. We provide professional Liquid Chromatograph (HPLC) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0078"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Liquid Chromatograph (HPLC)",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "hplc",
+            "1": "hplc Dubai",
+            "2": "hplc UAE",
+            "3": "column",
+            "4": "column Dubai",
+            "5": "column UAE",
+            "6": "nova",
+            "7": "nova Dubai",
+            "8": "nova UAE",
+            "9": "element",
+            "10": "element Dubai",
+            "11": "element UAE",
+            "12": "liquid",
+            "13": "liquid Dubai",
+            "14": "liquid UAE",
+            "15": "chromatography",
+            "16": "chromatography Dubai",
+            "17": "chromatography UAE",
+            "19": "liquid equipment",
+            "20": "liquid supplier",
+            "21": "chromatograph",
+            "22": "chromatograph equipment",
+            "23": "chromatograph supplier",
+            "24": "(hplc)",
+            "25": "(hplc) equipment",
+            "26": "(hplc) supplier",
+            "27": "maxware©",
+            "28": "maxware© UAE",
+            "29": "laboratory equipment",
+            "30": "medical equipment",
+            "31": "scientific instruments",
+            "32": "diagnostic tools",
+            "33": "research equipment",
+            "34": "lab supplies",
+            "35": "analytical instruments",
+            "36": "laboratory technology",
+            "37": "Dubai",
+            "38": "UAE",
+            "39": "Middle East",
+            "40": "MaxMed",
+            "41": "laboratory supplier Dubai",
+            "42": "medical equipment UAE",
+            "43": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.206042Z",
+            "validThrough": "2026-01-11T08:02:41.206199Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/hplc-column-nova-element-liquid-chromatography-mw-0078-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/hplc-column-nova-element-liquid-chromatography-mw-0078-maxware-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "hplc",
+        "1": "hplc Dubai",
+        "2": "hplc UAE",
+        "3": "column",
+        "4": "column Dubai",
+        "5": "column UAE",
+        "6": "nova",
+        "7": "nova Dubai",
+        "8": "nova UAE",
+        "9": "element",
+        "10": "element Dubai",
+        "11": "element UAE",
+        "12": "liquid",
+        "13": "liquid Dubai",
+        "14": "liquid UAE",
+        "15": "chromatography",
+        "16": "chromatography Dubai",
+        "17": "chromatography UAE",
+        "19": "liquid equipment",
+        "20": "liquid supplier",
+        "21": "chromatograph",
+        "22": "chromatograph equipment",
+        "23": "chromatograph supplier",
+        "24": "(hplc)",
+        "25": "(hplc) equipment",
+        "26": "(hplc) supplier",
+        "27": "maxware©",
+        "28": "maxware© UAE",
+        "29": "laboratory equipment",
+        "30": "medical equipment",
+        "31": "scientific instruments",
+        "32": "diagnostic tools",
+        "33": "research equipment",
+        "34": "lab supplies",
+        "35": "analytical instruments",
+        "36": "laboratory technology",
+        "37": "Dubai",
+        "38": "UAE",
+        "39": "Middle East",
+        "40": "MaxMed",
+        "41": "laboratory supplier Dubai",
+        "42": "medical equipment UAE",
+        "43": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Liquid Chromatograph (HPLC)",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "HPLC Column Nova Atom Liquid Chromatography",
+            "Liquid Chromatography Columns for Special Industries (HPLC)",
+            "PL aquagel-OH 20",
+            "Sugar KS-802",
+            "Allure Organic Acids"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.207922Z"
+}

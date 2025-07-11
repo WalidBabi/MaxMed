@@ -1,0 +1,168 @@
+{
+    "entity_type": "product",
+    "entity_name": "Mobile Water Aanalyzer",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Blank calibration,automatic measurement, direct reading of concentration.\r\nWith built -in standard curve. MaxMed UAE is the leading supplier of Portable Analyzers in Dubai and across the United Arab Emirates. We provide professional Portable Analyzers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Mobile Water Aanalyzer",
+        "description": "Blank calibration,automatic measurement, direct reading of concentration.\r\nWith built -in standard curve. MaxMed UAE is the leading supplier of Portable Analyzers in Dubai and across the United Arab Emirates. We provide professional Portable Analyzers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0121"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "WUHAN ECALBIO CO., LTD",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Portable Analyzers",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "mobile",
+            "mobile Dubai",
+            "mobile UAE",
+            "water",
+            "water Dubai",
+            "water UAE",
+            "aanalyzer",
+            "aanalyzer Dubai",
+            "aanalyzer UAE",
+            "portable",
+            "portable equipment",
+            "portable supplier",
+            "analyzers",
+            "analyzers equipment",
+            "analyzers supplier",
+            "wuhan ecalbio co., ltd",
+            "wuhan ecalbio co., ltd UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:42.055303Z",
+            "validThrough": "2026-01-11T08:02:42.055416Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/mobile-water-aanalyzer-mm-0121-ecalbio-coltd-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/mobile-water-aanalyzer-mm-0121-ecalbio-coltd-dubai-uae"
+        }
+    },
+    "keywords": [
+        "mobile",
+        "mobile Dubai",
+        "mobile UAE",
+        "water",
+        "water Dubai",
+        "water UAE",
+        "aanalyzer",
+        "aanalyzer Dubai",
+        "aanalyzer UAE",
+        "portable",
+        "portable equipment",
+        "portable supplier",
+        "analyzers",
+        "analyzers equipment",
+        "analyzers supplier",
+        "wuhan ecalbio co., ltd",
+        "wuhan ecalbio co., ltd UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Portable Analyzers",
+        "manufactured_by": "WUHAN ECALBIO CO., LTD",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": []
+    },
+    "last_updated": "2025-07-11T08:02:42.056619Z"
+}
