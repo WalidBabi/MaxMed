@@ -1,0 +1,180 @@
+{
+    "entity_type": "product",
+    "entity_name": "C410 Chemistry-design diapharm pump",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Maximum Vacuum:13mbar\r\n\r\nWork Mode: Continuous Operation\r\n\r\nNozzle Size:8mm, Power: 95W\r\n\r\nMotor speed:1450rpm\r\n\r\nFlow Rate:\r\n\r\nmbar  1000 | 880 | 750 | 600 | 480 | 280\r\n\r\nL\/min   25   |  22  |  20  |  12  |  7.5  |  5\r\n\r\nNoise:50dB\r\n\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n18900389 MaxMed UAE is the leading supplier of Distillation Systems in Dubai and across the United Arab Emirates. We provide professional Distillation Systems with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "C410 Chemistry-design diapharm pump",
+        "description": "Maximum Vacuum:13mbar\r\n\r\nWork Mode: Continuous Operation\r\n\r\nNozzle Size:8mm, Power: 95W\r\n\r\nMotor speed:1450rpm\r\n\r\nFlow Rate:\r\n\r\nmbar  1000 | 880 | 750 | 600 | 480 | 280\r\n\r\nL\/min   25   |  22  |  20  |  12  |  7.5  |  5\r\n\r\nNoise:50dB\r\n\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n18900389 MaxMed UAE is the leading supplier of Distillation Systems in Dubai and across the United Arab Emirates. We provide professional Distillation Systems with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0088"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Distillation Systems",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "c410",
+            "c410 Dubai",
+            "c410 UAE",
+            "chemistry-design",
+            "chemistry-design Dubai",
+            "chemistry-design UAE",
+            "diapharm",
+            "diapharm Dubai",
+            "diapharm UAE",
+            "pump",
+            "pump Dubai",
+            "pump UAE",
+            "distillation",
+            "distillation equipment",
+            "distillation supplier",
+            "systems",
+            "systems equipment",
+            "systems supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.300587Z",
+            "validThrough": "2026-01-11T08:02:41.300637Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/c410-chemistry-design-diapharm-pump-mw-0088-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/c410-chemistry-design-diapharm-pump-mw-0088-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "c410",
+        "c410 Dubai",
+        "c410 UAE",
+        "chemistry-design",
+        "chemistry-design Dubai",
+        "chemistry-design UAE",
+        "diapharm",
+        "diapharm Dubai",
+        "diapharm UAE",
+        "pump",
+        "pump Dubai",
+        "pump UAE",
+        "distillation",
+        "distillation equipment",
+        "distillation supplier",
+        "systems",
+        "systems equipment",
+        "systems supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Distillation Systems",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "RE200- Pro 20L Industrial Digital Rotary Evaporator",
+            "RE100-Pro Digital Rotary Evaporator",
+            "RE100-S LED Digital Rotary Evaporator",
+            "RE500-E Pilot Scale Digital Control Rotary Evaporator",
+            "RE1000-E Pilot Scale Digital Control Rotary Evaporator"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.302030Z"
+}

@@ -1,0 +1,190 @@
+{
+    "entity_type": "product",
+    "entity_name": "Chagas Rapid Test (WB\/S\/P)",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The Chagas Rapid Test is a lateral flow chromatographic immunoassay for the qualitative detection of IgG anti-Trypanosoma cruzi (T. cruzi) in human serum, plasma or whole blood. It is intended to be used as a screening test and as an aid in the diagnosis of infection with T. cruzi. Any reactive specimen with the Chagas Rapid Test must be confirmed with alternative testing method (s) and clinical findings.\r\n\r\nProduct Features\r\n\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Infectious Disease Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Infectious Disease Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Chagas Rapid Test (WB\/S\/P)",
+        "description": "The Chagas Rapid Test is a lateral flow chromatographic immunoassay for the qualitative detection of IgG anti-Trypanosoma cruzi (T. cruzi) in human serum, plasma or whole blood. It is intended to be used as a screening test and as an aid in the diagnosis of infection with T. cruzi. Any reactive specimen with the Chagas Rapid Test must be confirmed with alternative testing method (s) and clinical findings.\r\n\r\nProduct Features\r\n\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Infectious Disease Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Infectious Disease Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MT-0083"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxTest©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Infectious Disease Rapid Tests",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "chagas",
+            "1": "chagas Dubai",
+            "2": "chagas UAE",
+            "3": "rapid",
+            "4": "rapid Dubai",
+            "5": "rapid UAE",
+            "6": "test",
+            "7": "test Dubai",
+            "8": "test UAE",
+            "9": "(wb\/s\/p)",
+            "10": "(wb\/s\/p) Dubai",
+            "11": "(wb\/s\/p) UAE",
+            "12": "infectious",
+            "13": "infectious equipment",
+            "14": "infectious supplier",
+            "15": "disease",
+            "16": "disease equipment",
+            "17": "disease supplier",
+            "19": "rapid equipment",
+            "20": "rapid supplier",
+            "21": "tests",
+            "22": "tests equipment",
+            "23": "tests supplier",
+            "24": "maxtest©",
+            "25": "maxtest© UAE",
+            "26": "laboratory equipment",
+            "27": "medical equipment",
+            "28": "scientific instruments",
+            "29": "diagnostic tools",
+            "30": "research equipment",
+            "31": "lab supplies",
+            "32": "analytical instruments",
+            "33": "laboratory technology",
+            "34": "Dubai",
+            "35": "UAE",
+            "36": "Middle East",
+            "37": "MaxMed",
+            "38": "laboratory supplier Dubai",
+            "39": "medical equipment UAE",
+            "40": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.410261Z",
+            "validThrough": "2026-01-11T08:02:41.410375Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/chagas-rapid-test-wbsp-mt-0083-maxtest-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/chagas-rapid-test-wbsp-mt-0083-maxtest-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "chagas",
+        "1": "chagas Dubai",
+        "2": "chagas UAE",
+        "3": "rapid",
+        "4": "rapid Dubai",
+        "5": "rapid UAE",
+        "6": "test",
+        "7": "test Dubai",
+        "8": "test UAE",
+        "9": "(wb\/s\/p)",
+        "10": "(wb\/s\/p) Dubai",
+        "11": "(wb\/s\/p) UAE",
+        "12": "infectious",
+        "13": "infectious equipment",
+        "14": "infectious supplier",
+        "15": "disease",
+        "16": "disease equipment",
+        "17": "disease supplier",
+        "19": "rapid equipment",
+        "20": "rapid supplier",
+        "21": "tests",
+        "22": "tests equipment",
+        "23": "tests supplier",
+        "24": "maxtest©",
+        "25": "maxtest© UAE",
+        "26": "laboratory equipment",
+        "27": "medical equipment",
+        "28": "scientific instruments",
+        "29": "diagnostic tools",
+        "30": "research equipment",
+        "31": "lab supplies",
+        "32": "analytical instruments",
+        "33": "laboratory technology",
+        "34": "Dubai",
+        "35": "UAE",
+        "36": "Middle East",
+        "37": "MaxMed",
+        "38": "laboratory supplier Dubai",
+        "39": "medical equipment UAE",
+        "40": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Infectious Disease Rapid Tests",
+        "manufactured_by": "MaxTest©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Respiratory Infectious Diseases Rapid Test (Adeno\/HPIV\/RSV\/COVID-19\/MP\/RhV\/Flu B\/Flu A\/HMPV)",
+            "Respiratory Infectious Diseases Rapid Test (RhV)",
+            "Respiratory Infectious Diseases Rapid Test (HMPV)",
+            "Respiratory Infectious Diseases Rapid Test (HPIV)",
+            "Respiratory Infectious Diseases Rapid Test (Influenza A+B)"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.411455Z"
+}

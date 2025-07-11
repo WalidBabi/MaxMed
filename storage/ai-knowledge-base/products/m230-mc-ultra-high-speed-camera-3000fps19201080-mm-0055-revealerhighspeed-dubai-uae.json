@@ -1,0 +1,210 @@
+{
+    "entity_type": "product",
+    "entity_name": "M230 M\/C Ultra High Speed Camera 3,000fps@1920×1080",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The large memory and small size series high-speed camera is a miniature high-speed camera built by Revealer for experiments in various fields of science, enterprise research and development, fault location of equipment in industrial production lines, and observation of sea and air engineering, and it realizes terabyte-level mass storage through the comprehensive reconstruction of circuitry, structure, interfaces, appearance, and protection.\r\n\r\nSensor type: CMOS\r\nMax. Resolution: 1920×1080\r\nISO: 25000（M），8000（C）\r\nElectronic Shutter: Global Shutter\r\nMini. Exposure Time: 100ns\r\nSupport Automatic Exposure\r\nSupport Extreme Dynamic Range\r\nSSD Storage: 64GB\/256GB\/512GB\/1TB\/2TB\r\nLen Mount: F, C, EF: \r\nSize W*H*D Black: 75×75×97mm\r\nWhite: 98×98×98mm\r\nWeight: Black：≤820g White：≤1210g\r\n\r\nExtreme construction dimensions\r\nLarge memory, no data loss\r\nMovie grade quality\r\nSupport Offline use\r\nEDR double exposure\r\nB-code Alignment\r\nFlexible Lens Interface\r\nAnti-shock, anti-vibration, high and low temperature working conditions\r\nEfficient and easy-to-use RCC acquisition software MaxMed UAE is the leading supplier of Advanced Motion & Scientific Imaging Systems in Dubai and across the United Arab Emirates. We provide professional Advanced Motion & Scientific Imaging Systems with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "M230 M\/C Ultra High Speed Camera 3,000fps@1920×1080",
+        "description": "The large memory and small size series high-speed camera is a miniature high-speed camera built by Revealer for experiments in various fields of science, enterprise research and development, fault location of equipment in industrial production lines, and observation of sea and air engineering, and it realizes terabyte-level mass storage through the comprehensive reconstruction of circuitry, structure, interfaces, appearance, and protection.\r\n\r\nSensor type: CMOS\r\nMax. Resolution: 1920×1080\r\nISO: 25000（M），8000（C）\r\nElectronic Shutter: Global Shutter\r\nMini. Exposure Time: 100ns\r\nSupport Automatic Exposure\r\nSupport Extreme Dynamic Range\r\nSSD Storage: 64GB\/256GB\/512GB\/1TB\/2TB\r\nLen Mount: F, C, EF: \r\nSize W*H*D Black: 75×75×97mm\r\nWhite: 98×98×98mm\r\nWeight: Black：≤820g White：≤1210g\r\n\r\nExtreme construction dimensions\r\nLarge memory, no data loss\r\nMovie grade quality\r\nSupport Offline use\r\nEDR double exposure\r\nB-code Alignment\r\nFlexible Lens Interface\r\nAnti-shock, anti-vibration, high and low temperature working conditions\r\nEfficient and easy-to-use RCC acquisition software MaxMed UAE is the leading supplier of Advanced Motion & Scientific Imaging Systems in Dubai and across the United Arab Emirates. We provide professional Advanced Motion & Scientific Imaging Systems with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0055"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "RevealerHighSpeed",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Advanced Motion & Scientific Imaging Systems",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "m230",
+            "m230 Dubai",
+            "m230 UAE",
+            "ultra",
+            "ultra Dubai",
+            "ultra UAE",
+            "high",
+            "high Dubai",
+            "high UAE",
+            "speed",
+            "speed Dubai",
+            "speed UAE",
+            "camera",
+            "camera Dubai",
+            "camera UAE",
+            "3,000fps@1920×1080",
+            "3,000fps@1920×1080 Dubai",
+            "3,000fps@1920×1080 UAE",
+            "advanced",
+            "advanced equipment",
+            "advanced supplier",
+            "motion",
+            "motion equipment",
+            "motion supplier",
+            "scientific",
+            "scientific equipment",
+            "scientific supplier",
+            "imaging",
+            "imaging equipment",
+            "imaging supplier",
+            "systems",
+            "systems equipment",
+            "systems supplier",
+            "revealerhighspeed",
+            "revealerhighspeed UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.840089Z",
+            "validThrough": "2026-01-11T08:02:41.840158Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/m230-mc-ultra-high-speed-camera-3000fps19201080-mm-0055-revealerhighspeed-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/m230-mc-ultra-high-speed-camera-3000fps19201080-mm-0055-revealerhighspeed-dubai-uae"
+        }
+    },
+    "keywords": [
+        "m230",
+        "m230 Dubai",
+        "m230 UAE",
+        "ultra",
+        "ultra Dubai",
+        "ultra UAE",
+        "high",
+        "high Dubai",
+        "high UAE",
+        "speed",
+        "speed Dubai",
+        "speed UAE",
+        "camera",
+        "camera Dubai",
+        "camera UAE",
+        "3,000fps@1920×1080",
+        "3,000fps@1920×1080 Dubai",
+        "3,000fps@1920×1080 UAE",
+        "advanced",
+        "advanced equipment",
+        "advanced supplier",
+        "motion",
+        "motion equipment",
+        "motion supplier",
+        "scientific",
+        "scientific equipment",
+        "scientific supplier",
+        "imaging",
+        "imaging equipment",
+        "imaging supplier",
+        "systems",
+        "systems equipment",
+        "systems supplier",
+        "revealerhighspeed",
+        "revealerhighspeed UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Advanced Motion & Scientific Imaging Systems",
+        "manufactured_by": "RevealerHighSpeed",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "S1315 M\/C Ultra High Speed Camera 15,000fps@1280*1024",
+            "NEO25 M\/C Ultra High Speed Camera 25,000fps@1280x1024",
+            "G Pro High-Resolution High-Speed Camera 1,000fps@5120×4096",
+            "Gloria 4.2 sCMOS Extreme Low-Noise Scientific Camera",
+            "Digital Imaging Correlation (DIC) Measurement System"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.840903Z"
+}

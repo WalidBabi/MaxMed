@@ -1,0 +1,176 @@
+{
+    "entity_type": "product",
+    "entity_name": "ALP Rapid Test Strip",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Alkaline Phosphatase (ALP) is an enzyme naturally present in all raw milks, which is used as\r\n an indicator of proper milk pasteurization. Complete pasteurization will inactivate the enzyme\r\n to below levels which are detectable by conventional methods. Because the heat stability of\r\n ALP is greater than that of pathogens which may be present in milk, the enzyme serves as an\r\n indicator of product safety. However, the failure to detect ALP activity does not guarantee that\r\n the product is pathogen free. The current ALP rapid test kit is based on chemical reaction of\r\n ALP with its substrate to detect ALP activity in pasteurized milk. It is specific and accurate. MaxMed UAE is the leading supplier of Food Test Kits in Dubai and across the United Arab Emirates. We provide professional Food Test Kits with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "ALP Rapid Test Strip",
+        "description": "Alkaline Phosphatase (ALP) is an enzyme naturally present in all raw milks, which is used as\r\n an indicator of proper milk pasteurization. Complete pasteurization will inactivate the enzyme\r\n to below levels which are detectable by conventional methods. Because the heat stability of\r\n ALP is greater than that of pathogens which may be present in milk, the enzyme serves as an\r\n indicator of product safety. However, the failure to detect ALP activity does not guarantee that\r\n the product is pathogen free. The current ALP rapid test kit is based on chemical reaction of\r\n ALP with its substrate to detect ALP activity in pasteurized milk. It is specific and accurate. MaxMed UAE is the leading supplier of Food Test Kits in Dubai and across the United Arab Emirates. We provide professional Food Test Kits with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MT-0123"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxTest©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Food Test Kits",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "rapid",
+            "1": "rapid Dubai",
+            "2": "rapid UAE",
+            "3": "test",
+            "4": "test Dubai",
+            "5": "test UAE",
+            "6": "strip",
+            "7": "strip Dubai",
+            "8": "strip UAE",
+            "9": "food",
+            "10": "food equipment",
+            "11": "food supplier",
+            "13": "test equipment",
+            "14": "test supplier",
+            "15": "kits",
+            "16": "kits equipment",
+            "17": "kits supplier",
+            "18": "maxtest©",
+            "19": "maxtest© UAE",
+            "20": "laboratory equipment",
+            "21": "medical equipment",
+            "22": "scientific instruments",
+            "23": "diagnostic tools",
+            "24": "research equipment",
+            "25": "lab supplies",
+            "26": "analytical instruments",
+            "27": "laboratory technology",
+            "28": "Dubai",
+            "29": "UAE",
+            "30": "Middle East",
+            "31": "MaxMed",
+            "32": "laboratory supplier Dubai",
+            "33": "medical equipment UAE",
+            "34": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "385.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.806087Z",
+            "validThrough": "2026-01-11T08:02:41.806142Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/alp-rapid-test-strip-mt-0123-maxtest-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/alp-rapid-test-strip-mt-0123-maxtest-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "rapid",
+        "1": "rapid Dubai",
+        "2": "rapid UAE",
+        "3": "test",
+        "4": "test Dubai",
+        "5": "test UAE",
+        "6": "strip",
+        "7": "strip Dubai",
+        "8": "strip UAE",
+        "9": "food",
+        "10": "food equipment",
+        "11": "food supplier",
+        "13": "test equipment",
+        "14": "test supplier",
+        "15": "kits",
+        "16": "kits equipment",
+        "17": "kits supplier",
+        "18": "maxtest©",
+        "19": "maxtest© UAE",
+        "20": "laboratory equipment",
+        "21": "medical equipment",
+        "22": "scientific instruments",
+        "23": "diagnostic tools",
+        "24": "research equipment",
+        "25": "lab supplies",
+        "26": "analytical instruments",
+        "27": "laboratory technology",
+        "28": "Dubai",
+        "29": "UAE",
+        "30": "Middle East",
+        "31": "MaxMed",
+        "32": "laboratory supplier Dubai",
+        "33": "medical equipment UAE",
+        "34": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Food Test Kits",
+        "manufactured_by": "MaxTest©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Melamine Rapid Test Kit",
+            "Aflatoxin M1 Rapid Test Kit 0.05ppb",
+            "Halal Food Test Kit"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.808085Z"
+}

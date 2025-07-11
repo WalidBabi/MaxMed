@@ -1,0 +1,184 @@
+{
+    "entity_type": "product",
+    "entity_name": "Strep B Rapid Test",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The Strep B Rapid Test is for the qualitative, presumptive detection of Group B Streptococcus (GBS) antigens in specimens taken from vaginal or rectal swabs of pregnant women, or general swabs from newborn. This kit is intended for use as an aid in the diagnosis of Strep B infection.\r\nProduct Features\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Women's Health Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Women's Health Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Strep B Rapid Test",
+        "description": "The Strep B Rapid Test is for the qualitative, presumptive detection of Group B Streptococcus (GBS) antigens in specimens taken from vaginal or rectal swabs of pregnant women, or general swabs from newborn. This kit is intended for use as an aid in the diagnosis of Strep B infection.\r\nProduct Features\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Women's Health Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Women's Health Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MT-0016"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxTest©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Women's Health Rapid Tests",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "strep",
+            "1": "strep Dubai",
+            "2": "strep UAE",
+            "3": "rapid",
+            "4": "rapid Dubai",
+            "5": "rapid UAE",
+            "6": "test",
+            "7": "test Dubai",
+            "8": "test UAE",
+            "9": "women's",
+            "10": "women's equipment",
+            "11": "women's supplier",
+            "12": "health",
+            "13": "health equipment",
+            "14": "health supplier",
+            "16": "rapid equipment",
+            "17": "rapid supplier",
+            "18": "tests",
+            "19": "tests equipment",
+            "20": "tests supplier",
+            "21": "maxtest©",
+            "22": "maxtest© UAE",
+            "23": "laboratory equipment",
+            "24": "medical equipment",
+            "25": "scientific instruments",
+            "26": "diagnostic tools",
+            "27": "research equipment",
+            "28": "lab supplies",
+            "29": "analytical instruments",
+            "30": "laboratory technology",
+            "31": "Dubai",
+            "32": "UAE",
+            "33": "Middle East",
+            "34": "MaxMed",
+            "35": "laboratory supplier Dubai",
+            "36": "medical equipment UAE",
+            "37": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.166373Z",
+            "validThrough": "2026-01-11T08:02:41.166457Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/strep-b-rapid-test-mt-0016-maxtest-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/strep-b-rapid-test-mt-0016-maxtest-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "strep",
+        "1": "strep Dubai",
+        "2": "strep UAE",
+        "3": "rapid",
+        "4": "rapid Dubai",
+        "5": "rapid UAE",
+        "6": "test",
+        "7": "test Dubai",
+        "8": "test UAE",
+        "9": "women's",
+        "10": "women's equipment",
+        "11": "women's supplier",
+        "12": "health",
+        "13": "health equipment",
+        "14": "health supplier",
+        "16": "rapid equipment",
+        "17": "rapid supplier",
+        "18": "tests",
+        "19": "tests equipment",
+        "20": "tests supplier",
+        "21": "maxtest©",
+        "22": "maxtest© UAE",
+        "23": "laboratory equipment",
+        "24": "medical equipment",
+        "25": "scientific instruments",
+        "26": "diagnostic tools",
+        "27": "research equipment",
+        "28": "lab supplies",
+        "29": "analytical instruments",
+        "30": "laboratory technology",
+        "31": "Dubai",
+        "32": "UAE",
+        "33": "Middle East",
+        "34": "MaxMed",
+        "35": "laboratory supplier Dubai",
+        "36": "medical equipment UAE",
+        "37": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Women's Health Rapid Tests",
+        "manufactured_by": "MaxTest©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Pregnancy (hCG) Rapid Test （Urine）",
+            "Pregnancy (hCG) Rapid Test （S\/P\/U）",
+            "Pregnancy (hCG) Rapid Test （WB\/S\/P）",
+            "Ovulation (LH) Rapid Test",
+            "Follicle-Stimulating Hormone (FSH) Rapid Test"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.167459Z"
+}

@@ -1,0 +1,196 @@
+{
+    "entity_type": "product",
+    "entity_name": "Dengue\/Zika\/Chikungunya Combo Rapid Test Cassette",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The Dengue\/Zika\/Chikungunya Combo Rapid Test Cassette (Whole Blood\/Serum\/Plasma) is a rapid chromatographic immunoassay for the qualitative detection of antibodies to Dengue virus, Zika, Chikungunya virus in human whole blood, serum or plasma.\r\n\r\nProduct Features\r\n\r\nHigh Accuracy \r\n\r\nConvenient Operation\r\n\r\nFast Results in 10 Minutes\r\n\r\nClear Visual Interpretation MaxMed UAE is the leading supplier of Infectious Disease Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Infectious Disease Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Dengue\/Zika\/Chikungunya Combo Rapid Test Cassette",
+        "description": "The Dengue\/Zika\/Chikungunya Combo Rapid Test Cassette (Whole Blood\/Serum\/Plasma) is a rapid chromatographic immunoassay for the qualitative detection of antibodies to Dengue virus, Zika, Chikungunya virus in human whole blood, serum or plasma.\r\n\r\nProduct Features\r\n\r\nHigh Accuracy \r\n\r\nConvenient Operation\r\n\r\nFast Results in 10 Minutes\r\n\r\nClear Visual Interpretation MaxMed UAE is the leading supplier of Infectious Disease Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Infectious Disease Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MT-0052"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxTest©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Infectious Disease Rapid Tests",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "dengue\/zika\/chikungunya",
+            "1": "dengue\/zika\/chikungunya Dubai",
+            "2": "dengue\/zika\/chikungunya UAE",
+            "3": "combo",
+            "4": "combo Dubai",
+            "5": "combo UAE",
+            "6": "rapid",
+            "7": "rapid Dubai",
+            "8": "rapid UAE",
+            "9": "test",
+            "10": "test Dubai",
+            "11": "test UAE",
+            "12": "cassette",
+            "13": "cassette Dubai",
+            "14": "cassette UAE",
+            "15": "infectious",
+            "16": "infectious equipment",
+            "17": "infectious supplier",
+            "18": "disease",
+            "19": "disease equipment",
+            "20": "disease supplier",
+            "22": "rapid equipment",
+            "23": "rapid supplier",
+            "24": "tests",
+            "25": "tests equipment",
+            "26": "tests supplier",
+            "27": "maxtest©",
+            "28": "maxtest© UAE",
+            "29": "laboratory equipment",
+            "30": "medical equipment",
+            "31": "scientific instruments",
+            "32": "diagnostic tools",
+            "33": "research equipment",
+            "34": "lab supplies",
+            "35": "analytical instruments",
+            "36": "laboratory technology",
+            "37": "Dubai",
+            "38": "UAE",
+            "39": "Middle East",
+            "40": "MaxMed",
+            "41": "laboratory supplier Dubai",
+            "42": "medical equipment UAE",
+            "43": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.319652Z",
+            "validThrough": "2026-01-11T08:02:41.319772Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/denguezikachikungunya-combo-rapid-test-cassette-mt-0052-maxtest-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/denguezikachikungunya-combo-rapid-test-cassette-mt-0052-maxtest-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "dengue\/zika\/chikungunya",
+        "1": "dengue\/zika\/chikungunya Dubai",
+        "2": "dengue\/zika\/chikungunya UAE",
+        "3": "combo",
+        "4": "combo Dubai",
+        "5": "combo UAE",
+        "6": "rapid",
+        "7": "rapid Dubai",
+        "8": "rapid UAE",
+        "9": "test",
+        "10": "test Dubai",
+        "11": "test UAE",
+        "12": "cassette",
+        "13": "cassette Dubai",
+        "14": "cassette UAE",
+        "15": "infectious",
+        "16": "infectious equipment",
+        "17": "infectious supplier",
+        "18": "disease",
+        "19": "disease equipment",
+        "20": "disease supplier",
+        "22": "rapid equipment",
+        "23": "rapid supplier",
+        "24": "tests",
+        "25": "tests equipment",
+        "26": "tests supplier",
+        "27": "maxtest©",
+        "28": "maxtest© UAE",
+        "29": "laboratory equipment",
+        "30": "medical equipment",
+        "31": "scientific instruments",
+        "32": "diagnostic tools",
+        "33": "research equipment",
+        "34": "lab supplies",
+        "35": "analytical instruments",
+        "36": "laboratory technology",
+        "37": "Dubai",
+        "38": "UAE",
+        "39": "Middle East",
+        "40": "MaxMed",
+        "41": "laboratory supplier Dubai",
+        "42": "medical equipment UAE",
+        "43": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Infectious Disease Rapid Tests",
+        "manufactured_by": "MaxTest©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Respiratory Infectious Diseases Rapid Test (Adeno\/HPIV\/RSV\/COVID-19\/MP\/RhV\/Flu B\/Flu A\/HMPV)",
+            "Respiratory Infectious Diseases Rapid Test (RhV)",
+            "Respiratory Infectious Diseases Rapid Test (HMPV)",
+            "Respiratory Infectious Diseases Rapid Test (HPIV)",
+            "Respiratory Infectious Diseases Rapid Test (Influenza A+B)"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.320509Z"
+}

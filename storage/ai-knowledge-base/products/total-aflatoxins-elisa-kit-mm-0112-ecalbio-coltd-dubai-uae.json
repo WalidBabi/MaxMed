@@ -1,0 +1,174 @@
+{
+    "entity_type": "product",
+    "entity_name": "Total Aflatoxins ELISA Kit",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Total Aflatoxins ELISA Test Kit is a competitive enzyme immunoassay for the quantitative analysis of Aflatoxin B1,B2,G1,G2,M1,M2 in cereal grains and feed , etc.\r\n\r\n Sensitivity : 0.025ppb     \r\nDetect time: Approx. 75 min\r\n Detection limit:\r\n Grains...........................2.0ppb\r\n Feed.............................1.0ppb\r\n Oil................................ 2.0ppb\r\n Milk..............................0.5ppb MaxMed UAE is the leading supplier of Chemical & Reagents in Dubai and across the United Arab Emirates. We provide professional Chemical & Reagents with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Total Aflatoxins ELISA Kit",
+        "description": "Total Aflatoxins ELISA Test Kit is a competitive enzyme immunoassay for the quantitative analysis of Aflatoxin B1,B2,G1,G2,M1,M2 in cereal grains and feed , etc.\r\n\r\n Sensitivity : 0.025ppb     \r\nDetect time: Approx. 75 min\r\n Detection limit:\r\n Grains...........................2.0ppb\r\n Feed.............................1.0ppb\r\n Oil................................ 2.0ppb\r\n Milk..............................0.5ppb MaxMed UAE is the leading supplier of Chemical & Reagents in Dubai and across the United Arab Emirates. We provide professional Chemical & Reagents with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0112"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "WUHAN ECALBIO CO., LTD",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Chemical & Reagents",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "total",
+            "total Dubai",
+            "total UAE",
+            "aflatoxins",
+            "aflatoxins Dubai",
+            "aflatoxins UAE",
+            "elisa",
+            "elisa Dubai",
+            "elisa UAE",
+            "chemical",
+            "chemical equipment",
+            "chemical supplier",
+            "reagents",
+            "reagents equipment",
+            "reagents supplier",
+            "wuhan ecalbio co., ltd",
+            "wuhan ecalbio co., ltd UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:42.031254Z",
+            "validThrough": "2026-01-11T08:02:42.031339Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/total-aflatoxins-elisa-kit-mm-0112-ecalbio-coltd-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/total-aflatoxins-elisa-kit-mm-0112-ecalbio-coltd-dubai-uae"
+        }
+    },
+    "keywords": [
+        "total",
+        "total Dubai",
+        "total UAE",
+        "aflatoxins",
+        "aflatoxins Dubai",
+        "aflatoxins UAE",
+        "elisa",
+        "elisa Dubai",
+        "elisa UAE",
+        "chemical",
+        "chemical equipment",
+        "chemical supplier",
+        "reagents",
+        "reagents equipment",
+        "reagents supplier",
+        "wuhan ecalbio co., ltd",
+        "wuhan ecalbio co., ltd UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Chemical & Reagents",
+        "manufactured_by": "WUHAN ECALBIO CO., LTD",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "AflatoxinB1 Standard Substance",
+            "Aflatoxin Total in Acetonitrile",
+            "Deoxynivalenol Standard Substance",
+            "Ochratoxin A Standard Substance",
+            "Microcystin-LR Standard Substance"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:42.032832Z"
+}

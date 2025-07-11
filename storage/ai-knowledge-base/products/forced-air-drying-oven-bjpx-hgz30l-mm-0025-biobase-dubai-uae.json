@@ -1,0 +1,180 @@
+{
+    "entity_type": "product",
+    "entity_name": "Forced Air Drying Oven BJPX-HGZ30L",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Introduction:\r\nThis product is used for drying, disinfection, wax melting and sterilization of non-flammable and explosive items and non-volatile items. For example, drying of experimental samples, food, glassware, thermal hardening, thermal denaturation, thermal softening, and moisture removal of chemical substances; dry heat sterilization of utensils and utensils in bioengineering; aging and drying of electronic components. Widely used in enterprises, scientific research, food processing, medical units and various laboratories, etc.\r\n\r\nFeatures：\r\n\r\n1. Structure design\r\n\r\n(1) LCD display\r\n\r\n(2) Built-in temperature deviation calibration function, parameter memory function, with call parameters automatic recovery function\r\n\r\n\r\n\r\n2. Timing Settings\r\n\r\n(1) Accurate control of heating time, timing range 0~9999 minutes(hours), timing error≤1%\r\n\r\n\r\n\r\n3. Independent Fan Switch\r\n\r\n(1) Independent fan switch, according to the heating needs to decide whether to start\r\n\r\n(2) Unique mandatory fan cooling ventilation structure, ensure the fan working temperature is less than 50°C\r\n\r\n\r\n\r\n4. Exterior Design\r\n\r\n(1) Novel vertical design, shell with electrostatic spraying steel plate, corrosion resistant and durable\r\n\r\n(2) Optional Foot Master casters are available for more convenient movement\r\n\r\n\r\n\r\n5. Three-dimensional Circulation Air Duct\r\n\r\n(1) Unique bottom air blast and bottom heating reasonable cooperation\r\n\r\n(2) Vertical double duct vertical hot air circulation design\r\n\r\n(3) The temperature is uniform to meet the requirements of high-precision experiments MaxMed UAE is the leading supplier of Incubators & Ovens in Dubai and across the United Arab Emirates. We provide professional Incubators & Ovens with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Forced Air Drying Oven BJPX-HGZ30L",
+        "description": "Introduction:\r\nThis product is used for drying, disinfection, wax melting and sterilization of non-flammable and explosive items and non-volatile items. For example, drying of experimental samples, food, glassware, thermal hardening, thermal denaturation, thermal softening, and moisture removal of chemical substances; dry heat sterilization of utensils and utensils in bioengineering; aging and drying of electronic components. Widely used in enterprises, scientific research, food processing, medical units and various laboratories, etc.\r\n\r\nFeatures：\r\n\r\n1. Structure design\r\n\r\n(1) LCD display\r\n\r\n(2) Built-in temperature deviation calibration function, parameter memory function, with call parameters automatic recovery function\r\n\r\n\r\n\r\n2. Timing Settings\r\n\r\n(1) Accurate control of heating time, timing range 0~9999 minutes(hours), timing error≤1%\r\n\r\n\r\n\r\n3. Independent Fan Switch\r\n\r\n(1) Independent fan switch, according to the heating needs to decide whether to start\r\n\r\n(2) Unique mandatory fan cooling ventilation structure, ensure the fan working temperature is less than 50°C\r\n\r\n\r\n\r\n4. Exterior Design\r\n\r\n(1) Novel vertical design, shell with electrostatic spraying steel plate, corrosion resistant and durable\r\n\r\n(2) Optional Foot Master casters are available for more convenient movement\r\n\r\n\r\n\r\n5. Three-dimensional Circulation Air Duct\r\n\r\n(1) Unique bottom air blast and bottom heating reasonable cooperation\r\n\r\n(2) Vertical double duct vertical hot air circulation design\r\n\r\n(3) The temperature is uniform to meet the requirements of high-precision experiments MaxMed UAE is the leading supplier of Incubators & Ovens in Dubai and across the United Arab Emirates. We provide professional Incubators & Ovens with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0025"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "BIOBASE",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Incubators & Ovens",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "forced",
+            "forced Dubai",
+            "forced UAE",
+            "drying",
+            "drying Dubai",
+            "drying UAE",
+            "oven",
+            "oven Dubai",
+            "oven UAE",
+            "bjpx-hgz30l",
+            "bjpx-hgz30l Dubai",
+            "bjpx-hgz30l UAE",
+            "incubators",
+            "incubators equipment",
+            "incubators supplier",
+            "ovens",
+            "ovens equipment",
+            "ovens supplier",
+            "biobase",
+            "biobase UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.650344Z",
+            "validThrough": "2026-01-11T08:02:41.650474Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/forced-air-drying-oven-bjpx-hgz30l-mm-0025-biobase-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/forced-air-drying-oven-bjpx-hgz30l-mm-0025-biobase-dubai-uae"
+        }
+    },
+    "keywords": [
+        "forced",
+        "forced Dubai",
+        "forced UAE",
+        "drying",
+        "drying Dubai",
+        "drying UAE",
+        "oven",
+        "oven Dubai",
+        "oven UAE",
+        "bjpx-hgz30l",
+        "bjpx-hgz30l Dubai",
+        "bjpx-hgz30l UAE",
+        "incubators",
+        "incubators equipment",
+        "incubators supplier",
+        "ovens",
+        "ovens equipment",
+        "ovens supplier",
+        "biobase",
+        "biobase UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Incubators & Ovens",
+        "manufactured_by": "BIOBASE",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Vacuum Drying Oven(BOV-V\/VL)",
+            "Forced Air Drying Oven BJPX-HG Series",
+            "Dual-use Drying Oven B0V-D series",
+            "High Temperature Drying Oven",
+            "Constant-temperature Drying Oven BJPX-HDO Series"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.651717Z"
+}

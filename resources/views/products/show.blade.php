@@ -7,7 +7,15 @@
 @section('og_description', $seoData['og_description'] ?? $seoData['meta_description'])
 @section('og_image', $product->image_url ?? asset('Images/banner2.jpeg'))
 
+{{-- AI-Enhanced SEO Components --}}
+@push('head')
+    <x-ai-enhanced-schema :product="$product" type="product" />
+@endpush
+
 @section('content')
+
+{{-- AI Knowledge Article (Hidden from users, visible to AI crawlers) --}}
+<x-ai-knowledge-article :product="$product" />
 <div class="container-fluid py-4">
     <style>
         /* Professional Product Detail Page Styling */

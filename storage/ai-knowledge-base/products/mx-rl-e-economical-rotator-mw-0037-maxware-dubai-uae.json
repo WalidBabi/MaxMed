@@ -1,0 +1,168 @@
+{
+    "entity_type": "product",
+    "entity_name": "MX-RL-E Economical Rotator",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Provides gentle but effective rolling\r\nAdjustable speed range from 0 to 80 rpm\r\nUsed with MX-RL-E\/MX-RD-E Disk\/Rotisserie accessory, for 50mL, 15mL and 1.5mL\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8031402000\r\nAccessories type\r\nTube Rotator\r\nTilt angle\r\n-\r\nMotion type\r\n-\r\nRotation angle\r\n-\r\nAmplitude\r\n-\r\nSpeed range\r\n0-80rpm\r\nSpeed display\r\nScale\r\nTimer display\r\n-\r\nTime setting range\r\n-\r\nRun type\r\nContinuous\r\nMax. load capacity\r\n-\r\nNumber of rollers\r\n-\r\nRoller size[length]\r\n-\r\nMotor type\r\nDC motor\r\nVoltage\r\n100-240V\r\nFrequency\r\n50\/60Hz\r\nPower\r\n20W\r\nDimension [D×W×H ]\r\n150X530X190mm\r\nWeight\r\n-\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible ambient humidity\r\n80% RH\r\nProtection class\r\nIP21 MaxMed UAE is the leading supplier of Mixers in Dubai and across the United Arab Emirates. We provide professional Mixers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "MX-RL-E Economical Rotator",
+        "description": "Provides gentle but effective rolling\r\nAdjustable speed range from 0 to 80 rpm\r\nUsed with MX-RL-E\/MX-RD-E Disk\/Rotisserie accessory, for 50mL, 15mL and 1.5mL\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8031402000\r\nAccessories type\r\nTube Rotator\r\nTilt angle\r\n-\r\nMotion type\r\n-\r\nRotation angle\r\n-\r\nAmplitude\r\n-\r\nSpeed range\r\n0-80rpm\r\nSpeed display\r\nScale\r\nTimer display\r\n-\r\nTime setting range\r\n-\r\nRun type\r\nContinuous\r\nMax. load capacity\r\n-\r\nNumber of rollers\r\n-\r\nRoller size[length]\r\n-\r\nMotor type\r\nDC motor\r\nVoltage\r\n100-240V\r\nFrequency\r\n50\/60Hz\r\nPower\r\n20W\r\nDimension [D×W×H ]\r\n150X530X190mm\r\nWeight\r\n-\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible ambient humidity\r\n80% RH\r\nProtection class\r\nIP21 MaxMed UAE is the leading supplier of Mixers in Dubai and across the United Arab Emirates. We provide professional Mixers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0037"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Mixers",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "mx-rl-e",
+            "mx-rl-e Dubai",
+            "mx-rl-e UAE",
+            "economical",
+            "economical Dubai",
+            "economical UAE",
+            "rotator",
+            "rotator Dubai",
+            "rotator UAE",
+            "mixers",
+            "mixers equipment",
+            "mixers supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.000005Z",
+            "validThrough": "2026-01-11T08:02:41.000067Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/mx-rl-e-economical-rotator-mw-0037-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/mx-rl-e-economical-rotator-mw-0037-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "mx-rl-e",
+        "mx-rl-e Dubai",
+        "mx-rl-e UAE",
+        "economical",
+        "economical Dubai",
+        "economical UAE",
+        "rotator",
+        "rotator Dubai",
+        "rotator UAE",
+        "mixers",
+        "mixers equipment",
+        "mixers supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Mixers",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "MX-S Variable speed Vortex Mixer",
+            "MX-F Fixed speed Vortex Mixer",
+            "MX-E Economic Vortex Mixer",
+            "MX-C Cell Disruptor",
+            "MX-M Microplate Mixer"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.000636Z"
+}

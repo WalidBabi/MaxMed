@@ -1,0 +1,174 @@
+{
+    "entity_type": "product",
+    "entity_name": "DM1224 High Speed Centrifuge",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Speed range of 500-12000 rpm\r\n\r\n•  Precise control of speed and time\r\n\r\n•  Maintenance-free brushless DC motors\r\n\r\n•  Door interlock\r\nPRODUCT PARAMETERS\r\nSpeed range\r\n500- 12000rpm, increment: 100rpm\r\nMax. RCF\r\n13680×g\r\nSpeed accuracy\r\n±100\r\nRotor type\r\n-\r\nRotor capacity\r\n24×capillary tubes\r\nRun time\r\n10sec-99min\/Continuous\r\nAcceleration\/Braking time\r\n40s↑40s↓\r\nTemperature setting range\r\n-\r\nDisplay\r\nLCD\r\nPower\r\n380W\r\nVoltage\/Frequency\r\nSingle-phase, 200V-240V,50Hz\/60Hz, 5A;\r\nNoise level\r\n-\r\nMotor type\r\nBrushless DC motor\r\nDimensions[WxDxH]\r\n280×364×213mm\r\nWeight\r\n8.5Kg\r\nSafety performance\r\nDoor interlock\r\nOther functions\r\nSpeed\/RCF switch; Short-time run function; sound-alert function MaxMed UAE is the leading supplier of Centrifuges in Dubai and across the United Arab Emirates. We provide professional Centrifuges with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "DM1224 High Speed Centrifuge",
+        "description": "Speed range of 500-12000 rpm\r\n\r\n•  Precise control of speed and time\r\n\r\n•  Maintenance-free brushless DC motors\r\n\r\n•  Door interlock\r\nPRODUCT PARAMETERS\r\nSpeed range\r\n500- 12000rpm, increment: 100rpm\r\nMax. RCF\r\n13680×g\r\nSpeed accuracy\r\n±100\r\nRotor type\r\n-\r\nRotor capacity\r\n24×capillary tubes\r\nRun time\r\n10sec-99min\/Continuous\r\nAcceleration\/Braking time\r\n40s↑40s↓\r\nTemperature setting range\r\n-\r\nDisplay\r\nLCD\r\nPower\r\n380W\r\nVoltage\/Frequency\r\nSingle-phase, 200V-240V,50Hz\/60Hz, 5A;\r\nNoise level\r\n-\r\nMotor type\r\nBrushless DC motor\r\nDimensions[WxDxH]\r\n280×364×213mm\r\nWeight\r\n8.5Kg\r\nSafety performance\r\nDoor interlock\r\nOther functions\r\nSpeed\/RCF switch; Short-time run function; sound-alert function MaxMed UAE is the leading supplier of Centrifuges in Dubai and across the United Arab Emirates. We provide professional Centrifuges with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0019"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Centrifuges",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "dm1224",
+            "dm1224 Dubai",
+            "dm1224 UAE",
+            "high",
+            "high Dubai",
+            "high UAE",
+            "speed",
+            "speed Dubai",
+            "speed UAE",
+            "centrifuge",
+            "centrifuge Dubai",
+            "centrifuge UAE",
+            "centrifuges",
+            "centrifuges equipment",
+            "centrifuges supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:40.938050Z",
+            "validThrough": "2026-01-11T08:02:40.938128Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/dm1224-high-speed-centrifuge-mw-0019-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/dm1224-high-speed-centrifuge-mw-0019-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "dm1224",
+        "dm1224 Dubai",
+        "dm1224 UAE",
+        "high",
+        "high Dubai",
+        "high UAE",
+        "speed",
+        "speed Dubai",
+        "speed UAE",
+        "centrifuge",
+        "centrifuge Dubai",
+        "centrifuge UAE",
+        "centrifuges",
+        "centrifuges equipment",
+        "centrifuges supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Centrifuges",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "D1008 Low Speed Centrifuge",
+            "D1012UA High Speed Micro Centrifuges",
+            "D2012S High Speed Micro Centrifuges",
+            "D2012 High Speed Centrifuge",
+            "D1524R High Speed Refrigerated Centrifuge"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:40.938914Z"
+}

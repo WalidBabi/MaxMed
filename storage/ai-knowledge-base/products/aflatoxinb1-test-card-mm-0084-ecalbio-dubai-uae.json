@@ -1,0 +1,180 @@
+{
+    "entity_type": "product",
+    "entity_name": "AflatoxinB1 Test Card",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "AflatoxinB1 test card is based on lateral flow immunochromatographic assay. The test device has a testing window. The testing window has an invisible T (test) zone and C (control) zone. When sample is applied into the sample hole on the device, the liquid will laterally flow on the surface of the test strip. If there is little AflatoxinB1 in the sample, a visible T band will appear; T band is invisible if it has more AflatoxinB1 in the sample. The C band should always appear after a sample is applied, indicating a valid result. By this means, the device can accurately indicate the presence of AflatoxinB1 in the Edible oil ,feed,corn,wheat,grains. MaxMed UAE is the leading supplier of Other Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Other Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "AflatoxinB1 Test Card",
+        "description": "AflatoxinB1 test card is based on lateral flow immunochromatographic assay. The test device has a testing window. The testing window has an invisible T (test) zone and C (control) zone. When sample is applied into the sample hole on the device, the liquid will laterally flow on the surface of the test strip. If there is little AflatoxinB1 in the sample, a visible T band will appear; T band is invisible if it has more AflatoxinB1 in the sample. The C band should always appear after a sample is applied, indicating a valid result. By this means, the device can accurately indicate the presence of AflatoxinB1 in the Edible oil ,feed,corn,wheat,grains. MaxMed UAE is the leading supplier of Other Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Other Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0084"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "WUHAN ECALBIO CO., LTD",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Other Rapid Tests",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "aflatoxinb1",
+            "aflatoxinb1 Dubai",
+            "aflatoxinb1 UAE",
+            "test",
+            "test Dubai",
+            "test UAE",
+            "card",
+            "card Dubai",
+            "card UAE",
+            "other",
+            "other equipment",
+            "other supplier",
+            "rapid",
+            "rapid equipment",
+            "rapid supplier",
+            "tests",
+            "tests equipment",
+            "tests supplier",
+            "wuhan ecalbio co., ltd",
+            "wuhan ecalbio co., ltd UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.938722Z",
+            "validThrough": "2026-01-11T08:02:41.938774Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/aflatoxinb1-test-card-mm-0084-ecalbio-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/aflatoxinb1-test-card-mm-0084-ecalbio-dubai-uae"
+        }
+    },
+    "keywords": [
+        "aflatoxinb1",
+        "aflatoxinb1 Dubai",
+        "aflatoxinb1 UAE",
+        "test",
+        "test Dubai",
+        "test UAE",
+        "card",
+        "card Dubai",
+        "card UAE",
+        "other",
+        "other equipment",
+        "other supplier",
+        "rapid",
+        "rapid equipment",
+        "rapid supplier",
+        "tests",
+        "tests equipment",
+        "tests supplier",
+        "wuhan ecalbio co., ltd",
+        "wuhan ecalbio co., ltd UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Other Rapid Tests",
+        "manufactured_by": "WUHAN ECALBIO CO., LTD",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Celiac Rapid Test Cassette",
+            "Thyroid Stimulating Hormone (TSH) Rapid Test",
+            "Rheumatoid Factor Rapid Test",
+            "Micro-Albumin Rapid Test",
+            "Micro-Albumin Qualitative Rapid Test"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.939381Z"
+}

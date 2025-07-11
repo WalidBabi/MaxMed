@@ -1,0 +1,191 @@
+{
+    "entity_type": "product",
+    "entity_name": "Coagulation Analyzer Reagents",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Coagulation tests are becoming common and routine in the clinical laboratory.\r\nThey are mainly applied to the pre-operative examination, the pre-thrombosis examination and the monitoring of clinical oral anticoagulants patients. It's requested to test PT\/INR, TT, APTT and FIB before patient surgery. ACT is an effective indicator for detecting the anticoagulant effect of heparin and one of the most effective mean to ensure the safety and success of surgery.\r\n\r\n \r\n\r\n1 Strip, 6 Reasults, 20μl, 8 minutes\r\n\r\n \r\n\r\nSingle Test or Combine Test\r\nPT (Prothrombin Time)\/ INR (International Normalized Ratio)\r\nTT (Thrombin Time)    ACT (Activated Clotting Time)\r\nFIB (Fibrinogenstrip)   APTT (Activated Partial Thromboplastin Time) MaxMed UAE is the leading supplier of Point of Care Testing Platform (POCT) in Dubai and across the United Arab Emirates. We provide professional Point of Care Testing Platform (POCT) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Coagulation Analyzer Reagents",
+        "description": "Coagulation tests are becoming common and routine in the clinical laboratory.\r\nThey are mainly applied to the pre-operative examination, the pre-thrombosis examination and the monitoring of clinical oral anticoagulants patients. It's requested to test PT\/INR, TT, APTT and FIB before patient surgery. ACT is an effective indicator for detecting the anticoagulant effect of heparin and one of the most effective mean to ensure the safety and success of surgery.\r\n\r\n \r\n\r\n1 Strip, 6 Reasults, 20μl, 8 minutes\r\n\r\n \r\n\r\nSingle Test or Combine Test\r\nPT (Prothrombin Time)\/ INR (International Normalized Ratio)\r\nTT (Thrombin Time)    ACT (Activated Clotting Time)\r\nFIB (Fibrinogenstrip)   APTT (Activated Partial Thromboplastin Time) MaxMed UAE is the leading supplier of Point of Care Testing Platform (POCT) in Dubai and across the United Arab Emirates. We provide professional Point of Care Testing Platform (POCT) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0007"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "lansionbiotech",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Point of Care Testing Platform (POCT)",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "coagulation",
+            "coagulation Dubai",
+            "coagulation UAE",
+            "analyzer",
+            "analyzer Dubai",
+            "analyzer UAE",
+            "reagents",
+            "reagents Dubai",
+            "reagents UAE",
+            "point",
+            "point equipment",
+            "point supplier",
+            "care",
+            "care equipment",
+            "care supplier",
+            "testing",
+            "testing equipment",
+            "testing supplier",
+            "platform",
+            "platform equipment",
+            "platform supplier",
+            "(poct)",
+            "(poct) equipment",
+            "(poct) supplier",
+            "lansionbiotech",
+            "lansionbiotech UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.464594Z",
+            "validThrough": "2026-01-11T08:02:41.464689Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/coagulation-analyzer-reagents-mm-0007-lansionbiotech-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/coagulation-analyzer-reagents-mm-0007-lansionbiotech-dubai-uae"
+        }
+    },
+    "keywords": [
+        "coagulation",
+        "coagulation Dubai",
+        "coagulation UAE",
+        "analyzer",
+        "analyzer Dubai",
+        "analyzer UAE",
+        "reagents",
+        "reagents Dubai",
+        "reagents UAE",
+        "point",
+        "point equipment",
+        "point supplier",
+        "care",
+        "care equipment",
+        "care supplier",
+        "testing",
+        "testing equipment",
+        "testing supplier",
+        "platform",
+        "platform equipment",
+        "platform supplier",
+        "(poct)",
+        "(poct) equipment",
+        "(poct) supplier",
+        "lansionbiotech",
+        "lansionbiotech UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Point of Care Testing Platform (POCT)",
+        "manufactured_by": "lansionbiotech",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "LS-1100 Dry Fluorescence Immunoassay Analyzer (Portable)",
+            "LS-2100 Dry Fluorescence Immunoassay Analyzer (8 channels）",
+            "LS-4000 Dry Fluorescence Immunoassay Analyzer(Handheld)",
+            "LA-100 Handheld Coagulation Analyzer"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.465673Z"
+}

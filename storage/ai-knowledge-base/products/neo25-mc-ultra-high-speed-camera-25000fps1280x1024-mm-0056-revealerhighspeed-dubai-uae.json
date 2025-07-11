@@ -1,0 +1,210 @@
+{
+    "entity_type": "product",
+    "entity_name": "NEO25 M\/C Ultra High Speed Camera 25,000fps@1280x1024",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "High-sensitivity & ultra-high-speed camera utilizes a new generation of backside illumination sensors to enhance the capture efficiency of incident photons, enabling transient image capture within extremely short exposure times. This is suitable for ultra-high-speed applications.\r\n\r\nModel: NEO 25M\/C\r\nSensor: BSI CMOS\r\nMax Resolution: 1280x1024\r\nFull Frame Rate: 25000fps\r\nShutter: Global Shutter\r\nMin Exposure Time: 150ns\r\nPIV Cross Frame: 250ns\r\nRAM: 320GB\r\nSupport Auto Exposure\r\nSupport EDR\r\nSupport Record Button\r\nData Interface: GigE\/10GigE\r\nVideo Interface: SDI\r\nInput: 3.3\/5V TTL\r\nOutput: 5V TTL\r\nTime Input Interface: DC IRIG B\r\nControl Interface: RS422 Reserved\r\nTrigger Input: Pulse trigger signal\r\nIO: I Output Interface Reserved, Customizable\r\nNEO 25M\/C\r\nMount: F Port, C\/EF Port Options\r\nWxHxD: ≤125x125x210mm\r\nNet Weight: ≤4200g\r\nThread: 1\/4 NPT\r\nCooling: Fan cooling\r\n\r\nHigh-sensitivity\r\nEDR Secondary Exposure\r\nIntelligent Image Triggering\r\nIRIG-B Synchronization\r\nFlexible Lens Mount\r\nDual Power Supply\r\nEMC Protection\r\nFlexible for High & Low Temperature Working Environment\r\nEfficient & Easy-to-use Acquisition Software -- RCC MaxMed UAE is the leading supplier of Advanced Motion & Scientific Imaging Systems in Dubai and across the United Arab Emirates. We provide professional Advanced Motion & Scientific Imaging Systems with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "NEO25 M\/C Ultra High Speed Camera 25,000fps@1280x1024",
+        "description": "High-sensitivity & ultra-high-speed camera utilizes a new generation of backside illumination sensors to enhance the capture efficiency of incident photons, enabling transient image capture within extremely short exposure times. This is suitable for ultra-high-speed applications.\r\n\r\nModel: NEO 25M\/C\r\nSensor: BSI CMOS\r\nMax Resolution: 1280x1024\r\nFull Frame Rate: 25000fps\r\nShutter: Global Shutter\r\nMin Exposure Time: 150ns\r\nPIV Cross Frame: 250ns\r\nRAM: 320GB\r\nSupport Auto Exposure\r\nSupport EDR\r\nSupport Record Button\r\nData Interface: GigE\/10GigE\r\nVideo Interface: SDI\r\nInput: 3.3\/5V TTL\r\nOutput: 5V TTL\r\nTime Input Interface: DC IRIG B\r\nControl Interface: RS422 Reserved\r\nTrigger Input: Pulse trigger signal\r\nIO: I Output Interface Reserved, Customizable\r\nNEO 25M\/C\r\nMount: F Port, C\/EF Port Options\r\nWxHxD: ≤125x125x210mm\r\nNet Weight: ≤4200g\r\nThread: 1\/4 NPT\r\nCooling: Fan cooling\r\n\r\nHigh-sensitivity\r\nEDR Secondary Exposure\r\nIntelligent Image Triggering\r\nIRIG-B Synchronization\r\nFlexible Lens Mount\r\nDual Power Supply\r\nEMC Protection\r\nFlexible for High & Low Temperature Working Environment\r\nEfficient & Easy-to-use Acquisition Software -- RCC MaxMed UAE is the leading supplier of Advanced Motion & Scientific Imaging Systems in Dubai and across the United Arab Emirates. We provide professional Advanced Motion & Scientific Imaging Systems with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0056"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "RevealerHighSpeed",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Advanced Motion & Scientific Imaging Systems",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "neo25",
+            "neo25 Dubai",
+            "neo25 UAE",
+            "ultra",
+            "ultra Dubai",
+            "ultra UAE",
+            "high",
+            "high Dubai",
+            "high UAE",
+            "speed",
+            "speed Dubai",
+            "speed UAE",
+            "camera",
+            "camera Dubai",
+            "camera UAE",
+            "25,000fps@1280x1024",
+            "25,000fps@1280x1024 Dubai",
+            "25,000fps@1280x1024 UAE",
+            "advanced",
+            "advanced equipment",
+            "advanced supplier",
+            "motion",
+            "motion equipment",
+            "motion supplier",
+            "scientific",
+            "scientific equipment",
+            "scientific supplier",
+            "imaging",
+            "imaging equipment",
+            "imaging supplier",
+            "systems",
+            "systems equipment",
+            "systems supplier",
+            "revealerhighspeed",
+            "revealerhighspeed UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.842077Z",
+            "validThrough": "2026-01-11T08:02:41.842124Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/neo25-mc-ultra-high-speed-camera-25000fps1280x1024-mm-0056-revealerhighspeed-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/neo25-mc-ultra-high-speed-camera-25000fps1280x1024-mm-0056-revealerhighspeed-dubai-uae"
+        }
+    },
+    "keywords": [
+        "neo25",
+        "neo25 Dubai",
+        "neo25 UAE",
+        "ultra",
+        "ultra Dubai",
+        "ultra UAE",
+        "high",
+        "high Dubai",
+        "high UAE",
+        "speed",
+        "speed Dubai",
+        "speed UAE",
+        "camera",
+        "camera Dubai",
+        "camera UAE",
+        "25,000fps@1280x1024",
+        "25,000fps@1280x1024 Dubai",
+        "25,000fps@1280x1024 UAE",
+        "advanced",
+        "advanced equipment",
+        "advanced supplier",
+        "motion",
+        "motion equipment",
+        "motion supplier",
+        "scientific",
+        "scientific equipment",
+        "scientific supplier",
+        "imaging",
+        "imaging equipment",
+        "imaging supplier",
+        "systems",
+        "systems equipment",
+        "systems supplier",
+        "revealerhighspeed",
+        "revealerhighspeed UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Advanced Motion & Scientific Imaging Systems",
+        "manufactured_by": "RevealerHighSpeed",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "S1315 M\/C Ultra High Speed Camera 15,000fps@1280*1024",
+            "M230 M\/C Ultra High Speed Camera 3,000fps@1920×1080",
+            "G Pro High-Resolution High-Speed Camera 1,000fps@5120×4096",
+            "Gloria 4.2 sCMOS Extreme Low-Noise Scientific Camera",
+            "Digital Imaging Correlation (DIC) Measurement System"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.842895Z"
+}

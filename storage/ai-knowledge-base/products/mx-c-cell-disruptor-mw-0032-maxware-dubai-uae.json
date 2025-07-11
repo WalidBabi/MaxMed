@@ -1,0 +1,168 @@
+{
+    "entity_type": "product",
+    "entity_name": "MX-C Cell Disruptor",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Durable, reliable and affordable\r\n\r\n•  Easy to operate, rapid hands-free disruption of up to 8 microtubes\r\n\r\n•  Processes at a constant, controlled shear rate\r\n\r\n• Maintains genome integrity of the biological samples\r\n\r\n•  Facilitates subsequent purification of genomic material\r\n\r\n•  Best suited for research laboratories demanding accurate, reproducible, repeatable results\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8031122000\r\nMotion type\r\nHigh-speed circumferential vortex and oscillation function\r\nOrbital diameter\r\n4mm\r\nSpeed range\r\n0-3000rpm(Adjustable)\r\nSpeed display\r\nScale\r\nRun type\r\nHigh-speed circumferential vortex and oscillation function\r\nMotor type\r\n-\r\nMotor rating input\r\n-\r\nMotor rating output\r\n-\r\nPower\r\n60W\r\nVoltage\r\n200-240V\/ 100-120V\r\nFrequency\r\n50\/60 Hz\r\nDimension[W×H×D]\r\n127X130X160mm\r\nWeight\r\n2.0kg\r\nPermissible ambient temperature\r\n-\r\nPermissible relative humidity\r\n-\r\nProtection class\r\n-\r\nApplications\r\nDisrupts cells, yeast, bacteria, algae, fungi, etc.to prepare cell lysates for further processing MaxMed UAE is the leading supplier of Mixers in Dubai and across the United Arab Emirates. We provide professional Mixers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "MX-C Cell Disruptor",
+        "description": "Durable, reliable and affordable\r\n\r\n•  Easy to operate, rapid hands-free disruption of up to 8 microtubes\r\n\r\n•  Processes at a constant, controlled shear rate\r\n\r\n• Maintains genome integrity of the biological samples\r\n\r\n•  Facilitates subsequent purification of genomic material\r\n\r\n•  Best suited for research laboratories demanding accurate, reproducible, repeatable results\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8031122000\r\nMotion type\r\nHigh-speed circumferential vortex and oscillation function\r\nOrbital diameter\r\n4mm\r\nSpeed range\r\n0-3000rpm(Adjustable)\r\nSpeed display\r\nScale\r\nRun type\r\nHigh-speed circumferential vortex and oscillation function\r\nMotor type\r\n-\r\nMotor rating input\r\n-\r\nMotor rating output\r\n-\r\nPower\r\n60W\r\nVoltage\r\n200-240V\/ 100-120V\r\nFrequency\r\n50\/60 Hz\r\nDimension[W×H×D]\r\n127X130X160mm\r\nWeight\r\n2.0kg\r\nPermissible ambient temperature\r\n-\r\nPermissible relative humidity\r\n-\r\nProtection class\r\n-\r\nApplications\r\nDisrupts cells, yeast, bacteria, algae, fungi, etc.to prepare cell lysates for further processing MaxMed UAE is the leading supplier of Mixers in Dubai and across the United Arab Emirates. We provide professional Mixers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0032"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Mixers",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "mx-c",
+            "mx-c Dubai",
+            "mx-c UAE",
+            "cell",
+            "cell Dubai",
+            "cell UAE",
+            "disruptor",
+            "disruptor Dubai",
+            "disruptor UAE",
+            "mixers",
+            "mixers equipment",
+            "mixers supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:40.982756Z",
+            "validThrough": "2026-01-11T08:02:40.982863Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/mx-c-cell-disruptor-mw-0032-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/mx-c-cell-disruptor-mw-0032-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "mx-c",
+        "mx-c Dubai",
+        "mx-c UAE",
+        "cell",
+        "cell Dubai",
+        "cell UAE",
+        "disruptor",
+        "disruptor Dubai",
+        "disruptor UAE",
+        "mixers",
+        "mixers equipment",
+        "mixers supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Mixers",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "MX-S Variable speed Vortex Mixer",
+            "MX-F Fixed speed Vortex Mixer",
+            "MX-E Economic Vortex Mixer",
+            "MX-M Microplate Mixer",
+            "MX-RD-Pro LCD Digital Tube Rotator"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:40.984744Z"
+}

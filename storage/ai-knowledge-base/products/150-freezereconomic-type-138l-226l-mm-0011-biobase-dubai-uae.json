@@ -1,0 +1,193 @@
+{
+    "entity_type": "product",
+    "entity_name": "-150℃ Freezer(Economic Type) 138L 226L",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Introduction:\r\nThe -150℃ Ultra-Low Temperature Freezer is a specialized storage solution designed to maintain extremely low temperatures for the safe storage of temperature-sensitive biological samples and chemicals. MaxMed UAE is the leading supplier of Cold Chain Products in Dubai and across the United Arab Emirates. We provide professional Cold Chain Products with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "-150℃ Freezer(Economic Type) 138L 226L",
+        "description": "Introduction:\r\nThe -150℃ Ultra-Low Temperature Freezer is a specialized storage solution designed to maintain extremely low temperatures for the safe storage of temperature-sensitive biological samples and chemicals. MaxMed UAE is the leading supplier of Cold Chain Products in Dubai and across the United Arab Emirates. We provide professional Cold Chain Products with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0011"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "BIOBASE",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Cold Chain Products",
+        "additionalType": [
+            "https:\/\/schema.org\/Product",
+            "https:\/\/schema.org\/SoftwareApplication"
+        ],
+        "keywords": [
+            "-150℃",
+            "-150℃ Dubai",
+            "-150℃ UAE",
+            "freezer(economic",
+            "freezer(economic Dubai",
+            "freezer(economic UAE",
+            "type)",
+            "type) Dubai",
+            "type) UAE",
+            "138l",
+            "138l Dubai",
+            "138l UAE",
+            "226l",
+            "226l Dubai",
+            "226l UAE",
+            "cold",
+            "cold equipment",
+            "cold supplier",
+            "chain",
+            "chain equipment",
+            "chain supplier",
+            "products",
+            "products equipment",
+            "products supplier",
+            "biobase",
+            "biobase UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.607268Z",
+            "validThrough": "2026-01-11T08:02:41.607365Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/150-freezereconomic-type-138l-226l-mm-0011-biobase-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/150-freezereconomic-type-138l-226l-mm-0011-biobase-dubai-uae"
+        }
+    },
+    "keywords": [
+        "-150℃",
+        "-150℃ Dubai",
+        "-150℃ UAE",
+        "freezer(economic",
+        "freezer(economic Dubai",
+        "freezer(economic UAE",
+        "type)",
+        "type) Dubai",
+        "type) UAE",
+        "138l",
+        "138l Dubai",
+        "138l UAE",
+        "226l",
+        "226l Dubai",
+        "226l UAE",
+        "cold",
+        "cold equipment",
+        "cold supplier",
+        "chain",
+        "chain equipment",
+        "chain supplier",
+        "products",
+        "products equipment",
+        "products supplier",
+        "biobase",
+        "biobase UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Cold Chain Products",
+        "manufactured_by": "BIOBASE",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Chromatography Refrigerator 450L 1000L",
+            "-86℃ Freezer(Economic Type) 90L",
+            "Laboratory Refrigerator(Economic Type) 46L 150L 320L 400L",
+            "-20\/25℃ Freezer(Economic Type)",
+            "-40℃ Freezer(Economic Type)"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.608727Z"
+}

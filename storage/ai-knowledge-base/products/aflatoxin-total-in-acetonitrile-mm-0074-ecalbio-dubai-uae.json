@@ -1,0 +1,174 @@
+{
+    "entity_type": "product",
+    "entity_name": "Aflatoxin Total in Acetonitrile",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Aflatoxin B1\/ 1162-65-8,  Aflatoxin B2\/ 7220-81-7,  Aflatoxin G1\/1165-39-5,  Aflatoxin G2\/7241-98-7 \r\n\r\nResult concentration:  \r\nAflatoxin B1: 1.00±0.01μg\/mL,   \r\nAflatoxin B2: 1.00±0.01μg\/mL,\r\nAflatoxin G1: 1.00±0.01μg\/mL,   \r\nAflatoxin G2: 1.00±0.03μg\/mL\r\n\r\nStarting material:  Aflatoxin B1, lot#A24407P, ECALBIO CO.,LTD,  \r\nAflatoxin B2, lot#A24407P, ECALBIO CO.,LTD,\r\nAflatoxin G1,lot#A24407P,ECALBIO CO.,LTD, \r\nAflatoxin G2,lot#A24407P,ECALBIO CO.,LTD. MaxMed UAE is the leading supplier of Chemical & Reagents in Dubai and across the United Arab Emirates. We provide professional Chemical & Reagents with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Aflatoxin Total in Acetonitrile",
+        "description": "Aflatoxin B1\/ 1162-65-8,  Aflatoxin B2\/ 7220-81-7,  Aflatoxin G1\/1165-39-5,  Aflatoxin G2\/7241-98-7 \r\n\r\nResult concentration:  \r\nAflatoxin B1: 1.00±0.01μg\/mL,   \r\nAflatoxin B2: 1.00±0.01μg\/mL,\r\nAflatoxin G1: 1.00±0.01μg\/mL,   \r\nAflatoxin G2: 1.00±0.03μg\/mL\r\n\r\nStarting material:  Aflatoxin B1, lot#A24407P, ECALBIO CO.,LTD,  \r\nAflatoxin B2, lot#A24407P, ECALBIO CO.,LTD,\r\nAflatoxin G1,lot#A24407P,ECALBIO CO.,LTD, \r\nAflatoxin G2,lot#A24407P,ECALBIO CO.,LTD. MaxMed UAE is the leading supplier of Chemical & Reagents in Dubai and across the United Arab Emirates. We provide professional Chemical & Reagents with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0074"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "WUHAN ECALBIO CO., LTD",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Chemical & Reagents",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "aflatoxin",
+            "aflatoxin Dubai",
+            "aflatoxin UAE",
+            "total",
+            "total Dubai",
+            "total UAE",
+            "acetonitrile",
+            "acetonitrile Dubai",
+            "acetonitrile UAE",
+            "chemical",
+            "chemical equipment",
+            "chemical supplier",
+            "reagents",
+            "reagents equipment",
+            "reagents supplier",
+            "wuhan ecalbio co., ltd",
+            "wuhan ecalbio co., ltd UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.908552Z",
+            "validThrough": "2026-01-11T08:02:41.908639Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/aflatoxin-total-in-acetonitrile-mm-0074-ecalbio-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/aflatoxin-total-in-acetonitrile-mm-0074-ecalbio-dubai-uae"
+        }
+    },
+    "keywords": [
+        "aflatoxin",
+        "aflatoxin Dubai",
+        "aflatoxin UAE",
+        "total",
+        "total Dubai",
+        "total UAE",
+        "acetonitrile",
+        "acetonitrile Dubai",
+        "acetonitrile UAE",
+        "chemical",
+        "chemical equipment",
+        "chemical supplier",
+        "reagents",
+        "reagents equipment",
+        "reagents supplier",
+        "wuhan ecalbio co., ltd",
+        "wuhan ecalbio co., ltd UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Chemical & Reagents",
+        "manufactured_by": "WUHAN ECALBIO CO., LTD",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "AflatoxinB1 Standard Substance",
+            "Deoxynivalenol Standard Substance",
+            "Ochratoxin A Standard Substance",
+            "Microcystin-LR Standard Substance",
+            "SuperLumia ECL Plus HRP Substrate Kit"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.909433Z"
+}

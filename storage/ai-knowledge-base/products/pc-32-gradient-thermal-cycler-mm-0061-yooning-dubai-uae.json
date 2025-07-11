@@ -1,0 +1,180 @@
+{
+    "entity_type": "product",
+    "entity_name": "PC-32 Gradient thermal cycler",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "PC-32 gradient Thermal Cycler is a mini size designed for thermal cycling and protocol optimization in molecular biology, medical, food, genetic testing and etc. MaxMed UAE is the leading supplier of PCR & Molecular Analysis in Dubai and across the United Arab Emirates. We provide professional PCR & Molecular Analysis with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "PC-32 Gradient thermal cycler",
+        "description": "PC-32 gradient Thermal Cycler is a mini size designed for thermal cycling and protocol optimization in molecular biology, medical, food, genetic testing and etc. MaxMed UAE is the leading supplier of PCR & Molecular Analysis in Dubai and across the United Arab Emirates. We provide professional PCR & Molecular Analysis with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0061"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "Yooning",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "PCR & Molecular Analysis",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "pc-32",
+            "pc-32 Dubai",
+            "pc-32 UAE",
+            "gradient",
+            "gradient Dubai",
+            "gradient UAE",
+            "thermal",
+            "thermal Dubai",
+            "thermal UAE",
+            "cycler",
+            "cycler Dubai",
+            "cycler UAE",
+            "molecular",
+            "molecular equipment",
+            "molecular supplier",
+            "analysis",
+            "analysis equipment",
+            "analysis supplier",
+            "yooning",
+            "yooning UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Molecular biology",
+            "DNA analysis",
+            "Gene research",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.858439Z",
+            "validThrough": "2026-01-11T08:02:41.858563Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/pc-32-gradient-thermal-cycler-mm-0061-yooning-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/pc-32-gradient-thermal-cycler-mm-0061-yooning-dubai-uae"
+        }
+    },
+    "keywords": [
+        "pc-32",
+        "pc-32 Dubai",
+        "pc-32 UAE",
+        "gradient",
+        "gradient Dubai",
+        "gradient UAE",
+        "thermal",
+        "thermal Dubai",
+        "thermal UAE",
+        "cycler",
+        "cycler Dubai",
+        "cycler UAE",
+        "molecular",
+        "molecular equipment",
+        "molecular supplier",
+        "analysis",
+        "analysis equipment",
+        "analysis supplier",
+        "yooning",
+        "yooning UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "PCR & Molecular Analysis",
+        "manufactured_by": "Yooning",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "TC1000-S Thermal Cycler Standard",
+            "TC1000-G-Pro Thermal Cycler Gradient",
+            "PC-96 Gradient thermal cycler",
+            "PC-96P Gradient thermal cycler",
+            "T200 Gradient thermal cycler"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.859658Z"
+}

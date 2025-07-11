@@ -1,0 +1,52 @@
+{
+    "entity_type": "category",
+    "entity_name": "Molecular & Clinical Diagnostics",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Professional Molecular & Clinical Diagnostics equipment and supplies available in Dubai, UAE from MaxMed. We specialize in high-quality Molecular & Clinical Diagnostics for laboratories, hospitals, research institutions, and healthcare facilities across the Middle East. MaxMed UAE is the leading supplier of Molecular & Clinical Diagnostics in the United Arab Emirates. We serve hospitals, research laboratories, universities, and medical facilities throughout Dubai, Abu Dhabi, Sharjah, and the entire UAE region. Our Molecular & Clinical Diagnostics products meet international quality standards and come with comprehensive support services including installation, training, and maintenance. Contact MaxMed at +971 55 460 2500 for expert consultation and same-day quotes.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": "CollectionPage",
+        "name": "Molecular & Clinical Diagnostics",
+        "description": "Professional Molecular & Clinical Diagnostics equipment and supplies available in Dubai, UAE from MaxMed. We specialize in high-quality Molecular & Clinical Diagnostics for laboratories, hospitals, research institutions, and healthcare facilities across the Middle East. MaxMed UAE is the leading supplier of Molecular & Clinical Diagnostics in the United Arab Emirates. We serve hospitals, research laboratories, universities, and medical facilities throughout Dubai, Abu Dhabi, Sharjah, and the entire UAE region. Our Molecular & Clinical Diagnostics products meet international quality standards and come with comprehensive support services including installation, training, and maintenance. Contact MaxMed at +971 55 460 2500 for expert consultation and same-day quotes.",
+        "url": "http:\/\/localhost\/categories\/molecular-clinical-diagnostics",
+        "provider": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "telephone": "+971-55-460-2500",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai"
+            }
+        },
+        "mainEntity": {
+            "@type": "ItemList",
+            "name": "Molecular & Clinical Diagnostics Products",
+            "description": "Complete range of Molecular & Clinical Diagnostics available from MaxMed UAE"
+        },
+        "keywords": "molecular, molecular Dubai, molecular UAE, molecular equipment, molecular supplier, clinical, clinical Dubai, clinical UAE, clinical equipment, clinical supplier, diagnostics, diagnostics Dubai, diagnostics UAE, diagnostics equipment, diagnostics supplier, laboratory equipment, medical equipment, scientific instruments, diagnostic tools, research equipment, lab supplies, analytical instruments, laboratory technology, Dubai, UAE, Middle East, MaxMed, laboratory supplier Dubai, medical equipment UAE, scientific equipment Middle East, Molecular & Clinical Diagnostics, Molecular & Clinical Diagnostics Dubai, Molecular & Clinical Diagnostics UAE, Molecular & Clinical Diagnostics equipment, Molecular & Clinical Diagnostics supplies, Molecular & Clinical Diagnostics supplier",
+        "areaServed": {
+            "@type": "Country",
+            "name": "United Arab Emirates"
+        }
+    },
+    "relationships": {
+        "part_of": "MaxMed UAE Product Catalog",
+        "available_from": "MaxMed UAE",
+        "serves_industry": [
+            "Healthcare",
+            "Medical Research",
+            "Pharmaceutical",
+            "Biotechnology"
+        ],
+        "location_coverage": "Dubai, UAE, Middle East",
+        "subcategories": [
+            "Rapid Test Kits RDT",
+            "PCR & Molecular Analysis",
+            "Point of Care Testing Platform (POCT)"
+        ]
+    },
+    "product_count": 0,
+    "last_updated": "2025-07-11T08:02:42.069128Z"
+}

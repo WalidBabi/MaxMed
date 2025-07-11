@@ -1,0 +1,174 @@
+{
+    "entity_type": "product",
+    "entity_name": "Capsaicin Rapid Test Kit",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Capsaicin rapid test kit is based on lateral flow immunochromatographic assay to detect Capsaicin in the oil,tissue sample.\r\nThe test device has a testing window. The testing window has an invisible T (test) zone and C (control) zone. When sample is applied into the sample hole on the device, the liquid will laterally flow on the surface of the test strip. The Test card yields a positive result and T zone is invisible if Capsaicin in the sample exceed the detect limit. \r\n\r\nDetect limit： 5.0 ppb MaxMed UAE is the leading supplier of Chemical & Reagents in Dubai and across the United Arab Emirates. We provide professional Chemical & Reagents with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Capsaicin Rapid Test Kit",
+        "description": "Capsaicin rapid test kit is based on lateral flow immunochromatographic assay to detect Capsaicin in the oil,tissue sample.\r\nThe test device has a testing window. The testing window has an invisible T (test) zone and C (control) zone. When sample is applied into the sample hole on the device, the liquid will laterally flow on the surface of the test strip. The Test card yields a positive result and T zone is invisible if Capsaicin in the sample exceed the detect limit. \r\n\r\nDetect limit： 5.0 ppb MaxMed UAE is the leading supplier of Chemical & Reagents in Dubai and across the United Arab Emirates. We provide professional Chemical & Reagents with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0085"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "WUHAN ECALBIO CO., LTD",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Chemical & Reagents",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "capsaicin",
+            "capsaicin Dubai",
+            "capsaicin UAE",
+            "rapid",
+            "rapid Dubai",
+            "rapid UAE",
+            "test",
+            "test Dubai",
+            "test UAE",
+            "chemical",
+            "chemical equipment",
+            "chemical supplier",
+            "reagents",
+            "reagents equipment",
+            "reagents supplier",
+            "wuhan ecalbio co., ltd",
+            "wuhan ecalbio co., ltd UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.940986Z",
+            "validThrough": "2026-01-11T08:02:41.941086Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/capsaicin-rapid-test-kit-mm-0085-ecalbio-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/capsaicin-rapid-test-kit-mm-0085-ecalbio-dubai-uae"
+        }
+    },
+    "keywords": [
+        "capsaicin",
+        "capsaicin Dubai",
+        "capsaicin UAE",
+        "rapid",
+        "rapid Dubai",
+        "rapid UAE",
+        "test",
+        "test Dubai",
+        "test UAE",
+        "chemical",
+        "chemical equipment",
+        "chemical supplier",
+        "reagents",
+        "reagents equipment",
+        "reagents supplier",
+        "wuhan ecalbio co., ltd",
+        "wuhan ecalbio co., ltd UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Chemical & Reagents",
+        "manufactured_by": "WUHAN ECALBIO CO., LTD",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "AflatoxinB1 Standard Substance",
+            "Aflatoxin Total in Acetonitrile",
+            "Deoxynivalenol Standard Substance",
+            "Ochratoxin A Standard Substance",
+            "Microcystin-LR Standard Substance"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.943055Z"
+}

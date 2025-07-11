@@ -1,0 +1,174 @@
+{
+    "entity_type": "product",
+    "entity_name": "Deoxynivalenol Standard Substance",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The qualitative analysis for principal component of the material is obtained by liquid chromatography-mass spectrometry (LC-MS), ultraviolet and visible spectroscopy (UV-VIS) and nuclear magnetic resonance (NMR). The certified value (purity of Deoxynivalenol) is based on the results of mass balance method and qNMR method. Structure related impurities are determined by liquid chromatography - tandem mass spectrometry (LC-MS\/MS). Moisture content, inorganic impurities and volatile organic compounds are measured by Karl Fischer, ICP-MS and GC-FID respectively. Based on the above results, the purity certification value is given. MaxMed UAE is the leading supplier of Chemical & Reagents in Dubai and across the United Arab Emirates. We provide professional Chemical & Reagents with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Deoxynivalenol Standard Substance",
+        "description": "The qualitative analysis for principal component of the material is obtained by liquid chromatography-mass spectrometry (LC-MS), ultraviolet and visible spectroscopy (UV-VIS) and nuclear magnetic resonance (NMR). The certified value (purity of Deoxynivalenol) is based on the results of mass balance method and qNMR method. Structure related impurities are determined by liquid chromatography - tandem mass spectrometry (LC-MS\/MS). Moisture content, inorganic impurities and volatile organic compounds are measured by Karl Fischer, ICP-MS and GC-FID respectively. Based on the above results, the purity certification value is given. MaxMed UAE is the leading supplier of Chemical & Reagents in Dubai and across the United Arab Emirates. We provide professional Chemical & Reagents with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0075"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "WUHAN ECALBIO CO., LTD",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Chemical & Reagents",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "deoxynivalenol",
+            "deoxynivalenol Dubai",
+            "deoxynivalenol UAE",
+            "standard",
+            "standard Dubai",
+            "standard UAE",
+            "substance",
+            "substance Dubai",
+            "substance UAE",
+            "chemical",
+            "chemical equipment",
+            "chemical supplier",
+            "reagents",
+            "reagents equipment",
+            "reagents supplier",
+            "wuhan ecalbio co., ltd",
+            "wuhan ecalbio co., ltd UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.910958Z",
+            "validThrough": "2026-01-11T08:02:41.911018Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/deoxynivalenol-standard-substance-mm-0075-ecalbio-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/deoxynivalenol-standard-substance-mm-0075-ecalbio-dubai-uae"
+        }
+    },
+    "keywords": [
+        "deoxynivalenol",
+        "deoxynivalenol Dubai",
+        "deoxynivalenol UAE",
+        "standard",
+        "standard Dubai",
+        "standard UAE",
+        "substance",
+        "substance Dubai",
+        "substance UAE",
+        "chemical",
+        "chemical equipment",
+        "chemical supplier",
+        "reagents",
+        "reagents equipment",
+        "reagents supplier",
+        "wuhan ecalbio co., ltd",
+        "wuhan ecalbio co., ltd UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Chemical & Reagents",
+        "manufactured_by": "WUHAN ECALBIO CO., LTD",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "AflatoxinB1 Standard Substance",
+            "Aflatoxin Total in Acetonitrile",
+            "Ochratoxin A Standard Substance",
+            "Microcystin-LR Standard Substance",
+            "SuperLumia ECL Plus HRP Substrate Kit"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.911911Z"
+}

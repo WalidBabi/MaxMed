@@ -1,0 +1,50 @@
+{
+    "entity_type": "category",
+    "entity_name": "Veterinary",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Professional Veterinary equipment and supplies available in Dubai, UAE from MaxMed. We specialize in high-quality Veterinary for laboratories, hospitals, research institutions, and healthcare facilities across the Middle East. MaxMed UAE is the leading supplier of Veterinary in the United Arab Emirates. We serve hospitals, research laboratories, universities, and medical facilities throughout Dubai, Abu Dhabi, Sharjah, and the entire UAE region. Our Veterinary products meet international quality standards and come with comprehensive support services including installation, training, and maintenance. Contact MaxMed at +971 55 460 2500 for expert consultation and same-day quotes.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": "CollectionPage",
+        "name": "Veterinary",
+        "description": "Professional Veterinary equipment and supplies available in Dubai, UAE from MaxMed. We specialize in high-quality Veterinary for laboratories, hospitals, research institutions, and healthcare facilities across the Middle East. MaxMed UAE is the leading supplier of Veterinary in the United Arab Emirates. We serve hospitals, research laboratories, universities, and medical facilities throughout Dubai, Abu Dhabi, Sharjah, and the entire UAE region. Our Veterinary products meet international quality standards and come with comprehensive support services including installation, training, and maintenance. Contact MaxMed at +971 55 460 2500 for expert consultation and same-day quotes.",
+        "url": "http:\/\/localhost\/categories\/veterinary",
+        "provider": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "telephone": "+971-55-460-2500",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai"
+            }
+        },
+        "mainEntity": {
+            "@type": "ItemList",
+            "name": "Veterinary Products",
+            "description": "Complete range of Veterinary available from MaxMed UAE"
+        },
+        "keywords": "veterinary, veterinary Dubai, veterinary UAE, veterinary equipment, veterinary supplier, laboratory equipment, medical equipment, scientific instruments, diagnostic tools, research equipment, lab supplies, analytical instruments, laboratory technology, Dubai, UAE, Middle East, MaxMed, laboratory supplier Dubai, medical equipment UAE, scientific equipment Middle East, Veterinary, Veterinary Dubai, Veterinary UAE, Veterinary equipment, Veterinary supplies, Veterinary supplier",
+        "areaServed": {
+            "@type": "Country",
+            "name": "United Arab Emirates"
+        }
+    },
+    "relationships": {
+        "part_of": "MaxMed UAE Product Catalog",
+        "available_from": "MaxMed UAE",
+        "serves_industry": [
+            "Healthcare",
+            "Medical Research",
+            "Pharmaceutical",
+            "Biotechnology"
+        ],
+        "location_coverage": "Dubai, UAE, Middle East",
+        "subcategories": [
+            "Veterinary Diagnostics"
+        ]
+    },
+    "product_count": 0,
+    "last_updated": "2025-07-11T08:02:42.089075Z"
+}

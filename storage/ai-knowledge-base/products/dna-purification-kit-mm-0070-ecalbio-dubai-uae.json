@@ -1,0 +1,162 @@
+{
+    "entity_type": "product",
+    "entity_name": "DNA Purification Kit",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "DNA Purification Kit is used to purify total genomic DNA from a variety of sample sources including fresh or frozen animal tissues and cells, blood, or bacteria. Sample extraction filter genomic DNA spin column and the DNA adsorbs to the Spin column membrane in the presence of high concentrations of chaotropic salt. Genomic DNA is purified from the DNA spin column through the elution and centrifugation. All purification process requires no phenol or chloroform extraction, or alcohol precipitation, and involves minimal handling. MaxMed UAE is the leading supplier of PCR & Molecular Analysis in Dubai and across the United Arab Emirates. We provide professional PCR & Molecular Analysis with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "DNA Purification Kit",
+        "description": "DNA Purification Kit is used to purify total genomic DNA from a variety of sample sources including fresh or frozen animal tissues and cells, blood, or bacteria. Sample extraction filter genomic DNA spin column and the DNA adsorbs to the Spin column membrane in the presence of high concentrations of chaotropic salt. Genomic DNA is purified from the DNA spin column through the elution and centrifugation. All purification process requires no phenol or chloroform extraction, or alcohol precipitation, and involves minimal handling. MaxMed UAE is the leading supplier of PCR & Molecular Analysis in Dubai and across the United Arab Emirates. We provide professional PCR & Molecular Analysis with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0070"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "WUHAN ECALBIO CO., LTD",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "PCR & Molecular Analysis",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "purification",
+            "purification Dubai",
+            "purification UAE",
+            "molecular",
+            "molecular equipment",
+            "molecular supplier",
+            "analysis",
+            "analysis equipment",
+            "analysis supplier",
+            "wuhan ecalbio co., ltd",
+            "wuhan ecalbio co., ltd UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Molecular biology",
+            "DNA analysis",
+            "Gene research",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.895192Z",
+            "validThrough": "2026-01-11T08:02:41.895328Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/dna-purification-kit-mm-0070-ecalbio-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/dna-purification-kit-mm-0070-ecalbio-dubai-uae"
+        }
+    },
+    "keywords": [
+        "purification",
+        "purification Dubai",
+        "purification UAE",
+        "molecular",
+        "molecular equipment",
+        "molecular supplier",
+        "analysis",
+        "analysis equipment",
+        "analysis supplier",
+        "wuhan ecalbio co., ltd",
+        "wuhan ecalbio co., ltd UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "PCR & Molecular Analysis",
+        "manufactured_by": "WUHAN ECALBIO CO., LTD",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "TC1000-S Thermal Cycler Standard",
+            "TC1000-G-Pro Thermal Cycler Gradient",
+            "PC-32 Gradient thermal cycler",
+            "PC-96 Gradient thermal cycler",
+            "PC-96P Gradient thermal cycler"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.896667Z"
+}

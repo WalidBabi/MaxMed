@@ -1,0 +1,174 @@
+{
+    "entity_type": "product",
+    "entity_name": "Sugar KS-802",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Column with sodium (Na+) counter ions\r\n\r\n• Only water is required for the analysis of neutral sugars\r\n\r\n• Can be used in combination (2-3 column in row with same or different exclusion limit)\r\n\r\n• Fulfill USP L22 and L58 requirements\r\n\r\n \r\n\r\nSUGAR KS-801 and SUGAR KS-802\r\n\r\nSeparates saccharides by combination of ligand exchange (Na+) and size exclusion modes\r\n\r\nOnly water is required for the analysis of neutral sugars\r\n\r\nExclusion limit 1,000 and 10,000\r\n\r\n​\r\n\r\nSUGAR KS-803 and SUGAR KS-804\r\n\r\nSuitable for separation of polysaccharides by size exclusion mode\r\n\r\nCan be used in combination with other columns e.g., SUGAR KS-802 and SUGAR KS-801\r\n\r\nExclusion limit 50,000 and 400,000 MaxMed UAE is the leading supplier of Liquid Chromatograph (HPLC) in Dubai and across the United Arab Emirates. We provide professional Liquid Chromatograph (HPLC) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Sugar KS-802",
+        "description": "Column with sodium (Na+) counter ions\r\n\r\n• Only water is required for the analysis of neutral sugars\r\n\r\n• Can be used in combination (2-3 column in row with same or different exclusion limit)\r\n\r\n• Fulfill USP L22 and L58 requirements\r\n\r\n \r\n\r\nSUGAR KS-801 and SUGAR KS-802\r\n\r\nSeparates saccharides by combination of ligand exchange (Na+) and size exclusion modes\r\n\r\nOnly water is required for the analysis of neutral sugars\r\n\r\nExclusion limit 1,000 and 10,000\r\n\r\n​\r\n\r\nSUGAR KS-803 and SUGAR KS-804\r\n\r\nSuitable for separation of polysaccharides by size exclusion mode\r\n\r\nCan be used in combination with other columns e.g., SUGAR KS-802 and SUGAR KS-801\r\n\r\nExclusion limit 50,000 and 400,000 MaxMed UAE is the leading supplier of Liquid Chromatograph (HPLC) in Dubai and across the United Arab Emirates. We provide professional Liquid Chromatograph (HPLC) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0052"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "Shodex",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Liquid Chromatograph (HPLC)",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "sugar",
+            "sugar Dubai",
+            "sugar UAE",
+            "ks-802",
+            "ks-802 Dubai",
+            "ks-802 UAE",
+            "liquid",
+            "liquid equipment",
+            "liquid supplier",
+            "chromatograph",
+            "chromatograph equipment",
+            "chromatograph supplier",
+            "(hplc)",
+            "(hplc) equipment",
+            "(hplc) supplier",
+            "shodex",
+            "shodex UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "7548.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.829708Z",
+            "validThrough": "2026-01-11T08:02:41.829765Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/sugar-ks-802-mm-0052-shodex-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/sugar-ks-802-mm-0052-shodex-dubai-uae"
+        }
+    },
+    "keywords": [
+        "sugar",
+        "sugar Dubai",
+        "sugar UAE",
+        "ks-802",
+        "ks-802 Dubai",
+        "ks-802 UAE",
+        "liquid",
+        "liquid equipment",
+        "liquid supplier",
+        "chromatograph",
+        "chromatograph equipment",
+        "chromatograph supplier",
+        "(hplc)",
+        "(hplc) equipment",
+        "(hplc) supplier",
+        "shodex",
+        "shodex UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Liquid Chromatograph (HPLC)",
+        "manufactured_by": "Shodex",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "HPLC Column Nova Atom Liquid Chromatography",
+            "HPLC Column Nova Element Liquid Chromatography",
+            "Liquid Chromatography Columns for Special Industries (HPLC)",
+            "PL aquagel-OH 20",
+            "Allure Organic Acids"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.830771Z"
+}

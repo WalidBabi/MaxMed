@@ -1,0 +1,183 @@
+{
+    "entity_type": "product",
+    "entity_name": "ACQUITY TUV Performance Maintenance Kit",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The Waters Performance Maintenance Kit for the ACQUITY UPLC TUV\/PDA contains all of the Waters Quality Parts necessary to keep your instrument operating at peak performance on an annual basis. It is used in ACQUITY UPLC PDA Detectors, ACQUITY eLambda PDA Detector, ACQUITY UPLC TUV Detectors, 2489 Dual Wavelength UV Detector and the 2998 PDA Detector. The old part number was 201000186. The Waters Performance Maintenance Kit includes the following parts: PerformancePLUS Long Life Lamp which is warranted for a lifetime of 2000 hours or 1 year, whichever comes first. MaxMed UAE is the leading supplier of UPLC System Maintenance Kits in Dubai and across the United Arab Emirates. We provide professional UPLC System Maintenance Kits with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "ACQUITY TUV Performance Maintenance Kit",
+        "description": "The Waters Performance Maintenance Kit for the ACQUITY UPLC TUV\/PDA contains all of the Waters Quality Parts necessary to keep your instrument operating at peak performance on an annual basis. It is used in ACQUITY UPLC PDA Detectors, ACQUITY eLambda PDA Detector, ACQUITY UPLC TUV Detectors, 2489 Dual Wavelength UV Detector and the 2998 PDA Detector. The old part number was 201000186. The Waters Performance Maintenance Kit includes the following parts: PerformancePLUS Long Life Lamp which is warranted for a lifetime of 2000 hours or 1 year, whichever comes first. MaxMed UAE is the leading supplier of UPLC System Maintenance Kits in Dubai and across the United Arab Emirates. We provide professional UPLC System Maintenance Kits with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0049"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "Waters Corporation.",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "UPLC System Maintenance Kits",
+        "additionalType": [
+            "https:\/\/schema.org\/Product",
+            "https:\/\/schema.org\/SoftwareApplication"
+        ],
+        "keywords": {
+            "0": "acquity",
+            "1": "acquity Dubai",
+            "2": "acquity UAE",
+            "3": "performance",
+            "4": "performance Dubai",
+            "5": "performance UAE",
+            "6": "maintenance",
+            "7": "maintenance Dubai",
+            "8": "maintenance UAE",
+            "9": "uplc",
+            "10": "uplc equipment",
+            "11": "uplc supplier",
+            "12": "system",
+            "13": "system equipment",
+            "14": "system supplier",
+            "16": "maintenance equipment",
+            "17": "maintenance supplier",
+            "18": "kits",
+            "19": "kits equipment",
+            "20": "kits supplier",
+            "21": "waters corporation.",
+            "22": "waters corporation. UAE",
+            "23": "laboratory equipment",
+            "24": "medical equipment",
+            "25": "scientific instruments",
+            "26": "diagnostic tools",
+            "27": "research equipment",
+            "28": "lab supplies",
+            "29": "analytical instruments",
+            "30": "laboratory technology",
+            "31": "Dubai",
+            "32": "UAE",
+            "33": "Middle East",
+            "34": "MaxMed",
+            "35": "laboratory supplier Dubai",
+            "36": "medical equipment UAE",
+            "37": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "5550.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.820327Z",
+            "validThrough": "2026-01-11T08:02:41.820378Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/acquity-tuv-performance-maintenance-kit-mm-0049-waters-corporation-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/acquity-tuv-performance-maintenance-kit-mm-0049-waters-corporation-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "acquity",
+        "1": "acquity Dubai",
+        "2": "acquity UAE",
+        "3": "performance",
+        "4": "performance Dubai",
+        "5": "performance UAE",
+        "6": "maintenance",
+        "7": "maintenance Dubai",
+        "8": "maintenance UAE",
+        "9": "uplc",
+        "10": "uplc equipment",
+        "11": "uplc supplier",
+        "12": "system",
+        "13": "system equipment",
+        "14": "system supplier",
+        "16": "maintenance equipment",
+        "17": "maintenance supplier",
+        "18": "kits",
+        "19": "kits equipment",
+        "20": "kits supplier",
+        "21": "waters corporation.",
+        "22": "waters corporation. UAE",
+        "23": "laboratory equipment",
+        "24": "medical equipment",
+        "25": "scientific instruments",
+        "26": "diagnostic tools",
+        "27": "research equipment",
+        "28": "lab supplies",
+        "29": "analytical instruments",
+        "30": "laboratory technology",
+        "31": "Dubai",
+        "32": "UAE",
+        "33": "Middle East",
+        "34": "MaxMed",
+        "35": "laboratory supplier Dubai",
+        "36": "medical equipment UAE",
+        "37": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "UPLC System Maintenance Kits",
+        "manufactured_by": "Waters Corporation.",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "ACQUITY UPLC H-Class QSM PM kit",
+            "ACQUITY UPLC H-Class SM-FTN PM Kit",
+            "ACQUITY Fluorescence Detector PM Kit"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.821124Z"
+}

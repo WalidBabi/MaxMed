@@ -1,0 +1,176 @@
+{
+    "entity_type": "product",
+    "entity_name": "Melamine Rapid Test Kit",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Melamine is a common industry chemical, which was used illegally in milk to increase the protein content \r\nmeasured by classic Kjeldahl method. Milk products prepared from milk contaminated with melamine will directly \r\ndamage the urinary system, for instance, it will cause kidney stone in infant, whose main food is milk powder. FAO \r\nhas set a strict MRL to melamine in milk, other countries, such as China, USA also set MRLs. \r\nThis product utilizes the high affinity of monoclonal antibody against melamine, which can easily identify its \r\ncontamination in samples without any instrument. The detection limit of the kit is 30ppb. MaxMed UAE is the leading supplier of Food Test Kits in Dubai and across the United Arab Emirates. We provide professional Food Test Kits with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Melamine Rapid Test Kit",
+        "description": "Melamine is a common industry chemical, which was used illegally in milk to increase the protein content \r\nmeasured by classic Kjeldahl method. Milk products prepared from milk contaminated with melamine will directly \r\ndamage the urinary system, for instance, it will cause kidney stone in infant, whose main food is milk powder. FAO \r\nhas set a strict MRL to melamine in milk, other countries, such as China, USA also set MRLs. \r\nThis product utilizes the high affinity of monoclonal antibody against melamine, which can easily identify its \r\ncontamination in samples without any instrument. The detection limit of the kit is 30ppb. MaxMed UAE is the leading supplier of Food Test Kits in Dubai and across the United Arab Emirates. We provide professional Food Test Kits with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MT-0122"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxTest©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Food Test Kits",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "melamine",
+            "1": "melamine Dubai",
+            "2": "melamine UAE",
+            "3": "rapid",
+            "4": "rapid Dubai",
+            "5": "rapid UAE",
+            "6": "test",
+            "7": "test Dubai",
+            "8": "test UAE",
+            "9": "food",
+            "10": "food equipment",
+            "11": "food supplier",
+            "13": "test equipment",
+            "14": "test supplier",
+            "15": "kits",
+            "16": "kits equipment",
+            "17": "kits supplier",
+            "18": "maxtest©",
+            "19": "maxtest© UAE",
+            "20": "laboratory equipment",
+            "21": "medical equipment",
+            "22": "scientific instruments",
+            "23": "diagnostic tools",
+            "24": "research equipment",
+            "25": "lab supplies",
+            "26": "analytical instruments",
+            "27": "laboratory technology",
+            "28": "Dubai",
+            "29": "UAE",
+            "30": "Middle East",
+            "31": "MaxMed",
+            "32": "laboratory supplier Dubai",
+            "33": "medical equipment UAE",
+            "34": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "872.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.800260Z",
+            "validThrough": "2026-01-11T08:02:41.800347Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/melamine-rapid-test-kit-mt-0122-maxtest-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/melamine-rapid-test-kit-mt-0122-maxtest-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "melamine",
+        "1": "melamine Dubai",
+        "2": "melamine UAE",
+        "3": "rapid",
+        "4": "rapid Dubai",
+        "5": "rapid UAE",
+        "6": "test",
+        "7": "test Dubai",
+        "8": "test UAE",
+        "9": "food",
+        "10": "food equipment",
+        "11": "food supplier",
+        "13": "test equipment",
+        "14": "test supplier",
+        "15": "kits",
+        "16": "kits equipment",
+        "17": "kits supplier",
+        "18": "maxtest©",
+        "19": "maxtest© UAE",
+        "20": "laboratory equipment",
+        "21": "medical equipment",
+        "22": "scientific instruments",
+        "23": "diagnostic tools",
+        "24": "research equipment",
+        "25": "lab supplies",
+        "26": "analytical instruments",
+        "27": "laboratory technology",
+        "28": "Dubai",
+        "29": "UAE",
+        "30": "Middle East",
+        "31": "MaxMed",
+        "32": "laboratory supplier Dubai",
+        "33": "medical equipment UAE",
+        "34": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Food Test Kits",
+        "manufactured_by": "MaxTest©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Aflatoxin M1 Rapid Test Kit 0.05ppb",
+            "ALP Rapid Test Strip",
+            "Halal Food Test Kit"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.801292Z"
+}

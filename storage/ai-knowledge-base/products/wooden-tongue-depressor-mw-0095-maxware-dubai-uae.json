@@ -1,0 +1,174 @@
+{
+    "entity_type": "product",
+    "entity_name": "Wooden Tongue Depressor",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Professional single use tongue depressors\/waxing spatulas manufactured from smooth wood with rounded tips. Used by healthcare professionals to view the back of the throat and mouth.\r\n\r\nGENC-1084 Wooden Tongue Depressor Adult (150x18x1.6mm), Non-Sterile 100pcs\/bx, 50bxs\/ctn\r\nGENC-1085 Adult (150x18x1.6mm), Sterile 100pcs\/bx, 50bxs\/ctn MaxMed UAE is the leading supplier of Dental Consumables in Dubai and across the United Arab Emirates. We provide professional Dental Consumables with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Wooden Tongue Depressor",
+        "description": "Professional single use tongue depressors\/waxing spatulas manufactured from smooth wood with rounded tips. Used by healthcare professionals to view the back of the throat and mouth.\r\n\r\nGENC-1084 Wooden Tongue Depressor Adult (150x18x1.6mm), Non-Sterile 100pcs\/bx, 50bxs\/ctn\r\nGENC-1085 Adult (150x18x1.6mm), Sterile 100pcs\/bx, 50bxs\/ctn MaxMed UAE is the leading supplier of Dental Consumables in Dubai and across the United Arab Emirates. We provide professional Dental Consumables with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0095"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Dental Consumables",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "wooden",
+            "wooden Dubai",
+            "wooden UAE",
+            "tongue",
+            "tongue Dubai",
+            "tongue UAE",
+            "depressor",
+            "depressor Dubai",
+            "depressor UAE",
+            "dental",
+            "dental equipment",
+            "dental supplier",
+            "consumables",
+            "consumables equipment",
+            "consumables supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.514440Z",
+            "validThrough": "2026-01-11T08:02:41.514529Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/wooden-tongue-depressor-mw-0095-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/wooden-tongue-depressor-mw-0095-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "wooden",
+        "wooden Dubai",
+        "wooden UAE",
+        "tongue",
+        "tongue Dubai",
+        "tongue UAE",
+        "depressor",
+        "depressor Dubai",
+        "depressor UAE",
+        "dental",
+        "dental equipment",
+        "dental supplier",
+        "consumables",
+        "consumables equipment",
+        "consumables supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Dental Consumables",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Yankauer Suction Tube",
+            "Suction Tips",
+            "Sterilization Reel Heat Sealing Flat Reel Paper + Blue Film",
+            "Sterilization Pouch (Self Sealing Flat Pouch)",
+            "Saliva Ejector"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.515453Z"
+}

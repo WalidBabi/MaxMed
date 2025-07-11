@@ -1,0 +1,55 @@
+{
+    "entity_type": "category",
+    "entity_name": "Lab Equipment",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Professional Lab Equipment equipment and supplies available in Dubai, UAE from MaxMed. We specialize in high-quality Lab Equipment for laboratories, hospitals, research institutions, and healthcare facilities across the Middle East. MaxMed UAE is the leading supplier of Lab Equipment in the United Arab Emirates. We serve hospitals, research laboratories, universities, and medical facilities throughout Dubai, Abu Dhabi, Sharjah, and the entire UAE region. Our Lab Equipment products meet international quality standards and come with comprehensive support services including installation, training, and maintenance. Contact MaxMed at +971 55 460 2500 for expert consultation and same-day quotes.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": "CollectionPage",
+        "name": "Lab Equipment",
+        "description": "Professional Lab Equipment equipment and supplies available in Dubai, UAE from MaxMed. We specialize in high-quality Lab Equipment for laboratories, hospitals, research institutions, and healthcare facilities across the Middle East. MaxMed UAE is the leading supplier of Lab Equipment in the United Arab Emirates. We serve hospitals, research laboratories, universities, and medical facilities throughout Dubai, Abu Dhabi, Sharjah, and the entire UAE region. Our Lab Equipment products meet international quality standards and come with comprehensive support services including installation, training, and maintenance. Contact MaxMed at +971 55 460 2500 for expert consultation and same-day quotes.",
+        "url": "http:\/\/localhost\/categories\/lab-equipment",
+        "provider": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "telephone": "+971-55-460-2500",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai"
+            }
+        },
+        "mainEntity": {
+            "@type": "ItemList",
+            "name": "Lab Equipment Products",
+            "description": "Complete range of Lab Equipment available from MaxMed UAE"
+        },
+        "keywords": "equipment, equipment Dubai, equipment UAE, equipment equipment, equipment supplier, laboratory equipment, medical equipment, scientific instruments, diagnostic tools, research equipment, lab supplies, analytical instruments, laboratory technology, Dubai, UAE, Middle East, MaxMed, laboratory supplier Dubai, medical equipment UAE, scientific equipment Middle East, Lab Equipment, Lab Equipment Dubai, Lab Equipment UAE, Lab Equipment equipment, Lab Equipment supplies, Lab Equipment supplier",
+        "areaServed": {
+            "@type": "Country",
+            "name": "United Arab Emirates"
+        }
+    },
+    "relationships": {
+        "part_of": "MaxMed UAE Product Catalog",
+        "available_from": "MaxMed UAE",
+        "serves_industry": [
+            "Healthcare",
+            "Medical Research",
+            "Pharmaceutical",
+            "Biotechnology"
+        ],
+        "location_coverage": "Dubai, UAE, Middle East",
+        "subcategories": [
+            "Mixing & Shaking Equipment",
+            "Thermal & Process Equipment",
+            "Analytical Instruments",
+            "Microbiology Equipment",
+            "Pathology Equipment",
+            "Grinding & Homogenization Instruments"
+        ]
+    },
+    "product_count": 0,
+    "last_updated": "2025-07-11T08:02:42.085144Z"
+}

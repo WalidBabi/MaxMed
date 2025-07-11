@@ -1,0 +1,208 @@
+{
+    "entity_type": "product",
+    "entity_name": "Fecal Occult Blood (FOB) Rapid Test (40 ng\/mL)",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The FOB Rapid Test is a rapid chromatographic immunoassay for the qualitative detection of Human Occult Blood in feces.\r\nProduct Features\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Tumor Markers Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Tumor Markers Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Fecal Occult Blood (FOB) Rapid Test (40 ng\/mL)",
+        "description": "The FOB Rapid Test is a rapid chromatographic immunoassay for the qualitative detection of Human Occult Blood in feces.\r\nProduct Features\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Tumor Markers Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Tumor Markers Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MT-0020"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxTest©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Tumor Markers Rapid Tests",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "fecal",
+            "1": "fecal Dubai",
+            "2": "fecal UAE",
+            "3": "occult",
+            "4": "occult Dubai",
+            "5": "occult UAE",
+            "6": "blood",
+            "7": "blood Dubai",
+            "8": "blood UAE",
+            "9": "(fob)",
+            "10": "(fob) Dubai",
+            "11": "(fob) UAE",
+            "12": "rapid",
+            "13": "rapid Dubai",
+            "14": "rapid UAE",
+            "15": "test",
+            "16": "test Dubai",
+            "17": "test UAE",
+            "18": "ng\/ml)",
+            "19": "ng\/ml) Dubai",
+            "20": "ng\/ml) UAE",
+            "21": "tumor",
+            "22": "tumor equipment",
+            "23": "tumor supplier",
+            "24": "markers",
+            "25": "markers equipment",
+            "26": "markers supplier",
+            "28": "rapid equipment",
+            "29": "rapid supplier",
+            "30": "tests",
+            "31": "tests equipment",
+            "32": "tests supplier",
+            "33": "maxtest©",
+            "34": "maxtest© UAE",
+            "35": "laboratory equipment",
+            "36": "medical equipment",
+            "37": "scientific instruments",
+            "38": "diagnostic tools",
+            "39": "research equipment",
+            "40": "lab supplies",
+            "41": "analytical instruments",
+            "42": "laboratory technology",
+            "43": "Dubai",
+            "44": "UAE",
+            "45": "Middle East",
+            "46": "MaxMed",
+            "47": "laboratory supplier Dubai",
+            "48": "medical equipment UAE",
+            "49": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.177809Z",
+            "validThrough": "2026-01-11T08:02:41.177966Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/fecal-occult-blood-fob-rapid-test-40-ngml-mt-0020-maxtest-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/fecal-occult-blood-fob-rapid-test-40-ngml-mt-0020-maxtest-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "fecal",
+        "1": "fecal Dubai",
+        "2": "fecal UAE",
+        "3": "occult",
+        "4": "occult Dubai",
+        "5": "occult UAE",
+        "6": "blood",
+        "7": "blood Dubai",
+        "8": "blood UAE",
+        "9": "(fob)",
+        "10": "(fob) Dubai",
+        "11": "(fob) UAE",
+        "12": "rapid",
+        "13": "rapid Dubai",
+        "14": "rapid UAE",
+        "15": "test",
+        "16": "test Dubai",
+        "17": "test UAE",
+        "18": "ng\/ml)",
+        "19": "ng\/ml) Dubai",
+        "20": "ng\/ml) UAE",
+        "21": "tumor",
+        "22": "tumor equipment",
+        "23": "tumor supplier",
+        "24": "markers",
+        "25": "markers equipment",
+        "26": "markers supplier",
+        "28": "rapid equipment",
+        "29": "rapid supplier",
+        "30": "tests",
+        "31": "tests equipment",
+        "32": "tests supplier",
+        "33": "maxtest©",
+        "34": "maxtest© UAE",
+        "35": "laboratory equipment",
+        "36": "medical equipment",
+        "37": "scientific instruments",
+        "38": "diagnostic tools",
+        "39": "research equipment",
+        "40": "lab supplies",
+        "41": "analytical instruments",
+        "42": "laboratory technology",
+        "43": "Dubai",
+        "44": "UAE",
+        "45": "Middle East",
+        "46": "MaxMed",
+        "47": "laboratory supplier Dubai",
+        "48": "medical equipment UAE",
+        "49": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Tumor Markers Rapid Tests",
+        "manufactured_by": "MaxTest©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "HPV Antigen Rapid Test",
+            "Carcinoembryonic Antigen (CEA) Rapid Test",
+            "Fecal Occult Blood (FOB) Rapid Test (25 ng\/mL)",
+            "Fecal Occult Blood (FOB) Rapid Test (50 ng\/mL)",
+            "Transferrin and FOB Combo Rapid Test"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.179331Z"
+}

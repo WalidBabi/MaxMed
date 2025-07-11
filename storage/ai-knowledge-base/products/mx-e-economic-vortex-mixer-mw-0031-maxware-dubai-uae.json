@@ -1,0 +1,174 @@
+{
+    "entity_type": "product",
+    "entity_name": "MX-E Economic Vortex Mixer",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Compact , portable and fits nicelyon bench-top (erase desktops and table tops)\r\n\r\n•  Touch operation,Fixed speed of 3,000rpm for rapid mixing of samples\r\n\r\n•  Powerful and efficient 12V DC brushless motor is smooth operation and has long life\r\n\r\n•  Foot pad design secures the mixer in place and does not wobble during operation\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8031211000\r\nMotion type\r\nOrbital\r\nOrbital diameter\r\n4.8mm\r\nSpeed range\r\n3000rpm(Fixed speed)\r\nSpeed display\r\n-\r\nRun type\r\nOrbital\r\nMotor type\r\nTouch Operation\r\nMotor rating input\r\n-\r\nMotor rating output\r\n10W\r\nPower\r\n12W\r\nVoltage\r\n100-240V\r\nFrequency\r\n50\/60Hz\r\nDimension[W×H×D]\r\n133X133X80mm\r\nWeight\r\n0.6kg\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible relative humidity\r\n≤80% RH\r\nProtection class\r\nIP21 MaxMed UAE is the leading supplier of Mixers in Dubai and across the United Arab Emirates. We provide professional Mixers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "MX-E Economic Vortex Mixer",
+        "description": "Compact , portable and fits nicelyon bench-top (erase desktops and table tops)\r\n\r\n•  Touch operation,Fixed speed of 3,000rpm for rapid mixing of samples\r\n\r\n•  Powerful and efficient 12V DC brushless motor is smooth operation and has long life\r\n\r\n•  Foot pad design secures the mixer in place and does not wobble during operation\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8031211000\r\nMotion type\r\nOrbital\r\nOrbital diameter\r\n4.8mm\r\nSpeed range\r\n3000rpm(Fixed speed)\r\nSpeed display\r\n-\r\nRun type\r\nOrbital\r\nMotor type\r\nTouch Operation\r\nMotor rating input\r\n-\r\nMotor rating output\r\n10W\r\nPower\r\n12W\r\nVoltage\r\n100-240V\r\nFrequency\r\n50\/60Hz\r\nDimension[W×H×D]\r\n133X133X80mm\r\nWeight\r\n0.6kg\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible relative humidity\r\n≤80% RH\r\nProtection class\r\nIP21 MaxMed UAE is the leading supplier of Mixers in Dubai and across the United Arab Emirates. We provide professional Mixers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0031"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Mixers",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "mx-e",
+            "mx-e Dubai",
+            "mx-e UAE",
+            "economic",
+            "economic Dubai",
+            "economic UAE",
+            "vortex",
+            "vortex Dubai",
+            "vortex UAE",
+            "mixer",
+            "mixer Dubai",
+            "mixer UAE",
+            "mixers",
+            "mixers equipment",
+            "mixers supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:40.980295Z",
+            "validThrough": "2026-01-11T08:02:40.980347Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/mx-e-economic-vortex-mixer-mw-0031-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/mx-e-economic-vortex-mixer-mw-0031-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "mx-e",
+        "mx-e Dubai",
+        "mx-e UAE",
+        "economic",
+        "economic Dubai",
+        "economic UAE",
+        "vortex",
+        "vortex Dubai",
+        "vortex UAE",
+        "mixer",
+        "mixer Dubai",
+        "mixer UAE",
+        "mixers",
+        "mixers equipment",
+        "mixers supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Mixers",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "MX-S Variable speed Vortex Mixer",
+            "MX-F Fixed speed Vortex Mixer",
+            "MX-C Cell Disruptor",
+            "MX-M Microplate Mixer",
+            "MX-RD-Pro LCD Digital Tube Rotator"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:40.981256Z"
+}

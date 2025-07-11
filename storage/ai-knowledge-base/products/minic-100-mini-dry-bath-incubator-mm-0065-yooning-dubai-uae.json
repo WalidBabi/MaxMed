@@ -1,0 +1,180 @@
+{
+    "entity_type": "product",
+    "entity_name": "MiniC-100 Mini Dry Bath Incubator",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Mini Dry Bath Incubator is controlled by PID, applied to vehicle power supply due to small palm-size and light weight. Widely used in rapid inspection kit or small labs\r\nModels:\r\n• MiniC-100, -10 ~100℃, ≤30min ( R.T.-20℃ @R.T.25℃)\r\n\r\nOPTIONAL ACCESSORIES:\r\n• M1 block mini dry bath incubator,0.2ml x 32\r\n• M2 Block mini dry bath incubator,0.5mi x 24\r\n• M3 Block mini dry bath incubator,1.5ml x 15\r\n• M4 Block mini dry bath incubator,2.0ml x 15\r\n• M5 Block mini dry bath incubator,cuvette  x 8\r\n• M6 Block mini dry bath incubator,15 ml x 6 centrifuge tube( can't close the lid)\r\n• M7 Block  mini dry bath incubator,50ml x 2 centrifuge tube( can't close the lid)\r\n• M8 Block  mini dry bath incubator,5ml x 12 centrifuge tube( can't close the lid) MaxMed UAE is the leading supplier of Incubators & Ovens in Dubai and across the United Arab Emirates. We provide professional Incubators & Ovens with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "MiniC-100 Mini Dry Bath Incubator",
+        "description": "Mini Dry Bath Incubator is controlled by PID, applied to vehicle power supply due to small palm-size and light weight. Widely used in rapid inspection kit or small labs\r\nModels:\r\n• MiniC-100, -10 ~100℃, ≤30min ( R.T.-20℃ @R.T.25℃)\r\n\r\nOPTIONAL ACCESSORIES:\r\n• M1 block mini dry bath incubator,0.2ml x 32\r\n• M2 Block mini dry bath incubator,0.5mi x 24\r\n• M3 Block mini dry bath incubator,1.5ml x 15\r\n• M4 Block mini dry bath incubator,2.0ml x 15\r\n• M5 Block mini dry bath incubator,cuvette  x 8\r\n• M6 Block mini dry bath incubator,15 ml x 6 centrifuge tube( can't close the lid)\r\n• M7 Block  mini dry bath incubator,50ml x 2 centrifuge tube( can't close the lid)\r\n• M8 Block  mini dry bath incubator,5ml x 12 centrifuge tube( can't close the lid) MaxMed UAE is the leading supplier of Incubators & Ovens in Dubai and across the United Arab Emirates. We provide professional Incubators & Ovens with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0065"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "Yooning",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Incubators & Ovens",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "minic-100",
+            "minic-100 Dubai",
+            "minic-100 UAE",
+            "mini",
+            "mini Dubai",
+            "mini UAE",
+            "bath",
+            "bath Dubai",
+            "bath UAE",
+            "incubator",
+            "incubator Dubai",
+            "incubator UAE",
+            "incubators",
+            "incubators equipment",
+            "incubators supplier",
+            "ovens",
+            "ovens equipment",
+            "ovens supplier",
+            "yooning",
+            "yooning UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.871252Z",
+            "validThrough": "2026-01-11T08:02:41.871309Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/minic-100-mini-dry-bath-incubator-mm-0065-yooning-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/minic-100-mini-dry-bath-incubator-mm-0065-yooning-dubai-uae"
+        }
+    },
+    "keywords": [
+        "minic-100",
+        "minic-100 Dubai",
+        "minic-100 UAE",
+        "mini",
+        "mini Dubai",
+        "mini UAE",
+        "bath",
+        "bath Dubai",
+        "bath UAE",
+        "incubator",
+        "incubator Dubai",
+        "incubator UAE",
+        "incubators",
+        "incubators equipment",
+        "incubators supplier",
+        "ovens",
+        "ovens equipment",
+        "ovens supplier",
+        "yooning",
+        "yooning UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Incubators & Ovens",
+        "manufactured_by": "Yooning",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Vacuum Drying Oven(BOV-V\/VL)",
+            "Forced Air Drying Oven BJPX-HG Series",
+            "Dual-use Drying Oven B0V-D series",
+            "High Temperature Drying Oven",
+            "Constant-temperature Drying Oven BJPX-HDO Series"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.873569Z"
+}

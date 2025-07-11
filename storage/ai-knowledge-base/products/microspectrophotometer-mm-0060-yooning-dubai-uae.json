@@ -1,0 +1,156 @@
+{
+    "entity_type": "product",
+    "entity_name": "NanoOne Microspectrophotometer",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "NanoOne-S a cost-effective UV\/VIS spectrophotometer helps you access concentration of DNA, RNA, Protein quickly and accurately. NanoOne-S equipped with a long-life xenon lamp and a wavelength range of 180-910 nm and all data can be transferred by USB, widely used in molecular biology, clinical diagnostics, drug development, etc. NanoOne-S is an entry-level spectrophotometer with the most basic functions. Even on a tight budget, your lab can still have this instrument. MaxMed UAE is the leading supplier of Microspectrophotometer in Dubai and across the United Arab Emirates. We provide professional Microspectrophotometer with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "NanoOne Microspectrophotometer",
+        "description": "NanoOne-S a cost-effective UV\/VIS spectrophotometer helps you access concentration of DNA, RNA, Protein quickly and accurately. NanoOne-S equipped with a long-life xenon lamp and a wavelength range of 180-910 nm and all data can be transferred by USB, widely used in molecular biology, clinical diagnostics, drug development, etc. NanoOne-S is an entry-level spectrophotometer with the most basic functions. Even on a tight budget, your lab can still have this instrument. MaxMed UAE is the leading supplier of Microspectrophotometer in Dubai and across the United Arab Emirates. We provide professional Microspectrophotometer with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0060"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "Yooning",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Microspectrophotometer",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "nanoone",
+            "1": "nanoone Dubai",
+            "2": "nanoone UAE",
+            "3": "microspectrophotometer",
+            "4": "microspectrophotometer Dubai",
+            "5": "microspectrophotometer UAE",
+            "7": "microspectrophotometer equipment",
+            "8": "microspectrophotometer supplier",
+            "9": "yooning",
+            "10": "yooning UAE",
+            "11": "laboratory equipment",
+            "12": "medical equipment",
+            "13": "scientific instruments",
+            "14": "diagnostic tools",
+            "15": "research equipment",
+            "16": "lab supplies",
+            "17": "analytical instruments",
+            "18": "laboratory technology",
+            "19": "Dubai",
+            "20": "UAE",
+            "21": "Middle East",
+            "22": "MaxMed",
+            "23": "laboratory supplier Dubai",
+            "24": "medical equipment UAE",
+            "25": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.854804Z",
+            "validThrough": "2026-01-11T08:02:41.854887Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/microspectrophotometer-mm-0060-yooning-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/microspectrophotometer-mm-0060-yooning-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "nanoone",
+        "1": "nanoone Dubai",
+        "2": "nanoone UAE",
+        "3": "microspectrophotometer",
+        "4": "microspectrophotometer Dubai",
+        "5": "microspectrophotometer UAE",
+        "7": "microspectrophotometer equipment",
+        "8": "microspectrophotometer supplier",
+        "9": "yooning",
+        "10": "yooning UAE",
+        "11": "laboratory equipment",
+        "12": "medical equipment",
+        "13": "scientific instruments",
+        "14": "diagnostic tools",
+        "15": "research equipment",
+        "16": "lab supplies",
+        "17": "analytical instruments",
+        "18": "laboratory technology",
+        "19": "Dubai",
+        "20": "UAE",
+        "21": "Middle East",
+        "22": "MaxMed",
+        "23": "laboratory supplier Dubai",
+        "24": "medical equipment UAE",
+        "25": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Microspectrophotometer",
+        "manufactured_by": "Yooning",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "NanoAccu Microspectrophotometer"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.856054Z"
+}

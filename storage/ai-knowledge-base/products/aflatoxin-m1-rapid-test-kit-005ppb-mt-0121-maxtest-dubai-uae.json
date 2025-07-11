@@ -1,0 +1,182 @@
+{
+    "entity_type": "product",
+    "entity_name": "Aflatoxin M1 Rapid Test Kit 0.05ppb",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Aflatoxins are naturally occurring mycotoxins, which are extremely toxic and among the most carcinogenic \r\nsubstances known. After entering the animal body, aflatoxins may be metabolized by the liver t a new substance - \r\naflatoxin M1. Thus it is of great importance to monitor the residue of aflatoxin M1 in foods, especially in daily \r\nconsumptions, such as milk and many other dairy products. \r\nThis product utilizes the high affinity of monoclonal antibody against aflatoxin M1, which can easily identify its \r\ncontamination in milk without any instrument. The detection limit of the kit can meet both European and USA MRLs \r\nwhen use properly. MaxMed UAE is the leading supplier of Food Test Kits in Dubai and across the United Arab Emirates. We provide professional Food Test Kits with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Aflatoxin M1 Rapid Test Kit 0.05ppb",
+        "description": "Aflatoxins are naturally occurring mycotoxins, which are extremely toxic and among the most carcinogenic \r\nsubstances known. After entering the animal body, aflatoxins may be metabolized by the liver t a new substance - \r\naflatoxin M1. Thus it is of great importance to monitor the residue of aflatoxin M1 in foods, especially in daily \r\nconsumptions, such as milk and many other dairy products. \r\nThis product utilizes the high affinity of monoclonal antibody against aflatoxin M1, which can easily identify its \r\ncontamination in milk without any instrument. The detection limit of the kit can meet both European and USA MRLs \r\nwhen use properly. MaxMed UAE is the leading supplier of Food Test Kits in Dubai and across the United Arab Emirates. We provide professional Food Test Kits with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MT-0121"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxTest©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Food Test Kits",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "aflatoxin",
+            "1": "aflatoxin Dubai",
+            "2": "aflatoxin UAE",
+            "3": "rapid",
+            "4": "rapid Dubai",
+            "5": "rapid UAE",
+            "6": "test",
+            "7": "test Dubai",
+            "8": "test UAE",
+            "9": "0.05ppb",
+            "10": "0.05ppb Dubai",
+            "11": "0.05ppb UAE",
+            "12": "food",
+            "13": "food equipment",
+            "14": "food supplier",
+            "16": "test equipment",
+            "17": "test supplier",
+            "18": "kits",
+            "19": "kits equipment",
+            "20": "kits supplier",
+            "21": "maxtest©",
+            "22": "maxtest© UAE",
+            "23": "laboratory equipment",
+            "24": "medical equipment",
+            "25": "scientific instruments",
+            "26": "diagnostic tools",
+            "27": "research equipment",
+            "28": "lab supplies",
+            "29": "analytical instruments",
+            "30": "laboratory technology",
+            "31": "Dubai",
+            "32": "UAE",
+            "33": "Middle East",
+            "34": "MaxMed",
+            "35": "laboratory supplier Dubai",
+            "36": "medical equipment UAE",
+            "37": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "995.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.803318Z",
+            "validThrough": "2026-01-11T08:02:41.803417Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/aflatoxin-m1-rapid-test-kit-005ppb-mt-0121-maxtest-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/aflatoxin-m1-rapid-test-kit-005ppb-mt-0121-maxtest-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "aflatoxin",
+        "1": "aflatoxin Dubai",
+        "2": "aflatoxin UAE",
+        "3": "rapid",
+        "4": "rapid Dubai",
+        "5": "rapid UAE",
+        "6": "test",
+        "7": "test Dubai",
+        "8": "test UAE",
+        "9": "0.05ppb",
+        "10": "0.05ppb Dubai",
+        "11": "0.05ppb UAE",
+        "12": "food",
+        "13": "food equipment",
+        "14": "food supplier",
+        "16": "test equipment",
+        "17": "test supplier",
+        "18": "kits",
+        "19": "kits equipment",
+        "20": "kits supplier",
+        "21": "maxtest©",
+        "22": "maxtest© UAE",
+        "23": "laboratory equipment",
+        "24": "medical equipment",
+        "25": "scientific instruments",
+        "26": "diagnostic tools",
+        "27": "research equipment",
+        "28": "lab supplies",
+        "29": "analytical instruments",
+        "30": "laboratory technology",
+        "31": "Dubai",
+        "32": "UAE",
+        "33": "Middle East",
+        "34": "MaxMed",
+        "35": "laboratory supplier Dubai",
+        "36": "medical equipment UAE",
+        "37": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Food Test Kits",
+        "manufactured_by": "MaxTest©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Melamine Rapid Test Kit",
+            "ALP Rapid Test Strip",
+            "Halal Food Test Kit"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.804523Z"
+}

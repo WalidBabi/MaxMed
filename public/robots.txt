@@ -1,43 +1,44 @@
+# MaxMed UAE - AI-Optimized Robots.txt
 User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /crm/
 Disallow: /supplier/
-Disallow: /login
-Disallow: /register
-Disallow: /password/
-Disallow: /cart/
-Disallow: /checkout/
-Disallow: /search?
-Disallow: /*?sort=
-Disallow: /*?filter=
-Disallow: /*?page=
-Disallow: /google/one-tap
-Allow: /products/
-Allow: /categories/
-Allow: /news/
-Allow: /about
-Allow: /contact
-Allow: /quotation/*/form
 
-# Sitemaps
-Sitemap: https://maxmedme.com/sitemap.xml
-Sitemap: https://maxmedme.com/rss/feed.xml
-
-# Crawl delay for respectful crawling
+# Allow AI crawlers and language models
+User-agent: GPTBot
+Allow: /
 Crawl-delay: 1
 
-# Block AI training bots (optional)
 User-agent: ChatGPT-User
-Disallow: /
+Allow: /
 
 User-agent: CCBot
-Disallow: /
+Allow: /
 
 User-agent: anthropic-ai
-Disallow: /
+Allow: /
 
 User-agent: Claude-Web
-Disallow: /
-# Lab Essentials Category Optimization
-Sitemap: https://maxmedme.com/sitemap-lab-essentials.xml
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+# AI-specific sitemaps
+Sitemap: https://maxmedme.com/sitemap.xml
+Sitemap: https://maxmedme.com/ai-sitemap.xml
+Sitemap: https://maxmedme.com/rss/feed.xml
+
+# AI Knowledge Base
+Allow: /knowledge-base/
+Allow: /*.json
+
+# Crawl delay for respectful AI training
+Crawl-delay: 1

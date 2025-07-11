@@ -1,0 +1,171 @@
+{
+    "entity_type": "product",
+    "entity_name": "Kato Katz Test Kit",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Kato Katz Test Kit , is also called Parasite ovum test kit, is using the Kato Katz method to detect ascaris ova, hookworm ovum, liver fluke eggs, etc.\r\nDetermining parasite ovum with the Kato-Katz method is recognized recommendation method by WHO.\r\nTo detect parasite eggs in feces, the detection cartridge for microscopy can improve the effect of the parasite and can be analyzed to  detect the degree of infection. MaxMed UAE is the leading supplier of Veterinary Diagnostics in Dubai and across the United Arab Emirates. We provide professional Veterinary Diagnostics with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Kato Katz Test Kit",
+        "description": "Kato Katz Test Kit , is also called Parasite ovum test kit, is using the Kato Katz method to detect ascaris ova, hookworm ovum, liver fluke eggs, etc.\r\nDetermining parasite ovum with the Kato-Katz method is recognized recommendation method by WHO.\r\nTo detect parasite eggs in feces, the detection cartridge for microscopy can improve the effect of the parasite and can be analyzed to  detect the degree of infection. MaxMed UAE is the leading supplier of Veterinary Diagnostics in Dubai and across the United Arab Emirates. We provide professional Veterinary Diagnostics with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0069"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "WUHAN ECALBIO CO., LTD",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Veterinary Diagnostics",
+        "additionalType": [
+            "https:\/\/schema.org\/Product",
+            "https:\/\/schema.org\/MedicalDevice"
+        ],
+        "keywords": [
+            "kato",
+            "kato Dubai",
+            "kato UAE",
+            "katz",
+            "katz Dubai",
+            "katz UAE",
+            "test",
+            "test Dubai",
+            "test UAE",
+            "veterinary",
+            "veterinary equipment",
+            "veterinary supplier",
+            "diagnostics",
+            "diagnostics equipment",
+            "diagnostics supplier",
+            "wuhan ecalbio co., ltd",
+            "wuhan ecalbio co., ltd UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Medical diagnosis",
+            "Clinical testing",
+            "Healthcare facilities",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.889585Z",
+            "validThrough": "2026-01-11T08:02:41.889702Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/kato-katz-test-kit-mm-0069-ecalbio-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/kato-katz-test-kit-mm-0069-ecalbio-dubai-uae"
+        }
+    },
+    "keywords": [
+        "kato",
+        "kato Dubai",
+        "kato UAE",
+        "katz",
+        "katz Dubai",
+        "katz UAE",
+        "test",
+        "test Dubai",
+        "test UAE",
+        "veterinary",
+        "veterinary equipment",
+        "veterinary supplier",
+        "diagnostics",
+        "diagnostics equipment",
+        "diagnostics supplier",
+        "wuhan ecalbio co., ltd",
+        "wuhan ecalbio co., ltd UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Veterinary Diagnostics",
+        "manufactured_by": "WUHAN ECALBIO CO., LTD",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "LA-100 Handheld Coagulation Analyzer-for Pet"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.891020Z"
+}

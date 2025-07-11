@@ -1,0 +1,210 @@
+{
+    "entity_type": "product",
+    "entity_name": "S1315 M\/C Ultra High Speed Camera 15,000fps@1280*1024",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "With higher bandwidth CMOS sensor, Large memory S series can achieve high-speed video recording, real-time acquisition.\r\n\r\nResolution: 1280x1024\r\nBit Depth: 10Bit\r\nFrame Rate:\r\n@1280*1024 15,000fps\r\n@1280x8 1,060,000fps\r\nRAM Storage: 192GB\r\n1TB\/2TB\/ 10TB\/20TB(optional)\r\nUSB 3.0\r\nMini. Exposure Time: 100ns\r\nShutter: Global Shutter\r\nSupport ROI\r\nSupport uto Exposure\r\nSupport IRIG-B\r\nSize: 110x110x205mm\r\n(without lens) \r\nWeight: ≤3800g\r\n\r\n• Support ROI acquisition window setting, support\r\nresolution, frame rate linkage adjustment\r\n• Support auto exposure, EDR secondary exposure\r\n• Supports internal and external synchronization\r\n• Support rising edge, falling edge, low level, high level\r\nand other external signal triggering\r\n• Supports automatic triggering of image changes with a\r\n10x10 pixel area\r\n• Standard shutter release cable to control shooting and\r\nsaving, one-touch recording function\r\n• With automatic white balance, dark field correction,\r\nintelligent denoising, Gamma correction, color\r\noptimization module\r\n• SDI video output supports real-time screen preview and\r\nslow playback in the export preview state (select\r\nsettings)\r\n• Supports PIV cross-frame exposure for non-contact\r\nmeasurement of PIV, PTV, etc. MaxMed UAE is the leading supplier of Advanced Motion & Scientific Imaging Systems in Dubai and across the United Arab Emirates. We provide professional Advanced Motion & Scientific Imaging Systems with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "S1315 M\/C Ultra High Speed Camera 15,000fps@1280*1024",
+        "description": "With higher bandwidth CMOS sensor, Large memory S series can achieve high-speed video recording, real-time acquisition.\r\n\r\nResolution: 1280x1024\r\nBit Depth: 10Bit\r\nFrame Rate:\r\n@1280*1024 15,000fps\r\n@1280x8 1,060,000fps\r\nRAM Storage: 192GB\r\n1TB\/2TB\/ 10TB\/20TB(optional)\r\nUSB 3.0\r\nMini. Exposure Time: 100ns\r\nShutter: Global Shutter\r\nSupport ROI\r\nSupport uto Exposure\r\nSupport IRIG-B\r\nSize: 110x110x205mm\r\n(without lens) \r\nWeight: ≤3800g\r\n\r\n• Support ROI acquisition window setting, support\r\nresolution, frame rate linkage adjustment\r\n• Support auto exposure, EDR secondary exposure\r\n• Supports internal and external synchronization\r\n• Support rising edge, falling edge, low level, high level\r\nand other external signal triggering\r\n• Supports automatic triggering of image changes with a\r\n10x10 pixel area\r\n• Standard shutter release cable to control shooting and\r\nsaving, one-touch recording function\r\n• With automatic white balance, dark field correction,\r\nintelligent denoising, Gamma correction, color\r\noptimization module\r\n• SDI video output supports real-time screen preview and\r\nslow playback in the export preview state (select\r\nsettings)\r\n• Supports PIV cross-frame exposure for non-contact\r\nmeasurement of PIV, PTV, etc. MaxMed UAE is the leading supplier of Advanced Motion & Scientific Imaging Systems in Dubai and across the United Arab Emirates. We provide professional Advanced Motion & Scientific Imaging Systems with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0054"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "RevealerHighSpeed",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Advanced Motion & Scientific Imaging Systems",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "s1315",
+            "s1315 Dubai",
+            "s1315 UAE",
+            "ultra",
+            "ultra Dubai",
+            "ultra UAE",
+            "high",
+            "high Dubai",
+            "high UAE",
+            "speed",
+            "speed Dubai",
+            "speed UAE",
+            "camera",
+            "camera Dubai",
+            "camera UAE",
+            "15,000fps@1280*1024",
+            "15,000fps@1280*1024 Dubai",
+            "15,000fps@1280*1024 UAE",
+            "advanced",
+            "advanced equipment",
+            "advanced supplier",
+            "motion",
+            "motion equipment",
+            "motion supplier",
+            "scientific",
+            "scientific equipment",
+            "scientific supplier",
+            "imaging",
+            "imaging equipment",
+            "imaging supplier",
+            "systems",
+            "systems equipment",
+            "systems supplier",
+            "revealerhighspeed",
+            "revealerhighspeed UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.834902Z",
+            "validThrough": "2026-01-11T08:02:41.834952Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/s1315-mc-ultra-high-speed-camera-15000fps12801024-mm-0054-revealerhighspeed-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/s1315-mc-ultra-high-speed-camera-15000fps12801024-mm-0054-revealerhighspeed-dubai-uae"
+        }
+    },
+    "keywords": [
+        "s1315",
+        "s1315 Dubai",
+        "s1315 UAE",
+        "ultra",
+        "ultra Dubai",
+        "ultra UAE",
+        "high",
+        "high Dubai",
+        "high UAE",
+        "speed",
+        "speed Dubai",
+        "speed UAE",
+        "camera",
+        "camera Dubai",
+        "camera UAE",
+        "15,000fps@1280*1024",
+        "15,000fps@1280*1024 Dubai",
+        "15,000fps@1280*1024 UAE",
+        "advanced",
+        "advanced equipment",
+        "advanced supplier",
+        "motion",
+        "motion equipment",
+        "motion supplier",
+        "scientific",
+        "scientific equipment",
+        "scientific supplier",
+        "imaging",
+        "imaging equipment",
+        "imaging supplier",
+        "systems",
+        "systems equipment",
+        "systems supplier",
+        "revealerhighspeed",
+        "revealerhighspeed UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Advanced Motion & Scientific Imaging Systems",
+        "manufactured_by": "RevealerHighSpeed",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "M230 M\/C Ultra High Speed Camera 3,000fps@1920×1080",
+            "NEO25 M\/C Ultra High Speed Camera 25,000fps@1280x1024",
+            "G Pro High-Resolution High-Speed Camera 1,000fps@5120×4096",
+            "Gloria 4.2 sCMOS Extreme Low-Noise Scientific Camera",
+            "Digital Imaging Correlation (DIC) Measurement System"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.836870Z"
+}

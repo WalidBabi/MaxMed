@@ -1,0 +1,204 @@
+{
+    "entity_type": "product",
+    "entity_name": "HiPette Colorful Fully Autoclavable Mechanical Pipette",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Using different color scales to mark the pipettes helps users quickly identify the required pipetter, reducing the risk of choosing the wrong range and improving experimental efficiency and accuracy.\r\nFor novice experimental personnel, identifying different colors makes it easier to understand and remember, simplifying the training process.\r\nDifferent colors also help organize and manage pipettes within the laboratory, making it more orderly.\r\nDLAB's new generation of fully autoclavable manual pipettes feature an excellent ergonomic design with an ultra-light body weighing less than 100g, reducing fatigue and offering a smoother, more comfortable pipetting experience;\r\nThe pipettes are easy to press with a first stop force of 4N and a second stop force of 10N, providing a comfortable single-handed pipetting experience;\r\nThe single-channel adjustable range includes 10, covering 0.1ul to 10ml;\r\nA new piston structure and screw mechanism ensure precise aspiration and dispensing, with a counter increment of one-thousandth of the range;\r\nA one-button range lock effectively prevents pipetting errors due to misoperation and aids in the accurate transfer of small volumes of liquid;\r\nThe range adjustment is smooth and tactile;\r\nConstructed with new materials, the pipettes are autoclavable without disassembly, UV sterilizable, and resistant to strong chemical corrosion;\r\nThey come with a separate filter to reduce volatile reagents from entering the body, preventing over-aspiration and piston corrosion due to improper operation;\r\nEasy to disassemble for maintenance; with the accessory tools provided, calibration and repairs can be conveniently and quickly performed. MaxMed UAE is the leading supplier of Lab Essentials (Tubes, Pipettes, Glassware) in Dubai and across the United Arab Emirates. We provide professional Lab Essentials (Tubes, Pipettes, Glassware) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "HiPette Colorful Fully Autoclavable Mechanical Pipette",
+        "description": "Using different color scales to mark the pipettes helps users quickly identify the required pipetter, reducing the risk of choosing the wrong range and improving experimental efficiency and accuracy.\r\nFor novice experimental personnel, identifying different colors makes it easier to understand and remember, simplifying the training process.\r\nDifferent colors also help organize and manage pipettes within the laboratory, making it more orderly.\r\nDLAB's new generation of fully autoclavable manual pipettes feature an excellent ergonomic design with an ultra-light body weighing less than 100g, reducing fatigue and offering a smoother, more comfortable pipetting experience;\r\nThe pipettes are easy to press with a first stop force of 4N and a second stop force of 10N, providing a comfortable single-handed pipetting experience;\r\nThe single-channel adjustable range includes 10, covering 0.1ul to 10ml;\r\nA new piston structure and screw mechanism ensure precise aspiration and dispensing, with a counter increment of one-thousandth of the range;\r\nA one-button range lock effectively prevents pipetting errors due to misoperation and aids in the accurate transfer of small volumes of liquid;\r\nThe range adjustment is smooth and tactile;\r\nConstructed with new materials, the pipettes are autoclavable without disassembly, UV sterilizable, and resistant to strong chemical corrosion;\r\nThey come with a separate filter to reduce volatile reagents from entering the body, preventing over-aspiration and piston corrosion due to improper operation;\r\nEasy to disassemble for maintenance; with the accessory tools provided, calibration and repairs can be conveniently and quickly performed. MaxMed UAE is the leading supplier of Lab Essentials (Tubes, Pipettes, Glassware) in Dubai and across the United Arab Emirates. We provide professional Lab Essentials (Tubes, Pipettes, Glassware) with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0030"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "DLAB",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Lab Essentials (Tubes, Pipettes, Glassware)",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "hipette",
+            "hipette Dubai",
+            "hipette UAE",
+            "colorful",
+            "colorful Dubai",
+            "colorful UAE",
+            "fully",
+            "fully Dubai",
+            "fully UAE",
+            "autoclavable",
+            "autoclavable Dubai",
+            "autoclavable UAE",
+            "mechanical",
+            "mechanical Dubai",
+            "mechanical UAE",
+            "pipette",
+            "pipette Dubai",
+            "pipette UAE",
+            "essentials",
+            "essentials equipment",
+            "essentials supplier",
+            "(tubes,",
+            "(tubes, equipment",
+            "(tubes, supplier",
+            "pipettes,",
+            "pipettes, equipment",
+            "pipettes, supplier",
+            "glassware)",
+            "glassware) equipment",
+            "glassware) supplier",
+            "dlab",
+            "dlab UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.665651Z",
+            "validThrough": "2026-01-11T08:02:41.665713Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/hipette-colorful-fully-autoclavable-mechanical-pipette-mm-0030-dlab-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/hipette-colorful-fully-autoclavable-mechanical-pipette-mm-0030-dlab-dubai-uae"
+        }
+    },
+    "keywords": [
+        "hipette",
+        "hipette Dubai",
+        "hipette UAE",
+        "colorful",
+        "colorful Dubai",
+        "colorful UAE",
+        "fully",
+        "fully Dubai",
+        "fully UAE",
+        "autoclavable",
+        "autoclavable Dubai",
+        "autoclavable UAE",
+        "mechanical",
+        "mechanical Dubai",
+        "mechanical UAE",
+        "pipette",
+        "pipette Dubai",
+        "pipette UAE",
+        "essentials",
+        "essentials equipment",
+        "essentials supplier",
+        "(tubes,",
+        "(tubes, equipment",
+        "(tubes, supplier",
+        "pipettes,",
+        "pipettes, equipment",
+        "pipettes, supplier",
+        "glassware)",
+        "glassware) equipment",
+        "glassware) supplier",
+        "dlab",
+        "dlab UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Lab Essentials (Tubes, Pipettes, Glassware)",
+        "manufactured_by": "DLAB",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "HiPette Fully Autoclavable Mechanical Pipette",
+            "MicroPette Plus Fully Autoclavable Adjustable Volume Mechanical Pipette",
+            "MicroPette Plus Fully Autoclavable Fixed Volume Mechanical Pipette",
+            "MicroPette Plus 8-channel Adjustable Volume Mechanical Pipettes(magnetic suction model)",
+            "MicroPette Plus 12-channel Adjustable Volume Mechanical Pipettes(magnetic suction model)"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.667242Z"
+}

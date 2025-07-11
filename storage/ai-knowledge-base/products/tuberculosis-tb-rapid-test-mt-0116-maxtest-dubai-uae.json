@@ -1,0 +1,190 @@
+{
+    "entity_type": "product",
+    "entity_name": "Tuberculosis (TB) Rapid Test",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "The Tuberculosis Rapid Test is a rapid chromatographic immunoassay for the qualitative detection of anti-TB antibodies (Isotypes IgG, IgM and IgA) in human whole blood, serum or plasma specimens.\r\n\r\nProduct Features\r\n\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Infectious Disease Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Infectious Disease Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Tuberculosis (TB) Rapid Test",
+        "description": "The Tuberculosis Rapid Test is a rapid chromatographic immunoassay for the qualitative detection of anti-TB antibodies (Isotypes IgG, IgM and IgA) in human whole blood, serum or plasma specimens.\r\n\r\nProduct Features\r\n\r\nFast results  \r\n\r\nEasy visual interpretation\r\n\r\nSimple operation, no equipment required \r\n\r\nHigh accuracy MaxMed UAE is the leading supplier of Infectious Disease Rapid Tests in Dubai and across the United Arab Emirates. We provide professional Infectious Disease Rapid Tests with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MT-0116"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxTest©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Infectious Disease Rapid Tests",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": {
+            "0": "tuberculosis",
+            "1": "tuberculosis Dubai",
+            "2": "tuberculosis UAE",
+            "3": "(tb)",
+            "4": "(tb) Dubai",
+            "5": "(tb) UAE",
+            "6": "rapid",
+            "7": "rapid Dubai",
+            "8": "rapid UAE",
+            "9": "test",
+            "10": "test Dubai",
+            "11": "test UAE",
+            "12": "infectious",
+            "13": "infectious equipment",
+            "14": "infectious supplier",
+            "15": "disease",
+            "16": "disease equipment",
+            "17": "disease supplier",
+            "19": "rapid equipment",
+            "20": "rapid supplier",
+            "21": "tests",
+            "22": "tests equipment",
+            "23": "tests supplier",
+            "24": "maxtest©",
+            "25": "maxtest© UAE",
+            "26": "laboratory equipment",
+            "27": "medical equipment",
+            "28": "scientific instruments",
+            "29": "diagnostic tools",
+            "30": "research equipment",
+            "31": "lab supplies",
+            "32": "analytical instruments",
+            "33": "laboratory technology",
+            "34": "Dubai",
+            "35": "UAE",
+            "36": "Middle East",
+            "37": "MaxMed",
+            "38": "laboratory supplier Dubai",
+            "39": "medical equipment UAE",
+            "40": "scientific equipment Middle East"
+        },
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.581561Z",
+            "validThrough": "2026-01-11T08:02:41.581617Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/tuberculosis-tb-rapid-test-mt-0116-maxtest-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/tuberculosis-tb-rapid-test-mt-0116-maxtest-dubai-uae"
+        }
+    },
+    "keywords": {
+        "0": "tuberculosis",
+        "1": "tuberculosis Dubai",
+        "2": "tuberculosis UAE",
+        "3": "(tb)",
+        "4": "(tb) Dubai",
+        "5": "(tb) UAE",
+        "6": "rapid",
+        "7": "rapid Dubai",
+        "8": "rapid UAE",
+        "9": "test",
+        "10": "test Dubai",
+        "11": "test UAE",
+        "12": "infectious",
+        "13": "infectious equipment",
+        "14": "infectious supplier",
+        "15": "disease",
+        "16": "disease equipment",
+        "17": "disease supplier",
+        "19": "rapid equipment",
+        "20": "rapid supplier",
+        "21": "tests",
+        "22": "tests equipment",
+        "23": "tests supplier",
+        "24": "maxtest©",
+        "25": "maxtest© UAE",
+        "26": "laboratory equipment",
+        "27": "medical equipment",
+        "28": "scientific instruments",
+        "29": "diagnostic tools",
+        "30": "research equipment",
+        "31": "lab supplies",
+        "32": "analytical instruments",
+        "33": "laboratory technology",
+        "34": "Dubai",
+        "35": "UAE",
+        "36": "Middle East",
+        "37": "MaxMed",
+        "38": "laboratory supplier Dubai",
+        "39": "medical equipment UAE",
+        "40": "scientific equipment Middle East"
+    },
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Infectious Disease Rapid Tests",
+        "manufactured_by": "MaxTest©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Respiratory Infectious Diseases Rapid Test (Adeno\/HPIV\/RSV\/COVID-19\/MP\/RhV\/Flu B\/Flu A\/HMPV)",
+            "Respiratory Infectious Diseases Rapid Test (RhV)",
+            "Respiratory Infectious Diseases Rapid Test (HMPV)",
+            "Respiratory Infectious Diseases Rapid Test (HPIV)",
+            "Respiratory Infectious Diseases Rapid Test (Influenza A+B)"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.582526Z"
+}

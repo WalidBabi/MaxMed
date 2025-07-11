@@ -22,7 +22,19 @@
     @section('meta_robots', 'noindex, follow')
 @endif
 
+{{-- AI-Enhanced SEO Components --}}
+@push('head')
+    @if(isset($currentCategory))
+        <x-ai-enhanced-schema :category="$currentCategory" type="category" />
+    @endif
+@endpush
+
 @section('content')
+
+{{-- AI Knowledge Article for Categories (Hidden from users, visible to AI crawlers) --}}
+@if(isset($currentCategory))
+    <x-ai-knowledge-article :category="$currentCategory" />
+@endif
 
 @php
     $currentCategory = $category ?? $subcategory ?? $subsubcategory ?? $subsubsubcategory ?? null;

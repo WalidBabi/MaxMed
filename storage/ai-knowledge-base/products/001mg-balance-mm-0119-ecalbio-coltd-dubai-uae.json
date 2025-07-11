@@ -1,0 +1,168 @@
+{
+    "entity_type": "product",
+    "entity_name": "0.01mg balance",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Features:\r\n● Black backlit 120*55 mm LCD screen\r\n● Electromagnetic balance sensor\r\n● External\/ Internal calibration\r\n● 4-level shockproof\r\n● Counting function\r\n● Supports PC connection. Wireless bluetooth printin MaxMed UAE is the leading supplier of Micro & Analytical Balances in Dubai and across the United Arab Emirates. We provide professional Micro & Analytical Balances with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "0.01mg balance",
+        "description": "Features:\r\n● Black backlit 120*55 mm LCD screen\r\n● Electromagnetic balance sensor\r\n● External\/ Internal calibration\r\n● 4-level shockproof\r\n● Counting function\r\n● Supports PC connection. Wireless bluetooth printin MaxMed UAE is the leading supplier of Micro & Analytical Balances in Dubai and across the United Arab Emirates. We provide professional Micro & Analytical Balances with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0119"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "WUHAN ECALBIO CO., LTD",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Micro & Analytical Balances",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "0.01mg",
+            "0.01mg Dubai",
+            "0.01mg UAE",
+            "balance",
+            "balance Dubai",
+            "balance UAE",
+            "micro",
+            "micro equipment",
+            "micro supplier",
+            "analytical",
+            "analytical equipment",
+            "analytical supplier",
+            "balances",
+            "balances equipment",
+            "balances supplier",
+            "wuhan ecalbio co., ltd",
+            "wuhan ecalbio co., ltd UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:42.049714Z",
+            "validThrough": "2026-01-11T08:02:42.049774Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/001mg-balance-mm-0119-ecalbio-coltd-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/001mg-balance-mm-0119-ecalbio-coltd-dubai-uae"
+        }
+    },
+    "keywords": [
+        "0.01mg",
+        "0.01mg Dubai",
+        "0.01mg UAE",
+        "balance",
+        "balance Dubai",
+        "balance UAE",
+        "micro",
+        "micro equipment",
+        "micro supplier",
+        "analytical",
+        "analytical equipment",
+        "analytical supplier",
+        "balances",
+        "balances equipment",
+        "balances supplier",
+        "wuhan ecalbio co., ltd",
+        "wuhan ecalbio co., ltd UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Micro & Analytical Balances",
+        "manufactured_by": "WUHAN ECALBIO CO., LTD",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": []
+    },
+    "last_updated": "2025-07-11T08:02:42.050450Z"
+}

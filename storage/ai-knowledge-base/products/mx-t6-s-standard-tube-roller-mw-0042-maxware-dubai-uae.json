@@ -1,0 +1,174 @@
+{
+    "entity_type": "product",
+    "entity_name": "MX-T6-S+ Standard tube roller",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "Adjustable speed range from 0 to 70 rpm\r\n\r\n•  Six roller design for gentle and efficient rolling, and is easy to clean\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8063312000\r\nAccessories type\r\nTube Roller\r\nTilt angle\r\n-\r\nMotion type\r\nRocking and rolling\r\nRotation angle\r\n-\r\nAmplitude\r\n24mm\r\nSpeed range\r\n0-70rpm\r\nSpeed display\r\nScale\r\nTimer display\r\n-\r\nTime setting range\r\n-\r\nRun type\r\nContinuous\r\nMax. load capacity\r\n4kg\r\nNumber of rollers\r\n6\r\nRoller size[length]\r\n280mm\r\nMotor type\r\nBrushless DC motor\r\nVoltage\r\n100-240V\r\nFrequency\r\n50\/60Hz\r\nPower\r\n25W\r\nDimension [D×W×H ]\r\n485X250X100mm\r\nWeight\r\n4.5kg\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible ambient humidity\r\n80% RH\r\nProtection class\r\nIP21 MaxMed UAE is the leading supplier of Mixers in Dubai and across the United Arab Emirates. We provide professional Mixers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "MX-T6-S+ Standard tube roller",
+        "description": "Adjustable speed range from 0 to 70 rpm\r\n\r\n•  Six roller design for gentle and efficient rolling, and is easy to clean\r\nPRODUCT PARAMETERS\r\nCat.No.\r\n8063312000\r\nAccessories type\r\nTube Roller\r\nTilt angle\r\n-\r\nMotion type\r\nRocking and rolling\r\nRotation angle\r\n-\r\nAmplitude\r\n24mm\r\nSpeed range\r\n0-70rpm\r\nSpeed display\r\nScale\r\nTimer display\r\n-\r\nTime setting range\r\n-\r\nRun type\r\nContinuous\r\nMax. load capacity\r\n4kg\r\nNumber of rollers\r\n6\r\nRoller size[length]\r\n280mm\r\nMotor type\r\nBrushless DC motor\r\nVoltage\r\n100-240V\r\nFrequency\r\n50\/60Hz\r\nPower\r\n25W\r\nDimension [D×W×H ]\r\n485X250X100mm\r\nWeight\r\n4.5kg\r\nPermissible ambient temperature\r\n5-40℃\r\nPermissible ambient humidity\r\n80% RH\r\nProtection class\r\nIP21 MaxMed UAE is the leading supplier of Mixers in Dubai and across the United Arab Emirates. We provide professional Mixers with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MW-0042"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "MaxWare©",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Mixers",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "mx-t6-s+",
+            "mx-t6-s+ Dubai",
+            "mx-t6-s+ UAE",
+            "standard",
+            "standard Dubai",
+            "standard UAE",
+            "tube",
+            "tube Dubai",
+            "tube UAE",
+            "roller",
+            "roller Dubai",
+            "roller UAE",
+            "mixers",
+            "mixers equipment",
+            "mixers supplier",
+            "maxware©",
+            "maxware© UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.013253Z",
+            "validThrough": "2026-01-11T08:02:41.013308Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/mx-t6-s-standard-tube-roller-mw-0042-maxware-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/mx-t6-s-standard-tube-roller-mw-0042-maxware-dubai-uae"
+        }
+    },
+    "keywords": [
+        "mx-t6-s+",
+        "mx-t6-s+ Dubai",
+        "mx-t6-s+ UAE",
+        "standard",
+        "standard Dubai",
+        "standard UAE",
+        "tube",
+        "tube Dubai",
+        "tube UAE",
+        "roller",
+        "roller Dubai",
+        "roller UAE",
+        "mixers",
+        "mixers equipment",
+        "mixers supplier",
+        "maxware©",
+        "maxware© UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Mixers",
+        "manufactured_by": "MaxWare©",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "MX-S Variable speed Vortex Mixer",
+            "MX-F Fixed speed Vortex Mixer",
+            "MX-E Economic Vortex Mixer",
+            "MX-C Cell Disruptor",
+            "MX-M Microplate Mixer"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.013869Z"
+}

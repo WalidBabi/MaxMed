@@ -1,0 +1,180 @@
+{
+    "entity_type": "product",
+    "entity_name": "Zearalenone Immunoaffinity Column",
+    "supplier": "MaxMed UAE",
+    "location": "Dubai, UAE",
+    "description": "A simple and efficient extraction and purification procedure for Zearalenones was developed by means of the immunoaffinity column (IAC-SEP® ZEN) as a cleanup tool. Zearalenones content in grain feed are cleaned up by IAC and determined by HPLC or LC-MS\/MS. It is a fast,simple, safe and highly accurate method for quantitatively measuring Zearalenones. MaxMed UAE is the leading supplier of Toxin & Hygiene Detection in Dubai and across the United Arab Emirates. We provide professional Toxin & Hygiene Detection with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+    "structured_data": {
+        "@context": "https:\/\/schema.org",
+        "@type": [
+            "Product",
+            "MedicalDevice"
+        ],
+        "name": "Zearalenone Immunoaffinity Column",
+        "description": "A simple and efficient extraction and purification procedure for Zearalenones was developed by means of the immunoaffinity column (IAC-SEP® ZEN) as a cleanup tool. Zearalenones content in grain feed are cleaned up by IAC and determined by HPLC or LC-MS\/MS. It is a fast,simple, safe and highly accurate method for quantitatively measuring Zearalenones. MaxMed UAE is the leading supplier of Toxin & Hygiene Detection in Dubai and across the United Arab Emirates. We provide professional Toxin & Hygiene Detection with same-day quotes, fast delivery, installation support, and comprehensive after-sales service. Contact us at +971 55 460 2500 for expert consultation and competitive pricing.",
+        "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "SKU",
+            "value": "MM-0089"
+        },
+        "brand": {
+            "@type": "Brand",
+            "name": "WUHAN ECALBIO CO., LTD",
+            "description": "Trusted laboratory equipment brand"
+        },
+        "manufacturer": {
+            "@type": "Organization",
+            "name": "MaxMed UAE",
+            "description": "Leading laboratory equipment supplier in UAE",
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AE",
+                "addressRegion": "Dubai",
+                "addressLocality": "Dubai"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+971-55-460-2500",
+                "contactType": "sales",
+                "areaServed": "UAE"
+            }
+        },
+        "category": "Toxin & Hygiene Detection",
+        "additionalType": [
+            "https:\/\/schema.org\/Product"
+        ],
+        "keywords": [
+            "zearalenone",
+            "zearalenone Dubai",
+            "zearalenone UAE",
+            "immunoaffinity",
+            "immunoaffinity Dubai",
+            "immunoaffinity UAE",
+            "column",
+            "column Dubai",
+            "column UAE",
+            "toxin",
+            "toxin equipment",
+            "toxin supplier",
+            "hygiene",
+            "hygiene equipment",
+            "hygiene supplier",
+            "detection",
+            "detection equipment",
+            "detection supplier",
+            "wuhan ecalbio co., ltd",
+            "wuhan ecalbio co., ltd UAE",
+            "laboratory equipment",
+            "medical equipment",
+            "scientific instruments",
+            "diagnostic tools",
+            "research equipment",
+            "lab supplies",
+            "analytical instruments",
+            "laboratory technology",
+            "Dubai",
+            "UAE",
+            "Middle East",
+            "MaxMed",
+            "laboratory supplier Dubai",
+            "medical equipment UAE",
+            "scientific equipment Middle East"
+        ],
+        "applicationCategory": [
+            "Laboratory testing",
+            "Quality control",
+            "Research applications",
+            "Hospitals and clinics",
+            "Research institutions",
+            "University laboratories",
+            "Quality control laboratories",
+            "Pharmaceutical companies",
+            "Biotechnology firms"
+        ],
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "AED",
+            "availability": "https:\/\/schema.org\/InStock",
+            "validFrom": "2025-07-11T08:02:41.957792Z",
+            "validThrough": "2026-01-11T08:02:41.957859Z",
+            "areaServed": {
+                "@type": "Country",
+                "name": "United Arab Emirates"
+            },
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "description": "Laboratory equipment supplier in Dubai, UAE"
+            }
+        },
+        "potentialAction": [
+            {
+                "@type": "ViewAction",
+                "target": "http:\/\/localhost\/products\/zearalenone-immunoaffinity-column-mm-0089-ecalbio-coltd-dubai-uae",
+                "name": "View Product Details"
+            },
+            {
+                "@type": "CallAction",
+                "target": "tel:+971554602500",
+                "name": "Call for Quote"
+            }
+        ],
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "http:\/\/localhost\/products\/zearalenone-immunoaffinity-column-mm-0089-ecalbio-coltd-dubai-uae"
+        }
+    },
+    "keywords": [
+        "zearalenone",
+        "zearalenone Dubai",
+        "zearalenone UAE",
+        "immunoaffinity",
+        "immunoaffinity Dubai",
+        "immunoaffinity UAE",
+        "column",
+        "column Dubai",
+        "column UAE",
+        "toxin",
+        "toxin equipment",
+        "toxin supplier",
+        "hygiene",
+        "hygiene equipment",
+        "hygiene supplier",
+        "detection",
+        "detection equipment",
+        "detection supplier",
+        "wuhan ecalbio co., ltd",
+        "wuhan ecalbio co., ltd UAE",
+        "laboratory equipment",
+        "medical equipment",
+        "scientific instruments",
+        "diagnostic tools",
+        "research equipment",
+        "lab supplies",
+        "analytical instruments",
+        "laboratory technology",
+        "Dubai",
+        "UAE",
+        "Middle East",
+        "MaxMed",
+        "laboratory supplier Dubai",
+        "medical equipment UAE",
+        "scientific equipment Middle East"
+    ],
+    "relationships": {
+        "is_product_of": "MaxMed UAE",
+        "belongs_to_category": "Toxin & Hygiene Detection",
+        "manufactured_by": "WUHAN ECALBIO CO., LTD",
+        "available_in": "Dubai, UAE",
+        "sold_by": "MaxMed UAE",
+        "related_to": [
+            "Aflatoxin M1 Immunoaffinity Column",
+            "AflatoxinB1 Immunoaffinity Column",
+            "Aflatoxins Immunoaffinity Column",
+            "Fumonisins Immunoaffinity Column",
+            "T-2 toxin Immunoaffinity Column"
+        ]
+    },
+    "last_updated": "2025-07-11T08:02:41.959024Z"
+}
