@@ -48,6 +48,10 @@
             <div class="flex items-center justify-center p-8 bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
                 <img src="{{ asset('Images/Partners/EcalBiologo.png') }}" alt="EcalBio" class="max-h-40 w-auto">
             </div>
+            <!-- Supplier 6 -->
+            <div class="flex items-center justify-center p-8 bg-red-600 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
+                <img src="{{ asset('Images/Partners/hf-agile-device-co-ltd-logo.webp') }}" alt="hf-agile-device-co-ltd-logo" class="max-h-40 w-auto">
+            </div>
         </div>
     </div>
 </div>
