@@ -199,7 +199,9 @@ class OptimizeAllCategories extends Command
             
             'Incubators & Ovens' => "Laboratory incubators and ovens in Dubai UAE. Professional CO2 incubators, drying ovens, and temperature-controlled equipment for research and industrial applications. High-quality heating equipment for precise temperature control.",
             
-            'Microbiology Equipment' => "Microbiology equipment and microbial analysis tools in Dubai UAE. Professional equipment for bacterial culture, microbial testing, and microbiological research applications. Advanced microbiology tools for research and diagnostic laboratories."
+            'Microbiology Equipment' => "Microbiology equipment and microbial analysis tools in Dubai UAE. Professional equipment for bacterial culture, microbial testing, and microbiological research applications. Advanced microbiology tools for research and diagnostic laboratories.",
+            
+            'Advanced Motion & Scientific Imaging Systems' => "Cutting-edge advanced motion analysis and scientific imaging systems in Dubai UAE. Professional high-speed cameras, motion capture systems, digital image correlation (DIC), and scientific imaging equipment for research, industrial testing, and material analysis. Advanced motion analysis technology for universities, research institutions, and industrial laboratories."
         ];
         
         // Check for exact match
