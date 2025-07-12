@@ -113,7 +113,7 @@ class GenerateKeywordSitemap extends Command
 
         // Main category URL
         $xml .= $this->generateUrlEntry(
-            "https://maxmed.ae/categories/{$category}",
+            "https://maxmedme.com/categories/{$category}",
             '2025-01-20',
             'weekly',
             1.0,
@@ -123,7 +123,7 @@ class GenerateKeywordSitemap extends Command
         // Main keywords
         foreach ($keywords['main_keywords'] as $keyword => $priority) {
             $xml .= $this->generateUrlEntry(
-                "https://maxmed.ae/categories/{$category}?keyword={$keyword}",
+                "https://maxmedme.com/categories/{$category}?keyword={$keyword}",
                 '2025-01-20',
                 'weekly',
                 $priority,
@@ -134,7 +134,7 @@ class GenerateKeywordSitemap extends Command
         // Secondary keywords
         foreach ($keywords['secondary_keywords'] as $keyword => $priority) {
             $xml .= $this->generateUrlEntry(
-                "https://maxmed.ae/categories/{$category}?keyword={$keyword}",
+                "https://maxmedme.com/categories/{$category}?keyword={$keyword}",
                 '2025-01-20',
                 'weekly',
                 $priority,
@@ -145,7 +145,7 @@ class GenerateKeywordSitemap extends Command
         // Long tail keywords
         foreach ($keywords['long_tail_keywords'] as $keyword => $priority) {
             $xml .= $this->generateUrlEntry(
-                "https://maxmed.ae/categories/{$category}?keyword={$keyword}",
+                "https://maxmedme.com/categories/{$category}?keyword={$keyword}",
                 '2025-01-20',
                 'weekly',
                 $priority,
@@ -156,7 +156,7 @@ class GenerateKeywordSitemap extends Command
         // Niche keywords
         foreach ($keywords['niche_keywords'] as $keyword => $priority) {
             $xml .= $this->generateUrlEntry(
-                "https://maxmed.ae/categories/{$category}?keyword={$keyword}",
+                "https://maxmedme.com/categories/{$category}?keyword={$keyword}",
                 '2025-01-20',
                 'weekly',
                 $priority,

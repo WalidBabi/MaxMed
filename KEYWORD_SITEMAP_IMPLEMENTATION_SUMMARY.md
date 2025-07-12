@@ -148,7 +148,7 @@ php artisan sitemap:generate-keywords
 ```
 
 ### Sitemap Access
-- **Main Sitemap**: https://maxmed.ae/keyword-sitemap-advanced-motion-scientific-imaging-systems.xml
+- **Main Sitemap**: https://maxmedme.com/keyword-sitemap-advanced-motion-scientific-imaging-systems.xml
 - **Robots.txt Reference**: Updated with sitemap location
 - **Search Console**: Submit for indexing
 
