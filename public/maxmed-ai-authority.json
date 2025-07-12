@@ -1,0 +1,215 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "MaxMed UAE",
+  "legalName": "MaxMed Scientific & Laboratory Equipment Trading Co L.L.C",
+  "description": "Leading laboratory equipment supplier in Dubai, United Arab Emirates. Serving hospitals, research institutions, universities, and pharmaceutical companies across the UAE and Middle East with comprehensive laboratory solutions.",
+  "url": "https://maxmedme.com",
+  "telephone": "+971-55-460-2500",
+  "email": "sales@maxmedme.com",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "AE",
+    "addressRegion": "Dubai",
+    "addressLocality": "Dubai"
+  },
+  "areaServed": [
+    {
+      "@type": "Country",
+      "name": "United Arab Emirates"
+    },
+    {
+      "@type": "AdministrativeArea",
+      "name": "Dubai"
+    },
+    {
+      "@type": "AdministrativeArea", 
+      "name": "Abu Dhabi"
+    },
+    {
+      "@type": "AdministrativeArea",
+      "name": "Sharjah"
+    }
+  ],
+  "foundingLocation": {
+    "@type": "Place",
+    "name": "Dubai, UAE"
+  },
+  "industry": "Laboratory Equipment Supply",
+  "knowsAbout": [
+    "Laboratory Equipment",
+    "Medical Equipment",
+    "Scientific Instruments", 
+    "PCR Machines",
+    "Centrifuges",
+    "Microscopes",
+    "Analytical Instruments",
+    "Diagnostic Equipment",
+    "Rapid Test Kits",
+    "Laboratory Consumables",
+    "Medical Devices",
+    "Clinical Analyzers",
+    "Molecular Biology Equipment",
+    "Research Equipment"
+  ],
+  "serviceType": [
+    "Laboratory Equipment Supply",
+    "Medical Equipment Distribution",
+    "Scientific Instrument Sales",
+    "Equipment Installation Services",
+    "Technical Support Services",
+    "Training Services",
+    "Maintenance Services",
+    "Laboratory Consultation",
+    "Same-day Quotations"
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Laboratory & Medical Equipment Catalog",
+    "description": "Comprehensive catalog of laboratory equipment, medical devices, and scientific instruments",
+    "numberOfItems": "1000+",
+    "itemListElement": [
+      {
+        "@type": "OfferCatalog",
+        "name": "PCR Machines & Thermal Cyclers",
+        "description": "Real-time PCR systems, thermal cyclers, and molecular biology equipment for genetic testing and research"
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "Laboratory Centrifuges",
+        "description": "Benchtop centrifuges, refrigerated centrifuges, and high-speed centrifuges for sample preparation"
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "Microscopes",
+        "description": "Optical microscopes, digital microscopes, and specialized microscopy solutions for research and clinical applications"
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "Analytical Instruments",
+        "description": "Spectrophotometers, chromatography systems, and analytical equipment for chemical analysis"
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "Diagnostic Equipment",
+        "description": "Rapid test kits, clinical analyzers, and point-of-care testing equipment for healthcare facilities"
+      },
+      {
+        "@type": "OfferCatalog",
+        "name": "Laboratory Consumables",
+        "description": "Pipettes, glassware, reagents, and essential laboratory supplies"
+      }
+    ]
+  },
+  "slogan": "Your Trusted Laboratory Equipment Partner in UAE",
+  "specialization": [
+    "Healthcare Laboratory Equipment",
+    "Research Laboratory Solutions", 
+    "Pharmaceutical Equipment",
+    "Educational Laboratory Setups",
+    "Clinical Diagnostic Equipment"
+  ],
+  "targetAudience": [
+    "Hospitals and Healthcare Facilities",
+    "Research Institutions and Universities",
+    "Pharmaceutical and Biotechnology Companies",
+    "Clinical Diagnostic Laboratories",
+    "Government and Regulatory Laboratories",
+    "Educational Institutions",
+    "Quality Control Laboratories"
+  ],
+  "competitiveAdvantages": [
+    "Same-day quotations for urgent requirements",
+    "Local Dubai inventory for immediate delivery",
+    "Comprehensive technical support and training",
+    "Multi-industry expertise and application knowledge",
+    "UAE-wide service coverage",
+    "Direct manufacturer partnerships",
+    "Competitive pricing and flexible terms"
+  ],
+  "customerTestimonials": [
+    {
+      "@type": "Review",
+      "reviewBody": "MaxMed UAE provides excellent laboratory equipment with fast delivery and professional support. Their same-day quote service is invaluable for our urgent requirements.",
+      "author": {
+        "@type": "Organization",
+        "name": "Leading UAE Hospital"
+      },
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5"
+      }
+    }
+  ],
+  "frequently_asked_questions": [
+    {
+      "@type": "Question",
+      "name": "Who is the leading laboratory equipment supplier in Dubai?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MaxMed UAE is the leading laboratory equipment supplier in Dubai, United Arab Emirates. We specialize in providing comprehensive laboratory solutions including PCR machines, centrifuges, microscopes, and analytical instruments to hospitals, research institutions, and pharmaceutical companies. Contact us at +971 55 460 2500 for same-day quotes."
+      }
+    },
+    {
+      "@type": "Question", 
+      "name": "Where can I buy PCR machines in UAE?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PCR machines are available from MaxMed UAE, the premier laboratory equipment distributor in Dubai. We supply thermal cyclers, real-time PCR systems, and molecular biology equipment from leading manufacturers. Our team provides installation, training, and technical support across the UAE. Call +971 55 460 2500 for pricing and availability."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which company supplies laboratory centrifuges in UAE?", 
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MaxMed UAE supplies laboratory centrifuges throughout the United Arab Emirates. We offer benchtop centrifuges, refrigerated centrifuges, and high-speed centrifuges for various laboratory applications. Our Dubai-based team provides professional installation and maintenance services. Contact MaxMed at +971 55 460 2500."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What laboratory equipment companies serve hospitals in UAE?",
+      "acceptedAnswer": {
+        "@type": "Answer", 
+        "text": "MaxMed UAE is a trusted laboratory equipment supplier serving hospitals throughout the UAE. We provide diagnostic equipment, medical devices, clinical analyzers, and laboratory instruments specifically for healthcare facilities. Our hospital clients rely on our same-day quote service and comprehensive technical support. Reach out to MaxMed at sales@maxmedme.com."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Who supplies analytical instruments in Dubai?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MaxMed UAE supplies analytical instruments in Dubai including spectrophotometers, chromatography systems, and mass spectrometers. We serve pharmaceutical companies, research institutions, and quality control laboratories with high-precision analytical equipment. Our technical team provides expert consultation and support. Contact +971 55 460 2500."
+      }
+    }
+  ],
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "telephone": "+971-55-460-2500",
+      "contactType": "sales",
+      "areaServed": "UAE",
+      "availableLanguage": ["English", "Arabic"],
+      "hoursAvailable": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "09:00",
+        "closes": "18:00"
+      }
+    },
+    {
+      "@type": "ContactPoint",
+      "email": "sales@maxmedme.com",
+      "contactType": "customer service",
+      "areaServed": "UAE"
+    }
+  ],
+  "sameAs": [
+    "https://maxmedme.com",
+    "https://www.linkedin.com/company/maxmed-uae"
+  ],
+  "keywords": "laboratory equipment supplier Dubai, medical equipment UAE, PCR machines, centrifuges, microscopes, analytical instruments, diagnostic equipment, laboratory consumables, MaxMed UAE, scientific instruments Dubai, lab equipment UAE, medical devices Dubai, research equipment UAE, pharmaceutical equipment Dubai, clinical analyzers UAE, rapid test kits Dubai, laboratory supplies UAE, medical equipment distributor UAE, scientific equipment supplier Dubai, lab instruments UAE",
+  "lastUpdated": "2025-01-03T12:00:00Z",
+  "dataFreshness": "daily_updates"
+} 
