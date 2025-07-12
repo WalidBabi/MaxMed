@@ -71,6 +71,78 @@
 </script>
 @endif
 
+@if(isset($category) && $category->name === 'Advanced Motion & Scientific Imaging Systems' && isset($seoData))
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "{{ $seoData['title'] }}",
+  "description": "{{ $seoData['meta_description'] }}",
+  "url": "{{ $seoData['canonical_url'] }}",
+  "provider": {
+    "@type": "Organization",
+    "name": "MaxMed UAE",
+    "url": "https://maxmedme.com",
+    "telephone": "+971 55 460 2500",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "AE",
+      "addressRegion": "Dubai"
+    }
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "name": "Advanced Motion & Scientific Imaging Systems",
+    "description": "Cutting-edge high-speed cameras, motion analysis systems, and digital image correlation equipment for research and industrial testing in Dubai UAE",
+    "numberOfItems": {{ $products->total() ?? 0 }},
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "High-Speed Cameras",
+        "description": "Ultra-high-speed cameras for motion analysis and scientific imaging"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Digital Image Correlation (DIC)",
+        "description": "Advanced DIC systems for material deformation and strain analysis"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Motion Capture Systems",
+        "description": "Professional motion capture and analysis equipment"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "Scientific Imaging Equipment",
+        "description": "Advanced imaging systems for research and industrial applications"
+      }
+    ]
+  },
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "Frame Rate Range",
+      "value": "1,000 - 25,000+ fps"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "Applications",
+      "value": "Material Testing, Crash Analysis, Biomechanics, Research"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "Service",
+      "value": "Installation, Training, Calibration, Support"
+    }
+  ]
+}
+</script>
+@endif
+
 <div class="container-fluid py-4">
     <style>
         /* Enhanced styles for Lab Essentials */
@@ -151,6 +223,175 @@
             font-size: 18px;
         }
         @endif
+        
+        /* Advanced Motion & Scientific Imaging Systems Hero Styles */
+        .advanced-motion-hero {
+            background: linear-gradient(135deg, #1a237e 0%, #3949ab 50%, #5c6bc0 100%);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+        
+        .advanced-motion-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="motion-grid" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%23ffffff" opacity="0.1"/><path d="M 0 10 L 20 10 M 10 0 L 10 20" stroke="%23ffffff" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23motion-grid)"/></svg>') repeat;
+            opacity: 0.3;
+            z-index: 1;
+        }
+        
+        .advanced-motion-hero .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .advanced-motion-hero .hero-title {
+            font-size: 2.2rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .advanced-motion-hero .hero-description {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .advanced-motion-hero .hero-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .advanced-motion-hero .feature {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .advanced-motion-hero .feature:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        
+        .advanced-motion-hero .feature-icon {
+            width: 45px;
+            height: 45px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            font-size: 20px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .advanced-motion-hero .feature span:last-child {
+            color: white;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+        
+        /* Advanced Motion Content Section Styles */
+        .category-content-section {
+            margin: 40px 0;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #1a237e;
+        }
+        
+        .content-card h2 {
+            color: #1a237e;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .content-card h3 {
+            color: #3949ab;
+            font-size: 1.3rem;
+            margin: 1.5rem 0 1rem 0;
+            font-weight: 600;
+        }
+        
+        .content-card p {
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+        
+        .content-card ul {
+            margin-bottom: 1.5rem;
+        }
+        
+        .content-card li {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #5c6bc0;
+        }
+        
+        .info-card h4 {
+            color: #1a237e;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .info-card ul {
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-card li {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+            border-radius: 8px;
+            padding: 20px;
+            color: white;
+        }
+        
+        .cta-section p {
+            color: white;
+            margin: 0;
+            font-size: 1.1rem;
+        }
         
         .category-title {
             font-size: 1.5rem;
@@ -720,11 +961,110 @@
                     </div>
                 </div>
             </div>
+            @elseif(isset($category) && $category->name === 'Advanced Motion & Scientific Imaging Systems')
+            <!-- Enhanced Advanced Motion & Scientific Imaging Systems Hero Section -->
+            <div class="category-hero advanced-motion-hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Advanced Motion & Scientific Imaging Systems Dubai UAE | High-Speed Cameras & Motion Analysis</h1>
+                    <p class="hero-description">
+                        Cutting-edge advanced motion analysis and scientific imaging systems for research, industrial testing, and material analysis. Professional high-speed cameras, motion capture systems, digital image correlation (DIC), and scientific imaging equipment for universities, research institutions, and industrial laboratories.
+                    </p>
+                    <div class="hero-features">
+                        <div class="feature">
+                            <span class="feature-icon">📹</span>
+                            <span>High-Speed Cameras</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🎯</span>
+                            <span>Motion Analysis</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🔬</span>
+                            <span>Digital Image Correlation</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">⚡</span>
+                            <span>Scientific Imaging</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
             @else
             <!-- Default Category Header -->
             <div class="category-header">
                 <h1 class="category-title">{{ isset($category) ? $category->name : 'All Products' }}</h1>
                 <p class="category-description">{{ isset($category) && $category->description ? $category->description : 'Browse our selection of high-quality products' }}</p>
+            </div>
+            @endif
+            
+            @if(isset($category) && $category->name === 'Advanced Motion & Scientific Imaging Systems')
+            <!-- Advanced Motion & Scientific Imaging Systems Content Section -->
+            <div class="category-content-section mt-4 mb-5">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="content-card">
+                            <h2>Advanced Motion & Scientific Imaging Systems in Dubai UAE</h2>
+                            <p>MaxMed UAE is the leading supplier of cutting-edge Advanced Motion & Scientific Imaging Systems in Dubai and across the United Arab Emirates. Our comprehensive range includes ultra-high-speed cameras, digital image correlation (DIC) systems, motion capture technology, and scientific imaging equipment for research, industrial testing, and material analysis applications.</p>
+                            
+                            <h3>Key Features of Our Advanced Motion & Scientific Imaging Systems:</h3>
+                            <ul>
+                                <li><strong>Ultra-High-Speed Cameras:</strong> Capture frame rates from 1,000 to 25,000+ fps for precise motion analysis</li>
+                                <li><strong>Digital Image Correlation (DIC):</strong> Advanced non-contact optical method for measuring displacement and strain</li>
+                                <li><strong>Motion Capture Systems:</strong> Professional motion analysis and tracking technology</li>
+                                <li><strong>Scientific Imaging Equipment:</strong> High-resolution imaging systems for research applications</li>
+                                <li><strong>Advanced Software:</strong> Comprehensive analysis and visualization tools</li>
+                                <li><strong>Custom Solutions:</strong> Tailored configurations for specific applications</li>
+                            </ul>
+                            
+                            <h3>Applications:</h3>
+                            <ul>
+                                <li>Material testing and analysis</li>
+                                <li>Crash analysis and impact testing</li>
+                                <li>Fluid dynamics research</li>
+                                <li>Biomechanics studies</li>
+                                <li>Vibration analysis</li>
+                                <li>Quality control and inspection</li>
+                                <li>Academic and industrial research</li>
+                            </ul>
+                            
+                            <h3>Why Choose MaxMed UAE for Advanced Motion & Scientific Imaging Systems?</h3>
+                            <ul>
+                                <li>✅ Professional installation and calibration services</li>
+                                <li>✅ Comprehensive training and technical support</li>
+                                <li>✅ Manufacturer warranty and ongoing maintenance</li>
+                                <li>✅ Custom solutions for specific applications</li>
+                                <li>✅ Fast delivery across UAE</li>
+                                <li>✅ Expert consultation and support</li>
+                            </ul>
+                            
+                            <div class="cta-section mt-4">
+                                <p><strong>Contact MaxMed UAE at +971 55 460 2500 for expert consultation, competitive pricing, and professional support for all your Advanced Motion & Scientific Imaging Systems requirements.</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="info-card">
+                            <h4>Technical Specifications</h4>
+                            <ul>
+                                <li>Frame Rate: 1,000 - 25,000+ fps</li>
+                                <li>Resolution: Up to 4K</li>
+                                <li>Applications: Research, Industrial, Academic</li>
+                                <li>Warranty: Manufacturer + Support</li>
+                                <li>Service: Installation & Training</li>
+                            </ul>
+                            
+                            <h4>Industries Served</h4>
+                            <ul>
+                                <li>Automotive Testing</li>
+                                <li>Aerospace Research</li>
+                                <li>Material Science</li>
+                                <li>Biomechanics</li>
+                                <li>Sports Science</li>
+                                <li>Academic Research</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
             @endif
             

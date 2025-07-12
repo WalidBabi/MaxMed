@@ -205,7 +205,8 @@ class SeoService
             'Centrifuges' => "Centrifuges Dubai UAE | Laboratory Centrifuges | MaxMed",
             'UV-Vis Spectrophotometers' => "UV-Vis Spectrophotometers Dubai UAE | Analytical Instruments | MaxMed",
             'Incubators & Ovens' => "Incubators & Ovens Dubai UAE | Laboratory Heating Equipment | MaxMed",
-            'Microbiology Equipment' => "Microbiology Equipment Dubai UAE | Microbial Analysis Tools | MaxMed"
+            'Microbiology Equipment' => "Microbiology Equipment Dubai UAE | Microbial Analysis Tools | MaxMed",
+            'Advanced Motion & Scientific Imaging Systems' => "Advanced Motion & Scientific Imaging Systems Dubai UAE | High-Speed Cameras | Motion Analysis | MaxMed"
         ];
 
         // Check for exact match first
@@ -275,7 +276,9 @@ class SeoService
             
             'Incubators & Ovens' => "🔥 Laboratory incubators and ovens in Dubai UAE. Professional CO2 incubators, drying ovens, and temperature-controlled equipment for research and industrial applications. High-quality heating equipment for precise temperature control. Contact MaxMed at +971 55 460 2500.",
             
-            'Microbiology Equipment' => "🦠 Microbiology equipment and microbial analysis tools in Dubai UAE. Professional equipment for bacterial culture, microbial testing, and microbiological research applications. Advanced microbiology tools for research and diagnostic laboratories. Contact MaxMed at +971 55 460 2500."
+            'Microbiology Equipment' => "🦠 Microbiology equipment and microbial analysis tools in Dubai UAE. Professional equipment for bacterial culture, microbial testing, and microbiological research applications. Advanced microbiology tools for research and diagnostic laboratories. Contact MaxMed at +971 55 460 2500.",
+            
+            'Advanced Motion & Scientific Imaging Systems' => "📹 Advanced motion analysis and scientific imaging systems in Dubai UAE. Professional high-speed cameras, motion capture systems, digital image correlation (DIC), and scientific imaging equipment for research, industrial testing, and material analysis. Cutting-edge motion analysis technology for universities, research institutions, and industrial laboratories. Contact MaxMed at +971 55 460 2500."
         ];
 
         // Check for exact match first
@@ -418,6 +421,22 @@ class SeoService
                 'veterinary instruments Dubai', 'animal supplies UAE',
                 'veterinary tools Dubai', 'animal diagnostics UAE',
                 'veterinary equipment UAE', 'animal testing Dubai'
+            ],
+            
+            'Advanced Motion & Scientific Imaging Systems' => [
+                'advanced motion analysis Dubai', 'scientific imaging systems UAE',
+                'high-speed cameras Dubai', 'motion capture systems UAE',
+                'digital image correlation Dubai', 'DIC measurement UAE',
+                'scientific cameras Dubai', 'ultra-high-speed cameras UAE',
+                'motion analysis equipment Dubai', 'imaging systems UAE',
+                'scientific imaging Dubai', 'motion analysis UAE',
+                'high-speed imaging Dubai', 'scientific cameras UAE',
+                'motion capture Dubai', 'digital imaging UAE',
+                'scientific imaging equipment Dubai', 'motion analysis systems UAE',
+                'high-speed camera Dubai', 'motion analysis equipment UAE',
+                'DIC system Dubai', 'digital image correlation UAE',
+                'scientific imaging Dubai', 'motion capture UAE',
+                'ultra-high-speed camera Dubai', 'scientific imaging system UAE'
             ]
         ];
 
@@ -567,6 +586,13 @@ class SeoService
             'pcr machine' => route('products.index') . '?search=pcr',
             'microscope' => route('products.index') . '?search=microscope',
             'centrifuge' => route('products.index') . '?search=centrifuge',
+            'high-speed camera' => route('products.index') . '?search=high-speed+camera',
+            'motion analysis' => route('products.index') . '?search=motion+analysis',
+            'digital image correlation' => route('products.index') . '?search=digital+image+correlation',
+            'scientific imaging' => route('products.index') . '?search=scientific+imaging',
+            'DIC system' => route('products.index') . '?search=DIC+system',
+            'ultra-high-speed camera' => route('products.index') . '?search=ultra-high-speed+camera',
+            'motion capture' => route('products.index') . '?search=motion+capture',
             'contact us' => route('contact'),
             'about maxmed' => route('about'),
             'our partners' => route('partners.index'),
@@ -734,6 +760,53 @@ class SeoService
                         'answer' => 'Yes, MaxMed UAE offers comprehensive training programs for laboratory equipment operation, maintenance, and safety protocols. Contact us to schedule training sessions.'
                     ]
                 ];
+                break;
+                
+            case 'category':
+                if ($entity && $entity->name === 'Advanced Motion & Scientific Imaging Systems') {
+                    $faqs = [
+                        [
+                            'question' => 'What are Advanced Motion & Scientific Imaging Systems?',
+                            'answer' => 'Advanced Motion & Scientific Imaging Systems are cutting-edge equipment used for high-speed motion analysis, digital image correlation (DIC), and scientific imaging applications. These systems include ultra-high-speed cameras, motion capture technology, and advanced imaging software for research, industrial testing, and material analysis.'
+                        ],
+                        [
+                            'question' => 'What applications are Advanced Motion & Scientific Imaging Systems used for?',
+                            'answer' => 'These systems are used for material testing, crash analysis, fluid dynamics research, biomechanics studies, vibration analysis, impact testing, and scientific research requiring high-speed motion capture and precise image analysis.'
+                        ],
+                        [
+                            'question' => 'What is Digital Image Correlation (DIC)?',
+                            'answer' => 'Digital Image Correlation (DIC) is a non-contact optical method used to measure displacement, strain, and deformation of materials. It uses high-speed cameras to capture images and advanced software to analyze surface patterns and track material deformation.'
+                        ],
+                        [
+                            'question' => 'What frame rates do high-speed cameras support?',
+                            'answer' => 'High-speed cameras in our Advanced Motion & Scientific Imaging Systems can capture from 1,000 to 25,000 frames per second (fps) or higher, depending on resolution and application requirements.'
+                        ],
+                        [
+                            'question' => 'Do you provide installation and training for these systems?',
+                            'answer' => 'Yes, MaxMed UAE provides complete installation, calibration, and comprehensive training for all Advanced Motion & Scientific Imaging Systems. Our certified technicians ensure proper setup and provide ongoing technical support.'
+                        ],
+                        [
+                            'question' => 'What industries use Advanced Motion & Scientific Imaging Systems?',
+                            'answer' => 'These systems are used in automotive testing, aerospace research, material science, biomechanics, sports science, industrial testing, academic research, and quality control applications.'
+                        ],
+                        [
+                            'question' => 'What is the warranty period for these systems?',
+                            'answer' => 'All Advanced Motion & Scientific Imaging Systems come with comprehensive manufacturer warranty and our professional support. Contact MaxMed UAE at +971 55 460 2500 for specific warranty details.'
+                        ],
+                        [
+                            'question' => 'Can these systems be customized for specific applications?',
+                            'answer' => 'Yes, our Advanced Motion & Scientific Imaging Systems can be customized with specific cameras, lenses, lighting, and software configurations to meet your exact research and testing requirements.'
+                        ],
+                        [
+                            'question' => 'What is the difference between high-speed cameras and regular cameras?',
+                            'answer' => 'High-speed cameras can capture thousands of frames per second, allowing detailed analysis of fast-moving events that are invisible to the human eye. Regular cameras typically capture 24-60 fps, while our high-speed cameras can reach 25,000+ fps.'
+                        ],
+                        [
+                            'question' => 'How do I choose the right Advanced Motion & Scientific Imaging System?',
+                            'answer' => 'Consider your application requirements, frame rate needs, resolution requirements, and budget. Our experts at MaxMed UAE can help you select the perfect system for your specific needs. Contact us at +971 55 460 2500 for personalized consultation.'
+                        ]
+                    ];
+                }
                 break;
         }
 

@@ -575,4 +575,303 @@ class AiSeoService
             ]
         ];
     }
+
+    private $seoService;
+
+    public function __construct(SeoService $seoService)
+    {
+        $this->seoService = $seoService;
+    }
+
+    /**
+     * Generate AI-optimized meta data for Advanced Motion & Scientific Imaging Systems
+     */
+    public function generateAdvancedMotionSeo(Category $category): array
+    {
+        $baseMeta = $this->seoService->generateCategoryMeta($category);
+        
+        // AI-optimized title variations for better CTR
+        $titleVariations = [
+            "Advanced Motion & Scientific Imaging Systems Dubai UAE | High-Speed Cameras | Motion Analysis | MaxMed",
+            "High-Speed Cameras Dubai UAE | Advanced Motion Analysis Systems | MaxMed",
+            "Scientific Imaging Systems Dubai | Motion Analysis Equipment UAE | MaxMed",
+            "Digital Image Correlation Dubai | DIC Systems UAE | Advanced Motion Analysis | MaxMed",
+            "Ultra-High-Speed Cameras Dubai | Motion Capture Systems UAE | MaxMed"
+        ];
+        
+        // AI-optimized descriptions with high-engagement keywords
+        $descriptionVariations = [
+            "📹 #1 Advanced Motion & Scientific Imaging Systems Dubai UAE! High-speed cameras 1,000-25,000 fps ⚡ DIC systems ✅ Installation included ☎️ +971 55 460 2500 🚚 Fast delivery",
+            "🏆 Leading High-Speed Cameras Dubai UAE! Motion analysis, DIC systems, scientific imaging ✅ Expert consultation ⚡ Same-day quotes ☎️ MaxMed +971 55 460 2500",
+            "⭐ Advanced Motion Analysis Dubai UAE! Ultra-high-speed cameras, digital image correlation ✅ Professional installation ⚡ Competitive pricing ☎️ +971 55 460 2500",
+            "🔥 Scientific Imaging Systems Dubai UAE! Motion capture, DIC measurement ✅ Manufacturer warranty ⚡ Technical support ☎️ MaxMed +971 55 460 2500"
+        ];
+        
+        // AI-optimized keywords for maximum search visibility
+        $aiKeywords = [
+            // Primary keywords
+            'advanced motion analysis Dubai',
+            'scientific imaging systems UAE',
+            'high-speed cameras Dubai',
+            'motion capture systems UAE',
+            'digital image correlation Dubai',
+            'DIC measurement UAE',
+            'ultra-high-speed cameras Dubai',
+            'scientific cameras UAE',
+            'motion analysis equipment Dubai',
+            'imaging systems UAE',
+            
+            // Long-tail keywords
+            'high-speed camera suppliers Dubai',
+            'motion analysis equipment UAE',
+            'digital image correlation system Dubai',
+            'scientific imaging equipment UAE',
+            'ultra-high-speed camera Dubai',
+            'motion capture equipment UAE',
+            'DIC system suppliers Dubai',
+            'scientific imaging systems UAE',
+            'advanced motion analysis equipment Dubai',
+            'high-speed imaging systems UAE',
+            
+            // Industry-specific keywords
+            'automotive testing cameras Dubai',
+            'crash analysis equipment UAE',
+            'biomechanics motion analysis Dubai',
+            'material testing cameras UAE',
+            'fluid dynamics imaging Dubai',
+            'vibration analysis equipment UAE',
+            'impact testing cameras Dubai',
+            'research imaging systems UAE',
+            
+            // Location-specific keywords
+            'Dubai motion analysis equipment',
+            'UAE scientific imaging systems',
+            'Dubai high-speed cameras',
+            'UAE motion capture systems',
+            'Dubai DIC measurement',
+            'UAE scientific cameras',
+            'Dubai motion analysis',
+            'UAE imaging systems'
+        ];
+        
+        // AI-optimized meta data
+        $aiMeta = [
+            'title' => $titleVariations[array_rand($titleVariations)],
+            'meta_description' => $descriptionVariations[array_rand($descriptionVariations)],
+            'meta_keywords' => implode(', ', array_merge(explode(', ', $baseMeta['meta_keywords']), $aiKeywords)),
+            'canonical_url' => $baseMeta['canonical_url'],
+            'og_title' => $baseMeta['title'],
+            'og_description' => $baseMeta['meta_description'],
+            'og_type' => 'website',
+            'og_url' => $baseMeta['canonical_url'],
+            'twitter_card' => 'summary_large_image',
+            'twitter_title' => $baseMeta['title'],
+            'twitter_description' => $baseMeta['meta_description']
+        ];
+        
+        return $aiMeta;
+    }
+
+    /**
+     * Generate AI-optimized schema markup for better SERP features
+     */
+    public function generateAdvancedMotionSchema(Category $category): array
+    {
+        $products = $category->products()->limit(10)->get();
+        
+        $schema = [
+            "@context" => "https://schema.org",
+            "@type" => "CollectionPage",
+            "name" => "Advanced Motion & Scientific Imaging Systems Dubai UAE",
+            "description" => "Cutting-edge high-speed cameras, motion analysis systems, and digital image correlation equipment for research and industrial testing in Dubai UAE",
+            "url" => route('categories.show', $category),
+            "provider" => [
+                "@type" => "Organization",
+                "name" => "MaxMed UAE",
+                "url" => "https://maxmedme.com",
+                "telephone" => "+971 55 460 2500",
+                "address" => [
+                    "@type" => "PostalAddress",
+                    "addressCountry" => "AE",
+                    "addressRegion" => "Dubai"
+                ]
+            ],
+            "mainEntity" => [
+                "@type" => "ItemList",
+                "name" => "Advanced Motion & Scientific Imaging Systems",
+                "description" => "Professional high-speed cameras, motion analysis systems, and scientific imaging equipment",
+                "numberOfItems" => $products->count(),
+                "itemListElement" => []
+            ],
+            "additionalProperty" => [
+                [
+                    "@type" => "PropertyValue",
+                    "name" => "Frame Rate Range",
+                    "value" => "1,000 - 25,000+ fps"
+                ],
+                [
+                    "@type" => "PropertyValue",
+                    "name" => "Applications",
+                    "value" => "Material Testing, Crash Analysis, Biomechanics, Research"
+                ],
+                [
+                    "@type" => "PropertyValue",
+                    "name" => "Service",
+                    "value" => "Installation, Training, Calibration, Support"
+                ],
+                [
+                    "@type" => "PropertyValue",
+                    "name" => "Location",
+                    "value" => "Dubai, UAE"
+                ]
+            ]
+        ];
+        
+        // Add product items to schema
+        foreach ($products as $index => $product) {
+            $schema['mainEntity']['itemListElement'][] = [
+                "@type" => "ListItem",
+                "position" => $index + 1,
+                "name" => $product->name,
+                "description" => $product->description ?? "Professional {$product->name} for motion analysis and scientific imaging"
+            ];
+        }
+        
+        return $schema;
+    }
+
+    /**
+     * Generate AI-optimized FAQ schema for featured snippets
+     */
+    public function generateAdvancedMotionFAQ(): array
+    {
+        $faqs = [
+            [
+                "question" => "What are Advanced Motion & Scientific Imaging Systems?",
+                "answer" => "Advanced Motion & Scientific Imaging Systems are cutting-edge equipment used for high-speed motion analysis, digital image correlation (DIC), and scientific imaging applications. These systems include ultra-high-speed cameras, motion capture technology, and advanced imaging software for research, industrial testing, and material analysis."
+            ],
+            [
+                "question" => "What frame rates do high-speed cameras support?",
+                "answer" => "High-speed cameras in our Advanced Motion & Scientific Imaging Systems can capture from 1,000 to 25,000 frames per second (fps) or higher, depending on resolution and application requirements. This allows detailed analysis of fast-moving events invisible to the human eye."
+            ],
+            [
+                "question" => "What is Digital Image Correlation (DIC)?",
+                "answer" => "Digital Image Correlation (DIC) is a non-contact optical method used to measure displacement, strain, and deformation of materials. It uses high-speed cameras to capture images and advanced software to analyze surface patterns and track material deformation."
+            ],
+            [
+                "question" => "What industries use Advanced Motion & Scientific Imaging Systems?",
+                "answer" => "These systems are used in automotive testing, aerospace research, material science, biomechanics, sports science, industrial testing, academic research, and quality control applications."
+            ],
+            [
+                "question" => "Do you provide installation and training for these systems?",
+                "answer" => "Yes, MaxMed UAE provides complete installation, calibration, and comprehensive training for all Advanced Motion & Scientific Imaging Systems. Our certified technicians ensure proper setup and provide ongoing technical support."
+            ]
+        ];
+        
+        return [
+            "@context" => "https://schema.org",
+            "@type" => "FAQPage",
+            "mainEntity" => array_map(function($faq) {
+                return [
+                    "@type" => "Question",
+                    "name" => $faq['question'],
+                    "acceptedAnswer" => [
+                        "@type" => "Answer",
+                        "text" => $faq['answer']
+                    ]
+                ];
+            }, $faqs)
+        ];
+    }
+
+    /**
+     * Generate AI-optimized content for better rankings
+     */
+    public function generateAdvancedMotionContent(): array
+    {
+        return [
+            'hero_title' => 'Advanced Motion & Scientific Imaging Systems Dubai UAE | High-Speed Cameras & Motion Analysis',
+            'hero_description' => 'Cutting-edge advanced motion analysis and scientific imaging systems for research, industrial testing, and material analysis. Professional high-speed cameras, motion capture systems, digital image correlation (DIC), and scientific imaging equipment for universities, research institutions, and industrial laboratories.',
+            'key_features' => [
+                'Ultra-High-Speed Cameras: Capture frame rates from 1,000 to 25,000+ fps for precise motion analysis',
+                'Digital Image Correlation (DIC): Advanced non-contact optical method for measuring displacement and strain',
+                'Motion Capture Systems: Professional motion analysis and tracking technology',
+                'Scientific Imaging Equipment: High-resolution imaging systems for research applications',
+                'Advanced Software: Comprehensive analysis and visualization tools',
+                'Custom Solutions: Tailored configurations for specific applications'
+            ],
+            'applications' => [
+                'Material testing and analysis',
+                'Crash analysis and impact testing',
+                'Fluid dynamics research',
+                'Biomechanics studies',
+                'Vibration analysis',
+                'Quality control and inspection',
+                'Academic and industrial research'
+            ],
+            'technical_specs' => [
+                'Frame Rate: 1,000 - 25,000+ fps',
+                'Resolution: Up to 4K',
+                'Applications: Research, Industrial, Academic',
+                'Warranty: Manufacturer + Support',
+                'Service: Installation & Training'
+            ],
+            'industries_served' => [
+                'Automotive Testing',
+                'Aerospace Research',
+                'Material Science',
+                'Biomechanics',
+                'Sports Science',
+                'Academic Research'
+            ]
+        ];
+    }
+
+    /**
+     * Generate AI-optimized internal linking strategy
+     */
+    public function generateAdvancedMotionInternalLinks(): array
+    {
+        return [
+            'high-speed camera' => route('products.index') . '?search=high-speed+camera',
+            'motion analysis' => route('products.index') . '?search=motion+analysis',
+            'digital image correlation' => route('products.index') . '?search=digital+image+correlation',
+            'scientific imaging' => route('products.index') . '?search=scientific+imaging',
+            'DIC system' => route('products.index') . '?search=DIC+system',
+            'ultra-high-speed camera' => route('products.index') . '?search=ultra-high-speed+camera',
+            'motion capture' => route('products.index') . '?search=motion+capture',
+            'scientific cameras' => route('products.index') . '?search=scientific+cameras',
+            'motion analysis equipment' => route('products.index') . '?search=motion+analysis+equipment',
+            'imaging systems' => route('products.index') . '?search=imaging+systems'
+        ];
+    }
+
+    /**
+     * Generate AI-optimized meta robots for better crawling
+     */
+    public function generateAdvancedMotionMetaRobots(): string
+    {
+        return 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1';
+    }
+
+    /**
+     * Generate AI-optimized breadcrumb schema
+     */
+    public function generateAdvancedMotionBreadcrumbs(): array
+    {
+        return [
+            [
+                'name' => 'Home',
+                'url' => url('/')
+            ],
+            [
+                'name' => 'Products',
+                'url' => route('products.index')
+            ],
+            [
+                'name' => 'Advanced Motion & Scientific Imaging Systems',
+                'url' => route('categories.show', ['category' => 'advanced-motion-scientific-imaging-systems'])
+            ]
+        ];
+    }
 } 
