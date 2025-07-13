@@ -73,6 +73,22 @@ Route::get('/email/track/open/{trackingId}', [\App\Http\Controllers\EmailTrackin
 Route::get('/email/track/click/{trackingId}', [\App\Http\Controllers\EmailTrackingController::class, 'trackClick'])->name('email.track.click');
 Route::get('/email/unsubscribe/{token}', [\App\Http\Controllers\EmailTrackingController::class, 'trackUnsubscribe'])->name('email.track.unsubscribe');
 
+// User Behavior Tracking Routes (public, no authentication required)
+Route::post('/api/user-behavior/track', [\App\Http\Controllers\UserBehaviorController::class, 'track'])->name('user-behavior.track');
+Route::post('/api/user-behavior/track-batch', [\App\Http\Controllers\UserBehaviorController::class, 'trackBatch'])->name('user-behavior.track-batch');
+Route::get('/api/user-behavior/analytics', [\App\Http\Controllers\UserBehaviorController::class, 'analytics'])->name('user-behavior.analytics');
+Route::get('/api/user-behavior/journey', [\App\Http\Controllers\UserBehaviorController::class, 'userJourney'])->name('user-behavior.journey');
+
+// Test route for user behavior tracking
+Route::get('/test-tracking', function() {
+    return view('test-tracking');
+})->name('test.tracking');
+
+// Test route for cookie consent
+Route::get('/test-cookie-clear', function() {
+    return view('test-cookie-clear');
+})->name('test.cookie.clear');
+
 // Debug route for testing tracking
 Route::get('/debug/campaign/{campaignId}', function($campaignId) {
     $campaign = \App\Models\Campaign::with(['contacts', 'emailLogs'])->find($campaignId);
@@ -357,6 +373,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('analytics', [\App\Http\Controllers\Crm\MarketingAnalyticsController::class, 'index'])->name('analytics.index');
         Route::get('analytics/campaigns', [\App\Http\Controllers\Crm\MarketingAnalyticsController::class, 'campaigns'])->name('analytics.campaigns');
         Route::get('analytics/contacts', [\App\Http\Controllers\Crm\MarketingAnalyticsController::class, 'contacts'])->name('analytics.contacts');
+        
+        // User Behavior Analytics - Removed duplicate route
     });
 });
 
@@ -545,6 +563,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/orders/{order}/quotations', [OrderQuotationsController::class, 'index'])->name('orders.quotations.index');
         Route::post('/orders/{order}/quotations/{quotation}/approve', [OrderQuotationsController::class, 'approve'])->name('orders.quotations.approve');
 
+        // User Behavior Analytics
+        Route::get('user-behavior', function() {
+            return view('admin.user-behavior.index');
+        })->name('user-behavior.index');
     });
 
     // Supplier Onboarding Routes (accessible without authentication for invitation flow)
