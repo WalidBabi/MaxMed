@@ -142,6 +142,43 @@
                 z-index: 1000;
             }
         }
+
+        /* Ensure search input placeholder is fully visible and uses ellipsis if too long */
+        #desktop-search-input::placeholder,
+        #mobile-search-input::placeholder {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 1rem;
+            color: #64748b;
+            opacity: 1;
+            vertical-align: middle;
+        }
+
+        /* Make sure the input is wide enough for the placeholder */
+        #desktop-search-input {
+            min-width: 0;
+            width: 100%;
+            max-width: 100%;
+        }
+        /* Make the search input smaller and neater */
+        #desktop-search-input, #mobile-search-input {
+            height: 40px;
+            font-size: 0.95rem;
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+            border-radius: 9999px 0 0 9999px;
+        }
+        .search-button {
+            height: 40px;
+            min-width: 40px;
+            border-radius: 0 9999px 9999px 0;
+            padding: 0 16px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
     
     <!-- Initialize Alpine.js components without delays -->
@@ -176,8 +213,8 @@
                 <div class="hidden md:block mx-4 flex-1 max-w-2xl">
                     <form action="{{ route('search') }}" method="GET" class="flex items-center mb-0">
                         <div class="search-container relative w-full">
-                            <input type="text" name="query" id="desktop-search-input" placeholder="Search product names or codes"
-                                class="w-full py-3 pl-4 pr-12 bg-gray-100 border-none rounded-l-full focus:outline-none text-sm focus:ring-2 focus:ring-[#0a5694] focus:ring-opacity-50"
+                            <input type="text" name="query" id="desktop-search-input" placeholder="Search products..."
+                                class="w-full py-2 pl-4 pr-12 bg-gray-100 border-none rounded-l-full focus:outline-none text-sm focus:ring-2 focus:ring-[#0a5694] focus:ring-opacity-50"
                                 value="{{ request('query') }}" autocomplete="off">
                             <div id="desktop-search-suggestions" class="absolute z-50 w-full bg-white rounded-lg shadow-lg hidden max-h-60 overflow-y-auto border border-gray-200 min-w-[300px]"></div>
                         </div>
@@ -408,7 +445,7 @@
                 <div class="px-4 py-3">
                     <form action="{{ route('search') }}" method="GET" class="search-container relative">
                         <input type="text" name="query" id="mobile-search-input" placeholder="Search product names, codes or CAS number"
-                            class="w-full py-3 pl-4 pr-12 bg-gray-100 border-none rounded-full focus:outline-none text-sm focus:ring-2 focus:ring-[#0a5694] focus:ring-opacity-50"
+                            class="w-full py-2 pl-4 pr-12 bg-gray-100 border-none rounded-full focus:outline-none text-sm focus:ring-2 focus:ring-[#0a5694] focus:ring-opacity-50"
                             value="{{ request('query') }}" autocomplete="off">
                         <div id="mobile-search-suggestions" class="absolute z-50 w-full bg-white rounded-lg shadow-lg hidden max-h-60 overflow-y-auto border border-gray-200"></div>
                         <button type="submit" aria-label="Search products" class="search-button absolute right-1 top-1/2 transform -translate-y-1/2 bg-[#0064a8] text-white p-2.5 rounded-full hover:bg-[#0052a8] focus:outline-none">
@@ -913,12 +950,16 @@
                                     
                                     suggestionElement.addEventListener('click', () => {
                                         console.log('Suggestion clicked:', suggestion.text);
-                                        // Clean the suggestion before setting it as the search value
-                                        const cleanedSuggestion = cleanSuggestion(suggestion.text);
-                                        searchInput.value = cleanedSuggestion;
-                                        suggestionsContainer.classList.add('hidden');
-                                        // Submit the parent form
-                                        searchInput.closest('form').submit();
+                                        if (suggestion.type === 'category' && suggestion.slug) {
+                                            window.location.href = '/categories/' + suggestion.slug;
+                                        } else {
+                                            // Clean the suggestion before setting it as the search value
+                                            const cleanedSuggestion = cleanSuggestion(suggestion.text);
+                                            searchInput.value = cleanedSuggestion;
+                                            suggestionsContainer.classList.add('hidden');
+                                            // Submit the parent form
+                                            searchInput.closest('form').submit();
+                                        }
                                     });
                                     
                                     suggestionElement.addEventListener('mouseenter', () => {
