@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" x-cloak class="bg-white border-b border-gray-100 shadow-sm mt-0">
+<nav x-data="{ open: false }" x-cloak class="bg-white border-b border-gray-100 shadow-sm mt-0 sticky top-0 z-50">
     <style>
         [x-cloak] { display: none !important; }
         
@@ -149,7 +149,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            font-size: 1rem;
+            font-size: 0.85rem;
             color: #64748b;
             opacity: 1;
             vertical-align: middle;
@@ -179,6 +179,15 @@
             align-items: center;
             justify-content: center;
         }
+        @keyframes search-glow {
+  0% { box-shadow: 0 0 0 0 rgba(10,86,148,0.35); border-radius: 9999px; }
+  50% { box-shadow: 0 0 24px 12px rgba(10,86,148,0.45); border-radius: 9999px; }
+  100% { box-shadow: 0 0 0 0 rgba(10,86,148,0.0); border-radius: 9999px; }
+}
+.search-bar-glow {
+  animation: search-glow 4s ease-in-out infinite;
+  border-radius: 9999px;
+}
     </style>
     
     <!-- Initialize Alpine.js components without delays -->
@@ -212,7 +221,7 @@
                 <!-- Search Bar - Increased width and improved positioning -->
                 <div class="hidden md:block mx-4 flex-1 max-w-2xl">
                     <form action="{{ route('search') }}" method="GET" class="flex items-center mb-0">
-                        <div class="search-container relative w-full">
+                        <div class="search-container relative w-full search-bar-glow">
                             <input type="text" name="query" id="desktop-search-input" placeholder="Search products..."
                                 class="w-full py-2 pl-4 pr-12 bg-gray-100 border-none rounded-l-full focus:outline-none text-sm focus:ring-2 focus:ring-[#0a5694] focus:ring-opacity-50"
                                 value="{{ request('query') }}" autocomplete="off">
