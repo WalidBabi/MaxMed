@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('referrer_url', 2048)->nullable()->change();
             
             // Recreate the index with proper length
-            $table->index(['page_url'], 'user_behaviors_page_url_index', 'btree', 191);
+            $table->index(['page_url'], 'user_behaviors_page_url_index', 'btree', 100);
         });
     }
 

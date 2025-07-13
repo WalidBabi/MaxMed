@@ -36,7 +36,7 @@ return new class extends Migration
             $table->index(['user_id', 'timestamp']);
             $table->index(['session_id', 'timestamp']);
             // Index on page_url with limited length to avoid key length issues
-            $table->index(['page_url'], 'user_behaviors_page_url_index', 'btree', 191);
+            $table->index(['page_url'], 'user_behaviors_page_url_index', 'btree', 100);
         });
     }
 
