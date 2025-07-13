@@ -877,7 +877,7 @@
 <!-- Hero Section -->
 <div x-data="{ activeSlide: 0, particleSystem: null }"
     x-init="
-        setInterval(() => { activeSlide = activeSlide === 2 ? 0 : activeSlide + 1 }, 5000);
+        setInterval(() => { activeSlide = activeSlide === 3 ? 0 : activeSlide + 1 }, 5000);
         particleSystem = initBiologyParticles();
     "
     class="hero-section">
@@ -916,6 +916,16 @@
         x-transition:leave-end="opacity-0"
         style="background: linear-gradient(rgba(10, 70, 80,0), rgba(0, 90, 90, 0.6)), url('/Images/banner3.jpg'); background-size: cover; background-position: center;">
     </div>
+    <div class="hero-slide"
+        x-show="activeSlide === 3"
+        x-transition:enter="transition ease-out duration-800"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-800"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        style="background: linear-gradient(rgba(15, 75, 85,0), rgba(0, 95, 95, 0.6)), url('/Images/revealer-innovators-in-optical-measurement-instruments-and-systems.webp'); background-size: cover; background-position: center;">
+    </div>
 
     <!-- Content -->
     <div class="hero-content">
@@ -929,13 +939,13 @@
     </div>
 
     <!-- Navigation Arrows -->
-    <button @click="activeSlide = activeSlide === 0 ? 2 : activeSlide - 1"
+    <button @click="activeSlide = activeSlide === 0 ? 3 : activeSlide - 1"
         class="nav-arrow left" aria-label="Previous slide">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
     </button>
-    <button @click="activeSlide = activeSlide === 2 ? 0 : activeSlide + 1"
+    <button @click="activeSlide = activeSlide === 3 ? 0 : activeSlide + 1"
         class="nav-arrow right" aria-label="Next slide">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
