@@ -3,33 +3,33 @@
  * Prevents text selection, copying, and other content protection features
  */
 
+// Configuration object - moved outside DOMContentLoaded for global access
+const config = {
+    disableRightClick: false,
+    disableTextSelection: true,
+    disableKeyboardShortcuts: false,
+    disableDragAndDrop: true,
+    disablePrintScreen: false, // Set to true if you want to disable print screen
+    showWarningMessage: true,
+    warningDuration: 3000
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     'use strict';
 
-    // Configuration object
-    const config = {
-        disableRightClick: true,
-        disableTextSelection: true,
-        disableKeyboardShortcuts: true,
-        disableDragAndDrop: true,
-        disablePrintScreen: false, // Set to true if you want to disable print screen
-        showWarningMessage: true,
-        warningDuration: 3000
-    };
-
     // Disable right-click context menu
-    if (config.disableRightClick) {
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
+    // if (config.disableRightClick) {
+    //     document.addEventListener('contextmenu', function(e) {
+    //         e.preventDefault();
+    //         e.stopPropagation();
             
-            if (config.showWarningMessage) {
-                showWarningMessage('Right-click is disabled on this website.');
-            }
+    //         if (config.showWarningMessage) {
+    //             showWarningMessage('Right-click is disabled on this website.');
+    //         }
             
-            return false;
-        }, false);
-    }
+    //         return false;
+    //     }, false);
+    // }
 
     // Disable text selection with mouse
     if (config.disableTextSelection) {
@@ -61,70 +61,70 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Disable keyboard shortcuts
-    if (config.disableKeyboardShortcuts) {
-        document.addEventListener('keydown', function(e) {
-            // Allow normal behavior in input fields
-            if (e.target.tagName === 'INPUT' || 
-                e.target.tagName === 'TEXTAREA' || 
-                e.target.contentEditable === 'true' ||
-                e.target.closest('.allow-select')) {
-                return true;
-            }
+    // if (config.disableKeyboardShortcuts) {
+    //     document.addEventListener('keydown', function(e) {
+    //         // Allow normal behavior in input fields
+    //         if (e.target.tagName === 'INPUT' || 
+    //             e.target.tagName === 'TEXTAREA' || 
+    //             e.target.contentEditable === 'true' ||
+    //             e.target.closest('.allow-select')) {
+    //             return true;
+    //         }
 
-            // Disable Ctrl/Cmd combinations
-            if (e.ctrlKey || e.metaKey) {
-                // Common shortcuts to disable
-                const disabledKeys = [
-                    'a', 'c', 'v', 'x', 's', 'p', 'f', 'u', 'i', 'j'
-                ];
+    //         // Disable Ctrl/Cmd combinations
+    //         if (e.ctrlKey || e.metaKey) {
+    //             // Common shortcuts to disable
+    //             const disabledKeys = [
+    //                 'a', 'c', 'v', 'x', 's', 'p', 'f', 'u', 'i', 'j'
+    //             ];
                 
-                if (disabledKeys.includes(e.key.toLowerCase())) {
-                    e.preventDefault();
-                    e.stopPropagation();
+    //             if (disabledKeys.includes(e.key.toLowerCase())) {
+    //                 e.preventDefault();
+    //                 e.stopPropagation();
                     
-                    if (config.showWarningMessage) {
-                        let action = '';
-                        switch(e.key.toLowerCase()) {
-                            case 'a': action = 'Select All'; break;
-                            case 'c': action = 'Copy'; break;
-                            case 'v': action = 'Paste'; break;
-                            case 'x': action = 'Cut'; break;
-                            case 's': action = 'Save'; break;
-                            case 'p': action = 'Print'; break;
-                            case 'f': action = 'Find'; break;
-                            case 'u': action = 'View Source'; break;
-                            case 'i': action = 'Developer Tools'; break;
-                            case 'j': action = 'Developer Console'; break;
-                        }
-                        showWarningMessage(`${action} is disabled on this website.`);
-                    }
+    //                 if (config.showWarningMessage) {
+    //                     let action = '';
+    //                     switch(e.key.toLowerCase()) {
+    //                         case 'a': action = 'Select All'; break;
+    //                         case 'c': action = 'Copy'; break;
+    //                         case 'v': action = 'Paste'; break;
+    //                         case 'x': action = 'Cut'; break;
+    //                         case 's': action = 'Save'; break;
+    //                         case 'p': action = 'Print'; break;
+    //                         case 'f': action = 'Find'; break;
+    //                         case 'u': action = 'View Source'; break;
+    //                         case 'i': action = 'Developer Tools'; break;
+    //                         case 'j': action = 'Developer Console'; break;
+    //                     }
+    //                     showWarningMessage(`${action} is disabled on this website.`);
+    //                 }
                     
-                    return false;
-                }
-            }
+    //                 return false;
+    //             }
+    //         }
 
-            // Disable F12 (Developer Tools)
-            if (e.keyCode === 123) {
-                e.preventDefault();
-                e.stopPropagation();
+    //         // Disable F12 (Developer Tools)
+    //         if (e.keyCode === 123) {
+    //             e.preventDefault();
+    //             e.stopPropagation();
                 
-                if (config.showWarningMessage) {
-                    showWarningMessage('Developer tools are disabled on this website.');
-                }
+    //             if (config.showWarningMessage) {
+    //                 showWarningMessage('Developer tools are disabled on this website.');
+    //             }
                 
-                return false;
-            }
+    //             return false;
+    //         }
 
-            // Disable Print Screen (optional)
-            if (config.disablePrintScreen && e.keyCode === 44) {
-                e.preventDefault();
-                if (config.showWarningMessage) {
-                    showWarningMessage('Print Screen is disabled on this website.');
-                }
-                return false;
-            }
-        }, false);
-    }
+    //         // Disable Print Screen (optional)
+    //         if (config.disablePrintScreen && e.keyCode === 44) {
+    //             e.preventDefault();
+    //             if (config.showWarningMessage) {
+    //                 showWarningMessage('Print Screen is disabled on this website.');
+    //             }
+    //             return false;
+    //         }
+    //     }, false);
+    // }
 
     // Disable drag and drop
     if (config.disableDragAndDrop) {

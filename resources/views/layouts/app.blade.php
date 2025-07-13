@@ -509,6 +509,7 @@
         </script>
     </head>
     <body class="font-sans antialiased bg-gray-50 relative no-select-content">
+        <div id="consentOverlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.7);z-index:40;backdrop-filter:blur(2px);display:none;"></div>
         <!-- Page transition overlay -->
         <div id="page-transition-overlay">
             <div class="lab-loader">
@@ -732,6 +733,9 @@
         @include('components.google-one-tap')
         @include('components.google-one-tap-styles')
         
+        <!-- Error Handler Script (load first) -->
+        <script src="{{ asset('js/error-handler.js') }}"></script>
+        
         <!-- Google One Tap Script -->
         <script src="https://accounts.google.com/gsi/client" async defer></script>
         <script src="{{ asset('js/google-one-tap.js') }}"></script>
@@ -748,6 +752,81 @@
         @include('layouts.footer')
         @include('components.cookie-consent')
 
+        <!-- Cookie Consent Script (moved here for testing) -->
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cookieConsent = document.getElementById('cookieConsent');
+            const acceptBtn = document.getElementById('acceptCookies');
+            const rejectBtn = document.getElementById('rejectCookies');
+
+            // Check if user has already given consent
+            const existingConsent = document.cookie.split('; ').find(row => row.startsWith('cookie_consent='));
+            console.log('Cookie consent check:', existingConsent);
+            
+            if (!existingConsent) {
+                console.log('No consent found, showing banner');
+                cookieConsent.classList.remove('hidden');
+                document.getElementById('consentOverlay').style.display = 'block'; // Show overlay
+            } else {
+                console.log('Consent already given:', existingConsent);
+                document.getElementById('consentOverlay').style.display = 'none'; // Hide overlay if consent is given
+            }
+
+            // Handle accept button
+            acceptBtn.addEventListener('click', function() {
+                document.cookie = 'cookie_consent=accepted; path=/; max-age=' + (60 * 60 * 24 * 365);
+                cookieConsent.classList.add('hidden');
+                document.getElementById('consentOverlay').style.display = 'none'; // Hide overlay on accept
+                
+                // Send consent to backend
+                fetch('/api/user-behavior/track', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    },
+                    body: JSON.stringify({
+                        event_type: 'cookie_consent',
+                        page_url: window.location.href,
+                        event_data: {
+                            consent: 'accepted',
+                            timestamp: new Date().toISOString()
+                        }
+                    })
+                }).catch(error => console.log('Consent tracking failed:', error));
+            });
+
+            // Handle reject button
+            rejectBtn.addEventListener('click', function() {
+                document.cookie = 'cookie_consent=denied; path=/; max-age=' + (60 * 60 * 24 * 30);
+                cookieConsent.classList.add('hidden');
+                document.getElementById('consentOverlay').style.display = 'none'; // Hide overlay on reject
+                
+                // Send consent to backend
+                fetch('/api/user-behavior/track', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    },
+                    body: JSON.stringify({
+                        event_type: 'cookie_consent',
+                        page_url: window.location.href,
+                        event_data: {
+                            consent: 'denied',
+                            timestamp: new Date().toISOString()
+                        }
+                    })
+                }).catch(error => console.log('Consent tracking failed:', error));
+            });
+        });
+        </script>
+
+        <!-- User Behavior Tracker -->
+        <script src="{{ asset('js/user-behavior-tracker.js') }}"></script>
+        
         <!-- Scripts -->
         <script src="{{ asset('js/back-button-protection.js') }}"></script>
     </body>

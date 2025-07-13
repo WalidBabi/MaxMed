@@ -3,7 +3,14 @@ function handleCredentialResponse(response) {
     const container = document.getElementById('google-one-tap-container');
     if (container) container.style.display = 'none';
     
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+    if (!csrfTokenElement) {
+        console.error('CSRF token not found');
+        if (container) container.style.display = 'block';
+        return;
+    }
+    
+    const csrfToken = csrfTokenElement.getAttribute('content');
     
     fetch('/google/one-tap', {
         method: 'POST',
@@ -36,7 +43,10 @@ function handleCredentialResponse(response) {
 // Initialize Google One Tap
 function initializeOneTap() {
     const container = document.getElementById('google-one-tap-container');
-    if (!container) return;
+    if (!container) {
+        console.log('Google One Tap container not found');
+        return;
+    }
 
     // Check if we're in development mode
     const isDevelopment = window.location.hostname === 'localhost' || 
@@ -49,9 +59,16 @@ function initializeOneTap() {
         return;
     }
 
+    // Get client ID from data attribute
+    const gIdOnload = document.querySelector('#g_id_onload');
+    if (!gIdOnload || !gIdOnload.dataset.client_id) {
+        console.error('Google One Tap client ID not found');
+        return;
+    }
+
     // Configure Google One Tap with development-friendly settings
     const config = {
-        client_id: document.querySelector('#g_id_onload').dataset.client_id,
+        client_id: gIdOnload.dataset.client_id,
         callback: handleCredentialResponse,
         context: 'signin',
         ux_mode: 'popup',
@@ -66,27 +83,32 @@ function initializeOneTap() {
         console.log('🚀 Google One Tap: Development mode detected');
     }
 
-    window.google.accounts.id.initialize(config);
-    
-    // Show the One Tap UI
-    window.google.accounts.id.prompt((notification) => {
-        if (notification.isNotDisplayed()) {
-            console.log('One Tap prompt was not displayed:', notification.getNotDisplayedReason());
-            container.style.display = 'block';
-        } else if (notification.isSkippedMoment()) {
-            console.log('One Tap prompt was skipped:', notification.getSkippedReason());
-            container.style.display = 'block';
-        } else {
-            container.style.display = 'block';
-        }
-    });
+    try {
+        window.google.accounts.id.initialize(config);
+        
+        // Show the One Tap UI
+        window.google.accounts.id.prompt((notification) => {
+            if (notification.isNotDisplayed()) {
+                console.log('One Tap prompt was not displayed:', notification.getNotDisplayedReason());
+                if (container) container.style.display = 'block';
+            } else if (notification.isSkippedMoment()) {
+                console.log('One Tap prompt was skipped:', notification.getSkippedReason());
+                if (container) container.style.display = 'block';
+            } else {
+                if (container) container.style.display = 'block';
+            }
+        });
 
-    // Show the container after a short delay if not shown by the prompt
-    setTimeout(() => {
-        if (container && container.style.display !== 'block') {
-            container.style.display = 'block';
-        }
-    }, 1000);
+        // Show the container after a short delay if not shown by the prompt
+        setTimeout(() => {
+            if (container && container.style.display !== 'block') {
+                container.style.display = 'block';
+            }
+        }, 1000);
+    } catch (error) {
+        console.error('Error initializing Google One Tap:', error);
+        if (container) container.style.display = 'block';
+    }
 }
 
 // Check if user is authenticated using meta tag
