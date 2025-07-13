@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -35,9 +36,10 @@ return new class extends Migration
             $table->index(['event_type', 'timestamp']);
             $table->index(['user_id', 'timestamp']);
             $table->index(['session_id', 'timestamp']);
-            // Index on page_url with limited length to avoid key length issues
-            $table->index(['page_url'], 'user_behaviors_page_url_index', 'btree', 100);
         });
+
+        // Create index on page_url with limited length using raw SQL
+        DB::statement('CREATE INDEX user_behaviors_page_url_index ON user_behaviors (page_url(100))');
     }
 
     /**
