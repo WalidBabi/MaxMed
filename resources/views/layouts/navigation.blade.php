@@ -20,6 +20,128 @@
         body::before {
             display: none; /* Disable the placeholder */
         }
+        
+        /* Search dropdown improvements */
+        #desktop-search-suggestions,
+        #mobile-search-suggestions {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            background: white;
+            z-index: 9999;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 0.25rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        /* Ensure search input has proper focus states */
+        #desktop-search-input:focus,
+        #mobile-search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(10, 86, 148, 0.1);
+        }
+        
+        /* Improve search button styling */
+        .search-button {
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .search-button:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Search suggestions styling */
+        .search-suggestion-item {
+            display: flex;
+            align-items: center;
+            padding: 1.1rem 1.25rem;
+            cursor: pointer;
+            border-bottom: 1px solid #f3f4f6;
+            transition: background-color 0.15s ease-in-out;
+            font-size: 1.15rem;
+            line-height: 1.5rem;
+            min-height: 64px;
+        }
+        
+        .search-suggestion-item img {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .search-suggestion-item span {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #1e293b;
+            white-space: normal;
+            word-break: break-word;
+        }
+        
+        .search-suggestion-item:hover {
+            background-color: #f9fafb;
+        }
+        
+        .search-suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .search-suggestion-item.active {
+            background-color: #eff6ff;
+            color: #1e40af;
+        }
+        
+        /* Ensure proper positioning for search container */
+        .search-container {
+            position: relative;
+        }
+        
+        /* Improve scrollbar for suggestions */
+        #desktop-search-suggestions::-webkit-scrollbar,
+        #mobile-search-suggestions::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        #desktop-search-suggestions::-webkit-scrollbar-track,
+        #mobile-search-suggestions::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+        
+        #desktop-search-suggestions::-webkit-scrollbar-thumb,
+        #mobile-search-suggestions::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        
+        #desktop-search-suggestions::-webkit-scrollbar-thumb:hover,
+        #mobile-search-suggestions::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Mobile-specific search improvements */
+        @media (max-width: 768px) {
+            #mobile-search-suggestions {
+                position: fixed;
+                top: auto;
+                left: 1rem;
+                right: 1rem;
+                margin-top: 0.5rem;
+                max-height: 200px;
+                z-index: 10000;
+            }
+            
+            .search-container {
+                position: relative;
+                z-index: 1000;
+            }
+        }
     </style>
     
     <!-- Initialize Alpine.js components without delays -->
@@ -43,33 +165,34 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-12">
             <!-- Top section with Logo and Links -->
             <div class="flex justify-between items-center">
-                <!-- Logo - Now positioned between top and main navigation -->
+                <!-- Logo - Reduced size to give more space to search -->
                 <div class="flex justify-center py-1 flex-shrink-0">
                     <a href="{{ route('welcome') }}" class="transition hover:opacity-90 flex-shrink-0">
-                        <img src="{{ asset('Images/logo.png') }}" alt="MaxMed Logo" class="block h-[60px] w-[236px] mr-5 min-h-[60px] min-w-[236px] flex-shrink-0 !important">
+                        <img src="{{ asset('Images/logo.png') }}" alt="MaxMed Logo" class="block h-[50px] w-[200px] mr-4 min-h-[50px] min-w-[200px] flex-shrink-0 !important">
                     </a>
                 </div>
                 
-                <!-- Search Bar - Now in the middle -->
-                <div class="hidden md:block mx-4 w-1/3">
+                <!-- Search Bar - Increased width and improved positioning -->
+                <div class="hidden md:block mx-4 flex-1 max-w-2xl">
                     <form action="{{ route('search') }}" method="GET" class="flex items-center mb-0">
-                        <div class="relative w-full">
+                        <div class="search-container relative w-full">
                             <input type="text" name="query" id="desktop-search-input" placeholder="Search product names or codes"
-                                class="w-full py-2 pl-4 bg-gray-100 border-none rounded-l-full focus:outline-none text-sm"
+                                class="w-full py-3 pl-4 pr-12 bg-gray-100 border-none rounded-l-full focus:outline-none text-sm focus:ring-2 focus:ring-[#0a5694] focus:ring-opacity-50"
                                 value="{{ request('query') }}" autocomplete="off">
-                            <div id="desktop-search-suggestions" class="absolute z-50 w-full bg-white mt-1 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto"></div>
+                            <div id="desktop-search-suggestions" class="absolute z-50 w-full bg-white rounded-lg shadow-lg hidden max-h-60 overflow-y-auto border border-gray-200 min-w-[300px]"></div>
                         </div>
-                        <button type="submit" aria-label="Search products" class="bg-gradient-to-r from-[#171e60] to-[#0a5694] text-white p-2.5 rounded-lg hover:from-[#0a5694] hover:to-[#171e60] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#171e60] focus:ring-opacity-50 shadow-md">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <button type="submit" aria-label="Search products" class="search-button bg-gradient-to-r from-[#171e60] to-[#0a5694] text-white p-3 rounded-r-full hover:from-[#0a5694] hover:to-[#171e60] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#171e60] focus:ring-opacity-50 shadow-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </button>
                     </form>
                 </div>
                 
-                <div class="hidden md:flex items-center space-x-6">
+                <!-- Navigation items - Reduced spacing to accommodate search -->
+                <div class="hidden md:flex items-center space-x-4">
                
-                    <div class="flex items-center space-x-6 text-sm">
+                    <div class="flex items-center space-x-4 text-sm">
                 
                         <a href="{{ route('welcome') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Home</a>
                         <a href="{{ route('about') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">About</a>
@@ -247,35 +370,21 @@
                             </div>
                         </div>
                         @else
-                        <a href="{{ route('register') }}" class="flex items-center text-[#0064a8] hover:text-[#0052a3] font-normal h-full">Register</a>
-                        <a href="{{ route('supplier.register') }}" class="flex items-center text-[#0064a8] hover:text-[#0052a3] font-normal h-full">Register as Supplier</a>
-                        <a href="{{ route('login') }}" class="flex items-center text-[#0064a8] hover:text-[#0052a3] font-normal h-full">Login</a>
+                        <div class="flex items-center text-xs">
+                            <a href="{{ route('login') }}" class="flex items-center text-gray-600 hover:text-[#0a5694] font-normal transition-colors duration-200 px-1 py-0.5">Login</a>
+                            <div class="w-px h-6 bg-gray-300 mx-2"></div>
+                            <div class="flex flex-col space-y-0.5">
+                                <a href="{{ route('register') }}" class="flex items-center text-gray-600 hover:text-[#0a5694] font-normal transition-colors duration-200 px-1 py-0.5">Register</a>
+                                <a href="{{ route('supplier.register') }}" class="flex items-center text-gray-600 hover:text-[#0a5694] font-normal transition-colors duration-200 px-1 py-0.5">Register as Supplier</a>
+                            </div>
+                        </div>
                         @endauth
 
                         <!-- Main Navigation Categories -->
 
 
                         <!-- Cart Icon -->
-                        <a href="{{ route('cart.view') }}" class="flex items-center text-gray-600 hover:text-gray-900" aria-label="Shopping cart">
-                            <div class="relative">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                                @php
-                                $cartQuantity = 0;
-                                if (session('cart')) {
-                                foreach (session('cart') as $item) {
-                                $cartQuantity += intval($item['quantity']);
-                                }
-                                }
-                                @endphp
-                                @if($cartQuantity > 0)
-                                <span class="absolute -top-2 -right-2 bg-[#00a9e0] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                                    {{ $cartQuantity }}
-                                </span>
-                                @endif
-                            </div>
-                        </a>
+                        <!-- REMOVED: <a href="{{ route('cart.view') }}" class="flex items-center text-gray-600 hover:text-gray-900" aria-label="Shopping cart"> ... </a> -->
                     </div>
                 </div>
             </div>
@@ -284,17 +393,6 @@
 
         <!-- Mobile menu button -->
         <div class="md:hidden flex items-center justify-between px-4 py-2 border-t border-gray-100">
-            <a href="{{ route('cart.view') }}" class="flex items-center text-gray-600" aria-label="Shopping cart">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                @if($cartQuantity > 0)
-                <span class="ml-1 bg-[#00a9e0] text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                    {{ $cartQuantity }}
-                </span>
-                @endif
-                <span class="sr-only">View shopping cart</span>
-            </a>
             <button @click="open = !open" class="text-gray-500 hover:text-gray-600 focus:outline-none" aria-label="Toggle navigation menu">
                 <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                     <path :class="{'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -306,14 +404,14 @@
         <!-- Mobile Navigation Menu -->
         <div :class="{'block': open, 'hidden': !open}" class="hidden md:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-100">
-                <!-- Mobile Search - Updated to match SLS style -->
-                <div class="px-4 py-2">
-                    <form action="{{ route('search') }}" method="GET" class="relative">
+                <!-- Mobile Search - Improved styling and dropdown -->
+                <div class="px-4 py-3">
+                    <form action="{{ route('search') }}" method="GET" class="search-container relative">
                         <input type="text" name="query" id="mobile-search-input" placeholder="Search product names, codes or CAS number"
-                            class="w-full py-2 pl-4 pr-12 bg-gray-200 border-none rounded-full focus:outline-none text-sm"
+                            class="w-full py-3 pl-4 pr-12 bg-gray-100 border-none rounded-full focus:outline-none text-sm focus:ring-2 focus:ring-[#0a5694] focus:ring-opacity-50"
                             value="{{ request('query') }}" autocomplete="off">
-                        <div id="mobile-search-suggestions" class="absolute z-50 w-full bg-white mt-1 rounded-lg shadow-lg hidden max-h-60 overflow-y-auto"></div>
-                        <button type="submit" aria-label="Search products" class="absolute right-1 top-1/2 transform -translate-y-1/2 bg-[#0064a8] text-white p-2 rounded-full hover:bg-[#0052a3] focus:outline-none">
+                        <div id="mobile-search-suggestions" class="absolute z-50 w-full bg-white rounded-lg shadow-lg hidden max-h-60 overflow-y-auto border border-gray-200"></div>
+                        <button type="submit" aria-label="Search products" class="search-button absolute right-1 top-1/2 transform -translate-y-1/2 bg-[#0064a8] text-white p-2.5 rounded-full hover:bg-[#0052a8] focus:outline-none">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
@@ -740,7 +838,21 @@
         function setupSearchAutocomplete(inputId, suggestionsId) {
             const searchInput = document.getElementById(inputId);
             const suggestionsContainer = document.getElementById(suggestionsId);
-            if (!searchInput || !suggestionsContainer) return;
+            
+            console.log('Setting up search autocomplete for:', inputId, suggestionsId);
+            console.log('Search input found:', !!searchInput);
+            console.log('Suggestions container found:', !!suggestionsContainer);
+            
+            if (!searchInput || !suggestionsContainer) {
+                console.error('Search input or suggestions container not found');
+                return;
+            }
+
+            // Helper function to clean suggestions
+            function cleanSuggestion(suggestion) {
+                // Remove brand names (format: "Product Name - Brand Name")
+                return suggestion.replace(/\s*-\s*[^-]+$/, '').trim();
+            }
 
             let debounceTimer;
             
@@ -748,28 +860,74 @@
                 clearTimeout(debounceTimer);
                 const query = this.value.trim();
                 
+                console.log('Search input changed:', query);
+                
                 if (query.length < 2) {
                     suggestionsContainer.classList.add('hidden');
                     return;
                 }
                 
+                // Show loading state
+                suggestionsContainer.innerHTML = '<div class="search-suggestion-item text-gray-500 italic">Searching...</div>';
+                suggestionsContainer.classList.remove('hidden');
+                
                 debounceTimer = setTimeout(() => {
-                    fetch(`{{ route('search.suggestions') }}?query=${encodeURIComponent(query)}`)
-                        .then(response => response.json())
+                    const url = `{{ route('search.suggestions') }}?query=${encodeURIComponent(query)}`;
+                    console.log('Fetching suggestions from:', url);
+                    
+                    fetch(url, {
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        }
+                    })
+                        .then(response => {
+                            console.log('Response status:', response.status);
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
                         .then(data => {
+                            console.log('Received suggestions:', data);
                             suggestionsContainer.innerHTML = '';
                             
                             if (data.completions && data.completions.length > 0) {
                                 data.completions.forEach(suggestion => {
                                     const suggestionElement = document.createElement('div');
-                                    suggestionElement.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm';
-                                    suggestionElement.textContent = suggestion;
+                                    suggestionElement.className = 'search-suggestion-item';
+                                    
+                                    // If it's a product suggestion with image, show image
+                                    if (suggestion.type === 'product' && suggestion.image_url) {
+                                        const img = document.createElement('img');
+                                        img.src = suggestion.image_url;
+                                        img.alt = suggestion.text;
+                                        img.className = 'inline-block w-8 h-8 object-cover rounded mr-2 align-middle';
+                                        suggestionElement.appendChild(img);
+                                    }
+                                    
+                                    // Add the text
+                                    const textSpan = document.createElement('span');
+                                    textSpan.textContent = suggestion.text;
+                                    suggestionElement.appendChild(textSpan);
                                     
                                     suggestionElement.addEventListener('click', () => {
-                                        searchInput.value = suggestion;
+                                        console.log('Suggestion clicked:', suggestion.text);
+                                        // Clean the suggestion before setting it as the search value
+                                        const cleanedSuggestion = cleanSuggestion(suggestion.text);
+                                        searchInput.value = cleanedSuggestion;
                                         suggestionsContainer.classList.add('hidden');
                                         // Submit the parent form
                                         searchInput.closest('form').submit();
+                                    });
+                                    
+                                    suggestionElement.addEventListener('mouseenter', () => {
+                                        // Remove active class from all suggestions
+                                        suggestionsContainer.querySelectorAll('.search-suggestion-item').forEach(item => {
+                                            item.classList.remove('active');
+                                        });
+                                        // Add active class to current suggestion
+                                        suggestionElement.classList.add('active');
                                     });
                                     
                                     suggestionsContainer.appendChild(suggestionElement);
@@ -777,14 +935,36 @@
                                 
                                 suggestionsContainer.classList.remove('hidden');
                             } else {
-                                suggestionsContainer.classList.add('hidden');
+                                // Show "No suggestions found" message
+                                const noResultsElement = document.createElement('div');
+                                noResultsElement.className = 'search-suggestion-item text-gray-500 italic';
+                                noResultsElement.textContent = 'No suggestions found';
+                                suggestionsContainer.appendChild(noResultsElement);
+                                suggestionsContainer.classList.remove('hidden');
                             }
                         })
                         .catch(error => {
                             console.error('Error fetching search suggestions:', error);
-                            suggestionsContainer.classList.add('hidden');
+                            suggestionsContainer.innerHTML = '<div class="search-suggestion-item text-red-500 italic">Error loading suggestions</div>';
+                            suggestionsContainer.classList.remove('hidden');
+                            
+                            // Hide error message after 3 seconds
+                            setTimeout(() => {
+                                if (suggestionsContainer.querySelector('.text-red-500')) {
+                                    suggestionsContainer.classList.add('hidden');
+                                }
+                            }, 3000);
                         });
                 }, 300);
+            });
+            
+            // Show suggestions when input is focused (if there's a value)
+            searchInput.addEventListener('focus', function() {
+                const query = this.value.trim();
+                if (query.length >= 2) {
+                    // Trigger the input event to show suggestions
+                    this.dispatchEvent(new Event('input'));
+                }
             });
             
             // Close suggestions when clicking outside
@@ -801,7 +981,7 @@
                 const suggestions = suggestionsContainer.querySelectorAll('div');
                 if (suggestions.length === 0) return;
                 
-                let activeIndex = Array.from(suggestions).findIndex(el => el.classList.contains('bg-gray-200'));
+                let activeIndex = Array.from(suggestions).findIndex(el => el.classList.contains('active'));
                 
                 if (e.key === 'ArrowDown') {
                     e.preventDefault();
@@ -821,7 +1001,10 @@
                     updateActiveSuggestion(suggestions, activeIndex);
                 } else if (e.key === 'Enter' && activeIndex !== -1) {
                     e.preventDefault();
-                    searchInput.value = suggestions[activeIndex].textContent;
+                    const selectedSuggestion = suggestions[activeIndex].textContent;
+                    // Clean the suggestion before setting it as the search value
+                    const cleanedSuggestion = cleanSuggestion(selectedSuggestion);
+                    searchInput.value = cleanedSuggestion;
                     suggestionsContainer.classList.add('hidden');
                     searchInput.closest('form').submit();
                 } else if (e.key === 'Escape') {
@@ -830,9 +1013,11 @@
             });
             
             function updateActiveSuggestion(suggestions, activeIndex) {
-                suggestions.forEach(s => s.classList.remove('bg-gray-200'));
-                suggestions[activeIndex].classList.add('bg-gray-200');
-                suggestions[activeIndex].scrollIntoView({ block: 'nearest' });
+                suggestions.forEach(s => s.classList.remove('active'));
+                if (activeIndex >= 0 && activeIndex < suggestions.length) {
+                    suggestions[activeIndex].classList.add('active');
+                    suggestions[activeIndex].scrollIntoView({ block: 'nearest' });
+                }
             }
         }
         
