@@ -15,6 +15,12 @@ class SearchController extends Controller
     {
         $query = $request->input('query');
         
+        // Check for exact category match and redirect if found
+        $category = DB::table('categories')->whereRaw('LOWER(name) = ?', [strtolower(trim($query))])->first();
+        if ($category) {
+            return redirect()->route('categories.show', $category->slug);
+        }
+
         // Return all products if no query is provided
         if (!$query) {
             return redirect()->route('products.index');
@@ -359,7 +365,7 @@ class SearchController extends Controller
                 
             // Enhanced category suggestions
             $categorySuggestions = DB::table('categories')
-                ->select('name')
+                ->select('name', 'slug')
                 ->where(function($q) use ($searchTerm, $exactTerm) {
                     $q->where(DB::raw('LOWER(name)'), 'like', $searchTerm);
                     
@@ -422,6 +428,7 @@ class SearchController extends Controller
             $formattedCategorySuggestions = $categorySuggestions->map(function($cat) {
                 return [
                     'text' => $cat->name,
+                    'slug' => $cat->slug,
                     'image_url' => null,
                     'type' => 'category',
                 ];
