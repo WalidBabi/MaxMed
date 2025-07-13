@@ -1,0 +1,1 @@
+<!-- Detailed Technical Specifications Component -->
