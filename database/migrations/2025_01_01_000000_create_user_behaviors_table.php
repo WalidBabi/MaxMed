@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('session_id')->nullable()->index();
             $table->unsignedBigInteger('user_id')->nullable()->index();
-            $table->text('page_url');
-            $table->text('referrer_url')->nullable();
-            $table->text('user_agent')->nullable();
+            $table->string('page_url', 2048); // Changed from text to string with max length
+            $table->string('referrer_url', 2048)->nullable(); // Changed from text to string
+            $table->text('user_agent')->nullable(); // Keep as text since it can be very long
             $table->string('ip_address', 45)->nullable();
             $table->string('event_type');
             $table->json('event_data')->nullable();
