@@ -45,7 +45,7 @@
                                 @endif
                             </div>
                             @if(isset($product->price) && $product->price > 0)
-                                <div class="text-[#171e60] font-bold text-base mb-3">${{ number_format($product->price, 2) }}</div>
+                                {{-- <div class="text-[#171e60] font-bold text-base mb-3">${{ number_format($product->price, 2) }}</div> --}}
                             @endif
                             <a href="{{ route('product.show', $product) }}" class="mt-auto inline-block bg-[#171e60] hover:bg-[#0a5694] text-white px-4 py-2 rounded-lg font-semibold shadow transition-colors duration-200 text-center w-full">View Details</a>
                         </div>
