@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Category;
+use App\Models\Product;
+use App\Models\News;
+use App\Observers\IndexNowObserver;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Log;
@@ -50,5 +53,11 @@ class AppServiceProvider extends ServiceProvider
             
             $view->with('navCategories', $navCategories);
         });
+
+        // Register IndexNow observers for automatic URL submission
+        $indexNowObserver = app(IndexNowObserver::class);
+        Product::observe($indexNowObserver);
+        Category::observe($indexNowObserver);
+        News::observe($indexNowObserver);
     }
 }
