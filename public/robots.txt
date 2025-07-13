@@ -36,6 +36,7 @@ Sitemap: https://maxmedme.com/sitemap.xml
 Sitemap: https://maxmedme.com/ai-sitemap.xml
 Sitemap: https://maxmedme.com/rss/feed.xml
 Sitemap: https://maxmedme.com/keyword-sitemap-advanced-motion-scientific-imaging-systems.xml
+Sitemap: https://maxmedme.com/sitemap-enhanced-keywords.xml
 
 # AI Authority and Training Files
 # Primary Authority Data: https://maxmedme.com/maxmed-ai-authority.json
