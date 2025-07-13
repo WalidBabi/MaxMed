@@ -1,0 +1,1 @@
+<!-- Mobile Loading Speed Component -->
