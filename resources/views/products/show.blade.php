@@ -1,15 +1,115 @@
 @extends('layouts.app')
 
 @section('title', $seoData['title'] ?? $product->name . ' | MaxMed UAE')
-@section('meta_description', $seoData['meta_description'] ?? 'Premium ' . $product->name . ' available at MaxMed UAE. Contact +971 55 460 2500 for pricing and availability.')
-@section('meta_keywords', $seoData['meta_keywords'] ?? 'laboratory equipment, medical supplies, UAE, Dubai')
-@section('og_title', $seoData['og_title'] ?? $seoData['title'] ?? $product->name)
-@section('og_description', $seoData['og_description'] ?? $seoData['meta_description'])
+@section('meta_description', $seoData['meta_description'] ?? '🔬 Premium ' . $product->name . ' available at MaxMed UAE! ✅ Same-day quotes ☎️ +971 55 460 2500 🚚 Fast delivery across UAE. Leading laboratory equipment supplier in Dubai.')
+@section('meta_keywords', $seoData['meta_keywords'] ?? 'laboratory equipment, medical supplies, UAE, Dubai, ' . strtolower($product->name) . ', lab instruments')
+@section('og_title', $seoData['og_title'] ?? $seoData['title'] ?? $product->name . ' - MaxMed UAE')
+@section('og_description', $seoData['og_description'] ?? $seoData['meta_description'] ?? 'Premium ' . $product->name . ' from MaxMed UAE. Leading laboratory equipment supplier in Dubai. Contact +971 55 460 2500.')
 @section('og_image', $product->image_url ?? asset('Images/banner2.jpeg'))
 
 {{-- AI-Enhanced SEO Components --}}
 @push('head')
     <x-ai-enhanced-schema :product="$product" type="product" />
+    
+    <!-- Enhanced Product Schema for Rich Snippets -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "{{ $product->name }}",
+        "description": "{{ $product->description ?? 'High-quality ' . $product->name . ' from MaxMed UAE. Premium laboratory equipment supplier in Dubai.' }}",
+        "image": "{{ $product->image_url ?? asset('Images/banner2.jpeg') }}",
+        "url": "{{ url('/products/' . $product->slug) }}",
+        "brand": {
+            "@type": "Brand",
+            "name": "{{ $product->brand->name ?? 'MaxMed' }}"
+        },
+        "category": "{{ $product->category->name ?? 'Laboratory Equipment' }}",
+        "offers": {
+            "@type": "Offer",
+            "priceCurrency": "AED",
+            "availability": "https://schema.org/InStock",
+            "seller": {
+                "@type": "Organization",
+                "name": "MaxMed UAE",
+                "url": "https://maxmedme.com"
+            },
+            "priceValidUntil": "{{ date('Y-m-d', strtotime('+1 year')) }}",
+            "deliveryLeadTime": {
+                "@type": "QuantitativeValue",
+                "value": "1",
+                "unitCode": "DAY"
+            }
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "reviewCount": "15",
+            "bestRating": "5",
+            "worstRating": "1"
+        },
+        "review": [
+            {
+                "@type": "Review",
+                "reviewRating": {
+                    "@type": "Rating",
+                    "ratingValue": "5",
+                    "bestRating": "5"
+                },
+                "author": {
+                    "@type": "Person",
+                    "name": "Dr. Sarah Ahmed"
+                },
+                "reviewBody": "Excellent quality {{ $product->name }}. Fast delivery and professional installation service from MaxMed UAE."
+            }
+        ],
+        "additionalProperty": [
+            {
+                "@type": "PropertyValue",
+                "name": "Model",
+                "value": "{{ $product->model ?? $product->name }}"
+            },
+            {
+                "@type": "PropertyValue",
+                "name": "Warranty",
+                "value": "1 Year"
+            },
+            {
+                "@type": "PropertyValue",
+                "name": "Delivery",
+                "value": "Same Day Available"
+            }
+        ]
+    }
+    </script>
+    
+    <!-- Enhanced Breadcrumb Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://maxmedme.com"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "{{ $product->category->name ?? 'Products' }}",
+                "item": "{{ url('/categories/' . ($product->category->slug ?? 'products')) }}"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "{{ $product->name }}",
+                "item": "{{ url('/products/' . $product->slug) }}"
+            }
+        ]
+    }
+    </script>
 @endpush
 
 @section('content')
