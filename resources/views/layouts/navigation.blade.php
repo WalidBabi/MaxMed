@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" x-cloak class="bg-white border-b border-gray-100 shadow-sm mt-0 sticky top-0 z-50">
+<nav x-data="{ open: false }" x-cloak class="bg-white border-b border-gray-100 shadow-sm mt-0 sticky top-0 z-50" x-init="$nextTick(() => { $el.classList.add('initialized'); })">
     <style>
         [x-cloak] { display: none !important; }
         
@@ -6,6 +6,8 @@
         nav.initialized {
             display: block !important;
             margin-top: 0 !important;
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         
         /* Remove all top margins/padding that might cause spacing */
@@ -14,6 +16,14 @@
             padding-top: 0 !important;
             top: 0 !important;
             transition: opacity 0.2s ease-in-out;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        /* Show navigation once Alpine is ready */
+        .alpine-ready nav {
+            opacity: 1 !important;
+            visibility: visible !important;
         }
         
         /* Add a placeholder during load to prevent layout shift */

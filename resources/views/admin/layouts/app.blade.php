@@ -97,6 +97,38 @@
             min-height: 100vh;
         }
 
+        /* Prevent sidebar flashing during navigation */
+        .crm-sidebar,
+        .sidebar-container {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+        
+        /* Ensure sidebars are visible during page load */
+        .sidebar-initialized {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        
+        /* Prevent Alpine components from flashing */
+        [x-data] {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+        }
+        
+        /* Only hide x-cloak elements until Alpine is ready */
+        [x-cloak] {
+            display: none !important;
+        }
+        
+        .alpine-ready [x-cloak] {
+            display: block !important;
+        }
+
         /* Desktop sidebar positioning */
         @media (min-width: 1024px) {
             .sidebar-container {
@@ -287,6 +319,35 @@
 
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Initialize sidebars immediately to prevent flashing -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize admin sidebar immediately
+            document.querySelectorAll('.crm-sidebar, .sidebar-container').forEach(el => {
+                el.style.opacity = '1';
+                el.style.visibility = 'visible';
+                el.classList.add('sidebar-initialized');
+            });
+            
+            // Initialize Alpine components
+            document.addEventListener('alpine:initialized', () => {
+                document.body.classList.add('alpine-ready');
+                
+                // Ensure all Alpine components are properly initialized
+                document.querySelectorAll('[x-data]').forEach(el => {
+                    if (el._x_dataStack) {
+                        el.classList.add('alpine-initialized');
+                    }
+                });
+                
+                // Show all x-cloak elements
+                document.querySelectorAll('[x-cloak]').forEach(el => {
+                    el.style.display = '';
+                });
+            });
+        });
+    </script>
 
     @stack('scripts')
 </body>
