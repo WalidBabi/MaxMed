@@ -70,16 +70,38 @@
 <meta name="author" content="MaxMed UAE">
 <meta name="robots" content="@yield('meta_robots', 'index, follow')">
 
+<!-- Enhanced Meta Tags for Better CTR -->
+<meta name="application-name" content="MaxMed UAE">
+<meta name="apple-mobile-web-app-title" content="MaxMed UAE">
+<meta name="msapplication-TileColor" content="#171e60">
+<meta name="theme-color" content="#171e60">
+
 <!-- Contact Information for Search Engines -->
 <meta name="contact:phone" content="+971 55 460 2500">
 <meta name="contact:email" content="sales@maxmedme.com">
+
+<!-- Enhanced Social Media Meta Tags -->
+<meta property="og:site_name" content="MaxMed UAE">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="ar_AE">
+
+<!-- Enhanced Twitter Cards -->
+<meta name="twitter:site" content="@maxmeduae">
+<meta name="twitter:creator" content="@maxmeduae">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Business Information for Rich Snippets -->
+<meta name="business:hours" content="Monday-Friday 09:00-18:00">
+<meta name="business:hours:day" content="monday tuesday wednesday thursday friday">
+<meta name="business:hours:time" content="09:00-18:00">
 
 <!-- RSS Feed Links for Content Discovery -->
 <link rel="alternate" type="application/rss+xml" title="MaxMed UAE - Latest Updates" href="{{ url('/rss/feed.xml') }}">
 <link rel="alternate" type="application/rss+xml" title="MaxMed UAE - Latest News" href="{{ url('/rss/news.xml') }}">
 <link rel="alternate" type="application/rss+xml" title="MaxMed UAE - Latest Products" href="{{ url('/rss/products.xml') }}">
 
-<!-- Hreflang for International SEO -->
+<!-- Enhanced Hreflang for International SEO -->
 <link rel="alternate" hreflang="en" href="{{ $canonicalUrl }}">
 <link rel="alternate" hreflang="en-ae" href="{{ $canonicalUrl }}">
 <link rel="alternate" hreflang="en-sa" href="{{ $canonicalUrl }}">
@@ -87,23 +109,28 @@
 <link rel="alternate" hreflang="en-kw" href="{{ $canonicalUrl }}">
 <link rel="alternate" hreflang="en-om" href="{{ $canonicalUrl }}">
 <link rel="alternate" hreflang="en-bh" href="{{ $canonicalUrl }}">
+<link rel="alternate" hreflang="en-cn" href="{{ $canonicalUrl }}">
+<link rel="alternate" hreflang="en-hk" href="{{ $canonicalUrl }}">
+<link rel="alternate" hreflang="en-in" href="{{ $canonicalUrl }}">
+<link rel="alternate" hreflang="en-za" href="{{ $canonicalUrl }}">
+<link rel="alternate" hreflang="zh-cn" href="{{ $canonicalUrl }}">
+<link rel="alternate" hreflang="zh-hk" href="{{ $canonicalUrl }}">
+<link rel="alternate" hreflang="zh-tw" href="{{ $canonicalUrl }}">
+<link rel="alternate" hreflang="ar-ae" href="{{ $canonicalUrl }}">
 <link rel="alternate" hreflang="x-default" href="{{ $canonicalUrl }}">
 
-<!-- Favicon -->
+<!-- Enhanced Favicon -->
 <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('img/favicon/favicon-96x96.png') }}">
 <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon/favicon-32x32.png') }}">
 <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon/favicon-16x16.png') }}">
 <link rel="icon" type="image/svg+xml" href="{{ asset('img/favicon/favicon.svg') }}">
 <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
 <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/favicon/apple-touch-icon.png') }}">
-<meta name="apple-mobile-web-app-title" content="MaxMed UAE">
 <link rel="manifest" href="{{ asset('site.webmanifest') }}">
 <link rel="mask-icon" href="{{ asset('img/favicon/safari-pinned-tab.svg') }}" color="#171e60">
-<meta name="msapplication-TileColor" content="#171e60">
 <meta name="msapplication-config" content="{{ asset('browserconfig.xml') }}">
-<meta name="theme-color" content="#171e60">
 
-<!-- Open Graph / Facebook -->
+<!-- Enhanced Open Graph / Facebook -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="{{ $canonicalUrl }}">
 <meta property="og:title" content="@yield('og_title', 'MaxMed UAE - Premium Laboratory & Medical Equipment Supplier in Dubai')">
@@ -144,20 +171,20 @@
 <meta property="og:phone_number" content="+971 55 460 2500">
 <meta property="og:email" content="sales@maxmedme.com">
 
-<!-- Twitter -->
+<!-- Enhanced Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="{{ $canonicalUrl }}">
 <meta name="twitter:title" content="@yield('title')">
 <meta name="twitter:description" content="@yield('meta_description')">
 <meta name="twitter:image" content="{{ $ogImage }}">
 
-<!-- Additional SEO Meta Tags -->
+<!-- Enhanced SEO Meta Tags -->
 <meta name="geo.region" content="AE-DU">
 <meta name="geo.placename" content="Dubai">
 <meta name="geo.position" content="25.2048;55.2708">
 <meta name="ICBM" content="25.2048, 55.2708">
 
-<!-- Business Information -->
+<!-- Enhanced Business Information -->
 <meta name="business:hours" content="Monday-Friday 09:00-18:00">
 <meta name="business:hours:day" content="monday tuesday wednesday thursday friday">
 <meta name="business:hours:time" content="09:00-18:00">
@@ -165,14 +192,31 @@
 <!-- Canonical URL -->
 <link rel="canonical" href="{{ $canonicalUrl }}" />
 
-<!-- Mobile Optimization -->
+<!-- Enhanced Mobile Optimization -->
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
 
-<!-- Preconnect to External Resources -->
+<!-- Enhanced Preconnect to External Resources -->
 <link rel="preconnect" href="https://fonts.bunny.net">
 <link rel="preconnect" href="https://cdn.tailwindcss.com">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
 
-<!-- Schema Markup -->
-@include('components.schema-markup') 
+<!-- Enhanced Schema Markup -->
+@include('components.schema-markup')
+
+<!-- Enhanced Performance Meta Tags -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, shrink-to-fit=no, viewport-fit=cover">
+<meta name="theme-color" content="#171e60">
+<meta name="msapplication-TileColor" content="#171e60">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!-- Enhanced Security Meta Tags -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+<!-- Enhanced Accessibility Meta Tags -->
+<meta name="description" content="@yield('meta_description', '🔬 MaxMed UAE - Leading lab equipment supplier in Dubai! PCR machines, centrifuges, fume hoods, dental supplies & more ✅ Same-day quotes ☎️ +971 55 460 2500 🚚 Fast delivery')">
+<meta name="keywords" content="@yield('meta_keywords', 'laboratory equipment Dubai, lab instruments UAE, medical equipment supplier, fume hood suppliers UAE, dental consumables, PCR machine suppliers UAE, centrifuge suppliers, benchtop autoclave, dental supplies UAE, veterinary diagnostics UAE, point of care testing equipment, contact MaxMed, MaxMed phone number')"> 

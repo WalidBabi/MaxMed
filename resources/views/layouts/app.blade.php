@@ -293,282 +293,84 @@
             }
         </script>
         
-        <!-- Preconnect to external domains -->
+        <!-- Enhanced Preconnect to External Resources -->
         <link rel="preconnect" href="https://fonts.bunny.net">
+        <link rel="preconnect" href="https://cdn.tailwindcss.com">
         <link rel="preconnect" href="https://www.googletagmanager.com">
         <link rel="preconnect" href="https://cdn.jsdelivr.net">
-    
-        <!-- Immediate script to prevent flashing of Alpine elements -->
-        <script>
-            // Prevent FOUC (Flash of Unstyled Content) for Alpine components
-            document.documentElement.classList.add('no-fouc');
-            
-            document.addEventListener('DOMContentLoaded', function() {
-                document.body.classList.add('js-enabled');
-                
-                // Initialize Alpine components with better timing
-                document.addEventListener('alpine:initialized', () => {
-                    document.body.classList.add('alpine-ready');
-                    
-                    // Ensure all Alpine components are properly initialized
-                    document.querySelectorAll('[x-data]').forEach(el => {
-                        if (el._x_dataStack) {
-                            el.classList.add('alpine-initialized');
-                        }
-                    });
-                });
-                
-                // Initialize navbar immediately
-                const navbar = document.querySelector('nav');
-                if (navbar) {
-                    navbar.classList.add('initialized');
-                    navbar.style.opacity = '1';
-                    navbar.style.visibility = 'visible';
-                }
-                
-                // Initialize sidebars immediately to prevent flashing
-                document.querySelectorAll('.sidebar, .sidebar-column, .crm-sidebar, .supplier-sidebar').forEach(el => {
-                    el.style.opacity = '1';
-                    el.style.visibility = 'visible';
-                    el.classList.add('sidebar-initialized');
-                });
-                
-                // Initialize all x-cloak elements after Alpine is ready
-                setTimeout(() => {
-                    document.querySelectorAll('[x-cloak]').forEach(el => {
-                        el.style.display = '';
-                    });
-                }, 100);
-            });
-        </script>
-    
-        <!-- Schema.org structured data -->
-        @include('layouts.schema')
-
-        <!-- Critical CSS inline -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        
+        <!-- Enhanced Performance Meta Tags -->
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, shrink-to-fit=no, viewport-fit=cover">
+        <meta name="theme-color" content="#171e60">
+        <meta name="msapplication-TileColor" content="#171e60">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        
+        <!-- Enhanced Security Meta Tags -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="referrer" content="strict-origin-when-cross-origin">
+        
+        <!-- Enhanced Accessibility Meta Tags -->
+        <meta name="description" content="@yield('meta_description', '🔬 MaxMed UAE - Leading lab equipment supplier in Dubai! PCR machines, centrifuges, fume hoods, dental supplies & more ✅ Same-day quotes ☎️ +971 55 460 2500 🚚 Fast delivery')">
+        <meta name="keywords" content="@yield('meta_keywords', 'laboratory equipment Dubai, lab instruments UAE, medical equipment supplier, fume hood suppliers UAE, dental consumables, PCR machine suppliers UAE, centrifuge suppliers, benchtop autoclave, dental supplies UAE, veterinary diagnostics UAE, point of care testing equipment, contact MaxMed, MaxMed phone number')">
+        
+        <!-- Performance Optimizations -->
+        <link rel="dns-prefetch" href="//fonts.bunny.net">
+        <link rel="dns-prefetch" href="//cdn.tailwindcss.com">
+        <link rel="dns-prefetch" href="//www.googletagmanager.com">
+        <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+        
+        <!-- Critical CSS Inline for Above-the-fold Content -->
         <style>
-            /* Critical path CSS only */
+            /* Critical CSS for immediate rendering */
             :root {
                 --brand-main: #171e60;
                 --brand-auxiliary: #0a5694;
                 --brand-white: #ffffff;
-                --page-transition-duration: 200ms;
             }
             
-            /* Improve page transitions */
-            html, body {
-                scroll-behavior: smooth;
-            }
-            
-            /* Body state management */
             body {
                 margin: 0;
                 padding: 0;
                 font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-                overflow-x: hidden;
-                width: 100%;
-                opacity: 1;
-                transition: opacity var(--page-transition-duration) ease-in-out;
+                line-height: 1.6;
+                color: #333;
             }
             
-            /* Show initial content once page is loaded */
-            body.page-loaded .container,
-            body.page-loaded main,
-            body.page-loaded .row {
-                animation: none !important;
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 15px;
             }
             
-            /* Hide Alpine elements until Alpine is fully loaded */
-            .js-enabled [x-cloak] {
-                display: none !important;
+            .btn-primary {
+                background-color: var(--brand-main);
+                color: white;
+                padding: 12px 24px;
+                border: none;
+                border-radius: 6px;
+                text-decoration: none;
+                display: inline-block;
+                font-weight: 600;
+                transition: all 0.3s ease;
             }
             
-            /* Prevent FOUC for Alpine components */
-            .no-fouc [x-cloak] {
-                display: none !important;
+            .btn-primary:hover {
+                background-color: var(--brand-auxiliary);
+                transform: translateY(-2px);
             }
             
-            /* Show Alpine components once initialized */
-            .alpine-ready [x-cloak] {
-                display: block !important;
-            }
-            
-            /* Make sure sidebar is always visible */
-            .sidebar-column,
-            .sidebar,
-            .crm-sidebar,
-            .supplier-sidebar {
-                opacity: 1 !important;
-                visibility: visible !important;
-                transition: opacity 0.3s ease, visibility 0.3s ease;
-            }
-            
-            /* Ensure sidebars are visible during page load */
-            .sidebar-initialized {
-                opacity: 1 !important;
-                visibility: visible !important;
-            }
-            
-            /* Force fixed elements like navigation to stay visible */
-            nav {
-                opacity: 1 !important;
-                visibility: visible !important;
-                position: relative;
-                z-index: 1030;
-                margin-top: 0 !important;
-                padding-top: 0 !important;
-                top: 0 !important;
-                transition: opacity 0.2s ease-in-out;
-            }
-            
-            /* Remove any styles that might be hiding elements */
-            body:not(.js-enabled) .sidebar-column, 
-            body:not(.page-loaded) .sidebar-column,
-            body:not(.js-enabled) .sidebar,
-            body:not(.page-loaded) .sidebar,
-            body:not(.js-enabled) .crm-sidebar,
-            body:not(.page-loaded) .crm-sidebar,
-            body:not(.js-enabled) .supplier-sidebar,
-            body:not(.page-loaded) .supplier-sidebar {
-                opacity: 1 !important; /* Always show sidebar */
-                visibility: visible !important;
-            }
-            
-            /* Ensure all components are visible during navigation */
-            body.navigating .sidebar,
-            body.navigating .sidebar-column,
-            body.navigating .crm-sidebar,
-            body.navigating .supplier-sidebar,
-            body.navigating nav {
-                opacity: 1 !important;
-                visibility: visible !important;
-            }
-            
-            img {
-                max-width: 100%;
-                height: auto;
-            }
-            
-            .bg-primary { background-color: var(--brand-main) !important; }
-            .text-primary { color: var(--brand-main) !important; }
-            
-            /* Lazy loading */
-            .lazy-image {
-                opacity: 0;
-                transition: opacity 0.3s ease-in;
-            }
-            .lazy-image.loaded { opacity: 1; }
-            
-            /* Sidebar toggle transitions */
-            .sidebar-column {
-                transition: width 0.3s ease-in-out !important;
-                will-change: width;
-                overflow: hidden;
-                position: relative;
-                padding-left: 1rem !important; /* Add padding to prevent cutoff */
-                padding-right: 0.5rem !important; /* Add padding to prevent right cutoff */
-                transform: translateZ(0);
-                backface-visibility: hidden; /* Prevent flickering during transitions */
-            }
-            
-            /* Prevent sidebar flashing during navigation */
-            .sidebar {
-                opacity: 1 !important;
-                visibility: visible !important;
-                transition: opacity 0.3s ease, visibility 0.3s ease;
-                transform: translateZ(0);
-                backface-visibility: hidden;
-            }
-            
-            /* Ensure all sidebar types are visible */
-            .crm-sidebar,
-            .supplier-sidebar {
-                opacity: 1 !important;
-                visibility: visible !important;
-                transition: opacity 0.3s ease, visibility 0.3s ease;
-                transform: translateZ(0);
-                backface-visibility: hidden;
-            }
-            
-            /* Prevent Alpine components from flashing */
-            [x-data] {
-                opacity: 1 !important;
-                visibility: visible !important;
-                transition: opacity 0.2s ease, visibility 0.2s ease;
-            }
-            
-            /* Only hide x-cloak elements until Alpine is ready */
-            [x-cloak] {
-                display: none !important;
-            }
-            
-            .alpine-ready [x-cloak] {
-                display: block !important;
-            }
-            
-            .main-content-column {
-                transition: width 0.3s ease-in-out !important;
-                will-change: width;
-                transform: translateZ(0);
-                padding-left: 1rem; /* Consistent padding to prevent layout shift */
-            }
-            
-            .collapsed-sidebar-active {
-                width: calc(100% - 65px) !important;
-                margin-left: 0 !important; /* Remove left margin when collapsed */
-                padding-left: 0.5rem !important; /* Reduce padding when collapsed */
-            }
-            
-            .sidebar-content-container {
-                transition: all 0.3s ease-in-out !important;
-                overflow-x: hidden;
-                transform: translateZ(0);
-                padding-left: 0.5rem !important; /* Add consistent padding */
-                padding-right: 0.5rem !important; /* Add consistent padding */
-            }
-            
-            /* Prevent layout shifts */
-            .category-container, .subcategory-container, .products-grid {
-                transition: opacity 0.3s ease-in-out;
-                transform: translateZ(0);
-                backface-visibility: hidden;
-                perspective: 1000px;
-                contain: layout style paint; /* Modern browsers will use content-visibility */
-            }
-            
-            /* Force hardware acceleration to reduce visual flickering */
-            .row, .col-md-3, .col-md-9 {
-                transform: translateZ(0);
-                backface-visibility: hidden;
-            }
-            
-            /* Final fixes to prevent any remaining flashing */
-            .immediately-visible {
-                opacity: 1 !important;
-                visibility: visible !important;
-                transition: none !important;
-            }
-            
-            .fully-loaded .sidebar,
-            .fully-loaded .sidebar-column,
-            .fully-loaded .crm-sidebar,
-            .fully-loaded .supplier-sidebar,
-            .fully-loaded nav {
-                opacity: 1 !important;
-                visibility: visible !important;
-            }
-            
-            /* Ensure all components are visible during any state */
-            body * {
-                transition: opacity 0.2s ease, visibility 0.2s ease;
-            }
-            
-            /* Override any Bootstrap or other framework styles that might hide components */
-            .d-none,
-            .invisible {
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
+            /* Mobile-first responsive design */
+            @media (max-width: 768px) {
+                .container {
+                    padding: 0 10px;
+                }
+                
+                .btn-primary {
+                    padding: 14px 28px;
+                    font-size: 16px;
+                }
             }
         </style>
 
@@ -987,6 +789,9 @@
 
         <!-- User Behavior Tracker -->
         <script src="{{ asset('js/user-behavior-tracker.js') }}"></script>
+        
+        <!-- Mobile Optimization Script -->
+        <script src="{{ asset('js/mobile-optimization.js') }}"></script>
         
         <!-- Scripts -->
         <script src="{{ asset('js/back-button-protection.js') }}"></script>
