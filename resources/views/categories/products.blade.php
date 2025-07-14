@@ -624,6 +624,306 @@
             font-size: 1.15rem;
         }
         
+        /* Technology & AI Solutions Hero Section */
+        .technology-ai-hero {
+            position: relative;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 60px 40px;
+            margin-bottom: 40px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+            animation: heroSlideIn 0.8s ease-out;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+        }
+
+        .ai-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255,255,255,0.1) 1px, transparent 1px),
+                radial-gradient(circle at 80% 70%, rgba(255,255,255,0.1) 1px, transparent 1px),
+                radial-gradient(circle at 40% 80%, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px, 80px 80px, 60px 60px;
+            animation: particleFloat 20s infinite linear;
+        }
+
+        .circuit-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(0deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: circuitFlow 15s infinite linear;
+        }
+
+        .gradient-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 8px 16px;
+            margin-bottom: 20px;
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+
+        .badge-icon {
+            font-size: 16px;
+        }
+
+        .badge-text {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-title {
+            margin-bottom: 20px;
+        }
+
+        .title-main {
+            display: block;
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #ffffff, #f0f8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .title-sub {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 10px;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+
+        .hero-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .feature {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover .feature-icon-wrapper {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .feature-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero-cta .btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .hero-cta .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .hero-cta .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(255, 107, 107, 0.6);
+        }
+
+        .hero-cta .btn-outline-primary {
+            background: transparent;
+            color: white;
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .hero-cta .btn-outline-primary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+            transform: translateY(-3px);
+        }
+
+        .btn-icon {
+            font-size: 18px;
+        }
+
+        /* Animations */
+        @keyframes heroSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-20px); }
+        }
+
+        @keyframes circuitFlow {
+            0% { transform: translateX(0px); }
+            100% { transform: translateX(30px); }
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .technology-ai-hero {
+                padding: 40px 20px;
+                margin-bottom: 30px;
+            }
+
+            .title-main {
+                font-size: 2.5rem;
+            }
+
+            .title-sub {
+                font-size: 1.2rem;
+            }
+
+            .hero-description {
+                font-size: 1rem;
+            }
+
+            .hero-features {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .feature {
+                padding: 15px;
+            }
+
+            .feature-icon-wrapper {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hero-cta .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title-main {
+                font-size: 2rem;
+            }
+
+            .hero-features {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* Enhanced Empty State */
         .empty-state {
             background-color: #f9f9f9;
@@ -852,29 +1152,50 @@
             @elseif(isset($category) && $category->name === 'Technology & AI Solutions')
             <!-- Enhanced Technology & AI Solutions Hero Section -->
             <div class="category-hero technology-ai-hero">
+                <div class="hero-background">
+                    <div class="ai-particles"></div>
+                    <div class="circuit-pattern"></div>
+                    <div class="gradient-overlay"></div>
+                </div>
                 <div class="hero-content">
-                    <h1 class="hero-title">Technology & AI Solutions Dubai UAE | Laboratory Automation</h1>
+                    <div class="hero-badge">
+                        <span class="badge-icon">🚀</span>
+                        <span class="badge-text">Coming Soon</span>
+                    </div>
+                    <h1 class="hero-title">
+                        <span class="title-main">Technology & AI Solutions</span>
+                        <span class="title-sub">Dubai UAE | Laboratory Automation</span>
+                    </h1>
                     <p class="hero-description">
-                        Cutting-edge technology and AI solutions for laboratory automation in Dubai UAE. Smart laboratory equipment, automated systems, and artificial intelligence applications for research and diagnostic laboratories.
+                        Experience the future of laboratory technology with our cutting-edge AI solutions and automated systems. We're developing advanced smart laboratory equipment, artificial intelligence applications, and automated workflows for research and diagnostic laboratories across the UAE.
                     </p>
                     <div class="hero-features">
                         <div class="feature">
-                            <span class="feature-icon">🤖</span>
-                            <span>AI Solutions</span>
+                            <div class="feature-icon-wrapper">
+                                <span class="feature-icon">🤖</span>
+                            </div>
+                            <span class="feature-text">AI-Powered Solutions</span>
                         </div>
                         <div class="feature">
-                            <span class="feature-icon">⚡</span>
-                            <span>Laboratory Automation</span>
+                            <div class="feature-icon-wrapper">
+                                <span class="feature-icon">⚡</span>
+                            </div>
+                            <span class="feature-text">Laboratory Automation</span>
                         </div>
                         <div class="feature">
-                            <span class="feature-icon">🔬</span>
-                            <span>Smart Equipment</span>
+                            <div class="feature-icon-wrapper">
+                                <span class="feature-icon">🔬</span>
+                            </div>
+                            <span class="feature-text">Smart Equipment</span>
                         </div>
                         <div class="feature">
-                            <span class="feature-icon">📊</span>
-                            <span>Advanced Technology</span>
+                            <div class="feature-icon-wrapper">
+                                <span class="feature-icon">📊</span>
+                            </div>
+                            <span class="feature-text">Advanced Analytics</span>
                         </div>
                     </div>
+                  
                 </div>
             </div>
             @elseif(isset($category) && $category->name === 'Rapid Test Kits RDT')
