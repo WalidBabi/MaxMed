@@ -1715,51 +1715,133 @@
 </script>
 
 <!-- FAQ Section -->
-<section class="py-16 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
-            <p class="text-lg text-gray-600">Get answers to common questions about MaxMed UAE laboratory equipment</p>
+<section class="py-16 bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+    <!-- Background decorative elements -->
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-10 left-10 w-32 h-32 bg-blue-200 rounded-full blur-xl"></div>
+        <div class="absolute bottom-10 right-10 w-40 h-40 bg-indigo-200 rounded-full blur-xl"></div>
+        <div class="absolute top-1/2 left-1/4 w-24 h-24 bg-purple-200 rounded-full blur-lg"></div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-16">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full mb-6">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h2 class="text-4xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                Frequently Asked Questions
+            </h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Get answers to common questions about MaxMed UAE laboratory equipment and services
+            </p>
         </div>
         
-        <div class="max-w-3xl mx-auto">
+        <div class="max-w-4xl mx-auto">
             @php
                 $faqs = app(\App\Services\SeoService::class)->getPageFAQs('home');
             @endphp
             
-            @foreach($faqs as $index => $faq)
-            <div class="mb-6 bg-white rounded-lg shadow-sm border border-gray-200">
-                <button class="w-full px-6 py-4 text-left focus:outline-none focus:ring-2 focus:ring-[#171e60] rounded-lg" 
-                        onclick="toggleFAQ({{ $index }})">
-                    <div class="flex justify-between items-center">
-                        <h3 class="font-semibold text-gray-900">{{ $faq['question'] }}</h3>
-                        <svg class="w-5 h-5 text-gray-500 transform transition-transform duration-200" id="faq-icon-{{ $index }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
+            <div class="space-y-6" x-data="{ activeIndex: null }">
+                @foreach($faqs as $index => $faq)
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                     x-data="{ isOpen: false }"
+                     x-init="$watch('isOpen', value => { if (value) activeIndex = {{ $index }}; else if (activeIndex === {{ $index }}) activeIndex = null; })">
+                    <button class="w-full px-8 py-6 text-left focus:outline-none focus:ring-4 focus:ring-blue-100 rounded-2xl transition-all duration-300"
+                            @click="isOpen = !isOpen; $nextTick(() => { if (isOpen) $el.scrollIntoView({ behavior: 'smooth', block: 'center' }) })">
+                        <div class="flex justify-between items-center">
+                            <div class="flex-1">
+                                <h3 class="text-lg font-semibold text-gray-900 pr-4">{{ $faq['question'] }}</h3>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center transition-all duration-300"
+                                     :class="{ 'rotate-180': isOpen }">
+                                    <svg class="w-4 h-4 text-white transform transition-transform duration-300" 
+                                         :class="{ 'rotate-180': isOpen }"
+                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </button>
+                    
+                    <div class="overflow-hidden transition-all duration-500 ease-in-out"
+                         x-show="isOpen"
+                         x-transition:enter="transition ease-out duration-300"
+                         x-transition:enter-start="opacity-0 transform -translate-y-4"
+                         x-transition:enter-end="opacity-100 transform translate-y-0"
+                         x-transition:leave="transition ease-in duration-300"
+                         x-transition:leave-start="opacity-100 transform translate-y-0"
+                         x-transition:leave-end="opacity-0 transform -translate-y-4">
+                        <div class="px-8 pb-6">
+                            <div class="border-t border-gray-100 pt-6">
+                                <p class="text-gray-700 leading-relaxed">{{ $faq['answer'] }}</p>
+                                <div class="mt-4 flex items-center text-sm text-blue-600">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Need more help? <a href="{{ route('contact') }}" class="font-medium hover:underline">Contact our experts</a></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </button>
-                <div class="px-6 pb-4 hidden" id="faq-content-{{ $index }}">
-                    <p class="text-gray-600">{{ $faq['answer'] }}</p>
                 </div>
+                @endforeach
             </div>
-            @endforeach
+            
+
         </div>
     </div>
 </section>
 
-<script>
-function toggleFAQ(index) {
-    const content = document.getElementById(`faq-content-${index}`);
-    const icon = document.getElementById(`faq-icon-${index}`);
-    
-    if (content.classList.contains('hidden')) {
-        content.classList.remove('hidden');
-        icon.style.transform = 'rotate(180deg)';
-    } else {
-        content.classList.add('hidden');
-        icon.style.transform = 'rotate(0deg)';
+<style>
+/* Custom animations for FAQ section */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
-</script>
+
+.faq-item {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.faq-item:nth-child(1) { animation-delay: 0.1s; }
+.faq-item:nth-child(2) { animation-delay: 0.2s; }
+.faq-item:nth-child(3) { animation-delay: 0.3s; }
+.faq-item:nth-child(4) { animation-delay: 0.4s; }
+
+/* Smooth scroll behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Enhanced focus styles */
+.focus\:ring-4:focus {
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+/* Gradient text animation */
+.bg-gradient-to-r {
+    background-size: 200% 200%;
+    animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
+</style>
 
 @endsection
