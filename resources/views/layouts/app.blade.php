@@ -9,288 +9,179 @@
         @include('layouts.meta')
         <title>@yield('title', 'MaxMed UAE - Medical & Laboratory Equipment Supplier')</title>
 
-        <!-- Page Transition System - Prevents flashing -->
+        <!-- Optimized Page Transition System - Prevents Text Flashing -->
         <style>
-            /* Page transition overlay */
-            #page-transition-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: #fff;
-                z-index: 9999;
-                opacity: 0;
-                visibility: hidden;
-                transition: opacity 0.25s ease-in-out;
-                pointer-events: none;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-            
-            /* Lab-themed loading icon */
-            .lab-loader {
-                width: 120px;
-                height: 120px;
-                position: relative;
-                opacity: 0;
-                transform: scale(0.8);
-                transition: opacity 0.3s ease, transform 0.3s ease;
-            }
-            
-            /* When navigating, show overlay */
-            body.navigating #page-transition-overlay {
-                opacity: 1;
-                visibility: visible;
-            }
-            
-            /* When navigating, show the loader */
-            body.navigating .lab-loader {
-                opacity: 1;
-                transform: scale(1);
-            }
-            
-            /* Test tube and flask container */
-            .lab-loader-container {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 15px;
-                position: relative;
-            }
-            
-            /* Test tube styles */
-            .test-tube {
-                width: 22px;
-                height: 70px;
-                background: linear-gradient(to bottom, rgba(255,255,255,0) 20%, #0a5694 20%, #0a5694 100%);
-                border-radius: 0 0 11px 11px;
-                border: 2px solid #171e60;
-                position: relative;
-                transform-origin: center top;
-                animation: shake 3s ease-in-out infinite;
-            }
-            
-            .test-tube::before {
-                content: '';
-                position: absolute;
-                top: -8px;
-                left: -2px;
-                width: 22px;
-                height: 8px;
-                background-color: #171e60;
-                border-radius: 5px 5px 0 0;
-            }
-            
-            /* Flask styles */
-            .flask {
-                width: 40px;
-                height: 70px;
-                position: relative;
-                animation: bubble 4s ease-in-out infinite;
-            }
-            
-            .flask-top {
-                width: 20px;
-                height: 15px;
-                background-color: #171e60;
-                border-radius: 5px 5px 0 0;
-                margin: 0 auto;
-            }
-            
-            .flask-body {
-                width: 40px;
-                height: 45px;
-                background: linear-gradient(to bottom, rgba(255,255,255,0) 30%, #171e60 30%, #00a9e0 100%);
-                border: 2px solid #171e60;
-                border-radius: 0 0 20px 20px;
-                position: relative;
-                overflow: hidden;
-            }
-            
-            .flask-bubble {
-                position: absolute;
-                background-color: rgba(255, 255, 255, 0.6);
-                border-radius: 50%;
-                animation: rise 2s ease-in-out infinite;
-            }
-            
-            .flask-bubble:nth-child(1) {
-                width: 8px;
-                height: 8px;
-                left: 7px;
-                bottom: 0;
-                animation-delay: 0.2s;
-            }
-            
-            .flask-bubble:nth-child(2) {
-                width: 6px;
-                height: 6px;
-                left: 22px;
-                bottom: 0;
-                animation-delay: 0.8s;
-            }
-            
-            .flask-bubble:nth-child(3) {
-                width: 4px;
-                height: 4px;
-                left: 15px;
-                bottom: 0;
-                animation-delay: 1.5s;
-            }
-            
-            /* DNA helix around the containers */
-            .dna-strand {
-                position: absolute;
-                width: 100px;
-                height: 100px;
-                border: 2px dashed rgba(23, 30, 96, 0.3);
-                border-radius: 50%;
-                animation: rotate 8s linear infinite;
-            }
-            
-            .dna-strand:nth-child(1) {
-                border-color: rgba(23, 30, 96, 0.2);
-                animation-duration: 10s;
-            }
-            
-            .dna-strand:nth-child(2) {
-                width: 85px;
-                height: 85px;
-                border-color: rgba(10, 86, 148, 0.2);
-                animation-direction: reverse;
-                animation-duration: 7s;
-            }
-            
-            /* Animations */
-            @keyframes shake {
-                0%, 100% { transform: rotate(0deg); }
-                10% { transform: rotate(5deg); }
-                20% { transform: rotate(-5deg); }
-                30% { transform: rotate(3deg); }
-                40% { transform: rotate(-3deg); }
-                50% { transform: rotate(0deg); }
-            }
-            
-            @keyframes bubble {
-                0%, 100% { transform: translateY(0); }
-                50% { transform: translateY(-5px); }
-            }
-            
-            @keyframes rise {
-                from { transform: translateY(0); opacity: 1; }
-                to { transform: translateY(-30px); opacity: 0; }
-            }
-            
-            @keyframes rotate {
-                from { transform: rotate(0deg); }
-                to { transform: rotate(360deg); }
-            }
-            
-            /* Override any transitions that might cause flashing */
-            body.navigating * {
+            /* Prevent text flashing during navigation */
+            body {
+                opacity: 1 !important;
+                visibility: visible !important;
                 transition: none !important;
             }
             
-            /* But keep our loader transitions */
-            body.navigating .lab-loader,
-            body.navigating .test-tube,
-            body.navigating .flask,
-            body.navigating .flask-bubble,
+            /* Ensure content is always visible */
+            .container, main, .row, .col, .card, .product-card, .sidebar, .navbar {
+                opacity: 1 !important;
+                visibility: visible !important;
+                transition: none !important;
+            }
+            
+            /* Prevent Alpine components from flashing */
+            [x-data], [x-cloak] {
+                opacity: 1 !important;
+                visibility: visible !important;
+                display: block !important;
+                transition: none !important;
+            }
+            
+            /* Disable page transition overlay to prevent flashing */
+            #page-transition-overlay {
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+            }
+            
+            /* Ensure all text elements are always visible */
+            h1, h2, h3, h4, h5, h6, p, span, div, a, button, input, textarea, select {
+                opacity: 1 !important;
+                visibility: visible !important;
+                transition: none !important;
+            }
+            
+            /* Prevent any CSS animations that might cause flashing */
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+            
+            /* Only allow smooth scrolling */
+            html {
+                scroll-behavior: smooth;
+            }
+            
+            /* Ensure images don't cause layout shifts */
+            img {
+                opacity: 1 !important;
+                visibility: visible !important;
+                transition: none !important;
+            }
+            
+            /* Prevent any Bootstrap transitions */
+            .fade, .collapse, .collapsing {
+                opacity: 1 !important;
+                visibility: visible !important;
+                display: block !important;
+                transition: none !important;
+            }
+            
+            /* Ensure navigation elements are always visible */
+            .navbar, .navbar-nav, .nav-link, .dropdown-menu {
+                opacity: 1 !important;
+                visibility: visible !important;
+                display: block !important;
+                transition: none !important;
+            }
+            
+            /* Prevent sidebar flashing */
+            .sidebar, .sidebar-column, .crm-sidebar, .supplier-sidebar {
+                opacity: 1 !important;
+                visibility: visible !important;
+                transition: none !important;
+            }
+            
+            /* Ensure all components are immediately visible */
+            .js-enabled, .alpine-ready, .page-loaded {
+                opacity: 1 !important;
+                visibility: visible !important;
+            }
+            
+            /* Override any framework transitions */
+            .transition, .transform, .animate {
+                transition: none !important;
+                animation: none !important;
+            }
+            
+            /* Ensure content is visible during page load */
+            body.loading, body.navigating {
+                opacity: 1 !important;
+                visibility: visible !important;
+            }
+            
+            /* Prevent any remaining flashing */
+            body * {
+                opacity: 1 !important;
+                visibility: visible !important;
+                transition: none !important;
+                animation: none !important;
+            }
             body.navigating .dna-strand {
                 transition: all 0.3s ease !important;
             }
         </style>
         
-        <!-- Page Transition System -->
+        <!-- Simplified Navigation - No Transitions to Prevent Flashing -->
         <script>
-            // Single source of truth for navigation state
-            const navigation = {
-                isNavigating: false,
-                preventNextClick: false,
-                
-                start() {
-                    if (this.isNavigating || this.preventNextClick) return false;
-                    this.isNavigating = true;
-                    document.body.classList.add('navigating');
-                    return true;
-                },
-                
-                end() {
-                    this.isNavigating = false;
-                    this.preventNextClick = false;
-                    document.body.classList.remove('navigating');
-                    const overlay = document.getElementById('page-transition-overlay');
-                    if (overlay) {
-                        overlay.style.opacity = "0";
-                        overlay.style.visibility = "hidden";
-                    }
-                },
-                
-                preventNext() {
-                    this.preventNextClick = true;
-                    setTimeout(() => this.preventNextClick = false, 300);
-                }
-            };
-
-            // Initialize navigation system
-            function initializeNavigation() {
-                // Single click handler for all internal links
-                document.addEventListener('click', function(e) {
-                    const link = e.target.closest('a');
-                    if (!link) return;
-                    
-                    // Only handle links to the same domain
-                    if (link.hostname !== window.location.hostname) return;
-                    
-                    // Skip if using modifier keys or it's a special link
-                    if (e.ctrlKey || e.metaKey || e.shiftKey || 
-                        link.hasAttribute('download') ||
-                        link.hasAttribute('data-no-transition') ||
-                        link.getAttribute('href').startsWith('#') || 
-                        link.getAttribute('href').startsWith('mailto:') || 
-                        link.getAttribute('href').startsWith('tel:') ||
-                        link.getAttribute('target') === '_blank') {
-                        return;
-                    }
-                    
-                    // Start navigation
-                    if (!navigation.start()) {
-                        e.preventDefault();
-                        return;
-                    }
-                    
-                    // Let the navigation proceed
-                    navigation.preventNext();
-                });
-                
-                // Handle page load and back/forward navigation
-                window.addEventListener('pageshow', function(e) {
-                    navigation.end();
-                });
-                
-                window.addEventListener('popstate', function() {
-                    navigation.end();
-                });
-                
-                // Handle page unload
-                window.addEventListener('beforeunload', function() {
-                    if (!navigation.isNavigating) {
-                        setTimeout(() => navigation.start(), 50);
-                    }
-                });
-                
-                // Mark page as loaded
+            // Simple navigation without transitions to prevent text flashing
+            document.addEventListener('DOMContentLoaded', function() {
+                // Mark page as loaded immediately
                 document.body.classList.add('page-loaded');
-            }
+                
+                // Ensure all content is visible
+                document.body.style.opacity = '1';
+                document.body.style.visibility = 'visible';
+                
+                // Remove any transition classes that might cause flashing
+                document.body.classList.remove('navigating', 'loading');
+                
+                // Ensure all elements are visible
+                const allElements = document.querySelectorAll('*');
+                allElements.forEach(el => {
+                    el.style.opacity = '1';
+                    el.style.visibility = 'visible';
+                    el.style.transition = 'none';
+                });
+            });
             
-            // Initialize immediately if DOM is ready, otherwise wait
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initializeNavigation);
-            } else {
-                initializeNavigation();
-            }
+            // Additional script to prevent any remaining flashing
+            document.addEventListener('DOMContentLoaded', function() {
+                // Force all Alpine components to be visible immediately
+                document.querySelectorAll('[x-data], [x-cloak]').forEach(el => {
+                    el.style.opacity = '1';
+                    el.style.visibility = 'visible';
+                    el.style.display = 'block';
+                    el.style.transition = 'none';
+                });
+                
+                // Mark Alpine as ready immediately
+                document.body.classList.add('alpine-ready', 'js-enabled');
+                
+                // Ensure navbar and sidebars are visible
+                document.querySelectorAll('nav, .sidebar, .sidebar-column, .crm-sidebar, .supplier-sidebar').forEach(el => {
+                    el.style.opacity = '1';
+                    el.style.visibility = 'visible';
+                    el.style.transition = 'none';
+                });
+                
+                // Prevent any CSS animations that might cause flashing
+                const style = document.createElement('style');
+                style.textContent = `
+                    * {
+                        animation: none !important;
+                        transition: none !important;
+                    }
+                    body, .container, main, .row, .col, .card, .product-card, .sidebar, .navbar {
+                        opacity: 1 !important;
+                        visibility: visible !important;
+                        transition: none !important;
+                    }
+                    [x-data], [x-cloak] {
+                        opacity: 1 !important;
+                        visibility: visible !important;
+                        display: block !important;
+                        transition: none !important;
+                    }
+                `;
+                document.head.appendChild(style);
+            });
         </script>
         
         <!-- Enhanced Preconnect to External Resources -->
@@ -427,24 +318,7 @@
     </head>
     <body class="font-sans antialiased bg-gray-50 relative no-select-content">
         <div id="consentOverlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.7);z-index:40;backdrop-filter:blur(2px);display:none;"></div>
-        <!-- Page transition overlay -->
-        <div id="page-transition-overlay">
-            <div class="lab-loader">
-                <div class="dna-strand"></div>
-                <div class="dna-strand"></div>
-                <div class="lab-loader-container">
-                    <div class="test-tube"></div>
-                    <div class="flask">
-                        <div class="flask-top"></div>
-                        <div class="flask-body">
-                            <div class="flask-bubble"></div>
-                            <div class="flask-bubble"></div>
-                            <div class="flask-bubble"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- Removed page transition overlay to prevent text flashing -->
         
         <div class="min-h-screen bg-gray-100 mt-0 pt-0">
             @include('layouts.navigation')
