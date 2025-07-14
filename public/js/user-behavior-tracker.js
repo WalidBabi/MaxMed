@@ -35,7 +35,6 @@ class UserBehaviorTracker {
      */
     init() {
         if (!this.hasConsent) {
-            console.log('UserBehaviorTracker: Cookie consent not given, tracking disabled');
             return;
         }
 
@@ -421,8 +420,6 @@ class UserBehaviorTracker {
             platform: navigator.platform,
             cookies_enabled: navigator.cookieEnabled
         };
-        // Log the event before sending
-        console.log('[UserBehaviorTracker] Sending event:', eventData);
         this.events.push(eventData);
 
         // Send immediately for important events
@@ -441,7 +438,6 @@ class UserBehaviorTracker {
      */
     async sendEvent(eventData) {
         try {
-            console.log('[UserBehaviorTracker] sendEvent payload:', eventData);
             const response = await fetch(this.options.endpoint, {
                 method: 'POST',
                 headers: {

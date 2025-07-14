@@ -300,25 +300,45 @@
     
         <!-- Immediate script to prevent flashing of Alpine elements -->
         <script>
+            // Prevent FOUC (Flash of Unstyled Content) for Alpine components
+            document.documentElement.classList.add('no-fouc');
+            
             document.addEventListener('DOMContentLoaded', function() {
                 document.body.classList.add('js-enabled');
                 
-                // Initialize Alpine components
+                // Initialize Alpine components with better timing
                 document.addEventListener('alpine:initialized', () => {
                     document.body.classList.add('alpine-ready');
+                    
+                    // Ensure all Alpine components are properly initialized
+                    document.querySelectorAll('[x-data]').forEach(el => {
+                        if (el._x_dataStack) {
+                            el.classList.add('alpine-initialized');
+                        }
+                    });
                 });
                 
-                // Initialize navbar
+                // Initialize navbar immediately
                 const navbar = document.querySelector('nav');
                 if (navbar) {
                     navbar.classList.add('initialized');
+                    navbar.style.opacity = '1';
+                    navbar.style.visibility = 'visible';
                 }
                 
-                // Initialize sidebars
-                document.querySelectorAll('.sidebar, .sidebar-column').forEach(el => {
+                // Initialize sidebars immediately to prevent flashing
+                document.querySelectorAll('.sidebar, .sidebar-column, .crm-sidebar, .supplier-sidebar').forEach(el => {
                     el.style.opacity = '1';
                     el.style.visibility = 'visible';
+                    el.classList.add('sidebar-initialized');
                 });
+                
+                // Initialize all x-cloak elements after Alpine is ready
+                setTimeout(() => {
+                    document.querySelectorAll('[x-cloak]').forEach(el => {
+                        el.style.display = '';
+                    });
+                }, 100);
             });
         </script>
     
@@ -363,9 +383,28 @@
                 display: none !important;
             }
             
+            /* Prevent FOUC for Alpine components */
+            .no-fouc [x-cloak] {
+                display: none !important;
+            }
+            
+            /* Show Alpine components once initialized */
+            .alpine-ready [x-cloak] {
+                display: block !important;
+            }
+            
             /* Make sure sidebar is always visible */
             .sidebar-column,
-            .sidebar {
+            .sidebar,
+            .crm-sidebar,
+            .supplier-sidebar {
+                opacity: 1 !important;
+                visibility: visible !important;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+            }
+            
+            /* Ensure sidebars are visible during page load */
+            .sidebar-initialized {
                 opacity: 1 !important;
                 visibility: visible !important;
             }
@@ -379,12 +418,30 @@
                 margin-top: 0 !important;
                 padding-top: 0 !important;
                 top: 0 !important;
+                transition: opacity 0.2s ease-in-out;
             }
             
             /* Remove any styles that might be hiding elements */
             body:not(.js-enabled) .sidebar-column, 
-            body:not(.page-loaded) .sidebar-column {
+            body:not(.page-loaded) .sidebar-column,
+            body:not(.js-enabled) .sidebar,
+            body:not(.page-loaded) .sidebar,
+            body:not(.js-enabled) .crm-sidebar,
+            body:not(.page-loaded) .crm-sidebar,
+            body:not(.js-enabled) .supplier-sidebar,
+            body:not(.page-loaded) .supplier-sidebar {
                 opacity: 1 !important; /* Always show sidebar */
+                visibility: visible !important;
+            }
+            
+            /* Ensure all components are visible during navigation */
+            body.navigating .sidebar,
+            body.navigating .sidebar-column,
+            body.navigating .crm-sidebar,
+            body.navigating .supplier-sidebar,
+            body.navigating nav {
+                opacity: 1 !important;
+                visibility: visible !important;
             }
             
             img {
@@ -416,8 +473,37 @@
             
             /* Prevent sidebar flashing during navigation */
             .sidebar {
-                opacity: 1;
-                transition: opacity 0.3s ease;
+                opacity: 1 !important;
+                visibility: visible !important;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+                transform: translateZ(0);
+                backface-visibility: hidden;
+            }
+            
+            /* Ensure all sidebar types are visible */
+            .crm-sidebar,
+            .supplier-sidebar {
+                opacity: 1 !important;
+                visibility: visible !important;
+                transition: opacity 0.3s ease, visibility 0.3s ease;
+                transform: translateZ(0);
+                backface-visibility: hidden;
+            }
+            
+            /* Prevent Alpine components from flashing */
+            [x-data] {
+                opacity: 1 !important;
+                visibility: visible !important;
+                transition: opacity 0.2s ease, visibility 0.2s ease;
+            }
+            
+            /* Only hide x-cloak elements until Alpine is ready */
+            [x-cloak] {
+                display: none !important;
+            }
+            
+            .alpine-ready [x-cloak] {
+                display: block !important;
             }
             
             .main-content-column {
@@ -454,6 +540,35 @@
             .row, .col-md-3, .col-md-9 {
                 transform: translateZ(0);
                 backface-visibility: hidden;
+            }
+            
+            /* Final fixes to prevent any remaining flashing */
+            .immediately-visible {
+                opacity: 1 !important;
+                visibility: visible !important;
+                transition: none !important;
+            }
+            
+            .fully-loaded .sidebar,
+            .fully-loaded .sidebar-column,
+            .fully-loaded .crm-sidebar,
+            .fully-loaded .supplier-sidebar,
+            .fully-loaded nav {
+                opacity: 1 !important;
+                visibility: visible !important;
+            }
+            
+            /* Ensure all components are visible during any state */
+            body * {
+                transition: opacity 0.2s ease, visibility 0.2s ease;
+            }
+            
+            /* Override any Bootstrap or other framework styles that might hide components */
+            .d-none,
+            .invisible {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
             }
         </style>
 
@@ -694,9 +809,55 @@
                 }
                 
                 // Make sure all sidebars are visible
-                document.querySelectorAll('.sidebar-column, .sidebar').forEach(el => {
+                document.querySelectorAll('.sidebar-column, .sidebar, .crm-sidebar, .supplier-sidebar, .sidebar-container').forEach(el => {
                     el.style.opacity = '1';
                     el.style.visibility = 'visible';
+                    el.classList.add('sidebar-initialized');
+                });
+                
+                // Ensure all Alpine components are properly initialized
+                document.querySelectorAll('[x-data]').forEach(el => {
+                    if (el._x_dataStack) {
+                        el.classList.add('alpine-initialized');
+                    }
+                });
+                
+                // Show all x-cloak elements
+                document.querySelectorAll('[x-cloak]').forEach(el => {
+                    el.style.display = '';
+                });
+                
+                // Add final class to prevent any remaining flashing
+                document.body.classList.add('fully-loaded');
+            });
+            
+            // Additional script to prevent component flashing during navigation
+            document.addEventListener('DOMContentLoaded', function() {
+                // Immediately show all critical components
+                const criticalComponents = document.querySelectorAll('nav, .sidebar, .sidebar-column, .crm-sidebar, .supplier-sidebar, .sidebar-container');
+                criticalComponents.forEach(el => {
+                    el.style.opacity = '1';
+                    el.style.visibility = 'visible';
+                    el.classList.add('immediately-visible');
+                });
+                
+                // Prevent any CSS transitions from causing flashing
+                document.body.style.setProperty('--page-transition-duration', '0ms');
+                
+                // Ensure Alpine components don't flash
+                document.addEventListener('alpine:initialized', () => {
+                    document.body.classList.add('alpine-ready');
+                    
+                    // Force all Alpine components to be visible
+                    document.querySelectorAll('[x-data]').forEach(el => {
+                        el.style.opacity = '1';
+                        el.style.visibility = 'visible';
+                    });
+                    
+                    // Show all x-cloak elements immediately
+                    document.querySelectorAll('[x-cloak]').forEach(el => {
+                        el.style.display = '';
+                    });
                 });
             });
         </script>

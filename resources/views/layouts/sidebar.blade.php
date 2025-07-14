@@ -2,13 +2,27 @@
     <style>
         /* Prevent sidebar flashing during navigation */
         .sidebar {
-            opacity: 1; /* Make sidebar visible by default */
-            transition: opacity 0.3s ease;
+            opacity: 1 !important; /* Make sidebar visible by default */
+            visibility: visible !important;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
         
         /* Only hide Alpine components until initialized */
         [x-cloak] { 
             display: none !important; 
+        }
+        
+        /* Show Alpine components once initialized */
+        .alpine-ready [x-cloak] {
+            display: block !important;
+        }
+        
+        /* Ensure sidebar is always visible during page load */
+        .sidebar.initialized {
+            opacity: 1 !important;
+            visibility: visible !important;
         }
     </style>
     <div 
