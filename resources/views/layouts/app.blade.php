@@ -198,6 +198,50 @@
         <meta name="msapplication-TileColor" content="#171e60">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         
+        <!-- Mobile-specific styles for cookie consent and Google sign-in -->
+        <style>
+            /* Mobile cookie consent and Google sign-in positioning */
+            @media (max-width: 768px) {
+                /* Ensure proper spacing for mobile floating elements */
+                .fixed.bottom-6.right-6 {
+                    bottom: 140px; /* Space for cookie consent + Google sign-in */
+                }
+                
+                /* When cookie consent is hidden, adjust WhatsApp position */
+                body.cookie-consent-hidden .fixed.bottom-6.right-6 {
+                    bottom: 100px; /* Space for Google sign-in only */
+                }
+                
+                /* When both are hidden, restore original position */
+                body.cookie-consent-hidden.google-signin-hidden .fixed.bottom-6.right-6 {
+                    bottom: 24px;
+                }
+                
+                /* Smooth transitions for all floating elements */
+                .fixed.bottom-6.right-6,
+                .mobile-google-signin,
+                .mobile-google-signin-compact {
+                    transition: bottom 0.3s ease;
+                }
+            }
+            
+            /* Ensure cookie consent is always on top */
+            #cookieConsent {
+                z-index: 1050 !important;
+            }
+            
+            /* Google sign-in should be below cookie consent */
+            .mobile-google-signin,
+            .mobile-google-signin-compact {
+                z-index: 1049 !important;
+            }
+            
+            /* WhatsApp should be below Google sign-in */
+            .fixed.bottom-6.right-6 {
+                z-index: 1048 !important;
+            }
+        </style>
+        
         <!-- Enhanced Security Meta Tags -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -589,31 +633,67 @@
         @include('layouts.footer')
         @include('components.cookie-consent')
 
-        <!-- Cookie Consent Script (moved here for testing) -->
+        <!-- Enhanced Cookie Consent and Google Sign-in Management -->
         <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cookieConsent = document.getElementById('cookieConsent');
             const acceptBtn = document.getElementById('acceptCookies');
             const rejectBtn = document.getElementById('rejectCookies');
+            const mobileGoogleSignin = document.getElementById('mobile-google-signin');
+            const desktopGoogleSignin = document.getElementById('desktop-google-signin');
+
+            // Function to update Google sign-in positioning
+            function updateGoogleSigninPosition() {
+                const isMobile = window.innerWidth <= 768;
+                const cookieConsentVisible = !cookieConsent.classList.contains('hidden');
+                const googleSigninVisible = mobileGoogleSignin && !mobileGoogleSignin.classList.contains('hidden');
+                
+                if (isMobile) {
+                    if (cookieConsentVisible) {
+                        // Add class to body for CSS positioning
+                        document.body.classList.add('cookie-consent-visible');
+                        document.body.classList.remove('cookie-consent-hidden');
+                    } else {
+                        document.body.classList.remove('cookie-consent-visible');
+                        document.body.classList.add('cookie-consent-hidden');
+                    }
+                    
+                    // Handle Google sign-in visibility
+                    if (googleSigninVisible) {
+                        document.body.classList.remove('google-signin-hidden');
+                    } else {
+                        document.body.classList.add('google-signin-hidden');
+                    }
+                } else {
+                    // Desktop: remove all mobile-specific classes
+                    document.body.classList.remove('cookie-consent-visible', 'cookie-consent-hidden', 'google-signin-hidden');
+                }
+            }
 
             // Check if user has already given consent
             const existingConsent = document.cookie.split('; ').find(row => row.startsWith('cookie_consent='));
-            console.log('Cookie consent check:', existingConsent);
             
             if (!existingConsent) {
-                console.log('No consent found, showing banner');
-                cookieConsent.classList.remove('hidden');
-                document.getElementById('consentOverlay').style.display = 'block'; // Show overlay
+                // Add a small delay to ensure smooth appearance
+                setTimeout(() => {
+                    cookieConsent.classList.remove('hidden');
+                    cookieConsent.style.transform = 'translateY(0)';
+                    updateGoogleSigninPosition();
+                }, 500);
             } else {
-                console.log('Consent already given:', existingConsent);
-                document.getElementById('consentOverlay').style.display = 'none'; // Hide overlay if consent is given
+                updateGoogleSigninPosition();
             }
 
             // Handle accept button
             acceptBtn.addEventListener('click', function() {
-                document.cookie = 'cookie_consent=accepted; path=/; max-age=' + (60 * 60 * 24 * 365);
-                cookieConsent.classList.add('hidden');
-                document.getElementById('consentOverlay').style.display = 'none'; // Hide overlay on accept
+                document.cookie = 'cookie_consent=accepted; path=/; SameSite=Lax; max-age=' + (60 * 60 * 24 * 365);
+                
+                // Smooth hide animation
+                cookieConsent.style.transform = 'translateY(100%)';
+                setTimeout(() => {
+                    cookieConsent.classList.add('hidden');
+                    updateGoogleSigninPosition();
+                }, 300);
                 
                 // Send consent to backend
                 fetch('/api/user-behavior/track', {
@@ -631,14 +711,31 @@
                             timestamp: new Date().toISOString()
                         }
                     })
+                }).then(response => {
+                    console.log('Consent tracking response:', response.status);
                 }).catch(error => console.log('Consent tracking failed:', error));
+                
+                // Start tracking with a small delay to ensure cookie is set
+                setTimeout(() => {
+                    if (window.startUserBehaviorTracking) {
+                        console.log('Starting user behavior tracking...');
+                        window.startUserBehaviorTracking();
+                    } else {
+                        console.log('startUserBehaviorTracking function not found');
+                    }
+                }, 100);
             });
 
             // Handle reject button
             rejectBtn.addEventListener('click', function() {
-                document.cookie = 'cookie_consent=denied; path=/; max-age=' + (60 * 60 * 24 * 30);
-                cookieConsent.classList.add('hidden');
-                document.getElementById('consentOverlay').style.display = 'none'; // Hide overlay on reject
+                document.cookie = 'cookie_consent=denied; path=/; SameSite=Lax; max-age=' + (60 * 60 * 24 * 30);
+                
+                // Smooth hide animation
+                cookieConsent.style.transform = 'translateY(100%)';
+                setTimeout(() => {
+                    cookieConsent.classList.add('hidden');
+                    updateGoogleSigninPosition();
+                }, 300);
                 
                 // Send consent to backend
                 fetch('/api/user-behavior/track', {
@@ -658,6 +755,12 @@
                     })
                 }).catch(error => console.log('Consent tracking failed:', error));
             });
+
+            // Update positioning on window resize
+            window.addEventListener('resize', updateGoogleSigninPosition);
+            
+            // Initial positioning update
+            updateGoogleSigninPosition();
         });
         </script>
 
