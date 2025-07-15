@@ -51,6 +51,23 @@
                 transform: scale(1);
             }
             
+            /* Only show loading during navigation transitions, not initial page load */
+            body.navigating #page-transition-overlay {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            body.navigating .lab-loader {
+                opacity: 1;
+                transform: scale(1);
+            }
+            
+            /* Ensure content is always visible by default */
+            .main-content {
+                opacity: 1;
+                visibility: visible;
+            }
+            
             /* Test tube and flask container */
             .lab-loader-container {
                 display: flex;
@@ -285,11 +302,21 @@
                 document.body.classList.add('page-loaded');
             }
             
+            // Function to handle page ready state
+            function markPageReady() {
+                // Just end any navigation state
+                navigation.end();
+            }
+            
             // Initialize immediately if DOM is ready, otherwise wait
             if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initializeNavigation);
+                document.addEventListener('DOMContentLoaded', function() {
+                    initializeNavigation();
+                    markPageReady();
+                });
             } else {
                 initializeNavigation();
+                markPageReady();
             }
         </script>
         
@@ -476,7 +503,7 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
+            <main class="main-content">
                 @yield('content')
             </main>
 
