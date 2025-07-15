@@ -211,7 +211,7 @@
     /* Responsive improvements */
     @media (max-width: 992px) {
         .subcategory-container {
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 20px;
         }
     }
@@ -221,30 +221,61 @@
             font-size: 1.25rem;
         }
         .subcategory-container {
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 15px;
         }
+        
+        .subcategory-card {
+            border-radius: 12px;
+            min-height: 240px;
+        }
+        
+        .subcategory-card img {
+            height: 140px;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .subcategory-card .card-body {
+            padding: 16px 12px;
+        }
+        
         .subcategory-card .card-title {
-            font-size: 1.1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
         }
     }
     
     @media (max-width: 576px) {
         .subcategory-container {
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
         }
+        
+        .subcategory-card {
+            border-radius: 10px;
+            min-height: 200px;
+        }
+        
         .subcategory-card img {
-            height: 140px;
+            height: 110px;
+            border-radius: 10px 10px 0 0;
         }
+        
         .subcategory-card .card-body {
-            padding: 15px 10px;
+            padding: 12px 8px;
         }
+        
+        .subcategory-card .card-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        
         .lab-badge {
-            font-size: 0.7rem;
-            padding: 4px 8px;
-            top: 10px;
-            right: 10px;
+            font-size: 0.65rem;
+            padding: 3px 6px;
+            top: 8px;
+            right: 8px;
         }
     }
 </style>
