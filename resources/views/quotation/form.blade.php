@@ -89,30 +89,103 @@
     }
     
     .product-info {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        padding: 1rem;
-        margin-top: 1rem;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 16px;
+        padding: 2rem;
+        margin: 1.5rem auto 0;
+        max-width: 400px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        color: #333;
+        backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.2);
     }
     
-    .product-name {
-        font-size: 1.1rem;
-        font-weight: 500;
-        margin-bottom: 0.5rem;
-    }
-    
-    .product-sku {
-        font-size: 0.9rem;
-        opacity: 0.8;
-    }
-    
-    /* View Product Button Styling */
-    .view-product-section {
-        background: #f8f9fa;
-        padding: 1.5rem 2rem;
-        border-bottom: 1px solid #e2e8f0;
+    .product-details {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
         text-align: center;
+    }
+    
+    .product-image {
+        flex-shrink: 0;
+    }
+    
+    .product-img {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+        border-radius: 12px;
+        background: white;
+        border: 2px solid #e2e8f0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        margin: 0 auto;
+    }
+    
+    .product-placeholder {
+        width: 100px;
+        height: 100px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        border: 2px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6b7280;
+        font-size: 2rem;
+        margin: 0 auto;
+    }
+    
+    .product-text {
+        flex: 1;
+        width: 100%;
+    }
+    
+    .product-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #1f2937;
+        line-height: 1.4;
+    }
+    
+    .product-details-info {
+        margin-bottom: 1.5rem;
+    }
+    
+    .product-category,
+    .product-spec {
+        display: flex;
+        align-items: center;
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+    }
+    
+    .product-category i,
+    .product-spec i {
+        color: #9ca3af;
+        width: 16px;
+        text-align: center;
+    }
+    
+    .product-category .label,
+    .product-spec .label {
+        font-weight: 500;
+        margin-right: 0.25rem;
+        color: #4b5563;
+    }
+    
+    .product-category .value,
+    .product-spec .value {
+        font-weight: 600;
+        color: #1f2937;
+    }
+    
+    .product-action {
+        margin-top: 0.5rem;
     }
     
     .view-product-btn {
@@ -124,9 +197,10 @@
         border-radius: 8px;
         text-decoration: none;
         font-weight: 600;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
         transition: all 0.3s ease;
         box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+        border: none;
     }
     
     .view-product-btn:hover {
@@ -309,15 +383,48 @@
             padding: 1.5rem;
         }
         
-        .view-product-section {
-            padding: 1rem 1.5rem;
+        .view-product-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .product-info {
+            margin: 1rem 1rem 0;
+            padding: 1.5rem;
+            max-width: none;
+        }
+        
+        .product-details {
+            gap: 0.75rem;
+        }
+        
+        .product-img,
+        .product-placeholder {
+            width: 80px;
+            height: 80px;
+        }
+        
+        .product-name {
+            font-size: 1.1rem;
+        }
+        
+        .product-details-info {
+            margin-bottom: 1rem;
+        }
+        
+        .product-category,
+        .product-spec {
+            font-size: 0.8rem;
+            margin-bottom: 0.4rem;
         }
         
         .view-product-btn {
             width: 100%;
             justify-content: center;
-            padding: 1rem 1.5rem;
-            font-size: 1rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
         }
         
         .form-control {
@@ -342,19 +449,56 @@
             <div class="card-header">
                 <h2>Quotation Request</h2>
                 <div class="product-info">
-                    <div class="product-name">{{ $product->name }}</div>
-                    @if($product->sku)
-                        <div class="product-sku">SKU: {{ $product->sku }}</div>
-                    @endif
+                    <div class="product-details">
+                        <div class="product-image">
+                            @if($product->primaryImage)
+                                <img src="{{ $product->primaryImage->image_url }}" alt="{{ $product->name }}" class="product-img">
+                            @elseif($product->image_url)
+                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="product-img">
+                            @elseif($product->images && $product->images->count() > 0)
+                                <img src="{{ $product->images->first()->image_url }}" alt="{{ $product->name }}" class="product-img">
+                            @else
+                                <div class="product-placeholder">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="product-text">
+                            <div class="product-name">{{ $product->name }}</div>
+                            <div class="product-details-info">
+                                @if($product->category)
+                                    <div class="product-category">
+                                        <i class="fas fa-folder mr-1"></i>
+                                        <span class="label">Category:</span>
+                                        <span class="value">{{ $product->category->name }}</span>
+                                    </div>
+                                @endif
+                                @php
+                                    $keySpecs = $product->specifications()
+                                        ->where('show_on_listing', true)
+                                        ->orderBy('sort_order')
+                                        ->limit(2)
+                                        ->get();
+                                @endphp
+                                @if($keySpecs->count() > 0)
+                                    @foreach($keySpecs as $spec)
+                                        <div class="product-spec">
+                                            <i class="fas fa-cog mr-1"></i>
+                                            <span class="label">{{ $spec->display_name }}:</span>
+                                            <span class="value">{{ $spec->formatted_value }}</span>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                            <div class="product-action">
+                                <a href="{{ route('product.show', $product) }}" class="view-product-btn">
+                                    <i class="fas fa-eye mr-2"></i>
+                                    View Product Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- View Product Button -->
-            <div class="view-product-section">
-                <a href="{{ route('product.show', $product) }}" class="view-product-btn">
-                    <i class="fas fa-eye mr-2"></i>
-                    View Product Details
-                </a>
             </div>
             
             <!-- Form Section -->
