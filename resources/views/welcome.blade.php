@@ -752,7 +752,7 @@
         object-fit: cover;
         object-position: center;
         transition: transform 0.5s ease;
-        aspect-ratio: 16/9;
+        display: block;
     }
 
     .category-card:hover img {
@@ -832,24 +832,30 @@
 
     @media (max-width: 768px) {
         .category-container {
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 15px;
         }
 
         .category-card {
-            min-height: 280px;
+            border-radius: 12px;
+            min-height: 240px;
         }
 
         .category-card img {
-            height: 150px;
+            height: 140px;
             width: 100%;
             object-fit: cover;
             object-position: center;
-            aspect-ratio: 16/9;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .category-card .card-body {
+            padding: 16px 12px;
         }
 
         .category-card .card-title {
             font-size: 0.875rem;
+            font-weight: 600;
         }
 
         .feature-slide .w-1\/2 {
@@ -867,31 +873,38 @@
         }
 
         .category-container {
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
         }
 
         .category-card {
-            min-height: 240px;
+            border-radius: 10px;
+            min-height: 200px;
         }
 
         .category-card img {
-            height: 120px;
+            height: 110px;
             width: 100%;
             object-fit: cover;
             object-position: center;
-            aspect-ratio: 16/9;
+            border-radius: 10px 10px 0 0;
         }
 
         .category-card .card-body {
-            padding: 15px 10px;
+            padding: 12px 8px;
+        }
+
+        .category-card .card-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            line-height: 1.2;
         }
 
         .lab-badge {
-            font-size: 0.7rem;
-            padding: 4px 8px;
-            top: 10px;
-            right: 10px;
+            font-size: 0.65rem;
+            padding: 3px 6px;
+            top: 8px;
+            right: 8px;
         }
     }
 </style>
