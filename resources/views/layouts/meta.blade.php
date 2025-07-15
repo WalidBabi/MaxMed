@@ -119,7 +119,8 @@
 <link rel="alternate" hreflang="ar-ae" href="{{ $canonicalUrl }}">
 <link rel="alternate" hreflang="x-default" href="{{ $canonicalUrl }}">
 
-<!-- Enhanced Favicon -->
+<!-- Enhanced Favicon for Google Search Results -->
+<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('img/favicon/favicon-96x96.png') }}">
 <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon/favicon-32x32.png') }}">
 <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon/favicon-16x16.png') }}">
@@ -129,6 +130,44 @@
 <link rel="manifest" href="{{ asset('site.webmanifest') }}">
 <link rel="mask-icon" href="{{ asset('img/favicon/safari-pinned-tab.svg') }}" color="#171e60">
 <meta name="msapplication-config" content="{{ asset('browserconfig.xml') }}">
+
+<!-- Additional favicon formats for better browser compatibility -->
+<link rel="icon" type="image/png" sizes="192x192" href="{{ asset('img/favicon/web-app-manifest-192x192.png') }}">
+<link rel="icon" type="image/png" sizes="512x512" href="{{ asset('img/favicon/web-app-manifest-512x512.png') }}">
+
+<!-- Google-specific favicon meta tags for better search results -->
+<meta name="google-site-verification" content="your-google-verification-code">
+<meta name="msapplication-TileImage" content="{{ asset('img/favicon/mstile-150x150.png') }}">
+<meta name="msapplication-TileColor" content="#171e60">
+
+<!-- Structured Data for Organization/Brand -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "MaxMed UAE",
+  "alternateName": "MaxMed",
+  "url": "{{ $canonicalUrl }}",
+  "logo": "{{ asset('img/favicon/favicon-96x96.png') }}",
+  "image": "{{ asset('img/favicon/favicon-96x96.png') }}",
+  "description": "Leading supplier of laboratory equipment and medical supplies in Dubai, UAE",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "AE",
+    "addressRegion": "Dubai"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+971-55-460-2500",
+    "contactType": "customer service",
+    "availableLanguage": ["English", "Arabic"]
+  },
+  "sameAs": [
+    "https://www.linkedin.com/company/maxmed-uae",
+    "https://www.facebook.com/maxmeduae"
+  ]
+}
+</script>
 
 <!-- Enhanced Open Graph / Facebook -->
 <meta property="og:type" content="website">
