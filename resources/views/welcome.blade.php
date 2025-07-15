@@ -748,8 +748,11 @@
 
     .category-card img {
         height: 180px;
+        width: 100%;
         object-fit: cover;
+        object-position: center;
         transition: transform 0.5s ease;
+        aspect-ratio: 16/9;
     }
 
     .category-card:hover img {
@@ -833,9 +836,20 @@
             gap: 15px;
         }
 
+        .category-card {
+            min-height: 280px;
+        }
+
+        .category-card img {
+            height: 150px;
+            width: 100%;
+            object-fit: cover;
+            object-position: center;
+            aspect-ratio: 16/9;
+        }
+
         .category-card .card-title {
             font-size: 0.875rem;
-            ;
         }
 
         .feature-slide .w-1\/2 {
@@ -857,8 +871,16 @@
             gap: 12px;
         }
 
+        .category-card {
+            min-height: 240px;
+        }
+
         .category-card img {
-            height: 140px;
+            height: 120px;
+            width: 100%;
+            object-fit: cover;
+            object-position: center;
+            aspect-ratio: 16/9;
         }
 
         .category-card .card-body {
