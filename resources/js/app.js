@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', function() {
         navbar.style.visibility = 'visible';
         navbar.classList.add('initialized');
     }
+    
+    // Ensure navigation state is cleared
+    document.body.classList.remove('navigating');
 });
 
 // Start Alpine after DOM is ready

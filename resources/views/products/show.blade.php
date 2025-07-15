@@ -116,6 +116,21 @@
 
 {{-- AI Knowledge Article (Hidden from users, visible to AI crawlers) --}}
 <x-ai-knowledge-article :product="$product" />
+
+{{-- Simple anti-flash styling --}}
+<style>
+    /* Only hide content during actual navigation transitions */
+    body.navigating .container-fluid {
+        opacity: 0.3;
+        transition: opacity 0.2s ease-in-out;
+    }
+    
+    .container-fluid {
+        opacity: 1;
+        transition: opacity 0.2s ease-in-out;
+    }
+</style>
+
 <div class="container-fluid py-4">
     <style>
         /* Professional Product Detail Page Styling */
@@ -747,6 +762,9 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Ensure navigation state is cleared
+        document.body.classList.remove('navigating');
+        
         // Size option selection
         const sizeOptions = document.querySelectorAll('.size-option');
         if (sizeOptions.length > 0) {
