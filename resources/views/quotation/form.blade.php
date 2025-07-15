@@ -107,6 +107,41 @@
         opacity: 0.8;
     }
     
+    /* View Product Button Styling */
+    .view-product-section {
+        background: #f8f9fa;
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid #e2e8f0;
+        text-align: center;
+    }
+    
+    .view-product-btn {
+        display: inline-flex;
+        align-items: center;
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+    }
+    
+    .view-product-btn:hover {
+        background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(5, 150, 105, 0.35);
+        color: white;
+        text-decoration: none;
+    }
+    
+    .view-product-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
+    }
+    
     /* Form Styling */
     .form-section {
         padding: 2rem;
@@ -274,6 +309,17 @@
             padding: 1.5rem;
         }
         
+        .view-product-section {
+            padding: 1rem 1.5rem;
+        }
+        
+        .view-product-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+        }
+        
         .form-control {
             font-size: 16px; /* Prevents zoom on iOS */
         }
@@ -301,6 +347,14 @@
                         <div class="product-sku">SKU: {{ $product->sku }}</div>
                     @endif
                 </div>
+            </div>
+            
+            <!-- View Product Button -->
+            <div class="view-product-section">
+                <a href="{{ route('product.show', $product) }}" class="view-product-btn">
+                    <i class="fas fa-eye mr-2"></i>
+                    View Product Details
+                </a>
             </div>
             
             <!-- Form Section -->
