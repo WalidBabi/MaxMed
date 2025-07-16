@@ -149,17 +149,10 @@
         },
         @if($product)
         {
-            "@type": "Product",
+            "@type": "Thing",
             "@id": "{{ route('product.show', $product) }}#product",
             "name": "{{ $product->name }}",
-            "manufacturer": {
-                "@id": "https://maxmedme.com/#organization"
-            },
-            "brand": {
-                "@type": "Brand",
-                "name": "{{ $product->brand->name ?? 'MaxMed UAE' }}"
-            },
-            "category": "{{ $product->category->name ?? 'Laboratory Equipment' }}",
+            "description": "{{ $product->description ?? 'Laboratory equipment from MaxMed UAE' }}",
             "isPartOf": {
                 "@id": "https://maxmedme.com/#organization"
             }

@@ -34,7 +34,6 @@ $organization = [
 
 {{-- Product Schema --}}
 @if(($routeName === 'product.show' && isset($product)) || (request()->route() && request()->route()->getName() === 'product.show'))
-<!-- DEBUG: Product schema is being output -->
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
