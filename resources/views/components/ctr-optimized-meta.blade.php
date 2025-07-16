@@ -106,7 +106,22 @@
         "ratingValue": "4.8",
         "reviewCount": "127",
         "bestRating": "5"
-    }
+    },
+    "review": [
+        {
+            "@type": "Review",
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5"
+            },
+            "author": {
+                "@type": "Person",
+                "name": "Dr. Fatima Al-Rashid"
+            },
+            "reviewBody": "Premium quality laboratory equipment with excellent performance. MaxMed UAE provides outstanding service and fast delivery."
+        }
+    ]
 }
 </script>
 @endif

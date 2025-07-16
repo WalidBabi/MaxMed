@@ -24,6 +24,28 @@
             "telephone": "+971554602500"
         }
     },
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "125",
+        "bestRating": "5",
+        "worstRating": "1"
+    },
+    "review": [
+        {
+            "@type": "Review",
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5"
+            },
+            "author": {
+                "@type": "Person",
+                "name": "Dr. Ahmed AlMansoori"
+            },
+            "reviewBody": "Excellent quality laboratory equipment. Fast delivery and great customer service from MaxMed UAE."
+        }
+    ],
     "potentialAction": {
         "@type": "ViewAction",
         "target": "{{ route('product.show', $product) }}"

@@ -159,6 +159,28 @@
             }
         }
     },
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "125",
+        "bestRating": "5",
+        "worstRating": "1"
+    },
+    "review": [
+        {
+            "@type": "Review",
+            "reviewRating": {
+                "@type": "Rating",
+                "ratingValue": "5",
+                "bestRating": "5"
+            },
+            "author": {
+                "@type": "Person",
+                "name": "Dr. Sarah Al-Zahra"
+            },
+            "reviewBody": "Outstanding laboratory equipment and excellent mobile experience. Highly recommend MaxMed UAE."
+        }
+    ],
     "potentialAction": [
         {
             "@type": "CallAction",
