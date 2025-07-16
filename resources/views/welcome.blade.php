@@ -747,7 +747,7 @@
     }
 
     .category-card img {
-        height: 180px;
+        height: 150px;
         width: 100%;
         object-fit: cover;
         object-position: center;

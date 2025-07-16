@@ -445,7 +445,7 @@
             position: relative;
             overflow: hidden;
             width: 100%;
-            padding-bottom: 75%; /* 4:3 aspect ratio */
+            height: 150px;
             background: #f8f8f8;
             border-bottom: 1px solid #f0f0f0;
         }
@@ -456,7 +456,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
+            object-position: center;
             transition: transform 0.3s ease;
         }
         
@@ -573,10 +574,6 @@
                 gap: 14px;
             }
             
-            .product-image-container {
-                padding-bottom: 75%;
-            }
-            
             .product-content {
                 padding: 14px;
             }
@@ -592,10 +589,6 @@
             .masonry-layout {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 12px;
-            }
-            
-            .product-image-container {
-                padding-bottom: 75%;
             }
             
             .product-content {
