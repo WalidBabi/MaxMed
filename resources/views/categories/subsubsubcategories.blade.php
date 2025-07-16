@@ -136,12 +136,9 @@
     }
 
     .subcategory-card img {
-        height: 150px;
-        width: 100%;
+        height: 180px;
         object-fit: cover;
-        object-position: center;
         transition: transform 0.5s ease;
-        display: block;
     }
     
     .subcategory-card:hover img {
