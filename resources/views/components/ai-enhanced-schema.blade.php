@@ -20,11 +20,18 @@
     }
 @endphp
 
-@if(isset($schema))
-{{-- AI-Enhanced Schema Markup --}}
+@if(isset($schema) && $type !== 'product')
+{{-- AI-Enhanced Schema Markup (excluding Product schema to avoid duplicates) --}}
 <script type="application/ld+json">
 {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
 </script>
+@endif
+
+@if($type === 'product')
+{{-- For products, we rely on the main schema-markup.blade.php which already has the required properties --}}
+@endif
+
+@if(isset($schema))
 
 {{-- Knowledge Graph Schema for AI Understanding --}}
 <script type="application/ld+json">
