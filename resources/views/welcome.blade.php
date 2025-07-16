@@ -837,16 +837,14 @@
         }
 
         .category-card {
-            border-radius: 12px;
             min-height: 240px;
         }
 
         .category-card img {
-            height: 140px;
+            height: 150px;
             width: 100%;
             object-fit: cover;
             object-position: center;
-            border-radius: 12px 12px 0 0;
         }
 
         .category-card .card-body {
@@ -878,16 +876,14 @@
         }
 
         .category-card {
-            border-radius: 10px;
             min-height: 200px;
         }
 
         .category-card img {
-            height: 110px;
+            height: 150px;
             width: 100%;
             object-fit: cover;
             object-position: center;
-            border-radius: 10px 10px 0 0;
         }
 
         .category-card .card-body {

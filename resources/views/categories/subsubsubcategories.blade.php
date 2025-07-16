@@ -226,13 +226,11 @@
         }
         
         .subcategory-card {
-            border-radius: 12px;
             min-height: 240px;
         }
         
         .subcategory-card img {
-            height: 140px;
-            border-radius: 12px 12px 0 0;
+            height: 150px;
         }
         
         .subcategory-card .card-body {
@@ -252,13 +250,11 @@
         }
         
         .subcategory-card {
-            border-radius: 10px;
             min-height: 200px;
         }
         
         .subcategory-card img {
-            height: 110px;
-            border-radius: 10px 10px 0 0;
+            height: 150px;
         }
         
         .subcategory-card .card-body {

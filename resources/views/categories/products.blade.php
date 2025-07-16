@@ -573,16 +573,8 @@
                 gap: 14px;
             }
             
-            .product-item {
-                border-radius: 12px;
-            }
-            
             .product-image-container {
-                padding-bottom: 65%;
-            }
-            
-            .product-image {
-                border-radius: 12px 12px 0 0;
+                padding-bottom: 75%;
             }
             
             .product-content {
@@ -602,16 +594,8 @@
                 gap: 12px;
             }
             
-            .product-item {
-                border-radius: 10px;
-            }
-            
             .product-image-container {
-                padding-bottom: 60%;
-            }
-            
-            .product-image {
-                border-radius: 10px 10px 0 0;
+                padding-bottom: 75%;
             }
             
             .product-content {
