@@ -521,6 +521,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('supplier-categories/{supplier}/{category}/reject', [SupplierCategoryController::class, 'reject'])->name('supplier-categories.reject');
         Route::get('supplier-categories/export', [SupplierCategoryController::class, 'export'])->name('supplier-categories.export');
         
+        // Supplier Profiles Management
+        Route::get('supplier-profiles', [\App\Http\Controllers\Admin\SupplierProfileController::class, 'index'])->name('supplier-profiles.index');
+        Route::get('supplier-profiles/{supplier}', [\App\Http\Controllers\Admin\SupplierProfileController::class, 'show'])->name('supplier-profiles.show');
+        Route::get('supplier-profiles/{supplier}/documents/{documentType}', [\App\Http\Controllers\Admin\SupplierProfileController::class, 'downloadDocument'])->name('supplier-profiles.download-document');
+        Route::get('supplier-profiles/{supplier}/certifications/{index}', [\App\Http\Controllers\Admin\SupplierProfileController::class, 'downloadCertification'])->name('supplier-profiles.download-certification');
+        Route::post('supplier-profiles/{supplier}/update-status', [\App\Http\Controllers\Admin\SupplierProfileController::class, 'updateStatus'])->name('supplier-profiles.update-status');
+        
         // Feedback Management
         Route::resource('feedback', \App\Http\Controllers\Admin\FeedbackController::class)->only(['index', 'show', 'update']);
         Route::get('feedback/stats', [\App\Http\Controllers\Admin\FeedbackController::class, 'stats'])->name('feedback.stats');
