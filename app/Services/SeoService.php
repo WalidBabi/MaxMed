@@ -40,7 +40,86 @@ class SeoService
         'benchtop autoclave',
         'medical testing equipment',
         'laboratory refrigerator',
-        'veterinary biotech solutions uae'
+        'veterinary biotech solutions uae',
+        // NEW: High-impression zero-click keywords from GSC data
+        'laboratory essentials',
+        'dental supplies',
+        'dental equipment',
+        'medical laboratory equipment',
+        'dental bibs',
+        'medical testing equipment',
+        'medical consumables',
+        'dental bib',
+        'laboratory centrifuge suppliers',
+        'laboratory sterilization equipment',
+        'uae veterinary research diagnostics',
+        'laboratory refrigerator',
+        'dental bibs near me',
+        'dental tray',
+        'dental spectrophotometer',
+        'laboratory consumables',
+        'laboratory mixer machine',
+        'dental medical equipment',
+        'medical freezers',
+        'medical lab equipment for sale',
+        'laboratory scientific supplies uae',
+        'buy ns1 dengue test manufacturer',
+        'medical equipments',
+        'laboratory equipment suppliers in dubai'
+    ];
+
+    // Zero-click optimization keywords (high impressions, no clicks)
+    private $zeroClickKeywords = [
+        'laboratory essentials' => [
+            'impressions' => 199,
+            'position' => 11.26,
+            'optimization_strategy' => 'create_dedicated_landing_page'
+        ],
+        'dental consumables' => [
+            'impressions' => 108,
+            'position' => 28.87,
+            'optimization_strategy' => 'enhance_category_page'
+        ],
+        'laboratory equipment sterilization' => [
+            'impressions' => 77,
+            'position' => 65.43,
+            'optimization_strategy' => 'create_guide_content'
+        ],
+        'dental supplies uae' => [
+            'impressions' => 36,
+            'position' => 65.22,
+            'optimization_strategy' => 'local_seo_optimization'
+        ],
+        'dental supplies' => [
+            'impressions' => 36,
+            'position' => 96.22,
+            'optimization_strategy' => 'improve_ranking'
+        ],
+        'dental equipment' => [
+            'impressions' => 18,
+            'position' => 92.72,
+            'optimization_strategy' => 'enhance_category_page'
+        ],
+        'medical laboratory equipment suppliers in uae' => [
+            'impressions' => 13,
+            'position' => 57.31,
+            'optimization_strategy' => 'local_b2b_optimization'
+        ],
+        'medical laboratory equipment' => [
+            'impressions' => 13,
+            'position' => 95,
+            'optimization_strategy' => 'improve_ranking'
+        ],
+        'dental bibs' => [
+            'impressions' => 12,
+            'position' => 18.92,
+            'optimization_strategy' => 'product_page_optimization'
+        ],
+        'medical testing equipment' => [
+            'impressions' => 12,
+            'position' => 86.58,
+            'optimization_strategy' => 'create_guide_content'
+        ]
     ];
 
     public function generateProductMeta(Product $product): array
@@ -1004,6 +1083,342 @@ class SeoService
             'meta_description' => substr($optimizedDescription, 0, 160),
             'meta_keywords' => $this->generateSeoKeywords($pageType, $entity),
             'optimization_reason' => "High impressions ({$impressions}) with zero clicks - added urgency and trust signals"
+        ];
+    }
+
+    /**
+     * Generate optimization strategy for zero-click keywords
+     */
+    public function generateZeroClickOptimization(string $keyword): array
+    {
+        if (!isset($this->zeroClickKeywords[$keyword])) {
+            return [];
+        }
+
+        $data = $this->zeroClickKeywords[$keyword];
+        $strategy = $data['optimization_strategy'];
+        
+        switch ($strategy) {
+            case 'create_dedicated_landing_page':
+                return $this->generateDedicatedLandingPageStrategy($keyword, $data);
+            case 'enhance_category_page':
+                return $this->generateCategoryEnhancementStrategy($keyword, $data);
+            case 'create_guide_content':
+                return $this->generateGuideContentStrategy($keyword, $data);
+            case 'local_seo_optimization':
+                return $this->generateLocalSeoStrategy($keyword, $data);
+            case 'local_b2b_optimization':
+                return $this->generateB2bOptimizationStrategy($keyword, $data);
+            case 'product_page_optimization':
+                return $this->generateProductPageStrategy($keyword, $data);
+            case 'improve_ranking':
+                return $this->generateRankingImprovementStrategy($keyword, $data);
+            default:
+                return [];
+        }
+    }
+
+    /**
+     * Generate strategy for creating dedicated landing pages
+     */
+    private function generateDedicatedLandingPageStrategy(string $keyword, array $data): array
+    {
+        $keywordVariations = [
+            'laboratory essentials' => [
+                'title' => 'Laboratory Essentials Dubai UAE | Lab Tubes, Pipettes & Glassware | MaxMed',
+                'description' => '🔬 Complete laboratory essentials in Dubai UAE! Premium lab tubes, pipettes, glassware & consumables. ✅ 500+ products ⚡ Same-day quotes ☎️ +971 55 460 2500',
+                'content_focus' => 'comprehensive product catalog with detailed specifications',
+                'cta_strategy' => 'multiple "Shop Now" and "Request Quote" buttons',
+                'schema_type' => 'ProductCollection'
+            ]
+        ];
+
+        return $keywordVariations[$keyword] ?? [
+            'title' => ucfirst($keyword) . ' Dubai UAE | MaxMed',
+            'description' => "🔬 Premium {$keyword} in Dubai UAE! ✅ Quality guaranteed ⚡ Fast delivery ☎️ +971 55 460 2500",
+            'content_focus' => 'product showcase with specifications',
+            'cta_strategy' => 'prominent call-to-action buttons',
+            'schema_type' => 'Product'
+        ];
+    }
+
+    /**
+     * Generate strategy for enhancing category pages
+     */
+    private function generateCategoryEnhancementStrategy(string $keyword, array $data): array
+    {
+        $enhancements = [
+            'dental consumables' => [
+                'add_sections' => [
+                    'Product Comparison Table',
+                    'Customer Testimonials',
+                    'Same Day Delivery Information',
+                    'Bulk Order Discounts',
+                    'Technical Specifications'
+                ],
+                'cta_improvements' => [
+                    'Add "Request Quote" buttons on each product',
+                    'Include "Call Now" floating button',
+                    'Add "WhatsApp Contact" option',
+                    'Prominent "Bulk Orders" section'
+                ],
+                'content_additions' => [
+                    'Dental industry applications',
+                    'Quality certifications',
+                    'Delivery timeline',
+                    'After-sales support'
+                ]
+            ]
+        ];
+
+        return $enhancements[$keyword] ?? [
+            'add_sections' => ['Product Showcase', 'Technical Support', 'Delivery Information'],
+            'cta_improvements' => ['Add quote request buttons', 'Include contact information'],
+            'content_additions' => ['Product benefits', 'Industry applications']
+        ];
+    }
+
+    /**
+     * Generate strategy for creating guide content
+     */
+    private function generateGuideContentStrategy(string $keyword, array $data): array
+    {
+        $guides = [
+            'laboratory equipment sterilization' => [
+                'title' => 'Complete Guide to Laboratory Equipment Sterilization Dubai UAE',
+                'sections' => [
+                    'Types of Sterilization Methods',
+                    'Equipment Selection Guide',
+                    'Safety Protocols',
+                    'Maintenance Best Practices',
+                    'Regulatory Compliance'
+                ],
+                'target_keywords' => ['autoclave', 'sterilization equipment', 'lab safety'],
+                'cta_placement' => 'end of each section'
+            ],
+            'medical testing equipment' => [
+                'title' => 'Medical Testing Equipment Buyer\'s Guide Dubai UAE',
+                'sections' => [
+                    'Types of Medical Testing Equipment',
+                    'How to Choose the Right Equipment',
+                    'Installation and Setup',
+                    'Quality Assurance',
+                    'Support and Maintenance'
+                ],
+                'target_keywords' => ['diagnostic equipment', 'medical lab equipment', 'testing devices'],
+                'cta_placement' => 'strategic placement throughout'
+            ]
+        ];
+
+        return $guides[$keyword] ?? [
+            'title' => ucfirst($keyword) . ' Guide Dubai UAE',
+            'sections' => ['Overview', 'Selection Guide', 'Installation', 'Maintenance'],
+            'target_keywords' => [$keyword, $keyword . ' dubai', $keyword . ' uae'],
+            'cta_placement' => 'end of guide'
+        ];
+    }
+
+    /**
+     * Generate local SEO optimization strategy
+     */
+    private function generateLocalSeoStrategy(string $keyword, array $data): array
+    {
+        return [
+            'local_keywords' => [
+                $keyword . ' dubai',
+                $keyword . ' uae',
+                $keyword . ' near me',
+                $keyword . ' dubai supplier',
+                $keyword . ' uae distributor'
+            ],
+            'local_schema' => [
+                'LocalBusiness',
+                'Service',
+                'Organization'
+            ],
+            'content_focus' => [
+                'UAE delivery information',
+                'Dubai office location',
+                'Local customer testimonials',
+                'UAE regulatory compliance',
+                'Local contact information'
+            ],
+            'cta_improvements' => [
+                'Add "UAE Delivery" badges',
+                'Include "Dubai Office" information',
+                'Add "Local Support" messaging',
+                'Include Arabic language options'
+            ]
+        ];
+    }
+
+    /**
+     * Generate B2B optimization strategy
+     */
+    private function generateB2bOptimizationStrategy(string $keyword, array $data): array
+    {
+        return [
+            'b2b_keywords' => [
+                $keyword . ' supplier',
+                $keyword . ' distributor',
+                $keyword . ' manufacturer',
+                $keyword . ' wholesale',
+                $keyword . ' bulk order',
+                $keyword . ' procurement'
+            ],
+            'content_focus' => [
+                'B2B pricing information',
+                'Bulk order discounts',
+                'Corporate account benefits',
+                'Procurement process',
+                'Payment terms',
+                'Volume pricing'
+            ],
+            'cta_improvements' => [
+                'Add "B2B Quote Request" form',
+                'Include "Corporate Accounts" section',
+                'Add "Bulk Order" calculator',
+                'Include "Procurement Guide"'
+            ],
+            'schema_additions' => [
+                'B2BService',
+                'Wholesale',
+                'BusinessEntity'
+            ]
+        ];
+    }
+
+    /**
+     * Generate product page optimization strategy
+     */
+    private function generateProductPageStrategy(string $keyword, array $data): array
+    {
+        return [
+            'product_enhancements' => [
+                'Detailed specifications',
+                'High-quality images',
+                'Customer reviews',
+                'Technical documentation',
+                'Installation guides',
+                'Warranty information'
+            ],
+            'cta_improvements' => [
+                'Prominent "Add to Quote" button',
+                'Quick contact form',
+                'WhatsApp integration',
+                'Live chat option',
+                'Phone number display'
+            ],
+            'content_additions' => [
+                'Product benefits',
+                'Industry applications',
+                'Competitive advantages',
+                'Support information',
+                'Delivery options'
+            ]
+        ];
+    }
+
+    /**
+     * Generate ranking improvement strategy
+     */
+    private function generateRankingImprovementStrategy(string $keyword, array $data): array
+    {
+        return [
+            'technical_improvements' => [
+                'Page speed optimization',
+                'Mobile responsiveness',
+                'Core Web Vitals',
+                'Internal linking',
+                'URL structure'
+            ],
+            'content_improvements' => [
+                'Expand content length',
+                'Add more relevant keywords',
+                'Include FAQ section',
+                'Add customer testimonials',
+                'Include case studies'
+            ],
+            'backlink_strategy' => [
+                'Industry directory submissions',
+                'Guest posting opportunities',
+                'Broken link building',
+                'Local business citations',
+                'Social media engagement'
+            ],
+            'user_experience' => [
+                'Improve page navigation',
+                'Add breadcrumbs',
+                'Optimize images',
+                'Add related products',
+                'Improve site search'
+            ]
+        ];
+    }
+
+    /**
+     * Get all zero-click keywords for analysis
+     */
+    public function getZeroClickKeywords(): array
+    {
+        return $this->zeroClickKeywords;
+    }
+
+    /**
+     * Generate comprehensive SEO report for zero-click keywords
+     */
+    public function generateZeroClickSeoReport(): array
+    {
+        $report = [];
+        
+        foreach ($this->zeroClickKeywords as $keyword => $data) {
+            $report[$keyword] = [
+                'current_performance' => $data,
+                'optimization_strategy' => $this->generateZeroClickOptimization($keyword),
+                'priority_level' => $this->calculatePriorityLevel($data),
+                'estimated_impact' => $this->estimateSeoImpact($data)
+            ];
+        }
+        
+        return $report;
+    }
+
+    /**
+     * Calculate priority level based on impressions and position
+     */
+    private function calculatePriorityLevel(array $data): string
+    {
+        $impressions = $data['impressions'];
+        $position = $data['position'];
+        
+        if ($impressions >= 100 && $position <= 20) {
+            return 'HIGH';
+        } elseif ($impressions >= 50 && $position <= 50) {
+            return 'MEDIUM';
+        } else {
+            return 'LOW';
+        }
+    }
+
+    /**
+     * Estimate SEO impact potential
+     */
+    private function estimateSeoImpact(array $data): array
+    {
+        $impressions = $data['impressions'];
+        $position = $data['position'];
+        
+        // Estimate potential clicks if we improve CTR to 2%
+        $potentialClicks = round($impressions * 0.02);
+        
+        // Estimate potential traffic increase
+        $trafficIncrease = round($potentialClicks * 0.3); // Assuming 30% conversion to traffic
+        
+        return [
+            'potential_clicks' => $potentialClicks,
+            'traffic_increase' => $trafficIncrease,
+            'revenue_potential' => $trafficIncrease * 100, // Assuming $100 average order value
+            'ranking_improvement_potential' => $position <= 20 ? 'Top 10 possible' : 'Top 20 possible'
         ];
     }
 
