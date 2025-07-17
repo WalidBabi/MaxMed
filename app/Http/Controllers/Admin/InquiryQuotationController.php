@@ -121,7 +121,7 @@ class InquiryQuotationController extends Controller
     public function showQuotation(SupplierQuotation $quotation)
     {
         // Load the quotation with all necessary relationships
-        $quotation->load(['supplier', 'product', 'supplierInquiry', 'quotationRequest']);
+        $quotation->load(['supplier', 'product', 'supplierInquiry', 'quotationRequest', 'items.product']);
         
         return view('admin.inquiry-quotations.quotation-show', compact('quotation'));
     }

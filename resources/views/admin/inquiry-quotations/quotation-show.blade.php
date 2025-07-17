@@ -232,9 +232,74 @@
         </div>
     @endif
 
-
-    
-
+    <!-- Quotation Attachments -->
+    @if($quotation->attachments && is_array($quotation->attachments) && count($quotation->attachments) > 0)
+        <div class="mt-8 bg-white shadow-sm rounded-lg border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">
+                    <i class="fas fa-paperclip mr-2"></i>
+                    Quotation Attachments ({{ count($quotation->attachments) }})
+                </h3>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @foreach($quotation->attachments as $index => $attachment)
+                        @if(isset($attachment['path']))
+                            @php
+                                $fileName = $attachment['name'] ?? 'Document ' . ($index + 1);
+                                $filePath = $attachment['path'];
+                                $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                                $isPdf = $fileExtension === 'pdf';
+                                $isImage = in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                                $fileIcon = 'fas fa-file text-gray-500';
+                                if ($fileExtension === 'pdf') {
+                                    $fileIcon = 'fas fa-file-pdf text-red-500';
+                                } elseif (in_array($fileExtension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                                    $fileIcon = 'fas fa-file-image text-purple-500';
+                                } elseif (in_array($fileExtension, ['doc', 'docx'])) {
+                                    $fileIcon = 'fas fa-file-word text-blue-500';
+                                } elseif (in_array($fileExtension, ['xls', 'xlsx'])) {
+                                    $fileIcon = 'fas fa-file-excel text-green-500';
+                                }
+                            @endphp
+                            <div class="border border-gray-200 rounded-lg p-4 bg-white">
+                                <div class="flex items-center mb-3">
+                                    <i class="{{ $fileIcon }} mr-3 text-lg"></i>
+                                    <div class="flex-1">
+                                        <span class="text-sm font-medium text-gray-900 block" title="{{ $fileName }}">{{ $fileName }}</span>
+                                        @if(isset($attachment['size']))
+                                            <span class="text-xs text-gray-500">{{ round($attachment['size'] / 1024, 2) }} KB</span>
+                                        @endif
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <a href="{{ asset('storage/' . $filePath) }}" target="_blank" 
+                                           class="text-sm text-blue-600 hover:underline flex items-center">
+                                            <i class="fas fa-external-link-alt mr-1"></i> Open
+                                        </a>
+                                        <a href="{{ asset('storage/' . $filePath) }}" download="{{ $fileName }}" 
+                                           class="text-sm text-gray-500 hover:underline flex items-center">
+                                            <i class="fas fa-download mr-1"></i> Download
+                                        </a>
+                                    </div>
+                                </div>
+                                @if($isPdf)
+                                    <div class="mt-3">
+                                        <iframe src="{{ asset('storage/' . $filePath) }}" width="100%" height="300px" 
+                                                class="border-0 rounded border border-gray-200"></iframe>
+                                    </div>
+                                @elseif($isImage)
+                                    <div class="mt-3">
+                                        <img src="{{ asset('storage/' . $filePath) }}" alt="{{ $fileName }}" 
+                                             class="w-full h-48 object-contain rounded border border-gray-200 bg-gray-50">
+                                    </div>
+                                @endif
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    @endif
 
     <!-- Related Inquiry Information -->
     @if($quotation->supplierInquiry)
