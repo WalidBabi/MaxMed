@@ -23,15 +23,9 @@ class ProductSpecificationController extends Controller
      */
     private function getCategorySpecificationTemplates($categoryId)
     {
-        $category = Category::find($categoryId);
-        
-        if (!$category) {
-            Log::warning("Category not found for ID: {$categoryId}");
-            return [];
-        }
-
-        // Return templates based on category name
-        return $this->getTemplatesByCategory($category->name);
+        // Use the centralized ProductSpecificationService for consistency
+        $service = new \App\Services\ProductSpecificationService();
+        return $service->getCategorySpecificationTemplates($categoryId);
     }
 
     /**
