@@ -629,12 +629,11 @@
             <table class="items-table">
                 <thead>
                     <tr>
-                        <th style="width: 22%;">Item Description</th>
-                        <th style="width: 10%;" class="text-center">Size</th>
-                        <th style="width: 18%;" class="text-center">Specifications</th>
-                        <th style="width: 10%;" class="text-center">Quantity</th>
-                        <th style="width: 12%;" class="text-right">Rate ({{ $invoice->currency ?? 'AED' }})</th>
-                        <th style="width: 8%;" class="text-center">Discount</th>
+                        <th style="width: 25%;">Item Description</th>
+                        <th style="width: 20%;" class="text-center">Specifications</th>
+                        <th style="width: 12%;" class="text-center">Quantity</th>
+                        <th style="width: 13%;" class="text-right">Rate ({{ $invoice->currency ?? 'AED' }})</th>
+                        <th style="width: 10%;" class="text-center">Discount</th>
                         <th style="width: 20%;" class="text-right">Amount After Discount ({{ $invoice->currency ?? 'AED' }})</th>
                     </tr>
                 </thead>
@@ -650,13 +649,6 @@
                                     </div>
                                 @endif
                             </div>
-                        </td>
-                        <td class="text-center">
-                            @if($item->size && !empty(trim($item->size)))
-                                <div style="font-size: 9px; color: var(--text-primary); font-weight: 500;">{{ $item->size }}</div>
-                            @else
-                                <span style="color: var(--text-muted);">-</span>
-                            @endif
                         </td>
                         <td class="text-center">
                             @if($item->specifications && !empty(trim($item->specifications)))
@@ -681,7 +673,16 @@
                                         @endforeach
                                     </div>
                                 @endif
-                            @else
+                            @endif
+                            
+                            @if($item->size && !empty(trim($item->size)))
+                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3; margin-top: 3px;">
+                                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1px;">Size:</div>
+                                    <div>{{ $item->size }}</div>
+                                </div>
+                            @endif
+                            
+                            @if((!$item->specifications || empty(trim($item->specifications))) && (!$item->size || empty(trim($item->size))))
                                 <span style="color: var(--text-muted);">-</span>
                             @endif
                         </td>
