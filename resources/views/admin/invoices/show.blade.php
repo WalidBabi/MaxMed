@@ -135,6 +135,7 @@
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Description</th>
+                                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
                                         <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Unit Price</th>
                                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Discount</th>
@@ -153,6 +154,9 @@
                                                     </div>
                                                 @endif
                                            
+                                            </td>
+                                            <td class="px-6 py-4 text-center text-sm text-gray-900">
+                                                {{ $item->size ?? '-' }}
                                             </td>
                                             <td class="px-6 py-4 text-center text-sm text-gray-900">
                                                 {{ number_format($item->quantity, 2) }}
