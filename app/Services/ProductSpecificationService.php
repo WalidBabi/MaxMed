@@ -477,7 +477,7 @@ class ProductSpecificationService
                     ],
                 ],
             ],
-            'Tumor Markers Rapid Tests' => [
+            'Tumor Markers' => [
                 'Performance' => [
                     [
                         'key' => 'tests_per_kit',
@@ -618,7 +618,7 @@ class ProductSpecificationService
                     ],
                 ],
             ],
-            'Cardiac Markers Rapid Tests' => [
+            'Cardiac Markers' => [
                 'Performance' => [
                     [
                         'key' => 'tests_per_kit',
