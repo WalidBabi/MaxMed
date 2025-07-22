@@ -1230,7 +1230,7 @@
                   
                 </div>
             </div>
-            @elseif(isset($category) && $category->name === 'Rapid Test Kits RDT')
+            @elseif(isset($category) && $category->name === 'Rapid Test Kits & Detection Solutions')
             <!-- Enhanced Rapid Test Kits Hero Section -->
             <div class="category-hero rapid-tests-hero">
                 <div class="hero-content">

@@ -18,19 +18,31 @@ class IndexNowObserver
     }
 
     /**
-     * Handle the Product "created" event.
+     * Handle the "created" event.
      */
-    public function created(Product $product): void
+    public function created($model): void
     {
-        $this->submitProductUrl($product, 'created');
+        if ($model instanceof Product) {
+            $this->submitProductUrl($model, 'created');
+        } elseif ($model instanceof Category) {
+            $this->submitCategoryUrl($model, 'created');
+        } elseif ($model instanceof News) {
+            $this->submitNewsUrl($model, 'created');
+        }
     }
 
     /**
-     * Handle the Product "updated" event.
+     * Handle the "updated" event.
      */
-    public function updated(Product $product): void
+    public function updated($model): void
     {
-        $this->submitProductUrl($product, 'updated');
+        if ($model instanceof Product) {
+            $this->submitProductUrl($model, 'updated');
+        } elseif ($model instanceof Category) {
+            $this->submitCategoryUrl($model, 'updated');
+        } elseif ($model instanceof News) {
+            $this->submitNewsUrl($model, 'updated');
+        }
     }
 
     /**

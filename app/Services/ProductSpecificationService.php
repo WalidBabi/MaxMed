@@ -77,7 +77,7 @@ class ProductSpecificationService
         // Define templates based on category name - format for JavaScript frontend
         $templates = [
             // Rapid Test Kit Templates
-            'Women\'s Health Rapid Tests' => [
+            'Women\'s Health' => [
                 'Performance' => [
                     [
                         'key' => 'tests_per_kit',
@@ -207,7 +207,7 @@ class ProductSpecificationService
                     ],
                 ],
             ],
-            'Infectious Disease Rapid Tests' => [
+            'Infectious Disease' => [
                 'Performance' => [
                     [
                         'key' => 'tests_per_kit',
@@ -348,7 +348,7 @@ class ProductSpecificationService
                     ],
                 ],
             ],
-            'Drugs of Abuse Rapid Tests' => [
+            'Drugs of Abuse' => [
                 'Performance' => [
                     [
                         'key' => 'tests_per_kit',
@@ -2075,7 +2075,7 @@ class ProductSpecificationService
                     ],
                 ],
             ],
-            'Women\'s Health Rapid Tests' => [
+            'Women\'s Health' => [
                 'Performance' => [
                     [
                         'key' => 'tests_per_kit',

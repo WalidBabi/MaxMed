@@ -272,7 +272,7 @@ class SeoService
             'Life Science & Research' => "Life Science Research Equipment Dubai UAE | Scientific Instruments | MaxMed",
             'Technology & AI Solutions' => "Technology & AI Solutions Dubai UAE | Laboratory Automation | MaxMed",
             'Lab Consumables' => "Laboratory Consumables Dubai UAE | Lab Supplies | MaxMed",
-            'Rapid Test Kits RDT' => "Rapid Test Kits Dubai UAE | Point of Care Testing | MaxMed",
+            'Rapid Test Kits & Detection Solutions' => "Rapid Test Kits Dubai UAE | Point of Care Testing | MaxMed",
             'Analytical Instruments' => "Analytical Instruments Dubai UAE | Laboratory Analysis Equipment | MaxMed",
             'Thermal & Process Equipment' => "Thermal Process Equipment Dubai UAE | Laboratory Heating | MaxMed",
             'Mixing & Shaking Equipment' => "Mixing & Shaking Equipment Dubai UAE | Laboratory Mixers | MaxMed",
@@ -331,7 +331,7 @@ class SeoService
             
             'Lab Consumables' => "🧪 Laboratory consumables and supplies in Dubai UAE. Professional-grade lab glassware, chemicals, reagents, and essential supplies for research and analytical work. Complete range of laboratory consumables for accurate and reliable laboratory operations. Contact MaxMed at +971 55 460 2500.",
             
-            'Rapid Test Kits RDT' => "⚡ Rapid diagnostic test kits and point-of-care testing solutions in Dubai UAE. Professional rapid test kits for infectious diseases, cardiac markers, tumor markers, and various medical conditions. High-quality diagnostic tools for healthcare facilities and clinical laboratories. Contact MaxMed at +971 55 460 2500.",
+            'Rapid Test Kits & Detection Solutions' => "⚡ Rapid diagnostic test kits and point-of-care testing solutions in Dubai UAE. Professional rapid test kits for infectious diseases, cardiac markers, tumor markers, and various medical conditions. High-quality diagnostic tools for healthcare facilities and clinical laboratories. Contact MaxMed at +971 55 460 2500.",
             
             'Analytical Instruments' => "🔬 Advanced analytical instruments and laboratory analysis equipment in Dubai UAE. Precision instruments for chemical analysis, spectroscopy, chromatography, and quality control applications. Professional analytical equipment for research laboratories and industrial testing. Contact MaxMed at +971 55 460 2500.",
             
@@ -457,7 +457,7 @@ class SeoService
                 'smart lab Dubai', 'AI technology UAE'
             ],
             
-            'Rapid Test Kits RDT' => [
+            'Rapid Test Kits & Detection Solutions' => [
                 'rapid test kits Dubai', 'point of care testing UAE',
                 'diagnostic kits Dubai', 'rapid testing UAE',
                 'medical test kits Dubai', 'diagnostic testing UAE',

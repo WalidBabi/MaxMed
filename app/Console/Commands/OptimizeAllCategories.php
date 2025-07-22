@@ -177,7 +177,7 @@ class OptimizeAllCategories extends Command
             
             'Molecular & Clinical Diagnostics' => "Advanced molecular and clinical diagnostic equipment in Dubai UAE. Professional PCR machines, real-time PCR systems, thermal cyclers, and molecular analysis instruments for accurate medical testing and research applications. Trusted by hospitals, research laboratories, and diagnostic centers across the Middle East.",
             
-            'Rapid Test Kits RDT' => "Rapid diagnostic test kits and point-of-care testing solutions in Dubai UAE. Professional rapid test kits for infectious diseases, cardiac markers, tumor markers, and various medical conditions. High-quality diagnostic tools for healthcare facilities and clinical laboratories.",
+            'Rapid Test Kits & Detection Solutions' => "Rapid diagnostic test kits and point-of-care testing solutions in Dubai UAE. Professional rapid test kits for infectious diseases, cardiac markers, tumor markers, and various medical conditions. High-quality diagnostic tools for healthcare facilities and clinical laboratories.",
             
             'Analytical Instruments' => "Advanced analytical instruments and laboratory analysis equipment in Dubai UAE. Precision instruments for chemical analysis, spectroscopy, chromatography, and quality control applications. Professional analytical equipment for research laboratories and industrial testing.",
             
