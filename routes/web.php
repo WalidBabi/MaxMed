@@ -327,8 +327,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('leads/{lead}/activity', [CrmLeadController::class, 'addActivity'])->name('leads.activity.add');
     Route::post('leads/{lead}/convert', [CrmLeadController::class, 'convert'])->name('leads.convert');
     Route::post('leads/{lead}/convert-to-deal', [CrmLeadController::class, 'convertToDeal'])->name('leads.convert-to-deal');
-    Route::post('leads/{lead}/create-quotation-request', [CrmLeadController::class, 'createQuotationRequest'])->name('leads.create-quotation-request');
     Route::patch('leads/{lead}/status', [CrmLeadController::class, 'updateStatus'])->name('leads.update-status');
+    
+    // Enhanced Lead Management Features
+    Route::post('leads/bulk-status-update', [CrmLeadController::class, 'bulkStatusUpdate'])->name('leads.bulk-status-update');
+    Route::post('leads/bulk-assign', [CrmLeadController::class, 'bulkAssign'])->name('leads.bulk-assign');
+    Route::get('leads-stats', [CrmLeadController::class, 'getPipelineStats'])->name('leads.pipeline-stats');
+    Route::post('leads-quick-add', [CrmLeadController::class, 'quickAdd'])->name('leads.quick-add');
+    Route::get('leads-export', [CrmLeadController::class, 'export'])->name('leads.export');
     
     // Customer Management
     Route::resource('customers', \App\Http\Controllers\Crm\CustomerController::class);
