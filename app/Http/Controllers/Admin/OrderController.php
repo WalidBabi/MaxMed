@@ -40,24 +40,24 @@ class OrderController extends Controller
     {
         $validated = $request->validate([
             'customer_id' => 'required|exists:customers,id',
-            'quantities' => 'required|array',
-            'quantities.*' => 'integer|min:0',
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.item_details' => 'required|string',
+            'items.*.specifications' => 'nullable|string',
+            'items.*.size' => 'nullable|string',
+            'items.*.quantity' => 'required|numeric|min:0.01',
+            'items.*.rate' => 'required|numeric|min:0',
+            'items.*.discount' => 'nullable|numeric|min:0|max:100',
             'requires_quotation' => 'boolean'
         ]);
 
-        // Filter out products with zero quantities
-        $selectedProducts = [];
-        if (isset($validated['quantities'])) {
-            foreach ($validated['quantities'] as $productId => $quantity) {
-                if ($quantity > 0) {
-                    $selectedProducts[$productId] = $quantity;
-                }
-            }
-        }
+        // Filter out items with zero quantities and validate we have at least one item
+        $validItems = array_filter($validated['items'], function($item) {
+            return isset($item['quantity']) && $item['quantity'] > 0;
+        });
 
-        // Validate that at least one product is selected
-        if (empty($selectedProducts)) {
-            return back()->withErrors(['quantities' => 'Please select at least one product with a quantity greater than 0.'])->withInput();
+        if (empty($validItems)) {
+            return back()->withErrors(['items' => 'Please add at least one item with quantity greater than 0.'])->withInput();
         }
 
         // Get the customer
@@ -85,15 +85,38 @@ class OrderController extends Controller
             ]);
 
             $total = 0;
-            foreach ($selectedProducts as $productId => $quantity) {
-                $product = \App\Models\Product::find($productId);
+            foreach ($validItems as $itemData) {
+                $product = \App\Models\Product::find($itemData['product_id']);
                 if ($product) {
+                    // Calculate item totals using quote-like logic
+                    $quantity = (float) $itemData['quantity'];
+                    $rate = (float) $itemData['rate'];
+                    $discount = (float) ($itemData['discount'] ?? 0);
+                    
+                    $subtotal = $quantity * $rate;
+                    $discountAmount = ($subtotal * $discount) / 100;
+                    $finalPrice = $subtotal - $discountAmount;
+                    
+                    // Build variation string from specifications and size
+                    $variation = [];
+                    if (!empty($itemData['specifications'])) {
+                        $variation[] = 'Specs: ' . $itemData['specifications'];
+                    }
+                    if (!empty($itemData['size'])) {
+                        $variation[] = 'Size: ' . $itemData['size'];
+                    }
+                    $variationString = implode(' | ', $variation);
+                    
                     $order->orderItems()->create([
                         'product_id' => $product->id,
                         'quantity' => $quantity,
-                        'price' => $product->price_aed,
+                        'price' => $rate, // Unit price
+                        'variation' => $variationString ?: null,
+                        'discount_percentage' => $discount,
+                        'discount_amount' => $discountAmount,
                     ]);
-                    $total += $product->price_aed * $quantity;
+                    
+                    $total += $finalPrice;
                 }
             }
 
