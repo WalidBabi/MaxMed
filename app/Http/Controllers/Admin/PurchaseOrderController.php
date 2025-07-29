@@ -189,6 +189,7 @@ class PurchaseOrderController extends Controller
                             'product_id' => $itemData['product_id'],
                             'quantity' => $quantity,
                             'unit_price' => $unitPrice,
+                            'price_type' => strtolower($request->currency),
                             'discount_percentage' => $discountPercentage,
                             'discount_amount' => $discountAmount,
                             'line_total' => $totalAmount,

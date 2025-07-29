@@ -670,14 +670,18 @@ function updateAllProductPrices(currency) {
         if (productIdInput && productIdInput.value && rateInput) {
             const dropdownItem = row.querySelector(`[data-id="${productIdInput.value}"]`);
             if (dropdownItem) {
-                const procurementPrice = currency === 'USD' 
-                    ? dropdownItem.getAttribute('data-procurement-price-usd')
-                    : dropdownItem.getAttribute('data-procurement-price-aed');
+                let price;
                 
-                if (procurementPrice && parseFloat(procurementPrice) > 0) {
-                    rateInput.value = parseFloat(procurementPrice).toFixed(2);
-                    calculateRowAmount({ target: rateInput });
+                if (currency === 'USD') {
+                    price = dropdownItem.getAttribute('data-procurement-price-usd') || 
+                           dropdownItem.getAttribute('data-price-usd') || '0';
+                } else {
+                    price = dropdownItem.getAttribute('data-procurement-price-aed') || 
+                           dropdownItem.getAttribute('data-price-aed') || '0';
                 }
+                
+                rateInput.value = parseFloat(price).toFixed(2);
+                calculateRowAmount({ target: rateInput });
             }
         }
     });
@@ -1006,13 +1010,15 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         
         // Set rate based on selected currency and procurement price
         const currency = document.getElementById('currency').value;
-        const procurementPrice = currency === 'USD' 
-            ? item.dataset.procurementPriceUsd
-            : item.dataset.procurementPriceAed;
+        let price;
         
-        rateInput.value = procurementPrice && parseFloat(procurementPrice) > 0 
-            ? parseFloat(procurementPrice).toFixed(2) 
-            : '0.00';
+        if (currency === 'USD') {
+            price = item.dataset.procurementPriceUsd || item.dataset.priceUsd || '0';
+        } else {
+            price = item.dataset.procurementPriceAed || item.dataset.priceAed || '0';
+        }
+        
+        rateInput.value = parseFloat(price).toFixed(2);
         
         // Handle specifications
         if (specifications && specifications !== '[]') {
