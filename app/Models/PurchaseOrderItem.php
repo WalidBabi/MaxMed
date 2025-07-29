@@ -13,11 +13,13 @@ class PurchaseOrderItem extends Model
         'item_description',
         'quantity',
         'unit_price',
+        'price_type',
         'discount_percentage',
         'discount_amount',
         'line_total',
         'unit_of_measure',
         'specifications',
+        'size',
         'sort_order'
     ];
 

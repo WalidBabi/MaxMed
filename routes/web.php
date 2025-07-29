@@ -486,7 +486,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         // Purchase Order Management
         Route::resource('purchase-orders', \App\Http\Controllers\Admin\PurchaseOrderController::class);
-        Route::post('purchase-orders/{purchaseOrder}/send-to-supplier', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'sendToSupplier'])->name('purchase-orders.send-to-supplier');
+        Route::post('purchase-orders/{purchaseOrder}/send-email', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'sendEmail'])->name('purchase-orders.send-email');
         Route::post('purchase-orders/{purchaseOrder}/acknowledge', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'markAsAcknowledged'])->name('purchase-orders.acknowledge');
         Route::post('purchase-orders/{purchaseOrder}/update-status', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'updateStatus'])->name('purchase-orders.update-status');
         Route::get('purchase-orders/{purchaseOrder}/pdf', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'generatePdf'])->name('purchase-orders.pdf');
