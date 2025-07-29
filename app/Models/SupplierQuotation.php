@@ -346,7 +346,7 @@ class SupplierQuotation extends Model
                 'unit_price' => ($this->total_amount ?? $this->total_price) / $order->items->sum('quantity'),
                 'line_total' => (($this->total_amount ?? $this->total_price) / $order->items->sum('quantity')) * $orderItem->quantity,
                 'unit_of_measure' => 'pcs',
-                'specifications' => $orderItem->product->specifications ?? 'Standard specifications',
+                'specifications' => $orderItem->specifications ?? null,
                 'sort_order' => $orderItem->id
             ]);
         }
