@@ -102,6 +102,14 @@
                                     </select>
                                 </div>
                                 <div>
+                                    <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">Currency</label>
+                                    <select name="currency" id="currency" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                                        <option value="AED" {{ old('currency', 'AED') == 'AED' ? 'selected' : '' }}>AED (UAE Dirham)</option>
+                                        <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>USD (US Dollar)</option>
+                                    </select>
+                                    <p class="mt-1 text-sm text-gray-500">This determines which procurement prices to use for products</p>
+                                </div>
+                                <div>
                                     <label for="shipping_method" class="block text-sm font-medium text-gray-700 mb-2">Shipping Method</label>
                                     <select name="shipping_method" id="shipping_method" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                         <option value="">Select shipping method</option>
@@ -232,7 +240,7 @@
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 300px;">Item Details</th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 200px;">Specifications</th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Quantity</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 150px;">Rate (AED)</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 150px;">Rate (<span id="currency-label">AED</span>)</th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Discount</th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Amount</th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 80px;">Action</th>
@@ -250,20 +258,20 @@
                                 <div class="rounded-lg bg-gray-50 p-4">
                                     <div class="flex justify-between py-2">
                                         <span class="text-sm font-medium text-gray-700">Sub Total:</span>
-                                        <span id="subTotal" class="text-sm font-semibold text-gray-900">0.00 AED</span>
+                                        <span id="subTotal" class="text-sm font-semibold text-gray-900">0.00 <span class="currency-display">AED</span></span>
                                     </div>
                                     <div class="flex justify-between py-2">
                                         <span class="text-sm font-medium text-gray-700">Tax:</span>
-                                        <span id="tax-amount" class="text-sm font-semibold text-gray-900">0.00 AED</span>
+                                        <span id="tax-amount" class="text-sm font-semibold text-gray-900">0.00 <span class="currency-display">AED</span></span>
                                     </div>
                                     <div class="flex justify-between py-2">
                                         <span class="text-sm font-medium text-gray-700">Shipping:</span>
-                                        <span id="shipping-amount" class="text-sm font-semibold text-gray-900">0.00 AED</span>
+                                        <span id="shipping-amount" class="text-sm font-semibold text-gray-900">0.00 <span class="currency-display">AED</span></span>
                                     </div>
                                     <div class="border-t border-gray-200 pt-2">
                                         <div class="flex justify-between">
                                             <span class="text-base font-semibold text-gray-900">Total:</span>
-                                            <span id="totalAmount" class="text-base font-bold text-gray-900">0.00 AED</span>
+                                            <span id="totalAmount" class="text-base font-bold text-gray-900">0.00 <span class="currency-display">AED</span></span>
                                         </div>
                                     </div>
                                 </div>
@@ -301,39 +309,10 @@
                                 </div>
                                 <div>
                                     <label for="terms_conditions" class="block text-sm font-medium text-gray-700 mb-2">Terms & Conditions</label>
-                                    <textarea id="terms_conditions" name="terms_conditions" rows="12"
-                                              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('terms_conditions', 'TERMS & CONDITIONS:
-
-1. Quality Assurance: We ensure optimal product quality by requiring all goods to have a minimum of 2/3rd of their total shelf life remaining upon arrival. Single batch per item is preferred to maintain consistency, with a maximum of two batches per item upon prior confirmation.
-
-2. Product Identification: For quality control and traceability, batch numbers (or lot numbers) and expiry dates will be clearly marked on each item, along with serial numbers for equipment.
-
-3. Electrical Specifications: Equipment electrical requirements are standardized at 220/240 Volt 50/60 Hz with 3-pin British standard (UK) plugs. Any variations require prior approval before order confirmation.
-
-4. Documentation Package: All equipment and instruments will be accompanied by comprehensive documentation including 2 sets of operation manuals, 2 sets of service manuals, and detailed spare parts lists.
-
-5. Packaging Standards: Items will be packaged together with clear individual identification labels, barcodes, or other internationally accepted identification means in English. We recommend UCC/EAN-128 (GS1-128) or GS1-2D barcodes for optimal compatibility.
-
-6. Shipping Documentation: Each package will include a detailed packing list specifying package dimensions (in centimeters), gross weight (in kilograms), order numbers, and unique packing identifiers.
-
-7. Order Confirmation: Purchase orders will be processed upon receipt of supplier order confirmation in our records.
-
-8. Shipment Documentation: Soft copies of AWB or Bill of Lading, along with stamped and signed supplier invoices and packing lists, will be provided on the day of shipment departure, including quantity, price per piece, batch numbers, expiry dates, and serial numbers where applicable.
-
-9. Customs Compliance: Harmonization Code (HS CODE) and Country of Origin (COO) will be accurately mentioned on invoices. HS codes must correspond to actual product categories with at least 8 digits to ensure smooth customs clearance.
-
-10. Best Practice Standards: We maintain high standards for packaging and documentation to ensure efficient processing and delivery.
-
-11. VAT Policy: Purchase order prices are exclusive of Value-Added Tax (VAT). VAT will be charged at the prevailing rate as applicable at the time of invoicing in compliance with UAE VAT regulations.
-
-12. Shipment Coordination: Pre-arrival notifications will be provided according to Inco terms to ensure proper receiving arrangements and optimal logistics coordination.
-
-13. Storage & Transport: Shipments will comply with manufacturer-specified transport, transit, and storage conditions as per material safety data sheets (MSDS), which will be included in shipping documents and package labeling.
-
-14. Consolidated Orders: When combining multiple purchase orders in one delivery, we will receive one consolidated invoice and one packing list mentioning all purchase order numbers for streamlined processing.
-
-15. Temperature Monitoring: Data loggers will be provided for air freight shipments with temperature-sensitive items and are mandatory for all sea freight shipments as per UAE Ministerial Resolution No: 22, enclosed outside each package for optimal monitoring.') }}</textarea>
-                                    <p class="mt-1 text-sm text-gray-500">Standard terms and conditions for purchase orders (can be modified as needed)</p>
+                                    <textarea id="terms_conditions" name="terms_conditions" rows="6"
+                                              placeholder="Enter terms and conditions for this purchase order..."
+                                              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('terms_conditions') }}</textarea>
+                                    <p class="mt-1 text-sm text-gray-500">Terms and conditions for this purchase order</p>
                                 </div>
                                 <div>
                                     <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">Internal Notes</label>
@@ -353,42 +332,7 @@
                         </div>
                     </div>
 
-                    <!-- Financial Details -->
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                                <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                Financial Details
-                            </h3>
-                        </div>
-                        <div class="p-6">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div>
-                                    <label for="tax_rate" class="block text-sm font-medium text-gray-700 mb-2">Tax Rate (%)</label>
-                                    <input type="number" id="tax_rate" name="tax_rate" step="0.01" min="0" max="100"
-                                           value="{{ old('tax_rate', '5') }}"
-                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                    <p class="mt-1 text-sm text-gray-500">Tax rate percentage to apply</p>
-                                </div>
-                                <div>
-                                    <label for="shipping_cost" class="block text-sm font-medium text-gray-700 mb-2">Shipping Cost</label>
-                                    <input type="number" id="shipping_cost" name="shipping_cost" step="0.01" min="0"
-                                           value="{{ old('shipping_cost', '0') }}"
-                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                    <p class="mt-1 text-sm text-gray-500">Shipping and handling cost</p>
-                                </div>
-                                <div>
-                                    <label for="discount_amount" class="block text-sm font-medium text-gray-700 mb-2">Discount Amount</label>
-                                    <input type="number" id="discount_amount" name="discount_amount" step="0.01" min="0"
-                                           value="{{ old('discount_amount', '0') }}"
-                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                    <p class="mt-1 text-sm text-gray-500">Total discount amount</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
 
@@ -689,7 +633,55 @@
 <script>
 let itemCounter = 0;
 
-// Price type change handling - now uses manual selection instead of currency
+// Currency change handling
+function updateCurrencyDisplay() {
+    const currency = document.getElementById('currency').value;
+    const currencyLabels = document.querySelectorAll('#currency-label, .currency-display');
+    
+    currencyLabels.forEach(label => {
+        label.textContent = currency;
+    });
+    
+    // Update product price displays and selected rates
+    updateAllProductPrices(currency);
+    calculateTotals();
+}
+
+function updateAllProductPrices(currency) {
+    const allRows = document.querySelectorAll('.item-row');
+    
+    allRows.forEach(row => {
+        // Update dropdown prices
+        const priceDisplaysAed = row.querySelectorAll('.price-display-aed');
+        const priceDisplaysUsd = row.querySelectorAll('.price-display-usd');
+        
+        if (currency === 'USD') {
+            priceDisplaysAed.forEach(display => display.classList.add('hidden'));
+            priceDisplaysUsd.forEach(display => display.classList.remove('hidden'));
+        } else {
+            priceDisplaysAed.forEach(display => display.classList.remove('hidden'));
+            priceDisplaysUsd.forEach(display => display.classList.add('hidden'));
+        }
+        
+        // Update rate input if product is selected
+        const productIdInput = row.querySelector('.product-id-input');
+        const rateInput = row.querySelector('.rate-input');
+        
+        if (productIdInput && productIdInput.value && rateInput) {
+            const dropdownItem = row.querySelector(`[data-id="${productIdInput.value}"]`);
+            if (dropdownItem) {
+                const procurementPrice = currency === 'USD' 
+                    ? dropdownItem.getAttribute('data-procurement-price-usd')
+                    : dropdownItem.getAttribute('data-procurement-price-aed');
+                
+                if (procurementPrice && parseFloat(procurementPrice) > 0) {
+                    rateInput.value = parseFloat(procurementPrice).toFixed(2);
+                    calculateRowAmount({ target: rateInput });
+                }
+            }
+        }
+    });
+}
 
 function addItem() {
     const tbody = document.getElementById('itemsTable');
@@ -870,8 +862,9 @@ function calculateTotals() {
         total += parseFloat(amount.textContent) || 0;
     });
     
-    document.getElementById('subTotal').textContent = total.toFixed(2) + ' AED';
-    document.getElementById('totalAmount').textContent = total.toFixed(2) + ' AED';
+    const currency = document.getElementById('currency').value;
+    document.getElementById('subTotal').innerHTML = `${total.toFixed(2)} <span class="currency-display">${currency}</span>`;
+    document.getElementById('totalAmount').innerHTML = `${total.toFixed(2)} <span class="currency-display">${currency}</span>`;
     
     // Update hidden inputs for form submission
     document.getElementById('sub_total_hidden').value = total.toFixed(2);
@@ -1011,8 +1004,15 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         productIdInput.value = productId;
         itemDetailsHidden.value = productName;
         
-        // Reset rate input
-        rateInput.value = 0;
+        // Set rate based on selected currency and procurement price
+        const currency = document.getElementById('currency').value;
+        const procurementPrice = currency === 'USD' 
+            ? item.dataset.procurementPriceUsd
+            : item.dataset.procurementPriceAed;
+        
+        rateInput.value = procurementPrice && parseFloat(procurementPrice) > 0 
+            ? parseFloat(procurementPrice).toFixed(2) 
+            : '0.00';
         
         // Handle specifications
         if (specifications && specifications !== '[]') {
@@ -1202,6 +1202,9 @@ function initializeSupplierSelection() {
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize supplier selection functionality
     initializeSupplierSelection();
+    
+    // Add currency change event listener
+    document.getElementById('currency').addEventListener('change', updateCurrencyDisplay);
     
     document.getElementById('addItem').addEventListener('click', addItem);
     

@@ -398,7 +398,7 @@ class PurchaseOrder extends Model
                 'quantity' => $orderItem->quantity,
                 'unit_price' => $orderItem->price,
                 'line_total' => $orderItem->quantity * $orderItem->price,
-                'specifications' => $orderItem->product->description ?? null,
+                'specifications' => $orderItem->specifications ?? null,
                 'sort_order' => $index + 1
             ]);
         }

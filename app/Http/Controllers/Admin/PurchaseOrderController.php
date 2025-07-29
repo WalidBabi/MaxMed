@@ -89,6 +89,7 @@ class PurchaseOrderController extends Controller
         $validationRules = [
             'order_id' => 'nullable|exists:orders,id',
             'supplier_type' => 'required|in:existing,new',
+            'currency' => 'required|in:AED,USD',
             'delivery_date_requested' => 'required|date|after:today',  
             'description' => 'nullable|string',
             'terms_conditions' => 'nullable|string',
@@ -145,7 +146,7 @@ class PurchaseOrderController extends Controller
                 'description' => $request->description,
                 'terms_conditions' => $request->terms_conditions,
                 'notes' => $request->notes,
-                'currency' => 'AED', // Default to AED since we removed the currency selector
+                'currency' => $request->currency,
                 'sub_total' => $request->sub_total,
                 'tax_amount' => $request->tax_amount ?? 0,
                 'shipping_cost' => $request->shipping_cost ?? 0,
