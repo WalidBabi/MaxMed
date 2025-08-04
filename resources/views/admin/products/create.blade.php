@@ -110,9 +110,9 @@
                         </h3>
                         
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <!-- Price USD -->
+                            <!-- Customer Price USD -->
                             <div>
-                                <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Price (USD) <span class="text-red-500">*</span></label>
+                                <label for="price" class="block text-sm font-medium text-gray-700 mb-2">Customer Price (USD) <span class="text-red-500">*</span></label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <span class="text-gray-500 sm:text-sm">$</span>
@@ -125,9 +125,9 @@
                                 @enderror
                             </div>
 
-                            <!-- Price AED -->
+                            <!-- Customer Price AED -->
                             <div>
-                                <label for="price_aed" class="block text-sm font-medium text-gray-700 mb-2">Price (AED) <span class="text-red-500">*</span></label>
+                                <label for="price_aed" class="block text-sm font-medium text-gray-700 mb-2">Customer Price (AED) <span class="text-red-500">*</span></label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                         <span class="text-gray-500 sm:text-sm">AED</span>
@@ -655,4 +655,7 @@ Weight
         document.getElementById('parametersHelpModal').classList.add('hidden');
     }
 </script>
+
+<!-- Include price calculator script -->
+<script src="{{ asset('js/product-price-calculator.js') }}"></script>
 @endsection
