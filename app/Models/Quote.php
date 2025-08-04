@@ -20,6 +20,7 @@ class Quote extends Model
         'terms_conditions',
         'status',
         'sub_total',
+        'shipping_rate',
         'total_amount',
         'currency',
         'attachments',
@@ -30,6 +31,7 @@ class Quote extends Model
         'quote_date' => 'date',
         'expiry_date' => 'date',
         'sub_total' => 'decimal:2',
+        'shipping_rate' => 'decimal:2',
         'total_amount' => 'decimal:2',
         'attachments' => 'array'
     ];
@@ -88,9 +90,10 @@ class Quote extends Model
     public function calculateTotals()
     {
         $subTotal = $this->items->sum('amount');
+        $shippingRate = $this->shipping_rate ?? 0;
         $this->update([
             'sub_total' => $subTotal,
-            'total_amount' => $subTotal
+            'total_amount' => $subTotal + $shippingRate
         ]);
     }
 

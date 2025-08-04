@@ -15,8 +15,6 @@ class InvoiceItem extends Model
         'quantity',
         'unit_price',
         'subtotal',
-        'tax',
-        'total',
         'discount_percentage',
         'discount_amount',
         'line_total',
@@ -28,9 +26,7 @@ class InvoiceItem extends Model
     protected $casts = [
         'quantity' => 'decimal:2',
         'unit_price' => 'decimal:2',
-        'subtotal' => 'decimal:2',
-        'tax' => 'decimal:2',
-        'total' => 'decimal:2'
+        'subtotal' => 'decimal:2'
     ];
 
     /**
@@ -41,9 +37,8 @@ class InvoiceItem extends Model
         parent::boot();
         
         static::saving(function ($item) {
-            // Calculate subtotal and total
+            // Calculate subtotal
             $item->subtotal = $item->quantity * $item->unit_price;
-            $item->total = $item->subtotal + ($item->tax ?? 0);
         });
 
         static::saved(function ($item) {
@@ -77,11 +72,6 @@ class InvoiceItem extends Model
     /**
      * Accessors
      */
-    public function getFormattedTotalAttribute()
-    {
-        return number_format($this->total, 2);
-    }
-
     public function getFormattedUnitPriceAttribute()
     {
         return number_format($this->unit_price, 2);
@@ -90,11 +80,6 @@ class InvoiceItem extends Model
     public function getFormattedSubtotalAttribute()
     {
         return number_format($this->subtotal, 2);
-    }
-
-    public function getFormattedTaxAttribute()
-    {
-        return number_format($this->tax ?? 0, 2);
     }
 
     public function getFormattedDiscountAmountAttribute()

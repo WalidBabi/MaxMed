@@ -398,6 +398,16 @@
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
+                            <div>
+                                <label for="shipping_rate" class="block text-sm font-medium text-gray-700 mb-2">Shipping Rate</label>
+                                <input type="number" id="shipping_rate" name="shipping_rate" step="0.01" min="0"
+                                       value="{{ old('shipping_rate', $invoice->shipping_rate ?? 0) }}"
+                                       class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('shipping_rate') border-red-300 @enderror"
+                                       onchange="updateShippingAmount()">
+                                @error('shipping_rate')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -574,9 +584,10 @@
                                         <span id="subTotal" class="text-sm font-semibold text-gray-900">{{ number_format($invoice->sub_total, 2) }} <span id="subTotalCurrency">{{ $invoice->currency ?? 'AED' }}</span></span>
                                     </div>
                                     <div class="flex justify-between py-2">
-                                        <span class="text-sm font-medium text-gray-700">Tax:</span>
-                                        <span id="tax-amount" class="text-sm font-semibold text-gray-900">{{ number_format($invoice->tax_amount, 2) }} <span id="taxCurrency">{{ $invoice->currency ?? 'AED' }}</span></span>
+                                        <span class="text-sm font-medium text-gray-700">Shipping:</span>
+                                        <span id="shippingAmount" class="text-sm font-semibold text-gray-900">{{ number_format($invoice->shipping_rate, 2) }} <span id="shippingCurrency">{{ $invoice->currency ?? 'AED' }}</span></span>
                                     </div>
+
                                     <div class="border-t border-gray-200 pt-2">
                                         <div class="flex justify-between">
                                             <span class="text-base font-semibold text-gray-900">Total (<span id="totalCurrency">{{ $invoice->currency ?? 'AED' }}</span>):</span>
@@ -742,7 +753,7 @@ document.getElementById('currency').addEventListener('change', function() {
     
     // Update total currency displays
     document.getElementById('subTotalCurrency').textContent = selectedCurrency;
-    document.getElementById('taxCurrency').textContent = selectedCurrency;
+    document.getElementById('shippingCurrency').textContent = selectedCurrency;
     document.querySelectorAll('#totalCurrency').forEach(el => el.textContent = selectedCurrency);
     
     // Toggle price displays in product dropdowns
@@ -995,14 +1006,18 @@ function calculateRowAmount(event) {
 
 function calculateTotals() {
     const amounts = document.querySelectorAll('.amount-display');
-    let total = 0;
+    let subTotal = 0;
     
     amounts.forEach(amount => {
-        total += parseFloat(amount.textContent) || 0;
+        subTotal += parseFloat(amount.textContent) || 0;
     });
     
+    const shippingRate = parseFloat(document.getElementById('shipping_rate').value) || 0;
+    const total = subTotal + shippingRate;
+    
     const selectedCurrency = document.getElementById('currency').value;
-    document.getElementById('subTotal').innerHTML = total.toFixed(2) + ' <span id="subTotalCurrency">' + selectedCurrency + '</span>';
+    document.getElementById('subTotal').innerHTML = subTotal.toFixed(2) + ' <span id="subTotalCurrency">' + selectedCurrency + '</span>';
+    document.getElementById('shippingAmount').innerHTML = shippingRate.toFixed(2) + ' <span id="shippingCurrency">' + selectedCurrency + '</span>';
     document.getElementById('totalAmount').textContent = total.toFixed(2);
     
     // Update hidden total input for form submission
@@ -1010,6 +1025,10 @@ function calculateTotals() {
     if (totalHidden) {
         totalHidden.value = total.toFixed(2);
     }
+}
+
+function updateShippingAmount() {
+    calculateTotals();
 }
 
 function validateForm() {

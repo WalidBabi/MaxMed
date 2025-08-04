@@ -31,6 +31,7 @@ class Invoice extends Model
         'terms_conditions',
         'notes',
         'subtotal',
+        'shipping_rate',
         'tax_amount',
         'discount_amount',
         'total_amount',
@@ -62,6 +63,7 @@ class Invoice extends Model
         'email_history' => 'array',
         'attachments' => 'array',
         'subtotal' => 'decimal:2',
+        'shipping_rate' => 'decimal:2',
         'tax_amount' => 'decimal:2',
         'discount_amount' => 'decimal:2',
         'total_amount' => 'decimal:2',
@@ -234,7 +236,11 @@ class Invoice extends Model
         
         // Apply tax
         $taxAmount = $this->tax_amount ?? 0;
-        $finalTotal = $totalAfterDiscount + $taxAmount;
+        
+        // Apply shipping rate
+        $shippingRate = $this->shipping_rate ?? 0;
+        
+        $finalTotal = $totalAfterDiscount + $taxAmount + $shippingRate;
         
         // Update invoice totals without triggering events to prevent infinite loops
         $this->updateQuietly([
