@@ -650,6 +650,12 @@
                             <td class="total-label">Subtotal:</td>
                             <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($quote->sub_total, 2) }}</td>
                         </tr>
+                        @if($quote->shipping_rate > 0)
+                        <tr>
+                            <td class="total-label">Shipping:</td>
+                            <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($quote->shipping_rate, 2) }}</td>
+                        </tr>
+                        @endif
                         <tr class="grand-total">
                             <td class="total-label">Total Amount:</td>
                             <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($quote->total_amount, 2) }}</td>

@@ -192,7 +192,7 @@
                                         <![endif]-->
                                                     <div style="color: #FFFFFF;">
                                                         <div style="font-size: 16px; margin-bottom: 5px; opacity: 0.9; font-weight: 300; text-transform: uppercase; letter-spacing: 1px;">Total Amount</div>
-                                                        <div style="font-size: 36px; font-weight: 700; margin: 0; letter-spacing: -1px;">AED {{ number_format($quote->total_amount, 2) }}</div>
+                                                        <div style="font-size: 36px; font-weight: 700; margin: 0; letter-spacing: -1px;">{{ $quote->currency }} {{ number_format($quote->total_amount, 2) }}</div>
                                                     </div>
                                         <!--[if gte mso 9]>
                                                 </td>

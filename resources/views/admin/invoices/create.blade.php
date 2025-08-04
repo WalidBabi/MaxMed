@@ -114,6 +114,16 @@
                                         <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>USD (US Dollar)</option>
                                     </select>
                                 </div>
+                                <div>
+                                    <label for="shipping_rate" class="block text-sm font-medium text-gray-700 mb-2">Shipping Rate</label>
+                                    <input type="number" id="shipping_rate" name="shipping_rate" step="0.01" min="0"
+                                           value="{{ old('shipping_rate', $quote->shipping_rate ?? 0) }}"
+                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('shipping_rate') border-red-300 @enderror"
+                                           onchange="updateShippingAmount()">
+                                    @error('shipping_rate')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -377,9 +387,10 @@
                                         <span id="subTotal" class="text-sm font-semibold text-gray-900">0.00 <span id="subTotalCurrency">AED</span></span>
                                     </div>
                                     <div class="flex justify-between py-2">
-                                        <span class="text-sm font-medium text-gray-700">Tax:</span>
-                                        <span id="tax-amount" class="text-sm font-semibold text-gray-900">0.00 <span id="taxCurrency">AED</span></span>
+                                        <span class="text-sm font-medium text-gray-700">Shipping:</span>
+                                        <span id="shippingAmount" class="text-sm font-semibold text-gray-900">0.00 <span id="shippingCurrency">AED</span></span>
                                     </div>
+
                                     <div class="border-t border-gray-200 pt-2">
                                         <div class="flex justify-between">
                                             <span class="text-base font-semibold text-gray-900">Total:</span>
@@ -715,7 +726,7 @@ document.getElementById('currency').addEventListener('change', function() {
     
     // Update total currency displays
     document.getElementById('subTotalCurrency').textContent = selectedCurrency;
-    document.getElementById('taxCurrency').textContent = selectedCurrency;
+    document.getElementById('shippingCurrency').textContent = selectedCurrency;
     document.getElementById('totalCurrency').textContent = selectedCurrency;
     
     // Toggle price displays in product dropdowns
@@ -980,15 +991,23 @@ function calculateRowAmount(event) {
 
 function calculateTotals() {
     const amounts = document.querySelectorAll('.amount-display');
-    let total = 0;
+    let subTotal = 0;
     
     amounts.forEach(amount => {
-        total += parseFloat(amount.textContent) || 0;
+        subTotal += parseFloat(amount.textContent) || 0;
     });
     
+    const shippingRate = parseFloat(document.getElementById('shipping_rate').value) || 0;
+    const total = subTotal + shippingRate;
+    
     const selectedCurrency = document.getElementById('currency').value;
-    document.getElementById('subTotal').innerHTML = total.toFixed(2) + ' <span id="subTotalCurrency">' + selectedCurrency + '</span>';
+    document.getElementById('subTotal').innerHTML = subTotal.toFixed(2) + ' <span id="subTotalCurrency">' + selectedCurrency + '</span>';
+    document.getElementById('shippingAmount').innerHTML = shippingRate.toFixed(2) + ' <span id="shippingCurrency">' + selectedCurrency + '</span>';
     document.getElementById('totalAmount').innerHTML = total.toFixed(2) + ' <span id="totalCurrency">' + selectedCurrency + '</span>';
+}
+
+function updateShippingAmount() {
+    calculateTotals();
 }
 
 function validateForm() {

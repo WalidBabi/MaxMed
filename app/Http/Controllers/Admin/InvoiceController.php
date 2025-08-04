@@ -285,6 +285,7 @@ class InvoiceController extends Controller
             'due_date' => 'required|date|after_or_equal:invoice_date',
             'payment_terms' => 'required|in:advance_50,advance_100,on_delivery,net_30,custom',
             'advance_percentage' => 'nullable|numeric|min:0|max:100',
+            'shipping_rate' => 'nullable|numeric|min:0',
             'items' => 'required|array|min:1',
             'items.*.description' => 'required|string',
             'items.*.quantity' => 'required|numeric|min:0',
@@ -307,6 +308,7 @@ class InvoiceController extends Controller
                 'notes' => $request->notes,
                 'payment_terms' => $request->payment_terms,
                 'advance_percentage' => $request->advance_percentage,
+                'shipping_rate' => $request->shipping_rate ?? 0,
                 'currency' => 'AED',
                 'is_proforma' => $request->type === 'proforma',
                 'requires_advance_payment' => in_array($request->payment_terms, ['advance_50', 'advance_100', 'custom']),
@@ -391,6 +393,7 @@ class InvoiceController extends Controller
             'invoice_date' => 'required|date',
             'due_date' => 'required|date|after_or_equal:invoice_date',
             'payment_terms' => 'required|in:advance_50,advance_100,on_delivery,net_30,custom',
+            'shipping_rate' => 'nullable|numeric|min:0',
             'items' => 'required|array|min:1'
         ]);
 
@@ -408,6 +411,7 @@ class InvoiceController extends Controller
                 'notes' => $request->notes,
                 'payment_terms' => $request->payment_terms,
                 'advance_percentage' => $request->advance_percentage,
+                'shipping_rate' => $request->shipping_rate ?? 0,
                 'reference_number' => $request->reference_number,
                 'po_number' => $request->po_number,
                 'updated_by' => Auth::id()

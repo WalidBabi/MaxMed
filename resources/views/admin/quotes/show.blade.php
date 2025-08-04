@@ -220,6 +220,12 @@
                                     <span class="font-medium text-gray-900">Sub Total:</span>
                                     <span class="font-bold text-gray-900">{{ number_format($quote->sub_total, 2) }} {{ $quote->currency ?? 'AED' }}</span>
                                 </div>
+                                @if($quote->shipping_rate > 0)
+                                <div class="flex justify-between py-2 text-sm">
+                                    <span class="font-medium text-gray-900">Shipping:</span>
+                                    <span class="font-bold text-gray-900">{{ number_format($quote->shipping_rate, 2) }} {{ $quote->currency ?? 'AED' }}</span>
+                                </div>
+                                @endif
                                 <div class="flex justify-between py-3 text-lg border-t border-gray-200">
                                     <span class="font-semibold text-gray-900">Total:</span>
                                     <span class="font-bold text-indigo-600">{{ number_format($quote->total_amount, 2) }} {{ $quote->currency ?? 'AED' }}</span>

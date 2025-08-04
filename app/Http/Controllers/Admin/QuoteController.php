@@ -83,6 +83,7 @@ class QuoteController extends Controller
             'terms_conditions' => 'nullable|string',
             'status' => 'required|in:draft,sent,invoiced',
             'currency' => 'required|string|in:AED,CNY,USD',
+            'shipping_rate' => 'nullable|numeric|min:0',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.item_details' => 'required|string',
@@ -108,6 +109,7 @@ class QuoteController extends Controller
             'terms_conditions' => $request->terms_conditions,
             'status' => $request->status,
             'currency' => $request->currency,
+            'shipping_rate' => $request->shipping_rate ?? 0,
             'created_by' => Auth::id(),
         ]);
 
@@ -194,6 +196,7 @@ class QuoteController extends Controller
                 'terms_conditions' => 'nullable|string',
                 'status' => 'required|in:draft,sent,invoiced',
                 'currency' => 'required|string|in:AED,CNY,USD',
+                'shipping_rate' => 'nullable|numeric|min:0',
                 'items' => 'required|array|min:1',
                 'items.*.product_id' => 'nullable|exists:products,id',
                 'items.*.item_details' => 'required|string',
@@ -220,6 +223,7 @@ class QuoteController extends Controller
                     'terms_conditions' => $request->terms_conditions,
                     'status' => $request->status,
                     'currency' => $request->currency,
+                    'shipping_rate' => $request->shipping_rate ?? 0,
                 ]);
 
                 \Log::info('QuoteController update: Quote basic info updated');
@@ -521,6 +525,7 @@ class QuoteController extends Controller
                 'terms_conditions' => $quote->terms_conditions,
                 'notes' => $quote->customer_notes,
                 'sub_total' => $quote->sub_total,
+                'shipping_rate' => $quote->shipping_rate ?? 0,
                 'tax_amount' => $quote->tax_amount ?? 0,
                 'discount_amount' => $quote->discount_amount ?? 0,
                 'total_amount' => $quote->total_amount,
@@ -540,8 +545,6 @@ class QuoteController extends Controller
                 $subtotal = $quoteItem->quantity * $quoteItem->rate;
                 $discountAmount = ($subtotal * ($quoteItem->discount ?? 0)) / 100;
                 $lineTotal = $subtotal - $discountAmount;
-                $tax = 0; // Default tax to 0, can be updated later if needed
-                $total = $lineTotal + $tax;
                 
                 // Get item description, fallback to product name if not set
                 $description = $quoteItem->item_details;
@@ -560,8 +563,6 @@ class QuoteController extends Controller
                     'quantity' => $quoteItem->quantity,
                     'unit_price' => $quoteItem->rate,
                     'subtotal' => $subtotal,
-                    'tax' => $tax,
-                    'total' => $total,
                     'discount_percentage' => $quoteItem->discount ?? 0,
                     'discount_amount' => $discountAmount,
                     'line_total' => $lineTotal,
@@ -574,7 +575,7 @@ class QuoteController extends Controller
                 
                 $invoiceItem = \App\Models\InvoiceItem::create($invoiceItemData);
                 
-                Log::info("Created invoice item {$invoiceItem->id}: product_id={$invoiceItem->product_id}, subtotal={$invoiceItem->subtotal}, total={$invoiceItem->total}");
+                Log::info("Created invoice item {$invoiceItem->id}: product_id={$invoiceItem->product_id}, subtotal={$invoiceItem->subtotal}, line_total={$invoiceItem->line_total}");
             }
 
             // Update quote status

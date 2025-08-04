@@ -721,6 +721,12 @@
                         <td class="total-amount">-{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->discount_amount, 2) }}</td>
                     </tr>
                     @endif
+                    @if($invoice->shipping_rate > 0)
+                    <tr>
+                        <td class="total-label">Shipping:</td>
+                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->shipping_rate, 2) }}</td>
+                    </tr>
+                    @endif
                     @if(($invoice->tax_amount ?? 0) > 0)
                     <tr>
                         <td class="total-label">Tax:</td>

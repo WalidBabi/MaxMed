@@ -231,8 +231,9 @@
                                         return $item->quantity * $item->unit_price;
                                     });
                                     $totalDiscount = $invoice->items->sum('calculated_discount_amount') + ($invoice->discount_amount ?? 0);
+                                    $shippingRate = $invoice->shipping_rate ?? 0;
                                     $taxAmount = $invoice->tax_amount ?? 0;
-                                    $finalTotal = $subtotal - $totalDiscount + $taxAmount;
+                                    $finalTotal = $subtotal - $totalDiscount + $shippingRate + $taxAmount;
                                 @endphp
                                 
                                 <div class="flex justify-between py-2 text-sm">
@@ -244,6 +245,13 @@
                                 <div class="flex justify-between py-2 text-sm">
                                     <span class="font-medium text-gray-900">Total Discount:</span>
                                     <span class="font-bold text-red-600">-{{ number_format($totalDiscount, 2) }} {{ $invoice->currency }}</span>
+                                </div>
+                                @endif
+                                
+                                @if($invoice->shipping_rate > 0)
+                                <div class="flex justify-between py-2 text-sm">
+                                    <span class="font-medium text-gray-900">Shipping:</span>
+                                    <span class="font-bold text-gray-900">{{ number_format($invoice->shipping_rate, 2) }} {{ $invoice->currency }}</span>
                                 </div>
                                 @endif
                                 
