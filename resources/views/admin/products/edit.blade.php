@@ -151,9 +151,9 @@
             </div>
             <div class="p-6">
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                    <!-- Price USD -->
+                    <!-- Customer Price USD -->
                     <div>
-                        <label for="price" class="block text-sm font-medium leading-6 text-gray-900">Price (USD) <span class="text-red-500">*</span></label>
+                        <label for="price" class="block text-sm font-medium leading-6 text-gray-900">Customer Price (USD) <span class="text-red-500">*</span></label>
                         <div class="mt-2">
                             <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
                                 <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm">$</span>
@@ -168,9 +168,9 @@
                         </div>
                     </div>
 
-                    <!-- Price AED -->
+                    <!-- Customer Price AED -->
                     <div>
-                        <label for="price_aed" class="block text-sm font-medium leading-6 text-gray-900">Price (AED) <span class="text-red-500">*</span></label>
+                        <label for="price_aed" class="block text-sm font-medium leading-6 text-gray-900">Customer Price (AED) <span class="text-red-500">*</span></label>
                         <div class="mt-2">
                             <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
                                 <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm">AED</span>
@@ -777,5 +777,8 @@
         });
     });
 </script>
+
+<!-- Include price calculator script -->
+<script src="{{ asset('js/product-price-calculator.js') }}"></script>
 @endpush
 @endsection
