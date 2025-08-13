@@ -160,6 +160,36 @@
                                     @enderror
                                 </div>
 
+                                <div>
+                                    <label for="tax_amount" class="block text-sm font-medium text-gray-700 mb-2">VAT (5%)</label>
+                                    <input type="number" id="tax_amount" name="tax_amount" step="0.01" min="0"
+                                           value="{{ old('tax_amount', $quote->tax_amount ?? 0) }}"
+                                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('tax_amount') border-red-300 @enderror">
+                                    @error('tax_amount')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div>
+                                    <label for="customs_clearance" class="block text-sm font-medium text-gray-700 mb-2">Customs Clearance</label>
+                                    <input type="number" id="customs_clearance" name="customs_clearance" step="0.01" min="0"
+                                           value="{{ old('customs_clearance', $quote->customs_clearance ?? 0) }}"
+                                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('customs_clearance') border-red-300 @enderror">
+                                    @error('customs_clearance')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div>
+                                    <label for="bank_charges" class="block text-sm font-medium text-gray-700 mb-2">Bank Charges</label>
+                                    <input type="number" id="bank_charges" name="bank_charges" step="0.01" min="0"
+                                           value="{{ old('bank_charges', $quote->bank_charges ?? 0) }}"
+                                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('bank_charges') border-red-300 @enderror">
+                                    @error('bank_charges')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
                                 <div class="md:col-span-2">
                                     <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
                                     <input type="text" id="subject" name="subject" 
