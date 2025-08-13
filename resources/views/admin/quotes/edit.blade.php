@@ -463,7 +463,7 @@
                         <div class="p-2 text-sm text-gray-500 dropdown-loading hidden">Searching...</div>
                         <div class="dropdown-items">
                             @foreach($products as $product)
-                                <div class="dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0" 
+                                 <div class="dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0" 
                                      data-id="{{ $product->id }}"
                                      data-name="{{ $product->name }}"
                                      data-description="{{ $product->description }}"
@@ -472,7 +472,9 @@
                                  data-price-usd="{{ $product->price ?? 0 }}"
                                      data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
                                      data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
-                                     data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
+                                      data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
+                                      data-procurement-price-aed="{{ $product->procurement_price_aed ?? 0 }}"
+                                      data-procurement-price-usd="{{ $product->procurement_price_usd ?? 0 }}"
                                      data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
                                     <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
                                     @if($product->description)
@@ -617,10 +619,18 @@
         });
         
         const shippingRate = parseFloat(document.getElementById('shipping_rate').value) || 0;
-        const total = subTotal + shippingRate;
+        const vat = +(subTotal * 0.05).toFixed(2);
+        const customs = +(calculateProcurementSubtotal() * 0.10).toFixed(2);
+        const bankCharges = parseFloat(document.getElementById('bank_charges')?.value) || 0;
+        const total = subTotal + shippingRate + vat + customs + bankCharges;
         
         document.getElementById('subTotal').textContent = subTotal.toFixed(2);
         document.getElementById('shippingAmount').textContent = shippingRate.toFixed(2);
+        const vatEl = document.getElementById('vatAmount'); if (vatEl) vatEl.textContent = vat.toFixed(2);
+        const customsEl = document.getElementById('customsAmount'); if (customsEl) customsEl.textContent = customs.toFixed(2);
+        const bankEl = document.getElementById('bankAmount'); if (bankEl) bankEl.textContent = bankCharges.toFixed(2);
+        const taxInput = document.getElementById('tax_amount'); if (taxInput) taxInput.value = vat.toFixed(2);
+        const customsInput = document.getElementById('customs_clearance'); if (customsInput) customsInput.value = customs.toFixed(2);
         document.getElementById('totalAmount').textContent = total.toFixed(2);
     }
 
@@ -1199,6 +1209,24 @@
             ];
         })); ?>;
         window.products = products;
+        // Helper to compute procurement total in selected currency
+        window.calculateProcurementSubtotal = function() {
+            const currencySelect = document.getElementById('currency');
+            const selectedCurrency = currencySelect ? currencySelect.value : 'AED';
+            let sum = 0;
+            document.querySelectorAll('.item-row').forEach(row => {
+                const qty = parseFloat(row.querySelector('.quantity-input')?.value) || 0;
+                const productIdInput = row.querySelector('.product-id-input');
+                if (!productIdInput || !productIdInput.value) return;
+                const dropdownItem = row.querySelector(`.dropdown-item[data-id="${productIdInput.value}"]`);
+                if (!dropdownItem) return;
+                const pp = selectedCurrency === 'USD'
+                    ? parseFloat(dropdownItem.getAttribute('data-procurement-price-usd') || '0')
+                    : parseFloat(dropdownItem.getAttribute('data-procurement-price-aed') || '0');
+                sum += (pp || 0) * qty;
+            });
+            return sum;
+        }
     });
 
     // Function to populate size options from data attributes
