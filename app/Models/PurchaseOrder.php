@@ -191,7 +191,7 @@ class PurchaseOrder extends Model
      */
     public function hasCustomerOrder(): bool
     {
-        return !is_null($this->order_id);
+        return $this->order()->exists();
     }
 
     /**
