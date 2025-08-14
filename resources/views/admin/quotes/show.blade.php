@@ -226,24 +226,6 @@
                                     <span class="font-bold text-gray-900">{{ number_format($quote->shipping_rate, 2) }} {{ $quote->currency ?? 'AED' }}</span>
                                 </div>
                                 @endif
-                                @if(($quote->tax_amount ?? 0) > 0)
-                                <div class="flex justify-between py-2 text-sm">
-                                    <span class="font-medium text-gray-900">VAT:</span>
-                                    <span class="font-bold text-gray-900">{{ number_format($quote->tax_amount, 2) }} {{ $quote->currency ?? 'AED' }}</span>
-                                </div>
-                                @endif
-                                @if(($quote->customs_clearance ?? 0) > 0)
-                                <div class="flex justify-between py-2 text-sm">
-                                    <span class="font-medium text-gray-900">Customs Clearance:</span>
-                                    <span class="font-bold text-gray-900">{{ number_format($quote->customs_clearance, 2) }} {{ $quote->currency ?? 'AED' }}</span>
-                                </div>
-                                @endif
-                                @if(($quote->bank_charges ?? 0) > 0)
-                                <div class="flex justify-between py-2 text-sm">
-                                    <span class="font-medium text-gray-900">Bank Charges:</span>
-                                    <span class="font-bold text-gray-900">{{ number_format($quote->bank_charges, 2) }} {{ $quote->currency ?? 'AED' }}</span>
-                                </div>
-                                @endif
                                 <div class="flex justify-between py-3 text-lg border-t border-gray-200">
                                     <span class="font-semibold text-gray-900">Total:</span>
                                     <span class="font-bold text-indigo-600">{{ number_format($quote->total_amount, 2) }} {{ $quote->currency ?? 'AED' }}</span>

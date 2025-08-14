@@ -160,36 +160,6 @@
                                     @enderror
                                 </div>
 
-                                <div>
-                                    <label for="tax_amount" class="block text-sm font-medium text-gray-700 mb-2">VAT (5%)</label>
-                                    <input type="number" id="tax_amount" name="tax_amount" step="0.01" min="0"
-                                           value="{{ old('tax_amount', $quote->tax_amount ?? 0) }}"
-                                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('tax_amount') border-red-300 @enderror">
-                                    @error('tax_amount')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <div>
-                                    <label for="customs_clearance" class="block text-sm font-medium text-gray-700 mb-2">Customs Clearance</label>
-                                    <input type="number" id="customs_clearance" name="customs_clearance" step="0.01" min="0"
-                                           value="{{ old('customs_clearance', $quote->customs_clearance ?? 0) }}"
-                                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('customs_clearance') border-red-300 @enderror">
-                                    @error('customs_clearance')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <div>
-                                    <label for="bank_charges" class="block text-sm font-medium text-gray-700 mb-2">Bank Charges</label>
-                                    <input type="number" id="bank_charges" name="bank_charges" step="0.01" min="0"
-                                           value="{{ old('bank_charges', $quote->bank_charges ?? 0) }}"
-                                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('bank_charges') border-red-300 @enderror">
-                                    @error('bank_charges')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
                                 <div class="md:col-span-2">
                                     <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
                                     <input type="text" id="subject" name="subject" 
@@ -493,7 +463,7 @@
                         <div class="p-2 text-sm text-gray-500 dropdown-loading hidden">Searching...</div>
                         <div class="dropdown-items">
                             @foreach($products as $product)
-                                 <div class="dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0" 
+                                <div class="dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0" 
                                      data-id="{{ $product->id }}"
                                      data-name="{{ $product->name }}"
                                      data-description="{{ $product->description }}"
@@ -502,9 +472,7 @@
                                  data-price-usd="{{ $product->price ?? 0 }}"
                                      data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
                                      data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
-                                      data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
-                                      data-procurement-price-aed="{{ $product->procurement_price_aed ?? 0 }}"
-                                      data-procurement-price-usd="{{ $product->procurement_price_usd ?? 0 }}"
+                                     data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
                                      data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
                                     <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
                                     @if($product->description)
@@ -649,18 +617,10 @@
         });
         
         const shippingRate = parseFloat(document.getElementById('shipping_rate').value) || 0;
-        const vat = +(subTotal * 0.05).toFixed(2);
-        const customs = +(calculateProcurementSubtotal() * 0.10).toFixed(2);
-        const bankCharges = parseFloat(document.getElementById('bank_charges')?.value) || 0;
-        const total = subTotal + shippingRate + vat + customs + bankCharges;
+        const total = subTotal + shippingRate;
         
         document.getElementById('subTotal').textContent = subTotal.toFixed(2);
         document.getElementById('shippingAmount').textContent = shippingRate.toFixed(2);
-        const vatEl = document.getElementById('vatAmount'); if (vatEl) vatEl.textContent = vat.toFixed(2);
-        const customsEl = document.getElementById('customsAmount'); if (customsEl) customsEl.textContent = customs.toFixed(2);
-        const bankEl = document.getElementById('bankAmount'); if (bankEl) bankEl.textContent = bankCharges.toFixed(2);
-        const taxInput = document.getElementById('tax_amount'); if (taxInput) taxInput.value = vat.toFixed(2);
-        const customsInput = document.getElementById('customs_clearance'); if (customsInput) customsInput.value = customs.toFixed(2);
         document.getElementById('totalAmount').textContent = total.toFixed(2);
     }
 
@@ -1239,24 +1199,6 @@
             ];
         })); ?>;
         window.products = products;
-        // Helper to compute procurement total in selected currency
-        window.calculateProcurementSubtotal = function() {
-            const currencySelect = document.getElementById('currency');
-            const selectedCurrency = currencySelect ? currencySelect.value : 'AED';
-            let sum = 0;
-            document.querySelectorAll('.item-row').forEach(row => {
-                const qty = parseFloat(row.querySelector('.quantity-input')?.value) || 0;
-                const productIdInput = row.querySelector('.product-id-input');
-                if (!productIdInput || !productIdInput.value) return;
-                const dropdownItem = row.querySelector(`.dropdown-item[data-id="${productIdInput.value}"]`);
-                if (!dropdownItem) return;
-                const pp = selectedCurrency === 'USD'
-                    ? parseFloat(dropdownItem.getAttribute('data-procurement-price-usd') || '0')
-                    : parseFloat(dropdownItem.getAttribute('data-procurement-price-aed') || '0');
-                sum += (pp || 0) * qty;
-            });
-            return sum;
-        }
     });
 
     // Function to populate size options from data attributes
