@@ -21,9 +21,6 @@ class Quote extends Model
         'status',
         'sub_total',
         'shipping_rate',
-        'tax_amount', // VAT
-        'customs_clearance',
-        'bank_charges',
         'total_amount',
         'currency',
         'attachments',
@@ -35,9 +32,6 @@ class Quote extends Model
         'expiry_date' => 'date',
         'sub_total' => 'decimal:2',
         'shipping_rate' => 'decimal:2',
-        'tax_amount' => 'decimal:2',
-        'customs_clearance' => 'decimal:2',
-        'bank_charges' => 'decimal:2',
         'total_amount' => 'decimal:2',
         'attachments' => 'array'
     ];
@@ -97,12 +91,9 @@ class Quote extends Model
     {
         $subTotal = $this->items->sum('amount');
         $shippingRate = $this->shipping_rate ?? 0;
-        $vatAmount = $this->tax_amount ?? 0;
-        $customsClearance = $this->customs_clearance ?? 0;
-        $bankCharges = $this->bank_charges ?? 0;
         $this->update([
             'sub_total' => $subTotal,
-            'total_amount' => $subTotal + $shippingRate + $vatAmount + $customsClearance + $bankCharges
+            'total_amount' => $subTotal + $shippingRate
         ]);
     }
 

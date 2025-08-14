@@ -733,18 +733,6 @@
                         <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->tax_amount, 2) }}</td>
                     </tr>
                     @endif
-                    @if(($invoice->customs_clearance ?? 0) > 0)
-                    <tr>
-                        <td class="total-label">Customs Clearance:</td>
-                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->customs_clearance, 2) }}</td>
-                    </tr>
-                    @endif
-                    @if(($invoice->bank_charges ?? 0) > 0)
-                    <tr>
-                        <td class="total-label">Bank Charges:</td>
-                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->bank_charges, 2) }}</td>
-                    </tr>
-                    @endif
                     <tr class="grand-total">
                         <td class="total-label">Total Amount:</td>
                         <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->total_amount, 2) }}</td>

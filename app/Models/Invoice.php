@@ -33,8 +33,6 @@ class Invoice extends Model
         'subtotal',
         'shipping_rate',
         'tax_amount',
-        'customs_clearance',
-        'bank_charges',
         'discount_amount',
         'total_amount',
         'currency',
@@ -67,8 +65,6 @@ class Invoice extends Model
         'subtotal' => 'decimal:2',
         'shipping_rate' => 'decimal:2',
         'tax_amount' => 'decimal:2',
-        'customs_clearance' => 'decimal:2',
-        'bank_charges' => 'decimal:2',
         'discount_amount' => 'decimal:2',
         'total_amount' => 'decimal:2',
         'paid_amount' => 'decimal:2',
@@ -238,15 +234,13 @@ class Invoice extends Model
         // Calculate total after discounts
         $totalAfterDiscount = $subTotal - $totalDiscount;
         
-        // Apply charges/taxes
-        $taxAmount = $this->tax_amount ?? 0; // VAT
-        $customsClearance = $this->customs_clearance ?? 0;
+        // Apply tax
+        $taxAmount = $this->tax_amount ?? 0;
         
-        // Apply shipping and bank charges
+        // Apply shipping rate
         $shippingRate = $this->shipping_rate ?? 0;
-        $bankCharges = $this->bank_charges ?? 0;
         
-        $finalTotal = $totalAfterDiscount + $taxAmount + $customsClearance + $bankCharges + $shippingRate;
+        $finalTotal = $totalAfterDiscount + $taxAmount + $shippingRate;
         
         // Update invoice totals without triggering events to prevent infinite loops
         $this->updateQuietly([

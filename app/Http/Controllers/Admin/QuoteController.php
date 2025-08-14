@@ -84,9 +84,6 @@ class QuoteController extends Controller
             'status' => 'required|in:draft,sent,invoiced',
             'currency' => 'required|string|in:AED,CNY,USD',
             'shipping_rate' => 'nullable|numeric|min:0',
-            'tax_amount' => 'nullable|numeric|min:0',
-            'customs_clearance' => 'nullable|numeric|min:0',
-            'bank_charges' => 'nullable|numeric|min:0',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.item_details' => 'required|string',
@@ -113,9 +110,6 @@ class QuoteController extends Controller
             'status' => $request->status,
             'currency' => $request->currency,
             'shipping_rate' => $request->shipping_rate ?? 0,
-            'tax_amount' => $request->tax_amount ?? 0,
-            'customs_clearance' => $request->customs_clearance ?? 0,
-            'bank_charges' => $request->bank_charges ?? 0,
             'created_by' => Auth::id(),
         ]);
 
@@ -203,9 +197,6 @@ class QuoteController extends Controller
                 'status' => 'required|in:draft,sent,invoiced',
                 'currency' => 'required|string|in:AED,CNY,USD',
                 'shipping_rate' => 'nullable|numeric|min:0',
-                'tax_amount' => 'nullable|numeric|min:0',
-                'customs_clearance' => 'nullable|numeric|min:0',
-                'bank_charges' => 'nullable|numeric|min:0',
                 'items' => 'required|array|min:1',
                 'items.*.product_id' => 'nullable|exists:products,id',
                 'items.*.item_details' => 'required|string',
@@ -233,9 +224,6 @@ class QuoteController extends Controller
                     'status' => $request->status,
                     'currency' => $request->currency,
                     'shipping_rate' => $request->shipping_rate ?? 0,
-                    'tax_amount' => $request->tax_amount ?? 0,
-                    'customs_clearance' => $request->customs_clearance ?? 0,
-                    'bank_charges' => $request->bank_charges ?? 0,
                 ]);
 
                 \Log::info('QuoteController update: Quote basic info updated');
@@ -539,8 +527,6 @@ class QuoteController extends Controller
                 'sub_total' => $quote->sub_total,
                 'shipping_rate' => $quote->shipping_rate ?? 0,
                 'tax_amount' => $quote->tax_amount ?? 0,
-                'customs_clearance' => $quote->customs_clearance ?? 0,
-                'bank_charges' => $quote->bank_charges ?? 0,
                 'discount_amount' => $quote->discount_amount ?? 0,
                 'total_amount' => $quote->total_amount,
                 'currency' => $quote->currency ?: 'AED', // Default to AED if not set

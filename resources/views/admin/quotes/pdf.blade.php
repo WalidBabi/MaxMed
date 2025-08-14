@@ -656,24 +656,6 @@
                             <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($quote->shipping_rate, 2) }}</td>
                         </tr>
                         @endif
-                        @if(($quote->tax_amount ?? 0) > 0)
-                        <tr>
-                            <td class="total-label">VAT:</td>
-                            <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($quote->tax_amount, 2) }}</td>
-                        </tr>
-                        @endif
-                        @if(($quote->customs_clearance ?? 0) > 0)
-                        <tr>
-                            <td class="total-label">Customs Clearance:</td>
-                            <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($quote->customs_clearance, 2) }}</td>
-                        </tr>
-                        @endif
-                        @if(($quote->bank_charges ?? 0) > 0)
-                        <tr>
-                            <td class="total-label">Bank Charges:</td>
-                            <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($quote->bank_charges, 2) }}</td>
-                        </tr>
-                        @endif
                         <tr class="grand-total">
                             <td class="total-label">Total Amount:</td>
                             <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($quote->total_amount, 2) }}</td>

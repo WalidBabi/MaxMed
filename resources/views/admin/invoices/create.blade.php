@@ -115,38 +115,12 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="shipping_rate" class="block text-sm font-medium text-gray-700 mb-2">Shipping</label>
+                                    <label for="shipping_rate" class="block text-sm font-medium text-gray-700 mb-2">Shipping Rate</label>
                                     <input type="number" id="shipping_rate" name="shipping_rate" step="0.01" min="0"
                                            value="{{ old('shipping_rate', $quote->shipping_rate ?? 0) }}"
-                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('shipping_rate') border-red-300 @enderror">
+                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('shipping_rate') border-red-300 @enderror"
+                                           onchange="updateShippingAmount()">
                                     @error('shipping_rate')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                <div>
-                                    <label for="tax_amount" class="block text-sm font-medium text-gray-700 mb-2">VAT (5%)</label>
-                                    <input type="number" id="tax_amount" name="tax_amount" step="0.01" min="0"
-                                           value="{{ old('tax_amount', 0) }}"
-                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('tax_amount') border-red-300 @enderror">
-                                    @error('tax_amount')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                <div>
-                                    <label for="customs_clearance" class="block text-sm font-medium text-gray-700 mb-2">Customs Clearance</label>
-                                    <input type="number" id="customs_clearance" name="customs_clearance" step="0.01" min="0"
-                                           value="{{ old('customs_clearance', 0) }}"
-                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('customs_clearance') border-red-300 @enderror">
-                                    @error('customs_clearance')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                <div>
-                                    <label for="bank_charges" class="block text-sm font-medium text-gray-700 mb-2">Bank Charges</label>
-                                    <input type="number" id="bank_charges" name="bank_charges" step="0.01" min="0"
-                                           value="{{ old('bank_charges', 0) }}"
-                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('bank_charges') border-red-300 @enderror">
-                                    @error('bank_charges')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -330,9 +304,7 @@
                                                                      data-description="{{ $product->description }}"
                                                                      data-price-aed="{{ $product->price_aed ?? $product->price }}"
                                                      data-price-usd="{{ $product->price }}"
-                                                                      data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
-                                                                      data-procurement-price-aed="{{ $product->procurement_price_aed ?? 0 }}"
-                                                                      data-procurement-price-usd="{{ $product->procurement_price_usd ?? 0 }}"
+                                                                     data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
                                                                      data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                                                      data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
                                                                      data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
@@ -417,18 +389,6 @@
                                     <div class="flex justify-between py-2">
                                         <span class="text-sm font-medium text-gray-700">Shipping:</span>
                                         <span id="shippingAmount" class="text-sm font-semibold text-gray-900">0.00 <span id="shippingCurrency">AED</span></span>
-                                    </div>
-                                    <div class="flex justify-between py-2">
-                                        <span class="text-sm font-medium text-gray-700">VAT (5%):</span>
-                                        <span id="vatAmount" class="text-sm font-semibold text-gray-900">0.00 <span id="vatCurrency">AED</span></span>
-                                    </div>
-                                    <div class="flex justify-between py-2">
-                                        <span class="text-sm font-medium text-gray-700">Customs Clearance:</span>
-                                        <span id="customsAmount" class="text-sm font-semibold text-gray-900">0.00 <span id="customsCurrency">AED</span></span>
-                                    </div>
-                                    <div class="flex justify-between py-2">
-                                        <span class="text-sm font-medium text-gray-700">Bank Charges:</span>
-                                        <span id="bankAmount" class="text-sm font-semibold text-gray-900">0.00 <span id="bankCurrency">AED</span></span>
                                     </div>
 
                                     <div class="border-t border-gray-200 pt-2">
@@ -761,15 +721,12 @@
 let itemCounter = 0;
 
 // Currency change handling
-    document.getElementById('currency').addEventListener('change', function() {
+document.getElementById('currency').addEventListener('change', function() {
     const selectedCurrency = this.value;
     
     // Update total currency displays
     document.getElementById('subTotalCurrency').textContent = selectedCurrency;
     document.getElementById('shippingCurrency').textContent = selectedCurrency;
-        document.getElementById('vatCurrency').textContent = selectedCurrency;
-        document.getElementById('customsCurrency').textContent = selectedCurrency;
-        document.getElementById('bankCurrency').textContent = selectedCurrency;
     document.getElementById('totalCurrency').textContent = selectedCurrency;
     
     // Toggle price displays in product dropdowns
@@ -877,17 +834,15 @@ function addItem() {
                     <div class="p-2 text-sm text-gray-500 dropdown-loading hidden">Searching...</div>
                     <div class="dropdown-items">
                         @foreach($products as $product)
-                             <div class="dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0" 
+                            <div class="dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0" 
                                  data-id="{{ $product->id }}"
                                  data-name="{{ $product->name }}"
                                  data-description="{{ $product->description }}"
                                                                       data-price-aed="{{ $product->price_aed ?? $product->price }}"
                                      data-price-usd="{{ $product->price }}"
-                                                                      data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
+                                 data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
                                                                      data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
-                                                                      data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
-                                                                      data-procurement-price-aed="{{ $product->procurement_price_aed ?? 0 }}"
-                                                                      data-procurement-price-usd="{{ $product->procurement_price_usd ?? 0 }}"
+                                                                     data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
                                                                      data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
                                 <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
                                 @if($product->description)
@@ -1043,52 +998,16 @@ function calculateTotals() {
     });
     
     const shippingRate = parseFloat(document.getElementById('shipping_rate').value) || 0;
-
-    // Auto-calc VAT 5% on subtotal (post-discount)
-    const vat = +(subTotal * 0.05).toFixed(2);
-    // Auto-calc customs 10% on procurement total
-    const customs = +(calculateProcurementSubtotal() * 0.10).toFixed(2);
-    // Bank charges manual
-    const bankCharges = parseFloat(document.getElementById('bank_charges').value) || 0;
-
-    const total = subTotal + shippingRate + vat + customs + bankCharges;
+    const total = subTotal + shippingRate;
     
     const selectedCurrency = document.getElementById('currency').value;
     document.getElementById('subTotal').innerHTML = subTotal.toFixed(2) + ' <span id="subTotalCurrency">' + selectedCurrency + '</span>';
     document.getElementById('shippingAmount').innerHTML = shippingRate.toFixed(2) + ' <span id="shippingCurrency">' + selectedCurrency + '</span>';
-    document.getElementById('vatAmount').innerHTML = vat.toFixed(2) + ' <span id="vatCurrency">' + selectedCurrency + '</span>';
-    document.getElementById('customsAmount').innerHTML = customs.toFixed(2) + ' <span id="customsCurrency">' + selectedCurrency + '</span>';
-    document.getElementById('bankAmount').innerHTML = bankCharges.toFixed(2) + ' <span id="bankCurrency">' + selectedCurrency + '</span>';
-    // Sync hidden inputs
-    const taxInput = document.getElementById('tax_amount');
-    if (taxInput) taxInput.value = vat.toFixed(2);
-    const customsInput = document.getElementById('customs_clearance');
-    if (customsInput) customsInput.value = customs.toFixed(2);
     document.getElementById('totalAmount').innerHTML = total.toFixed(2) + ' <span id="totalCurrency">' + selectedCurrency + '</span>';
 }
 
-function calculateProcurementSubtotal() {
-    // Sum procurement (selected currency) * qty across rows
-    const selectedCurrency = document.getElementById('currency').value;
-    let sum = 0;
-    document.querySelectorAll('.item-row').forEach(row => {
-        const qty = parseFloat(row.querySelector('.quantity-input')?.value) || 0;
-        const productIdInput = row.querySelector('.product-id-input');
-        if (!productIdInput || !productIdInput.value) return;
-        const dropdown = row.querySelector(`.dropdown-item[data-id="${productIdInput.value}"]`);
-        // Prefer procurement price; fallback to the row's unit price if missing
-        let pp = 0;
-        if (dropdown) {
-            pp = selectedCurrency === 'USD'
-                ? parseFloat(dropdown.getAttribute('data-procurement-price-usd') || '0')
-                : parseFloat(dropdown.getAttribute('data-procurement-price-aed') || '0');
-        }
-        if (!pp || pp <= 0) {
-            pp = parseFloat(row.querySelector('.rate-input')?.value) || 0;
-        }
-        sum += (pp) * qty;
-    });
-    return sum;
+function updateShippingAmount() {
+    calculateTotals();
 }
 
 function validateForm() {
@@ -1460,7 +1379,6 @@ document.addEventListener('DOMContentLoaded', function() {
         ];
     })); ?>;
     window.products = products;
-    calculateTotals();
 });
 </script>
 @endpush 

@@ -233,9 +233,7 @@
                                     $totalDiscount = $invoice->items->sum('calculated_discount_amount') + ($invoice->discount_amount ?? 0);
                                     $shippingRate = $invoice->shipping_rate ?? 0;
                                     $taxAmount = $invoice->tax_amount ?? 0;
-                                    $customsClearance = $invoice->customs_clearance ?? 0;
-                                    $bankCharges = $invoice->bank_charges ?? 0;
-                                    $finalTotal = $subtotal - $totalDiscount + $shippingRate + $taxAmount + $customsClearance + $bankCharges;
+                                    $finalTotal = $subtotal - $totalDiscount + $shippingRate + $taxAmount;
                                 @endphp
                                 
                                 <div class="flex justify-between py-2 text-sm">
@@ -261,18 +259,6 @@
                                 <div class="flex justify-between py-2 text-sm">
                                     <span class="font-medium text-gray-900">Tax:</span>
                                     <span class="font-bold text-gray-900">{{ number_format($taxAmount, 2) }} {{ $invoice->currency }}</span>
-                                </div>
-                                @endif
-                                @if(($invoice->customs_clearance ?? 0) > 0)
-                                <div class="flex justify-between py-2 text-sm">
-                                    <span class="font-medium text-gray-900">Customs Clearance:</span>
-                                    <span class="font-bold text-gray-900">{{ number_format($invoice->customs_clearance, 2) }} {{ $invoice->currency }}</span>
-                                </div>
-                                @endif
-                                @if(($invoice->bank_charges ?? 0) > 0)
-                                <div class="flex justify-between py-2 text-sm">
-                                    <span class="font-medium text-gray-900">Bank Charges:</span>
-                                    <span class="font-bold text-gray-900">{{ number_format($invoice->bank_charges, 2) }} {{ $invoice->currency }}</span>
                                 </div>
                                 @endif
                                 

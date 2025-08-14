@@ -206,9 +206,7 @@ class InvoiceController extends Controller
                     'terms_conditions' => $quote->terms_conditions,
                     'notes' => $quote->customer_notes,
                     'sub_total' => $quote->sub_total,
-                    'tax_amount' => $quote->tax_amount ?? 0,
-                    'customs_clearance' => $quote->customs_clearance ?? 0,
-                    'bank_charges' => $quote->bank_charges ?? 0,
+                    'tax_amount' => 0,
                     'discount_amount' => 0,
                     'total_amount' => $quote->total_amount,
                     'currency' => $quote->currency ?: 'AED', // Default to AED if not set
@@ -288,9 +286,6 @@ class InvoiceController extends Controller
             'payment_terms' => 'required|in:advance_50,advance_100,on_delivery,net_30,custom',
             'advance_percentage' => 'nullable|numeric|min:0|max:100',
             'shipping_rate' => 'nullable|numeric|min:0',
-            'tax_amount' => 'nullable|numeric|min:0',
-            'customs_clearance' => 'nullable|numeric|min:0',
-            'bank_charges' => 'nullable|numeric|min:0',
             'items' => 'required|array|min:1',
             'items.*.description' => 'required|string',
             'items.*.quantity' => 'required|numeric|min:0',
@@ -314,9 +309,6 @@ class InvoiceController extends Controller
                 'payment_terms' => $request->payment_terms,
                 'advance_percentage' => $request->advance_percentage,
                 'shipping_rate' => $request->shipping_rate ?? 0,
-                'tax_amount' => $request->tax_amount ?? 0,
-                'customs_clearance' => $request->customs_clearance ?? 0,
-                'bank_charges' => $request->bank_charges ?? 0,
                 'currency' => 'AED',
                 'is_proforma' => $request->type === 'proforma',
                 'requires_advance_payment' => in_array($request->payment_terms, ['advance_50', 'advance_100', 'custom']),
@@ -402,9 +394,6 @@ class InvoiceController extends Controller
             'due_date' => 'required|date|after_or_equal:invoice_date',
             'payment_terms' => 'required|in:advance_50,advance_100,on_delivery,net_30,custom',
             'shipping_rate' => 'nullable|numeric|min:0',
-            'tax_amount' => 'nullable|numeric|min:0',
-            'customs_clearance' => 'nullable|numeric|min:0',
-            'bank_charges' => 'nullable|numeric|min:0',
             'items' => 'required|array|min:1'
         ]);
 
@@ -423,9 +412,6 @@ class InvoiceController extends Controller
                 'payment_terms' => $request->payment_terms,
                 'advance_percentage' => $request->advance_percentage,
                 'shipping_rate' => $request->shipping_rate ?? 0,
-                'tax_amount' => $request->tax_amount ?? 0,
-                'customs_clearance' => $request->customs_clearance ?? 0,
-                'bank_charges' => $request->bank_charges ?? 0,
                 'reference_number' => $request->reference_number,
                 'po_number' => $request->po_number,
                 'updated_by' => Auth::id()
