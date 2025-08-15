@@ -403,8 +403,31 @@
                                 <input type="number" id="shipping_rate" name="shipping_rate" step="0.01" min="0"
                                        value="{{ old('shipping_rate', $invoice->shipping_rate ?? 0) }}"
                                        class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('shipping_rate') border-red-300 @enderror"
-                                       onchange="updateShippingAmount()">
+                                       onchange="updateTotals()">
                                 @error('shipping_rate')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="vat_rate" class="block text-sm font-medium text-gray-700 mb-2">VAT Rate (%)</label>
+                                <input type="number" id="vat_rate" name="vat_rate" step="0.01" min="0" max="100"
+                                       value="{{ old('vat_rate', $invoice->vat_rate ?? 5) }}"
+                                       class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('vat_rate') border-red-300 @enderror"
+                                       onchange="updateTotals()" 
+                                       oninput="this.setAttribute('data-manual-override', 'true')">
+                                @error('vat_rate')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="customs_clearance_fee" class="block text-sm font-medium text-gray-700 mb-2">Customs Clearance Fee</label>
+                                <input type="number" id="customs_clearance_fee" name="customs_clearance_fee" step="0.01" min="0"
+                                       value="{{ old('customs_clearance_fee', $invoice->customs_clearance_fee ?? 0) }}"
+                                       class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('customs_clearance_fee') border-red-300 @enderror"
+                                       onchange="updateTotals()" 
+                                       oninput="this.setAttribute('data-manual-override', 'true')"
+                                       placeholder="Auto-calculated at 10% of procurement cost">
+                                @error('customs_clearance_fee')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -500,6 +523,8 @@
                                                                              data-description="{{ $product->description }}"
                                                                              data-price-aed="{{ $product->price_aed ?? $product->price }}"
                                                                              data-price-usd="{{ $product->price }}"
+                                                                             data-procurement-price-aed="{{ $product->procurement_price_aed ?? $product->price_aed ?? $product->price }}"
+                                                                             data-procurement-price-usd="{{ $product->procurement_price_usd ?? $product->price ?? 0 }}"
                                                                              data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
                                                                              data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                                                              data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
@@ -586,6 +611,14 @@
                                     <div class="flex justify-between py-2">
                                         <span class="text-sm font-medium text-gray-700">Shipping:</span>
                                         <span id="shippingAmount" class="text-sm font-semibold text-gray-900">{{ number_format($invoice->shipping_rate, 2) }} <span id="shippingCurrency">{{ $invoice->currency ?? 'AED' }}</span></span>
+                                    </div>
+                                    <div class="flex justify-between py-2" id="customsRow" style="display: {{ ($invoice->customs_clearance_fee ?? 0) > 0 ? 'flex' : 'none' }};">
+                                        <span class="text-sm font-medium text-gray-700">Customs Clearance:</span>
+                                        <span id="customsAmount" class="text-sm font-semibold text-gray-900">{{ number_format($invoice->customs_clearance_fee ?? 0, 2) }} <span id="customsCurrency">{{ $invoice->currency ?? 'AED' }}</span></span>
+                                    </div>
+                                    <div class="flex justify-between py-2" id="vatRow" style="display: {{ ($invoice->vat_rate ?? 0) > 0 ? 'flex' : 'none' }};">
+                                        <span class="text-sm font-medium text-gray-700">VAT (<span id="vatRateDisplay">{{ number_format($invoice->vat_rate ?? 0, 1) }}</span>%):</span>
+                                        <span id="vatAmount" class="text-sm font-semibold text-gray-900">{{ number_format($invoice->tax_amount ?? (($invoice->sub_total + ($invoice->shipping_rate ?? 0) + ($invoice->customs_clearance_fee ?? 0)) * (($invoice->vat_rate ?? 0) / 100)), 2) }} <span id="vatCurrency">{{ $invoice->currency ?? 'AED' }}</span></span>
                                     </div>
 
                                     <div class="border-t border-gray-200 pt-2">
@@ -844,6 +877,8 @@ function addItem(data = {}) {
                                      data-description="{{ $product->description }}"
                                      data-price-aed="{{ $product->price_aed ?? $product->price }}"
                                      data-price-usd="{{ $product->price }}"
+                                     data-procurement-price-aed="{{ $product->procurement_price_aed ?? $product->price_aed ?? $product->price }}"
+                                     data-procurement-price-usd="{{ $product->procurement_price_usd ?? $product->price ?? 0 }}"
                                      data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
                                      data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                      data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
@@ -1012,13 +1047,48 @@ function calculateTotals() {
         subTotal += parseFloat(amount.textContent) || 0;
     });
     
+    // Calculate total procurement cost for customs calculation
+    let totalProcurementCost = 0;
+    document.querySelectorAll('.item-row').forEach(row => {
+        const quantity = parseFloat(row.querySelector('.quantity-input')?.value) || 0;
+        const procurementPriceElement = row.querySelector('[data-procurement-price]');
+        const procurementPrice = parseFloat(procurementPriceElement?.getAttribute('data-procurement-price')) || 0;
+        totalProcurementCost += quantity * procurementPrice;
+    });
+    
     const shippingRate = parseFloat(document.getElementById('shipping_rate').value) || 0;
-    const total = subTotal + shippingRate;
+    let customsFee = parseFloat(document.getElementById('customs_clearance_fee').value) || 0;
+    let vatRate = parseFloat(document.getElementById('vat_rate').value) || 0;
+    
+    // Auto-calculate customs as 10% of procurement cost if not manually set
+    if (!document.getElementById('customs_clearance_fee').getAttribute('data-manual-override')) {
+        customsFee = totalProcurementCost * 0.10;
+        document.getElementById('customs_clearance_fee').value = customsFee.toFixed(2);
+    }
+    
+    // Auto-set VAT rate to 5% if not manually set
+    if (!document.getElementById('vat_rate').getAttribute('data-manual-override')) {
+        vatRate = 5;
+        document.getElementById('vat_rate').value = vatRate.toFixed(1);
+    }
+    
+    // Calculate VAT on subtotal + shipping + customs
+    const vatAmount = ((subTotal + shippingRate + customsFee) * (vatRate / 100));
+    const total = subTotal + shippingRate + customsFee + vatAmount;
     
     const selectedCurrency = document.getElementById('currency').value;
+    
+    // Update displays
     document.getElementById('subTotal').innerHTML = subTotal.toFixed(2) + ' <span id="subTotalCurrency">' + selectedCurrency + '</span>';
     document.getElementById('shippingAmount').innerHTML = shippingRate.toFixed(2) + ' <span id="shippingCurrency">' + selectedCurrency + '</span>';
+    document.getElementById('customsAmount').innerHTML = customsFee.toFixed(2) + ' <span id="customsCurrency">' + selectedCurrency + '</span>';
+    document.getElementById('vatAmount').innerHTML = vatAmount.toFixed(2) + ' <span id="vatCurrency">' + selectedCurrency + '</span>';
+    document.getElementById('vatRateDisplay').textContent = vatRate.toFixed(1);
     document.getElementById('totalAmount').textContent = total.toFixed(2);
+    
+    // Show/hide rows based on values
+    document.getElementById('customsRow').style.display = customsFee > 0 ? 'flex' : 'none';
+    document.getElementById('vatRow').style.display = vatRate > 0 ? 'flex' : 'none';
     
     // Update hidden total input for form submission
     const totalHidden = document.getElementById('total_amount_hidden');
@@ -1028,6 +1098,10 @@ function calculateTotals() {
 }
 
 function updateShippingAmount() {
+    calculateTotals();
+}
+
+function updateTotals() {
     calculateTotals();
 }
 

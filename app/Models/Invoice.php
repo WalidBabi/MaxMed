@@ -33,6 +33,8 @@ class Invoice extends Model
         'subtotal',
         'shipping_rate',
         'tax_amount',
+        'vat_rate',
+        'customs_clearance_fee',
         'discount_amount',
         'total_amount',
         'currency',
@@ -65,6 +67,8 @@ class Invoice extends Model
         'subtotal' => 'decimal:2',
         'shipping_rate' => 'decimal:2',
         'tax_amount' => 'decimal:2',
+        'vat_rate' => 'decimal:2',
+        'customs_clearance_fee' => 'decimal:2',
         'discount_amount' => 'decimal:2',
         'total_amount' => 'decimal:2',
         'paid_amount' => 'decimal:2',
@@ -234,18 +238,25 @@ class Invoice extends Model
         // Calculate total after discounts
         $totalAfterDiscount = $subTotal - $totalDiscount;
         
-        // Apply tax
+        // Apply explicit tax amount; if vat_rate is set and tax_amount is 0, compute VAT
         $taxAmount = $this->tax_amount ?? 0;
+        if ((float)($this->vat_rate ?? 0) > 0 && (float)$taxAmount === 0.0) {
+            $taxAmount = round($totalAfterDiscount * ((float)$this->vat_rate / 100), 2);
+        }
         
         // Apply shipping rate
         $shippingRate = $this->shipping_rate ?? 0;
         
-        $finalTotal = $totalAfterDiscount + $taxAmount + $shippingRate;
+        // Apply customs clearance fee
+        $customsClearance = $this->customs_clearance_fee ?? 0;
+        
+        $finalTotal = $totalAfterDiscount + $taxAmount + $shippingRate + $customsClearance;
         
         // Update invoice totals without triggering events to prevent infinite loops
         $this->updateQuietly([
             'subtotal' => $subTotal,
-            'total_amount' => $finalTotal
+            'total_amount' => $finalTotal,
+            'tax_amount' => $taxAmount
         ]);
     }
 

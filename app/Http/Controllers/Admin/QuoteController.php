@@ -84,6 +84,9 @@ class QuoteController extends Controller
             'status' => 'required|in:draft,sent,invoiced',
             'currency' => 'required|string|in:AED,CNY,USD',
             'shipping_rate' => 'nullable|numeric|min:0',
+            'payment_terms' => 'nullable|in:advance_50,advance_100,on_delivery,net_30,custom',
+            'vat_rate' => 'nullable|numeric|min:0|max:100',
+            'customs_clearance_fee' => 'nullable|numeric|min:0',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.item_details' => 'required|string',
@@ -110,6 +113,9 @@ class QuoteController extends Controller
             'status' => $request->status,
             'currency' => $request->currency,
             'shipping_rate' => $request->shipping_rate ?? 0,
+            'payment_terms' => $request->payment_terms ?? 'advance_50',
+            'vat_rate' => $request->vat_rate ?? 0,
+            'customs_clearance_fee' => $request->customs_clearance_fee ?? 0,
             'created_by' => Auth::id(),
         ]);
 
@@ -197,6 +203,9 @@ class QuoteController extends Controller
                 'status' => 'required|in:draft,sent,invoiced',
                 'currency' => 'required|string|in:AED,CNY,USD',
                 'shipping_rate' => 'nullable|numeric|min:0',
+                'payment_terms' => 'nullable|in:advance_50,advance_100,on_delivery,net_30,custom',
+                'vat_rate' => 'nullable|numeric|min:0|max:100',
+                'customs_clearance_fee' => 'nullable|numeric|min:0',
                 'items' => 'required|array|min:1',
                 'items.*.product_id' => 'nullable|exists:products,id',
                 'items.*.item_details' => 'required|string',
@@ -224,6 +233,9 @@ class QuoteController extends Controller
                     'status' => $request->status,
                     'currency' => $request->currency,
                     'shipping_rate' => $request->shipping_rate ?? 0,
+                    'payment_terms' => $request->payment_terms ?? $quote->payment_terms,
+                    'vat_rate' => $request->vat_rate ?? $quote->vat_rate,
+                    'customs_clearance_fee' => $request->customs_clearance_fee ?? $quote->customs_clearance_fee,
                 ]);
 
                 \Log::info('QuoteController update: Quote basic info updated');
@@ -527,11 +539,13 @@ class QuoteController extends Controller
                 'sub_total' => $quote->sub_total,
                 'shipping_rate' => $quote->shipping_rate ?? 0,
                 'tax_amount' => $quote->tax_amount ?? 0,
+                'vat_rate' => $quote->vat_rate ?? 0,
+                'customs_clearance_fee' => $quote->customs_clearance_fee ?? 0,
                 'discount_amount' => $quote->discount_amount ?? 0,
                 'total_amount' => $quote->total_amount,
                 'currency' => $quote->currency ?: 'AED', // Default to AED if not set
                 'payment_status' => 'pending',
-                'payment_terms' => 'advance_50', // Default to 50% advance
+                'payment_terms' => $quote->payment_terms ?? 'advance_50',
                 'status' => 'draft',
                 'reference_number' => $quote->reference_number,
                 'created_by' => Auth::id(),

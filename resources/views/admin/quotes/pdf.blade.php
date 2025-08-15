@@ -389,6 +389,33 @@
             font-size: 13px;
         }
 
+        /* TOTAL IN WORDS SECTION */
+        .total-words-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f0f9ff;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary-color);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .total-words-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .total-words-text {
+            font-size: 11px;
+            color: var(--text-primary);
+            line-height: 1.4;
+            font-weight: 600;
+            font-style: italic;
+        }
+
         /* CONTENT SECTIONS */
         .content-section {
             margin-bottom: 20px;
@@ -650,10 +677,28 @@
                             <td class="total-label">Subtotal:</td>
                             <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($quote->sub_total, 2) }}</td>
                         </tr>
-                        @if($quote->shipping_rate > 0)
+                        @if(($quote->shipping_rate ?? 0) > 0)
                         <tr>
                             <td class="total-label">Shipping:</td>
                             <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($quote->shipping_rate, 2) }}</td>
+                        </tr>
+                        @endif
+                        @if(($quote->customs_clearance_fee ?? 0) > 0)
+                        <tr>
+                            <td class="total-label">Customs Clearance:</td>
+                            <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($quote->customs_clearance_fee, 2) }}</td>
+                        </tr>
+                        @endif
+                        @php
+                            $computedVat = 0;
+                            if (($quote->vat_rate ?? 0) > 0) {
+                                $computedVat = round((($quote->sub_total ?? 0) + ($quote->shipping_rate ?? 0) + ($quote->customs_clearance_fee ?? 0)) * (($quote->vat_rate ?? 0) / 100), 2);
+                            }
+                        @endphp
+                        @if(($computedVat ?? 0) > 0)
+                        <tr>
+                            <td class="total-label">VAT ({{ number_format($quote->vat_rate, 2) }}%):</td>
+                            <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($computedVat, 2) }}</td>
                         </tr>
                         @endif
                         <tr class="grand-total">
@@ -665,11 +710,45 @@
             </div>
         </div>
 
+        <!-- TOTAL IN WORDS -->
+        <div class="total-words-section">
+            <div class="total-words-title">Amount in Words:</div>
+            <div class="total-words-text">{{ numberToWords($quote->total_amount, $quote->currency ?? 'AED') }}</div>
+        </div>
+
         <!-- CUSTOMER NOTES -->
         @if($quote->customer_notes)
         <div class="content-section">
             <div class="content-title">Customer Notes</div>
             <div class="content-text">{{ $quote->customer_notes }}</div>
+        </div>
+        @endif
+
+        <!-- PAYMENT TERMS -->
+        @if(!empty($quote->payment_terms))
+        <div class="content-section">
+            <div class="content-title">Payment Terms</div>
+            <div class="content-text">
+                @switch($quote->payment_terms)
+                    @case('advance_50')
+                        50% advance payment required before processing order
+                        @break
+                    @case('advance_100')
+                        100% advance payment required before processing order
+                        @break
+                    @case('on_delivery')
+                        Payment on delivery
+                        @break
+                    @case('net_30')
+                        Net 30 days from invoice date
+                        @break
+                    @case('custom')
+                        Custom payment terms (as per agreement)
+                        @break
+                    @default
+                        {{ ucfirst(str_replace('_', ' ', $quote->payment_terms)) }}
+                @endswitch
+            </div>
         </div>
         @endif
 
