@@ -232,8 +232,9 @@
                                     });
                                     $totalDiscount = $invoice->items->sum('calculated_discount_amount') + ($invoice->discount_amount ?? 0);
                                     $shippingRate = $invoice->shipping_rate ?? 0;
-                                    $taxAmount = $invoice->tax_amount ?? 0;
-                                    $finalTotal = $subtotal - $totalDiscount + $shippingRate + $taxAmount;
+                                    $customsClearance = $invoice->customs_clearance_fee ?? 0;
+                                    $vatAmount = $invoice->tax_amount ?? 0;
+                                    $finalTotal = $subtotal - $totalDiscount + $shippingRate + $customsClearance + $vatAmount;
                                 @endphp
                                 
                                 <div class="flex justify-between py-2 text-sm">
@@ -255,10 +256,17 @@
                                 </div>
                                 @endif
                                 
-                                @if($taxAmount > 0)
+                                @if($customsClearance > 0)
                                 <div class="flex justify-between py-2 text-sm">
-                                    <span class="font-medium text-gray-900">Tax:</span>
-                                    <span class="font-bold text-gray-900">{{ number_format($taxAmount, 2) }} {{ $invoice->currency }}</span>
+                                    <span class="font-medium text-gray-900">Customs Clearance:</span>
+                                    <span class="font-bold text-gray-900">{{ number_format($customsClearance, 2) }} {{ $invoice->currency }}</span>
+                                </div>
+                                @endif
+                                
+                                @if($vatAmount > 0)
+                                <div class="flex justify-between py-2 text-sm">
+                                    <span class="font-medium text-gray-900">VAT{{ ($invoice->vat_rate ?? 0) > 0 ? ' (' . number_format($invoice->vat_rate, 1) . '%)' : '' }}:</span>
+                                    <span class="font-bold text-gray-900">{{ number_format($vatAmount, 2) }} {{ $invoice->currency }}</span>
                                 </div>
                                 @endif
                                 

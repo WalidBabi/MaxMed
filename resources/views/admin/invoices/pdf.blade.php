@@ -433,6 +433,33 @@
             margin-bottom: 6px;
         }
 
+        /* TOTAL IN WORDS SECTION */
+        .total-words-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f0f9ff;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary-color);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .total-words-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .total-words-text {
+            font-size: 11px;
+            color: var(--text-primary);
+            line-height: 1.4;
+            font-weight: 600;
+            font-style: italic;
+        }
+
         /* CONTENT SECTIONS */
         .content-section {
             margin-bottom: 20px;
@@ -727,9 +754,15 @@
                         <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->shipping_rate, 2) }}</td>
                     </tr>
                     @endif
+                    @if(($invoice->customs_clearance_fee ?? 0) > 0)
+                    <tr>
+                        <td class="total-label">Customs Clearance:</td>
+                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->customs_clearance_fee, 2) }}</td>
+                    </tr>
+                    @endif
                     @if(($invoice->tax_amount ?? 0) > 0)
                     <tr>
-                        <td class="total-label">Tax:</td>
+                        <td class="total-label">VAT{{ ($invoice->vat_rate ?? 0) > 0 ? ' (' . number_format($invoice->vat_rate, 1) . '%)' : '' }}:</td>
                         <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->tax_amount, 2) }}</td>
                     </tr>
                     @endif
@@ -739,6 +772,12 @@
                     </tr>
                 </table>
             </div>
+        </div>
+
+        <!-- TOTAL IN WORDS -->
+        <div class="total-words-section">
+            <div class="total-words-title">Amount in Words:</div>
+            <div class="total-words-text">{{ numberToWords($invoice->total_amount, $invoice->currency ?? 'AED') }}</div>
         </div>
         @endif
 
