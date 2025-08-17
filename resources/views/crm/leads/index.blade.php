@@ -231,9 +231,77 @@
     position: relative;
 }
 
+/* Text truncation utilities */
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Medical Equipment Card Enhancements */
+.lead-card {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.lead-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.lead-card .medical-icon {
+    animation: pulse-medical 2s infinite;
+}
+
+@keyframes pulse-medical {
+    0%, 100% { 
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% { 
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+}
+
+/* Priority Badge Animations */
+.priority-high {
+    animation: attention-pulse 1.5s infinite;
+}
+
+@keyframes attention-pulse {
+    0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+    50% { 
+        transform: scale(1.05);
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+    }
+}
+
 .lead-card:hover {
     transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    z-index: 10;
 }
 
 .lead-card:hover .card-checkbox {
@@ -241,8 +309,7 @@
 }
 
 .lead-card.selected {
-    ring: 2px;
-    ring-color: rgb(59 130 246);
+    box-shadow: 0 0 0 2px rgb(59 130 246);
     transform: translateY(-2px);
 }
 
@@ -252,7 +319,7 @@
 
 .lead-card[draggable="true"]:active {
     cursor: grabbing;
-    transform: rotate(5deg) scale(1.05);
+    transform: rotate(2deg) scale(1.02);
 }
 
 .lead-card.dragging {
@@ -1277,7 +1344,7 @@ function openEnhancedLeadModal(leadId, leadName) {
             </div>
         </div>
         
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-3 gap-3">
             <a href="/crm/leads/${leadId}" 
                class="group inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105">
                 <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1293,13 +1360,6 @@ function openEnhancedLeadModal(leadId, leadName) {
                 </svg>
                 Edit Lead
             </a>
-            <button onclick="callLead('${leadId}')" 
-                    class="group inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 transform hover:scale-105">
-                <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                </svg>
-                Call Lead
-            </button>
             <button onclick="emailLead('${leadId}')" 
                     class="group inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200 transform hover:scale-105">
                 <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1310,16 +1370,37 @@ function openEnhancedLeadModal(leadId, leadName) {
         </div>
         
         <div class="mt-4 p-3 bg-gray-50 rounded-lg">
-            <h5 class="text-sm font-semibold text-gray-700 mb-2">Quick Status Change</h5>
+            <h5 class="text-sm font-semibold text-gray-700 mb-2">Quick Status Update - Medical Equipment Trading</h5>
             <div class="flex flex-wrap gap-2">
-                <button onclick="quickStatusChange('${leadId}', 'contacted')" class="px-3 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full hover:bg-yellow-200 transition-all transform hover:scale-105">
-                    Mark Contacted
+                <button onclick="quickStatusChange('${leadId}', 'new_inquiry')" class="px-3 py-1 text-xs bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 transition-all transform hover:scale-105">
+                    📩 New Inquiry
                 </button>
-                <button onclick="quickStatusChange('${leadId}', 'qualified')" class="px-3 py-1 text-xs bg-purple-100 text-purple-800 rounded-full hover:bg-purple-200 transition-all transform hover:scale-105">
-                    Mark Qualified
+                <button onclick="quickStatusChange('${leadId}', 'quote_requested')" class="px-3 py-1 text-xs bg-purple-100 text-purple-800 rounded-full hover:bg-purple-200 transition-all transform hover:scale-105">
+                    💰 Quote Requested
                 </button>
-                <button onclick="quickStatusChange('${leadId}', 'proposal')" class="px-3 py-1 text-xs bg-orange-100 text-orange-800 rounded-full hover:bg-orange-200 transition-all transform hover:scale-105">
-                    Send Proposal
+                <button onclick="quickStatusChange('${leadId}', 'follow_up_1')" class="px-3 py-1 text-xs bg-amber-100 text-amber-800 rounded-full hover:bg-amber-200 transition-all transform hover:scale-105">
+                    ⏰ Follow-up 1
+                </button>
+                <button onclick="quickStatusChange('${leadId}', 'follow_up_2')" class="px-3 py-1 text-xs bg-orange-100 text-orange-800 rounded-full hover:bg-orange-200 transition-all transform hover:scale-105">
+                    🔔 Follow-up 2
+                </button>
+                <button onclick="quickStatusChange('${leadId}', 'follow_up_3')" class="px-3 py-1 text-xs bg-red-100 text-red-800 rounded-full hover:bg-red-200 transition-all transform hover:scale-105">
+                    🚨 Follow-up 3
+                </button>
+                <button onclick="quickStatusChange('${leadId}', 'quote_sent')" class="px-3 py-1 text-xs bg-indigo-100 text-indigo-800 rounded-full hover:bg-indigo-200 transition-all transform hover:scale-105">
+                    📤 Quote Sent
+                </button>
+                <button onclick="quickStatusChange('${leadId}', 'negotiating_price')" class="px-3 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full hover:bg-yellow-200 transition-all transform hover:scale-105">
+                    🤝 Price Negotiation
+                </button>
+                <button onclick="quickStatusChange('${leadId}', 'payment_pending')" class="px-3 py-1 text-xs bg-emerald-100 text-emerald-800 rounded-full hover:bg-emerald-200 transition-all transform hover:scale-105">
+                    💳 Payment Pending
+                </button>
+                <button onclick="quickStatusChange('${leadId}', 'order_confirmed')" class="px-3 py-1 text-xs bg-green-100 text-green-800 rounded-full hover:bg-green-200 transition-all transform hover:scale-105">
+                    ✅ Order Confirmed
+                </button>
+                <button onclick="quickStatusChange('${leadId}', 'deal_lost')" class="px-3 py-1 text-xs bg-gray-100 text-gray-800 rounded-full hover:bg-gray-200 transition-all transform hover:scale-105">
+                    ❌ Deal Lost
                 </button>
             </div>
         </div>

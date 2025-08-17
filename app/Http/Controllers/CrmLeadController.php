@@ -77,13 +77,16 @@ class CrmLeadController extends Controller
     private function getPipelineData($baseQuery)
     {
         $stages = [
-            'new' => ['title' => 'New Leads', 'color' => 'blue'],
-            'contacted' => ['title' => 'Contacted', 'color' => 'yellow'],
-            'qualified' => ['title' => 'Qualified', 'color' => 'purple'],
-            'proposal' => ['title' => 'Proposal', 'color' => 'orange'],
-            'negotiation' => ['title' => 'Negotiation', 'color' => 'indigo'],
-            'won' => ['title' => 'Won', 'color' => 'green'],
-            'lost' => ['title' => 'Lost', 'color' => 'red']
+            'new_inquiry' => ['title' => '📩 New Inquiry', 'color' => 'blue'],
+            'quote_requested' => ['title' => '💰 Quote Requested', 'color' => 'purple'],
+            'follow_up_1' => ['title' => '⏰ Follow-up 1', 'color' => 'amber'],
+            'follow_up_2' => ['title' => '🔔 Follow-up 2', 'color' => 'orange'],
+            'follow_up_3' => ['title' => '🚨 Follow-up 3', 'color' => 'red'],
+            'quote_sent' => ['title' => '📤 Quote Sent', 'color' => 'indigo'],
+            'negotiating_price' => ['title' => '🤝 Price Negotiation', 'color' => 'yellow'],
+            'payment_pending' => ['title' => '💳 Payment Pending', 'color' => 'emerald'],
+            'order_confirmed' => ['title' => '✅ Order Confirmed', 'color' => 'green'],
+            'deal_lost' => ['title' => '❌ Deal Lost', 'color' => 'gray']
         ];
         
         $pipelineData = [];
@@ -163,7 +166,7 @@ class CrmLeadController extends Controller
             'company_name' => 'required|string|max:255',
             'job_title' => 'nullable|string|max:255',
             'company_address' => 'nullable|string',
-            'status' => 'required|in:new,contacted,qualified,proposal,negotiation,won,lost',
+            'status' => 'required|in:new_inquiry,quote_requested,follow_up_1,follow_up_2,follow_up_3,quote_sent,negotiating_price,payment_pending,order_confirmed,deal_lost',
             'source' => 'required|in:website,linkedin,email,phone,whatsapp,on_site_visit,referral,trade_show,google_ads,other',
             'priority' => 'required|in:low,medium,high',
             'estimated_value' => 'nullable|numeric|min:0',
@@ -225,7 +228,7 @@ class CrmLeadController extends Controller
     public function convert(CrmLead $lead)
     {
         // Convert lead to customer if won
-        if ($lead->status === 'won') {
+        if ($lead->status === 'order_confirmed') {
             // Integration with your existing customers table
             // This would depend on your current customer model structure
         }
@@ -239,7 +242,7 @@ class CrmLeadController extends Controller
     public function updateStatus(Request $request, CrmLead $lead)
     {
         $validated = $request->validate([
-            'status' => 'required|in:new,contacted,qualified,proposal,negotiation,won,lost'
+            'status' => 'required|in:new_inquiry,quote_requested,follow_up_1,follow_up_2,follow_up_3,quote_sent,negotiating_price,payment_pending,order_confirmed,deal_lost'
         ]);
         
         $oldStatus = $lead->status;
@@ -324,7 +327,7 @@ class CrmLeadController extends Controller
         $validated = $request->validate([
             'lead_ids' => 'required|array|min:1',
             'lead_ids.*' => 'exists:crm_leads,id',
-            'status' => 'required|in:new,contacted,qualified,proposal,negotiation,won,lost'
+            'status' => 'required|in:new_inquiry,quote_requested,follow_up_1,follow_up_2,follow_up_3,quote_sent,negotiating_price,payment_pending,order_confirmed,deal_lost'
         ]);
 
         try {

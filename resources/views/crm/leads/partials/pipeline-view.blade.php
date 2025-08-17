@@ -183,7 +183,7 @@
         <div class="flex overflow-x-auto space-x-6 pb-6 pipeline-scroll-container scroll-smooth pt-12" id="pipeline-container">
             @if(isset($pipelineData))
                 @foreach($pipelineData as $status => $stage)
-                    <div class="flex-shrink-0 w-80 pipeline-column" data-stage="{{ $status }}">
+                    <div class="flex-shrink-0 w-64 pipeline-column" data-stage="{{ $status }}">
                         <!-- Enhanced Column Header -->
                         <div class="bg-gradient-to-r from-{{ $stage['color'] }}-50 to-{{ $stage['color'] }}-100 border border-{{ $stage['color'] }}-200 rounded-t-xl p-4 sticky top-0 z-10">
                             <div class="flex items-center justify-between">
@@ -235,8 +235,8 @@
                             </div>
                         </div>
 
-                        <!-- Enhanced Lead Cards Container -->
-                        <div class="bg-gradient-to-b from-{{ $stage['color'] }}-25 to-{{ $stage['color'] }}-50 border-l border-r border-b border-{{ $stage['color'] }}-200 rounded-b-xl min-h-[600px] p-4 space-y-4 drop-zone transition-all duration-300" 
+                        <!-- Compact Lead Cards Container -->
+                        <div class="bg-gradient-to-b from-{{ $stage['color'] }}-25 to-{{ $stage['color'] }}-50 border-l border-r border-b border-{{ $stage['color'] }}-200 rounded-b-xl min-h-[400px] p-2 space-y-2 drop-zone transition-all duration-300" 
                              data-status="{{ $status }}"
                              ondragover="handleDragOver(event)"
                              ondrop="handleDrop(event)"
@@ -244,8 +244,8 @@
                              ondragleave="handleDragLeave(event)">
                             
                             @forelse($stage['leads'] as $lead)
-                                <!-- Enhanced Lead Card -->
-                                <div class="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 cursor-pointer lead-card" 
+                                <!-- Modern Medical Equipment Lead Card -->
+                                <div class="group relative bg-gradient-to-br from-white via-white to-{{ $stage['color'] }}-50 rounded-xl shadow-md border border-{{ $stage['color'] }}-200 hover:shadow-xl hover:border-{{ $stage['color'] }}-300 transition-all duration-300 cursor-pointer lead-card overflow-hidden" 
                                      data-lead-id="{{ $lead->id }}"
                                      data-current-status="{{ $status }}"
                                      data-lead-name="{{ $lead->full_name }}"
@@ -259,201 +259,139 @@
                                      ondragstart="handleDragStart(event)"
                                      ondragend="handleDragEnd(event)">
                                     
+                                    <!-- Colored Top Border -->
+                                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-{{ $stage['color'] }}-400 to-{{ $stage['color'] }}-600"></div>
+                                    
                                     <!-- Card Selection Checkbox -->
-                                    <div class="absolute top-3 left-3 z-10 opacity-0 transition-opacity duration-200 card-checkbox">
+                                    <div class="absolute top-3 left-3 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 card-checkbox">
                                         <input type="checkbox" 
-                                               class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                                               onchange="toggleCardSelection({{ $lead->id }}, this)"
+                                               class="w-4 h-4 text-{{ $stage['color'] }}-600 bg-white border-2 border-gray-300 rounded focus:ring-{{ $stage['color'] }}-500 focus:ring-2 shadow-sm"
+                                               onchange="toggleCardSelection('{{ $lead->id }}', this)"
                                                onclick="event.stopPropagation()">
                                     </div>
 
-                                    <!-- Enhanced Card Header -->
-                                    <div class="p-4 border-b border-gray-100">
-                                        <div class="flex items-start justify-between">
-                                            <div class="flex items-center space-x-3 flex-1 min-w-0">
-                                                <div class="flex-shrink-0">
-                                                    <div class="h-12 w-12 rounded-full bg-gradient-to-br from-{{ $stage['color'] }}-100 to-{{ $stage['color'] }}-200 flex items-center justify-center shadow-sm border border-{{ $stage['color'] }}-300">
-                                                        <span class="text-sm font-bold text-{{ $stage['color'] }}-800">
-                                                            {{ strtoupper(substr($lead->first_name, 0, 1) . substr($lead->last_name, 0, 1)) }}
-                                                        </span>
+                                    <!-- Card Content -->
+                                    <div class="p-4 pt-5">
+                                        <!-- Header with Customer Info -->
+                                        <div class="flex items-start justify-between mb-3">
+                                            <div class="min-w-0 flex-1 pr-2">
+                                                <div class="flex items-center space-x-2 mb-1">
+                                                    <!-- Medical Icon -->
+                                                    <div class="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-{{ $stage['color'] }}-100 to-{{ $stage['color'] }}-200 rounded-lg flex items-center justify-center medical-icon">
+                                                        <svg class="w-4 h-4 text-{{ $stage['color'] }}-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <div class="min-w-0 flex-1">
+                                                        <p class="text-sm font-bold text-gray-900 truncate">{{ $lead->full_name }}</p>
+                                                        <p class="text-xs text-gray-600 truncate font-medium">{{ $lead->company_name }}</p>
                                                     </div>
                                                 </div>
-                                                <div class="min-w-0 flex-1">
-                                                    <p class="text-base font-bold text-gray-900 leading-tight">{{ $lead->full_name }}</p>
-                                                    <p class="text-sm text-gray-600">{{ $lead->company_name }}</p>
-                                                    @if($lead->job_title)
-                                                        <p class="text-xs text-gray-500 truncate">{{ $lead->job_title }}</p>
-                                                    @endif
-                                                </div>
                                             </div>
-                                            <div class="flex flex-col items-end space-y-1 ml-2">
-                                                <!-- Priority Badge -->
+                                            
+                                            <!-- Priority Badge -->
+                                            <div class="flex-shrink-0">
                                                 @if($lead->priority === 'high')
-                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-200">
-                                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92z" clip-rule="evenodd"></path>
-                                                        </svg>
-                                                        HIGH
+                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-200 priority-high">
+                                                        🔥 HIGH
                                                     </span>
                                                 @elseif($lead->priority === 'medium')
-                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800 border border-yellow-200">
-                                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M10 2L3 7v11a2 2 0 002 2h10a2 2 0 002-2V7l-7-5z" clip-rule="evenodd"></path>
-                                                        </svg>
-                                                        MED
+                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                                                        ⚡ MED
                                                     </span>
                                                 @else
-                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800 border border-green-200">
-                                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                                        </svg>
-                                                        LOW
-                                                    </span>
-                                                @endif
-                                                
-                                                <!-- Overdue Indicator -->
-                                                @if($lead->isOverdue())
-                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-200 animate-pulse" title="Overdue - No contact in {{ $lead->daysSinceLastContact() }} days">
-                                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
-                                                        </svg>
-                                                        {{ $lead->daysSinceLastContact() }}d
+                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                                        ✅ LOW
                                                     </span>
                                                 @endif
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Enhanced Card Body -->
-                                    <div class="p-4">
-                                        <div class="space-y-3">
-                                            <!-- Contact Information -->
-                                            <div class="space-y-2">
-                                                <div class="flex items-center text-sm text-gray-600">
-                                                    <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                                    </svg>
-                                                    <span class="truncate">{{ $lead->email }}</span>
-                                                </div>
-
-                                                @if($lead->phone || $lead->mobile)
-                                                    <div class="flex items-center text-sm text-gray-600">
-                                                        <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                                                        </svg>
-                                                        <span>{{ $lead->phone ?: $lead->mobile }}</span>
-                                                    </div>
-                                                @endif
-                                            </div>
-
-                                            <!-- Value and Source -->
-                                            <div class="flex justify-between items-center">
-                                                @if($lead->estimated_value)
-                                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-green-100 text-green-800 border border-green-200">
-                                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"></path>
-                                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"></path>
-                                                        </svg>
-                                                        AED {{ number_format($lead->estimated_value, 0) }}
-                                                    </span>
+                                        <!-- Equipment Requirements -->
+                                        <div class="mb-3">
+                                            <div class="bg-gray-50 rounded-lg p-2 border border-gray-100">
+                                                @if($lead->notes)
+                                                    <p class="text-xs text-gray-700 line-clamp-2 leading-relaxed">
+                                                        <span class="font-medium text-{{ $stage['color'] }}-700">🏥 Requirements:</span>
+                                                        {{ $lead->notes }}
+                                                    </p>
                                                 @else
-                                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-700 border border-gray-200">
-                                                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
-                                                        </svg>
-                                                        TBD
-                                                    </span>
+                                                    <p class="text-xs text-gray-500 italic">
+                                                        <span class="font-medium">🏥 Requirements:</span> 
+                                                        Awaiting equipment specifications
+                                                    </p>
                                                 @endif
-                                                
-                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200 capitalize">
-                                                    {{ str_replace('_', ' ', $lead->source) }}
-                                                </span>
                                             </div>
+                                        </div>
 
-                                            <!-- Assignment and Last Contact -->
-                                            <div class="flex justify-between items-center text-xs text-gray-500 bg-gray-50 rounded-lg p-2">
-                                                <div class="flex items-center">
-                                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                                        <!-- Value and Source -->
+                                        <div class="flex items-center justify-between mb-3">
+                                            @if($lead->estimated_value)
+                                                <div class="inline-flex items-center px-2 py-1 bg-green-50 rounded-md border border-green-200">
+                                                    <svg class="w-3 h-3 text-green-600 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                                                     </svg>
-                                                    <span class="font-medium">{{ $lead->assignedUser->name ?? 'Unassigned' }}</span>
+                                                    <span class="text-xs font-bold text-green-700">AED {{ number_format($lead->estimated_value, 0) }}</span>
                                                 </div>
-                                                <div class="flex items-center">
-                                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
-                                                    </svg>
-                                                    <span>
-                                                        @if($lead->last_contacted_at)
-                                                            {{ $lead->last_contacted_at->diffForHumans() }}
-                                                        @else
-                                                            Never contacted
-                                                        @endif
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            <!-- Activity Summary -->
-                                            @if($lead->activities->count() > 0)
-                                                <div class="flex items-center justify-between text-xs text-gray-500 bg-blue-50 rounded-lg p-2">
-                                                    <div class="flex items-center">
-                                                        <svg class="w-3 h-3 mr-1 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
-                                                        </svg>
-                                                        <span class="font-medium">{{ $lead->activities->count() }} activities</span>
-                                                    </div>
-                                                    @if($lead->activities->first())
-                                                        <span class="text-blue-600">{{ $lead->activities->first()->created_at->format('M d') }}</span>
-                                                    @endif
+                                            @else
+                                                <div class="inline-flex items-center px-2 py-1 bg-gray-50 rounded-md border border-gray-200">
+                                                    <span class="text-xs font-medium text-gray-600">💰 Value TBD</span>
                                                 </div>
                                             @endif
+                                            
+                                            <!-- Source Badge -->
+                                            <div class="inline-flex items-center px-2 py-1 bg-{{ $stage['color'] }}-50 rounded-md border border-{{ $stage['color'] }}-200">
+                                                @if($lead->source === 'whatsapp')
+                                                    <span class="text-xs font-medium text-{{ $stage['color'] }}-700">📱 WhatsApp</span>
+                                                @elseif($lead->source === 'email')
+                                                    <span class="text-xs font-medium text-{{ $stage['color'] }}-700">📧 Email</span>
+                                                @elseif($lead->source === 'website')
+                                                    <span class="text-xs font-medium text-{{ $stage['color'] }}-700">🌐 Website</span>
+                                                @else
+                                                    <span class="text-xs font-medium text-{{ $stage['color'] }}-700 capitalize">{{ str_replace('_', ' ', $lead->source) }}</span>
+                                                @endif
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <!-- Enhanced Quick Action Buttons -->
-                                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-4 py-3 border-t border-gray-200 rounded-b-xl">
-                                        <div class="flex justify-between items-center">
+                                        <!-- Action Buttons -->
+                                        <div class="flex items-center justify-between pt-2 border-t border-gray-100">
+                                            <!-- Contact Info -->
+                                            <div class="flex items-center space-x-1 text-xs text-gray-500">
+                                                @if($lead->phone || $lead->mobile)
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                                    </svg>
+                                                @endif
+                                                @if($lead->email)
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                                    </svg>
+                                                @endif
+                                            </div>
+                                            
+                                            <!-- Quick Actions -->
                                             <div class="flex space-x-1">
-                                                <button onclick="event.stopPropagation(); window.location.href='{{ route('crm.leads.show', $lead) }}'" 
-                                                        class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105"
-                                                        title="View Lead Details">
-                                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <button onclick="event.stopPropagation(); window.location.href='/crm/leads/{{ $lead->id }}'" 
+                                                        class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-{{ $stage['color'] }}-100 text-{{ $stage['color'] }}-600 hover:bg-{{ $stage['color'] }}-200 transition-colors duration-200 group"
+                                                        title="View Details">
+                                                    <svg class="w-3 h-3 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                                     </svg>
-                                                    View
                                                 </button>
-                                                <button onclick="event.stopPropagation(); window.location.href='{{ route('crm.leads.edit', $lead) }}'" 
-                                                        class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 transform hover:scale-105"
+                                                <button onclick="event.stopPropagation(); window.location.href='/crm/leads/{{ $lead->id }}/edit'" 
+                                                        class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors duration-200 group"
                                                         title="Edit Lead">
-                                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <svg class="w-3 h-3 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                     </svg>
-                                                    Edit
-                                                </button>
-                                            </div>
-                                            
-                                            <div class="flex space-x-1">
-                                                @if($lead->phone || $lead->mobile)
-                                                    <button onclick="event.stopPropagation(); callLead({{ $lead->id }})" 
-                                                            class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 transform hover:scale-105"
-                                                            title="Call Lead">
-                                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                                                        </svg>
-                                                        Call
-                                                    </button>
-                                                @endif
-                                                <button onclick="event.stopPropagation(); emailLead({{ $lead->id }})" 
-                                                        class="inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded-md text-purple-700 bg-purple-100 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200 transform hover:scale-105"
-                                                        title="Email Lead">
-                                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                                    </svg>
-                                                    Email
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- Hover Overlay Effect -->
+                                    <div class="absolute inset-0 bg-gradient-to-t from-{{ $stage['color'] }}-100/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-xl"></div>
                                 </div>
                             @empty
                                 <!-- Enhanced Empty State -->
