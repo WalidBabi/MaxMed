@@ -206,11 +206,14 @@ class InvoiceController extends Controller
                     'terms_conditions' => $quote->terms_conditions,
                     'notes' => $quote->customer_notes,
                     'sub_total' => $quote->sub_total,
-                    'tax_amount' => 0,
+                    'shipping_rate' => $quote->shipping_rate ?? 0,
+                    'tax_amount' => $quote->vat_amount ?? 0,
+                    'vat_rate' => $quote->vat_rate ?? 0,
+                    'customs_clearance_fee' => $quote->customs_clearance_fee ?? 0,
                     'discount_amount' => 0,
                     'total_amount' => $quote->total_amount,
                     'currency' => $quote->currency ?: 'AED', // Default to AED if not set
-                    'payment_terms' => 'advance_50', // Default to 50% advance
+                    'payment_terms' => $quote->payment_terms ?? 'advance_50',
                     'payment_status' => 'pending',
                     'status' => 'draft',
                     'reference_number' => $quote->reference_number,

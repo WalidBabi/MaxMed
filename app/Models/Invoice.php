@@ -238,17 +238,16 @@ class Invoice extends Model
         // Calculate total after discounts
         $totalAfterDiscount = $subTotal - $totalDiscount;
         
+        // Apply shipping rate and customs clearance fee
+        $shippingRate = $this->shipping_rate ?? 0;
+        $customsClearance = $this->customs_clearance_fee ?? 0;
+        
         // Apply explicit tax amount; if vat_rate is set and tax_amount is 0, compute VAT
         $taxAmount = $this->tax_amount ?? 0;
         if ((float)($this->vat_rate ?? 0) > 0 && (float)$taxAmount === 0.0) {
-            $taxAmount = round($totalAfterDiscount * ((float)$this->vat_rate / 100), 2);
+            // VAT calculated on subtotal + shipping + customs (same as Quote calculation)
+            $taxAmount = round(($totalAfterDiscount + $shippingRate + $customsClearance) * ((float)$this->vat_rate / 100), 2);
         }
-        
-        // Apply shipping rate
-        $shippingRate = $this->shipping_rate ?? 0;
-        
-        // Apply customs clearance fee
-        $customsClearance = $this->customs_clearance_fee ?? 0;
         
         $finalTotal = $totalAfterDiscount + $taxAmount + $shippingRate + $customsClearance;
         

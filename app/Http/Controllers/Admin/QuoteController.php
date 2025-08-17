@@ -538,7 +538,7 @@ class QuoteController extends Controller
                 'notes' => $quote->customer_notes,
                 'sub_total' => $quote->sub_total,
                 'shipping_rate' => $quote->shipping_rate ?? 0,
-                'tax_amount' => $quote->tax_amount ?? 0,
+                'tax_amount' => $quote->vat_amount ?? 0,
                 'vat_rate' => $quote->vat_rate ?? 0,
                 'customs_clearance_fee' => $quote->customs_clearance_fee ?? 0,
                 'discount_amount' => $quote->discount_amount ?? 0,

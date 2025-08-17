@@ -409,12 +409,12 @@
                                         <span class="text-sm font-medium text-gray-700">Shipping:</span>
                                         <span id="shippingAmount" class="text-sm font-semibold text-gray-900">0.00 <span id="shippingCurrency">AED</span></span>
                                     </div>
-                                    <div class="flex justify-between py-2">
+                                    <div class="flex justify-between py-2" id="customsRow" style="display: none;">
                                         <span class="text-sm font-medium text-gray-700">Customs Clearance:</span>
                                         <span id="customsAmount" class="text-sm font-semibold text-gray-900">0.00 <span id="customsCurrency">AED</span></span>
                                     </div>
-                                    <div class="flex justify-between py-2">
-                                        <span class="text-sm font-medium text-gray-700">VAT:</span>
+                                    <div class="flex justify-between py-2" id="vatRow" style="display: none;">
+                                        <span class="text-sm font-medium text-gray-700">VAT (<span id="vatRateDisplay">0.0</span>%):</span>
                                         <span id="vatAmountDisplay" class="text-sm font-semibold text-gray-900">0.00 <span id="vatCurrency">AED</span></span>
                                     </div>
 
@@ -1038,13 +1038,13 @@ function calculateTotals() {
     });
     
     const shippingRate = parseFloat(document.getElementById('shipping_rate').value) || 0;
-    let customs = parseFloat(document.getElementById('customs_clearance_fee').value) || 0;
+    let customsFee = parseFloat(document.getElementById('customs_clearance_fee').value) || 0;
     let vatRate = parseFloat(document.getElementById('vat_rate').value) || 0;
     
     // Auto-calculate customs as 10% of procurement cost if not manually set
     if (!document.getElementById('customs_clearance_fee').getAttribute('data-manual-override')) {
-        customs = totalProcurementCost * 0.10;
-        document.getElementById('customs_clearance_fee').value = customs.toFixed(2);
+        customsFee = totalProcurementCost * 0.10;
+        document.getElementById('customs_clearance_fee').value = customsFee.toFixed(2);
     }
     
     // Auto-set VAT rate to 5% if not manually set
@@ -1053,15 +1053,20 @@ function calculateTotals() {
         document.getElementById('vat_rate').value = vatRate.toFixed(1);
     }
     
-    const vatAmount = ((subTotal + shippingRate + customs) * (vatRate / 100)) || 0;
-    const total = subTotal + shippingRate + customs + vatAmount;
+    const vatAmount = ((subTotal + shippingRate + customsFee) * (vatRate / 100)) || 0;
+    const total = subTotal + shippingRate + customsFee + vatAmount;
     
     const selectedCurrency = document.getElementById('currency').value;
     document.getElementById('subTotal').innerHTML = subTotal.toFixed(2) + ' <span id="subTotalCurrency">' + selectedCurrency + '</span>';
     document.getElementById('shippingAmount').innerHTML = shippingRate.toFixed(2) + ' <span id="shippingCurrency">' + selectedCurrency + '</span>';
-    document.getElementById('customsAmount').innerHTML = customs.toFixed(2) + ' <span id="customsCurrency">' + selectedCurrency + '</span>';
+    document.getElementById('customsAmount').innerHTML = customsFee.toFixed(2) + ' <span id="customsCurrency">' + selectedCurrency + '</span>';
     document.getElementById('vatAmountDisplay').innerHTML = vatAmount.toFixed(2) + ' <span id="vatCurrency">' + selectedCurrency + '</span>';
+    document.getElementById('vatRateDisplay').textContent = vatRate.toFixed(1);
     document.getElementById('totalAmount').innerHTML = total.toFixed(2) + ' <span id="totalCurrency">' + selectedCurrency + '</span>';
+    
+    // Show/hide rows based on values
+    document.getElementById('customsRow').style.display = customsFee > 0 ? 'flex' : 'none';
+    document.getElementById('vatRow').style.display = vatRate > 0 ? 'flex' : 'none';
 }
 
 function updateShippingAmount() {

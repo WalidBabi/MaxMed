@@ -689,16 +689,10 @@
                             <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($quote->customs_clearance_fee, 2) }}</td>
                         </tr>
                         @endif
-                        @php
-                            $computedVat = 0;
-                            if (($quote->vat_rate ?? 0) > 0) {
-                                $computedVat = round((($quote->sub_total ?? 0) + ($quote->shipping_rate ?? 0) + ($quote->customs_clearance_fee ?? 0)) * (($quote->vat_rate ?? 0) / 100), 2);
-                            }
-                        @endphp
-                        @if(($computedVat ?? 0) > 0)
+                        @if(($quote->vat_amount ?? 0) > 0)
                         <tr>
-                            <td class="total-label">VAT ({{ number_format($quote->vat_rate, 2) }}%):</td>
-                            <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($computedVat, 2) }}</td>
+                            <td class="total-label">VAT ({{ number_format($quote->vat_rate ?? 0, 1) }}%):</td>
+                            <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($quote->vat_amount, 2) }}</td>
                         </tr>
                         @endif
                         <tr class="grand-total">

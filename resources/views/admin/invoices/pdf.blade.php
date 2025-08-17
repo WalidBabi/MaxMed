@@ -760,17 +760,10 @@
                         <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->customs_clearance_fee, 2) }}</td>
                     </tr>
                     @endif
-                    @php
-                        $computedVat = 0;
-                        if (($invoice->vat_rate ?? 0) > 0) {
-                            $computedVat = round((($invoice->subtotal ?? 0) - ($invoice->discount_amount ?? 0) + ($invoice->shipping_rate ?? 0) + ($invoice->customs_clearance_fee ?? 0)) * (($invoice->vat_rate ?? 0) / 100), 2);
-                        }
-                        $displayTax = ($invoice->tax_amount ?? 0) > 0 ? $invoice->tax_amount : $computedVat;
-                    @endphp
-                    @if(($displayTax ?? 0) > 0)
+                    @if(($invoice->tax_amount ?? 0) > 0)
                     <tr>
-                        <td class="total-label">VAT{{ ($invoice->vat_rate ?? 0) > 0 ? ' (' . number_format($invoice->vat_rate, 2) . '%)' : '' }}:</td>
-                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($displayTax, 2) }}</td>
+                        <td class="total-label">VAT{{ ($invoice->vat_rate ?? 0) > 0 ? ' (' . number_format($invoice->vat_rate, 1) . '%)' : '' }}:</td>
+                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->tax_amount, 2) }}</td>
                     </tr>
                     @endif
                     <tr class="grand-total">
