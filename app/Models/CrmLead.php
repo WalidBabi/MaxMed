@@ -73,13 +73,16 @@ class CrmLead extends Model
     public function getStatusColorAttribute()
     {
         return match($this->status) {
-            'new' => 'blue',
-            'contacted' => 'yellow',
-            'qualified' => 'purple',
-            'proposal' => 'orange',
-            'negotiation' => 'indigo',
-            'won' => 'green',
-            'lost' => 'red',
+            'new_inquiry' => 'blue',
+            'quote_requested' => 'purple',
+            'follow_up_1' => 'amber',
+            'follow_up_2' => 'orange', 
+            'follow_up_3' => 'red',
+            'quote_sent' => 'indigo',
+            'negotiating_price' => 'yellow',
+            'payment_pending' => 'emerald',
+            'order_confirmed' => 'green',
+            'deal_lost' => 'gray',
             default => 'gray'
         };
     }
