@@ -374,6 +374,14 @@ class CrmLeadController extends Controller
      */
     public function updateStatus(Request $request, CrmLead $lead)
     {
+        \Log::info('Quick status update called', [
+            'lead_id' => $lead->id,
+            'current_status' => $lead->status,
+            'request_data' => $request->all(),
+            'url' => $request->url(),
+            'method' => $request->method()
+        ]);
+        
         $validated = $request->validate([
             'status' => 'required|in:new_inquiry,quote_requested,follow_up_1,follow_up_2,follow_up_3,quote_sent,negotiating_price,payment_pending,order_confirmed,deal_lost'
         ]);
@@ -383,6 +391,13 @@ class CrmLeadController extends Controller
         
         // Log status change
         $lead->logActivity('note', 'Status changed', "Status changed from {$oldStatus} to {$validated['status']}");
+        
+        \Log::info('Quick status update completed', [
+            'lead_id' => $lead->id,
+            'old_status' => $oldStatus,
+            'new_status' => $validated['status'],
+            'success' => true
+        ]);
         
         // Check if this is an AJAX request or form submission
         if ($request->expectsJson() || $request->ajax()) {
