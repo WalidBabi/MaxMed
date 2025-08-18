@@ -8,27 +8,9 @@
     <div class="flex justify-between items-center mb-8">
         <div>
             <h1 class="text-3xl font-bold text-gray-900 mb-2">Sales Pipeline</h1>
-            <p class="text-gray-600">Track leads through your sales process</p>
+            <p class="text-gray-600">Track lead status and progress through your sales pipeline</p>
         </div>
         <div class="flex items-center space-x-4">
-            <!-- View Toggle -->
-            <div class="bg-gray-100 p-1 rounded-lg">
-                <a href="{{ route('crm.leads.index', array_merge(request()->query(), ['view' => 'pipeline'])) }}" 
-                   class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md {{ (!isset($viewType) || $viewType === 'pipeline') ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 17h6m0 0v-6m0 6h2a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 7h6"></path>
-                    </svg>
-                    Pipeline
-                </a>
-                <a href="{{ route('crm.leads.index', array_merge(request()->query(), ['view' => 'table'])) }}" 
-                   class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md {{ (isset($viewType) && $viewType === 'table') ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700' }}">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
-                    </svg>
-                    Table
-                </a>
-            </div>
-            
             <!-- Add Lead Button -->
             <a href="{{ route('crm.leads.create') }}" 
                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
@@ -249,68 +231,22 @@
 }
 
 /* Medical Equipment Card Enhancements */
+/* Status Card Styling */
 .lead-card {
-    backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.95);
-}
-
-.lead-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
-    border-radius: inherit;
-    pointer-events: none;
-    z-index: 1;
-}
-
-.lead-card .medical-icon {
-    animation: pulse-medical 2s infinite;
-}
-
-@keyframes pulse-medical {
-    0%, 100% { 
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% { 
-        transform: scale(1.05);
-        opacity: 0.8;
-    }
-}
-
-/* Priority Badge Animations */
-.priority-high {
-    animation: attention-pulse 1.5s infinite;
-}
-
-@keyframes attention-pulse {
-    0%, 100% { 
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
-    }
-    50% { 
-        transform: scale(1.05);
-        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
-    }
+    background: #ffffff;
+    transition: all 0.2s ease;
+    border: 1px solid #e5e7eb;
 }
 
 .lead-card:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     z-index: 10;
-}
-
-.lead-card:hover .card-checkbox {
-    opacity: 1;
 }
 
 .lead-card.selected {
     box-shadow: 0 0 0 2px rgb(59 130 246);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 .lead-card[draggable="true"] {
@@ -319,13 +255,14 @@
 
 .lead-card[draggable="true"]:active {
     cursor: grabbing;
-    transform: rotate(2deg) scale(1.02);
+    transform: rotate(1deg) scale(1.01);
 }
 
 .lead-card.dragging {
-    opacity: 0.7;
-    transform: rotate(5deg) scale(1.1);
+    opacity: 0.8;
+    transform: rotate(3deg) scale(1.05);
     z-index: 1000;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
 }
 
 .drop-zone {
@@ -431,12 +368,14 @@
     }
 }
 
+/* Modern Metric Cards */
 .metric-card {
-    animation: countUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .metric-card:hover {
-    animation: pulse 2s infinite;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
 
 /* Loading states */

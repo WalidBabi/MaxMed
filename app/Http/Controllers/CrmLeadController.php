@@ -139,8 +139,18 @@ class CrmLeadController extends Controller
         // Log initial activity
         $lead->logActivity('note', 'Lead created', "Lead created from {$lead->source}");
         
+        // Automatically create a customer from this lead
+        try {
+            $customer = $lead->createCustomer();
+            $lead->logActivity('note', 'Customer created', "Customer '{$customer->name}' (ID: {$customer->id}) automatically created from this lead");
+        } catch (\Exception $e) {
+            // Log the error but don't fail the lead creation
+            \Log::error("Failed to create customer from lead {$lead->id}: " . $e->getMessage());
+            $lead->logActivity('note', 'Customer creation failed', "Failed to automatically create customer: " . $e->getMessage());
+        }
+        
         return redirect()->route('crm.leads.show', $lead)
-                        ->with('success', 'Lead created successfully!');
+                        ->with('success', 'Lead created successfully! Customer has been automatically created.');
     }
     
     public function show(CrmLead $lead)
@@ -547,9 +557,21 @@ class CrmLeadController extends Controller
             $lead->logActivity('note', 'Lead created (quick add)', 
                 "Lead created via quick add from {$lead->source}");
 
+            // Automatically create a customer from this lead
+            try {
+                $customer = $lead->createCustomer();
+                $lead->logActivity('note', 'Customer created', "Customer '{$customer->name}' (ID: {$customer->id}) automatically created from this lead");
+                $message = 'Lead and customer created successfully!';
+            } catch (\Exception $e) {
+                // Log the error but don't fail the lead creation
+                \Log::error("Failed to create customer from lead {$lead->id}: " . $e->getMessage());
+                $lead->logActivity('note', 'Customer creation failed', "Failed to automatically create customer: " . $e->getMessage());
+                $message = 'Lead created successfully! (Customer creation failed)';
+            }
+
             return response()->json([
                 'success' => true,
-                'message' => 'Lead created successfully!',
+                'message' => $message,
                 'lead' => $lead->load(['assignedUser', 'activities'])
             ]);
 
