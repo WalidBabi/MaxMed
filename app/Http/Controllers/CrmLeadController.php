@@ -117,40 +117,84 @@ class CrmLeadController extends Controller
     
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:crm_leads',
-            'mobile' => 'nullable|string|max:20',
-            'phone' => 'nullable|string|max:20',
-            'company_name' => 'required|string|max:255',
-            'job_title' => 'nullable|string|max:255',
-            'company_address' => 'nullable|string',
-            'source' => 'required|in:website,linkedin,email,phone,whatsapp,on_site_visit,referral,trade_show,google_ads,other',
-            'priority' => 'required|in:low,medium,high',
-            'estimated_value' => 'nullable|numeric|min:0',
-            'notes' => 'nullable|string',
-            'expected_close_date' => 'nullable|date',
-            'assigned_to' => 'required|exists:users,id',
-        ]);
+        \Log::info('CRM Lead creation started', ['request_data' => $request->except(['_token', 'attachments'])]);
+        
+        try {
+            $validated = $request->validate([
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'email' => 'required|email|unique:crm_leads',
+                'mobile' => 'nullable|string|max:20',
+                'phone' => 'nullable|string|max:20',
+                'company_name' => 'required|string|max:255',
+                'job_title' => 'nullable|string|max:255',
+                'company_address' => 'nullable|string',
+                'source' => 'required|in:website,linkedin,email,phone,whatsapp,on_site_visit,referral,trade_show,google_ads,other',
+                'priority' => 'required|in:low,medium,high',
+                'estimated_value' => 'nullable|numeric|min:0',
+                'notes' => 'nullable|string',
+                'expected_close_date' => 'nullable|date',
+                'assigned_to' => 'required|exists:users,id',
+                'attachments.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png,gif,webp|max:10240', // Max 10MB per file
+            ]);
+        
+        // Remove attachments from validated data for model creation
+        $attachmentFiles = $request->file('attachments', []);
+        unset($validated['attachments']);
         
         $lead = CrmLead::create($validated);
+        
+        // Handle file uploads
+        if (!empty($attachmentFiles)) {
+            $attachments = [];
+            foreach ($attachmentFiles as $file) {
+                if ($file && $file->isValid()) {
+                    $originalName = $file->getClientOriginalName();
+                    $fileName = time() . '_' . uniqid() . '_' . $originalName;
+                    $filePath = $file->storeAs('lead_attachments', $fileName, 'public');
+                    
+                    $attachments[] = [
+                        'path' => $filePath,
+                        'original_name' => $originalName,
+                        'size' => $file->getSize(),
+                        'uploaded_at' => now()->toISOString(),
+                    ];
+                }
+            }
+            
+            if (!empty($attachments)) {
+                $lead->attachments = $attachments;
+                $lead->save();
+                
+                $lead->logActivity('note', 'Attachments uploaded', count($attachments) . ' file(s) uploaded during lead creation');
+            }
+        }
         
         // Log initial activity
         $lead->logActivity('note', 'Lead created', "Lead created from {$lead->source}");
         
-        // Automatically create a customer from this lead
-        try {
-            $customer = $lead->createCustomer();
-            $lead->logActivity('note', 'Customer created', "Customer '{$customer->name}' (ID: {$customer->id}) automatically created from this lead");
+            // Automatically create a customer from this lead
+            try {
+                $customer = $lead->createCustomer();
+                $lead->logActivity('note', 'Customer created', "Customer '{$customer->name}' (ID: {$customer->id}) automatically created from this lead");
+            } catch (\Exception $e) {
+                // Log the error but don't fail the lead creation
+                \Log::error("Failed to create customer from lead {$lead->id}: " . $e->getMessage());
+                $lead->logActivity('note', 'Customer creation failed', "Failed to automatically create customer: " . $e->getMessage());
+            }
+            
+            \Log::info('CRM Lead created successfully', ['lead_id' => $lead->id, 'lead_name' => $lead->full_name]);
+            
+            return redirect()->route('crm.leads.show', $lead)
+                            ->with('success', 'Lead created successfully! Customer has been automatically created.');
+                            
         } catch (\Exception $e) {
-            // Log the error but don't fail the lead creation
-            \Log::error("Failed to create customer from lead {$lead->id}: " . $e->getMessage());
-            $lead->logActivity('note', 'Customer creation failed', "Failed to automatically create customer: " . $e->getMessage());
+            \Log::error('CRM Lead creation failed', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            
+            return redirect()->back()
+                           ->withInput()
+                           ->withErrors(['error' => 'Failed to create lead: ' . $e->getMessage()]);
         }
-        
-        return redirect()->route('crm.leads.show', $lead)
-                        ->with('success', 'Lead created successfully! Customer has been automatically created.');
     }
     
     public function show(CrmLead $lead)
@@ -167,6 +211,12 @@ class CrmLeadController extends Controller
     
     public function update(Request $request, CrmLead $lead)
     {
+        \Log::info('CRM Lead update started', [
+            'lead_id' => $lead->id,
+            'request_data' => $request->except(['_token', '_method', 'attachments']),
+            'remove_attachments' => $request->input('remove_attachments', [])
+        ]);
+        
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -183,10 +233,83 @@ class CrmLeadController extends Controller
             'notes' => 'nullable|string',
             'expected_close_date' => 'nullable|date',
             'assigned_to' => 'required|exists:users,id',
+            'attachments.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png,gif,webp|max:10240', // Max 10MB per file
+            'remove_attachments' => 'nullable|array',
+            'remove_attachments.*' => 'numeric',
         ]);
         
         $oldStatus = $lead->status;
+        
+        // Handle attachment removal
+        $removeAttachments = $request->input('remove_attachments', []);
+        $existingAttachments = $lead->attachments ?: [];
+        
+        \Log::info('Processing attachment removal', [
+            'lead_id' => $lead->id,
+            'remove_attachments' => $removeAttachments,
+            'existing_attachments_count' => count($existingAttachments)
+        ]);
+        
+        if (!empty($removeAttachments)) {
+            $filesToDelete = [];
+            foreach ($removeAttachments as $index) {
+                if (isset($existingAttachments[$index])) {
+                    $filesToDelete[] = $existingAttachments[$index]['path'];
+                    unset($existingAttachments[$index]);
+                }
+            }
+            
+            // Delete files from storage
+            foreach ($filesToDelete as $filePath) {
+                \Storage::disk('public')->delete($filePath);
+            }
+            
+            // Reindex array to maintain proper indexing
+            $existingAttachments = array_values($existingAttachments);
+            
+            if (!empty($removeAttachments)) {
+                \Log::info('Attachments removed successfully', [
+                    'lead_id' => $lead->id,
+                    'removed_files' => $filesToDelete,
+                    'remaining_attachments' => count($existingAttachments)
+                ]);
+                $lead->logActivity('note', 'Attachments removed', count($removeAttachments) . ' file(s) removed');
+            }
+        }
+        
+        // Handle new file uploads
+        $attachmentFiles = $request->file('attachments', []);
+        unset($validated['attachments'], $validated['remove_attachments']);
+        
         $lead->update($validated);
+        
+        if (!empty($attachmentFiles)) {
+            $newAttachments = [];
+            
+            foreach ($attachmentFiles as $file) {
+                if ($file && $file->isValid()) {
+                    $originalName = $file->getClientOriginalName();
+                    $fileName = time() . '_' . uniqid() . '_' . $originalName;
+                    $filePath = $file->storeAs('lead_attachments', $fileName, 'public');
+                    
+                    $newAttachments[] = [
+                        'path' => $filePath,
+                        'original_name' => $originalName,
+                        'size' => $file->getSize(),
+                        'uploaded_at' => now()->toISOString(),
+                    ];
+                }
+            }
+            
+            if (!empty($newAttachments)) {
+                $existingAttachments = array_merge($existingAttachments, $newAttachments);
+                $lead->logActivity('note', 'Attachments added', count($newAttachments) . ' new file(s) uploaded');
+            }
+        }
+        
+        // Update attachments
+        $lead->attachments = $existingAttachments;
+        $lead->save();
         
         // Log status change if it changed
         if ($oldStatus !== $validated['status']) {
