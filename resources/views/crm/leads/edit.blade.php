@@ -108,13 +108,16 @@
                             <select id="status" name="status" required
                                     class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                 <option value="">Select Status</option>
-                                <option value="new" {{ old('status', $lead->status) == 'new' ? 'selected' : '' }}>New</option>
-                                <option value="contacted" {{ old('status', $lead->status) == 'contacted' ? 'selected' : '' }}>Contacted</option>
-                                <option value="qualified" {{ old('status', $lead->status) == 'qualified' ? 'selected' : '' }}>Qualified</option>
-                                <option value="proposal" {{ old('status', $lead->status) == 'proposal' ? 'selected' : '' }}>Proposal</option>
-                                <option value="negotiation" {{ old('status', $lead->status) == 'negotiation' ? 'selected' : '' }}>Negotiation</option>
-                                <option value="won" {{ old('status', $lead->status) == 'won' ? 'selected' : '' }}>Won</option>
-                                <option value="lost" {{ old('status', $lead->status) == 'lost' ? 'selected' : '' }}>Lost</option>
+                                <option value="new_inquiry" {{ old('status', $lead->status) == 'new_inquiry' ? 'selected' : '' }}>📩 New Inquiry</option>
+                                <option value="quote_requested" {{ old('status', $lead->status) == 'quote_requested' ? 'selected' : '' }}>💰 Quote Requested</option>
+                                <option value="follow_up_1" {{ old('status', $lead->status) == 'follow_up_1' ? 'selected' : '' }}>⏰ Follow-up 1</option>
+                                <option value="follow_up_2" {{ old('status', $lead->status) == 'follow_up_2' ? 'selected' : '' }}>🔔 Follow-up 2</option>
+                                <option value="follow_up_3" {{ old('status', $lead->status) == 'follow_up_3' ? 'selected' : '' }}>🚨 Follow-up 3</option>
+                                <option value="quote_sent" {{ old('status', $lead->status) == 'quote_sent' ? 'selected' : '' }}>📤 Quote Sent</option>
+                                <option value="negotiating_price" {{ old('status', $lead->status) == 'negotiating_price' ? 'selected' : '' }}>🤝 Negotiating Price</option>
+                                <option value="payment_pending" {{ old('status', $lead->status) == 'payment_pending' ? 'selected' : '' }}>💳 Payment Pending</option>
+                                <option value="order_confirmed" {{ old('status', $lead->status) == 'order_confirmed' ? 'selected' : '' }}>✅ Order Confirmed</option>
+                                <option value="deal_lost" {{ old('status', $lead->status) == 'deal_lost' ? 'selected' : '' }}>❌ Deal Lost</option>
                             </select>
                             @error('status')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
