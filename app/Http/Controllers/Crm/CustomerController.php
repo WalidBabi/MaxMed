@@ -12,10 +12,82 @@ class CustomerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $customers = Customer::latest()->paginate(10);
-        return view('crm.customers.index', compact('customers'));
+        $query = Customer::query();
+
+        // Search filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('company_name', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%");
+            });
+        }
+
+        // Status filter
+        if ($request->filled('status')) {
+            $query->where('is_active', $request->status === 'active');
+        }
+
+        // Country filter
+        if ($request->filled('country')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('billing_country', 'like', "%{$request->country}%")
+                  ->orWhere('shipping_country', 'like', "%{$request->country}%");
+            });
+        }
+
+        // Date range filter
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        // Sorting
+        $sortField = $request->get('sort', 'created_at');
+        $sortDirection = $request->get('direction', 'desc');
+        
+        $allowedSorts = ['name', 'email', 'company_name', 'created_at', 'updated_at'];
+        if (in_array($sortField, $allowedSorts)) {
+            $query->orderBy($sortField, $sortDirection);
+        } else {
+            $query->latest();
+        }
+
+        $customers = $query->paginate(15)->appends($request->query());
+
+        // Get filter data for dropdowns
+        $countries = Customer::select('billing_country')
+            ->distinct()
+            ->whereNotNull('billing_country')
+            ->where('billing_country', '!=', '')
+            ->orderBy('billing_country')
+            ->pluck('billing_country')
+            ->merge(
+                Customer::select('shipping_country')
+                    ->distinct()
+                    ->whereNotNull('shipping_country')
+                    ->where('shipping_country', '!=', '')
+                    ->orderBy('shipping_country')
+                    ->pluck('shipping_country')
+            )
+            ->unique()
+            ->sort()
+            ->values();
+
+        $stats = [
+            'total' => Customer::count(),
+            'active' => Customer::where('is_active', true)->count(),
+            'inactive' => Customer::where('is_active', false)->count(),
+            'with_company' => Customer::whereNotNull('company_name')->where('company_name', '!=', '')->count(),
+        ];
+
+        return view('crm.customers.index', compact('customers', 'countries', 'stats'));
     }
 
     /**
