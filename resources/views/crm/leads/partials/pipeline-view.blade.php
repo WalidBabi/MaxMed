@@ -507,7 +507,7 @@
                                                         📤 Quote Sent
                                                         @break
                                                     @case('negotiating_price')
-                                                        🤝 Negotiating
+                                                        🤝 Price Negotiation
                                                         @break
                                                     @case('payment_pending')
                                                         💳 Payment Pending

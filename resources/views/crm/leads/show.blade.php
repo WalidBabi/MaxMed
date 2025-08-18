@@ -1,4 +1,7 @@
 @extends('layouts.crm')
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
 
 @section('title', 'Lead Details - ' . $lead->full_name)
 
@@ -301,6 +304,186 @@
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Notes</h3>
                     <p class="text-sm text-gray-600">{{ $lead->notes }}</p>
+                </div>
+                @endif
+
+                <!-- Requirements Attachments -->
+                @if($lead->hasAttachments())
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Requirements Attachments</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                            {{ $lead->getAttachmentCount() }} {{ $lead->getAttachmentCount() === 1 ? 'file' : 'files' }}
+                        </span>
+                    </div>
+
+                    @php
+                        $attachmentsByType = $lead->getAttachmentsByType();
+                    @endphp
+
+                    <!-- Images Section -->
+                    @if(!empty($attachmentsByType['images']))
+                    <div class="mb-6">
+                        <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
+                            <span class="mr-2">🖼️</span>
+                            Images ({{ count($attachmentsByType['images']) }})
+                        </h4>
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            @foreach($attachmentsByType['images'] as $attachment)
+                            @if(Storage::disk('public')->exists($attachment['path']))
+                            <div class="relative group">
+                                <div class="aspect-square bg-gray-200 rounded-lg overflow-hidden">
+                                    <img src="{{ Storage::url($attachment['path']) }}" 
+                                         alt="{{ $attachment['original_name'] }}"
+                                         class="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform"
+                                         onclick="openImageModal('{{ Storage::url($attachment['path']) }}', '{{ $attachment['original_name'] }}')">
+                                </div>
+                                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg flex items-center justify-center">
+                                    <div class="opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <a href="{{ Storage::url($attachment['path']) }}" target="_blank" 
+                                           class="bg-white text-gray-800 px-3 py-1 rounded-md text-sm font-medium shadow-lg hover:bg-gray-100">
+                                            View
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <p class="text-xs text-gray-600 truncate">{{ $attachment['original_name'] }}</p>
+                                    <p class="text-xs text-gray-400">
+                                        @if(isset($attachment['size']))
+                                            {{ number_format($attachment['size'] / 1024, 1) }} KB
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
+                            @else
+                            <div class="relative group">
+                                <div class="aspect-square bg-red-100 rounded-lg overflow-hidden flex items-center justify-center">
+                                    <div class="text-center">
+                                        <span class="text-red-400 text-2xl">❌</span>
+                                        <p class="text-xs text-red-600 mt-1">File Missing</p>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <p class="text-xs text-red-600 truncate">{{ $attachment['original_name'] }}</p>
+                                    <p class="text-xs text-red-400">File not found</p>
+                                </div>
+                            </div>
+                            @endif
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- PDFs Section -->
+                    @if(!empty($attachmentsByType['pdfs']))
+                    <div class="mb-6">
+                        <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
+                            <span class="mr-2">📄</span>
+                            PDF Documents ({{ count($attachmentsByType['pdfs']) }})
+                        </h4>
+                        <div class="space-y-2">
+                            @foreach($attachmentsByType['pdfs'] as $attachment)
+                            @if(Storage::disk('public')->exists($attachment['path']))
+                            <div class="flex items-center justify-between p-3 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors">
+                                <div class="flex items-center min-w-0">
+                                    <span class="text-2xl mr-3">📄</span>
+                                    <div class="min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 truncate">{{ $attachment['original_name'] }}</p>
+                                        <p class="text-xs text-gray-500">
+                                            @if(isset($attachment['size']))
+                                                {{ number_format($attachment['size'] / 1024, 1) }} KB
+                                            @endif
+                                            • {{ \Carbon\Carbon::parse($attachment['uploaded_at'])->format('M j, Y') }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <a href="{{ Storage::url($attachment['path']) }}" target="_blank" 
+                                   class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm font-medium">
+                                    View PDF
+                                </a>
+                            </div>
+                            @else
+                            <div class="flex items-center justify-between p-3 bg-red-100 border border-red-300 rounded-lg">
+                                <div class="flex items-center min-w-0">
+                                    <span class="text-2xl mr-3">❌</span>
+                                    <div class="min-w-0">
+                                        <p class="text-sm font-medium text-red-700 truncate">{{ $attachment['original_name'] }}</p>
+                                        <p class="text-xs text-red-500">File not found</p>
+                                    </div>
+                                </div>
+                                <span class="bg-red-200 text-red-800 px-3 py-1 rounded-md text-sm font-medium">
+                                    Missing
+                                </span>
+                            </div>
+                            @endif
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- Documents Section -->
+                    @if(!empty($attachmentsByType['documents']))
+                    <div class="mb-6">
+                        <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
+                            <span class="mr-2">📝</span>
+                            Word Documents ({{ count($attachmentsByType['documents']) }})
+                        </h4>
+                        <div class="space-y-2">
+                            @foreach($attachmentsByType['documents'] as $attachment)
+                            <div class="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors">
+                                <div class="flex items-center min-w-0">
+                                    <span class="text-2xl mr-3">📝</span>
+                                    <div class="min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 truncate">{{ $attachment['original_name'] }}</p>
+                                        <p class="text-xs text-gray-500">
+                                            @if(isset($attachment['size']))
+                                                {{ number_format($attachment['size'] / 1024, 1) }} KB
+                                            @endif
+                                            • {{ \Carbon\Carbon::parse($attachment['uploaded_at'])->format('M j, Y') }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <a href="{{ Storage::url($attachment['path']) }}" download 
+                                   class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm font-medium">
+                                    Download
+                                </a>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+
+                    <!-- Other Files Section -->
+                    @if(!empty($attachmentsByType['others']))
+                    <div class="mb-6">
+                        <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
+                            <span class="mr-2">📎</span>
+                            Other Files ({{ count($attachmentsByType['others']) }})
+                        </h4>
+                        <div class="space-y-2">
+                            @foreach($attachmentsByType['others'] as $attachment)
+                            <div class="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors">
+                                <div class="flex items-center min-w-0">
+                                    <span class="text-2xl mr-3">📎</span>
+                                    <div class="min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 truncate">{{ $attachment['original_name'] }}</p>
+                                        <p class="text-xs text-gray-500">
+                                            @if(isset($attachment['size']))
+                                                {{ number_format($attachment['size'] / 1024, 1) }} KB
+                                            @endif
+                                            • {{ \Carbon\Carbon::parse($attachment['uploaded_at'])->format('M j, Y') }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <a href="{{ Storage::url($attachment['path']) }}" download 
+                                   class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded-md text-sm font-medium">
+                                    Download
+                                </a>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
                 </div>
                 @endif
 

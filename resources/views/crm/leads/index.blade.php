@@ -1346,13 +1346,7 @@ function openEnhancedLeadModal(leadId, leadName) {
                 </button>
             </div>
             
-            <!-- Debug Test Button -->
-            <div class="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded">
-                <p class="text-xs text-yellow-700 mb-2">Debug Test:</p>
-                <button onclick="testDirectStatusUpdate('${leadId}', 'quote_sent')" class="px-2 py-1 text-xs bg-yellow-200 text-yellow-800 rounded hover:bg-yellow-300">
-                    🧪 Test Direct Update (Quote Sent)
-                </button>
-            </div>
+
         </div>
     `;
     
@@ -1389,55 +1383,7 @@ function quickStatusChange(leadId, newStatus) {
     }
 }
 
-// Test function for direct status update
-function testDirectStatusUpdate(leadId, newStatus) {
-    console.log('=== DIRECT TEST UPDATE ===');
-    console.log('Lead ID:', leadId);
-    console.log('New Status:', newStatus);
-    
-    // Get CSRF token
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-    console.log('CSRF Token:', csrfToken ? 'Found' : 'Missing');
-    
-    if (!csrfToken) {
-        alert('CSRF token not found! Please refresh the page.');
-        return;
-    }
-    
-    // Make direct AJAX call
-    fetch(`/crm/leads/${leadId}/status`, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrfToken,
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify({ status: newStatus })
-    })
-    .then(response => {
-        console.log('Response Status:', response.status);
-        console.log('Response OK:', response.ok);
-        
-        if (!response.ok) {
-            return response.text().then(text => {
-                console.error('Error Response Body:', text);
-                throw new Error(`HTTP ${response.status}: ${text}`);
-            });
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Success Response:', data);
-        alert(`✅ Status updated successfully! New status: ${newStatus}`);
-        
-        // Refresh the page to see changes
-        window.location.reload();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert(`❌ Error: ${error.message}`);
-    });
-}
+
 
 // Bulk actions functionality
 function toggleCardSelection(leadId, checkbox) {

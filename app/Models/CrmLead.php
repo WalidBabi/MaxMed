@@ -24,6 +24,7 @@ class CrmLead extends Model
         'priority',
         'estimated_value',
         'notes',
+        'attachments',
         'expected_close_date',
         'last_contacted_at',
         'assigned_to',
@@ -33,6 +34,7 @@ class CrmLead extends Model
         'estimated_value' => 'decimal:2',
         'expected_close_date' => 'date',
         'last_contacted_at' => 'datetime',
+        'attachments' => 'array',
     ];
 
     // Relationships
@@ -219,5 +221,54 @@ class CrmLead extends Model
     public function scopeHighPriority($query)
     {
         return $query->where('priority', 'high');
+    }
+
+    // Attachment helper methods
+    public function hasAttachments()
+    {
+        return !empty($this->attachments);
+    }
+
+    public function getAttachmentCount()
+    {
+        return $this->attachments ? count($this->attachments) : 0;
+    }
+
+    public function getAttachmentsByType()
+    {
+        if (!$this->attachments) {
+            return [];
+        }
+
+        $grouped = [];
+        foreach ($this->attachments as $attachment) {
+            $extension = strtolower(pathinfo($attachment['original_name'], PATHINFO_EXTENSION));
+            
+            if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                $grouped['images'][] = $attachment;
+            } elseif (in_array($extension, ['pdf'])) {
+                $grouped['pdfs'][] = $attachment;
+            } elseif (in_array($extension, ['doc', 'docx'])) {
+                $grouped['documents'][] = $attachment;
+            } else {
+                $grouped['others'][] = $attachment;
+            }
+        }
+        
+        return $grouped;
+    }
+
+    public function addAttachment($filePath, $originalName, $size = null)
+    {
+        $attachments = $this->attachments ?: [];
+        $attachments[] = [
+            'path' => $filePath,
+            'original_name' => $originalName,
+            'size' => $size,
+            'uploaded_at' => now()->toISOString(),
+        ];
+        
+        $this->attachments = $attachments;
+        return $this;
     }
 } 
