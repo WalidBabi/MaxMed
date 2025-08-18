@@ -56,6 +56,11 @@ class CrmLead extends Model
         return $this->hasMany(QuotationRequest::class, 'lead_id');
     }
 
+    public function customer()
+    {
+        return $this->hasOne(Customer::class, 'email', 'email');
+    }
+
     // Methods
     public function hasActiveQuotationRequest()
     {
@@ -125,6 +130,71 @@ class CrmLead extends Model
     public function updateLastContacted()
     {
         $this->update(['last_contacted_at' => now()]);
+    }
+
+    /**
+     * Create a customer from this lead if one doesn't exist
+     */
+    public function createCustomer()
+    {
+        // Check if customer already exists with this email
+        $existingCustomer = Customer::where('email', $this->email)->first();
+        
+        if ($existingCustomer) {
+            return $existingCustomer;
+        }
+
+        // Parse company address into components
+        $addressComponents = $this->parseAddress($this->company_address);
+
+        // Create new customer
+        $customer = Customer::create([
+            'name' => $this->full_name,
+            'email' => $this->email,
+            'phone' => $this->mobile ?: $this->phone,
+            'company_name' => $this->company_name,
+            'billing_street' => $addressComponents['street'],
+            'billing_city' => $addressComponents['city'],
+            'billing_state' => $addressComponents['state'],
+            'billing_zip' => $addressComponents['zip'],
+            'billing_country' => $addressComponents['country'],
+            'shipping_street' => $addressComponents['street'],
+            'shipping_city' => $addressComponents['city'],
+            'shipping_state' => $addressComponents['state'],
+            'shipping_zip' => $addressComponents['zip'],
+            'shipping_country' => $addressComponents['country'],
+            'notes' => "Auto-created from CRM Lead #{$this->id} - {$this->job_title}",
+            'is_active' => true,
+        ]);
+
+        return $customer;
+    }
+
+    /**
+     * Parse address string into components
+     */
+    private function parseAddress($address)
+    {
+        if (empty($address)) {
+            return [
+                'street' => null,
+                'city' => null,
+                'state' => null,
+                'zip' => null,
+                'country' => null,
+            ];
+        }
+
+        // Basic address parsing - this can be enhanced based on your needs
+        $lines = array_map('trim', explode("\n", $address));
+        
+        return [
+            'street' => $lines[0] ?? null,
+            'city' => $lines[1] ?? null,
+            'state' => $lines[2] ?? null,
+            'zip' => null,
+            'country' => $lines[3] ?? null,
+        ];
     }
 
     // Scopes

@@ -98,6 +98,18 @@ class ContactSubmissionController extends Controller
                 'expected_close_date' => now()->addDays(30), // Default 30-day close expectation
             ]);
 
+            // Automatically create a customer from this lead
+            try {
+                $customer = $lead->createCustomer();
+                $lead->logActivity('note', 'Customer created', "Customer '{$customer->name}' (ID: {$customer->id}) automatically created from this lead");
+                $successMessage = 'Contact submission converted to lead and customer successfully.';
+            } catch (\Exception $e) {
+                // Log the error but don't fail the lead creation
+                Log::error("Failed to create customer from lead {$lead->id}: " . $e->getMessage());
+                $lead->logActivity('note', 'Customer creation failed', "Failed to automatically create customer: " . $e->getMessage());
+                $successMessage = 'Contact submission converted to lead successfully. (Customer creation failed)';
+            }
+
             // Update contact submission
             $submission->update([
                 'status' => 'converted_to_lead',
@@ -107,7 +119,7 @@ class ContactSubmissionController extends Controller
             DB::commit();
 
             return redirect()->route('crm.leads.show', $lead)
-                ->with('success', 'Contact submission converted to lead successfully.');
+                ->with('success', $successMessage);
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Error converting contact submission to lead: ' . $e->getMessage());
