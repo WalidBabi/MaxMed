@@ -1193,17 +1193,22 @@ function changeLeadStatusOptimistic(leadId, newStatus, oldStatus) {
     console.log('Making AJAX call to update lead status...');
     
     // Make the actual API call
-    console.log('Making fetch request to:', `/crm/leads/${leadId}/status`);
-    console.log('Request payload:', { status: newStatus });
+    const url = `/crm/leads/${leadId}/status`;
+    const payload = { status: newStatus };
     
-    fetch(`/crm/leads/${leadId}/status`, {
+    console.log('Making fetch request to:', url);
+    console.log('Request payload:', payload);
+    console.log('CSRF Token:', csrfToken);
+    
+    fetch(url, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': csrfToken,
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
         },
-        body: JSON.stringify({ status: newStatus })
+        body: JSON.stringify(payload)
     })
     .then(response => {
         console.log('Response received:', response.status, response.statusText);
@@ -1220,6 +1225,16 @@ function changeLeadStatusOptimistic(leadId, newStatus, oldStatus) {
                 leadCard.classList.remove('loading');
             }
             console.log('Lead status updated successfully');
+            
+            // Show success notification
+            showNotification(`Lead status changed to ${newStatus}`, 'success');
+            
+            // Refresh the page to show updated data from database
+            setTimeout(() => {
+                console.log('Refreshing page to show updated status...');
+                window.location.reload();
+            }, 1500); // Wait 1.5 seconds to show the notification
+            
         } else {
             // Revert optimistic update on failure
             console.error('Server returned success: false');
@@ -1813,6 +1828,40 @@ function emailLead(leadId) {
     console.log(`Composing email for lead ${leadId}`);
     closeLeadModal();
     showNotification('Email composer would open here', 'info');
+}
+
+// Debug function to test status update manually
+function testStatusUpdate(leadId, newStatus) {
+    console.log('=== MANUAL STATUS UPDATE TEST ===');
+    console.log('Lead ID:', leadId);
+    console.log('New Status:', newStatus);
+    
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    
+    fetch(`/crm/leads/${leadId}/status`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({ status: newStatus })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Manual test result:', data);
+        if (data.success) {
+            console.log('✅ Status update successful!');
+            alert(`Status successfully changed to: ${newStatus}`);
+        } else {
+            console.log('❌ Status update failed:', data.message);
+            alert(`Failed: ${data.message}`);
+        }
+    })
+    .catch(error => {
+        console.error('❌ Error:', error);
+        alert(`Error: ${error.message}`);
+    });
 }
 
 // Add new CSS animation classes
