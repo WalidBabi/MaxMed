@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Crm;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\CrmLead;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
@@ -295,5 +297,73 @@ class CustomerController extends Controller
         }
         
         return response()->json(['error' => 'Customer not found'], 404);
+    }
+
+    /**
+     * Convert an existing customer into a CRM lead (or reset existing lead)
+     */
+    public function convertToLead(Request $request, Customer $customer)
+    {
+        // Require an email to associate lead uniquely
+        if (empty($customer->email)) {
+            return redirect()->back()->with('error', 'Customer has no email. Please add an email before converting to a lead.');
+        }
+
+        // Split customer name
+        $nameParts = preg_split('/\s+/', trim($customer->name), 2);
+        $firstName = $nameParts[0] ?? 'Unknown';
+        $lastName = $nameParts[1] ?? 'Customer';
+
+        // Try to find existing lead by email (email is unique in crm_leads)
+        $lead = CrmLead::where('email', $customer->email)->first();
+
+        if ($lead) {
+            // Reset pipeline to new inquiry and update key fields
+            $lead->update([
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'mobile' => $lead->mobile ?: $customer->phone,
+                'phone' => $lead->phone ?: $customer->phone,
+                'company_name' => $customer->company_name ?: $lead->company_name,
+                'status' => 'new_inquiry',
+                'priority' => $lead->priority ?: 'medium',
+                'source' => $lead->source ?: 'other',
+                'expected_close_date' => now()->addDays(30),
+                'assigned_to' => Auth::id(),
+            ]);
+
+            // Log activity
+            try {
+                $lead->logActivity('note', 'Lead re-opened from customer', 'Customer requested a new enquiry; lead reset to New Inquiry.');
+            } catch (\Throwable $e) {
+                // Silent fail on activity logging
+            }
+        } else {
+            // Create a fresh lead from this customer
+            $lead = CrmLead::create([
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'email' => $customer->email,
+                'mobile' => $customer->phone,
+                'phone' => $customer->phone,
+                'company_name' => $customer->company_name ?: 'Unknown Company',
+                'status' => 'new_inquiry',
+                'source' => 'other',
+                'priority' => 'medium',
+                'estimated_value' => null,
+                'notes' => 'Lead created from existing customer #' . $customer->id,
+                'expected_close_date' => now()->addDays(30),
+                'last_contacted_at' => null,
+                'assigned_to' => Auth::id(),
+            ]);
+
+            try {
+                $lead->logActivity('note', 'Lead created from customer', 'Lead created from customer profile for a new enquiry.');
+            } catch (\Throwable $e) {
+                // Silent fail on activity logging
+            }
+        }
+
+        return redirect()->route('crm.leads.show', $lead)->with('success', 'Lead is ready.');
     }
 } 

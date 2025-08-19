@@ -338,6 +338,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Customer Management
     Route::resource('customers', \App\Http\Controllers\Crm\CustomerController::class);
+    Route::post('customers/{customer}/convert-to-lead', [\App\Http\Controllers\Crm\CustomerController::class, 'convertToLead'])->name('customers.convert-to-lead');
     Route::get('customers/{id}/details', [\App\Http\Controllers\Crm\CustomerController::class, 'getCustomerDetails'])->name('customers.details');
     Route::get('customers/by-name/{name}', [\App\Http\Controllers\Crm\CustomerController::class, 'getByName'])->name('customers.by-name');
     
