@@ -24,6 +24,16 @@
                     </svg>
                     Back to Customers
                 </a>
+
+                <form action="{{ route('crm.customers.convert-to-lead', $customer) }}" method="POST" onsubmit="return confirm('Convert this customer into a lead for a new enquiry?');">
+                    @csrf
+                    <button type="submit" class="inline-flex items-center rounded-md bg-amber-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-amber-500">
+                        <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v9.75A1.5 1.5 0 006 21h3.75v-4.5A1.5 1.5 0 0111.25 15h1.5A1.5 1.5 0 0114.25 16.5V21H18a1.5 1.5 0 001.5-1.5V9.75" />
+                        </svg>
+                        Make Lead Again
+                    </button>
+                </form>
             </div>
         </div>
     </div>

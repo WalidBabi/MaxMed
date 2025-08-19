@@ -100,10 +100,11 @@ class Quote extends Model
         $shippingRate = $this->shipping_rate ?? 0;
         $customsClearance = $this->customs_clearance_fee ?? 0;
         
-        // Compute VAT amount if rate is present; otherwise keep existing value
-        $vatAmount = $this->vat_amount ?? 0;
-        if ((float)($this->vat_rate ?? 0) > 0) {
-            $vatAmount = round(($subTotal + $shippingRate + $customsClearance) * ((float)$this->vat_rate / 100), 2);
+        // Compute VAT amount; explicitly zero out when vat_rate is 0 or not set
+        $vatRate = (float)($this->vat_rate ?? 0);
+        $vatAmount = 0.0;
+        if ($vatRate > 0) {
+            $vatAmount = round(($subTotal + $shippingRate + $customsClearance) * ($vatRate / 100), 2);
         }
         
         $this->update([
