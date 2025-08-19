@@ -104,10 +104,10 @@
 </div>
 
 <!-- Enhanced Lead Action Modal -->
-<div id="leadModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+<div id="leadModal" class="fixed inset-0 z-[9999] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
     <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onclick="closeLeadModal()"></div>
-        <div class="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+        <div class="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-5xl sm:w-full md:translate-x-8 lg:translate-x-12">
             <div class="bg-white px-6 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div class="sm:flex sm:items-start">
                     <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
@@ -526,6 +526,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // If redirected with a `lead` query param, open that lead in the modal
+    const urlParams = new URLSearchParams(window.location.search);
+    const leadIdParam = urlParams.get('lead');
+    if (leadIdParam) {
+        openEnhancedLeadModal(leadIdParam, 'Lead Details');
+    }
 });
 
 // Initialize pipeline functionality
@@ -1283,95 +1290,13 @@ function revertLeadStatusUpdate(leadId, oldStatus, newStatus) {
 function openEnhancedLeadModal(leadId, leadName) {
     const modal = document.getElementById('leadModal');
     const modalContent = document.getElementById('modalContent');
-    
-    modalContent.innerHTML = `
-        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 mb-4">
-            <div class="flex items-center space-x-3">
-                <div class="flex-shrink-0">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-100 to-indigo-200 rounded-full flex items-center justify-center">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="text-lg font-bold text-gray-900">${leadName}</h4>
-                    <p class="text-sm text-gray-600">Choose an action to perform</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="grid grid-cols-3 gap-3">
-            <a href="/crm/leads/${leadId}" 
-               class="group inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-105">
-                <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                </svg>
-                View Details
-            </a>
-            <a href="/crm/leads/${leadId}/edit" 
-               class="group inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 transform hover:scale-105">
-                <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                </svg>
-                Edit Lead
-            </a>
-            <button onclick="emailLead('${leadId}')" 
-                    class="group inline-flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200 transform hover:scale-105">
-                <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                </svg>
-                Send Email
-            </button>
-        </div>
-        
-        <div class="mt-4 p-3 bg-gray-50 rounded-lg">
-            <h5 class="text-sm font-semibold text-gray-700 mb-2">Quick Status Update - Medical Equipment Trading</h5>
-            <div class="flex flex-wrap gap-2">
-                <button onclick="quickStatusChange('${leadId}', 'new_inquiry')" class="px-3 py-1 text-xs bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 transition-all transform hover:scale-105">
-                    📩 New Inquiry
-                </button>
-                <button onclick="quickStatusChange('${leadId}', 'quote_requested')" class="px-3 py-1 text-xs bg-purple-100 text-purple-800 rounded-full hover:bg-purple-200 transition-all transform hover:scale-105">
-                    💰 Quote Requested
-                </button>
-                <button onclick="quickStatusChange('${leadId}', 'follow_up_1')" class="px-3 py-1 text-xs bg-amber-100 text-amber-800 rounded-full hover:bg-amber-200 transition-all transform hover:scale-105">
-                    ⏰ Follow-up 1
-                </button>
-                <button onclick="quickStatusChange('${leadId}', 'follow_up_2')" class="px-3 py-1 text-xs bg-orange-100 text-orange-800 rounded-full hover:bg-orange-200 transition-all transform hover:scale-105">
-                    🔔 Follow-up 2
-                </button>
-                <button onclick="quickStatusChange('${leadId}', 'follow_up_3')" class="px-3 py-1 text-xs bg-red-100 text-red-800 rounded-full hover:bg-red-200 transition-all transform hover:scale-105">
-                    🚨 Follow-up 3
-                </button>
-                <button onclick="quickStatusChange('${leadId}', 'quote_sent')" class="px-3 py-1 text-xs bg-indigo-100 text-indigo-800 rounded-full hover:bg-indigo-200 transition-all transform hover:scale-105">
-                    📤 Quote Sent
-                </button>
-                <button onclick="quickStatusChange('${leadId}', 'negotiating_price')" class="px-3 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full hover:bg-yellow-200 transition-all transform hover:scale-105">
-                    🤝 Price Negotiation
-                </button>
-                <button onclick="quickStatusChange('${leadId}', 'payment_pending')" class="px-3 py-1 text-xs bg-emerald-100 text-emerald-800 rounded-full hover:bg-emerald-200 transition-all transform hover:scale-105">
-                    💳 Payment Pending
-                </button>
-                <button onclick="quickStatusChange('${leadId}', 'order_confirmed')" class="px-3 py-1 text-xs bg-green-100 text-green-800 rounded-full hover:bg-green-200 transition-all transform hover:scale-105">
-                    ✅ Order Confirmed
-                </button>
-                <button onclick="quickStatusChange('${leadId}', 'deal_lost')" class="px-3 py-1 text-xs bg-gray-100 text-gray-800 rounded-full hover:bg-gray-200 transition-all transform hover:scale-105">
-                    ❌ Deal Lost
-                </button>
-            </div>
-            
-
-        </div>
-    `;
-    
+    modalContent.innerHTML = `<div class=\"py-8 text-center text-gray-500\">Loading lead details...</div>`;
     modal.classList.remove('hidden');
-    
-    // Focus management for accessibility
-    const firstFocusableElement = modal.querySelector('a, button');
-    if (firstFocusableElement) {
-        firstFocusableElement.focus();
-    }
+
+    fetch(`/crm/leads/${leadId}`, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.text(); })
+        .then(html => { modalContent.innerHTML = html; })
+        .catch(err => { modalContent.innerHTML = `<div class=\"py-8 text-center text-red-600\">Failed to load lead. ${err.message}</div>`; });
 }
 
 function closeLeadModal() {

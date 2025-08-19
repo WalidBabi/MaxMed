@@ -200,7 +200,12 @@ class CrmLeadController extends Controller
     public function show(CrmLead $lead)
     {
         $lead->load(['assignedUser', 'activities.user', 'deals.assignedUser']);
-        return view('crm.leads.show', compact('lead'));
+        // When requested via AJAX, return the modal-friendly partial
+        if (request()->ajax() || request()->wantsJson()) {
+            return view('crm.leads.partials.show-content', compact('lead'));
+        }
+        // Remove standalone show page: redirect back to index with a helper query param
+        return redirect()->route('crm.leads.index', ['lead' => $lead->id]);
     }
     
     public function edit(CrmLead $lead)
