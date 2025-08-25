@@ -42,28 +42,36 @@
                 </div>
             </div>
 
-            <!-- Company Information -->
-            <div class="bg-white rounded-lg border border-gray-200 p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Company Information</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-500">Company Name</label>
-                        <p class="mt-1 text-sm text-gray-900">{{ $lead->company_name }}</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-500">Job Title</label>
-                        <p class="mt-1 text-sm text-gray-900">{{ $lead->job_title ?: '-' }}</p>
-                    </div>
-                </div>
-                @if($lead->company_address)
-                <div class="mt-4">
-                    <label class="block text-sm font-medium text-gray-500">Company Address</label>
-                    <p class="mt-1 text-sm text-gray-900">{{ $lead->company_address }}</p>
-                </div>
-                @endif
-            </div>
-
-            <!-- Quick Status Update -->
+                         <!-- Company Information -->
+             <div class="bg-white rounded-lg border border-gray-200 p-6">
+                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Company Information</h3>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     <div>
+                         <label class="block text-sm font-medium text-gray-500">Company Name</label>
+                         <p class="mt-1 text-sm text-gray-900">{{ $lead->company_name }}</p>
+                     </div>
+                     <div>
+                         <label class="block text-sm font-medium text-gray-500">Job Title</label>
+                         <p class="mt-1 text-sm text-gray-900">{{ $lead->job_title ?: '-' }}</p>
+                     </div>
+                 </div>
+                 @if($lead->company_address)
+                 <div class="mt-4">
+                     <label class="block text-sm font-medium text-gray-500">Company Address</label>
+                     <p class="mt-1 text-sm text-gray-900">{{ $lead->company_address }}</p>
+                 </div>
+                 @endif
+             </div>
+ 
+             <!-- Notes -->
+             @if($lead->notes)
+             <div class="bg-white rounded-lg border border-gray-200 p-6">
+                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Notes</h3>
+                 <p class="text-sm text-gray-900 whitespace-pre-wrap">{{ $lead->notes }}</p>
+             </div>
+             @endif
+ 
+             <!-- Quick Status Update -->
             <div class="bg-white rounded-lg border border-gray-200 p-4">
                 <h4 class="text-sm font-semibold text-gray-700 mb-3">Quick Status Update - Medical Equipment Trading</h4>
                 <div class="flex flex-wrap gap-2">
@@ -100,7 +108,7 @@
                         <span class="mr-2">🖼️</span>
                         Images ({{ count($attachmentsByType['images']) }})
                     </h4>
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach($attachmentsByType['images'] as $attachment)
                         @if(Storage::disk('public')->exists($attachment['path']))
                         <div class="relative group">
@@ -110,19 +118,19 @@
                                 </a>
                             </div>
                             <div class="mt-2">
-                                <p class="text-xs text-gray-600 truncate">{{ $attachment['original_name'] }}</p>
+                                <p class="text-sm text-gray-600 truncate">{{ $attachment['original_name'] }}</p>
                             </div>
                         </div>
                         @else
                         <div class="relative group">
                             <div class="aspect-square bg-red-100 rounded-lg overflow-hidden flex items-center justify-center">
                                 <div class="text-center">
-                                    <span class="text-red-400 text-2xl">❌</span>
-                                    <p class="text-xs text-red-600 mt-1">File Missing</p>
+                                    <span class="text-red-400 text-3xl">❌</span>
+                                    <p class="text-sm text-red-600 mt-1">File Missing</p>
                                 </div>
                             </div>
                             <div class="mt-2">
-                                <p class="text-xs text-red-600 truncate">{{ $attachment['original_name'] }}</p>
+                                <p class="text-sm text-red-600 truncate">{{ $attachment['original_name'] }}</p>
                             </div>
                         </div>
                         @endif
@@ -137,17 +145,17 @@
                         <span class="mr-2">📄</span>
                         PDF Documents ({{ count($attachmentsByType['pdfs']) }})
                     </h4>
-                    <div class="space-y-2">
+                    <div class="space-y-3">
                         @foreach($attachmentsByType['pdfs'] as $attachment)
                         @if(Storage::disk('public')->exists($attachment['path']))
-                        <div class="flex items-center justify-between p-3 bg-red-50 border border-red-200 rounded-lg">
+                        <div class="flex items-center justify-between p-4 bg-red-50 border border-red-200 rounded-lg">
                             <div class="flex items-center min-w-0">
                                 <span class="text-2xl mr-3">📄</span>
                                 <div class="min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 truncate">{{ $attachment['original_name'] }}</p>
+                                    <p class="text-base font-medium text-gray-900 truncate">{{ $attachment['original_name'] }}</p>
                                 </div>
                             </div>
-                            <a href="{{ Storage::url($attachment['path']) }}" target="_blank" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm font-medium">View PDF</a>
+                            <a href="{{ Storage::url($attachment['path']) }}" target="_blank" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium">View PDF</a>
                         </div>
                         @else
                         <div class="flex items-center justify-between p-3 bg-red-100 border border-red-300 rounded-lg">
@@ -171,16 +179,16 @@
                         <span class="mr-2">📝</span>
                         Word Documents ({{ count($attachmentsByType['documents']) }})
                     </h4>
-                    <div class="space-y-2">
+                    <div class="space-y-3">
                         @foreach($attachmentsByType['documents'] as $attachment)
-                        <div class="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div class="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-lg">
                             <div class="flex items-center min-w-0">
                                 <span class="text-2xl mr-3">📝</span>
                                 <div class="min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 truncate">{{ $attachment['original_name'] }}</p>
+                                    <p class="text-base font-medium text-gray-900 truncate">{{ $attachment['original_name'] }}</p>
                                 </div>
                             </div>
-                            <a href="{{ Storage::url($attachment['path']) }}" download class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm font-medium">Download</a>
+                            <a href="{{ Storage::url($attachment['path']) }}" download class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">Download</a>
                         </div>
                         @endforeach
                     </div>
@@ -193,16 +201,16 @@
                         <span class="mr-2">📎</span>
                         Other Files ({{ count($attachmentsByType['others']) }})
                     </h4>
-                    <div class="space-y-2">
+                    <div class="space-y-3">
                         @foreach($attachmentsByType['others'] as $attachment)
-                        <div class="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                        <div class="flex items-center justify-between p-4 bg-gray-50 border border-gray-200 rounded-lg">
                             <div class="flex items-center min-w-0">
                                 <span class="text-2xl mr-3">📎</span>
                                 <div class="min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 truncate">{{ $attachment['original_name'] }}</p>
+                                    <p class="text-base font-medium text-gray-900 truncate">{{ $attachment['original_name'] }}</p>
                                 </div>
                             </div>
-                            <a href="{{ Storage::url($attachment['path']) }}" download class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded-md text-sm font-medium">Download</a>
+                            <a href="{{ Storage::url($attachment['path']) }}" download class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium">Download</a>
                         </div>
                         @endforeach
                     </div>
