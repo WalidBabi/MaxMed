@@ -557,19 +557,22 @@
         @endif
 
         @php
-            // Determine display currency based on price types
-            $hasUsdItems = $purchaseOrder->items->where('price_type', 'usd')->count() > 0;
-            $hasAedItems = $purchaseOrder->items->where('price_type', 'aed')->count() > 0;
-            
-            // If all items are USD or majority are USD, display in USD
-            $displayCurrency = 'AED';
-            if ($hasUsdItems && !$hasAedItems) {
-                $displayCurrency = 'USD';
-            } elseif ($hasUsdItems && $hasAedItems) {
-                // Mixed currencies - check which is more prevalent
-                $usdCount = $purchaseOrder->items->where('price_type', 'usd')->count();
-                $aedCount = $purchaseOrder->items->where('price_type', 'aed')->count();
-                $displayCurrency = $usdCount > $aedCount ? 'USD' : 'AED';
+            // Prefer explicit PO currency if available (supports AED, USD, CYN)
+            $poCurrency = strtoupper($purchaseOrder->currency ?? '');
+            if (in_array($poCurrency, ['AED', 'USD', 'CYN'])) {
+                $displayCurrency = $poCurrency;
+            } else {
+                // Fallback: derive from item price_type prevalence
+                $hasUsdItems = $purchaseOrder->items->where('price_type', 'usd')->count() > 0;
+                $hasAedItems = $purchaseOrder->items->where('price_type', 'aed')->count() > 0;
+                $displayCurrency = 'AED';
+                if ($hasUsdItems && !$hasAedItems) {
+                    $displayCurrency = 'USD';
+                } elseif ($hasUsdItems && $hasAedItems) {
+                    $usdCount = $purchaseOrder->items->where('price_type', 'usd')->count();
+                    $aedCount = $purchaseOrder->items->where('price_type', 'aed')->count();
+                    $displayCurrency = $usdCount > $aedCount ? 'USD' : 'AED';
+                }
             }
         @endphp
 
@@ -695,7 +698,9 @@
         <!-- NET ORDER VALUE IN WORDS & PAYMENT TERMS -->
         <div class="content-section" style="margin-bottom: 15px; background-color: white; border-left: 3px solid var(--primary-color);">
             @php
-                function numberToWords($number) {
+                // Avoid global function name conflicts
+                if (!function_exists('po_number_to_words')) {
+                function po_number_to_words($number) {
                     $ones = array(
                         0 => '', 1 => 'One', 2 => 'Two', 3 => 'Three', 4 => 'Four', 5 => 'Five',
                         6 => 'Six', 7 => 'Seven', 8 => 'Eight', 9 => 'Nine', 10 => 'Ten',
@@ -713,26 +718,29 @@
                     } elseif ($number < 100) {
                         return $tens[intval($number / 10)] . ' ' . $ones[$number % 10];
                     } elseif ($number < 1000) {
-                        return $ones[intval($number / 100)] . ' Hundred ' . numberToWords($number % 100);
+                        return $ones[intval($number / 100)] . ' Hundred ' . po_number_to_words($number % 100);
                     } elseif ($number < 1000000) {
-                        return numberToWords(intval($number / 1000)) . ' Thousand ' . numberToWords($number % 1000);
+                        return po_number_to_words(intval($number / 1000)) . ' Thousand ' . po_number_to_words($number % 1000);
                     } elseif ($number < 1000000000) {
-                        return numberToWords(intval($number / 1000000)) . ' Million ' . numberToWords($number % 1000000);
+                        return po_number_to_words(intval($number / 1000000)) . ' Million ' . po_number_to_words($number % 1000000);
                     }
                     return 'Number too large';
+                }
                 }
                 
                 $amount = $purchaseOrder->total_amount;
                 $wholePart = floor($amount);
                 $decimalPart = round(($amount - $wholePart) * 100);
                 
-                $amountInWords = numberToWords($wholePart);
+                $amountInWords = po_number_to_words($wholePart);
                 if ($decimalPart > 0) {
-                    $amountInWords .= ' and ' . numberToWords($decimalPart) . ' Fils';
+                    $amountInWords .= ' and ' . po_number_to_words($decimalPart) . ' Fils';
                 }
                 $amountInWords = trim($amountInWords);
                 
-                $currencyName = $displayCurrency === 'USD' ? 'US Dollars' : 'UAE Dirhams';
+                $currencyName = 'UAE Dirhams';
+                if ($displayCurrency === 'USD') { $currencyName = 'US Dollars'; }
+                elseif ($displayCurrency === 'CYN') { $currencyName = 'Chinese Yuan'; }
                 $finalAmountInWords = $amountInWords . ' ' . $currencyName . ' Only';
             @endphp
             
