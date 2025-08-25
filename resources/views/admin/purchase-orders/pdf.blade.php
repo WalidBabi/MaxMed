@@ -449,6 +449,15 @@
             font-size: 9px;
         }
 
+        /* STAMP */
+        .stamp {
+            position: fixed;
+            right: 35px; /* align to the right side, near totals box */
+            bottom: 110px; /* a little lower than totals box */
+            width: 180px;
+            opacity: 0.9;
+        }
+
         .footer p {
             margin-bottom: 2px;
         }
@@ -762,6 +771,16 @@
                 @endif
             </div>
         </div>
+
+        <!-- COMPANY STAMP (always render if file exists) -->
+        @php 
+            $stampPathUpper = public_path('Images/stamp.png');
+            $stampPathLower = public_path('images/stamp.png');
+            $resolvedStamp = file_exists($stampPathUpper) ? $stampPathUpper : (file_exists($stampPathLower) ? $stampPathLower : null);
+        @endphp
+        @if($resolvedStamp)
+            <img class="stamp" src="{{ $resolvedStamp }}" alt="Company Stamp">
+        @endif
 
         <!-- TERMS & CONDITIONS -->
         @if(!empty(trim($purchaseOrder->terms_conditions)))
