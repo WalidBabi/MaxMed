@@ -71,19 +71,32 @@
                             <input type="hidden" name="status" value="{{ $quote->status }}">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label for="customer_name" class="block text-sm font-medium text-gray-700 mb-2">Customer Name <span class="text-red-500">*</span></label>
-                                    <select id="customer_name" name="customer_name" required
-                                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('customer_name') border-red-300 @enderror">
-                                        <option value="">Select Customer</option>
-                                        @if(isset($customers))
-                                            @foreach($customers as $customer)
-                                                <option value="{{ $customer->name }}" 
-                                                        {{ old('customer_name', $quote->customer_name) == $customer->name ? 'selected' : '' }}>
-                                                    {{ $customer->name }}{{ $customer->company_name ? ' - ' . $customer->company_name : '' }}
-                                                </option>
-                                            @endforeach
-                                        @endif
-                                    </select>
+                                    <label for="customer_search" class="block text-sm font-medium text-gray-700 mb-2">Customer Name <span class="text-red-500">*</span></label>
+                                    <div class="relative product-dropdown-container">
+                                        <input type="text"
+                                               id="customer_search"
+                                               class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 product-search-input"
+                                               placeholder="Search customers..."
+                                               autocomplete="off"
+                                               value="{{ $quote->customer_name }}{{ $quote->customer_company ? ' - ' . $quote->customer_company : '' }}">
+                                        <input type="hidden" name="customer_name" id="customer_name" value="{{ old('customer_name', $quote->customer_name) }}">
+                                        <div class="product-dropdown-list hidden" id="customer_dropdown_list">
+                                            <div class="dropdown-items">
+                                                @if(isset($customers))
+                                                    @foreach($customers as $customer)
+                                                        <div class="dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
+                                                             data-id="{{ $customer->id }}"
+                                                             data-name="{{ $customer->name }}"
+                                                             data-company="{{ $customer->company_name }}"
+                                                             data-search-text="{{ strtolower(trim($customer->name . ' ' . ($customer->company_name ?? ''))) }}">
+                                                            <div class="font-medium text-gray-900">{{ $customer->name }}{{ $customer->company_name ? ' - ' . $customer->company_name : '' }}</div>
+                                                        </div>
+                                                    @endforeach
+                                                @endif
+                                            </div>
+                                            <div class="p-3 text-sm text-gray-500 text-center dropdown-no-results hidden">No customers found</div>
+                                        </div>
+                                    </div>
                                     @error('customer_name')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
@@ -990,6 +1003,30 @@
 
     // Initialize existing items and setup
     document.addEventListener('DOMContentLoaded', function() {
+        // Initialize customer dropdown (edit)
+        (function initializeCustomerDropdown(){
+            const searchInput = document.getElementById('customer_search');
+            const hiddenName = document.getElementById('customer_name');
+            const dropdownList = document.getElementById('customer_dropdown_list');
+            if (!searchInput || !hiddenName || !dropdownList) return;
+            const dropdownItemsContainer = dropdownList.querySelector('.dropdown-items');
+            const allItems = dropdownItemsContainer.querySelectorAll('.dropdown-item');
+            const noResults = dropdownList.querySelector('.dropdown-no-results');
+            let selectedIndex = -1;
+            function filter(term){
+                let visible=0; const t=(term||'').toLowerCase();
+                allItems.forEach(item=>{ const st=item.dataset.searchText||''; if(t===''||st.includes(t)){ item.classList.remove('hidden'); visible++; } else { item.classList.add('hidden'); } });
+                if (noResults) noResults.classList.toggle('hidden', visible!==0);
+            }
+            function updateHighlight(visibleItems){ visibleItems.forEach(i=>i.classList.remove('bg-indigo-50')); if(selectedIndex>=0&&visibleItems[selectedIndex]){ visibleItems[selectedIndex].classList.add('bg-indigo-50'); } }
+            function selectCustomer(item){ const name=item.dataset.name; const company=item.dataset.company; hiddenName.value=name; searchInput.value=company? name+' - '+company : name; dropdownList.classList.add('hidden'); selectedIndex=-1; }
+            searchInput.addEventListener('focus', ()=>{ dropdownList.classList.remove('hidden'); filter(searchInput.value); });
+            searchInput.addEventListener('input', (e)=>{ filter(e.target.value); selectedIndex=-1; dropdownList.classList.remove('hidden'); });
+            searchInput.addEventListener('keydown', (e)=>{ const visibleItems=Array.from(dropdownItemsContainer.querySelectorAll('.dropdown-item:not(.hidden)')); if(e.key==='ArrowDown'){ e.preventDefault(); selectedIndex=Math.min(selectedIndex+1, visibleItems.length-1); updateHighlight(visibleItems);} else if(e.key==='ArrowUp'){ e.preventDefault(); selectedIndex=Math.max(selectedIndex-1, -1); updateHighlight(visibleItems);} else if(e.key==='Enter'){ e.preventDefault(); if(selectedIndex>=0&&visibleItems[selectedIndex]) selectCustomer(visibleItems[selectedIndex]); } else if(e.key==='Escape'){ dropdownList.classList.add('hidden'); selectedIndex=-1; }});
+            allItems.forEach(item=> item.addEventListener('click', ()=> selectCustomer(item)));
+            document.addEventListener('click', (e)=>{ if(!searchInput.contains(e.target) && !dropdownList.contains(e.target)){ dropdownList.classList.add('hidden'); selectedIndex=-1; } });
+            searchInput.addEventListener('blur', ()=>{ setTimeout(()=>{ if(!hiddenName.value && searchInput.value){ searchInput.value=''; } }, 200); });
+        })();
         // Add item button
         document.getElementById('addItem').addEventListener('click', () => addItem());
         
