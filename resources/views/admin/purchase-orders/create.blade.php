@@ -106,6 +106,7 @@
                                     <select name="currency" id="currency" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
                                         <option value="AED" {{ old('currency', 'AED') == 'AED' ? 'selected' : '' }}>AED (UAE Dirham)</option>
                                         <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>USD (US Dollar)</option>
+                                        <option value="CYN" {{ old('currency') == 'CYN' ? 'selected' : '' }}>CYN (Chinese Yuan)</option>
                                     </select>
                                     <p class="mt-1 text-sm text-gray-500">This determines which procurement prices to use for products</p>
                                 </div>
@@ -658,8 +659,11 @@ function updateAllProductPrices(currency) {
         if (currency === 'USD') {
             priceDisplaysAed.forEach(display => display.classList.add('hidden'));
             priceDisplaysUsd.forEach(display => display.classList.remove('hidden'));
-        } else {
+        } else if (currency === 'AED') {
             priceDisplaysAed.forEach(display => display.classList.remove('hidden'));
+            priceDisplaysUsd.forEach(display => display.classList.add('hidden'));
+        } else {
+            priceDisplaysAed.forEach(display => display.classList.add('hidden'));
             priceDisplaysUsd.forEach(display => display.classList.add('hidden'));
         }
         
@@ -670,16 +674,15 @@ function updateAllProductPrices(currency) {
         if (productIdInput && productIdInput.value && rateInput) {
             const dropdownItem = row.querySelector(`[data-id="${productIdInput.value}"]`);
             if (dropdownItem) {
-                let price;
-                
+                let price = '0';
                 if (currency === 'USD') {
-                    price = dropdownItem.getAttribute('data-procurement-price-usd') || 
-                           dropdownItem.getAttribute('data-price-usd') || '0';
+                    price = dropdownItem.getAttribute('data-procurement-price-usd') || dropdownItem.getAttribute('data-price-usd') || '0';
+                } else if (currency === 'AED') {
+                    price = dropdownItem.getAttribute('data-procurement-price-aed') || dropdownItem.getAttribute('data-price-aed') || '0';
                 } else {
-                    price = dropdownItem.getAttribute('data-procurement-price-aed') || 
-                           dropdownItem.getAttribute('data-price-aed') || '0';
+                    // For CYN or other currencies, do not auto-populate
+                    price = '0';
                 }
-                
                 rateInput.value = parseFloat(price).toFixed(2);
                 calculateRowAmount({ target: rateInput });
             }
@@ -1010,14 +1013,15 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         
         // Set rate based on selected currency and procurement price
         const currency = document.getElementById('currency').value;
-        let price;
-        
+        let price = '0';
         if (currency === 'USD') {
             price = item.dataset.procurementPriceUsd || item.dataset.priceUsd || '0';
-        } else {
+        } else if (currency === 'AED') {
             price = item.dataset.procurementPriceAed || item.dataset.priceAed || '0';
+        } else {
+            // For CYN or other currencies, keep zero and let user input manually
+            price = '0';
         }
-        
         rateInput.value = parseFloat(price).toFixed(2);
         
         // Handle specifications

@@ -274,6 +274,14 @@
                     <div class="p-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
+                                <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">Currency</label>
+                                <select id="currency" name="currency" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    <option value="AED" {{ old('currency', $purchaseOrder->currency) == 'AED' ? 'selected' : '' }}>AED (UAE Dirham)</option>
+                                    <option value="USD" {{ old('currency', $purchaseOrder->currency) == 'USD' ? 'selected' : '' }}>USD (US Dollar)</option>
+                                    <option value="CYN" {{ old('currency', $purchaseOrder->currency) == 'CYN' ? 'selected' : '' }}>CYN (Chinese Yuan)</option>
+                                </select>
+                            </div>
+                            <div>
                                 <label for="po_number" class="block text-sm font-medium text-gray-700 mb-2">PO Number</label>
                                 <input type="text" id="po_number" value="{{ $purchaseOrder->po_number }}" readonly
                                        class="block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm sm:text-sm">
@@ -403,12 +411,12 @@
                                 <div class="bg-gray-50 p-4 rounded-lg">
                                     <div class="flex justify-between py-2">
                                         <span class="text-sm font-medium text-gray-600">Subtotal:</span>
-                                        <span class="text-sm font-bold text-gray-900">AED <span id="subTotal">0.00</span></span>
+                                        <span class="text-sm font-bold text-gray-900"><span id="currencyDisplaySub">{{ $purchaseOrder->currency }}</span> <span id="subTotal">0.00</span></span>
                                     </div>
                                     <div class="border-t border-gray-200 pt-2 mt-2">
                                         <div class="flex justify-between">
                                             <span class="text-base font-bold text-gray-900">Total:</span>
-                                            <span class="text-base font-bold text-gray-900">AED <span id="totalAmount">0.00</span></span>
+                                            <span class="text-base font-bold text-gray-900"><span id="currencyDisplay">{{ $purchaseOrder->currency }}</span> <span id="totalAmount">0.00</span></span>
                                         </div>
                                     </div>
                                 </div>
@@ -1218,7 +1226,62 @@ function validateForm() {
 }
 
 // Initialize page
+// Currency handling in edit page
+function updateCurrencyUI() {
+    const currency = document.getElementById('currency').value;
+    const currencyDisplay = document.getElementById('currencyDisplay');
+    if (currencyDisplay) currencyDisplay.textContent = currency;
+    const currencyDisplaySub = document.getElementById('currencyDisplaySub');
+    if (currencyDisplaySub) currencyDisplaySub.textContent = currency;
+    // Recalculate totals to reflect label changes
+    calculateTotals();
+    // Sync price type controls with selected currency
+    updatePriceTypeControlsByCurrency();
+}
+
+// Enable/disable price type selects and auto-update rates based on currency
+function updatePriceTypeControlsByCurrency() {
+    const currency = document.getElementById('currency') ? document.getElementById('currency').value : '{{ $purchaseOrder->currency }}';
+    const rows = document.querySelectorAll('#itemsTable tr');
+    rows.forEach(row => {
+        const priceTypeSelect = row.querySelector('.price-type-select');
+        const rateInput = row.querySelector('.rate-input');
+        const productIdInput = row.querySelector('.product-id-input');
+        if (!priceTypeSelect) return;
+        if (currency === 'AED') {
+            priceTypeSelect.disabled = false;
+            if (!priceTypeSelect.value) priceTypeSelect.value = 'aed';
+            // If product selected, update rate from AED
+            if (productIdInput && productIdInput.value) {
+                updateRateFromPriceType(priceTypeSelect);
+            }
+        } else if (currency === 'USD') {
+            priceTypeSelect.disabled = false;
+            if (!priceTypeSelect.value) priceTypeSelect.value = 'usd';
+            if (productIdInput && productIdInput.value) {
+                updateRateFromPriceType(priceTypeSelect);
+            }
+        } else {
+            // For CYN or others: disable price type selection and leave manual rate
+            priceTypeSelect.value = '';
+            priceTypeSelect.disabled = true;
+            // Do not auto-change rate; keep whatever user set
+            if (rateInput && !rateInput.value) {
+                rateInput.value = 0;
+            }
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    const currencySelect = document.getElementById('currency');
+    if (currencySelect) {
+        currencySelect.addEventListener('change', updateCurrencyUI);
+    }
+    // Initialize price type controls according to initial currency
+    updatePriceTypeControlsByCurrency();
+    // Ensure currency labels (Subtotal/Total) match current selection on load
+    updateCurrencyUI();
     // Add event listener for add item button
     document.getElementById('addItem').addEventListener('click', function() {
         addItem();
