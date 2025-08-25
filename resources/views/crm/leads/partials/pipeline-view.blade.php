@@ -544,6 +544,14 @@
                                                 @endif
                                             </div>
                                             
+                                            <!-- Days Since Creation -->
+                                            <span class="text-gray-400 font-medium">
+                                                {{ round($lead->created_at->diffInDays(now())) }}d
+                                            </span>
+                                        </div>
+
+                                        <!-- Source Row -->
+                                        <div class="flex items-center justify-end text-xs text-gray-500">
                                             <!-- Source -->
                                             <span class="capitalize text-{{ $stage['color'] }}-600 font-medium">
                                                 @switch($lead->source)
