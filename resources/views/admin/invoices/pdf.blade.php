@@ -670,6 +670,11 @@
                         <td>
                             <div class="item-description">
                                 {{ $item->description }}
+                                @if($item->product)
+                                    <div style="font-size: 9px; margin-top: 3px;">
+                                        <a href="{{ route('product.show', $item->product) }}" style="color: #0ea5e9; text-decoration: none;">View product page</a>
+                                    </div>
+                                @endif
                                 @if($item->product && $item->product->brand)
                                     <div style="font-size: 9px; color: var(--text-secondary); margin-top: 2px;">
                                         <span style="font-weight: 600;">Brand:</span> {{ $item->product->brand->name }}
