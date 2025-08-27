@@ -242,8 +242,8 @@
                          <span class="text-sm text-gray-900">{{ $lead->created_at->format('M d, Y') }}</span>
                      </div>
                      <div class="flex justify-between items-center">
-                         <span class="text-sm font-medium text-gray-500">Days Since</span>
-                         <span class="text-sm text-gray-900">{{ $lead->created_at->diffInDays(now()) }} days</span>
+                         <span class="text-sm font-medium text-gray-500">Age</span>
+                         <span class="text-sm text-gray-900">{{ $lead->created_ago }}</span>
                      </div>
                  </div>
              </div>

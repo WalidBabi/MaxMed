@@ -544,9 +544,9 @@
                                                 @endif
                                             </div>
                                             
-                                            <!-- Days Since Creation -->
-                                            <span class="text-gray-400 font-medium">
-                                                {{ round($lead->created_at->diffInDays(now())) }}d
+                                            <!-- Age Since Creation (days hours minutes) -->
+                                            <span class="text-gray-400 font-medium" title="{{ $lead->created_at->format('Y-m-d H:i') }}">
+                                                {{ $lead->created_ago }}
                                             </span>
                                         </div>
 
@@ -582,7 +582,7 @@
                                                 <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
                                                 </svg>
-                                                Overdue ({{ $lead->daysSinceLastContact() }} days)
+                                                Overdue ({{ (int) floor($lead->daysSinceLastContact()) }} days)
                                             </div>
                                         @endif
 

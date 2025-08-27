@@ -113,6 +113,28 @@ class CrmLead extends Model
         return $this->last_contacted_at->diffInDays(now());
     }
 
+    /**
+     * Get human readable age since creation, e.g., "1 day 2 hours" (no minutes)
+     */
+    public function getCreatedAgoAttribute()
+    {
+        $from = $this->created_at ?? now();
+        $totalMinutes = $from->diffInMinutes(now());
+
+        $days = intdiv($totalMinutes, 60 * 24);
+        $remainingAfterDays = $totalMinutes - ($days * 60 * 24);
+        $hours = intdiv($remainingAfterDays, 60);
+
+        $parts = [];
+        if ($days > 0) {
+            $parts[] = $days . ' ' . ($days === 1 ? 'day' : 'days');
+        }
+        // Always show hours (even 0 hours when days shown) to avoid minutes
+        $parts[] = $hours . ' ' . ($hours === 1 ? 'hour' : 'hours');
+
+        return implode(' ', $parts);
+    }
+
     public function isOverdue()
     {
         return $this->daysSinceLastContact() > 7; // Consider overdue if no contact in 7 days
