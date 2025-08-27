@@ -123,7 +123,7 @@ class CrmLeadController extends Controller
             $validated = $request->validate([
                 'first_name' => 'required|string|max:255',
                 'last_name' => 'required|string|max:255',
-                'email' => 'required|email|unique:crm_leads',
+                'email' => 'required|email',
                 'mobile' => 'nullable|string|max:20',
                 'phone' => 'nullable|string|max:20',
                 'company_name' => 'required|string|max:255',
@@ -172,21 +172,20 @@ class CrmLeadController extends Controller
         
         // Log initial activity
         $lead->logActivity('note', 'Lead created', "Lead created from {$lead->source}");
-        
-            // Automatically create a customer from this lead
-            try {
-                $customer = $lead->createCustomer();
-                $lead->logActivity('note', 'Customer created', "Customer '{$customer->name}' (ID: {$customer->id}) automatically created from this lead");
-            } catch (\Exception $e) {
-                // Log the error but don't fail the lead creation
-                \Log::error("Failed to create customer from lead {$lead->id}: " . $e->getMessage());
-                $lead->logActivity('note', 'Customer creation failed', "Failed to automatically create customer: " . $e->getMessage());
-            }
+
+        // Also create/update customer record from this lead, but do not block lead creation
+        try {
+            $customer = $lead->createCustomer();
+            $lead->logActivity('note', 'Customer created/linked', "Customer '{$customer->name}' (ID: {$customer->id}) linked to this lead");
+        } catch (\Exception $e) {
+            \Log::error("Customer creation from lead {$lead->id} failed: " . $e->getMessage());
+            // Non-fatal: keep going even if customer creation fails
+        }
             
             \Log::info('CRM Lead created successfully', ['lead_id' => $lead->id, 'lead_name' => $lead->full_name]);
             
             return redirect()->route('crm.leads.show', $lead)
-                            ->with('success', 'Lead created successfully! Customer has been automatically created.');
+                            ->with('success', 'Lead created successfully!');
                             
         } catch (\Exception $e) {
             \Log::error('CRM Lead creation failed', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
@@ -225,7 +224,8 @@ class CrmLeadController extends Controller
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:crm_leads,email,' . $lead->id,
+            // Allow duplicate emails between leads
+            'email' => 'required|email',
             'mobile' => 'nullable|string|max:20',
             'phone' => 'nullable|string|max:20',
             'company_name' => 'required|string|max:255',
@@ -665,7 +665,7 @@ class CrmLeadController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:crm_leads',
+            'email' => 'required|email',
             'phone' => 'nullable|string|max:20',
             'company' => 'required|string|max:255',
             'source' => 'required|in:website,linkedin,email,phone,whatsapp,on_site_visit,referral,trade_show,google_ads,other',
@@ -700,21 +700,17 @@ class CrmLeadController extends Controller
             $lead->logActivity('note', 'Lead created (quick add)', 
                 "Lead created via quick add from {$lead->source}");
 
-            // Automatically create a customer from this lead
+            // Also create/update customer record from this lead (non-blocking)
             try {
                 $customer = $lead->createCustomer();
-                $lead->logActivity('note', 'Customer created', "Customer '{$customer->name}' (ID: {$customer->id}) automatically created from this lead");
-                $message = 'Lead and customer created successfully!';
+                $lead->logActivity('note', 'Customer created/linked', "Customer '{$customer->name}' (ID: {$customer->id}) linked to this lead");
             } catch (\Exception $e) {
-                // Log the error but don't fail the lead creation
-                \Log::error("Failed to create customer from lead {$lead->id}: " . $e->getMessage());
-                $lead->logActivity('note', 'Customer creation failed', "Failed to automatically create customer: " . $e->getMessage());
-                $message = 'Lead created successfully! (Customer creation failed)';
+                \Log::error("Customer creation from lead {$lead->id} failed: " . $e->getMessage());
             }
 
             return response()->json([
                 'success' => true,
-                'message' => $message,
+                'message' => 'Lead created successfully!',
                 'lead' => $lead->load(['assignedUser', 'activities'])
             ]);
 
