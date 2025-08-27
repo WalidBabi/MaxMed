@@ -55,6 +55,16 @@
             position: relative;
         }
 
+        /* STAMP (match Purchase Order style) */
+        .stamp {
+            position: fixed;
+            right: 35px; /* align to the right side, near totals box */
+            bottom: 110px; /* a little lower than totals box */
+            width: 180px;
+            opacity: 0.9;
+            z-index: 1000;
+        }
+
         .header-section {
             display: flex;
             justify-content: space-between;
@@ -563,6 +573,16 @@
     </style>
 </head>
 <body>
+    @if($invoice->type === 'proforma')
+    @php 
+        $stampPathUpper = public_path('Images/stamp.png');
+        $stampPathLower = public_path('images/stamp.png');
+        $resolvedStamp = file_exists($stampPathUpper) ? $stampPathUpper : (file_exists($stampPathLower) ? $stampPathLower : null);
+    @endphp
+    @if($resolvedStamp)
+        <img class="stamp" src="{{ $resolvedStamp }}" alt="Company Stamp">
+    @endif
+    @endif
     <div class="document-container">
         <!-- HEADER WITH COMPANY INFO & DOCUMENT TITLE -->
         <div class="header-wrapper">
