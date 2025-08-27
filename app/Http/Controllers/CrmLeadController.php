@@ -135,7 +135,7 @@ class CrmLeadController extends Controller
                 'notes' => 'nullable|string',
                 'expected_close_date' => 'nullable|date',
                 'assigned_to' => 'required|exists:users,id',
-                'attachments.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png,gif,webp|max:10240', // Max 10MB per file
+                'attachments.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png,gif,webp,xls,xlsx,csv|max:10240', // Max 10MB per file
             ]);
         
         // Remove attachments from validated data for model creation
@@ -238,7 +238,7 @@ class CrmLeadController extends Controller
             'notes' => 'nullable|string',
             'expected_close_date' => 'nullable|date',
             'assigned_to' => 'required|exists:users,id',
-            'attachments.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png,gif,webp|max:10240', // Max 10MB per file
+            'attachments.*' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png,gif,webp,xls,xlsx,csv|max:10240', // Max 10MB per file
             'remove_attachments' => 'nullable|array',
             'remove_attachments.*' => 'numeric',
         ]);

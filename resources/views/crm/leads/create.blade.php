@@ -224,7 +224,7 @@
                                         Upload Requirements Files
                                     </span>
                                     <span class="mt-1 block text-sm text-gray-500">
-                                        PDF, Word documents, or images (JPG, PNG, GIF, WebP)
+                                        PDF, Word, Excel, CSV, or images (JPG, PNG, GIF, WebP)
                                     </span>
                                     <span class="mt-1 block text-xs text-gray-400">
                                         Maximum 10MB per file
@@ -235,7 +235,7 @@
                                     name="attachments[]" 
                                     type="file" 
                                     multiple 
-                                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.webp"
+                                    accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png,.gif,.webp"
                                     class="sr-only"
                                     onchange="displaySelectedFiles(this)"
                                 >
