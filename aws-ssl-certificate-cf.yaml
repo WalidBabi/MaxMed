@@ -1,0 +1,233 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'SSL Certificate Management for MaxMed - AWS CloudFormation Template'
+
+Parameters:
+  DomainName:
+    Type: String
+    Default: 'maxmedme.com'
+    Description: 'Primary domain name for the SSL certificate'
+  
+  WWWDomainName:
+    Type: String
+    Default: 'www.maxmedme.com'
+    Description: 'WWW subdomain for the SSL certificate'
+  
+  EmailAddress:
+    Type: String
+    Default: 'admin@maxmedme.com'
+    Description: 'Email address for certificate notifications'
+
+Resources:
+  # SSL Certificate
+  SSLCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref DomainName
+      SubjectAlternativeNames:
+        - !Ref WWWDomainName
+      ValidationMethod: DNS
+      DomainValidationOptions:
+        - DomainName: !Ref DomainName
+          HostedZoneId: !Ref HostedZone
+        - DomainName: !Ref WWWDomainName
+          HostedZoneId: !Ref HostedZone
+      Tags:
+        - Key: Name
+          Value: !Sub '${DomainName}-SSL-Certificate'
+        - Key: Environment
+          Value: Production
+        - Key: Project
+          Value: MaxMed
+
+  # Route 53 Hosted Zone (if not exists)
+  HostedZone:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      Name: !Ref DomainName
+      HostedZoneConfig:
+        Comment: !Sub 'Hosted zone for ${DomainName}'
+      Tags:
+        - Key: Name
+          Value: !Sub '${DomainName}-HostedZone'
+        - Key: Environment
+          Value: Production
+        - Key: Project
+          Value: MaxMed
+
+  # SNS Topic for Certificate Alerts
+  CertificateAlertsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub '${DomainName}-Certificate-Alerts'
+      DisplayName: !Sub 'SSL Certificate Alerts for ${DomainName}'
+      Tags:
+        - Key: Name
+          Value: !Sub '${DomainName}-Certificate-Alerts'
+        - Key: Environment
+          Value: Production
+        - Key: Project
+          Value: MaxMed
+
+  # SNS Subscription (Email)
+  CertificateAlertsSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref CertificateAlertsTopic
+      Protocol: email
+      Endpoint: !Ref EmailAddress
+
+  # CloudWatch Alarm for Certificate Expiration
+  CertificateExpirationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub '${DomainName}-SSL-Certificate-Expiration'
+      AlarmDescription: !Sub 'SSL Certificate expiration warning for ${DomainName}'
+      MetricName: DaysToExpiry
+      Namespace: AWS/CertificateManager
+      Statistic: Minimum
+      Period: 86400  # 24 hours
+      EvaluationPeriods: 1
+      Threshold: 30  # 30 days before expiration
+      ComparisonOperator: LessThanThreshold
+      AlarmActions:
+        - !Ref CertificateAlertsTopic
+      Dimensions:
+        - Name: CertificateArn
+          Value: !Ref SSLCertificate
+      Tags:
+        - Key: Name
+          Value: !Sub '${DomainName}-Certificate-Expiration-Alarm'
+        - Key: Environment
+          Value: Production
+        - Key: Project
+          Value: MaxMed
+
+  # CloudWatch Dashboard for Certificate Monitoring
+  CertificateDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: !Sub '${DomainName}-SSL-Certificate-Monitoring'
+      DashboardBody: !Sub |
+        {
+          "widgets": [
+            {
+              "type": "metric",
+              "x": 0,
+              "y": 0,
+              "width": 12,
+              "height": 6,
+              "properties": {
+                "metrics": [
+                  ["AWS/CertificateManager", "DaysToExpiry", "CertificateArn", "${SSLCertificate}"],
+                  [".", ".", ".", ".", {"stat": "Minimum"}]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "${AWS::Region}",
+                "title": "SSL Certificate Days to Expiry",
+                "period": 86400
+              }
+            },
+            {
+              "type": "metric",
+              "x": 12,
+              "y": 0,
+              "width": 12,
+              "height": 6,
+              "properties": {
+                "metrics": [
+                  ["AWS/CertificateManager", "DaysToExpiry", "CertificateArn", "${SSLCertificate}"],
+                  [".", ".", ".", ".", {"stat": "Average"}]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "${AWS::Region}",
+                "title": "Certificate Status",
+                "period": 86400
+              }
+            }
+          ]
+        }
+
+  # IAM Role for Certificate Management (if needed)
+  CertificateManagementRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${DomainName}-Certificate-Management-Role'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: CertificateManagementPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - acm:DescribeCertificate
+                  - acm:ListCertificates
+                  - acm:RequestCertificate
+                  - acm:DeleteCertificate
+                  - route53:ChangeResourceRecordSets
+                  - route53:ListResourceRecordSets
+                  - cloudwatch:PutMetricData
+                  - sns:Publish
+                Resource: '*'
+      Tags:
+        - Key: Name
+          Value: !Sub '${DomainName}-Certificate-Management-Role'
+        - Key: Environment
+          Value: Production
+        - Key: Project
+          Value: MaxMed
+
+Outputs:
+  CertificateArn:
+    Description: 'ARN of the SSL Certificate'
+    Value: !Ref SSLCertificate
+    Export:
+      Name: !Sub '${AWS::StackName}-CertificateArn'
+
+  CertificateDomainName:
+    Description: 'Domain name of the SSL Certificate'
+    Value: !GetAtt SSLCertificate.DomainName
+    Export:
+      Name: !Sub '${AWS::StackName}-CertificateDomainName'
+
+  HostedZoneId:
+    Description: 'ID of the Route 53 Hosted Zone'
+    Value: !Ref HostedZone
+    Export:
+      Name: !Sub '${AWS::StackName}-HostedZoneId'
+
+  HostedZoneNameServers:
+    Description: 'Name servers for the Route 53 Hosted Zone'
+    Value: !Join
+      - ','
+      - !GetAtt HostedZone.NameServers
+    Export:
+      Name: !Sub '${AWS::StackName}-HostedZoneNameServers'
+
+  AlertsTopicArn:
+    Description: 'ARN of the SNS Topic for certificate alerts'
+    Value: !Ref CertificateAlertsTopic
+    Export:
+      Name: !Sub '${AWS::StackName}-AlertsTopicArn'
+
+  DashboardUrl:
+    Description: 'URL of the CloudWatch Dashboard for certificate monitoring'
+    Value: !Sub 'https://${AWS::Region}.console.aws.amazon.com/cloudwatch/home?region=${AWS::Region}#dashboards:name=${CertificateDashboard}'
+    Export:
+      Name: !Sub '${AWS::StackName}-DashboardUrl'
+
+  CertificateStatus:
+    Description: 'Current status of the SSL Certificate'
+    Value: !GetAtt SSLCertificate.Status
+    Export:
+      Name: !Sub '${AWS::StackName}-CertificateStatus'
