@@ -137,7 +137,8 @@
 
         /* Mobile-specific search improvements */
         @media (max-width: 768px) {
-            #mobile-search-suggestions {
+            #mobile-search-suggestions,
+            #mobile-search-suggestions-top {
                 position: fixed;
                 top: auto;
                 left: 1rem;
@@ -151,6 +152,53 @@
                 position: relative;
                 z-index: 1000;
             }
+            
+            /* Mobile search bar styling */
+            #mobile-search-input-top {
+                font-size: 16px; /* Prevents zoom on iOS */
+                min-height: 48px;
+                padding: 12px 16px 12px 48px;
+            }
+            
+            #mobile-search-input-top::placeholder {
+                font-size: 16px;
+                color: #6b7280;
+            }
+            
+                    /* Mobile search button positioning */
+        #mobile-search-input-top + .search-button {
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            padding: 0;
+        }
+        
+        /* Enhanced mobile search container */
+        .md\\:hidden.px-4.py-3.bg-white.border-b.border-gray-100 {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(to right, #f8fafc, #f1f5f9);
+        }
+        
+        /* Mobile search input focus state */
+        #mobile-search-input-top:focus {
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(10, 86, 148, 0.1);
+            border: 1px solid #0a5694;
+        }
+        
+        /* Mobile search suggestions enhancement */
+        #mobile-search-suggestions-top .search-suggestion-item {
+            padding: 12px 16px;
+            min-height: 56px;
+            font-size: 14px;
+        }
+        
+        #mobile-search-suggestions-top .search-suggestion-item img {
+            width: 48px;
+            height: 48px;
+        }
         }
 
         /* Ensure search input placeholder is fully visible and uses ellipsis if too long */
@@ -445,6 +493,21 @@
                 </div>
             </div>
 
+        </div>
+
+        <!-- Mobile Search Bar - Always Visible -->
+        <div class="md:hidden px-4 py-3 bg-white border-b border-gray-100">
+            <form action="{{ route('search') }}" method="GET" class="search-container relative">
+                <input type="text" name="query" id="mobile-search-input-top" placeholder="Search products..."
+                    class="w-full py-3 pl-4 pr-12 bg-gray-100 border-none rounded-full focus:outline-none text-base focus:ring-2 focus:ring-[#0a5694] focus:ring-opacity-50"
+                    value="{{ request('query') }}" autocomplete="off">
+                <div id="mobile-search-suggestions-top" class="absolute z-50 w-full bg-white rounded-lg shadow-lg hidden max-h-60 overflow-y-auto border border-gray-200"></div>
+                <button type="submit" aria-label="Search products" class="search-button absolute right-1 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-[#171e60] to-[#0a5694] text-white p-2.5 rounded-full hover:from-[#0a5694] hover:to-[#171e60] focus:outline-none transition-all duration-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </button>
+            </form>
         </div>
 
         <!-- Mobile menu button -->
@@ -1084,6 +1147,7 @@
         // Initialize autocomplete for both desktop and mobile search inputs
         setupSearchAutocomplete('desktop-search-input', 'desktop-search-suggestions');
         setupSearchAutocomplete('mobile-search-input', 'mobile-search-suggestions');
+        setupSearchAutocomplete('mobile-search-input-top', 'mobile-search-suggestions-top');
     });
 </script>
 
