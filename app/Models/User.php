@@ -75,50 +75,14 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function isAdmin(): bool
     {
-        Log::info('User::isAdmin() - Starting admin check', [
-            'user_id' => $this->id,
-            'user_email' => $this->email,
-            'role_id' => $this->role_id,
-            'has_role_relation' => $this->role ? 'yes' : 'no'
-        ]);
-        
         try {
             if (!$this->role) {
-                Log::info('User::isAdmin() - No role found', [
-                    'user_id' => $this->id,
-                    'role_id' => $this->role_id,
-                    'result' => false
-                ]);
                 return false;
             }
             
-            Log::info('User::isAdmin() - Role found, checking permissions', [
-                'user_id' => $this->id,
-                'role_name' => $this->role->name,
-                'role_id' => $this->role->id,
-                'role_permissions' => $this->role->permissions
-            ]);
-            
-            $hasPermission = $this->role->hasPermission('dashboard.view');
-            
-            Log::info('User::isAdmin() - Permission check completed', [
-                'user_id' => $this->id,
-                'role_name' => $this->role->name,
-                'has_dashboard_view' => $hasPermission,
-                'result' => $hasPermission
-            ]);
-            
-            return $hasPermission;
+            return $this->role->hasPermission('dashboard.view');
             
         } catch (\Exception $e) {
-            Log::error('User::isAdmin() - Exception occurred', [
-                'user_id' => $this->id,
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
             // Return false as fallback
             return false;
         }
