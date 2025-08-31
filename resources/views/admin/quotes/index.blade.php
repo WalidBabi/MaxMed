@@ -109,7 +109,7 @@
             <h3 class="text-lg font-semibold text-gray-900">Filters</h3>
         </div>
         <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
                 <div class="md:col-span-2">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
                     <div class="relative">
@@ -118,13 +118,13 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
-                        <input type="text" id="search" name="search" value="{{ request('search') }}" placeholder="Search quotes, customers, products..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" oninput="filterQuotes()">
+                        <input type="text" id="search" name="search" value="{{ request('search') }}" placeholder="Search quotes, customers, products..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     </div>
                 </div>
                 
                 <div>
                     <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                    <select name="status" id="status" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onchange="filterQuotes()">
+                    <select name="status" id="status" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         <option value="">All Status</option>
                         <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
                         <option value="sent" {{ request('status') == 'sent' ? 'selected' : '' }}>Sent</option>
@@ -134,7 +134,7 @@
                 
                 <div>
                     <label for="currency" class="block text-sm font-medium text-gray-700 mb-1">Currency</label>
-                    <select name="currency" id="currency" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onchange="filterQuotes()">
+                    <select name="currency" id="currency" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         <option value="">All Currencies</option>
                         <option value="AED" {{ request('currency') == 'AED' ? 'selected' : '' }}>AED</option>
                         <option value="USD" {{ request('currency') == 'USD' ? 'selected' : '' }}>USD</option>
@@ -142,13 +142,26 @@
                     </select>
                 </div>
                 
+                <div>
+                    <label for="date_from" class="block text-sm font-medium text-gray-700 mb-1">Date From</label>
+                    <input type="date" id="date_from" name="date_from" value="{{ request('date_from') }}" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                
+                <div>
+                    <label for="date_to" class="block text-sm font-medium text-gray-700 mb-1">Date To</label>
+                    <input type="date" id="date_to" name="date_to" value="{{ request('date_to') }}" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                
                 <div class="flex items-end space-x-2">
-                    <button type="button" onclick="applyFilters()" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"></path>
-                        </svg>
-                        Apply Filters
-                    </button>
+                    <div class="relative">
+                        <button type="button" onclick="applyFilters()" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                            <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"></path>
+                            </svg>
+                            Apply Filters
+                        </button>
+                        <span id="active-filters-badge" class="hidden absolute -top-2 -right-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full"></span>
+                    </div>
                     <button type="button" onclick="clearFilters()" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                         <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -632,6 +645,8 @@ function filterQuotes() {
         const searchTerm = document.getElementById('search').value.toLowerCase();
         const statusFilter = document.getElementById('status').value;
         const currencyFilter = document.getElementById('currency').value;
+        const dateFromFilter = document.getElementById('date_from').value;
+        const dateToFilter = document.getElementById('date_to').value;
         
         const rows = document.querySelectorAll('tbody tr');
         let visibleCount = 0;
@@ -642,6 +657,7 @@ function filterQuotes() {
             const status = row.querySelector('td:nth-child(4) span')?.textContent?.toLowerCase() || '';
             const amount = row.querySelector('td:nth-child(5)')?.textContent?.toLowerCase() || '';
             const products = row.querySelector('td:nth-child(6)')?.textContent?.toLowerCase() || '';
+            const dateCell = row.querySelector('td:nth-child(1)')?.textContent?.trim() || '';
             
             // Check if row matches all filters
             const matchesSearch = !searchTerm || 
@@ -652,7 +668,22 @@ function filterQuotes() {
             const matchesStatus = !statusFilter || status.includes(statusFilter);
             const matchesCurrency = !currencyFilter || amount.includes(currencyFilter.toLowerCase());
             
-            if (matchesSearch && matchesStatus && matchesCurrency) {
+            // Date filtering logic
+            let matchesDate = true;
+            if (dateFromFilter || dateToFilter) {
+                const quoteDate = new Date(dateCell);
+                if (dateFromFilter) {
+                    const fromDate = new Date(dateFromFilter);
+                    matchesDate = matchesDate && quoteDate >= fromDate;
+                }
+                if (dateToFilter) {
+                    const toDate = new Date(dateToFilter);
+                    toDate.setHours(23, 59, 59); // Set to end of day
+                    matchesDate = matchesDate && quoteDate <= toDate;
+                }
+            }
+            
+            if (matchesSearch && matchesStatus && matchesCurrency && matchesDate) {
                 row.style.display = '';
                 visibleCount++;
             } else {
@@ -702,7 +733,33 @@ function clearFilters() {
     document.getElementById('search').value = '';
     document.getElementById('status').value = '';
     document.getElementById('currency').value = '';
+    document.getElementById('date_from').value = '';
+    document.getElementById('date_to').value = '';
     filterQuotes();
+    updateActiveFiltersBadge();
+}
+
+function applyFilters() {
+    filterQuotes();
+    updateActiveFiltersBadge();
+}
+
+function updateActiveFiltersBadge() {
+    const searchTerm = document.getElementById('search').value;
+    const statusFilter = document.getElementById('status').value;
+    const currencyFilter = document.getElementById('currency').value;
+    const dateFromFilter = document.getElementById('date_from').value;
+    const dateToFilter = document.getElementById('date_to').value;
+    
+    const activeFilters = [searchTerm, statusFilter, currencyFilter, dateFromFilter, dateToFilter].filter(filter => filter && filter.trim() !== '');
+    const badge = document.getElementById('active-filters-badge');
+    
+    if (activeFilters.length > 0) {
+        badge.textContent = activeFilters.length;
+        badge.classList.remove('hidden');
+    } else {
+        badge.classList.add('hidden');
+    }
 }
 
 function updateResultsCount(visible, total) {
@@ -725,6 +782,20 @@ function updateResultsCount(visible, total) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Add Enter key support for search input
+    const searchInput = document.getElementById('search');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                applyFilters();
+            }
+        });
+    }
+    
+    // Initialize active filters badge
+    updateActiveFiltersBadge();
+    
     // Delete quote functionality
     document.querySelectorAll('.delete-quote-btn').forEach(button => {
         button.addEventListener('click', function() {
