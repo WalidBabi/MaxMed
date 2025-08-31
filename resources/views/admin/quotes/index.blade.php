@@ -103,6 +103,57 @@
         </div>
     </div>
 
+    <!-- Filters Section -->
+    <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-8">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-900">Filters</h3>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div class="md:col-span-2">
+                    <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <input type="text" id="search" name="search" value="{{ request('search') }}" placeholder="Search quotes, customers, products..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" oninput="filterQuotes()">
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select name="status" id="status" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onchange="filterQuotes()">
+                        <option value="">All Status</option>
+                        <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                        <option value="sent" {{ request('status') == 'sent' : '' }}>Sent</option>
+                        <option value="invoiced" {{ request('status') == 'invoiced' ? 'selected' : '' }}>Invoiced</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="currency" class="block text-sm font-medium text-gray-700 mb-1">Currency</label>
+                    <select name="currency" id="currency" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onchange="filterQuotes()">
+                        <option value="">All Currencies</option>
+                        <option value="AED" {{ request('currency') == 'AED' ? 'selected' : '' }}>AED</option>
+                        <option value="USD" {{ request('currency') == 'USD' ? 'selected' : '' }}>USD</option>
+                        <option value="CNY" {{ request('currency') == 'CNY' ? 'selected' : '' }}>CNY</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-end space-x-2">
+                    <button type="button" onclick="clearFilters()" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                        <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Quotes Table -->
     <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
         <div class="px-6 py-4 border-b border-gray-200">
@@ -120,6 +171,16 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <div class="flex items-center space-x-1">
+                                    <span>Products</span>
+                                    <button type="button" onclick="toggleProductsColumn()" class="text-gray-400 hover:text-gray-600" title="Toggle Products Column">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </th>
                             <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
@@ -157,6 +218,34 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                     {{ number_format($quote->total_amount, 2) }} {{ $quote->currency ?? 'AED' }}
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-900 products-column">
+                                    @if($quote->items->count() > 0)
+                                        <div class="space-y-1">
+                                            @foreach($quote->items->take(3) as $item)
+                                                <div class="flex items-center space-x-2">
+                                                    <div class="flex-1 min-w-0">
+                                                        <div class="text-sm font-medium text-gray-900 truncate">
+                                                            {{ $item->product ? $item->product->name : $item->item_details }}
+                                                        </div>
+                                                        @if($item->product && $item->product->sku)
+                                                            <div class="text-xs text-gray-500">SKU: {{ $item->product->sku }}</div>
+                                                        @endif
+                                                        <div class="text-xs text-gray-500">
+                                                            Qty: {{ number_format($item->quantity, 2) }} × {{ number_format($item->rate, 2) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                            @if($quote->items->count() > 3)
+                                                <div class="text-xs text-gray-500 font-medium">
+                                                    +{{ $quote->items->count() - 3 }} more items
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <span class="text-gray-400">No products</span>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex items-center justify-end space-x-2">
@@ -490,6 +579,144 @@
 @push('scripts')
 <script>
 let currentQuoteId = null; // Store current quote ID for status updates
+let productsColumnVisible = true; // Track products column visibility
+
+// Function to toggle products column visibility
+function toggleProductsColumn() {
+    const productsColumns = document.querySelectorAll('.products-column');
+    const toggleButton = document.querySelector('button[onclick="toggleProductsColumn()"] svg');
+    
+    productsColumnVisible = !productsColumnVisible;
+    
+    productsColumns.forEach(column => {
+        if (productsColumnVisible) {
+            column.style.display = 'table-cell';
+            toggleButton.style.transform = 'rotate(0deg)';
+        } else {
+            column.style.display = 'none';
+            toggleButton.style.transform = 'rotate(180deg)';
+        }
+    });
+    
+    // Store preference in localStorage
+    localStorage.setItem('productsColumnVisible', productsColumnVisible);
+}
+
+// Initialize products column visibility on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedVisibility = localStorage.getItem('productsColumnVisible');
+    if (savedVisibility === 'false') {
+        toggleProductsColumn();
+    }
+});
+
+// Real-time filtering functions
+let filterTimeout;
+let isFiltering = false;
+
+function filterQuotes() {
+    clearTimeout(filterTimeout);
+    
+    // Show filtering indicator
+    if (!isFiltering) {
+        showFilteringIndicator();
+    }
+    
+    filterTimeout = setTimeout(() => {
+        const searchTerm = document.getElementById('search').value.toLowerCase();
+        const statusFilter = document.getElementById('status').value;
+        const currencyFilter = document.getElementById('currency').value;
+        
+        const rows = document.querySelectorAll('tbody tr');
+        let visibleCount = 0;
+        
+        rows.forEach(row => {
+            const quoteNumber = row.querySelector('td:nth-child(2) .text-sm')?.textContent?.toLowerCase() || '';
+            const customerName = row.querySelector('td:nth-child(3) .text-sm')?.textContent?.toLowerCase() || '';
+            const status = row.querySelector('td:nth-child(4) span')?.textContent?.toLowerCase() || '';
+            const amount = row.querySelector('td:nth-child(5)')?.textContent?.toLowerCase() || '';
+            const products = row.querySelector('td:nth-child(6)')?.textContent?.toLowerCase() || '';
+            
+            // Check if row matches all filters
+            const matchesSearch = !searchTerm || 
+                quoteNumber.includes(searchTerm) || 
+                customerName.includes(searchTerm) || 
+                products.includes(searchTerm);
+            
+            const matchesStatus = !statusFilter || status.includes(statusFilter);
+            const matchesCurrency = !currencyFilter || amount.includes(currencyFilter.toLowerCase());
+            
+            if (matchesSearch && matchesStatus && matchesCurrency) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+        
+        // Update results count
+        updateResultsCount(visibleCount, rows.length);
+        
+        // Hide filtering indicator
+        hideFilteringIndicator();
+    }, 300); // Debounce for 300ms
+}
+
+function showFilteringIndicator() {
+    isFiltering = true;
+    const searchInput = document.getElementById('search');
+    const parent = searchInput.parentElement;
+    
+    // Add loading spinner
+    let spinner = parent.querySelector('.filtering-spinner');
+    if (!spinner) {
+        spinner = document.createElement('div');
+        spinner.className = 'filtering-spinner absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none';
+        spinner.innerHTML = `
+            <svg class="animate-spin h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+        `;
+        parent.appendChild(spinner);
+    }
+    spinner.style.display = 'flex';
+}
+
+function hideFilteringIndicator() {
+    isFiltering = false;
+    const spinner = document.querySelector('.filtering-spinner');
+    if (spinner) {
+        spinner.style.display = 'none';
+    }
+}
+}
+
+function clearFilters() {
+    document.getElementById('search').value = '';
+    document.getElementById('status').value = '';
+    document.getElementById('currency').value = '';
+    filterQuotes();
+}
+
+function updateResultsCount(visible, total) {
+    // Find or create results count element
+    let resultsCount = document.getElementById('results-count');
+    if (!resultsCount) {
+        resultsCount = document.createElement('div');
+        resultsCount.id = 'results-count';
+        resultsCount.className = 'text-sm text-gray-600 mt-2';
+        const filterSection = document.querySelector('.card-hover .p-6');
+        filterSection.appendChild(resultsCount);
+    }
+    
+    if (visible === total) {
+        resultsCount.style.display = 'none';
+    } else {
+        resultsCount.style.display = 'block';
+        resultsCount.textContent = `Showing ${visible} of ${total} quotes`;
+    }
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     // Delete quote functionality

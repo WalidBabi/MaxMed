@@ -27,7 +27,7 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Invoice::with(['quote', 'order', 'delivery', 'creator', 'payments', 'parentInvoice', 'childInvoices']);
+        $query = Invoice::with(['quote', 'order', 'delivery', 'creator', 'payments', 'parentInvoice', 'childInvoices', 'items.product']);
 
         // Apply filters
         if ($request->filled('type')) {
@@ -47,7 +47,14 @@ class InvoiceController extends Controller
             $query->where(function($q) use ($search) {
                 $q->where('invoice_number', 'like', "%{$search}%")
                   ->orWhere('customer_name', 'like', "%{$search}%")
-                  ->orWhere('reference_number', 'like', "%{$search}%");
+                  ->orWhere('reference_number', 'like', "%{$search}%")
+                  ->orWhereHas('items.product', function($productQuery) use ($search) {
+                      $productQuery->where('name', 'like', "%{$search}%")
+                                  ->orWhere('sku', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('items', function($itemQuery) use ($search) {
+                      $itemQuery->where('description', 'like', "%{$search}%");
+                  });
             });
         }
 

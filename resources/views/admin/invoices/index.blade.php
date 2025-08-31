@@ -110,7 +110,7 @@
             <h3 class="text-lg font-semibold text-gray-900">Filters</h3>
         </div>
         <div class="p-6">
-            <form method="GET" action="{{ route('admin.invoices.index') }}" class="grid grid-cols-1 md:grid-cols-6 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
                 <div class="md:col-span-2">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
                     <div class="relative">
@@ -119,13 +119,13 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
-                        <input type="text" id="search" name="search" value="{{ request('search') }}" placeholder="Search invoices..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <input type="text" id="search" name="search" value="{{ request('search') }}" placeholder="Search invoices, customers, products..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" oninput="filterInvoices()">
                     </div>
                 </div>
                 
                 <div>
                     <label for="type" class="block text-sm font-medium text-gray-700 mb-1">Type</label>
-                    <select name="type" id="type" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <select name="type" id="type" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onchange="filterInvoices()">
                         <option value="">All Types</option>
                         @foreach($filterOptions['types'] as $value => $label)
                             <option value="{{ $value }}" {{ request('type') == $value ? 'selected' : '' }}>
@@ -137,7 +137,7 @@
                 
                 <div>
                     <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                    <select name="status" id="status" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <select name="status" id="status" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onchange="filterInvoices()">
                         <option value="">All Status</option>
                         @foreach($filterOptions['statuses'] as $value => $label)
                             <option value="{{ $value }}" {{ request('status') == $value ? 'selected' : '' }}>
@@ -149,7 +149,7 @@
                 
                 <div>
                     <label for="payment_status" class="block text-sm font-medium text-gray-700 mb-1">Payment Status</label>
-                    <select name="payment_status" id="payment_status" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <select name="payment_status" id="payment_status" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onchange="filterInvoices()">
                         <option value="">Payment Status</option>
                         @foreach($filterOptions['payment_statuses'] as $value => $label)
                             <option value="{{ $value }}" {{ request('payment_status') == $value ? 'selected' : '' }}>
@@ -160,20 +160,14 @@
                 </div>
                 
                 <div class="flex items-end space-x-2">
-                    <button type="submit" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
-                        <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
-                        </svg>
-                        Filter
-                    </button>
-                    <a href="{{ route('admin.invoices.index') }}" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                    <button type="button" onclick="clearInvoiceFilters()" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                         <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                         Clear
-                    </a>
+                    </button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -197,6 +191,16 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <div class="flex items-center space-x-1">
+                                    <span>Products</span>
+                                    <button type="button" onclick="toggleInvoiceProductsColumn()" class="text-gray-400 hover:text-gray-600" title="Toggle Products Column">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </th>
                             <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
@@ -377,6 +381,34 @@
                                         <div class="text-xs text-gray-500">
                                             Balance: {{ number_format($invoice->total_amount - $invoice->paid_amount, 2) }}
                                         </div>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-900 invoice-products-column">
+                                    @if($invoice->items->count() > 0)
+                                        <div class="space-y-1">
+                                            @foreach($invoice->items->take(3) as $item)
+                                                <div class="flex items-center space-x-2">
+                                                    <div class="flex-1 min-w-0">
+                                                        <div class="text-sm font-medium text-gray-900 truncate">
+                                                            {{ $item->product ? $item->product->name : $item->description }}
+                                                        </div>
+                                                        @if($item->product && $item->product->sku)
+                                                            <div class="text-xs text-gray-500">SKU: {{ $item->product->sku }}</div>
+                                                        @endif
+                                                        <div class="text-xs text-gray-500">
+                                                            Qty: {{ number_format($item->quantity, 2) }} × {{ number_format($item->unit_price, 2) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                            @if($invoice->items->count() > 3)
+                                                <div class="text-xs text-gray-500 font-medium">
+                                                    +{{ $invoice->items->count() - 3 }} more items
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <span class="text-gray-400">No products</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -714,6 +746,148 @@
 @push('scripts')
 <script>
 let currentInvoiceId = null; // Store current invoice ID for status updates
+let invoiceProductsColumnVisible = true; // Track invoice products column visibility
+
+// Function to toggle invoice products column visibility
+function toggleInvoiceProductsColumn() {
+    const productsColumns = document.querySelectorAll('.invoice-products-column');
+    const toggleButton = document.querySelector('button[onclick="toggleInvoiceProductsColumn()"] svg');
+    
+    invoiceProductsColumnVisible = !invoiceProductsColumnVisible;
+    
+    productsColumns.forEach(column => {
+        if (invoiceProductsColumnVisible) {
+            column.style.display = 'table-cell';
+            toggleButton.style.transform = 'rotate(0deg)';
+        } else {
+            column.style.display = 'none';
+            toggleButton.style.transform = 'rotate(180deg)';
+        }
+    });
+    
+    // Store preference in localStorage
+    localStorage.setItem('invoiceProductsColumnVisible', invoiceProductsColumnVisible);
+}
+
+// Initialize invoice products column visibility on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedVisibility = localStorage.getItem('invoiceProductsColumnVisible');
+    if (savedVisibility === 'false') {
+        toggleInvoiceProductsColumn();
+    }
+});
+
+// Real-time filtering functions for invoices
+let invoiceFilterTimeout;
+let isInvoiceFiltering = false;
+
+function filterInvoices() {
+    clearTimeout(invoiceFilterTimeout);
+    
+    // Show filtering indicator
+    if (!isInvoiceFiltering) {
+        showInvoiceFilteringIndicator();
+    }
+    
+    invoiceFilterTimeout = setTimeout(() => {
+        const searchTerm = document.getElementById('search').value.toLowerCase();
+        const typeFilter = document.getElementById('type').value;
+        const statusFilter = document.getElementById('status').value;
+        const paymentStatusFilter = document.getElementById('payment_status').value;
+        
+        const rows = document.querySelectorAll('tbody tr');
+        let visibleCount = 0;
+        
+        rows.forEach(row => {
+            const invoiceNumber = row.querySelector('td:nth-child(2) .text-sm')?.textContent?.toLowerCase() || '';
+            const customerName = row.querySelector('td:nth-child(4) .text-sm')?.textContent?.toLowerCase() || '';
+            const type = row.querySelector('td:nth-child(3) span')?.textContent?.toLowerCase() || '';
+            const status = row.querySelector('td:nth-child(6) span')?.textContent?.toLowerCase() || '';
+            const paymentStatus = row.querySelector('td:nth-child(7) span')?.textContent?.toLowerCase() || '';
+            const products = row.querySelector('td:nth-child(9)')?.textContent?.toLowerCase() || '';
+            
+            // Check if row matches all filters
+            const matchesSearch = !searchTerm || 
+                invoiceNumber.includes(searchTerm) || 
+                customerName.includes(searchTerm) || 
+                products.includes(searchTerm);
+            
+            const matchesType = !typeFilter || type.includes(typeFilter);
+            const matchesStatus = !statusFilter || status.includes(statusFilter);
+            const matchesPaymentStatus = !paymentStatusFilter || paymentStatus.includes(paymentStatusFilter);
+            
+            if (matchesSearch && matchesType && matchesStatus && matchesPaymentStatus) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+        
+        // Update results count
+        updateInvoiceResultsCount(visibleCount, rows.length);
+        
+        // Hide filtering indicator
+        hideInvoiceFilteringIndicator();
+    }, 300); // Debounce for 300ms
+}
+
+function showInvoiceFilteringIndicator() {
+    isInvoiceFiltering = true;
+    const searchInput = document.getElementById('search');
+    const parent = searchInput.parentElement;
+    
+    // Add loading spinner
+    let spinner = parent.querySelector('.invoice-filtering-spinner');
+    if (!spinner) {
+        spinner = document.createElement('div');
+        spinner.className = 'invoice-filtering-spinner absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none';
+        spinner.innerHTML = `
+            <svg class="animate-spin h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+        `;
+        parent.appendChild(spinner);
+    }
+    spinner.style.display = 'flex';
+}
+
+function hideInvoiceFilteringIndicator() {
+    isInvoiceFiltering = false;
+    const spinner = document.querySelector('.invoice-filtering-spinner');
+    if (spinner) {
+        spinner.style.display = 'none';
+    }
+}
+}
+
+function clearInvoiceFilters() {
+    document.getElementById('search').value = '';
+    document.getElementById('type').value = '';
+    document.getElementById('status').value = '';
+    document.getElementById('payment_status').value = '';
+    filterInvoices();
+}
+
+function updateInvoiceResultsCount(visible, total) {
+    // Find or create results count element
+    let resultsCount = document.getElementById('invoice-results-count');
+    if (!resultsCount) {
+        resultsCount = document.createElement('div');
+        resultsCount.id = 'invoice-results-count';
+        resultsCount.className = 'text-sm text-gray-600 mt-2';
+        const filterSection = document.querySelector('.card-hover .p-6');
+        filterSection.appendChild(resultsCount);
+    }
+    
+    if (visible === total) {
+        resultsCount.style.display = 'none';
+    } else {
+        resultsCount.style.display = 'block';
+        resultsCount.textContent = `Showing ${visible} of ${total} invoices`;
+    }
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     // Delete invoice functionality
