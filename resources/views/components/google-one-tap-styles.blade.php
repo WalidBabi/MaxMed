@@ -42,7 +42,7 @@
             left: 15px;
             right: 15px;
             max-width: none;
-            top: 70px;
+            top: 120px; /* Increased from 70px to 120px to avoid hamburger menu */
         }
     }
 </style>
