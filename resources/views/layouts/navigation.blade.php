@@ -1,3 +1,15 @@
+<!-- Google One Tap Sign In -->
+@guest
+    <div id="g_id_onload"
+        data-client_id="{{ config('services.google.client_id') }}"
+        data-callback="handleCredentialResponse"
+        data-auto_prompt="false"
+        data-context="signin"
+        data-ux_mode="popup"
+        data-itp_support="true">
+    </div>
+@endguest
+
 <nav x-data="{ open: false }" x-cloak class="bg-white border-b border-gray-100 shadow-sm mt-0 sticky top-0 z-50" x-init="$nextTick(() => { $el.classList.add('initialized'); })">
     <style>
         [x-cloak] { display: none !important; }
@@ -137,7 +149,6 @@
 
         /* Mobile-specific search improvements */
         @media (max-width: 768px) {
-            #mobile-search-suggestions,
             #mobile-search-suggestions-top {
                 position: fixed;
                 top: auto;
@@ -523,20 +534,6 @@
         <!-- Mobile Navigation Menu -->
         <div :class="{'block': open, 'hidden': !open}" class="hidden md:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-100">
-                <!-- Mobile Search - Improved styling and dropdown -->
-                <div class="px-4 py-3">
-                    <form action="{{ route('search') }}" method="GET" class="search-container relative">
-                        <input type="text" name="query" id="mobile-search-input" placeholder="Search product names, codes or CAS number"
-                            class="w-full py-2 pl-4 pr-12 bg-gray-100 border-none rounded-full focus:outline-none text-sm focus:ring-2 focus:ring-[#0a5694] focus:ring-opacity-50"
-                            value="{{ request('query') }}" autocomplete="off">
-                        <div id="mobile-search-suggestions" class="absolute z-50 w-full bg-white rounded-lg shadow-lg hidden max-h-60 overflow-y-auto border border-gray-200"></div>
-                        <button type="submit" aria-label="Search products" class="search-button absolute right-1 top-1/2 transform -translate-y-1/2 bg-[#0064a8] text-white p-2.5 rounded-full hover:bg-[#0052a8] focus:outline-none">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </button>
-                    </form>
-                </div>
 
                 <a href="{{ route('welcome') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Home</a>
                 <a href="{{ route('about') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">About Us</a>
@@ -822,6 +819,30 @@
                 <a href="{{ route('login') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0064a8] hover:bg-gray-50">Login</a>
                 <a href="{{ route('register') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0064a8] hover:bg-gray-50">Register</a>
                 <a href="{{ route('supplier.register') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0064a8] hover:bg-gray-50">Register as Supplier</a>
+                
+                <!-- Mobile Google One Tap Sign In -->
+                <div class="px-3 py-4 border-t border-gray-100 mt-4">
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4">
+                        <div class="text-center mb-3">
+                            <h4 class="text-sm font-medium text-gray-800 mb-1">Quick Sign In</h4>
+                            <p class="text-xs text-gray-600">Sign in with Google for a faster experience</p>
+                        </div>
+                        <div class="flex justify-center">
+                            <div class="g_id_signin"
+                                data-type="standard"
+                                data-size="large"
+                                data-theme="outline"
+                                data-text="sign_in_with"
+                                data-shape="rectangular"
+                                data-logo_alignment="left"
+                                data-width="280">
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <small class="text-xs text-gray-500">By continuing, you agree to our <a href="{{ route('privacy.policy') }}" class="text-blue-600 hover:underline">Terms</a> and <a href="{{ route('privacy.policy') }}" class="text-blue-600 hover:underline">Privacy Policy</a></small>
+                        </div>
+                    </div>
+                </div>
                 @endauth
             </div>
         </div>
@@ -1144,9 +1165,8 @@
             }
         }
         
-        // Initialize autocomplete for both desktop and mobile search inputs
+        // Initialize autocomplete for desktop and top mobile search inputs
         setupSearchAutocomplete('desktop-search-input', 'desktop-search-suggestions');
-        setupSearchAutocomplete('mobile-search-input', 'mobile-search-suggestions');
         setupSearchAutocomplete('mobile-search-input-top', 'mobile-search-suggestions-top');
     });
 </script>
