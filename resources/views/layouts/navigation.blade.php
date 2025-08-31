@@ -210,6 +210,38 @@
             width: 48px;
             height: 48px;
         }
+        
+        /* Mobile menu scrolling improvements */
+        .mobile-menu-scrollable {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 #f1f5f9;
+            padding-bottom: 1rem;
+        }
+        
+        .mobile-menu-scrollable::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .mobile-menu-scrollable::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+        
+        .mobile-menu-scrollable::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        
+        .mobile-menu-scrollable::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Ensure menu items are properly spaced when scrolling */
+        .mobile-menu-scrollable .space-y-1 > * + * {
+            margin-top: 0.25rem;
+        }
         }
 
         /* Ensure search input placeholder is fully visible and uses ellipsis if too long */
@@ -533,7 +565,7 @@
 
         <!-- Mobile Navigation Menu -->
         <div :class="{'block': open, 'hidden': !open}" class="hidden md:hidden">
-            <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-100">
+            <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-100 mobile-menu-scrollable">
 
                 <a href="{{ route('welcome') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Home</a>
                 <a href="{{ route('about') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">About Us</a>
