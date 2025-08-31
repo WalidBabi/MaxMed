@@ -127,7 +127,7 @@
                     <select name="status" id="status" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" onchange="filterQuotes()">
                         <option value="">All Status</option>
                         <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
-                        <option value="sent" {{ request('status') == 'sent' : '' }}>Sent</option>
+                        <option value="sent" {{ request('status') == 'sent' ? 'selected' : '' }}>Sent</option>
                         <option value="invoiced" {{ request('status') == 'invoiced' ? 'selected' : '' }}>Invoiced</option>
                     </select>
                 </div>
