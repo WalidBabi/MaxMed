@@ -533,3 +533,20 @@ chmod +x emergency-fix.sh
 
 
 php artisan sitemap:generate-all
+
+//certbot ssl renewal command.
+# 1. Stop nginx to free port 80
+sudo docker-compose stop nginx
+
+# 2. Force renewal of the expired certificate
+sudo certbot renew --cert-name maxmedme.com --force-renewal
+
+# 3. Restart the full application stack
+sudo docker-compose up -d
+
+# 4. Verify the certificate is valid
+sudo certbot certificates
+
+
+# Add automatic renewal to crontab
+echo "0 12,18 * * * /usr/bin/certbot renew --quiet --deploy-hook 'docker-compose restart nginx'" | sudo crontab -
