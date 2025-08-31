@@ -50,7 +50,11 @@
         <div class="google-one-tap-inner">
             <div class="google-one-tap-header">
                 <h4>Sign in with Google</h4>
-              
+                <button type="button" class="google-one-tap-close" onclick="hideGoogleOneTapContainer()" aria-label="Close">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
             </div>
             <div class="google-one-tap-content">
                 <p>Sign in for a faster, easier experience</p>
@@ -193,6 +197,48 @@
     }
 
     /* Responsive */
+    @media (max-width: 768px) {
+        .google-one-tap-container {
+            top: 10px;
+            right: 10px;
+            left: 10px;
+            max-width: none;
+            width: calc(100% - 20px);
+            border-radius: 8px;
+        }
+        
+        .google-one-tap-header {
+            padding: 12px 16px;
+        }
+        
+        .google-one-tap-header h4 {
+            font-size: 14px;
+        }
+        
+        .google-one-tap-content {
+            padding: 16px;
+        }
+        
+        .google-one-tap-content p {
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+        
+        .google-one-tap-footer {
+            margin-top: 12px;
+            padding-top: 8px;
+        }
+        
+        .google-one-tap-footer small {
+            font-size: 11px;
+        }
+        
+        .google-one-tap-close {
+            font-size: 20px;
+            padding: 0 4px;
+        }
+    }
+    
     @media (max-width: 480px) {
         .google-one-tap-container {
             right: 10px;
