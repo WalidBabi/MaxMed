@@ -20,43 +20,16 @@ class QuoteController extends Controller
     /**
      * Display a listing of quotes
      */
-    public function index(Request $request)
+    public function index()
     {
         // Additional security check
         if (!auth()->check() || !auth()->user()->isAdmin()) {
             abort(403, 'Unauthorized access.');
         }
 
-        $query = Quote::with(['creator', 'items.product']);
-
-        // Apply search filter
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('quote_number', 'like', "%{$search}%")
-                  ->orWhere('customer_name', 'like', "%{$search}%")
-                  ->orWhere('reference_number', 'like', "%{$search}%")
-                  ->orWhereHas('items.product', function($productQuery) use ($search) {
-                      $productQuery->where('name', 'like', "%{$search}%")
-                                  ->orWhere('sku', 'like', "%{$search}%");
-                  })
-                  ->orWhereHas('items', function($itemQuery) use ($search) {
-                      $itemQuery->where('item_details', 'like', "%{$search}%");
-                  });
-            });
-        }
-
-        // Apply status filter
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        // Apply currency filter
-        if ($request->filled('currency')) {
-            $query->where('currency', $request->currency);
-        }
-
-        $quotes = $query->orderBy('created_at', 'desc')->paginate(20);
+        $quotes = Quote::with('creator')
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
 
         return view('admin.quotes.index', compact('quotes'));
     }

@@ -473,6 +473,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('quotes/{quote}/attachments', [\App\Http\Controllers\Admin\QuoteController::class, 'removeAttachment'])->name('quotes.attachments.remove');
         Route::post('quotes/{quote}/send-email', [\App\Http\Controllers\Admin\QuoteController::class, 'sendEmail'])->name('quotes.send-email');
         Route::post('quotes/{quote}/convert-to-proforma', [\App\Http\Controllers\Admin\QuoteController::class, 'convertToProforma'])->name('quotes.convert-to-proforma');
+Route::get('quotes/search/suggestions', [\App\Http\Controllers\Admin\QuoteController::class, 'searchSuggestions'])->name('quotes.search-suggestions');
         
         // Invoice Management
         Route::resource('invoices', \App\Http\Controllers\Admin\InvoiceController::class);

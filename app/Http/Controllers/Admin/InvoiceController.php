@@ -27,7 +27,7 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Invoice::with(['quote', 'order', 'delivery', 'creator', 'payments', 'parentInvoice', 'childInvoices', 'items.product']);
+        $query = Invoice::with(['quote', 'order', 'delivery', 'creator', 'payments', 'parentInvoice', 'childInvoices']);
 
         // Apply filters
         if ($request->filled('type')) {
@@ -47,14 +47,7 @@ class InvoiceController extends Controller
             $query->where(function($q) use ($search) {
                 $q->where('invoice_number', 'like', "%{$search}%")
                   ->orWhere('customer_name', 'like', "%{$search}%")
-                  ->orWhere('reference_number', 'like', "%{$search}%")
-                  ->orWhereHas('items.product', function($productQuery) use ($search) {
-                      $productQuery->where('name', 'like', "%{$search}%")
-                                  ->orWhere('sku', 'like', "%{$search}%");
-                  })
-                  ->orWhereHas('items', function($itemQuery) use ($search) {
-                      $itemQuery->where('description', 'like', "%{$search}%");
-                  });
+                  ->orWhere('reference_number', 'like', "%{$search}%");
             });
         }
 
@@ -677,7 +670,10 @@ class InvoiceController extends Controller
     {
         $invoice->load(['items.product.specifications', 'delivery', 'parentInvoice', 'order.cashReceipts']);
         
-        $pdf = Pdf::loadView('admin.invoices.pdf', compact('invoice'));
+        // Get customer data for company name display
+        $customer = \App\Models\Customer::where('name', $invoice->customer_name)->first();
+        
+        $pdf = Pdf::loadView('admin.invoices.pdf', compact('invoice', 'customer'));
         
         return $pdf->download($invoice->invoice_number . '.pdf');
     }

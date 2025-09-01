@@ -63,7 +63,11 @@ class InvoiceEmail extends Mailable
     {
         // Generate PDF and attach it
         $this->invoice->load(['items.product.specifications', 'delivery', 'parentInvoice', 'order.cashReceipts']);
-        $pdf = Pdf::loadView('admin.invoices.pdf', ['invoice' => $this->invoice]);
+        
+        // Get customer data for company name display
+        $customer = \App\Models\Customer::where('name', $this->invoice->customer_name)->first();
+        
+        $pdf = Pdf::loadView('admin.invoices.pdf', ['invoice' => $this->invoice, 'customer' => $customer]);
         
         $pdfContent = $pdf->output();
         $filename = $this->invoice->invoice_number . '.pdf';

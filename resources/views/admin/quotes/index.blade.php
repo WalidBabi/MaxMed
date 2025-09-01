@@ -118,7 +118,49 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
-                        <input type="text" id="search" name="search" value="{{ request('search') }}" placeholder="Search quotes, customers, products..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <input type="text" id="search" name="search" value="{{ request('search') }}" placeholder="Search quotes, customers, products..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" autocomplete="off">
+                        <div id="search-suggestions" class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto hidden" style="box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);">
+                            <!-- Suggestions will be populated here -->
+                        </div>
+                        <style>
+                            #search-suggestions {
+                                border: 1px solid #e5e7eb;
+                                border-radius: 0.5rem;
+                                background: white;
+                                z-index: 9999;
+                                position: absolute;
+                                top: 100%;
+                                left: 0;
+                                right: 0;
+                                margin-top: 0.25rem;
+                                max-height: 300px;
+                                overflow-y: auto;
+                            }
+                            
+                            .suggestion-item {
+                                display: flex;
+                                align-items: center;
+                                padding: 1rem 1.25rem;
+                                cursor: pointer;
+                                border-bottom: 1px solid #f3f4f6;
+                                transition: background-color 0.15s ease-in-out;
+                                font-size: 0.875rem;
+                                line-height: 1.25rem;
+                                min-height: 56px;
+                            }
+                            
+                            .suggestion-item:last-child {
+                                border-bottom: none;
+                            }
+                            
+                            .suggestion-item:hover {
+                                background-color: #f9fafb;
+                            }
+                            
+                            .suggestion-item.bg-indigo-50 {
+                                background-color: #eef2ff;
+                            }
+                        </style>
                     </div>
                 </div>
                 
@@ -633,6 +675,10 @@ document.addEventListener('DOMContentLoaded', function() {
 let filterTimeout;
 let isFiltering = false;
 
+// Search suggestions variables
+let suggestionsTimeout;
+let selectedSuggestionIndex = -1;
+
 function filterQuotes() {
     clearTimeout(filterTimeout);
     
@@ -762,6 +808,159 @@ function updateActiveFiltersBadge() {
     }
 }
 
+// Search suggestions functions
+function showLoadingSuggestions() {
+    const suggestionsContainer = document.getElementById('search-suggestions');
+    suggestionsContainer.innerHTML = `
+        <div class="px-4 py-3 text-center">
+            <div class="inline-flex items-center">
+                <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-indigo-500" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span class="text-sm text-gray-600">Searching...</span>
+            </div>
+        </div>
+    `;
+    suggestionsContainer.classList.remove('hidden');
+}
+
+function fetchSuggestions(query) {
+    fetch(`/admin/quotes/search/suggestions?q=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.suggestions && data.suggestions.length > 0) {
+                showSuggestions(data.suggestions);
+            } else {
+                const suggestionsContainer = document.getElementById('search-suggestions');
+                suggestionsContainer.innerHTML = `
+                    <div class="px-4 py-3 text-center text-sm text-gray-500">
+                        No suggestions found
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching suggestions:', error);
+            const suggestionsContainer = document.getElementById('search-suggestions');
+            suggestionsContainer.innerHTML = `
+                <div class="px-4 py-3 text-center text-sm text-red-500">
+                    Error loading suggestions
+                </div>
+            `;
+        });
+}
+
+function showSuggestions(suggestions) {
+    const suggestionsContainer = document.getElementById('search-suggestions');
+    suggestionsContainer.innerHTML = '';
+    
+    suggestions.forEach((suggestion, index) => {
+        const suggestionItem = document.createElement('div');
+        suggestionItem.className = 'suggestion-item px-4 py-3 hover:bg-gray-100 cursor-pointer border-b border-gray-200 last:border-b-0 transition-colors duration-150';
+        suggestionItem.setAttribute('data-value', suggestion.value);
+        suggestionItem.setAttribute('data-type', suggestion.type);
+        
+        // Create icon based on suggestion type
+        let icon = '';
+        let iconColor = '';
+        switch(suggestion.type) {
+            case 'quote_number':
+                icon = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>';
+                iconColor = 'text-blue-600';
+                break;
+            case 'customer':
+                icon = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>';
+                iconColor = 'text-green-600';
+                break;
+            case 'product':
+                icon = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>';
+                iconColor = 'text-purple-600';
+                break;
+        }
+        
+        suggestionItem.innerHTML = `
+            <div class="flex items-center space-x-3">
+                <div class="flex-shrink-0 ${iconColor}">
+                    ${icon}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-sm font-medium text-gray-900 truncate">${suggestion.display}</div>
+                    <div class="text-xs text-gray-500 truncate">${suggestion.subtitle}</div>
+                </div>
+                <div class="flex-shrink-0">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                        suggestion.type === 'quote_number' ? 'bg-blue-100 text-blue-800' :
+                        suggestion.type === 'customer' ? 'bg-green-100 text-green-800' :
+                        'bg-purple-100 text-purple-800'
+                    }">
+                        ${suggestion.type === 'quote_number' ? 'Quote' :
+                          suggestion.type === 'customer' ? 'Customer' : 'Product'}
+                    </span>
+                </div>
+            </div>
+        `;
+        
+        suggestionItem.addEventListener('click', () => selectSuggestion(suggestionItem));
+        suggestionItem.addEventListener('mouseenter', () => {
+            document.querySelectorAll('.suggestion-item').forEach(item => {
+                item.classList.remove('bg-indigo-50', 'bg-gray-100');
+                item.classList.add('bg-gray-100');
+            });
+            suggestionItem.classList.remove('bg-gray-100');
+            suggestionItem.classList.add('bg-indigo-50');
+        });
+        
+        suggestionsContainer.appendChild(suggestionItem);
+    });
+    
+    suggestionsContainer.classList.remove('hidden');
+}
+
+function hideSuggestions() {
+    const suggestionsContainer = document.getElementById('search-suggestions');
+    suggestionsContainer.classList.add('hidden');
+    selectedSuggestionIndex = -1;
+}
+
+function updateActiveSuggestion(suggestions, activeIndex) {
+    suggestions.forEach((suggestion, index) => {
+        if (index === activeIndex) {
+            suggestion.classList.add('bg-indigo-50');
+            suggestion.classList.remove('bg-gray-100');
+            suggestion.scrollIntoView({ block: 'nearest' });
+        } else {
+            suggestion.classList.remove('bg-indigo-50');
+            suggestion.classList.add('bg-gray-100');
+        }
+    });
+}
+
+function updateSelectedSuggestion(suggestions) {
+    suggestions.forEach((suggestion, index) => {
+        if (index === selectedSuggestionIndex) {
+            suggestion.classList.add('bg-indigo-50');
+            suggestion.classList.remove('bg-gray-100');
+        } else {
+            suggestion.classList.remove('bg-indigo-50');
+            suggestion.classList.add('bg-gray-100');
+        }
+    });
+}
+
+function selectSuggestion(suggestionElement) {
+    const value = suggestionElement.getAttribute('data-value');
+    const type = suggestionElement.getAttribute('data-type');
+    
+    document.getElementById('search').value = value;
+    hideSuggestions();
+    
+    // Automatically apply filters when a suggestion is selected
+    setTimeout(() => {
+        applyFilters();
+    }, 100);
+}
+
 function updateResultsCount(visible, total) {
     // Find or create results count element
     let resultsCount = document.getElementById('results-count');
@@ -789,6 +988,77 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 applyFilters();
+            }
+        });
+        
+        // Add search suggestions functionality
+        
+        searchInput.addEventListener('input', function() {
+            clearTimeout(suggestionsTimeout);
+            const query = this.value.trim();
+            
+            if (query.length < 2) {
+                hideSuggestions();
+                return;
+            }
+            
+            // Show loading state immediately
+            showLoadingSuggestions();
+            
+            suggestionsTimeout = setTimeout(() => {
+                fetchSuggestions(query);
+            }, 300);
+        });
+        
+        // Show suggestions when input is focused (if there's a value)
+        searchInput.addEventListener('focus', function() {
+            const query = this.value.trim();
+            if (query.length >= 2) {
+                // Trigger the input event to show suggestions
+                this.dispatchEvent(new Event('input'));
+            }
+        });
+        
+        searchInput.addEventListener('keydown', function(e) {
+            const suggestionsContainer = document.getElementById('search-suggestions');
+            if (suggestionsContainer.classList.contains('hidden')) return;
+            
+            const suggestions = document.querySelectorAll('#search-suggestions .suggestion-item');
+            if (suggestions.length === 0) return;
+            
+            let activeIndex = Array.from(suggestions).findIndex(el => el.classList.contains('bg-indigo-50'));
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (activeIndex === -1 || activeIndex === suggestions.length - 1) {
+                    activeIndex = 0;
+                } else {
+                    activeIndex++;
+                }
+                updateActiveSuggestion(suggestions, activeIndex);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (activeIndex === -1 || activeIndex === 0) {
+                    activeIndex = suggestions.length - 1;
+                } else {
+                    activeIndex--;
+                }
+                updateActiveSuggestion(suggestions, activeIndex);
+            } else if (e.key === 'Enter' && activeIndex !== -1) {
+                e.preventDefault();
+                const selectedSuggestion = suggestions[activeIndex];
+                if (selectedSuggestion) {
+                    selectSuggestion(selectedSuggestion);
+                }
+            } else if (e.key === 'Escape') {
+                hideSuggestions();
+            }
+        });
+        
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !document.getElementById('search-suggestions').contains(e.target)) {
+                hideSuggestions();
             }
         });
     }
