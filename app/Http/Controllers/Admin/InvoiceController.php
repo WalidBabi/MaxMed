@@ -670,7 +670,10 @@ class InvoiceController extends Controller
     {
         $invoice->load(['items.product.specifications', 'delivery', 'parentInvoice', 'order.cashReceipts']);
         
-        $pdf = Pdf::loadView('admin.invoices.pdf', compact('invoice'));
+        // Get customer data for company name display
+        $customer = \App\Models\Customer::where('name', $invoice->customer_name)->first();
+        
+        $pdf = Pdf::loadView('admin.invoices.pdf', compact('invoice', 'customer'));
         
         return $pdf->download($invoice->invoice_number . '.pdf');
     }
