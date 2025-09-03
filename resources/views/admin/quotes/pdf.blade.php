@@ -557,6 +557,27 @@
                             </div>
                         @endif
                     </div>
+                    @if($customer)
+                        <div class="client-address" style="font-size: 10px; color: var(--text-secondary); line-height: 1.5; margin-top: 8px;">
+                            @if($customer->email)
+                                <div><strong>Email:</strong> {{ $customer->email }}</div>
+                            @endif
+                            @if($customer->phone)
+                                <div><strong>Phone:</strong> {{ $customer->phone }}</div>
+                            @endif
+                            @if($customer->tax_id)
+                                <div><strong>Tax ID:</strong> {{ $customer->tax_id }}</div>
+                            @endif
+                            @php $billing = $customer->billing_address; @endphp
+                            @if(!empty($billing))
+                                <div style="margin-top: 6px;"><strong>Billing Address:</strong><br>{!! nl2br(e($billing)) !!}</div>
+                            @endif
+                            @php $shipping = $customer->shipping_address; @endphp
+                            @if(!empty($shipping) && $shipping !== $billing)
+                                <div style="margin-top: 6px;"><strong>Shipping Address:</strong><br>{!! nl2br(e($shipping)) !!}</div>
+                            @endif
+                        </div>
+                    @endif
                 </div>
             </div>
 

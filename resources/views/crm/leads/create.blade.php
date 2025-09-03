@@ -93,7 +93,13 @@
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Company Information</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="company_name" class="block text-sm font-medium text-gray-700 mb-1">Company Name *</label>
+                            <div class="flex items-center justify-between mb-1">
+                                <label for="company_name" class="block text-sm font-medium text-gray-700">Company Name *</label>
+                                <label class="inline-flex items-center text-sm text-gray-700">
+                                    <input type="checkbox" id="personal_purchase_toggle" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600">
+                                    <span class="ml-2">Personal Purchase</span>
+                                </label>
+                            </div>
                             <input type="text" id="company_name" name="company_name" value="{{ old('company_name') }}" required
                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                             @error('company_name')
@@ -281,6 +287,35 @@
 </div>
 
 <script>
+// Personal Purchase toggle behavior
+document.addEventListener('DOMContentLoaded', function() {
+    const toggle = document.getElementById('personal_purchase_toggle');
+    const companyInput = document.getElementById('company_name');
+
+    function applyToggleState() {
+        if (toggle && companyInput) {
+            if (toggle.checked) {
+                companyInput.value = 'Personal Purchase';
+                companyInput.readOnly = true;
+                companyInput.classList.add('bg-gray-100','cursor-not-allowed');
+            } else {
+                if (companyInput.value === 'Personal Purchase') {
+                    companyInput.value = '';
+                }
+                companyInput.readOnly = false;
+                companyInput.classList.remove('bg-gray-100','cursor-not-allowed');
+            }
+        }
+    }
+
+    if (toggle) {
+        toggle.addEventListener('change', applyToggleState);
+        if (companyInput && companyInput.value === 'Personal Purchase') {
+            toggle.checked = true;
+        }
+        applyToggleState();
+    }
+});
 // Prevent double form submission
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('leadForm');

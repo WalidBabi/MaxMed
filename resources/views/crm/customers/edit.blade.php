@@ -120,7 +120,13 @@
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     <!-- Company Name -->
                     <div>
-                        <label for="company_name" class="block text-sm font-medium leading-6 text-gray-900">Company Name</label>
+                        <div class="flex items-center justify-between">
+                            <label for="company_name" class="block text-sm font-medium leading-6 text-gray-900">Company Name</label>
+                            <label class="inline-flex items-center text-sm text-gray-700">
+                                <input type="checkbox" id="personal_purchase_toggle" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                                <span class="ml-2">Personal Purchase</span>
+                            </label>
+                        </div>
                         <div class="mt-2">
                             <input type="text" name="company_name" id="company_name" value="{{ old('company_name', $customer->company_name) }}"
                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('company_name') ring-red-500 focus:ring-red-500 @enderror"
@@ -250,6 +256,34 @@
 
     @push('scripts')
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.getElementById('personal_purchase_toggle');
+            const companyInput = document.getElementById('company_name');
+
+            function applyToggleState() {
+                if (toggle && companyInput) {
+                    if (toggle.checked) {
+                        companyInput.value = 'Personal Purchase';
+                        companyInput.readOnly = true;
+                        companyInput.classList.add('bg-gray-100','cursor-not-allowed');
+                    } else {
+                        if (companyInput.value === 'Personal Purchase') {
+                            companyInput.value = '';
+                        }
+                        companyInput.readOnly = false;
+                        companyInput.classList.remove('bg-gray-100','cursor-not-allowed');
+                    }
+                }
+            }
+
+            if (toggle) {
+                toggle.addEventListener('change', applyToggleState);
+                if (companyInput && companyInput.value === 'Personal Purchase') {
+                    toggle.checked = true;
+                }
+                applyToggleState();
+            }
+        });
         function copyBillingToShipping() {
             const sameAsBilling = document.getElementById('same_as_billing').checked;
             if (sameAsBilling) {

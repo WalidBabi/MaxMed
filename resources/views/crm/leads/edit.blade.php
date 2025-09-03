@@ -74,7 +74,13 @@
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Company Information</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="company_name" class="block text-sm font-medium text-gray-700 mb-1">Company Name *</label>
+                            <div class="flex items-center justify-between mb-1">
+                                <label for="company_name" class="block text-sm font-medium text-gray-700">Company Name *</label>
+                                <label class="inline-flex items-center text-sm text-gray-700">
+                                    <input type="checkbox" id="personal_purchase_toggle" class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600">
+                                    <span class="ml-2">Personal Purchase</span>
+                                </label>
+                            </div>
                             <input type="text" id="company_name" name="company_name" value="{{ old('company_name', $lead->company_name) }}" required
                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                             @error('company_name')
@@ -248,8 +254,8 @@
                                        class="text-blue-600 hover:text-blue-800 text-sm">
                                         View
                                     </a>
-                                    <button type="button" onclick="removeAttachment({{ $index }})" 
-                                            class="text-red-600 hover:text-red-800 text-sm">
+                                    <button type="button" data-attachment-index="{{ $index }}" 
+                                            class="text-red-600 hover:text-red-800 text-sm js-remove-attachment">
                                         Remove
                                     </button>
                                 </div>
@@ -332,9 +338,45 @@
 </div>
 
 <script>
+// Personal Purchase toggle behavior
+document.addEventListener('DOMContentLoaded', function() {
+    const toggle = document.getElementById('personal_purchase_toggle');
+    const companyInput = document.getElementById('company_name');
+
+    function applyToggleState() {
+        if (toggle && companyInput) {
+            if (toggle.checked) {
+                companyInput.value = 'Personal Purchase';
+                companyInput.readOnly = true;
+                companyInput.classList.add('bg-gray-100','cursor-not-allowed');
+            } else {
+                if (companyInput.value === 'Personal Purchase') {
+                    companyInput.value = '';
+                }
+                companyInput.readOnly = false;
+                companyInput.classList.remove('bg-gray-100','cursor-not-allowed');
+            }
+        }
+    }
+
+    if (toggle) {
+        toggle.addEventListener('change', applyToggleState);
+        if (companyInput && companyInput.value === 'Personal Purchase') {
+            toggle.checked = true;
+        }
+        applyToggleState();
+    }
+});
 // Add form submission debugging
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('editLeadForm');
+    // Wire up Remove buttons
+    document.querySelectorAll('.js-remove-attachment').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            var idx = this.getAttribute('data-attachment-index');
+            removeAttachment(idx);
+        });
+    });
     form.addEventListener('submit', function(e) {
         console.log('Form being submitted...');
         
@@ -360,7 +402,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const removeInputs = form.querySelectorAll('input[name="remove_attachments[]"]');
         console.log('Direct check - removal inputs found:', removeInputs.length);
         removeInputs.forEach((input, i) => {
-            console.log(`Removal input ${i}: value=${input.value}`);
+            console.log('Removal input ' + i + ': value=' + input.value);
         });
     });
 });
@@ -373,7 +415,7 @@ function debugRemovalInputs() {
     console.log('Form found:', !!form);
     console.log('Removal inputs count:', removeInputs.length);
     removeInputs.forEach((input, i) => {
-        console.log(`Input ${i}: value=${input.value}, name=${input.name}`);
+        console.log('Input ' + i + ': value=' + input.value + ', name=' + input.name);
     });
     console.log('===================================');
 }
@@ -397,11 +439,7 @@ function displaySelectedFiles(input) {
             
             // File icon based on type
             const icon = getFileIcon(file.name);
-            fileInfo.innerHTML = `
-                <span class="mr-2">${icon}</span>
-                <span class="font-medium">${file.name}</span>
-                <span class="ml-2 text-gray-500">(${formatFileSize(file.size)})</span>
-            `;
+            fileInfo.innerHTML = '\n                <span class="mr-2">' + icon + '</span>\n                <span class="font-medium">' + file.name + '</span>\n                <span class="ml-2 text-gray-500">(' + formatFileSize(file.size) + ')</span>\n            ';
             
             li.appendChild(fileInfo);
             filesList.appendChild(li);
@@ -453,7 +491,7 @@ function removeAttachment(index) {
         }
         
         // Check if this attachment is already marked for removal
-        const existingInput = form.querySelector(`input[name="remove_attachments[]"][value="${index}"]`);
+        const existingInput = form.querySelector('input[name="remove_attachments[]"][value="' + index + '"]');
         if (existingInput) {
             console.log('Attachment already marked for removal');
             return;
