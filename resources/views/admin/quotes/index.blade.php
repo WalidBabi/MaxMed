@@ -664,7 +664,14 @@ function toggleProductsColumn() {
 }
 
 // Initialize products column visibility on page load
-document.addEventListener('DOMContentLoaded', function() {
+// Ensure initialization runs whether DOMContentLoaded has already fired or not
+(function onReady(fn){
+    if (document.readyState !== 'loading') {
+        fn();
+    } else {
+        document.addEventListener('DOMContentLoaded', fn, { once: true });
+    }
+})(function() {
     const savedVisibility = localStorage.getItem('productsColumnVisible');
     if (savedVisibility === 'false') {
         toggleProductsColumn();
@@ -773,8 +780,6 @@ function hideFilteringIndicator() {
         spinner.style.display = 'none';
     }
 }
-}
-
 function clearFilters() {
     document.getElementById('search').value = '';
     document.getElementById('status').value = '';
