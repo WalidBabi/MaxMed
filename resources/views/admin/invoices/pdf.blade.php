@@ -583,6 +583,17 @@
         <img class="stamp" src="{{ $resolvedStamp }}" alt="Company Stamp">
     @endif
     @endif
+    @if($invoice->type === 'final')
+    @php 
+        $paidStampUpper = public_path('Images/paid.png');
+        $paidStampLower = public_path('images/paid.png');
+        $paidStamp = file_exists($paidStampUpper) ? $paidStampUpper : (file_exists($paidStampLower) ? $paidStampLower : null);
+        $isPaidFinal = (float)($invoice->total_amount ?? 0) - (float)($invoice->paid_amount ?? 0) <= 0.0001;
+    @endphp
+    @if($paidStamp && $isPaidFinal)
+        <img class="stamp" src="{{ $paidStamp }}" alt="Paid Stamp">
+    @endif
+    @endif
     <div class="document-container">
         <!-- HEADER WITH COMPANY INFO & DOCUMENT TITLE -->
         <div class="header-wrapper">
@@ -921,7 +932,39 @@
         </div>
         @endif
 
+         <!-- PAYMENT DETAILS (only for final invoices with payments) -->
+         @if($invoice->type === 'final' && ($invoice->payments && $invoice->payments->count() > 0))
+         <div class="banking-section">
+             <div class="banking-title">Payment Details</div>
+             <div class="banking-grid">
+                 @php $lastPayment = $invoice->payments->sortByDesc('payment_date')->first(); @endphp
+                 <div class="banking-item">
+                     <div class="banking-label">Paid To Date</div>
+                     <div class="banking-value">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->paid_amount ?? 0, 2) }}</div>
+                 </div>
+                 @if($lastPayment)
+                 <div class="banking-item">
+                     <div class="banking-label">Last Payment Date</div>
+                     <div class="banking-value">{{ formatDubaiDate($lastPayment->payment_date ?? $invoice->paid_at, 'd M Y') }}</div>
+                 </div>
+                 <div class="banking-item">
+                     <div class="banking-label">Payment Method</div>
+                     <div class="banking-value">{{ \App\Models\Payment::PAYMENT_METHODS[$lastPayment->payment_method] ?? ucfirst(str_replace('_',' ',$lastPayment->payment_method)) }}</div>
+                 </div>
+                 @if($lastPayment->transaction_reference)
+                 <div class="banking-item">
+                     <div class="banking-label">Transaction Ref</div>
+                     <div class="banking-value">{{ $lastPayment->transaction_reference }}</div>
+                 </div>
+                 @endif
+                 @endif
+             </div>
+         </div>
+         @endif
+
          <!-- BANKING SECTION -->
+         @php $isPaidInFull = ($invoice->type === 'final') && (float)($invoice->total_amount ?? 0) - (float)($invoice->paid_amount ?? 0) <= 0.0001; @endphp
+         @if(!$isPaidInFull)
          <div class="banking-section">
              <div class="banking-title">Banking Details</div>
              <div class="banking-grid">
@@ -947,6 +990,7 @@
                  </div>
              </div>
          </div>
+         @endif
 
          <!-- TERMS & CONDITIONS -->
          @if($invoice->terms_conditions)
