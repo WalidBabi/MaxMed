@@ -358,7 +358,10 @@ class Invoice extends Model
                     $finalInvoice->payment_status = 'paid';
                     $finalInvoice->paid_amount = $this->total_amount; // Show actual amount paid
                     $finalInvoice->paid_at = now();
-                    $finalInvoice->description = 'Final Invoice - Delivery Completed (Full payment received on proforma)';
+                    // Only reference delivery completion when we have a delivered record
+                    $finalInvoice->description = $isDelivered
+                        ? 'Final Invoice - Delivery Completed (Full payment received on proforma)'
+                        : 'Final Invoice - Full payment received on proforma';
                 } else {
                     throw new \Exception('Full advance payment not received. Cannot convert to final invoice.');
                 }
