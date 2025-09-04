@@ -36,7 +36,8 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600">Total Quotes</p>
-                    <p class="text-3xl font-bold text-gray-900">{{ $quotes->total() }}</p>
+                    <p class="text-3xl font-bold text-gray-900">{{ $totalQuotesCount ?? $quotes->total() }}</p>
+                    <p class="text-xs text-gray-500 mt-1">Includes all pages</p>
                 </div>
             </div>
         </div>
@@ -52,7 +53,8 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600">Pending</p>
-                    <p class="text-3xl font-bold text-gray-900">{{ $quotes->where('status', 'draft')->count() + $quotes->where('status', 'sent')->count() }}</p>
+                    <p class="text-3xl font-bold text-gray-900">{{ $pendingCountAll ?? ($quotes->where('status', 'draft')->count() + $quotes->where('status', 'sent')->count()) }}</p>
+                    <p class="text-xs text-gray-500 mt-1">Includes all pages</p>
                 </div>
             </div>
         </div>
@@ -68,7 +70,8 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600">Converted</p>
-                    <p class="text-3xl font-bold text-gray-900">{{ $quotes->where('status', 'invoiced')->count() }}</p>
+                    <p class="text-3xl font-bold text-gray-900">{{ $convertedCountAll ?? $quotes->where('status', 'invoiced')->count() }}</p>
+                    <p class="text-xs text-gray-500 mt-1">Includes all pages</p>
                 </div>
             </div>
         </div>
@@ -84,8 +87,8 @@
                     <p class="text-sm font-medium text-gray-600">Total Value</p>
                     <p class="text-3xl font-bold text-gray-900">
                         @php
-                            $totalByAed = $quotes->where('currency', 'AED')->sum('total_amount');
-                            $totalByUsd = $quotes->where('currency', 'USD')->sum('total_amount');
+                            $totalByAed = isset($totalByAedAll) ? $totalByAedAll : $quotes->where('currency', 'AED')->sum('total_amount');
+                            $totalByUsd = isset($totalByUsdAll) ? $totalByUsdAll : $quotes->where('currency', 'USD')->sum('total_amount');
                         @endphp
                         @if($totalByAed > 0 && $totalByUsd > 0)
                             <div class="text-lg">{{ number_format($totalByAed, 0) }} AED</div>
@@ -98,6 +101,7 @@
                             <div class="text-3xl">0 AED</div>
                         @endif
                     </p>
+                    <p class="text-xs text-gray-500 mt-1">Totals include all pages</p>
                 </div>
             </div>
         </div>

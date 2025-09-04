@@ -31,7 +31,22 @@ class QuoteController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
-        return view('admin.quotes.index', compact('quotes'));
+        // Aggregates across ALL quotes (not just current page)
+        $totalQuotesCount = Quote::count();
+        $pendingCountAll = Quote::whereIn('status', ['draft', 'sent'])->count();
+        $convertedCountAll = Quote::where('status', 'invoiced')->count();
+
+        $totalByAedAll = Quote::where('currency', 'AED')->sum('total_amount');
+        $totalByUsdAll = Quote::where('currency', 'USD')->sum('total_amount');
+
+        return view('admin.quotes.index', compact(
+            'quotes',
+            'totalQuotesCount',
+            'pendingCountAll',
+            'convertedCountAll',
+            'totalByAedAll',
+            'totalByUsdAll'
+        ));
     }
 
     /**
