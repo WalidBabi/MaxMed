@@ -193,6 +193,7 @@
                                     <label for="vat_rate" class="block text-sm font-medium text-gray-700 mb-2">VAT Rate (%)</label>
                                     <input type="number" id="vat_rate" name="vat_rate" step="0.01" min="0" max="100"
                                            value="{{ old('vat_rate', $quote->vat_rate ?? 5) }}"
+                                           @if(!is_null($quote->vat_rate ?? null)) data-manual-override="true" @endif
                                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('vat_rate') border-red-300 @enderror"
                                            onchange="updateTotals()" 
                                            oninput="this.setAttribute('data-manual-override', 'true')">
@@ -205,7 +206,7 @@
                                     <label for="customs_clearance_fee" class="block text-sm font-medium text-gray-700 mb-2">Customs Clearance Fee</label>
                                     <input type="number" id="customs_clearance_fee" name="customs_clearance_fee" step="0.01" min="0"
                                            value="{{ old('customs_clearance_fee', $quote->customs_clearance_fee ?? 0) }}"
-                                           @if(($quote->customs_clearance_fee ?? 0) > 0) data-manual-override="true" @endif
+                                           @if(!is_null($quote->customs_clearance_fee ?? null)) data-manual-override="true" @endif
                                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('customs_clearance_fee') border-red-300 @enderror"
                                            onchange="updateTotals()" 
                                            oninput="this.setAttribute('data-manual-override', 'true')"
@@ -672,7 +673,14 @@
                     productSearchInput.value = productName;
                     productIdInput.value = String(data.product_id);
                     itemDetailsHidden.value = productName;
-                    rateInput.value = (currency === 'USD' ? priceUsd : priceAed) || data.rate || 0;
+                    // Preserve saved user rate if provided
+                    if (typeof data.rate === 'number' && !isNaN(data.rate)) {
+                        rateInput.value = data.rate;
+                        rateInput.setAttribute('data-manual-rate', 'true');
+                        rateInput.setAttribute('data-prefilled', 'true');
+                    } else {
+                        rateInput.value = (currency === 'USD' ? priceUsd : priceAed) || 0;
+                    }
                     rateInput.setAttribute('data-procurement-price', String(currency === 'USD' ? procurementUsd : procurementAed));
 
                     const sizeSelect = row.querySelector('.size-options-select');
@@ -792,19 +800,26 @@
         });
         
         const shippingRate = parseFloat(document.getElementById('shipping_rate').value) || 0;
-        let customsFee = parseFloat(document.getElementById('customs_clearance_fee').value) || 0;
-        let vatRate = parseFloat(document.getElementById('vat_rate').value) || 0;
+        let customsFee = parseFloat(document.getElementById('customs_clearance_fee').value);
+        customsFee = isNaN(customsFee) ? 0 : customsFee;
+        let vatRate = parseFloat(document.getElementById('vat_rate').value);
+        vatRate = isNaN(vatRate) ? 0 : vatRate;
         
         // Auto-calculate customs as 10% of procurement cost if not manually set
         if (!document.getElementById('customs_clearance_fee').getAttribute('data-manual-override')) {
-            customsFee = totalProcurementCost * 0.10;
-            document.getElementById('customs_clearance_fee').value = customsFee.toFixed(2);
+            // Only auto-calc if input is truly empty; preserve explicit 0
+            if (document.getElementById('customs_clearance_fee').value === '') {
+                customsFee = totalProcurementCost * 0.10;
+                document.getElementById('customs_clearance_fee').value = customsFee.toFixed(2);
+            }
         }
         
         // Auto-set VAT rate to 5% if not manually set
         if (!document.getElementById('vat_rate').getAttribute('data-manual-override')) {
-            vatRate = 5;
-            document.getElementById('vat_rate').value = vatRate.toFixed(1);
+            if (document.getElementById('vat_rate').value === '') {
+                vatRate = 5;
+                document.getElementById('vat_rate').value = vatRate.toFixed(1);
+            }
         }
         
         // Calculate VAT on subtotal + shipping + customs
@@ -1145,7 +1160,7 @@
                     specifications: item.specifications || '',
                     size: item.size || '',
                     quantity: parseFloat(item.quantity) || 1.00,
-                    rate: parseFloat(item.rate) || 0.00,
+                    rate: (item.rate !== null && item.rate !== undefined) ? parseFloat(item.rate) : 0.00,
                     discount: parseFloat(item.discount) || 0,
                     amount: parseFloat(item.amount) || 0.00,
                     product_id: item.product_id || null
@@ -1301,13 +1316,19 @@
                     priceDisplaysUsd.forEach(el => el.style.display = 'none');
                 }
                 
-                // Update existing item rates based on selected currency
+                // Update existing item rates based on selected currency (only if rate wasn't manually set for this row)
                 const itemRows = document.querySelectorAll('#itemsTable tr');
                 itemRows.forEach(row => {
                     const productIdInput = row.querySelector('input[name*="[product_id]"]');
                     const rateInput = row.querySelector('input[name*="[rate]"]');
+                    // If the rate was filled from saved data (edit), mark to preserve
+                    if (!rateInput.hasAttribute('data-manual-rate')) {
+                        if (rateInput.value && !rateInput.getAttribute('data-prefilled')) {
+                            rateInput.setAttribute('data-manual-rate', 'true');
+                        }
+                    }
                     
-                    if (productIdInput && productIdInput.value && rateInput) {
+                    if (productIdInput && productIdInput.value && rateInput && !rateInput.hasAttribute('data-manual-rate')) {
                         // Find the product in dropdown to get price data
                         const productItem = document.querySelector(`[data-id="${productIdInput.value}"]`);
                         if (productItem) {
