@@ -409,6 +409,11 @@ class InvoiceController extends Controller
         try {
             DB::beginTransaction();
 
+            // Preserve existing VAT unless explicitly changed; if vat_rate provided as 0, also zero tax_amount
+            $vatRateInput = $request->vat_rate;
+            $vatRateNormalized = is_null($vatRateInput) ? $invoice->vat_rate : (float)$vatRateInput;
+            $taxAmountToSet = ($vatRateNormalized <= 0) ? 0 : ($invoice->tax_amount ?? 0);
+
             $invoice->update([
                 'customer_name' => $request->customer_name,
                 'billing_address' => $request->billing_address,
@@ -421,7 +426,8 @@ class InvoiceController extends Controller
                 'payment_terms' => $request->payment_terms,
                 'advance_percentage' => $request->advance_percentage,
                 'shipping_rate' => $request->shipping_rate ?? 0,
-                'vat_rate' => $request->vat_rate ?? 0,
+                'vat_rate' => $vatRateNormalized,
+                'tax_amount' => $taxAmountToSet,
                 'customs_clearance_fee' => $request->customs_clearance_fee ?? 0,
                 'reference_number' => $request->reference_number,
                 'po_number' => $request->po_number,

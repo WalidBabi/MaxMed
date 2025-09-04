@@ -242,11 +242,14 @@ class Invoice extends Model
         $shippingRate = $this->shipping_rate ?? 0;
         $customsClearance = $this->customs_clearance_fee ?? 0;
         
-        // Apply explicit tax amount; if vat_rate is set and tax_amount is 0, compute VAT
+        // VAT handling: if vat_rate is 0 or not set, force tax to 0; otherwise, compute if not explicitly set
         $taxAmount = $this->tax_amount ?? 0;
-        if ((float)($this->vat_rate ?? 0) > 0 && (float)$taxAmount === 0.0) {
+        $vatRate = (float)($this->vat_rate ?? 0);
+        if ($vatRate <= 0) {
+            $taxAmount = 0.0;
+        } elseif ((float)$taxAmount === 0.0) {
             // VAT calculated on subtotal + shipping + customs (same as Quote calculation)
-            $taxAmount = round(($totalAfterDiscount + $shippingRate + $customsClearance) * ((float)$this->vat_rate / 100), 2);
+            $taxAmount = round(($totalAfterDiscount + $shippingRate + $customsClearance) * ($vatRate / 100), 2);
         }
         
         $finalTotal = $totalAfterDiscount + $taxAmount + $shippingRate + $customsClearance;
