@@ -822,6 +822,27 @@
                         <td class="total-label">Total Amount:</td>
                         <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->total_amount, 2) }}</td>
                     </tr>
+                    @if($invoice->type === 'final')
+                    @php
+                        $paidToDate = (float)($invoice->paid_amount ?? 0);
+                        $amountDue = max(0, (float)($invoice->total_amount ?? 0) - $paidToDate);
+                    @endphp
+                    @if($paidToDate > 0)
+                    <tr>
+                        <td class="total-label">Paid to Date:</td>
+                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($paidToDate, 2) }}</td>
+                    </tr>
+                    @endif
+                    <tr>
+                        <td class="total-label">Amount Due:</td>
+                        <td class="total-amount">
+                            {{ $invoice->currency ?? 'AED' }} {{ number_format($amountDue, 2) }}
+                            @if($amountDue == 0)
+                                <span style="font-size:9px; color: var(--success-color); font-weight:700;">(Paid)</span>
+                            @endif
+                        </td>
+                    </tr>
+                    @endif
                 </table>
             </div>
         </div>
@@ -869,26 +890,30 @@
                 if ($invoice->order && $invoice->order->cashReceipts) {
                     $hasCashReceipt = $invoice->order->cashReceipts->where('status', 'issued')->count() > 0;
                 }
-                $paymentRecorded = $invoice->payment_status === 'paid';
+                $paidToDateFinal = (float)($invoice->paid_amount ?? 0);
+                $amountDueFinal = max(0, (float)($invoice->total_amount ?? 0) - $paidToDateFinal);
+                $paymentRecorded = $amountDueFinal == 0;
             @endphp
 
-            @if($isOnDeliveryTerms && $paymentRecorded && $hasCashReceipt)
-                <div class="payment-text">Thank you for considering MaxMed. Here is your invoice.</div>
-            @else
+            @if($paymentRecorded)
+                <div class="payment-text">Payment received in full. No amount due. Thank you for your business.</div>
                 @if($isDelivered)
-                    <div class="payment-text">Your order has been delivered successfully. 
-                        @if($invoice->payment_status === 'paid')
-                            Payment has been received.
-                        @else
-                            Please arrange payment for the remaining amount.
-                        @endif
-                    </div>
+                    <div class="payment-text">Order status: Delivered.</div>
                 @elseif($isShipped)
-                    <div class="payment-text">Your order has been shipped and is in transit. Please arrange payment for the remaining amount if applicable.</div>
-                @else
-                    <div class="payment-text">Your order has been processed and is ready for delivery. Please arrange payment for the remaining amount if applicable.</div>
+                    <div class="payment-text">Order status: In transit.</div>
                 @endif
-
+                @if($invoice->paid_at)
+                    <div class="payment-text">Paid on: {{ formatDubaiDate($invoice->paid_at, 'd M Y') }}</div>
+                @endif
+            @else
+                <div class="payment-text">Amount Due: <strong>{{ $invoice->currency ?? 'AED' }} {{ number_format($amountDueFinal, 2) }}</strong> @if($paidToDateFinal > 0) (Paid to date: {{ $invoice->currency ?? 'AED' }} {{ number_format($paidToDateFinal, 2) }}) @endif</div>
+                @if($isDelivered)
+                    <div class="payment-text">Your order has been delivered. Please arrange payment for the balance.</div>
+                @elseif($isShipped)
+                    <div class="payment-text">Your order is in transit. Please arrange payment for the balance.</div>
+                @else
+                    <div class="payment-text">Your order is being processed for delivery. Please arrange payment for the balance.</div>
+                @endif
                 @if($hasAdvancePayment && !$paymentCollectedOnDelivery)
                     <div class="payment-text">Previous advance payment received: <strong>{{ number_format($parentInvoice->paid_amount, 2) }} {{ $invoice->currency ?? 'AED' }}</strong></div>
                 @endif
