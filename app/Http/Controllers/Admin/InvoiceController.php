@@ -542,6 +542,13 @@ class InvoiceController extends Controller
             
             Log::info("Recording payment for invoice {$invoice->id}: amount={$request->amount}, current_status={$invoice->status}, current_payment_status={$invoice->payment_status}");
             
+            // Ensure invoice status is appropriate before creating payment so hooks see correct state
+            $freshBeforePayment = $invoice->fresh();
+            if ($freshBeforePayment->type === 'proforma' && $freshBeforePayment->status === 'draft') {
+                Log::info("Pre-payment: updating invoice {$freshBeforePayment->id} status from 'draft' to 'sent' to enable workflow");
+                $freshBeforePayment->update(['status' => 'sent']);
+            }
+
             $payment = Payment::create([
                 'invoice_id' => $invoice->id,
                 'amount' => $request->amount,
@@ -557,17 +564,9 @@ class InvoiceController extends Controller
 
             Log::info("Payment {$payment->id} created successfully for invoice {$invoice->id}");
             
-            // Ensure invoice status is appropriate for workflow automation
+            // Payment::saved hook updates invoice paid_amount/payment_status and triggers automation.
             $freshInvoice = $invoice->fresh();
-            if ($freshInvoice->type === 'proforma' && $freshInvoice->status === 'draft') {
-                Log::info("Updating invoice {$freshInvoice->id} status from 'draft' to 'sent' to enable workflow");
-                $freshInvoice->update(['status' => 'sent']);
-            }
-            
-            // Manually trigger workflow automation to ensure it runs
-            $freshInvoice = $invoice->fresh();
-            Log::info("Triggering workflow automation for invoice {$freshInvoice->id}: status={$freshInvoice->status}, payment_status={$freshInvoice->payment_status}");
-            $freshInvoice->handleWorkflowAutomation();
+            Log::info("Post-payment: invoice {$freshInvoice->id} state: status={$freshInvoice->status}, payment_status={$freshInvoice->payment_status}");
 
             // Check final status
             $finalInvoice = $invoice->fresh();

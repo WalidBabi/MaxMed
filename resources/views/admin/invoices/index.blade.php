@@ -769,8 +769,14 @@ function toggleInvoiceProductsColumn() {
     localStorage.setItem('invoiceProductsColumnVisible', invoiceProductsColumnVisible);
 }
 
-// Initialize invoice products column visibility on page load
-document.addEventListener('DOMContentLoaded', function() {
+// Initialize invoice products column visibility on page load (robust to timing)
+(function onReady(fn){
+    if (document.readyState !== 'loading') {
+        fn();
+    } else {
+        document.addEventListener('DOMContentLoaded', fn, { once: true });
+    }
+})(function() {
     const savedVisibility = localStorage.getItem('invoiceProductsColumnVisible');
     if (savedVisibility === 'false') {
         toggleInvoiceProductsColumn();
@@ -860,7 +866,7 @@ function hideInvoiceFilteringIndicator() {
         spinner.style.display = 'none';
     }
 }
-}
+ 
 
 function clearInvoiceFilters() {
     document.getElementById('search').value = '';
@@ -889,7 +895,13 @@ function updateInvoiceResultsCount(visible, total) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+(function onReady(fn){
+    if (document.readyState !== 'loading') {
+        fn();
+    } else {
+        document.addEventListener('DOMContentLoaded', fn, { once: true });
+    }
+})(function() {
     // Delete invoice functionality
     document.querySelectorAll('.delete-invoice-btn').forEach(button => {
         button.addEventListener('click', function() {
