@@ -114,7 +114,7 @@
                                         <option value="">Select a role (optional)</option>
                                         @foreach($roles as $role)
                                             <option value="{{ $role->id }}" {{ old('role_id', $user->role_id) == $role->id ? 'selected' : '' }}>
-                                                {{ $role->display_name }}
+                                                {{ $role->display_name }} (ID: {{ $role->id }})
                                             </option>
                                         @endforeach
                                     </select>
@@ -181,14 +181,16 @@
                             <div>
                                 <p class="font-medium text-gray-900">Current Role:</p>
                                 <div class="mt-1">
-                                    @if($user->isAdmin())
-                                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800">
-                                            Super Admin
-                                        </span>
-                                    @elseif($user->role)
-                                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800">
-                                            {{ $user->role->display_name }}
-                                        </span>
+                                    @if($user->role)
+                                        @if($user->role->name === 'admin')
+                                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                {{ $user->role->display_name }} (ID: {{ $user->role->id }})
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800">
+                                                {{ $user->role->display_name }} (ID: {{ $user->role->id }})
+                                            </span>
+                                        @endif
                                     @else
                                         <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-800">
                                             No Role
@@ -245,4 +247,5 @@
         </div>
     </div>
 </div>
+
 @endsection 
