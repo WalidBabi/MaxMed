@@ -29,6 +29,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'verification_reminder_sent_at',
     ];
 
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -80,7 +81,7 @@ class User extends Authenticatable implements MustVerifyEmail
                 return false;
             }
             
-            return $this->role->hasPermission('dashboard.view');
+            return $this->role->name === 'admin';
             
         } catch (\Exception $e) {
             // Return false as fallback

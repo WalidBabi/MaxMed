@@ -160,6 +160,134 @@ class Role extends Model
             'crm.campaigns.create' => 'Create Marketing Campaigns',
             'crm.campaigns.edit' => 'Edit Marketing Campaigns',
             'crm.campaigns.delete' => 'Delete Marketing Campaigns',
+            
+            // Purchase Order Management
+            'purchase_orders.view' => 'View Purchase Orders',
+            'purchase_orders.create' => 'Create Purchase Orders',
+            'purchase_orders.edit' => 'Edit Purchase Orders',
+            'purchase_orders.delete' => 'Delete Purchase Orders',
+            'purchase_orders.approve' => 'Approve Purchase Orders',
+            'purchase_orders.send_to_supplier' => 'Send Purchase Orders to Suppliers',
+            'purchase_orders.manage_status' => 'Manage Purchase Order Status',
+            'purchase_orders.view_financials' => 'View Purchase Order Financial Information',
+            'purchase_orders.manage_payments' => 'Manage Purchase Order Payments',
+            
+            // Supplier Management
+            'suppliers.view' => 'View Suppliers',
+            'suppliers.create' => 'Create Suppliers',
+            'suppliers.edit' => 'Edit Suppliers',
+            'suppliers.delete' => 'Delete Suppliers',
+            'suppliers.manage_contracts' => 'Manage Supplier Contracts',
+            'suppliers.view_performance' => 'View Supplier Performance',
+            
+            // Quotation Management
+            'quotations.view' => 'View Quotations',
+            'quotations.create' => 'Create Quotations',
+            'quotations.edit' => 'Edit Quotations',
+            'quotations.delete' => 'Delete Quotations',
+            'quotations.approve' => 'Approve Quotations',
+            'quotations.compare' => 'Compare Quotations',
+            
+            // Procurement Analytics
+            'procurement.analytics' => 'View Procurement Analytics',
+            'procurement.reports' => 'Generate Procurement Reports',
+            'procurement.budget_tracking' => 'Track Procurement Budget',
+            
+            // CRM Lead Management
+            'crm.leads.view' => 'View CRM Leads',
+            'crm.leads.create' => 'Create CRM Leads',
+            'crm.leads.edit' => 'Edit CRM Leads',
+            'crm.leads.delete' => 'Delete CRM Leads',
+            'crm.leads.assign' => 'Assign Leads to Users',
+            'crm.leads.convert' => 'Convert Leads to Deals',
+            'crm.leads.export' => 'Export Lead Data',
+            'crm.leads.import' => 'Import Lead Data',
+            'crm.leads.merge' => 'Merge Duplicate Leads',
+            'crm.leads.bulk_actions' => 'Perform Bulk Actions on Leads',
+            
+            // CRM Deal Management
+            'crm.deals.view' => 'View CRM Deals',
+            'crm.deals.create' => 'Create CRM Deals',
+            'crm.deals.edit' => 'Edit CRM Deals',
+            'crm.deals.delete' => 'Delete CRM Deals',
+            'crm.deals.assign' => 'Assign Deals to Users',
+            'crm.deals.close' => 'Close Deals (Won/Lost)',
+            'crm.deals.export' => 'Export Deal Data',
+            'crm.deals.pipeline' => 'View Sales Pipeline',
+            'crm.deals.forecast' => 'View Sales Forecast',
+            
+            // CRM Activity Management
+            'crm.activities.view' => 'View CRM Activities',
+            'crm.activities.create' => 'Create CRM Activities',
+            'crm.activities.edit' => 'Edit CRM Activities',
+            'crm.activities.delete' => 'Delete CRM Activities',
+            'crm.activities.complete' => 'Mark Activities as Complete',
+            'crm.activities.schedule' => 'Schedule Activities',
+            'crm.activities.timeline' => 'View Activity Timeline',
+            
+            // CRM Contact Management
+            'crm.contacts.view' => 'View CRM Contacts',
+            'crm.contacts.create' => 'Create CRM Contacts',
+            'crm.contacts.edit' => 'Edit CRM Contacts',
+            'crm.contacts.delete' => 'Delete CRM Contacts',
+            'crm.contacts.merge' => 'Merge Duplicate Contacts',
+            'crm.contacts.export' => 'Export Contact Data',
+            'crm.contacts.import' => 'Import Contact Data',
+            
+            // CRM Campaign Management
+            'crm.campaigns.view' => 'View Marketing Campaigns',
+            'crm.campaigns.create' => 'Create Marketing Campaigns',
+            'crm.campaigns.edit' => 'Edit Marketing Campaigns',
+            'crm.campaigns.delete' => 'Delete Marketing Campaigns',
+            'crm.campaigns.execute' => 'Execute Campaigns',
+            'crm.campaigns.track' => 'Track Campaign Performance',
+            
+            // CRM Task Management
+            'crm.tasks.view' => 'View CRM Tasks',
+            'crm.tasks.create' => 'Create CRM Tasks',
+            'crm.tasks.edit' => 'Edit CRM Tasks',
+            'crm.tasks.delete' => 'Delete CRM Tasks',
+            'crm.tasks.assign' => 'Assign Tasks to Users',
+            'crm.tasks.complete' => 'Mark Tasks as Complete',
+            'crm.tasks.overdue' => 'View Overdue Tasks',
+            
+            // CRM Reporting & Analytics
+            'crm.reports.view' => 'View CRM Reports',
+            'crm.reports.create' => 'Create Custom Reports',
+            'crm.reports.export' => 'Export CRM Reports',
+            'crm.analytics.view' => 'View CRM Analytics',
+            'crm.analytics.dashboard' => 'View CRM Dashboard',
+            'crm.analytics.performance' => 'View Performance Metrics',
+            
+            // CRM Communication
+            'crm.communication.email' => 'Send CRM Emails',
+            'crm.communication.sms' => 'Send SMS Messages',
+            'crm.communication.call' => 'Log Phone Calls',
+            'crm.communication.meeting' => 'Schedule Meetings',
+            'crm.communication.templates' => 'Manage Email Templates',
+            
+            // CRM Integration & Automation
+            'crm.integration.webhooks' => 'Manage Webhooks',
+            'crm.integration.api' => 'Access CRM API',
+            'crm.automation.workflows' => 'Manage Workflows',
+            'crm.automation.rules' => 'Manage Automation Rules',
+            'crm.automation.triggers' => 'Manage Triggers',
+            
+            // CRM Administration
+            'crm.admin.settings' => 'Manage CRM Settings',
+            'crm.admin.fields' => 'Manage Custom Fields',
+            'crm.admin.workflows' => 'Manage System Workflows',
+            'crm.admin.integrations' => 'Manage Integrations',
+            'crm.admin.backup' => 'Backup CRM Data',
+            'crm.admin.restore' => 'Restore CRM Data',
         ];
+    }
+
+    /**
+     * Get all available permissions with descriptions (alias for getAllPermissions)
+     */
+    public static function getAvailablePermissions(): array
+    {
+        return self::getAllPermissions();
     }
 } 

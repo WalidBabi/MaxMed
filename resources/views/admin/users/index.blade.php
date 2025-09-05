@@ -216,9 +216,13 @@
                                     @else
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             @if($user->isAdmin())
-                                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800">Super Admin</span>
+                                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                    {{ $user->role->display_name }} (ID: {{ $user->role->id }})
+                                                </span>
                                             @elseif($user->role)
-                                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800">{{ $user->role->display_name }}</span>
+                                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800">
+                                                    {{ $user->role->display_name }} (ID: {{ $user->role->id }})
+                                                </span>
                                             @else
                                                 <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-800">No Role</span>
                                             @endif
