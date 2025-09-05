@@ -130,7 +130,9 @@ class RegisteredUserController extends Controller
                     $admin->name = 'Admin';
                     $admin->id = 0;
                 } else {
-                    $admin = User::where('is_admin', true)
+                    $admin = User::whereHas('role', function($q) {
+                        $q->where('name', 'admin');
+                    })
                         ->whereNotNull('email')
                         ->whereDoesntHave('role', function($query) {
                             $query->where('name', 'supplier');

@@ -42,7 +42,7 @@
                     
                     <div class="mb-3">
                         <strong>Status:</strong>
-                        @if($user->is_admin)
+                        @if($user->isAdmin())
                             <span class="badge bg-soft-warning text-warning ms-2">Super Admin</span>
                         @elseif($user->role)
                             <span class="badge bg-soft-info text-info ms-2">{{ $user->role->display_name }}</span>
@@ -73,7 +73,7 @@
 
         <div class="col-lg-8">
             <!-- Role and Permissions -->
-            @if($user->role || $user->is_admin)
+            @if($user->role || $user->isAdmin())
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-header bg-light">
                         <h6 class="mb-0">
@@ -81,7 +81,7 @@
                         </h6>
                     </div>
                     <div class="card-body">
-                        @if($user->is_admin)
+                        @if($user->isAdmin())
                             <div class="text-center py-4">
                                 <div class="icon-shape icon-lg bg-soft-warning text-warning rounded-3 mx-auto mb-3">
                                     <i class="fas fa-crown fa-2x"></i>

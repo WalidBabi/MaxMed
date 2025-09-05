@@ -63,7 +63,7 @@ class InvoiceController extends Controller
             'quote',
             'order.delivery',
             'delivery',
-            'parentInvoice',
+            'parentInvoice.items',
             'childInvoices'
         ])->paginate(20);
 
@@ -107,6 +107,9 @@ class InvoiceController extends Controller
             'total' => Invoice::count()
         ];
 
+        // All-pages pending count (not limited by pagination)
+        $pendingAll = Invoice::where('payment_status', 'pending')->count();
+
         // Calculate unique paid orders (avoiding double counting proforma + final)
         $paidOrdersCount = Invoice::where('payment_status', 'paid')
             ->where(function($q) {
@@ -141,7 +144,7 @@ class InvoiceController extends Controller
             'payment_statuses' => Invoice::PAYMENT_STATUS
         ];
 
-        return view('admin.invoices.index', compact('invoices', 'filterOptions', 'invoiceTotals', 'invoiceCounts', 'paidOrdersCount'));
+        return view('admin.invoices.index', compact('invoices', 'filterOptions', 'invoiceTotals', 'invoiceCounts', 'paidOrdersCount', 'pendingAll'));
     }
 
     /**

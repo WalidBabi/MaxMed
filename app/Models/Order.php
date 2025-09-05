@@ -612,7 +612,9 @@ class Order extends Model
         try {
             // Get all admin users (excluding suppliers)
             $admins = User::where(function($query) {
-                $query->where('is_admin', true)
+                $query->whereHas('role', function($q) {
+                    $q->where('name', 'admin');
+                })
                       ->orWhereHas('role', function($roleQuery) {
                           $roleQuery->where('name', 'admin');
                       });
@@ -679,7 +681,9 @@ class Order extends Model
         try {
             // Get all admin users
             $admins = \App\Models\User::where(function($query) {
-                $query->where('is_admin', true)
+                $query->whereHas('role', function($q) {
+                    $q->where('name', 'admin');
+                })
                       ->orWhereHas('role', function($roleQuery) {
                           $roleQuery->where('name', 'admin');
                       });

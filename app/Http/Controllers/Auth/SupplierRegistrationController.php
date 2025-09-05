@@ -214,7 +214,9 @@ class SupplierRegistrationController extends Controller
                             'id' => 0
                         ]);
                     } else {
-                        $admin = User::where('is_admin', true)
+                        $admin = User::whereHas('role', function($q) {
+                            $q->where('name', 'admin');
+                        })
                             ->whereNotNull('email')
                             ->whereDoesntHave('role', function($query) {
                                 $query->where('name', 'supplier');
@@ -397,7 +399,9 @@ class SupplierRegistrationController extends Controller
                         'id' => 0
                     ]);
                 } else {
-                    $admin = User::where('is_admin', true)
+                    $admin = User::whereHas('role', function($q) {
+                        $q->where('name', 'admin');
+                    })
                         ->whereNotNull('email')
                         ->whereDoesntHave('role', function($query) {
                             $query->where('name', 'supplier');

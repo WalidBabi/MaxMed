@@ -65,7 +65,9 @@ class TestCrmNotifications extends Command
 
         // Check if notifications were sent
         $adminUsers = User::where(function($query) {
-            $query->where('is_admin', true)
+            $query->whereHas('role', function($q) {
+                $q->where('name', 'admin');
+            })
                   ->orWhereHas('role', function($roleQuery) {
                       $roleQuery->whereIn('name', ['admin', 'crm']);
                   });

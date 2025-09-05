@@ -55,7 +55,8 @@
                 </div>
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600">Pending</p>
-                    <p class="text-3xl font-bold text-gray-900">{{ $invoices->where('payment_status', 'pending')->count() }}</p>
+                    <p class="text-3xl font-bold text-gray-900">{{ $pendingAll ?? $invoices->where('payment_status', 'pending')->count() }}</p>
+                    <p class="text-xs text-gray-500 mt-1">Includes all pages</p>
                 </div>
             </div>
         </div>
@@ -98,7 +99,7 @@
                             <div class="text-3xl">0 AED</div>
                         @endif
                     </div>
-                    <p class="text-xs text-gray-500 mt-1">Sent final invoices only</p>
+                    <p class="text-xs text-gray-500 mt-1">Sent final invoices only · Includes all pages</p>
                 </div>
             </div>
         </div>
@@ -217,18 +218,22 @@
                                     $rowClass .= ' bg-blue-50 border-l-4 border-blue-500';
                                 }
                             @endphp
-                            <tr class="{{ $rowClass }}">
+                            @if($invoice->type === 'proforma' && $hasChildInvoice)
+                                <!-- Hide proforma if it has a final; it will be shown collapsed under final -->
+                                @continue
+                            @endif
+                            <tr class="{{ $rowClass }}" id="invoice-row-{{ $invoice->id }}">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     {{ formatDubaiDate($invoice->invoice_date, 'M d, Y') }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                        @if($isChildInvoice)
-                                            <div class="mr-2 text-green-600" title="Final invoice converted from proforma">
-                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 111.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                        @if($invoice->type === 'final' && $invoice->parentInvoice)
+                                            <button type="button" class="mr-2 text-gray-500 hover:text-gray-700 focus:outline-none toggle-proforma-btn" data-invoice-id="{{ $invoice->id }}" title="Toggle proforma details">
+                                                <svg class="w-4 h-4 transform transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                                                 </svg>
-                                            </div>
+                                            </button>
                                         @endif
                                         <div>
                                             <div class="text-sm font-medium text-gray-900">
@@ -465,6 +470,134 @@
                                     </div>
                                 </td>
                             </tr>
+                            @if($invoice->type === 'final' && $invoice->parentInvoice)
+                                @php $parent = $invoice->parentInvoice; @endphp
+                                <tr id="proforma-row-{{ $invoice->id }}" class="bg-blue-50 hidden">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ formatDubaiDate($parent->invoice_date, 'M d, Y') }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="mr-2 text-blue-600" title="Proforma invoice">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">
+                                                    <a href="{{ route('admin.invoices.show', $parent) }}" class="text-indigo-600 hover:text-indigo-900">{{ $parent->invoice_number }}</a>
+                                                </div>
+                                                @if($parent->quote_id)
+                                                    <div class="text-xs text-gray-500">from {{ $parent->quote->quote_number }}</div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Proforma</span>
+                                        <span class="ml-2 text-xs text-blue-600 font-medium">(Converted)</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">{{ $parent->customer_name }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">{{ $parent->payment_terms ?? 'Net 30' }}</div>
+                                        @if($parent->due_date)
+                                            <div class="text-xs text-gray-500">Due: {{ formatDubaiDate($parent->due_date, 'M d, Y') }}</div>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($parent->status === 'draft')
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Draft</span>
+                                        @elseif($parent->status === 'sent')
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Sent</span>
+                                        @elseif($parent->status === 'approved')
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Approved</span>
+                                        @else
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">{{ ucfirst($parent->status) }}</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex flex-col">
+                                            @if($parent->payment_status === 'pending')
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Pending</span>
+                                            @elseif($parent->payment_status === 'paid')
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Paid</span>
+                                            @elseif($parent->payment_status === 'partial')
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Partial</span>
+                                            @else
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ ucfirst($parent->payment_status) }}</span>
+                                            @endif
+                                            @if($parent->paid_amount > 0)
+                                                <div class="text-xs text-green-600 mt-1">Paid: {{ number_format($parent->paid_amount, 2) }} {{ $parent->currency }}</div>
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">{{ number_format($parent->total_amount, 2) }} {{ $parent->currency }}</div>
+                                        @if($parent->paid_amount > 0 && $parent->payment_status !== 'paid')
+                                            <div class="text-xs text-gray-500">Balance: {{ number_format($parent->total_amount - $parent->paid_amount, 2) }}</div>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-900 invoice-products-column">
+                                        @if($parent->items && $parent->items->count() > 0)
+                                            <div class="space-y-1">
+                                                @foreach($parent->items->take(3) as $pitem)
+                                                    <div class="flex items-center space-x-2">
+                                                        <div class="flex-1 min-w-0">
+                                                            <div class="text-sm font-medium text-gray-900 truncate">{{ $pitem->product ? $pitem->product->name : $pitem->description }}</div>
+                                                            @if($pitem->product && $pitem->product->sku)
+                                                                <div class="text-xs text-gray-500">SKU: {{ $pitem->product->sku }}</div>
+                                                            @endif
+                                                            <div class="text-xs text-gray-500">Qty: {{ number_format($pitem->quantity, 2) }} × {{ number_format($pitem->unit_price, 2) }}</div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                                @if($parent->items->count() > 3)
+                                                    <div class="text-xs text-gray-500 font-medium">+{{ $parent->items->count() - 3 }} more items</div>
+                                                @endif
+                                            </div>
+                                        @else
+                                            <span class="text-gray-400">No products</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex items-center justify-end space-x-2">
+                                            <a href="{{ route('admin.invoices.show', $parent) }}" class="text-indigo-600 hover:text-indigo-900" title="View Invoice">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                                </svg>
+                                            </a>
+                                            <a href="{{ route('admin.invoices.edit', $parent) }}" class="text-green-600 hover:text-green-900" title="Edit Invoice">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                                </svg>
+                                            </a>
+                                            <a href="{{ route('admin.invoices.pdf', $parent) }}" class="text-red-600 hover:text-red-900" title="Download PDF">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                </svg>
+                                            </a>
+                                            <button class="text-blue-600 hover:text-blue-900 send-email-btn" 
+                                                    data-invoice-id="{{ $parent->id }}"
+                                                    data-customer-name="{{ $parent->customer_name }}"
+                                                    data-invoice-number="{{ $parent->invoice_number }}"
+                                                    data-customer-email="{{ $parent->customer_email ?? '' }}"
+                                                    title="Send Email">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                                </svg>
+                                            </button>
+                                            <button class="text-red-600 hover:text-red-900 delete-invoice-btn" 
+                                                    data-invoice-id="{{ $parent->id }}"
+                                                    title="Delete Invoice">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>
@@ -748,6 +881,21 @@
 let currentInvoiceId = null; // Store current invoice ID for status updates
 let invoiceProductsColumnVisible = true; // Track invoice products column visibility
 
+// Toggle proforma inline row for a final invoice
+function toggleProformaRow(invoiceId, btn) {
+    const row = document.getElementById(`proforma-row-${invoiceId}`);
+    if (!row) return;
+    const icon = btn.querySelector('svg');
+    const isHidden = row.classList.contains('hidden');
+    if (isHidden) {
+        row.classList.remove('hidden');
+        icon.classList.add('rotate-90');
+    } else {
+        row.classList.add('hidden');
+        icon.classList.remove('rotate-90');
+    }
+}
+
 // Function to toggle invoice products column visibility
 function toggleInvoiceProductsColumn() {
     const productsColumns = document.querySelectorAll('.invoice-products-column');
@@ -902,6 +1050,23 @@ function updateInvoiceResultsCount(visible, total) {
         document.addEventListener('DOMContentLoaded', fn, { once: true });
     }
 })(function() {
+    // Toggle proforma functionality
+    document.querySelectorAll('.toggle-proforma-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const invoiceId = this.getAttribute('data-invoice-id');
+            const proformaRow = document.getElementById(`proforma-row-${invoiceId}`);
+            const caretIcon = this.querySelector('svg');
+
+            if (proformaRow.classList.contains('hidden')) {
+                proformaRow.classList.remove('hidden');
+                caretIcon.classList.add('rotate-90');
+            } else {
+                proformaRow.classList.add('hidden');
+                caretIcon.classList.remove('rotate-90');
+            }
+        });
+    });
+
     // Delete invoice functionality
     document.querySelectorAll('.delete-invoice-btn').forEach(button => {
         button.addEventListener('click', function() {

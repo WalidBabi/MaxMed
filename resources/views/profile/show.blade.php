@@ -50,7 +50,7 @@
                                 Active
                             </span>
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                {{ $user->is_admin ? 'Administrator' : 'User' }}
+                                {{ $user->isAdmin() ? 'Administrator' : 'User' }}
                             </span>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Account Type</label>
-                        <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-md">{{ $user->is_admin ? 'Administrator' : 'User' }}</p>
+                        <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-md">{{ $user->isAdmin() ? 'Administrator' : 'User' }}</p>
                     </div>
                 </div>
             </div>
