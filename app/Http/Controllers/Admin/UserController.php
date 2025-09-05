@@ -30,7 +30,9 @@ class UserController extends Controller
                 });
                 break;
             case 'admins':
-                $query->where('is_admin', true);
+                $query->whereHas('role', function($q) {
+                    $q->where('name', 'admin');
+                });
                 break;
             default:
                 // All users - no additional filtering
@@ -49,9 +51,11 @@ class UserController extends Controller
         // Role filter (only apply if not in specific tab)
         if ($request->filled('role') && $tab === 'all') {
             if ($request->role === 'admin') {
-                $query->where('is_admin', true);
+                $query->whereHas('role', function($q) {
+                    $q->where('name', 'admin');
+                });
             } elseif ($request->role === 'no_role') {
-                $query->where('role_id', null)->where('is_admin', false);
+                $query->where('role_id', null);
             } else {
                 $query->where('role_id', $request->role);
             }
@@ -96,7 +100,9 @@ class UserController extends Controller
             $q->where('name', 'supplier');
         })->count();
         
-        $adminCount = User::where('is_admin', true)->count();
+        $adminCount = User::whereHas('role', function($q) {
+            $q->where('name', 'admin');
+        })->count();
         
         return view('admin.users.index', compact('users', 'roles', 'supplierCount', 'adminCount'));
     }

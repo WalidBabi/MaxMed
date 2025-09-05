@@ -123,18 +123,11 @@
                                 </div>
                             </div>
 
-                            <!-- Administrative Access -->
+                            <!-- Note: Admin access is now managed through roles -->
                             <div class="flex items-center justify-center">
-                                <div class="flex items-center">
-                                    <input id="is_admin" name="is_admin" type="checkbox" value="1" {{ old('is_admin') ? 'checked' : '' }}
-                                           class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600 @error('is_admin') border-red-500 @enderror">
-                                    <div class="ml-3">
-                                        <label for="is_admin" class="text-sm font-medium leading-6 text-gray-900">Super Administrator</label>
-                                        <p class="text-sm text-gray-500">Super admins have all permissions regardless of role</p>
-                                        @error('is_admin')
-                                            <p class="text-sm text-red-600">{{ $message }}</p>
-                                        @enderror
-                                    </div>
+                                <div class="text-center">
+                                    <p class="text-sm text-gray-600">Administrative access is now managed through the role system above.</p>
+                                    <p class="text-xs text-gray-500 mt-1">Select "Administrator" role for full admin access.</p>
                                 </div>
                             </div>
                         </div>

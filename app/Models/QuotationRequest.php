@@ -63,7 +63,9 @@ class QuotationRequest extends Model
         try {
             // Get all admin users and CRM users
             $users = User::where(function($query) {
-                $query->where('is_admin', true)
+                $query->whereHas('role', function($q) {
+                    $q->where('name', 'admin');
+                })
                       ->orWhereHas('role', function($roleQuery) {
                           $roleQuery->whereIn('name', ['admin', 'crm']);
                       });

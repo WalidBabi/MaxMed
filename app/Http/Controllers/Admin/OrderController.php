@@ -173,7 +173,6 @@ class OrderController extends Controller
             [
                 'name' => 'Guest Customer',
                 'password' => bcrypt('random_password_' . time()),
-                'is_admin' => false,
             ]
         );
 

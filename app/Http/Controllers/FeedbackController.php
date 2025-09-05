@@ -35,12 +35,9 @@ class FeedbackController extends Controller
 
         // Send notification to all admin users about new feedback
         try {
-            // Get all admin users with the is_admin flag or admin role
-            $admins = User::where(function($query) {
-                $query->where('is_admin', true)
-                      ->orWhereHas('role', function($roleQuery) {
-                          $roleQuery->where('name', 'admin');
-                      });
+            // Get all admin users with admin role
+            $admins = User::whereHas('role', function($roleQuery) {
+                $roleQuery->where('name', 'admin');
             })
             ->whereNotNull('email')
             ->get();

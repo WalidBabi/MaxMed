@@ -55,7 +55,9 @@ class ContactSubmission extends Model
             
             // Find all admin and CRM users in database
             $users = User::where(function($query) {
-                $query->where('is_admin', true)
+                $query->whereHas('role', function($q) {
+                    $q->where('name', 'admin');
+                })
                       ->orWhereHas('role', function($roleQuery) {
                           $roleQuery->whereIn('name', ['admin', 'crm']);
                       });
@@ -83,7 +85,7 @@ class ContactSubmission extends Model
                 $allUsers = User::all();
                 Log::info('Total users in database: ' . $allUsers->count());
                 foreach ($allUsers as $user) {
-                    Log::info('User found: ' . $user->email . ' (is_admin: ' . ($user->is_admin ? 'true' : 'false') . ', role: ' . ($user->role ? $user->role->name : 'none') . ')');
+                    Log::info('User found: ' . $user->email . ' (is_admin: ' . ($user->isAdmin() ? 'true' : 'false') . ', role: ' . ($user->role ? $user->role->name : 'none') . ')');
                 }
             }
         } catch (\Exception $e) {

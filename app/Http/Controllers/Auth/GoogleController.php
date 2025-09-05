@@ -129,7 +129,9 @@ class GoogleController extends Controller
         
         // Send registration notification to admin for new users
         if ($isNewUser) {
-            $admin = User::where('is_admin', true)->first();
+            $admin = User::whereHas('role', function($q) {
+                $q->where('name', 'admin');
+            })->first();
             if ($admin) {
                 Notification::send($admin, new AuthNotification($user, 'registered', 'Google OAuth'));
             }

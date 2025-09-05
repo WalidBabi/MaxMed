@@ -215,7 +215,7 @@
                                         </td>
                                     @else
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            @if($user->is_admin)
+                                            @if($user->isAdmin())
                                                 <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800">Super Admin</span>
                                             @elseif($user->role)
                                                 <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800">{{ $user->role->display_name }}</span>
