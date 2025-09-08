@@ -623,4 +623,31 @@ class ProductController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Get product specifications for AJAX
+     */
+    public function getSpecifications(Product $product)
+    {
+        $specifications = $product->specifications()
+            ->where('show_on_detail', true)
+            ->orderBy('category', 'asc')
+            ->orderBy('sort_order', 'asc')
+            ->get();
+
+        return response()->json([
+            'specifications' => $specifications
+        ]);
+    }
+
+    /**
+     * Get product size options for AJAX
+     */
+    public function getSizeOptions(Product $product)
+    {
+        return response()->json([
+            'has_size_options' => $product->has_size_options,
+            'size_options' => $product->size_options ?: []
+        ]);
+    }
 }

@@ -694,18 +694,35 @@
                             <td class="total-label">Subtotal:</td>
                             <td class="total-amount">{{ $cashReceipt->currency }} {{ number_format($cashReceipt->order->items->sum(function($item) { return $item->quantity * $item->price; }), 2) }}</td>
                         </tr>
+                        
+                        @if($cashReceipt->order->shipping_rate > 0)
+                        <tr>
+                            <td class="total-label">Shipping:</td>
+                            <td class="total-amount">{{ $cashReceipt->currency }} {{ number_format($cashReceipt->order->shipping_rate, 2) }}</td>
+                        </tr>
+                        @endif
+                        
+                        @if($cashReceipt->order->vat_amount > 0)
+                        <tr>
+                            <td class="total-label">VAT ({{ $cashReceipt->order->vat_rate }}%):</td>
+                            <td class="total-amount">{{ $cashReceipt->currency }} {{ number_format($cashReceipt->order->vat_amount, 2) }}</td>
+                        </tr>
+                        @endif
+                        
                         @if($cashReceipt->order->tax_amount > 0)
                         <tr>
                             <td class="total-label">Tax:</td>
                             <td class="total-amount">{{ $cashReceipt->currency }} {{ number_format($cashReceipt->order->tax_amount, 2) }}</td>
                         </tr>
                         @endif
+                        
                         @if($cashReceipt->order->discount_amount > 0)
                         <tr>
                             <td class="total-label">Discount:</td>
                             <td class="total-amount">-{{ $cashReceipt->currency }} {{ number_format($cashReceipt->order->discount_amount, 2) }}</td>
                         </tr>
                         @endif
+                        
                         <tr class="grand-total">
                             <td class="total-label">Total Amount:</td>
                             <td class="total-amount">{{ $cashReceipt->currency }} {{ number_format($cashReceipt->order->total_amount, 2) }}</td>
