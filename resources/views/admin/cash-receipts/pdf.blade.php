@@ -322,13 +322,6 @@
             font-weight: 600;
         }
 
-        .notes {
-            margin-top: 20px;
-            font-size: 9px;
-            color: var(--text-secondary);
-            text-align: center;
-            font-style: italic;
-        }
 
         .status-badge {
             display: inline-block;
@@ -769,31 +762,7 @@
         <div style="margin-top: 30px;"></div>
         @if($cashReceipt->order->items->count() > 0)
         
-        @php
-            // Pre-calculate discount summary for display
-            $previewItemDiscounts = $cashReceipt->order->items->sum(function($item) { 
-                return $item->calculated_discount_amount ?? 0; 
-            });
-            $previewOrderDiscount = $cashReceipt->order->discount_amount ?? 0;
-            $previewTotalDiscounts = $previewItemDiscounts + $previewOrderDiscount;
-        @endphp
         
-        @if($previewTotalDiscounts > 0)
-        <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 4px; padding: 12px; margin-bottom: 20px;">
-            <div style="font-size: 12px; font-weight: 600; color: #495057; margin-bottom: 8px;">💰 Discount Summary</div>
-            <div style="font-size: 10px; color: #6c757d; line-height: 1.4;">
-                @if($previewItemDiscounts > 0)
-                    <div>• Item-level discounts: {{ $cashReceipt->currency }} {{ number_format($previewItemDiscounts, 2) }}</div>
-                @endif
-                @if($previewOrderDiscount > 0)
-                    <div>• Order-level discount: {{ $cashReceipt->currency }} {{ number_format($previewOrderDiscount, 2) }}</div>
-                @endif
-                <div style="font-weight: 600; color: #28a745; margin-top: 4px;">
-                    Total savings: {{ $cashReceipt->currency }} {{ number_format($previewTotalDiscounts, 2) }}
-                </div>
-            </div>
-        </div>
-        @endif
         <div class="items-section">
             <table class="items-table">
                 <thead>
@@ -1041,18 +1010,9 @@
                         </div>
                     </div>
                 @endif
-                <div class="stamp-label">
-                    Authorized by MaxMed Scientific
-                </div>
             </div>
         </div>
 
-        @if($cashReceipt->payment_method === 'check')
-        <div class="notes">
-            <strong>Note:</strong> This receipt acknowledges the receipt of the check only. 
-            Payment is subject to bank clearance. Please retain this receipt for your records.
-        </div>
-        @endif
 
         @endif
 
