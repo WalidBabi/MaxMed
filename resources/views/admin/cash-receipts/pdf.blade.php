@@ -655,14 +655,41 @@
         <!-- Products List -->
         <div style="margin-top: 30px;"></div>
         @if($cashReceipt->order->items->count() > 0)
+        
+        @php
+            // Pre-calculate discount summary for display
+            $previewItemDiscounts = $cashReceipt->order->items->sum(function($item) { 
+                return $item->calculated_discount_amount ?? 0; 
+            });
+            $previewOrderDiscount = $cashReceipt->order->discount_amount ?? 0;
+            $previewTotalDiscounts = $previewItemDiscounts + $previewOrderDiscount;
+        @endphp
+        
+        @if($previewTotalDiscounts > 0)
+        <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 4px; padding: 12px; margin-bottom: 20px;">
+            <div style="font-size: 12px; font-weight: 600; color: #495057; margin-bottom: 8px;">💰 Discount Summary</div>
+            <div style="font-size: 10px; color: #6c757d; line-height: 1.4;">
+                @if($previewItemDiscounts > 0)
+                    <div>• Item-level discounts: {{ $cashReceipt->currency }} {{ number_format($previewItemDiscounts, 2) }}</div>
+                @endif
+                @if($previewOrderDiscount > 0)
+                    <div>• Order-level discount: {{ $cashReceipt->currency }} {{ number_format($previewOrderDiscount, 2) }}</div>
+                @endif
+                <div style="font-weight: 600; color: #28a745; margin-top: 4px;">
+                    Total savings: {{ $cashReceipt->currency }} {{ number_format($previewTotalDiscounts, 2) }}
+                </div>
+            </div>
+        </div>
+        @endif
         <div class="items-section">
             <table class="items-table">
                 <thead>
                     <tr>
-                        <th style="width: 40%;">Item Description</th>
+                        <th style="width: 35%;">Item Description</th>
                         <th style="width: 20%;">Specifications</th>
-                        <th style="width: 10%;" class="text-center">Quantity</th>
-                        <th style="width: 15%;" class="text-right">Unit Price ({{ $cashReceipt->currency }})</th>
+                        <th style="width: 8%;" class="text-center">Qty</th>
+                        <th style="width: 12%;" class="text-right">Unit Price ({{ $cashReceipt->currency }})</th>
+                        <th style="width: 10%;" class="text-right">Discount</th>
                         <th style="width: 15%;" class="text-right">Amount ({{ $cashReceipt->currency }})</th>
                     </tr>
                 </thead>
@@ -678,41 +705,99 @@
                             @endif
                         </td>
                         <td>
-                            @php
-                                // Get invoice item for this order item to get specifications and size
-                                $invoiceItem = null;
-                                if($cashReceipt->order && $cashReceipt->order->invoice) {
-                                    $invoiceItem = $cashReceipt->order->invoice->items->where('product_id', $item->product_id)->first();
-                                }
-                            @endphp
-                            
-                            @if($invoiceItem && $invoiceItem->specifications)
+                            @if($item->variation && !empty(trim($item->variation)))
                                 @php
-                                    $selectedSpecs = json_decode($invoiceItem->specifications, true);
+                                    // Parse the variation string which contains specifications and size
+                                    $variationParts = explode(' | ', $item->variation);
                                 @endphp
-                                @if(count($selectedSpecs) > 0)
-                                    <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
-                                        @foreach($selectedSpecs as $spec)
-                                            <div style="margin-bottom: 2px;">{{ $spec }}</div>
-                                        @endforeach
-                                    </div>
-                                @endif
-                            @endif
-                            
-                            @if($invoiceItem && $invoiceItem->size && !empty(trim($invoiceItem->size)))
-                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3; margin-top: 3px;">
-                                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1px;">Size:</div>
-                                    <div>{{ $invoiceItem->size }}</div>
+                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.4;">
+                                    @foreach($variationParts as $part)
+                                        @php
+                                            // Clean up the formatting - remove "Specs: " and "Size: " prefixes for cleaner display
+                                            $cleanPart = $part;
+                                            if (str_starts_with($part, 'Specs: ')) {
+                                                $cleanPart = substr($part, 7);
+                                            } elseif (str_starts_with($part, 'Size: ')) {
+                                                $cleanPart = '<strong>Size:</strong> ' . substr($part, 6);
+                                            }
+                                        @endphp
+                                        <div style="margin-bottom: 3px;">{!! $cleanPart !!}</div>
+                                    @endforeach
                                 </div>
-                            @endif
-                            
-                            @if((!$invoiceItem || !$invoiceItem->specifications || empty(trim($invoiceItem->specifications))) && (!$invoiceItem || !$invoiceItem->size || empty(trim($invoiceItem->size))))
-                                <span style="font-size: 9px; color: var(--text-muted);">-</span>
+                            @else
+                                @php
+                                    // Fallback: Try to get specifications from product specifications if variation is empty
+                                    $hasSpecs = false;
+                                    $productSpecs = null;
+                                    if($item->product && $item->product->specifications) {
+                                        $productSpecs = $item->product->specifications()
+                                            ->where('show_on_detail', true)
+                                            ->orderBy('category', 'asc')
+                                            ->orderBy('sort_order', 'asc')
+                                            ->get();
+                                        $hasSpecs = $productSpecs->count() > 0;
+                                    }
+                                @endphp
+                                
+                                @if($hasSpecs)
+                                    <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.4;">
+                                        @foreach($productSpecs as $spec)
+                                            <div style="margin-bottom: 3px;">
+                                                <strong>{{ $spec->display_name }}:</strong> 
+                                                {{ $spec->specification_value }}{{ $spec->unit ? ' ' . $spec->unit : '' }}
+                                            </div>
+                                        @endforeach
+                                        
+                                        @if($item->product && $item->product->has_size_options && $item->product->size_options)
+                                            <div style="margin-top: 6px; margin-bottom: 3px;">
+                                                <strong>Available Sizes:</strong>
+                                            </div>
+                                            @foreach($item->product->size_options as $size)
+                                                <div style="margin-bottom: 2px; margin-left: 8px;">• {{ $size }}</div>
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                @else
+                                    @if($item->product && $item->product->has_size_options && $item->product->size_options)
+                                        <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.4;">
+                                            <div style="margin-bottom: 3px;">
+                                                <strong>Available Sizes:</strong>
+                                            </div>
+                                            @foreach($item->product->size_options as $size)
+                                                <div style="margin-bottom: 2px; margin-left: 8px;">• {{ $size }}</div>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <span style="font-size: 9px; color: var(--text-muted);">-</span>
+                                    @endif
+                                @endif
                             @endif
                         </td>
                         <td class="text-center">{{ number_format($item->quantity) }}</td>
                         <td class="text-right">{{ number_format($item->price, 2) }}</td>
-                        <td class="text-right">{{ number_format($item->quantity * $item->price, 2) }}</td>
+                        <td class="text-right">
+                            @php
+                                $itemDiscount = $item->calculated_discount_amount ?? 0;
+                            @endphp
+                            @if($itemDiscount > 0)
+                                @if($item->discount_percentage > 0)
+                                    {{ number_format($item->discount_percentage, 1) }}%
+                                    <div style="font-size: 8px; color: var(--text-secondary);">
+                                        ({{ $cashReceipt->currency }} {{ number_format($itemDiscount, 2) }})
+                                    </div>
+                                @else
+                                    {{ $cashReceipt->currency }} {{ number_format($itemDiscount, 2) }}
+                                @endif
+                            @else
+                                <span style="color: var(--text-muted);">-</span>
+                            @endif
+                        </td>
+                        <td class="text-right">
+                            @php
+                                $lineTotal = ($item->quantity * $item->price) - ($item->calculated_discount_amount ?? 0);
+                            @endphp
+                            {{ number_format($lineTotal, 2) }}
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -722,10 +807,46 @@
             <div class="totals-wrapper">
                 <div class="totals-section">
                     <table class="totals-table">
+                        @php
+                            // Calculate comprehensive totals
+                            $grossSubtotal = $cashReceipt->order->items->sum(function($item) { 
+                                return $item->quantity * $item->price; 
+                            });
+                            
+                            $totalItemDiscounts = $cashReceipt->order->items->sum(function($item) { 
+                                return $item->calculated_discount_amount ?? 0; 
+                            });
+                            
+                            $netSubtotal = $grossSubtotal - $totalItemDiscounts;
+                            $orderLevelDiscount = $cashReceipt->order->discount_amount ?? 0;
+                            $totalDiscounts = $totalItemDiscounts + $orderLevelDiscount;
+                        @endphp
+                        
                         <tr>
-                            <td class="total-label">Subtotal:</td>
-                            <td class="total-amount">{{ $cashReceipt->currency }} {{ number_format($cashReceipt->order->items->sum(function($item) { return $item->quantity * $item->price; }), 2) }}</td>
+                            <td class="total-label">Subtotal (Gross):</td>
+                            <td class="total-amount">{{ $cashReceipt->currency }} {{ number_format($grossSubtotal, 2) }}</td>
                         </tr>
+                        
+                        @if($totalItemDiscounts > 0)
+                        <tr>
+                            <td class="total-label">Item Discounts:</td>
+                            <td class="total-amount" style="color: #dc3545;">-{{ $cashReceipt->currency }} {{ number_format($totalItemDiscounts, 2) }}</td>
+                        </tr>
+                        @endif
+                        
+                        @if($orderLevelDiscount > 0)
+                        <tr>
+                            <td class="total-label">Order Discount:</td>
+                            <td class="total-amount" style="color: #dc3545;">-{{ $cashReceipt->currency }} {{ number_format($orderLevelDiscount, 2) }}</td>
+                        </tr>
+                        @endif
+                        
+                        @if($totalDiscounts > 0)
+                        <tr style="border-top: 1px solid #dee2e6;">
+                            <td class="total-label">Subtotal (After Discounts):</td>
+                            <td class="total-amount">{{ $cashReceipt->currency }} {{ number_format($netSubtotal - $orderLevelDiscount, 2) }}</td>
+                        </tr>
+                        @endif
                         
                         @if($cashReceipt->order->shipping_rate > 0)
                         <tr>
@@ -748,31 +869,28 @@
                         </tr>
                         @endif
                         
-                        @if($cashReceipt->order->discount_amount > 0)
-                        <tr>
-                            <td class="total-label">Discount:</td>
-                            <td class="total-amount">-{{ $cashReceipt->currency }} {{ number_format($cashReceipt->order->discount_amount, 2) }}</td>
-                        </tr>
-                        @endif
-                        
                         <tr class="grand-total">
                             <td class="total-label">Total Amount:</td>
                             <td class="total-amount">
                                 @php
-                                    // Calculate total including all components
-                                    $subtotal = $cashReceipt->order->items->sum(function($item) { return $item->quantity * $item->price; });
+                                    // Calculate final total with all discounts applied
+                                    $finalSubtotal = $netSubtotal - $orderLevelDiscount;
                                     $shipping = $cashReceipt->order->shipping_rate ?? 0;
                                     $vat = $cashReceipt->order->vat_amount ?? 0;
                                     $tax = $cashReceipt->order->tax_amount ?? 0;
-                                    $discount = $cashReceipt->order->discount_amount ?? 0;
-                                    $calculatedTotal = $subtotal + $shipping + $vat + $tax - $discount;
-                                    
-                                    // Use the higher of calculated total or order total_amount (in case of manual adjustments)
+                                    $calculatedTotal = $finalSubtotal + $shipping + $vat + $tax;
                                     $finalTotal = max($calculatedTotal, $cashReceipt->order->total_amount ?? 0);
                                 @endphp
                                 {{ $cashReceipt->currency }} {{ number_format($finalTotal, 2) }}
                             </td>
                         </tr>
+                        
+                        @if($totalDiscounts > 0)
+                        <tr style="border-top: 1px solid #dee2e6; font-size: 11px; color: #28a745;">
+                            <td class="total-label">Total Savings:</td>
+                            <td class="total-amount" style="color: #28a745;">{{ $cashReceipt->currency }} {{ number_format($totalDiscounts, 2) }}</td>
+                        </tr>
+                        @endif
                     </table>
                 </div>
             </div>
