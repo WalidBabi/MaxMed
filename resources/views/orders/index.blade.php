@@ -116,7 +116,7 @@
                                     <span class="text-gray-600 text-sm">Total Amount</span>
                                 </div>
                                 <div>
-                                    <p class="text-xl font-bold text-gray-900">AED{{ number_format($order->total_amount, 2) }}</p>
+                                    <p class="text-xl font-bold text-gray-900">{{ $order->currency ?? 'AED' }}{{ number_format($order->total_amount, 2) }}</p>
                                 </div>
                             </div>
                         </div>

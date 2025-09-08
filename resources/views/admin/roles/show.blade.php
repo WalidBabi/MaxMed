@@ -128,17 +128,32 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             @php
                                 $permissionGroups = [
-                                    'Dashboard' => ['dashboard.view'],
+                                    'Dashboard' => ['dashboard.view', 'dashboard.analytics'],
                                     'Users' => ['users.view', 'users.create', 'users.edit', 'users.delete'],
                                     'Roles' => ['roles.view', 'roles.create', 'roles.edit', 'roles.delete'],
-                                    'Products' => ['products.view', 'products.create', 'products.edit', 'products.delete'],
+                                    'Products' => ['products.view', 'products.create', 'products.edit', 'products.delete', 'products.manage_inventory'],
                                     'Supplier Products' => ['supplier.products.view', 'supplier.products.create', 'supplier.products.edit', 'supplier.products.delete'],
-                                    'Orders' => ['orders.view', 'orders.create', 'orders.edit', 'orders.delete'],
+                                    'Orders' => ['orders.view', 'orders.create', 'orders.edit', 'orders.delete', 'orders.manage_status'],
                                     'Customers' => ['customers.view', 'customers.create', 'customers.edit', 'customers.delete'],
                                     'Deliveries' => ['deliveries.view', 'deliveries.create', 'deliveries.edit', 'deliveries.delete'],
                                     'Categories' => ['categories.view', 'categories.create', 'categories.edit', 'categories.delete'],
                                     'Brands' => ['brands.view', 'brands.create', 'brands.edit', 'brands.delete'],
                                     'News' => ['news.view', 'news.create', 'news.edit', 'news.delete'],
+                                    'Purchase Orders' => ['purchase_orders.view', 'purchase_orders.create', 'purchase_orders.edit', 'purchase_orders.delete', 'purchase_orders.approve', 'purchase_orders.send_to_supplier', 'purchase_orders.manage_status', 'purchase_orders.view_financials', 'purchase_orders.manage_payments'],
+                                    'Suppliers' => ['suppliers.view', 'suppliers.create', 'suppliers.edit', 'suppliers.delete', 'suppliers.manage_contracts', 'suppliers.view_performance'],
+                                    'Quotations' => ['quotations.view', 'quotations.create', 'quotations.edit', 'quotations.delete', 'quotations.approve', 'quotations.compare'],
+                                    'Procurement' => ['procurement.analytics', 'procurement.reports', 'procurement.budget_tracking'],
+                                    'CRM Leads' => ['crm.leads.view', 'crm.leads.create', 'crm.leads.edit', 'crm.leads.delete', 'crm.leads.assign', 'crm.leads.convert', 'crm.leads.export', 'crm.leads.import', 'crm.leads.merge', 'crm.leads.bulk_actions'],
+                                    'CRM Deals' => ['crm.deals.view', 'crm.deals.create', 'crm.deals.edit', 'crm.deals.delete', 'crm.deals.assign', 'crm.deals.close', 'crm.deals.export', 'crm.deals.pipeline', 'crm.deals.forecast'],
+                                    'CRM Activities' => ['crm.activities.view', 'crm.activities.create', 'crm.activities.edit', 'crm.activities.delete', 'crm.activities.complete', 'crm.activities.schedule', 'crm.activities.timeline'],
+                                    'CRM Contacts' => ['crm.contacts.view', 'crm.contacts.create', 'crm.contacts.edit', 'crm.contacts.delete', 'crm.contacts.merge', 'crm.contacts.export', 'crm.contacts.import'],
+                                    'CRM Campaigns' => ['crm.campaigns.view', 'crm.campaigns.create', 'crm.campaigns.edit', 'crm.campaigns.delete', 'crm.campaigns.execute', 'crm.campaigns.track'],
+                                    'CRM Tasks' => ['crm.tasks.view', 'crm.tasks.create', 'crm.tasks.edit', 'crm.tasks.delete', 'crm.tasks.assign', 'crm.tasks.complete', 'crm.tasks.overdue'],
+                                    'CRM Reports' => ['crm.reports.view', 'crm.reports.create', 'crm.reports.export', 'crm.analytics.view', 'crm.analytics.dashboard', 'crm.analytics.performance'],
+                                    'CRM Communication' => ['crm.communication.email', 'crm.communication.sms', 'crm.communication.call', 'crm.communication.meeting', 'crm.communication.templates'],
+                                    'CRM Integration' => ['crm.integration.webhooks', 'crm.integration.api', 'crm.automation.workflows', 'crm.automation.rules', 'crm.automation.triggers'],
+                                    'CRM Administration' => ['crm.admin.settings', 'crm.admin.fields', 'crm.admin.workflows', 'crm.admin.integrations', 'crm.admin.backup', 'crm.admin.restore'],
+                                    'Feedback' => ['feedback.view', 'feedback.respond'],
                                 ];
                             @endphp
 
