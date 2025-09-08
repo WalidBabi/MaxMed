@@ -809,9 +809,25 @@ function loadProductSpecifications(productId, row) {
     }
     
     // Make AJAX request to fetch specifications
-    fetch(`/admin/products/${productId}/specifications`)
-        .then(response => response.json())
+    fetch(`{{ url('/admin/products') }}/${productId}/specifications`, {
+        method: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log('Specifications response:', data);
+            if (data.error) {
+                throw new Error(data.message || 'Server error');
+            }
             if (data.specifications && data.specifications.length > 0) {
                 // Group specifications by category
                 const groupedSpecs = {};
@@ -844,6 +860,8 @@ function loadProductSpecifications(productId, row) {
         })
         .catch(error => {
             console.error('Error loading specifications:', error);
+            console.error('Product ID:', productId);
+            console.error('URL:', `{{ url('/admin/products') }}/${productId}/specifications`);
             specificationsInput.value = 'Error loading specifications';
             specificationsHidden.value = '';
         });
@@ -859,11 +877,27 @@ function loadProductSizeOptions(productId, row) {
     }
     
     // Make AJAX request to fetch size options
-    fetch(`/admin/products/${productId}/size-options`)
-        .then(response => response.json())
+    fetch(`{{ url('/admin/products') }}/${productId}/size-options`, {
+        method: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log('Size options response:', data);
             sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
             
+            if (data.error) {
+                throw new Error(data.message || 'Server error');
+            }
             if (data.has_size_options && data.size_options && data.size_options.length > 0) {
                 data.size_options.forEach(size => {
                     const option = document.createElement('option');
@@ -878,6 +912,8 @@ function loadProductSizeOptions(productId, row) {
         })
         .catch(error => {
             console.error('Error loading size options:', error);
+            console.error('Product ID:', productId);
+            console.error('URL:', `{{ url('/admin/products') }}/${productId}/size-options`);
             sizeSelect.innerHTML = '<option value="">Error loading sizes</option>';
             sizeSelect.disabled = true;
         });
@@ -902,8 +938,20 @@ function loadProformaInvoiceDetails(invoiceId) {
     }
     
     // Make AJAX request to fetch proforma invoice details
-    fetch(`/admin/invoices/${invoiceId}/details`)
-        .then(response => response.json())
+    fetch(`{{ url('/admin/invoices') }}/${invoiceId}/details`, {
+        method: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             const currency = getCurrentCurrency();
             
