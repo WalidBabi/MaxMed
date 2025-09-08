@@ -40,6 +40,7 @@ class OrderController extends Controller
     {
         $validated = $request->validate([
             'customer_id' => 'required|exists:customers,id',
+            'currency' => 'required|in:USD,AED',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.item_details' => 'required|string',
@@ -73,6 +74,7 @@ class OrderController extends Controller
             $order = \App\Models\Order::create([
                 'user_id' => $userId,
                 'customer_id' => $customer->id,
+                'currency' => $validated['currency'],
                 'status' => \App\Models\Order::STATUS_PENDING, // Start with pending status
                 'total_amount' => 0, // Will be calculated
                 'shipping_address' => $customer->shipping_street ?: $customer->billing_street ?: 'Admin Created Order',

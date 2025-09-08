@@ -52,7 +52,7 @@
                             </div>
                             <div class="bg-white p-4 rounded-lg shadow-sm">
                                 <p class="text-gray-500 text-sm uppercase tracking-wide">Total Amount</p>
-                                <p class="font-semibold text-gray-900 mt-1">AED{{ number_format($order->total_amount, 2) }}</p>
+                                <p class="font-semibold text-gray-900 mt-1">{{ $order->currency ?? 'AED' }}{{ number_format($order->total_amount, 2) }}</p>
                             </div>
                           
                         </div>
@@ -89,7 +89,7 @@
                                         <div class="ml-4">
                                             <h4 class="font-semibold text-gray-900">{{ $item->product->name }}</h4>
                                             <p class="text-gray-500 text-sm md:hidden mt-1">
-                                                {{ $item->quantity }} × AED{{ number_format($item->price, 2) }}
+                                                {{ $item->quantity }} × {{ $order->currency ?? 'AED' }}{{ number_format($item->price, 2) }}
                                             </p>
                                         </div>
                                     </div>
@@ -101,12 +101,12 @@
                                     
                                     <!-- Unit Price (hidden on mobile) -->
                                     <div class="col-span-2 text-center hidden md:block">
-                                        <span>AED{{ number_format($item->price, 2) }}</span>
+                                        <span>{{ $order->currency ?? 'AED' }}{{ number_format($item->price, 2) }}</span>
                                     </div>
                                     
                                     <!-- Total Price -->
                                     <div class="col-span-2 text-right mt-2 md:mt-0">
-                                        <span class="font-semibold text-gray-900">AED{{ number_format($item->price * $item->quantity, 2) }}</span>
+                                        <span class="font-semibold text-gray-900">{{ $order->currency ?? 'AED' }}{{ number_format($item->price * $item->quantity, 2) }}</span>
                                     </div>
                                 </div>
                             @endforeach
@@ -115,9 +115,9 @@
                             <div class="p-4 bg-gray-50">
                                 <div class="flex justify-end">
                                     <div class="text-right">
-                                        <p class="text-gray-600">Subtotal: <span class="font-medium">AED{{ number_format($order->total_amount, 2) }}</span></p>
-                                        <p class="text-gray-600">Shipping: <span class="font-medium">AED0.00</span></p>
-                                        <p class="text-gray-800 text-lg font-bold mt-2">Total: <span>AED{{ number_format($order->total_amount, 2) }}</span></p>
+                                        <p class="text-gray-600">Subtotal: <span class="font-medium">{{ $order->currency ?? 'AED' }}{{ number_format($order->total_amount, 2) }}</span></p>
+                                        <p class="text-gray-600">Shipping: <span class="font-medium">{{ $order->currency ?? 'AED' }}0.00</span></p>
+                                        <p class="text-gray-800 text-lg font-bold mt-2">Total: <span>{{ $order->currency ?? 'AED' }}{{ number_format($order->total_amount, 2) }}</span></p>
                                     </div>
                                 </div>
                             </div>

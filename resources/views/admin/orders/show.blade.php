@@ -68,6 +68,10 @@
                     <dt class="text-sm font-medium text-gray-500">Order Number</dt>
                     <dd class="mt-1 text-sm text-gray-900">#{{ $order->order_number }}</dd>
                 </div>
+                <div>
+                    <dt class="text-sm font-medium text-gray-500">Currency</dt>
+                    <dd class="mt-1 text-sm text-gray-900">{{ $order->currency ?? 'AED' }}</dd>
+                </div>
             </div>
         </div>
     </div>
@@ -106,22 +110,22 @@
                                             <div class="text-sm text-gray-900">{{ $item->quantity }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">AED {{ number_format($item->price, 2) }}</div>
+                                            <div class="text-sm text-gray-900">{{ $order->currency ?? 'AED' }} {{ number_format($item->price, 2) }}</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             @if($item->discount_percentage > 0)
                                                 <div class="text-sm text-red-600">{{ number_format($item->discount_percentage, 2) }}%</div>
                                                 @if($item->calculated_discount_amount > 0)
-                                                    <div class="text-xs text-gray-500">(-AED {{ number_format($item->calculated_discount_amount, 2) }})</div>
+                                                    <div class="text-xs text-gray-500">(-{{ $order->currency ?? 'AED' }} {{ number_format($item->calculated_discount_amount, 2) }})</div>
                                                 @endif
                                             @elseif($item->discount_amount > 0)
-                                                <div class="text-sm text-red-600">-AED {{ number_format($item->discount_amount, 2) }}</div>
+                                                <div class="text-sm text-red-600">-{{ $order->currency ?? 'AED' }} {{ number_format($item->discount_amount, 2) }}</div>
                                             @else
                                                 <div class="text-sm text-gray-500">-</div>
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">AED {{ number_format($item->line_total, 2) }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ $order->currency ?? 'AED' }} {{ number_format($item->line_total, 2) }}</div>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -136,7 +140,7 @@
                                             <div class="text-sm font-medium text-gray-900">Subtotal</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">AED {{ number_format($orderSubtotal, 2) }}</div>
+                                            <div class="text-sm font-medium text-gray-900">{{ $order->currency ?? 'AED' }} {{ number_format($orderSubtotal, 2) }}</div>
                                         </td>
                                     </tr>
                                     <tr class="bg-red-50">
@@ -144,7 +148,7 @@
                                             <div class="text-sm font-medium text-red-600">Total Discount</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-red-600">-AED {{ number_format($totalDiscount, 2) }}</div>
+                                            <div class="text-sm font-medium text-red-600">-{{ $order->currency ?? 'AED' }} {{ number_format($totalDiscount, 2) }}</div>
                                         </td>
                                     </tr>
                                 @endif
@@ -153,7 +157,7 @@
                                         <div class="text-sm font-medium text-gray-900">Total</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">AED {{ number_format($orderTotal, 2) }}</div>
+                                        <div class="text-sm font-medium text-gray-900">{{ $order->currency ?? 'AED' }} {{ number_format($orderTotal, 2) }}</div>
                                     </td>
                                 </tr>
                             </tbody>

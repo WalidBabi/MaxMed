@@ -36,6 +36,7 @@ class Order extends Model
         'customer_id',
         'order_number',
         'total_amount',
+        'currency',
         'status',
         'shipping_address',
         'shipping_city',

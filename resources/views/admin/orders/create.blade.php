@@ -104,6 +104,18 @@
                         </div>
                         <div class="px-6 py-6">
                             <div class="space-y-4">
+                                <!-- Currency Selection -->
+                                <div>
+                                    <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Currency
+                                    </label>
+                                    <select name="currency" id="currency" 
+                                            class="block w-full rounded-md border-0 py-2.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <option value="AED" {{ old('currency', 'AED') == 'AED' ? 'selected' : '' }}>AED (UAE Dirham)</option>
+                                        <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>USD (US Dollar)</option>
+                                    </select>
+                                </div>
+                                
                                 <div class="flex justify-between items-center">
                                     <span class="text-sm font-medium text-gray-600">Selected Items</span>
                                     <span id="selectedCount" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">0</span>
@@ -403,12 +415,23 @@
 <script>
 let itemCounter = 0;
 
+// Currency conversion constants
+const USD_TO_AED_RATE = 3.67;
+
 document.addEventListener('DOMContentLoaded', function() {
     const addItemBtn = document.getElementById('addItem');
     const orderForm = document.getElementById('orderForm');
+    const currencySelect = document.getElementById('currency');
     
     if (addItemBtn) {
         addItemBtn.addEventListener('click', addItem);
+    }
+    
+    // Currency change handler
+    if (currencySelect) {
+        currencySelect.addEventListener('change', function() {
+            updateAllCurrencyDisplays();
+        });
     }
     
     // Form validation before submission
@@ -451,6 +474,61 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Currency conversion functions
+function convertUsdToAed(usdAmount) {
+    return (usdAmount * USD_TO_AED_RATE).toFixed(2);
+}
+
+function convertAedToUsd(aedAmount) {
+    return (aedAmount / USD_TO_AED_RATE).toFixed(2);
+}
+
+function getCurrentCurrency() {
+    const currencySelect = document.getElementById('currency');
+    return currencySelect ? currencySelect.value : 'AED';
+}
+
+function formatCurrency(amount, currency) {
+    return currency + ' ' + parseFloat(amount).toFixed(2);
+}
+
+function updateAllCurrencyDisplays() {
+    const currency = getCurrentCurrency();
+    
+    // Update all rate inputs and displays
+    const rows = document.querySelectorAll('.item-row');
+    rows.forEach(row => {
+        updateRowCurrencyDisplay(row, currency);
+    });
+    
+    // Update totals
+    calculateTotals();
+}
+
+function updateRowCurrencyDisplay(row, currency) {
+    const rateInput = row.querySelector('.rate-input');
+    const amountDisplay = row.querySelector('.amount-display');
+    
+    if (rateInput && amountDisplay) {
+        const currentRate = parseFloat(rateInput.value) || 0;
+        let convertedRate = currentRate;
+        
+        // If we have a stored original rate in AED, convert it
+        const originalRateAed = rateInput.getAttribute('data-original-rate-aed');
+        if (originalRateAed) {
+            if (currency === 'USD') {
+                convertedRate = convertAedToUsd(originalRateAed);
+            } else {
+                convertedRate = originalRateAed;
+            }
+            rateInput.value = convertedRate;
+        }
+        
+        // Recalculate amount for this row
+        calculateRowAmount(row);
+    }
+}
 
 function validateForm() {
     const rows = document.querySelectorAll('.item-row');
@@ -634,12 +712,20 @@ function addItem() {
         if (item) {
             const productId = item.getAttribute('data-id');
             const productName = item.getAttribute('data-name');
-            const productPrice = item.getAttribute('data-price');
+            const productPrice = item.getAttribute('data-price'); // This is in AED
             
             productSearchInput.value = productName;
             productIdInput.value = productId;
             itemDetailsHidden.value = productName;
-            rateInput.value = productPrice;
+            
+            // Store original AED rate and convert based on current currency
+            rateInput.setAttribute('data-original-rate-aed', productPrice);
+            const currentCurrency = getCurrentCurrency();
+            if (currentCurrency === 'USD') {
+                rateInput.value = convertAedToUsd(productPrice);
+            } else {
+                rateInput.value = productPrice;
+            }
             
             dropdownList.classList.add('hidden');
             calculateRowAmount(row);
@@ -718,6 +804,7 @@ function calculateTotals() {
     const rows = document.querySelectorAll('.item-row');
     let subTotal = 0;
     let itemCount = 0;
+    const currency = getCurrentCurrency();
     
     rows.forEach(row => {
         const amountDisplay = row.querySelector('.amount-display');
@@ -741,8 +828,8 @@ function calculateTotals() {
     const subTotalElement = document.getElementById('subTotal');
     const totalAmountElement = document.getElementById('totalAmount');
     
-    if (subTotalElement) subTotalElement.textContent = 'AED ' + subTotal.toFixed(2);
-    if (totalAmountElement) totalAmountElement.textContent = 'AED ' + subTotal.toFixed(2);
+    if (subTotalElement) subTotalElement.textContent = formatCurrency(subTotal, currency);
+    if (totalAmountElement) totalAmountElement.textContent = formatCurrency(subTotal, currency);
     
     // Update sidebar summary
     const selectedCountElement = document.getElementById('selectedCount');
@@ -750,7 +837,7 @@ function calculateTotals() {
     const submitBtn = document.getElementById('submitBtn');
     
     if (selectedCountElement) selectedCountElement.textContent = itemCount;
-    if (orderTotalElement) orderTotalElement.textContent = 'AED ' + subTotal.toFixed(2);
+    if (orderTotalElement) orderTotalElement.textContent = formatCurrency(subTotal, currency);
     if (submitBtn) {
         if (itemCount === 0) {
             submitBtn.disabled = true;
