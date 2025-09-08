@@ -162,9 +162,25 @@ class CashReceiptController extends Controller
      */
     public function downloadPdf(CashReceipt $cashReceipt)
     {
-        $cashReceipt->load(['customer', 'order.invoice.items']);
+        $cashReceipt->load([
+            'customer', 
+            'order.customer', 
+            'order.items.product.brand',
+            'order.items.product.specifications',
+            'order.proformaInvoice',
+            'creator'
+        ]);
         
+        // Get customer information - try direct relationship first, then from order
         $customer = $cashReceipt->customer;
+        if (!$customer && $cashReceipt->order && $cashReceipt->order->customer) {
+            $customer = $cashReceipt->order->customer;
+        }
+        
+        // If still no customer found, try to find by name as fallback
+        if (!$customer && $cashReceipt->customer_name) {
+            $customer = Customer::where('name', $cashReceipt->customer_name)->first();
+        }
         
         $pdf = Pdf::loadView('admin.cash-receipts.pdf', compact('cashReceipt', 'customer'));
         
