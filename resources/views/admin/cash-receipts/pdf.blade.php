@@ -322,6 +322,13 @@
             font-weight: 600;
         }
 
+        .notes {
+            margin-top: 20px;
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-align: center;
+            font-style: italic;
+        }
 
         .status-badge {
             display: inline-block;
@@ -594,12 +601,6 @@
                             </div>
                         @endif
                         
-                        @if($customer->notes && !empty(trim($customer->notes)))
-                            <div style="font-size: 10px; color: var(--text-secondary); margin-top: 8px;">
-                                <div style="font-weight: 600; margin-bottom: 4px;">Notes:</div>
-                                <div style="line-height: 1.3; font-style: italic;">{{ $customer->notes }}</div>
-                            </div>
-                        @endif
                     @else
                         @php
                             // Fallback: Try to get customer info from order if direct customer relationship doesn't exist
@@ -650,12 +651,6 @@
                                 </div>
                             @endif
                             
-                            @if($fallbackCustomer->notes && !empty(trim($fallbackCustomer->notes)))
-                                <div style="font-size: 10px; color: var(--text-secondary); margin-top: 8px;">
-                                    <div style="font-weight: 600; margin-bottom: 4px;">Notes:</div>
-                                    <div style="line-height: 1.3; font-style: italic;">{{ $fallbackCustomer->notes }}</div>
-                                </div>
-                            @endif
                         @else
                             <div style="font-size: 10px; color: var(--text-muted); margin-top: 8px; font-style: italic;">
                                 Additional customer information not available.
@@ -1013,6 +1008,12 @@
             </div>
         </div>
 
+        @if($cashReceipt->payment_method === 'check')
+        <div class="notes">
+            <strong>Note:</strong> This receipt acknowledges the receipt of the check only. 
+            Payment is subject to bank clearance. Please retain this receipt for your records.
+        </div>
+        @endif
 
         @endif
 
