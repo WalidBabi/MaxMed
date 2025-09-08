@@ -566,11 +566,29 @@
                     </tr>
                     <tr>
                         <td class="label">Payment Method</td>
-                        <td class="value">{{ ucfirst(str_replace('_', ' ', $cashReceipt->payment_method)) }}</td>
+                        <td class="value">
+                            @if($cashReceipt->payment_method === 'check')
+                                Bank Check
+                            @elseif($cashReceipt->payment_method === 'bank_transfer')
+                                Bank Transfer
+                            @elseif($cashReceipt->payment_method === 'credit_card')
+                                Credit Card
+                            @else
+                                {{ ucfirst(str_replace('_', ' ', $cashReceipt->payment_method)) }}
+                            @endif
+                        </td>
                     </tr>
                     @if($cashReceipt->reference_number)
                     <tr>
-                        <td class="label">Reference</td>
+                        <td class="label">
+                            @if($cashReceipt->payment_method === 'check')
+                                Check Number
+                            @elseif($cashReceipt->payment_method === 'bank_transfer')
+                                Transaction Reference
+                            @else
+                                Reference
+                            @endif
+                        </td>
                         <td class="value">{{ $cashReceipt->reference_number }}</td>
                     </tr>
                     @endif
@@ -584,8 +602,22 @@
             @if($cashReceipt->description)
             <div style="margin-bottom: 15px; font-size: 10px;">{{ $cashReceipt->description }}</div>
             @endif
+            
+            @if($cashReceipt->payment_method === 'check')
+            <div style="margin-bottom: 15px; font-size: 10px; color: var(--text-secondary); font-style: italic;">
+                Payment received via bank check. This receipt acknowledges the receipt of the check. 
+                Funds are subject to bank clearance.
+            </div>
+            @endif
+            
             <div class="amount-section">
-                <div class="amount-label">Amount Received</div>
+                <div class="amount-label">
+                    @if($cashReceipt->payment_method === 'check')
+                        Check Amount
+                    @else
+                        Amount Received
+                    @endif
+                </div>
                 <div class="amount-value">{{ number_format($cashReceipt->amount, 2) }} {{ $cashReceipt->currency }}</div>
             </div>
         </div>
@@ -725,7 +757,21 @@
                         
                         <tr class="grand-total">
                             <td class="total-label">Total Amount:</td>
-                            <td class="total-amount">{{ $cashReceipt->currency }} {{ number_format($cashReceipt->order->total_amount, 2) }}</td>
+                            <td class="total-amount">
+                                @php
+                                    // Calculate total including all components
+                                    $subtotal = $cashReceipt->order->items->sum(function($item) { return $item->quantity * $item->price; });
+                                    $shipping = $cashReceipt->order->shipping_rate ?? 0;
+                                    $vat = $cashReceipt->order->vat_amount ?? 0;
+                                    $tax = $cashReceipt->order->tax_amount ?? 0;
+                                    $discount = $cashReceipt->order->discount_amount ?? 0;
+                                    $calculatedTotal = $subtotal + $shipping + $vat + $tax - $discount;
+                                    
+                                    // Use the higher of calculated total or order total_amount (in case of manual adjustments)
+                                    $finalTotal = max($calculatedTotal, $cashReceipt->order->total_amount ?? 0);
+                                @endphp
+                                {{ $cashReceipt->currency }} {{ number_format($finalTotal, 2) }}
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -744,6 +790,31 @@
             <div class="signature-image" style="text-align: left;">
                 <img src="{{ public_path('storage/' . $cashReceipt->order->delivery->customer_signature) }}" alt="Customer Signature" style="max-width: 300px; max-height: 100px; border: 1px solid #d1d5db; border-radius: 4px;">
             </div>
+        </div>
+        @endif
+
+        <!-- Signature Section -->
+        <div class="signature-section">
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <div class="signature-label">Customer Signature</div>
+            </div>
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <div class="signature-label">
+                    @if($cashReceipt->payment_method === 'check')
+                        Authorized Representative
+                    @else
+                        Received By
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        @if($cashReceipt->payment_method === 'check')
+        <div class="notes">
+            <strong>Note:</strong> This receipt acknowledges the receipt of the check only. 
+            Payment is subject to bank clearance. Please retain this receipt for your records.
         </div>
         @endif
 
