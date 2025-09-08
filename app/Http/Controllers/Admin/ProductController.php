@@ -629,15 +629,29 @@ class ProductController extends Controller
      */
     public function getSpecifications(Product $product)
     {
-        $specifications = $product->specifications()
-            ->where('show_on_detail', true)
-            ->orderBy('category', 'asc')
-            ->orderBy('sort_order', 'asc')
-            ->get();
+        try {
+            \Log::info("Getting specifications for product ID: {$product->id}, Name: {$product->name}");
+            
+            $specifications = $product->specifications()
+                ->where('show_on_detail', true)
+                ->orderBy('category', 'asc')
+                ->orderBy('sort_order', 'asc')
+                ->get();
 
-        return response()->json([
-            'specifications' => $specifications
-        ]);
+            \Log::info("Found {$specifications->count()} specifications for product {$product->id}");
+
+            return response()->json([
+                'specifications' => $specifications,
+                'product_id' => $product->id,
+                'product_name' => $product->name
+            ]);
+        } catch (\Exception $e) {
+            \Log::error("Error getting specifications for product {$product->id}: " . $e->getMessage());
+            return response()->json([
+                'error' => 'Failed to load specifications',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -645,9 +659,23 @@ class ProductController extends Controller
      */
     public function getSizeOptions(Product $product)
     {
-        return response()->json([
-            'has_size_options' => $product->has_size_options,
-            'size_options' => $product->size_options ?: []
-        ]);
+        try {
+            \Log::info("Getting size options for product ID: {$product->id}, Name: {$product->name}");
+            \Log::info("Has size options: " . ($product->has_size_options ? 'Yes' : 'No'));
+            \Log::info("Size options: " . json_encode($product->size_options));
+
+            return response()->json([
+                'has_size_options' => $product->has_size_options,
+                'size_options' => $product->size_options ?: [],
+                'product_id' => $product->id,
+                'product_name' => $product->name
+            ]);
+        } catch (\Exception $e) {
+            \Log::error("Error getting size options for product {$product->id}: " . $e->getMessage());
+            return response()->json([
+                'error' => 'Failed to load size options',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }
