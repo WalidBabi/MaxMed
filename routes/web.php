@@ -435,9 +435,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
         
         // AJAX routes for order creation
-        Route::get('products/{product}/specifications', [\App\Http\Controllers\Admin\ProductController::class, 'getSpecifications'])->name('products.specifications');
-        Route::get('products/{product}/size-options', [\App\Http\Controllers\Admin\ProductController::class, 'getSizeOptions'])->name('products.size-options');
-        Route::get('invoices/{invoice}/details', [\App\Http\Controllers\Admin\InvoiceController::class, 'getDetails'])->name('invoices.details');
+        Route::get('products/{product}/ajax/specifications', [\App\Http\Controllers\Admin\ProductController::class, 'getSpecifications'])->name('products.ajax.specifications');
+        Route::get('products/{product}/ajax/size-options', [\App\Http\Controllers\Admin\ProductController::class, 'getSizeOptions'])->name('products.ajax.size-options');
+        Route::get('invoices/{invoice}/ajax/details', [\App\Http\Controllers\Admin\InvoiceController::class, 'getDetails'])->name('invoices.ajax.details');
 
         // Category Management - Using slug-based routing
         Route::get('categories', [\App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('categories.index');
