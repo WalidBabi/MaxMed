@@ -850,4 +850,27 @@ class InvoiceController extends Controller
             return redirect()->back()->with('error', 'Failed to link delivery: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Get invoice details for AJAX
+     */
+    public function getDetails(Invoice $invoice)
+    {
+        return response()->json([
+            'id' => $invoice->id,
+            'invoice_number' => $invoice->invoice_number,
+            'customer_name' => $invoice->customer_name,
+            'currency' => $invoice->currency,
+            'subtotal' => $invoice->subtotal,
+            'shipping_rate' => $invoice->shipping_rate,
+            'tax_amount' => $invoice->tax_amount,
+            'vat_rate' => $invoice->vat_rate,
+            'customs_clearance_fee' => $invoice->customs_clearance_fee,
+            'discount_amount' => $invoice->discount_amount,
+            'total_amount' => $invoice->total_amount,
+            'payment_terms' => $invoice->payment_terms,
+            'billing_address' => $invoice->billing_address,
+            'shipping_address' => $invoice->shipping_address,
+        ]);
+    }
 } 

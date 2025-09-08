@@ -70,6 +70,22 @@
                                 </div>
                                 
                                 <div class="md:col-span-2">
+                                    <label for="proforma_invoice_id" class="block text-sm font-medium text-gray-700 mb-2">
+                                        Link to Proforma Invoice (Optional)
+                                    </label>
+                                    <select name="proforma_invoice_id" id="proforma_invoice_id" 
+                                            class="block w-full rounded-md border-0 py-2.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <option value="">Select a proforma invoice...</option>
+                                        @foreach(\App\Models\Invoice::where('type', 'proforma')->where('status', '!=', 'cancelled')->orderBy('created_at', 'desc')->limit(50)->get() as $invoice)
+                                            <option value="{{ $invoice->id }}" {{ old('proforma_invoice_id') == $invoice->id ? 'selected' : '' }}>
+                                                {{ $invoice->invoice_number }} - {{ $invoice->customer_name }} ({{ $invoice->currency }} {{ number_format($invoice->total_amount, 2) }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <p class="mt-1 text-sm text-gray-500">Link this order to a proforma invoice to inherit shipping and VAT details</p>
+                                </div>
+                                
+                                <div class="md:col-span-2">
                                     <div class="flex items-center space-x-3">
                                         <input type="checkbox" name="requires_quotation" id="requires_quotation" value="1" 
                                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
@@ -202,6 +218,22 @@
                                         <span class="font-medium text-gray-600">Subtotal:</span>
                                         <span id="subTotal" class="font-semibold text-gray-900">AED 0.00</span>
                                     </div>
+                                    
+                                    <!-- Shipping and VAT from Proforma Invoice -->
+                                    <div id="proformaDetails" class="hidden">
+                                        <div class="flex justify-between items-center text-sm">
+                                            <span class="font-medium text-gray-600">Shipping:</span>
+                                            <span id="shippingAmount" class="font-semibold text-gray-900">AED 0.00</span>
+                                        </div>
+                                        <div class="flex justify-between items-center text-sm">
+                                            <span class="font-medium text-gray-600">VAT:</span>
+                                            <span id="vatAmount" class="font-semibold text-gray-900">AED 0.00</span>
+                                        </div>
+                                        <input type="hidden" name="shipping_rate" id="shippingRateHidden" value="0">
+                                        <input type="hidden" name="vat_rate" id="vatRateHidden" value="0">
+                                        <input type="hidden" name="vat_amount" id="vatAmountHidden" value="0">
+                                    </div>
+                                    
                                     <div class="border-t border-gray-300 pt-3">
                                         <div class="flex justify-between items-center">
                                             <span class="text-lg font-semibold text-gray-900">Total:</span>
@@ -431,6 +463,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (currencySelect) {
         currencySelect.addEventListener('change', function() {
             updateAllCurrencyDisplays();
+        });
+    }
+    
+    // Proforma invoice selection handler
+    const proformaSelect = document.getElementById('proforma_invoice_id');
+    if (proformaSelect) {
+        proformaSelect.addEventListener('change', function() {
+            loadProformaInvoiceDetails(this.value);
         });
     }
     
@@ -727,6 +767,10 @@ function addItem() {
                 rateInput.value = productPrice;
             }
             
+            // Load specifications and size options for the selected product
+            loadProductSpecifications(productId, row);
+            loadProductSizeOptions(productId, row);
+            
             dropdownList.classList.add('hidden');
             calculateRowAmount(row);
         }
@@ -751,6 +795,157 @@ function addItem() {
     
     // Update totals after adding item
     calculateTotals();
+}
+
+// Load product specifications
+function loadProductSpecifications(productId, row) {
+    const specificationsInput = row.querySelector('.specifications-search-input');
+    const specificationsHidden = row.querySelector('.specifications-hidden');
+    
+    if (!productId) {
+        specificationsInput.value = '';
+        specificationsHidden.value = '';
+        return;
+    }
+    
+    // Make AJAX request to fetch specifications
+    fetch(`/admin/products/${productId}/specifications`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.specifications && data.specifications.length > 0) {
+                // Group specifications by category
+                const groupedSpecs = {};
+                data.specifications.forEach(spec => {
+                    const category = spec.category || 'General';
+                    if (!groupedSpecs[category]) {
+                        groupedSpecs[category] = [];
+                    }
+                    groupedSpecs[category].push(spec);
+                });
+                
+                // Create display text
+                let displayText = [];
+                let valueText = [];
+                
+                Object.keys(groupedSpecs).forEach(category => {
+                    const specs = groupedSpecs[category];
+                    specs.forEach(spec => {
+                        displayText.push(`${spec.display_name}: ${spec.specification_value}${spec.unit ? ' ' + spec.unit : ''}`);
+                        valueText.push(`${spec.specification_key}:${spec.specification_value}`);
+                    });
+                });
+                
+                specificationsInput.value = displayText.join(' | ');
+                specificationsHidden.value = valueText.join(',');
+            } else {
+                specificationsInput.value = 'No specifications available';
+                specificationsHidden.value = '';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading specifications:', error);
+            specificationsInput.value = 'Error loading specifications';
+            specificationsHidden.value = '';
+        });
+}
+
+// Load product size options
+function loadProductSizeOptions(productId, row) {
+    const sizeSelect = row.querySelector('.size-options-select');
+    
+    if (!productId) {
+        sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
+        return;
+    }
+    
+    // Make AJAX request to fetch size options
+    fetch(`/admin/products/${productId}/size-options`)
+        .then(response => response.json())
+        .then(data => {
+            sizeSelect.innerHTML = '<option value="">Select Size (if applicable)</option>';
+            
+            if (data.has_size_options && data.size_options && data.size_options.length > 0) {
+                data.size_options.forEach(size => {
+                    const option = document.createElement('option');
+                    option.value = size;
+                    option.textContent = size;
+                    sizeSelect.appendChild(option);
+                });
+                sizeSelect.disabled = false;
+            } else {
+                sizeSelect.disabled = true;
+            }
+        })
+        .catch(error => {
+            console.error('Error loading size options:', error);
+            sizeSelect.innerHTML = '<option value="">Error loading sizes</option>';
+            sizeSelect.disabled = true;
+        });
+}
+
+// Load proforma invoice details
+function loadProformaInvoiceDetails(invoiceId) {
+    const proformaDetails = document.getElementById('proformaDetails');
+    const shippingAmount = document.getElementById('shippingAmount');
+    const vatAmount = document.getElementById('vatAmount');
+    const shippingRateHidden = document.getElementById('shippingRateHidden');
+    const vatRateHidden = document.getElementById('vatRateHidden');
+    const vatAmountHidden = document.getElementById('vatAmountHidden');
+    
+    if (!invoiceId) {
+        proformaDetails.classList.add('hidden');
+        shippingRateHidden.value = '0';
+        vatRateHidden.value = '0';
+        vatAmountHidden.value = '0';
+        calculateTotals();
+        return;
+    }
+    
+    // Make AJAX request to fetch proforma invoice details
+    fetch(`/admin/invoices/${invoiceId}/details`)
+        .then(response => response.json())
+        .then(data => {
+            const currency = getCurrentCurrency();
+            
+            // Convert amounts based on current currency
+            let shippingRate = parseFloat(data.shipping_rate || 0);
+            let vatAmountValue = parseFloat(data.tax_amount || 0);
+            let vatRateValue = parseFloat(data.vat_rate || 0);
+            
+            // If invoice is in different currency, convert
+            if (data.currency !== currency) {
+                if (currency === 'USD' && data.currency === 'AED') {
+                    shippingRate = convertAedToUsd(shippingRate);
+                    vatAmountValue = convertAedToUsd(vatAmountValue);
+                } else if (currency === 'AED' && data.currency === 'USD') {
+                    shippingRate = convertUsdToAed(shippingRate);
+                    vatAmountValue = convertUsdToAed(vatAmountValue);
+                }
+            }
+            
+            // Update display
+            shippingAmount.textContent = formatCurrency(shippingRate, currency);
+            vatAmount.textContent = formatCurrency(vatAmountValue, currency);
+            
+            // Update hidden fields
+            shippingRateHidden.value = shippingRate;
+            vatRateHidden.value = vatRateValue;
+            vatAmountHidden.value = vatAmountValue;
+            
+            // Show proforma details
+            proformaDetails.classList.remove('hidden');
+            
+            // Recalculate totals
+            calculateTotals();
+        })
+        .catch(error => {
+            console.error('Error loading proforma invoice details:', error);
+            proformaDetails.classList.add('hidden');
+            shippingRateHidden.value = '0';
+            vatRateHidden.value = '0';
+            vatAmountHidden.value = '0';
+            calculateTotals();
+        });
 }
 
 function removeItem(button) {
@@ -824,12 +1019,22 @@ function calculateTotals() {
         }
     });
     
+    // Get shipping and VAT from proforma invoice
+    const shippingRateHidden = document.getElementById('shippingRateHidden');
+    const vatAmountHidden = document.getElementById('vatAmountHidden');
+    
+    const shippingRate = parseFloat(shippingRateHidden?.value || 0);
+    const vatAmount = parseFloat(vatAmountHidden?.value || 0);
+    
+    // Calculate final total
+    const finalTotal = subTotal + shippingRate + vatAmount;
+    
     // Update item table totals
     const subTotalElement = document.getElementById('subTotal');
     const totalAmountElement = document.getElementById('totalAmount');
     
     if (subTotalElement) subTotalElement.textContent = formatCurrency(subTotal, currency);
-    if (totalAmountElement) totalAmountElement.textContent = formatCurrency(subTotal, currency);
+    if (totalAmountElement) totalAmountElement.textContent = formatCurrency(finalTotal, currency);
     
     // Update sidebar summary
     const selectedCountElement = document.getElementById('selectedCount');
@@ -837,7 +1042,7 @@ function calculateTotals() {
     const submitBtn = document.getElementById('submitBtn');
     
     if (selectedCountElement) selectedCountElement.textContent = itemCount;
-    if (orderTotalElement) orderTotalElement.textContent = formatCurrency(subTotal, currency);
+    if (orderTotalElement) orderTotalElement.textContent = formatCurrency(finalTotal, currency);
     if (submitBtn) {
         if (itemCount === 0) {
             submitBtn.disabled = true;

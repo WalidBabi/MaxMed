@@ -34,9 +34,13 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'customer_id',
+        'proforma_invoice_id',
         'order_number',
         'total_amount',
         'currency',
+        'shipping_rate',
+        'vat_rate',
+        'vat_amount',
         'status',
         'shipping_address',
         'shipping_city',
@@ -517,7 +521,7 @@ class Order extends Model
      */
     public function proformaInvoice()
     {
-        return $this->hasOne(Invoice::class, 'order_id', 'id')->where('type', 'proforma');
+        return $this->belongsTo(Invoice::class, 'proforma_invoice_id', 'id');
     }
 
     /**

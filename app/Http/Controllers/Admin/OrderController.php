@@ -41,6 +41,10 @@ class OrderController extends Controller
         $validated = $request->validate([
             'customer_id' => 'required|exists:customers,id',
             'currency' => 'required|in:USD,AED',
+            'proforma_invoice_id' => 'nullable|exists:invoices,id',
+            'shipping_rate' => 'nullable|numeric|min:0',
+            'vat_rate' => 'nullable|numeric|min:0',
+            'vat_amount' => 'nullable|numeric|min:0',
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.item_details' => 'required|string',
@@ -74,9 +78,13 @@ class OrderController extends Controller
             $order = \App\Models\Order::create([
                 'user_id' => $userId,
                 'customer_id' => $customer->id,
+                'proforma_invoice_id' => $validated['proforma_invoice_id'] ?? null,
                 'currency' => $validated['currency'],
                 'status' => \App\Models\Order::STATUS_PENDING, // Start with pending status
                 'total_amount' => 0, // Will be calculated
+                'shipping_rate' => $validated['shipping_rate'] ?? 0,
+                'vat_rate' => $validated['vat_rate'] ?? 0,
+                'vat_amount' => $validated['vat_amount'] ?? 0,
                 'shipping_address' => $customer->shipping_street ?: $customer->billing_street ?: 'Admin Created Order',
                 'shipping_city' => $customer->shipping_city ?: $customer->billing_city ?: 'N/A',
                 'shipping_state' => $customer->shipping_state ?: $customer->billing_state ?: 'N/A',
@@ -122,7 +130,9 @@ class OrderController extends Controller
                 }
             }
 
-            $order->update(['total_amount' => $total]);
+            // Calculate final total including shipping and VAT
+            $finalTotal = $total + ($validated['shipping_rate'] ?? 0) + ($validated['vat_amount'] ?? 0);
+            $order->update(['total_amount' => $finalTotal]);
 
             // If order requires quotation, update status accordingly
             if ($order->requires_quotation) {
