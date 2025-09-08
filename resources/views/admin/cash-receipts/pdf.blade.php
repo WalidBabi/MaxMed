@@ -290,28 +290,36 @@
             border-top: 1px solid var(--border-color);
         }
 
-        .signature-section {
-            display: flex;
-            justify-content: space-between;
+        .company-stamp-section {
             margin-top: 30px;
+            text-align: right;
         }
 
-        .signature-box {
-            width: 45%;
+        .stamp-container {
+            display: inline-block;
             text-align: center;
         }
 
-        .signature-line {
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 8px;
-            height: 40px;
+        .stamp-image {
+            margin-bottom: 10px;
         }
 
-        .signature-label {
-            font-size: 9px;
+        .stamp-placeholder {
+            width: 150px;
+            height: 80px;
+            border: 2px solid #6c757d;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+        }
+
+        .stamp-label {
+            font-size: 10px;
             color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: 600;
         }
 
         .notes {
@@ -551,10 +559,115 @@
                 <div class="client-info">
                     <div class="section-heading">Customer Information</div>
                     <div class="client-name">{{ $cashReceipt->customer_name }}</div>
-                    @if($customer && $customer->company_name)
-                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 3px; font-weight: 500;">
-                            {{ $customer->company_name }}
+                    
+                    @if($customer)
+                        @if($customer->company_name)
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 3px; font-weight: 500;">
+                                {{ $customer->company_name }}
+                            </div>
+                        @endif
+                        
+                        <div style="font-size: 10px; color: var(--text-secondary); margin-top: 8px; line-height: 1.4;">
+                            @if($customer->email)
+                                <div style="margin-bottom: 3px;">
+                                    <strong>Email:</strong> {{ $customer->email }}
+                                </div>
+                            @endif
+                            
+                            @if($customer->phone)
+                                <div style="margin-bottom: 3px;">
+                                    <strong>Phone:</strong> {{ $customer->phone }}
+                                </div>
+                            @endif
+                            
+                            @if($customer->tax_id)
+                                <div style="margin-bottom: 3px;">
+                                    <strong>Tax ID:</strong> {{ $customer->tax_id }}
+                                </div>
+                            @endif
                         </div>
+                        
+                        @if($customer->billing_address)
+                            <div style="font-size: 10px; color: var(--text-secondary); margin-top: 8px;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">Billing Address:</div>
+                                <div style="line-height: 1.3; white-space: pre-line;">{{ $customer->billing_address }}</div>
+                            </div>
+                        @endif
+                        
+                        @if($customer->shipping_address && $customer->shipping_address !== $customer->billing_address)
+                            <div style="font-size: 10px; color: var(--text-secondary); margin-top: 8px;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">Shipping Address:</div>
+                                <div style="line-height: 1.3; white-space: pre-line;">{{ $customer->shipping_address }}</div>
+                            </div>
+                        @endif
+                        
+                        @if($customer->notes && !empty(trim($customer->notes)))
+                            <div style="font-size: 10px; color: var(--text-secondary); margin-top: 8px;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">Notes:</div>
+                                <div style="line-height: 1.3; font-style: italic;">{{ $customer->notes }}</div>
+                            </div>
+                        @endif
+                    @else
+                        @php
+                            // Fallback: Try to get customer info from order if direct customer relationship doesn't exist
+                            $fallbackCustomer = null;
+                            if($cashReceipt->order && $cashReceipt->order->customer) {
+                                $fallbackCustomer = $cashReceipt->order->customer;
+                            }
+                        @endphp
+                        
+                        @if($fallbackCustomer)
+                            @if($fallbackCustomer->company_name)
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 3px; font-weight: 500;">
+                                    {{ $fallbackCustomer->company_name }}
+                                </div>
+                            @endif
+                            
+                            <div style="font-size: 10px; color: var(--text-secondary); margin-top: 8px; line-height: 1.4;">
+                                @if($fallbackCustomer->email)
+                                    <div style="margin-bottom: 3px;">
+                                        <strong>Email:</strong> {{ $fallbackCustomer->email }}
+                                    </div>
+                                @endif
+                                
+                                @if($fallbackCustomer->phone)
+                                    <div style="margin-bottom: 3px;">
+                                        <strong>Phone:</strong> {{ $fallbackCustomer->phone }}
+                                    </div>
+                                @endif
+                                
+                                @if($fallbackCustomer->tax_id)
+                                    <div style="margin-bottom: 3px;">
+                                        <strong>Tax ID:</strong> {{ $fallbackCustomer->tax_id }}
+                                    </div>
+                                @endif
+                            </div>
+                            
+                            @if($fallbackCustomer->billing_address)
+                                <div style="font-size: 10px; color: var(--text-secondary); margin-top: 8px;">
+                                    <div style="font-weight: 600; margin-bottom: 4px;">Billing Address:</div>
+                                    <div style="line-height: 1.3; white-space: pre-line;">{{ $fallbackCustomer->billing_address }}</div>
+                                </div>
+                            @endif
+                            
+                            @if($fallbackCustomer->shipping_address && $fallbackCustomer->shipping_address !== $fallbackCustomer->billing_address)
+                                <div style="font-size: 10px; color: var(--text-secondary); margin-top: 8px;">
+                                    <div style="font-weight: 600; margin-bottom: 4px;">Shipping Address:</div>
+                                    <div style="line-height: 1.3; white-space: pre-line;">{{ $fallbackCustomer->shipping_address }}</div>
+                                </div>
+                            @endif
+                            
+                            @if($fallbackCustomer->notes && !empty(trim($fallbackCustomer->notes)))
+                                <div style="font-size: 10px; color: var(--text-secondary); margin-top: 8px;">
+                                    <div style="font-weight: 600; margin-bottom: 4px;">Notes:</div>
+                                    <div style="line-height: 1.3; font-style: italic;">{{ $fallbackCustomer->notes }}</div>
+                                </div>
+                            @endif
+                        @else
+                            <div style="font-size: 10px; color: var(--text-muted); margin-top: 8px; font-style: italic;">
+                                Additional customer information not available.
+                            </div>
+                        @endif
                     @endif
                 </div>
             </div>
@@ -911,20 +1024,25 @@
         </div>
         @endif
 
-        <!-- Signature Section -->
-        <div class="signature-section">
-            <div class="signature-box">
-                <div class="signature-line"></div>
-                <div class="signature-label">Customer Signature</div>
-            </div>
-            <div class="signature-box">
-                <div class="signature-line"></div>
-                <div class="signature-label">
-                    @if($cashReceipt->payment_method === 'check')
-                        Authorized Representative
-                    @else
-                        Received By
-                    @endif
+        <!-- Company Stamp Section -->
+        <div class="company-stamp-section">
+            <div class="stamp-container">
+                @if(file_exists(public_path('Images/stamp.png')))
+                    <div class="stamp-image">
+                        <img src="{{ public_path('Images/stamp.png') }}" alt="Company Stamp" style="max-width: 150px; max-height: 100px;">
+                    </div>
+                @else
+                    <div class="stamp-placeholder">
+                        <div style="text-align: center; color: #6c757d; font-size: 10px; line-height: 1.2;">
+                            <div style="font-weight: 600;">COMPANY STAMP</div>
+                            <div style="margin-top: 4px;">MaxMed Scientific</div>
+                            <div>& Laboratory Equipment</div>
+                            <div>Trading Co. LLC</div>
+                        </div>
+                    </div>
+                @endif
+                <div class="stamp-label">
+                    Authorized by MaxMed Scientific
                 </div>
             </div>
         </div>
