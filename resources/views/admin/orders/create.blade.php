@@ -809,7 +809,7 @@ function loadProductSpecifications(productId, row) {
     }
     
     // Make AJAX request to fetch specifications
-    fetch(`{{ url('/admin/products') }}/${productId}/specifications`, {
+    fetch(`{{ url('/admin/products') }}/${productId}/ajax/specifications`, {
         method: 'GET',
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -861,7 +861,7 @@ function loadProductSpecifications(productId, row) {
         .catch(error => {
             console.error('Error loading specifications:', error);
             console.error('Product ID:', productId);
-            console.error('URL:', `{{ url('/admin/products') }}/${productId}/specifications`);
+            console.error('URL:', `{{ url('/admin/products') }}/${productId}/ajax/specifications`);
             specificationsInput.value = 'Error loading specifications';
             specificationsHidden.value = '';
         });
@@ -877,7 +877,7 @@ function loadProductSizeOptions(productId, row) {
     }
     
     // Make AJAX request to fetch size options
-    fetch(`{{ url('/admin/products') }}/${productId}/size-options`, {
+    fetch(`{{ url('/admin/products') }}/${productId}/ajax/size-options`, {
         method: 'GET',
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -913,7 +913,7 @@ function loadProductSizeOptions(productId, row) {
         .catch(error => {
             console.error('Error loading size options:', error);
             console.error('Product ID:', productId);
-            console.error('URL:', `{{ url('/admin/products') }}/${productId}/size-options`);
+            console.error('URL:', `{{ url('/admin/products') }}/${productId}/ajax/size-options`);
             sizeSelect.innerHTML = '<option value="">Error loading sizes</option>';
             sizeSelect.disabled = true;
         });
@@ -938,7 +938,7 @@ function loadProformaInvoiceDetails(invoiceId) {
     }
     
     // Make AJAX request to fetch proforma invoice details
-    fetch(`{{ url('/admin/invoices') }}/${invoiceId}/details`, {
+    fetch(`{{ url('/admin/invoices') }}/${invoiceId}/ajax/details`, {
         method: 'GET',
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -983,6 +983,11 @@ function loadProformaInvoiceDetails(invoiceId) {
             // Show proforma details
             proformaDetails.classList.remove('hidden');
             
+            // Auto-populate items from proforma invoice
+            if (data.items && data.items.length > 0) {
+                populateItemsFromProforma(data.items, currency);
+            }
+            
             // Recalculate totals
             calculateTotals();
         })
@@ -994,6 +999,99 @@ function loadProformaInvoiceDetails(invoiceId) {
             vatAmountHidden.value = '0';
             calculateTotals();
         });
+}
+
+// Populate items from proforma invoice
+function populateItemsFromProforma(items, currency) {
+    // Clear existing items first
+    const tbody = document.getElementById('itemsTable');
+    tbody.innerHTML = '';
+    itemCounter = 0;
+    
+    // Add each item from the proforma invoice
+    items.forEach(invoiceItem => {
+        if (invoiceItem.product_id) {
+            addItem(); // Add a new row
+            
+            // Get the newly added row
+            const rows = document.querySelectorAll('.item-row');
+            const newRow = rows[rows.length - 1];
+            
+            // Populate the row with invoice item data
+            const productSearchInput = newRow.querySelector('.product-search-input');
+            const productIdInput = newRow.querySelector('.product-id-input');
+            const itemDetailsHidden = newRow.querySelector('.item-details-hidden');
+            const specificationsInput = newRow.querySelector('.specifications-search-input');
+            const specificationsHidden = newRow.querySelector('.specifications-hidden');
+            const sizeSelect = newRow.querySelector('.size-options-select');
+            const quantityInput = newRow.querySelector('.quantity-input');
+            const rateInput = newRow.querySelector('.rate-input');
+            const discountInput = newRow.querySelector('.discount-input');
+            
+            // Set product information
+            if (invoiceItem.product) {
+                productSearchInput.value = invoiceItem.product.name;
+                productIdInput.value = invoiceItem.product.id;
+                itemDetailsHidden.value = invoiceItem.product.name;
+                
+                // Store original AED rate and convert based on current currency
+                const originalPrice = invoiceItem.product.price_aed || invoiceItem.product.price || invoiceItem.unit_price;
+                rateInput.setAttribute('data-original-rate-aed', originalPrice);
+                
+                if (currency === 'USD') {
+                    rateInput.value = convertAedToUsd(originalPrice);
+                } else {
+                    rateInput.value = originalPrice;
+                }
+            } else {
+                productSearchInput.value = invoiceItem.product_name || 'Product not found';
+                itemDetailsHidden.value = invoiceItem.product_name || 'Product not found';
+                rateInput.value = invoiceItem.unit_price || 0;
+            }
+            
+            // Set specifications
+            if (invoiceItem.specifications) {
+                try {
+                    const specs = typeof invoiceItem.specifications === 'string' 
+                        ? JSON.parse(invoiceItem.specifications) 
+                        : invoiceItem.specifications;
+                    
+                    if (Array.isArray(specs)) {
+                        specificationsInput.value = specs.join(' | ');
+                        specificationsHidden.value = specs.join(',');
+                    } else {
+                        specificationsInput.value = invoiceItem.specifications;
+                        specificationsHidden.value = invoiceItem.specifications;
+                    }
+                } catch (e) {
+                    specificationsInput.value = invoiceItem.specifications;
+                    specificationsHidden.value = invoiceItem.specifications;
+                }
+            }
+            
+            // Set size
+            if (invoiceItem.size) {
+                // Add the size option if it doesn't exist
+                const existingOption = Array.from(sizeSelect.options).find(option => option.value === invoiceItem.size);
+                if (!existingOption) {
+                    const option = document.createElement('option');
+                    option.value = invoiceItem.size;
+                    option.textContent = invoiceItem.size;
+                    sizeSelect.appendChild(option);
+                }
+                sizeSelect.value = invoiceItem.size;
+            }
+            
+            // Set quantity and discount
+            quantityInput.value = invoiceItem.quantity || 1;
+            discountInput.value = invoiceItem.discount_percentage || 0;
+            
+            // Calculate row amount
+            calculateRowAmount(newRow);
+        }
+    });
+    
+    console.log(`Populated ${items.length} items from proforma invoice`);
 }
 
 function removeItem(button) {

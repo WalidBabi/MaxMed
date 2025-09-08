@@ -856,6 +856,31 @@ class InvoiceController extends Controller
      */
     public function getDetails(Invoice $invoice)
     {
+        // Load items with product details
+        $invoice->load('items.product');
+        
+        $items = $invoice->items->map(function($item) {
+            return [
+                'id' => $item->id,
+                'product_id' => $item->product_id,
+                'product_name' => $item->product ? $item->product->name : $item->item_details,
+                'product_description' => $item->product ? $item->product->description : '',
+                'specifications' => $item->specifications,
+                'size' => $item->size,
+                'quantity' => $item->quantity,
+                'unit_price' => $item->unit_price,
+                'line_total' => $item->line_total,
+                'discount_percentage' => $item->discount_percentage ?? 0,
+                'product' => $item->product ? [
+                    'id' => $item->product->id,
+                    'name' => $item->product->name,
+                    'description' => $item->product->description,
+                    'price_aed' => $item->product->price_aed,
+                    'price' => $item->product->price,
+                ] : null
+            ];
+        });
+
         return response()->json([
             'id' => $invoice->id,
             'invoice_number' => $invoice->invoice_number,
@@ -871,6 +896,7 @@ class InvoiceController extends Controller
             'payment_terms' => $invoice->payment_terms,
             'billing_address' => $invoice->billing_address,
             'shipping_address' => $invoice->shipping_address,
+            'items' => $items
         ]);
     }
 } 
