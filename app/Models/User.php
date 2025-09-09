@@ -101,6 +101,17 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Check if the user cannot perform a specific action
+     *
+     * @param string $permission
+     * @return bool
+     */
+    public function cannotPermission(string $permission): bool
+    {
+        return !$this->hasPermission($permission);
+    }
+
+    /**
      * Check if the user has any of the given permissions
      *
      * @param array $permissions
@@ -108,12 +119,56 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasAnyPermission(array $permissions): bool
     {
-        foreach ($permissions as $permission) {
-            if ($this->hasPermission($permission)) {
-                return true;
-            }
+        return $this->role && $this->role->hasAnyPermission($permissions);
+    }
+
+    /**
+     * Check if the user has all of the given permissions
+     *
+     * @param array $permissions
+     * @return bool
+     */
+    public function hasAllPermissions(array $permissions): bool
+    {
+        return $this->role && $this->role->hasAllPermissions($permissions);
+    }
+
+    /**
+     * Get all permissions for this user through their role
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getAllPermissions()
+    {
+        if (!$this->role) {
+            return collect();
         }
-        return false;
+        
+        // Always use the query to ensure we get active permissions
+        // The relationship might not be properly loaded due to pivot table issues
+        return $this->role->permissions()->where('is_active', true)->get();
+    }
+
+    /**
+     * Check if user has role by name
+     *
+     * @param string $roleName
+     * @return bool
+     */
+    public function hasRole(string $roleName): bool
+    {
+        return $this->role && $this->role->name === $roleName;
+    }
+
+    /**
+     * Check if user has any of the given roles
+     *
+     * @param array $roleNames
+     * @return bool
+     */
+    public function hasAnyRole(array $roleNames): bool
+    {
+        return $this->role && in_array($this->role->name, $roleNames);
     }
 
     public function orders()

@@ -19,6 +19,12 @@ class ProductController extends Controller
     public function __construct(ProductSpecificationService $specificationService)
     {
         $this->specificationService = $specificationService;
+        $this->middleware('auth');
+        $this->middleware('role:supplier');
+        $this->middleware('permission:supplier.products.view')->only(['index', 'show']);
+        $this->middleware('permission:supplier.products.create')->only(['create', 'store']);
+        $this->middleware('permission:supplier.products.edit')->only(['edit', 'update']);
+        $this->middleware('permission:supplier.products.delete')->only(['destroy']);
     }
 
     /**

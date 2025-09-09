@@ -519,4 +519,61 @@ class PurchaseOrderController extends Controller
             return redirect()->back()->with('error', 'Failed to delete purchase order.');
         }
     }
+
+    /**
+     * Get order items for AJAX request
+     */
+    public function getOrderItems(Order $order)
+    {
+        try {
+            $orderItems = $order->items()->with('product.specifications')->get();
+            
+            $items = $orderItems->map(function ($item) {
+                $product = $item->product;
+                $specifications = [];
+                
+                if ($product && $product->specifications) {
+                    $specifications = $product->specifications->map(function ($spec) {
+                        return $spec->display_name . ': ' . $spec->formatted_value;
+                    })->toArray();
+                }
+                
+                return [
+                    'product_id' => $item->product_id,
+                    'item_description' => $product ? $product->name : 'Unknown Product',
+                    'quantity' => (float) $item->quantity,
+                    'unit_price' => (float) $item->price,
+                    'specifications' => $specifications,
+                    'variation' => $item->variation ?? '',
+                    'discount_percentage' => (float) ($item->discount_percentage ?? 0),
+                    'discount_amount' => (float) ($item->discount_amount ?? 0),
+                    'line_total' => (float) $item->line_total,
+                    'product_name' => $product ? $product->name : 'Unknown Product',
+                    'product_description' => $product ? $product->description : '',
+                    'procurement_price_aed' => $product ? ($product->procurement_price_aed ?? $product->price_aed ?? $product->price ?? 0) : 0,
+                    'procurement_price_usd' => $product ? ($product->procurement_price_usd ?? $product->price ?? 0) : 0,
+                    'has_size_options' => $product ? ($product->has_size_options ?? false) : false,
+                    'size_options' => $product ? ($product->size_options ?? []) : []
+                ];
+            });
+            
+            return response()->json([
+                'success' => true,
+                'items' => $items,
+                'order' => [
+                    'order_number' => $order->order_number,
+                    'customer_name' => $order->getCustomerName(),
+                    'total_amount' => $order->total_amount,
+                    'currency' => $order->currency ?? 'AED'
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Failed to get order items: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to load order items'
+            ], 500);
+        }
+    }
 } 

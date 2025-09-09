@@ -495,8 +495,10 @@
                                 x-transition:leave-start="transform opacity-100 scale-100"
                                 x-transition:leave-end="transform opacity-0 scale-95"
                                 class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                                @if(Auth::user()->isAdmin())
+                                @if(Auth::user()->hasPermission('dashboard.view') || Auth::user()->isAdmin())
                                 <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admin Dashboard</a>
+                                @endif
+                                @if(Auth::user()->hasPermission('crm.access') || Auth::user()->isAdmin())
                                 <a href="{{ route('crm.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">CRM Dashboard</a>
                                 @endif
                                 @if(Auth::user()->hasPermission('supplier.products.view'))
@@ -828,8 +830,10 @@
                 <a href="{{ route('news.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">News</a>
 
                 @auth
-                @if(Auth::user()->isAdmin())
+                @if(Auth::user()->hasPermission('dashboard.view') || Auth::user()->isAdmin())
                 <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Admin Dashboard</a>
+                @endif
+                @if(Auth::user()->hasPermission('crm.access') || Auth::user()->isAdmin())
                 <a href="{{ route('crm.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">CRM Dashboard</a>
                 @endif
                 @if(Auth::user()->hasPermission('supplier.products.view'))

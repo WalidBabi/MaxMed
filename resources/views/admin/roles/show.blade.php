@@ -61,8 +61,8 @@
                             <div class="text-sm text-blue-800">{{ Str::plural('User', $role->users->count()) }}</div>
                         </div>
                         <div class="bg-green-50 rounded-lg p-4 text-center">
-                            <div class="text-2xl font-bold text-green-600">{{ count($role->permissions ?? []) }}</div>
-                            <div class="text-sm text-green-800">{{ Str::plural('Permission', count($role->permissions ?? [])) }}</div>
+                            <div class="text-2xl font-bold text-green-600">{{ $rolePermissions->count() }}</div>
+                            <div class="text-sm text-green-800">{{ Str::plural('Permission', $rolePermissions->count()) }}</div>
                         </div>
                     </div>
 
@@ -124,7 +124,7 @@
                     </h3>
                 </div>
                 <div class="p-6">
-                    @if(count($role->permissions ?? []) > 0)
+                    @if($rolePermissions->count() > 0)
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             @php
                                 $permissionGroups = [
@@ -157,25 +157,23 @@
                                 ];
                             @endphp
 
-                            @foreach($permissionGroups as $group => $groupPermissions)
+                            @foreach($permissionCategories as $categoryKey => $categoryName)
                                 @php
-                                    $hasGroupPermissions = array_intersect($groupPermissions, $role->permissions ?? []);
+                                    $categoryPermissions = $rolePermissions->where('category', $categoryKey);
                                 @endphp
-                                @if(!empty($hasGroupPermissions))
+                                @if($categoryPermissions->count() > 0)
                                     <div class="border border-gray-200 rounded-lg">
                                         <div class="px-4 py-3 bg-gray-50 border-b border-gray-200 rounded-t-lg">
-                                            <h4 class="text-sm font-medium text-gray-900">{{ $group }}</h4>
+                                            <h4 class="text-sm font-medium text-gray-900">{{ $categoryName }} ({{ $categoryPermissions->count() }})</h4>
                                         </div>
                                         <div class="p-4 space-y-2">
-                                            @foreach($groupPermissions as $permission)
-                                                @if(in_array($permission, $role->permissions ?? []))
-                                                    <div class="flex items-center">
-                                                        <svg class="h-4 w-4 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                        </svg>
-                                                        <span class="text-sm text-gray-700">{{ $availablePermissions[$permission] ?? $permission }}</span>
-                                                    </div>
-                                                @endif
+                                            @foreach($categoryPermissions as $permission)
+                                                <div class="flex items-center">
+                                                    <svg class="h-4 w-4 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <span class="text-sm text-gray-700">{{ $permission->display_name }}</span>
+                                                </div>
                                             @endforeach
                                         </div>
                                     </div>
