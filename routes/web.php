@@ -498,6 +498,7 @@ Route::get('quotes/search/suggestions', [\App\Http\Controllers\Admin\QuoteContro
         Route::post('purchase-orders/{purchaseOrder}/update-status', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'updateStatus'])->name('purchase-orders.update-status');
         Route::get('purchase-orders/{purchaseOrder}/pdf', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'generatePdf'])->name('purchase-orders.pdf');
         Route::post('purchase-orders/{purchaseOrder}/create-payment', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'createPayment'])->name('purchase-orders.create-payment');
+        Route::get('api/orders/{order}/items', [\App\Http\Controllers\Admin\PurchaseOrderController::class, 'getOrderItems'])->name('api.orders.items');
 
         // Unified Inquiry & Quotation Management Routes
         Route::get('inquiry-quotations', [\App\Http\Controllers\Admin\InquiryQuotationController::class, 'index'])->name('inquiry-quotations.index');

@@ -33,10 +33,18 @@ class AdminMiddleware
 
         $user = auth()->user();
 
-        if (!$user->isAdmin()) {
-            Log::warning('AdminMiddleware::handle() - Access denied - User is not admin', [
+        // Check if user has admin access via role or permissions
+        $hasAdminAccess = $user->isAdmin() || 
+                         $user->hasPermission('dashboard.view') || 
+                         $user->hasAnyRole(['super_admin', 'system_admin', 'business_admin', 'operations_manager', 'purchasing_crm_assistant']);
+
+        if (!$hasAdminAccess) {
+            Log::warning('AdminMiddleware::handle() - Access denied - User lacks admin permissions', [
                 'user_id' => $user->id,
                 'user_email' => $user->email,
+                'user_role' => $user->role?->name,
+                'has_dashboard_view' => $user->hasPermission('dashboard.view'),
+                'is_admin' => $user->isAdmin(),
                 'url' => $request->url(),
                 'ip' => $request->ip(),
                 'timestamp' => now()->toISOString()

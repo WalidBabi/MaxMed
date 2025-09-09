@@ -42,6 +42,14 @@ class Role extends Model
     }
 
     /**
+     * Get the permissions that belong to this role.
+     */
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, 'role_permissions');
+    }
+
+    /**
      * Check if role has a specific permission.
      *
      * @param string $permission
@@ -50,6 +58,12 @@ class Role extends Model
     public function hasPermission(string $permission): bool
     {
         try {
+            // First check the new permission system
+            if ($this->permissions()->where('name', $permission)->where('is_active', true)->exists()) {
+                return true;
+            }
+            
+            // Fallback to legacy permissions array for backwards compatibility
             if (!$this->permissions) {
                 return false;
             }
@@ -60,6 +74,94 @@ class Role extends Model
             // Return false as fallback
             return false;
         }
+    }
+
+    /**
+     * Check if role has any of the given permissions.
+     *
+     * @param array $permissions
+     * @return bool
+     */
+    public function hasAnyPermission(array $permissions): bool
+    {
+        foreach ($permissions as $permission) {
+            if ($this->hasPermission($permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if role has all of the given permissions.
+     *
+     * @param array $permissions
+     * @return bool
+     */
+    public function hasAllPermissions(array $permissions): bool
+    {
+        foreach ($permissions as $permission) {
+            if (!$this->hasPermission($permission)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Assign a permission to this role.
+     *
+     * @param string|Permission $permission
+     * @return void
+     */
+    public function givePermissionTo($permission): void
+    {
+        if (is_string($permission)) {
+            $permission = Permission::where('name', $permission)->firstOrFail();
+        }
+        
+        $this->permissions()->syncWithoutDetaching([$permission->id]);
+    }
+
+    /**
+     * Remove a permission from this role.
+     *
+     * @param string|Permission $permission
+     * @return void
+     */
+    public function revokePermissionTo($permission): void
+    {
+        if (is_string($permission)) {
+            $permission = Permission::where('name', $permission)->firstOrFail();
+        }
+        
+        $this->permissions()->detach($permission->id);
+    }
+
+    /**
+     * Sync permissions for this role.
+     *
+     * @param array $permissions
+     * @return void
+     */
+    public function syncPermissions(array $permissions): void
+    {
+        $permissionIds = [];
+        
+        foreach ($permissions as $permission) {
+            if (is_string($permission)) {
+                $permissionModel = Permission::where('name', $permission)->first();
+                if ($permissionModel) {
+                    $permissionIds[] = $permissionModel->id;
+                }
+            } elseif ($permission instanceof Permission) {
+                $permissionIds[] = $permission->id;
+            } elseif (is_numeric($permission)) {
+                $permissionIds[] = $permission;
+            }
+        }
+        
+        $this->permissions()->sync($permissionIds);
     }
 
     /**

@@ -12,6 +12,14 @@ use Illuminate\Validation\Rules;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:users.view')->only(['index', 'show']);
+        $this->middleware('permission:users.create')->only(['create', 'store']);
+        $this->middleware('permission:users.edit')->only(['edit', 'update']);
+        $this->middleware('permission:users.delete')->only(['destroy']);
+    }
     /**
      * Display a listing of the resource.
      */
@@ -104,7 +112,10 @@ class UserController extends Controller
             $q->where('name', 'admin');
         })->count();
         
-        return view('admin.users.index', compact('users', 'roles', 'supplierCount', 'adminCount'));
+        // Check if user can view sensitive data
+        $canViewSensitive = auth()->user()->can('view-sensitive-data');
+        
+        return view('admin.users.index', compact('users', 'roles', 'supplierCount', 'adminCount', 'canViewSensitive'));
     }
 
     /**

@@ -17,15 +17,21 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class QuoteController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:quotations.view')->only(['index', 'show']);
+        $this->middleware('permission:quotations.create')->only(['create', 'store']);
+        $this->middleware('permission:quotations.edit')->only(['edit', 'update']);
+        $this->middleware('permission:quotations.delete')->only(['destroy']);
+        $this->middleware('permission:quotations.send')->only(['send']);
+    }
+
     /**
      * Display a listing of quotes
      */
     public function index()
     {
-        // Additional security check
-        if (!auth()->check() || !auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized access.');
-        }
 
         $quotes = Quote::with('creator')
             ->orderBy('created_at', 'desc')

@@ -96,6 +96,7 @@
                                         <option value="Net 60" {{ old('payment_terms') == 'Net 60' ? 'selected' : '' }}>Net 60</option>
                                         <option value="Net 90" {{ old('payment_terms') == 'Net 90' ? 'selected' : '' }}>Net 90</option>
                                         <option value="Due on Receipt" {{ old('payment_terms') == 'Due on Receipt' ? 'selected' : '' }}>Due on Receipt</option>
+                                        <option value="Cash on Delivery" {{ old('payment_terms') == 'Cash on Delivery' ? 'selected' : '' }}>Cash on Delivery</option>
                                         <option value="50% Advance, 50% on Delivery" {{ old('payment_terms') == '50% Advance, 50% on Delivery' ? 'selected' : '' }}>50% Advance, 50% on Delivery</option>
                                         <option value="Advance Payment" {{ old('payment_terms') == 'Advance Payment' ? 'selected' : '' }}>Advance Payment</option>
                                         <option value="Custom" {{ old('payment_terms') == 'Custom' ? 'selected' : '' }}>Custom</option>
@@ -690,11 +691,25 @@ function updateAllProductPrices(currency) {
     });
 }
 
-function addItem() {
+function addItem(itemData = null) {
     const tbody = document.getElementById('itemsTable');
     const row = document.createElement('tr');
     row.className = 'item-row bg-white hover:bg-gray-50';
     row.draggable = true;
+    
+    // Use provided data or defaults
+    const data = itemData || {
+        product_id: '',
+        item_description: '',
+        quantity: 1.00,
+        rate: 0.00,
+        price_type: '',
+        discount: 0,
+        amount: 0.00,
+        specifications: '',
+        variation: ''
+    };
+    
     row.innerHTML = `
         <td class="px-3 py-4 text-center">
             <svg class="w-4 h-4 text-gray-400 cursor-pointer drag-handle mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -706,9 +721,10 @@ function addItem() {
                 <input type="text" 
                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 product-search-input" 
                        placeholder="Search products..." 
-                       autocomplete="off">
-                <input type="hidden" name="items[${itemCounter}][product_id]" class="product-id-input">
-                <input type="hidden" name="items[${itemCounter}][item_description]" class="item-details-hidden">
+                       autocomplete="off"
+                       value="${data.item_description}">
+                <input type="hidden" name="items[${itemCounter}][product_id]" class="product-id-input" value="${data.product_id}">
+                <input type="hidden" name="items[${itemCounter}][item_description]" class="item-details-hidden" value="${data.item_description}">
                 
                 <!-- Dropdown List -->
                 <div class="product-dropdown-list hidden">
@@ -749,7 +765,7 @@ function addItem() {
                        placeholder="Select specifications..." 
                        autocomplete="off"
                        readonly>
-                <input type="hidden" name="items[${itemCounter}][specifications]" class="specifications-hidden">
+                <input type="hidden" name="items[${itemCounter}][specifications]" class="specifications-hidden" value="${data.specifications}">
                 <!-- Size Options Dropdown -->
                 <div class="mt-2">
                     <select name="items[${itemCounter}][size]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 size-options-select">
@@ -763,22 +779,22 @@ function addItem() {
             </div>
         </td>
         <td class="px-3 py-4">
-            <input type="number" step="0.01" name="items[${itemCounter}][quantity]" value="1.00" required
+            <input type="number" step="0.01" name="items[${itemCounter}][quantity]" value="${data.quantity}" required
                    class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 quantity-input">
         </td>
         <td class="px-3 py-4">
-            <input type="number" step="0.01" name="items[${itemCounter}][unit_price]" value="0.00" required
+            <input type="number" step="0.01" name="items[${itemCounter}][unit_price]" value="${data.rate}" required
                    class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rate-input">
         </td>
         <td class="px-3 py-4">
             <div class="flex">
-                <input type="number" step="0.01" name="items[${itemCounter}][discount_percentage]" value="0" min="0" max="100"
+                <input type="number" step="0.01" name="items[${itemCounter}][discount_percentage]" value="${data.discount}" min="0" max="100"
                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 discount-input">
                 <span class="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm rounded-r-md">%</span>
             </div>
         </td>
         <td class="px-3 py-4 text-right">
-            <span class="amount-display font-medium text-gray-900">0.00</span>
+            <span class="amount-display font-medium text-gray-900">${data.amount.toFixed(2)}</span>
         </td>
         <td class="px-3 py-4 text-center">
             <button type="button" onclick="removeItem(this)" class="inline-flex items-center p-1 border border-transparent rounded-full text-red-600 hover:bg-red-50 action-button">
@@ -1208,10 +1224,92 @@ function initializeSupplierSelection() {
     });
 }
 
+// Handle order selection and populate items
+function handleOrderSelection() {
+    const orderSelect = document.getElementById('order_id');
+    
+    orderSelect.addEventListener('change', function() {
+        const orderId = this.value;
+        
+        if (orderId) {
+            // Show loading state
+            const itemsTable = document.getElementById('itemsTable');
+            itemsTable.innerHTML = '<tr><td colspan="8" class="text-center py-4">Loading order items...</td></tr>';
+            
+            // Fetch order items
+            fetch(`/admin/api/orders/${orderId}/items`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Clear existing items
+                        itemsTable.innerHTML = '';
+                        itemCounter = 0;
+                        
+                        // Update currency if order has currency
+                        if (data.order.currency) {
+                            const currencySelect = document.getElementById('currency');
+                            currencySelect.value = data.order.currency;
+                            updateCurrencyDisplay();
+                        }
+                        
+                        // Add items from order
+                        if (data.items && data.items.length > 0) {
+                            data.items.forEach(function(item) {
+                                const itemData = {
+                                    product_id: item.product_id,
+                                    item_description: item.product_name,
+                                    quantity: item.quantity,
+                                    rate: item.procurement_price_aed || item.unit_price || 0,
+                                    price_type: 'aed', // Default to AED procurement price
+                                    discount: item.discount_percentage || 0,
+                                    amount: item.line_total || (item.quantity * (item.procurement_price_aed || item.unit_price || 0)),
+                                    specifications: item.specifications ? JSON.stringify(item.specifications) : '',
+                                    variation: item.variation || ''
+                                };
+                                
+                                addItem(itemData);
+                            });
+                        } else {
+                            // Add one empty item if no items in order
+                            addItem();
+                        }
+                        
+                        // Recalculate totals
+                        calculateTotals();
+                        
+                    } else {
+                        console.error('Failed to load order items:', data.message);
+                        // Add one empty item on error
+                        itemsTable.innerHTML = '';
+                        addItem();
+                        alert('Failed to load order items. Please add items manually.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching order items:', error);
+                    // Add one empty item on error
+                    itemsTable.innerHTML = '';
+                    addItem();
+                    alert('Error loading order items. Please add items manually.');
+                });
+        } else {
+            // Clear items when no order is selected
+            const itemsTable = document.getElementById('itemsTable');
+            itemsTable.innerHTML = '';
+            itemCounter = 0;
+            addItem();
+            calculateTotals();
+        }
+    });
+}
+
 // Initialize with one item
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize supplier selection functionality
     initializeSupplierSelection();
+    
+    // Initialize order selection functionality
+    handleOrderSelection();
     
     // Add currency change event listener
     document.getElementById('currency').addEventListener('change', updateCurrencyDisplay);

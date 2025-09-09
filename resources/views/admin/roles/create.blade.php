@@ -8,310 +8,189 @@
     <div class="mb-8">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">Create Role</h1>
-                <p class="text-gray-600 mt-2">Set up a new role with specific permissions</p>
+                <nav class="flex" aria-label="Breadcrumb">
+                    <ol role="list" class="flex items-center space-x-4">
+                        <li>
+                            <div class="flex items-center">
+                                <a href="{{ route('admin.roles.index') }}" class="text-sm font-medium text-gray-500 hover:text-gray-700">
+                                    Role Management
+                                </a>
             </div>
-            <div class="flex items-center space-x-3">
-                <a href="{{ route('admin.roles.index') }}" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                    <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                        </li>
+                        <li>
+                            <div class="flex items-center">
+                                <svg class="flex-shrink-0 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
                     </svg>
-                    Back to Roles
-                </a>
+                                <span class="ml-4 text-sm font-medium text-gray-500">Create Role</span>
+                            </div>
+                        </li>
+                    </ol>
+                </nav>
+                <h1 class="text-3xl font-bold text-gray-900 mt-2">Create New Role</h1>
+                <p class="text-gray-600 mt-1">Define a new role with specific permissions for your team</p>
             </div>
         </div>
     </div>
 
-    <!-- Form -->
-    <form action="{{ route('admin.roles.store') }}" method="POST" id="roleForm">
+    <form action="{{ route('admin.roles.store') }}" method="POST" class="space-y-8">
         @csrf
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Main Form -->
-            <div class="lg:col-span-2 space-y-8">
+        
                 <!-- Basic Information -->
-                <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                            <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            Role Information
-                        </h3>
+        <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl">
+            <div class="px-4 py-6 sm:p-8">
+                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                    <div class="sm:col-span-4">
+                        <label for="display_name" class="block text-sm font-medium leading-6 text-gray-900">Role Name</label>
+                        <div class="mt-2">
+                            <input type="text" name="display_name" id="display_name" value="{{ old('display_name') }}" 
+                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+                                   placeholder="e.g., Sales Manager" required>
                     </div>
-                    <div class="p-6">
-                        <div class="space-y-6">
-                            <div>
-                                <label for="display_name" class="block text-sm font-medium text-gray-700 mb-2">Role Name <span class="text-red-500">*</span></label>
-                                <input type="text" id="display_name" name="display_name" 
-                                       value="{{ old('display_name') }}" required
-                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('display_name') border-red-300 @enderror"
-                                       placeholder="e.g., Product Manager">
                                 @error('display_name')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
-                            <div>
-                                <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                                <textarea id="description" name="description" rows="3"
-                                          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('description') border-red-300 @enderror"
-                                          placeholder="Brief description of this role's responsibilities">{{ old('description') }}</textarea>
-                                @error('description')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+                    <div class="sm:col-span-2">
+                        <label for="is_active" class="block text-sm font-medium leading-6 text-gray-900">Status</label>
+                        <div class="mt-2">
+                            <select name="is_active" id="is_active" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                <option value="1" {{ old('is_active', '1') == '1' ? 'selected' : '' }}>Active</option>
+                                <option value="0" {{ old('is_active') == '0' ? 'selected' : '' }}>Inactive</option>
+                            </select>
+                        </div>
                             </div>
 
-                            <div>
-                                <div class="flex items-center">
-                                    <input type="checkbox" id="is_active" name="is_active" value="1" 
-                                           {{ old('is_active', true) ? 'checked' : '' }}
-                                           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                    <label for="is_active" class="ml-2 block text-sm text-gray-700">
-                                        Active Role
-                                    </label>
-                                </div>
-                                <p class="mt-1 text-xs text-gray-500">Inactive roles cannot be assigned to users</p>
-                            </div>
+                    <div class="col-span-full">
+                        <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Description</label>
+                        <div class="mt-2">
+                            <textarea rows="3" name="description" id="description" 
+                                      class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" 
+                                      placeholder="Describe what this role is responsible for...">{{ old('description') }}</textarea>
+                        </div>
+                        @error('description')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Permissions -->
-                <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                            <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.623 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                            </svg>
-                            Permissions
-                        </h3>
+        <div class="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-xl">
+            <div class="px-4 py-6 sm:p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900">Permissions</h3>
+                        <p class="text-sm text-gray-600">Select the permissions this role should have</p>
                     </div>
-                    <div class="p-6">
-                        <p class="text-sm text-gray-600 mb-6">Select the permissions this role should have</p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            @php
-                                $permissionGroups = [
-                                    'Dashboard' => ['dashboard.view', 'dashboard.analytics'],
-                                    'Users' => ['users.view', 'users.create', 'users.edit', 'users.delete'],
-                                    'Roles' => ['roles.view', 'roles.create', 'roles.edit', 'roles.delete'],
-                                    'Products' => ['products.view', 'products.create', 'products.edit', 'products.delete', 'products.manage_inventory'],
-                                    'Supplier Products' => ['supplier.products.view', 'supplier.products.create', 'supplier.products.edit', 'supplier.products.delete'],
-                                    'Orders' => ['orders.view', 'orders.create', 'orders.edit', 'orders.delete', 'orders.manage_status'],
-                                    'Customers' => ['customers.view', 'customers.create', 'customers.edit', 'customers.delete'],
-                                    'Deliveries' => ['deliveries.view', 'deliveries.create', 'deliveries.edit', 'deliveries.delete'],
-                                    'Categories' => ['categories.view', 'categories.create', 'categories.edit', 'categories.delete'],
-                                    'Brands' => ['brands.view', 'brands.create', 'brands.edit', 'brands.delete'],
-                                    'News' => ['news.view', 'news.create', 'news.edit', 'news.delete'],
-                                    'Purchase Orders' => ['purchase_orders.view', 'purchase_orders.create', 'purchase_orders.edit', 'purchase_orders.delete', 'purchase_orders.approve', 'purchase_orders.send_to_supplier', 'purchase_orders.manage_status', 'purchase_orders.view_financials', 'purchase_orders.manage_payments'],
-                                    'Suppliers' => ['suppliers.view', 'suppliers.create', 'suppliers.edit', 'suppliers.delete', 'suppliers.manage_contracts', 'suppliers.view_performance'],
-                                    'Quotations' => ['quotations.view', 'quotations.create', 'quotations.edit', 'quotations.delete', 'quotations.approve', 'quotations.compare'],
-                                    'Procurement' => ['procurement.analytics', 'procurement.reports', 'procurement.budget_tracking'],
-                                    'CRM Leads' => ['crm.leads.view', 'crm.leads.create', 'crm.leads.edit', 'crm.leads.delete', 'crm.leads.assign', 'crm.leads.convert', 'crm.leads.export', 'crm.leads.import', 'crm.leads.merge', 'crm.leads.bulk_actions'],
-                                    'CRM Deals' => ['crm.deals.view', 'crm.deals.create', 'crm.deals.edit', 'crm.deals.delete', 'crm.deals.assign', 'crm.deals.close', 'crm.deals.export', 'crm.deals.pipeline', 'crm.deals.forecast'],
-                                    'CRM Activities' => ['crm.activities.view', 'crm.activities.create', 'crm.activities.edit', 'crm.activities.delete', 'crm.activities.complete', 'crm.activities.schedule', 'crm.activities.timeline'],
-                                    'CRM Contacts' => ['crm.contacts.view', 'crm.contacts.create', 'crm.contacts.edit', 'crm.contacts.delete', 'crm.contacts.merge', 'crm.contacts.export', 'crm.contacts.import'],
-                                    'CRM Campaigns' => ['crm.campaigns.view', 'crm.campaigns.create', 'crm.campaigns.edit', 'crm.campaigns.delete', 'crm.campaigns.execute', 'crm.campaigns.track'],
-                                    'CRM Tasks' => ['crm.tasks.view', 'crm.tasks.create', 'crm.tasks.edit', 'crm.tasks.delete', 'crm.tasks.assign', 'crm.tasks.complete', 'crm.tasks.overdue'],
-                                    'CRM Reports' => ['crm.reports.view', 'crm.reports.create', 'crm.reports.export', 'crm.analytics.view', 'crm.analytics.dashboard', 'crm.analytics.performance'],
-                                    'CRM Communication' => ['crm.communication.email', 'crm.communication.sms', 'crm.communication.call', 'crm.communication.meeting', 'crm.communication.templates'],
-                                    'CRM Integration' => ['crm.integration.webhooks', 'crm.integration.api', 'crm.automation.workflows', 'crm.automation.rules', 'crm.automation.triggers'],
-                                    'CRM Administration' => ['crm.admin.settings', 'crm.admin.fields', 'crm.admin.workflows', 'crm.admin.integrations', 'crm.admin.backup', 'crm.admin.restore'],
-                                    'Feedback' => ['feedback.view', 'feedback.respond'],
-                                ];
-                            @endphp
+                    <div class="flex items-center space-x-4">
+                        <button type="button" id="select-all" class="text-sm text-indigo-600 hover:text-indigo-500 font-medium">
+                            Select All
+                        </button>
+                        <button type="button" id="deselect-all" class="text-sm text-gray-600 hover:text-gray-500 font-medium">
+                            Deselect All
+                        </button>
+                    </div>
+                </div>
 
-                            @foreach($permissionGroups as $group => $groupPermissions)
-                                <div class="border border-gray-200 rounded-lg p-4">
+                @if(isset($permissions) && $permissions->count() > 0)
+                    <div class="space-y-6">
+                        @foreach($permissionCategories as $categoryKey => $categoryName)
+                            @if(isset($permissions[$categoryKey]))
+                                <div class="border rounded-lg p-4">
                                     <div class="flex items-center justify-between mb-3">
-                                        <h4 class="text-sm font-medium text-gray-900">{{ $group }}</h4>
-                                        <button type="button" onclick="toggleGroupPermissions('{{ $group }}')" 
-                                                class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">
+                                        <h4 class="text-md font-medium text-gray-900">{{ $categoryName }}</h4>
+                                        <div class="flex items-center space-x-2">
+                                            <button type="button" class="category-select-all text-xs text-indigo-600 hover:text-indigo-500" data-category="{{ $categoryKey }}">
                                             Select All
                                         </button>
+                                            <button type="button" class="category-deselect-all text-xs text-gray-600 hover:text-gray-500" data-category="{{ $categoryKey }}">
+                                                Deselect All
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="space-y-2" data-group="{{ $group }}">
-                                        @foreach($groupPermissions as $permission)
-                                            @if(isset($availablePermissions[$permission]))
-                                                <div class="flex items-center">
-                                                    <input type="checkbox" id="permission_{{ $permission }}" 
-                                                           name="permissions[]" value="{{ $permission }}"
-                                                           {{ in_array($permission, old('permissions', [])) ? 'checked' : '' }}
-                                                           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                                    <label for="permission_{{ $permission }}" class="ml-2 text-sm text-gray-700">
-                                                        {{ $availablePermissions[$permission] }}
-                                                    </label>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                        @foreach($permissions[$categoryKey] as $permission)
+                                            <label class="relative flex items-start py-2 px-3 rounded-md hover:bg-gray-50 cursor-pointer">
+                                                <div class="flex items-center h-6">
+                                                    <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" 
+                                                           class="permission-checkbox category-{{ $categoryKey }} h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                           {{ in_array($permission->id, old('permissions', [])) ? 'checked' : '' }}>
                                                 </div>
+                                                <div class="ml-3 text-sm leading-6">
+                                                    <div class="font-medium text-gray-900">{{ $permission->display_name }}</div>
+                                                    @if($permission->description)
+                                                        <div class="text-gray-500 text-xs">{{ $permission->description }}</div>
                                             @endif
+                                                </div>
+                                            </label>
                                         @endforeach
                                     </div>
                                 </div>
+                            @endif
                             @endforeach
-                        </div>
                     </div>
-                </div>
-            </div>
+                @else
+                    <div class="text-center py-8">
+                        <p class="text-gray-500">No permissions available. Please create permissions first.</p>
+                    </div>
+                @endif
 
-            <!-- Sidebar -->
-            <div class="space-y-8">
-                <!-- Actions -->
-                <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-lg font-semibold text-gray-900">Actions</h3>
-                    </div>
-                    <div class="p-6 space-y-3">
-                        <button type="submit" class="w-full inline-flex justify-center items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
-                            <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
-                            </svg>
-                            Create Role
-                        </button>
-                        <a href="{{ route('admin.roles.index') }}" class="w-full inline-flex justify-center items-center rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-200">
-                            Cancel
-                        </a>
+                @error('permissions')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                @enderror
                     </div>
                 </div>
 
-                <!-- Help Section -->
-                <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                            <svg class="h-5 w-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                            </svg>
-                            Role Guidelines
-                        </h3>
-                    </div>
-                    <div class="p-6">
-                        <div class="space-y-4 text-sm text-gray-600">
-                            <div>
-                                <p class="font-medium text-gray-900">Role Name:</p>
-                                <p>Choose a clear, descriptive name for the role.</p>
-                            </div>
-                            <div>
-                                <p class="font-medium text-gray-900">Permissions:</p>
-                                <p>Grant only the permissions necessary for this role's responsibilities.</p>
-                            </div>
-                            <div>
-                                <p class="font-medium text-gray-900">Status:</p>
-                                <p>Inactive roles cannot be assigned to users.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Permission Types -->
-                <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-                            <svg class="h-5 w-5 text-green-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.623 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                            </svg>
-                            Permission Types
-                        </h3>
-                    </div>
-                    <div class="p-6">
-                        <div class="space-y-3 text-sm text-gray-600">
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-                                    <svg class="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-900">View</p>
-                                    <p class="text-xs">Can see and browse items</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-                                    <svg class="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-900">Create</p>
-                                    <p class="text-xs">Can add new items</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
-                                    <svg class="w-4 h-4 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-900">Edit</p>
-                                    <p class="text-xs">Can modify existing items</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center mr-3">
-                                    <svg class="w-4 h-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-900">Delete</p>
-                                    <p class="text-xs">Can remove items</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Actions -->
+        <div class="flex items-center justify-end gap-x-6">
+            <a href="{{ route('admin.roles.index') }}" class="text-sm font-semibold leading-6 text-gray-900">
+                Cancel
+            </a>
+            <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                Create Role
+            </button>
         </div>
     </form>
 </div>
-@endsection
-
-@push('styles')
-<style>
-.card-hover {
-    transition: all 0.2s ease-in-out;
-}
-.card-hover:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-</style>
-@endpush
 
 @push('scripts')
 <script>
-function toggleGroupPermissions(group) {
-    const groupDiv = document.querySelector(`[data-group="${group}"]`);
-    const checkboxes = groupDiv.querySelectorAll('input[type="checkbox"]');
-    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-    
-    checkboxes.forEach(checkbox => {
-        checkbox.checked = !allChecked;
-    });
-    
-    const button = groupDiv.parentElement.querySelector('button');
-    button.textContent = allChecked ? 'Select All' : 'Deselect All';
-}
-
-// Update button text based on current state
 document.addEventListener('DOMContentLoaded', function() {
-    const groups = document.querySelectorAll('[data-group]');
-    groups.forEach(group => {
-        const groupName = group.getAttribute('data-group');
-        const checkboxes = group.querySelectorAll('input[type="checkbox"]');
-        const button = group.parentElement.querySelector('button');
-        
-        function updateButtonText() {
-            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-            button.textContent = allChecked ? 'Deselect All' : 'Select All';
-        }
-        
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', updateButtonText);
+    // Select/Deselect all permissions
+    document.getElementById('select-all').addEventListener('click', function() {
+        document.querySelectorAll('.permission-checkbox').forEach(function(checkbox) {
+            checkbox.checked = true;
         });
-        
-        updateButtonText();
+    });
+
+    document.getElementById('deselect-all').addEventListener('click', function() {
+        document.querySelectorAll('.permission-checkbox').forEach(function(checkbox) {
+            checkbox.checked = false;
+        });
+    });
+
+    // Category-specific select/deselect
+    document.querySelectorAll('.category-select-all').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const category = this.dataset.category;
+            document.querySelectorAll(`.category-${category}`).forEach(function(checkbox) {
+                checkbox.checked = true;
+            });
+        });
+    });
+
+    document.querySelectorAll('.category-deselect-all').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const category = this.dataset.category;
+            document.querySelectorAll(`.category-${category}`).forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
+        });
     });
 });
 </script>
 @endpush 
+@endsection

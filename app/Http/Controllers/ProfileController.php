@@ -20,6 +20,12 @@ class ProfileController extends Controller
     public function show(Request $request): View
     {
         $user = $request->user();
+        $user->load('role');
+        
+        // Ensure permissions are properly loaded
+        if ($user->role) {
+            $user->role->load('permissions');
+        }
         
         // Determine the correct view based on user role
         if ($user->role && $user->role->name === 'supplier') {
@@ -38,7 +44,7 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        $user = $request->user();
+        $user = $request->user()->load(['role', 'role.permissions']);
         
         // Determine the correct view based on user role
         if ($user->role && $user->role->name === 'supplier') {

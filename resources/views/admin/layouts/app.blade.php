@@ -203,7 +203,7 @@
 
         <!-- Desktop sidebar -->
         <div class="sidebar-container" :class="{ 'hidden': sidebarHidden, 'mobile-open': sidebarOpen }">
-            @include('admin.partials.sidebar')
+            @include('admin.partials.sidebar-blade')
         </div>
 
         <!-- Main content area -->

@@ -3,6 +3,11 @@
 @section('title', 'Profile')
 
 @section('content')
+@php
+    $userPermissions = $user->getAllPermissions();
+    $permissionCount = $userPermissions ? $userPermissions->count() : 0;
+@endphp
+
 <!-- Header -->
 <div class="mb-8">
     <div class="flex items-center justify-between">
@@ -49,9 +54,25 @@
                                 </svg>
                                 Active
                             </span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                {{ $user->isAdmin() ? 'Administrator' : 'User' }}
+                            @if($user->role)
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                @if($user->role->name === 'super_admin') bg-red-100 text-red-800
+                                @elseif(in_array($user->role->name, ['admin', 'system_admin', 'business_admin'])) bg-purple-100 text-purple-800
+                                @elseif(in_array($user->role->name, ['operations_manager', 'sales_manager'])) bg-indigo-100 text-indigo-800
+                                @elseif(in_array($user->role->name, ['purchasing_crm_assistant', 'customer_service_manager'])) bg-blue-100 text-blue-800
+                                @elseif($user->role->name === 'supplier') bg-yellow-100 text-yellow-800
+                                @else bg-gray-100 text-gray-800
+                                @endif">
+                                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                                {{ $user->role->display_name }}
                             </span>
+                            @else
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                No Role Assigned
+                            </span>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -77,10 +98,91 @@
                         </p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Account Type</label>
-                        <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-md">{{ $user->isAdmin() ? 'Administrator' : 'User' }}</p>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Role & Permissions</label>
+                        <div class="bg-gray-50 px-3 py-2 rounded-md">
+                            @if($user->role)
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-gray-900 font-medium">{{ $user->role->display_name }}</p>
+                                        @if($user->role->description)
+                                        <p class="text-sm text-gray-600 mt-1">{{ $user->role->description }}</p>
+                                        @endif
+                                    </div>
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium 
+                                        @if($user->role->name === 'super_admin') bg-red-100 text-red-800
+                                        @elseif(in_array($user->role->name, ['admin', 'system_admin', 'business_admin'])) bg-purple-100 text-purple-800
+                                        @elseif(in_array($user->role->name, ['operations_manager', 'sales_manager'])) bg-indigo-100 text-indigo-800
+                                        @elseif(in_array($user->role->name, ['purchasing_crm_assistant', 'customer_service_manager'])) bg-blue-100 text-blue-800
+                                        @elseif($user->role->name === 'supplier') bg-yellow-100 text-yellow-800
+                                        @else bg-gray-100 text-gray-800
+                                        @endif">
+                                        {{ $permissionCount }} permissions
+                                    </span>
+                                </div>
+                            @else
+                                <p class="text-gray-500 italic">No role assigned</p>
+                            @endif
+                        </div>
                     </div>
                 </div>
+
+                <!-- Role Permissions Details -->
+                @if($user->role && $userPermissions && $permissionCount > 0)
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <h4 class="text-lg font-semibold text-gray-900 mb-4">Your Permissions & Access</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        @php
+                            $permissions = $userPermissions;
+                            $categories = $permissions->groupBy(function($permission) {
+                                $parts = explode('.', $permission->name);
+                                return ucfirst(str_replace('_', ' ', $parts[0]));
+                            });
+                        @endphp
+
+                        @foreach($categories as $category => $categoryPermissions)
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h5 class="font-medium text-gray-900 mb-2 flex items-center">
+                                <svg class="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {{ $category }}
+                            </h5>
+                            <div class="space-y-1">
+                                @foreach($categoryPermissions->take(5) as $permission)
+                                <div class="text-sm text-gray-600 flex items-center">
+                                    <svg class="w-3 h-3 mr-2 text-green-500" fill="currentColor" viewBox="0 0 8 8">
+                                        <circle cx="4" cy="4" r="3"/>
+                                    </svg>
+                                    {{ ucfirst(str_replace(['.', '_'], [' ', ' '], explode('.', $permission->name)[1] ?? $permission->name)) }}
+                                </div>
+                                @endforeach
+                                @if($categoryPermissions->count() > 5)
+                                <div class="text-xs text-gray-500">
+                                    +{{ $categoryPermissions->count() - 5 }} more permissions
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    
+                    <div class="mt-4 p-4 bg-blue-50 rounded-lg">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-400 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <div>
+                                <h6 class="text-sm font-medium text-blue-900">About Your Role</h6>
+                                <p class="text-sm text-blue-700 mt-1">
+                                    You have been assigned the <strong>{{ $user->role->display_name }}</strong> role with 
+                                    <strong>{{ $permissionCount }} permissions</strong>. 
+                                    This controls what features and actions you can access in the system.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>

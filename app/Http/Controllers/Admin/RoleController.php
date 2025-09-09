@@ -4,17 +4,26 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Role;
+use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:roles.view')->only(['index', 'show']);
+        $this->middleware('permission:roles.create')->only(['create', 'store']);
+        $this->middleware('permission:roles.edit')->only(['edit', 'update']);
+        $this->middleware('permission:roles.delete')->only(['destroy']);
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $roles = Role::withCount('users')->orderBy('created_at', 'desc')->paginate(10);
+        $roles = Role::withCount(['users', 'permissions'])->orderBy('created_at', 'desc')->paginate(10);
         
         return view('admin.roles.index', compact('roles'));
     }
@@ -59,10 +68,13 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        $role->load('users');
+        $role->load(['users', 'permissions']);
         $availablePermissions = Role::getAvailablePermissions();
+        $permissionCategories = Permission::getCategories();
+        $permissions = Permission::where('is_active', true)->get()->groupBy('category');
+        $rolePermissions = $role->permissions;
         
-        return view('admin.roles.show', compact('role', 'availablePermissions'));
+        return view('admin.roles.show', compact('role', 'availablePermissions', 'permissionCategories', 'permissions', 'rolePermissions'));
     }
 
     /**
@@ -70,9 +82,12 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
+        $role->load('permissions');
         $availablePermissions = Role::getAvailablePermissions();
+        $permissionCategories = Permission::getCategories();
+        $permissions = Permission::where('is_active', true)->get()->groupBy('category');
         
-        return view('admin.roles.edit', compact('role', 'availablePermissions'));
+        return view('admin.roles.edit', compact('role', 'availablePermissions', 'permissionCategories', 'permissions'));
     }
 
     /**
@@ -84,7 +99,7 @@ class RoleController extends Controller
             'display_name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
             'permissions' => 'nullable|array',
-            'permissions.*' => 'string',
+            'permissions.*' => 'exists:permissions,id',
             'is_active' => 'boolean',
         ]);
 
@@ -92,9 +107,12 @@ class RoleController extends Controller
             'name' => Str::slug($request->display_name),
             'display_name' => $request->display_name,
             'description' => $request->description,
-            'permissions' => $request->permissions ?? [],
+            'permissions' => [], // Keep for backward compatibility
             'is_active' => $request->boolean('is_active', true),
         ]);
+        
+        // Sync permissions using the new system
+        $role->permissions()->sync($request->permissions ?? []);
 
         return redirect()->route('admin.roles.index')
             ->with('success', 'Role updated successfully.');

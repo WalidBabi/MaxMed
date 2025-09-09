@@ -12,6 +12,16 @@ use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:orders.view_all')->only(['index', 'show']);
+        $this->middleware('permission:orders.create')->only(['create', 'store']);
+        $this->middleware('permission:orders.edit')->only(['edit', 'update']);
+        $this->middleware('permission:orders.delete')->only(['destroy']);
+        $this->middleware('permission:orders.manage_status')->only(['updateStatus']);
+    }
+
     public function create()
     {
         // Get ALL customers (both with and without user accounts)
