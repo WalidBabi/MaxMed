@@ -69,10 +69,19 @@ class PurchaseOrderEmail extends Mailable
                 
             if (is_array($attachments) && !empty($attachments)) {
                 foreach ($attachments as $attachment) {
-                    // Check if the attachment file exists and attach it
+                    // Check if the attachment file exists and attach it using the same method as PO PDF
                     if (isset($attachment['path']) && Storage::disk('public')->exists($attachment['path'])) {
                         $filename = $attachment['filename'] ?? basename($attachment['path']);
-                        $email->attachFromStorageDisk('public', $attachment['path'], $filename);
+                        $fileContent = Storage::disk('public')->get($attachment['path']);
+                        $mimeType = $attachment['mime_type'] ?? Storage::disk('public')->mimeType($attachment['path']);
+                        
+                        $email->attachData(
+                            $fileContent,
+                            $filename,
+                            [
+                                'mime' => $mimeType,
+                            ]
+                        );
                     }
                 }
             }
