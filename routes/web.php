@@ -388,6 +388,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Admin Routes
     Route::middleware(['web', 'auth', 'verified', \App\Http\Middleware\AdminMiddleware::class])->name('admin.')->prefix('admin')->group(function () {
         Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard/sales-data', [\App\Http\Controllers\Admin\DashboardController::class, 'getSalesData'])->name('dashboard.sales-data');
 
         // Inquiry Management
         Route::resource('inquiries', \App\Http\Controllers\Admin\InquiryController::class)->names([

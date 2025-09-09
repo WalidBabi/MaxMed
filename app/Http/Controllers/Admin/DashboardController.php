@@ -15,7 +15,10 @@ class DashboardController extends Controller
         try {
             $salesData = $this->getSalesChartData();
             
-            return view('admin.dashboard', compact('salesData'));
+            // Get filter options for the dashboard
+            $filterOptions = $this->getFilterOptions();
+            
+            return view('admin.dashboard', compact('salesData', 'filterOptions'));
         } catch (\Exception $e) {
             Log::error('Dashboard error', [
                 'error' => $e->getMessage(),
@@ -37,7 +40,51 @@ class DashboardController extends Controller
                 'zero_months' => []
             ];
             
-            return view('admin.dashboard', compact('salesData'));
+            $filterOptions = [
+                'currencies' => ['AED', 'USD'],
+                'customers' => [],
+                'categories' => []
+            ];
+            
+            return view('admin.dashboard', compact('salesData', 'filterOptions'));
+        }
+    }
+
+    /**
+     * API endpoint for filtered sales data
+     */
+    public function getSalesData(Request $request)
+    {
+        try {
+            $period = $request->get('period', 'monthly'); // daily, monthly, quarterly
+            $currency = $request->get('currency', 'all'); // all, AED, USD
+            $customerId = $request->get('customer_id', 'all');
+            $categoryId = $request->get('category_id', 'all');
+            $startDate = $request->get('start_date');
+            $endDate = $request->get('end_date');
+            
+            $salesData = $this->getFilteredSalesData($period, $currency, $customerId, $categoryId, $startDate, $endDate);
+            
+            return response()->json([
+                'success' => true,
+                'data' => $salesData
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Sales data API error', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error fetching sales data',
+                'data' => [
+                    'labels' => [],
+                    'datasets' => []
+                ]
+            ], 500);
         }
     }
     
@@ -230,5 +277,320 @@ class DashboardController extends Controller
             Log::info('Quotes table not available or error occurred', ['error' => $e->getMessage()]);
             return [];
         }
+    }
+
+    /**
+     * Get filter options for the dashboard
+     */
+    private function getFilterOptions()
+    {
+        try {
+            $currencies = ['AED', 'USD'];
+            
+            // Get customers with sales
+            $customers = DB::table('customers')
+                ->join('invoices', 'customers.name', '=', 'invoices.customer_name')
+                ->select('customers.id', 'customers.name')
+                ->distinct()
+                ->orderBy('customers.name')
+                ->get();
+            
+            // Get categories with products that have sales
+            $categories = DB::table('categories')
+                ->join('products', 'categories.id', '=', 'products.category_id')
+                ->join('invoice_items', 'products.id', '=', 'invoice_items.product_id')
+                ->select('categories.id', 'categories.name')
+                ->distinct()
+                ->orderBy('categories.name')
+                ->get();
+            
+            return [
+                'currencies' => $currencies,
+                'customers' => $customers,
+                'categories' => $categories
+            ];
+            
+        } catch (\Exception $e) {
+            Log::error('Error getting filter options', ['error' => $e->getMessage()]);
+            return [
+                'currencies' => ['AED', 'USD'],
+                'customers' => [],
+                'categories' => []
+            ];
+        }
+    }
+
+    /**
+     * Get filtered sales data based on parameters
+     */
+    private function getFilteredSalesData($period, $currency, $customerId, $categoryId, $startDate, $endDate)
+    {
+        try {
+            // Set default date range if not provided
+            if (!$startDate || !$endDate) {
+                $endDate = Carbon::now();
+                switch ($period) {
+                    case 'daily':
+                        $startDate = Carbon::now()->subDays(30);
+                        break;
+                    case 'quarterly':
+                        $startDate = Carbon::now()->subQuarters(4);
+                        break;
+                    default: // monthly
+                        $startDate = Carbon::now()->subMonths(12);
+                        break;
+                }
+            } else {
+                $startDate = Carbon::parse($startDate);
+                $endDate = Carbon::parse($endDate);
+            }
+
+            // Generate labels based on period
+            $labels = $this->generateLabels($period, $startDate, $endDate);
+            
+            // Get sales data
+            $salesData = $this->getSalesDataForPeriod($period, $startDate, $endDate, $currency, $customerId, $categoryId);
+            
+            // Format data for Chart.js
+            $datasets = $this->formatDataForChart($salesData, $currency);
+            
+            return [
+                'labels' => $labels,
+                'datasets' => $datasets,
+                'summary' => $this->calculateSummary($salesData, $currency)
+            ];
+            
+        } catch (\Exception $e) {
+            Log::error('Error getting filtered sales data', ['error' => $e->getMessage()]);
+            return [
+                'labels' => [],
+                'datasets' => [],
+                'summary' => ['total' => 0, 'count' => 0]
+            ];
+        }
+    }
+
+    /**
+     * Generate labels based on period
+     */
+    private function generateLabels($period, $startDate, $endDate)
+    {
+        $labels = [];
+        $current = $startDate->copy();
+        
+        while ($current->lte($endDate)) {
+            switch ($period) {
+                case 'daily':
+                    $labels[] = $current->format('M j');
+                    $current->addDay();
+                    break;
+                case 'quarterly':
+                    $labels[] = 'Q' . $current->quarter . ' ' . $current->year;
+                    $current->addQuarter();
+                    break;
+                default: // monthly
+                    $labels[] = $current->format('M Y');
+                    $current->addMonth();
+                    break;
+            }
+        }
+        
+        return $labels;
+    }
+
+    /**
+     * Get sales data for specific period with filters
+     */
+    private function getSalesDataForPeriod($period, $startDate, $endDate, $currency, $customerId, $categoryId)
+    {
+        $data = [];
+        
+        // Build base query for invoices
+        $invoiceQuery = DB::table('invoices')
+            ->whereBetween('invoice_date', [$startDate, $endDate])
+            ->where('type', 'final'); // Only final invoices for sales data
+        
+        // Apply currency filter
+        if ($currency !== 'all') {
+            $invoiceQuery->where('currency', $currency);
+        }
+        
+        // Apply customer filter
+        if ($customerId !== 'all') {
+            $customer = DB::table('customers')->where('id', $customerId)->first();
+            if ($customer) {
+                $invoiceQuery->where('customer_name', $customer->name);
+            }
+        }
+        
+        // Apply category filter through invoice items
+        if ($categoryId !== 'all') {
+            $invoiceQuery->whereExists(function ($query) use ($categoryId) {
+                $query->select(DB::raw(1))
+                    ->from('invoice_items')
+                    ->join('products', 'invoice_items.product_id', '=', 'products.id')
+                    ->whereColumn('invoice_items.invoice_id', 'invoices.id')
+                    ->where('products.category_id', $categoryId);
+            });
+        }
+        
+        // Group by period
+        $groupByFormat = $this->getGroupByFormat($period);
+        
+        $invoices = $invoiceQuery
+            ->select(
+                DB::raw("DATE_FORMAT(invoice_date, '{$groupByFormat}') as period"),
+                'currency',
+                DB::raw('SUM(total_amount) as total')
+            )
+            ->groupBy('period', 'currency')
+            ->get();
+        
+        // Process invoice data
+        foreach ($invoices as $invoice) {
+            $periodKey = $invoice->period;
+            
+            // For quarterly grouping, convert month to quarter
+            if ($period === 'quarterly') {
+                $periodKey = $this->convertMonthToQuarter($invoice->period);
+            }
+            
+            if (!isset($data[$periodKey])) {
+                $data[$periodKey] = ['AED' => 0, 'USD' => 0];
+            }
+            $data[$periodKey][$invoice->currency] += $invoice->total;
+        }
+        
+        return $data;
+    }
+
+    /**
+     * Get MySQL date format for grouping
+     */
+    private function getGroupByFormat($period)
+    {
+        switch ($period) {
+            case 'daily':
+                return '%Y-%m-%d';
+            case 'quarterly':
+                return '%Y-%m'; // Use monthly for now, we'll group by quarters in PHP
+            default: // monthly
+                return '%Y-%m';
+        }
+    }
+
+    /**
+     * Format data for Chart.js
+     */
+    private function formatDataForChart($salesData, $currency)
+    {
+        $datasets = [];
+        
+        // Extract data arrays for each currency
+        $aedData = [];
+        $usdData = [];
+        $combinedData = [];
+        
+        // Sort data by period key to ensure proper order
+        ksort($salesData);
+        
+        foreach ($salesData as $periodData) {
+            $aedAmount = $periodData['AED'] ?? 0;
+            $usdAmount = $periodData['USD'] ?? 0;
+            $combinedAmount = $aedAmount + ($usdAmount * 3.67); // Convert USD to AED
+            
+            $aedData[] = round($aedAmount, 2);
+            $usdData[] = round($usdAmount, 2);
+            $combinedData[] = round($combinedAmount, 2);
+        }
+        
+        if ($currency === 'all' || $currency === 'AED') {
+            $datasets[] = [
+                'label' => 'AED Sales',
+                'data' => $aedData,
+                'borderColor' => 'rgb(34, 197, 94)',
+                'backgroundColor' => 'rgba(34, 197, 94, 0.1)',
+                'borderWidth' => 3,
+                'fill' => false,
+                'tension' => 0.4,
+                'pointBackgroundColor' => 'rgb(34, 197, 94)',
+                'pointBorderColor' => '#fff',
+                'pointBorderWidth' => 2,
+                'pointRadius' => 6,
+                'pointHoverRadius' => 8
+            ];
+        }
+        
+        if ($currency === 'all' || $currency === 'USD') {
+            $datasets[] = [
+                'label' => 'USD Sales',
+                'data' => $usdData,
+                'borderColor' => 'rgb(59, 130, 246)',
+                'backgroundColor' => 'rgba(59, 130, 246, 0.1)',
+                'borderWidth' => 3,
+                'fill' => false,
+                'tension' => 0.4,
+                'pointBackgroundColor' => 'rgb(59, 130, 246)',
+                'pointBorderColor' => '#fff',
+                'pointBorderWidth' => 2,
+                'pointRadius' => 6,
+                'pointHoverRadius' => 8
+            ];
+        }
+        
+        if ($currency === 'all') {
+            $datasets[] = [
+                'label' => 'Combined Sales (AED)',
+                'data' => $combinedData,
+                'borderColor' => 'rgb(147, 51, 234)',
+                'backgroundColor' => 'rgba(147, 51, 234, 0.1)',
+                'borderWidth' => 4,
+                'fill' => false,
+                'tension' => 0.4,
+                'pointBackgroundColor' => 'rgb(147, 51, 234)',
+                'pointBorderColor' => '#fff',
+                'pointBorderWidth' => 3,
+                'pointRadius' => 7,
+                'pointHoverRadius' => 9,
+                'borderDash' => [5, 5]
+            ];
+        }
+        
+        return $datasets;
+    }
+
+    /**
+     * Convert month (YYYY-MM) to quarter (YYYY-QX)
+     */
+    private function convertMonthToQuarter($month)
+    {
+        $year = substr($month, 0, 4);
+        $monthNum = (int)substr($month, 5, 2);
+        $quarter = ceil($monthNum / 3);
+        return $year . '-Q' . $quarter;
+    }
+
+    /**
+     * Calculate summary statistics
+     */
+    private function calculateSummary($salesData, $currency)
+    {
+        $total = 0;
+        $count = 0;
+        
+        foreach ($salesData as $periodData) {
+            if ($currency === 'all') {
+                $total += $periodData['AED'] + ($periodData['USD'] * 3.67); // Convert USD to AED
+            } else {
+                $total += $periodData[$currency] ?? 0;
+            }
+            $count++;
+        }
+        
+        return [
+            'total' => round($total, 2),
+            'count' => $count,
+            'average' => $count > 0 ? round($total / $count, 2) : 0
+        ];
     }
 } 
