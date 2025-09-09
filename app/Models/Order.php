@@ -701,7 +701,7 @@ class Order extends Model
 
             if ($admins->count() > 0) {
                 \Illuminate\Support\Facades\Notification::send($admins, new \App\Notifications\OrderNotification($this, 'status_changed'));
-                \Illuminate\Support\Facades\Log::info('Order status change notification sent to ' . $admins->count() . ' admin(s) for order: ' . $this->order_number . ' (new status: ' . $this->status . ')');
+                \Illuminate\Support\Facades\Log::info('Order status change notification (database only) sent to ' . $admins->count() . ' admin(s) for order: ' . $this->order_number . ' (new status: ' . $this->status . ')');
             }
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Failed to send order status change notification: ' . $e->getMessage());

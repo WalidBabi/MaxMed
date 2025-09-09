@@ -6,15 +6,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     public function index()
     {
         try {
-            $stats = $this->getDashboardStats();
+            $salesData = $this->getSalesChartData();
             
-            return view('admin.dashboard', compact('stats'));
+            return view('admin.dashboard', compact('salesData'));
         } catch (\Exception $e) {
             Log::error('Dashboard error', [
                 'error' => $e->getMessage(),
@@ -23,157 +24,211 @@ class DashboardController extends Controller
                 'environment' => app()->environment()
             ]);
             
-            // Return a simplified dashboard without stats if there's an error
-            $stats = [
-                'quotation_stats' => [
-                    'total_quotations' => 0,
-                    'pending_quotations' => 0,
-                    'quotations_this_week' => 0,
-                    'approved_quotations' => 0
-                ],
-                'order_stats' => [
-                    'total_orders' => 0,
-                    'pending_orders' => 0,
-                    'completed_orders' => 0
-                ],
-                'customer_stats' => [
-                    'total_customers' => 0,
-                    'new_customers_this_month' => 0
-                ],
-                'revenue_stats' => [
-                    'total_revenue' => 0,
-                    'revenue_this_month' => 0
-                ]
+            // Return empty sales data if there's an error
+            $salesData = [
+                'labels' => [],
+                'aed_data' => [],
+                'usd_data' => [],
+                'combined_data' => [],
+                'total_aed' => 0,
+                'total_usd' => 0,
+                'total_combined' => 0,
+                'peak_months' => [],
+                'zero_months' => []
             ];
             
-            return view('admin.dashboard', compact('stats'));
+            return view('admin.dashboard', compact('salesData'));
         }
     }
     
-    private function getDashboardStats()
+    private function getSalesChartData()
     {
-        // Temporary fix: Return empty stats to prevent server errors
-        // This will be reverted once the table issues are resolved
-        return [
-            'quotation_stats' => [
-                'total_quotations' => 0,
-                'pending_quotations' => 0,
-                'quotations_this_week' => 0,
-                'approved_quotations' => 0
-            ],
-            'order_stats' => [
-                'total_orders' => 0,
-                'pending_orders' => 0,
-                'completed_orders' => 0
-            ],
-            'customer_stats' => [
-                'total_customers' => 0,
-                'new_customers_this_month' => 0
-            ],
-            'revenue_stats' => [
-                'total_revenue' => 0,
-                'revenue_this_month' => 0
-            ]
-        ];
-        
-        // Original code commented out for now
-        /*
-        $stats = [
-            'quotation_stats' => [
-                'total_quotations' => 0,
-                'pending_quotations' => 0,
-                'quotations_this_week' => 0,
-                'approved_quotations' => 0
-            ],
-            'order_stats' => [
-                'total_orders' => 0,
-                'pending_orders' => 0,
-                'completed_orders' => 0
-            ],
-            'customer_stats' => [
-                'total_customers' => 0,
-                'new_customers_this_month' => 0
-            ],
-            'revenue_stats' => [
-                'total_revenue' => 0,
-                'revenue_this_month' => 0
-            ]
-        ];
-        
         try {
-            // Check if tables exist before querying them
-            $tables = ['quotes', 'orders', 'customers', 'invoices'];
-            $existingTables = [];
+            // Get the last 12 months of data
+            $startDate = Carbon::now()->subMonths(11)->startOfMonth();
+            $endDate = Carbon::now()->endOfMonth();
             
-            foreach ($tables as $table) {
-                try {
-                    DB::select("SELECT 1 FROM {$table} LIMIT 1");
-                    $existingTables[] = $table;
-                } catch (\Exception $e) {
-                    Log::info("Table {$table} does not exist, skipping stats");
-                }
+            // Initialize arrays for chart data
+            $labels = [];
+            $aedData = [];
+            $usdData = [];
+            $combinedData = [];
+            $peakMonths = [];
+            $zeroMonths = [];
+            
+            // Generate month labels
+            for ($i = 0; $i < 12; $i++) {
+                $month = $startDate->copy()->addMonths($i);
+                $labels[] = $month->format('M Y');
             }
             
-            Log::info('Available tables for stats', ['tables' => $existingTables]);
+            // Get invoice data
+            $invoiceData = $this->getInvoiceSalesData($startDate, $endDate);
             
-            // Get quotation stats only if table exists
-            if (in_array('quotes', $existingTables)) {
-                try {
-                    $stats['quotation_stats']['total_quotations'] = DB::table('quotes')->count();
-                    $stats['quotation_stats']['pending_quotations'] = DB::table('quotes')->where('status', 'pending')->count();
-                    $stats['quotation_stats']['quotations_this_week'] = DB::table('quotes')
-                        ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
-                        ->count();
-                    $stats['quotation_stats']['approved_quotations'] = DB::table('quotes')->where('status', 'approved')->count();
-                } catch (\Exception $e) {
-                    Log::error('Error getting quotation stats', ['error' => $e->getMessage()]);
-                }
-            }
+            // Get converted quotes data
+            $quoteData = $this->getConvertedQuotesData($startDate, $endDate);
             
-            // Get order stats only if table exists
-            if (in_array('orders', $existingTables)) {
-                try {
-                    $stats['order_stats']['total_orders'] = DB::table('orders')->count();
-                    $stats['order_stats']['pending_orders'] = DB::table('orders')->where('status', 'pending')->count();
-                    $stats['order_stats']['completed_orders'] = DB::table('orders')->where('status', 'completed')->count();
-                } catch (\Exception $e) {
-                    Log::error('Error getting order stats', ['error' => $e->getMessage()]);
-                }
-            }
-            
-            // Get customer stats only if table exists
-            if (in_array('customers', $existingTables)) {
-                try {
-                    $stats['customer_stats']['total_customers'] = DB::table('customers')->count();
-                    $stats['customer_stats']['new_customers_this_month'] = DB::table('customers')
-                        ->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])
-                        ->count();
-                } catch (\Exception $e) {
-                    Log::error('Error getting customer stats', ['error' => $e->getMessage()]);
-                }
-            }
-            
-            // Get revenue stats only if table exists
-            if (in_array('invoices', $existingTables)) {
-                try {
-                    $stats['revenue_stats']['total_revenue'] = DB::table('invoices')->where('status', 'paid')->sum('total_amount');
-                    $stats['revenue_stats']['revenue_this_month'] = DB::table('invoices')
-                        ->where('status', 'paid')
-                        ->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])
-                        ->sum('total_amount');
-                } catch (\Exception $e) {
-                    Log::error('Error getting revenue stats', ['error' => $e->getMessage()]);
-                }
-            }
+            // Combine and process data for each month
+            for ($i = 0; $i < 12; $i++) {
+                $month = $startDate->copy()->addMonths($i);
+                $monthKey = $month->format('Y-m');
                 
+                $aedAmount = 0;
+                $usdAmount = 0;
+                
+                // Add invoice amounts
+                if (isset($invoiceData[$monthKey])) {
+                    $aedAmount += $invoiceData[$monthKey]['aed'] ?? 0;
+                    $usdAmount += $invoiceData[$monthKey]['usd'] ?? 0;
+                }
+                
+                // Add converted quote amounts
+                if (isset($quoteData[$monthKey])) {
+                    $aedAmount += $quoteData[$monthKey]['aed'] ?? 0;
+                    $usdAmount += $quoteData[$monthKey]['usd'] ?? 0;
+                }
+                
+                $aedData[] = round($aedAmount, 2);
+                $usdData[] = round($usdAmount, 2);
+                
+                // Calculate combined total (AED + USD converted to AED at 3.67 rate)
+                $combinedAmount = $aedAmount + ($usdAmount * 3.67);
+                $combinedData[] = round($combinedAmount, 2);
+                
+                // Track zero sales months
+                if ($aedAmount == 0 && $usdAmount == 0) {
+                    $zeroMonths[] = $month->format('M Y');
+                }
+            }
+            
+            // Find peak months
+            $maxAed = max($aedData);
+            $maxUsd = max($usdData);
+            $maxCombined = max($combinedData);
+            
+            for ($i = 0; $i < 12; $i++) {
+                if ($aedData[$i] == $maxAed && $maxAed > 0) {
+                    $peakMonths[] = $labels[$i] . ' (AED: ' . number_format($maxAed, 2) . ')';
+                }
+                if ($usdData[$i] == $maxUsd && $maxUsd > 0) {
+                    $peakMonths[] = $labels[$i] . ' (USD: ' . number_format($maxUsd, 2) . ')';
+                }
+                if ($combinedData[$i] == $maxCombined && $maxCombined > 0) {
+                    $peakMonths[] = $labels[$i] . ' (Combined: ' . number_format($maxCombined, 2) . ' AED)';
+                }
+            }
+            
+            // Remove duplicates from peak months
+            $peakMonths = array_unique($peakMonths);
+            
+            return [
+                'labels' => $labels,
+                'aed_data' => $aedData,
+                'usd_data' => $usdData,
+                'combined_data' => $combinedData,
+                'total_aed' => array_sum($aedData),
+                'total_usd' => array_sum($usdData),
+                'total_combined' => array_sum($combinedData),
+                'peak_months' => array_values($peakMonths),
+                'zero_months' => $zeroMonths
+            ];
+            
         } catch (\Exception $e) {
-            Log::error('Error getting dashboard stats', [
+            Log::error('Error getting sales chart data', [
                 'error' => $e->getMessage(),
-                'environment' => app()->environment()
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
             ]);
+            
+            return [
+                'labels' => [],
+                'aed_data' => [],
+                'usd_data' => [],
+                'combined_data' => [],
+                'total_aed' => 0,
+                'total_usd' => 0,
+                'total_combined' => 0,
+                'peak_months' => [],
+                'zero_months' => []
+            ];
         }
-        
-        return $stats;
-        */
+    }
+    
+    private function getInvoiceSalesData($startDate, $endDate)
+    {
+        try {
+            $data = [];
+            
+            // Check if invoices table exists
+            DB::select("SELECT 1 FROM invoices LIMIT 1");
+            
+            $invoices = DB::table('invoices')
+                ->whereIn('status', ['confirmed', 'paid', 'completed'])
+                ->whereBetween('invoice_date', [$startDate, $endDate])
+                ->select(
+                    DB::raw('DATE_FORMAT(invoice_date, "%Y-%m") as month'),
+                    'currency',
+                    DB::raw('SUM(total_amount) as total')
+                )
+                ->groupBy('month', 'currency')
+                ->get();
+            
+            foreach ($invoices as $invoice) {
+                if (!isset($data[$invoice->month])) {
+                    $data[$invoice->month] = ['aed' => 0, 'usd' => 0];
+                }
+                
+                if (strtoupper($invoice->currency) === 'AED') {
+                    $data[$invoice->month]['aed'] += $invoice->total;
+                } else {
+                    $data[$invoice->month]['usd'] += $invoice->total;
+                }
+            }
+            
+            return $data;
+            
+        } catch (\Exception $e) {
+            Log::info('Invoices table not available or error occurred', ['error' => $e->getMessage()]);
+            return [];
+        }
+    }
+    
+    private function getConvertedQuotesData($startDate, $endDate)
+    {
+        try {
+            $data = [];
+            
+            // Check if quotes table exists
+            DB::select("SELECT 1 FROM quotes LIMIT 1");
+            
+            $quotes = DB::table('quotes')
+                ->where('status', 'converted')
+                ->whereBetween('quote_date', [$startDate, $endDate])
+                ->select(
+                    DB::raw('DATE_FORMAT(quote_date, "%Y-%m") as month'),
+                    'currency',
+                    DB::raw('SUM(total_amount) as total')
+                )
+                ->groupBy('month', 'currency')
+                ->get();
+            
+            foreach ($quotes as $quote) {
+                if (!isset($data[$quote->month])) {
+                    $data[$quote->month] = ['aed' => 0, 'usd' => 0];
+                }
+                
+                if (strtoupper($quote->currency) === 'AED') {
+                    $data[$quote->month]['aed'] += $quote->total;
+                } else {
+                    $data[$quote->month]['usd'] += $quote->total;
+                }
+            }
+            
+            return $data;
+            
+        } catch (\Exception $e) {
+            Log::info('Quotes table not available or error occurred', ['error' => $e->getMessage()]);
+            return [];
+        }
     }
 } 

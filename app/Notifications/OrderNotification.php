@@ -33,6 +33,12 @@ class OrderNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable): array
     {
+        // For status change notifications, only send database notifications (no emails)
+        if ($this->type === 'status_changed') {
+            return ['database'];
+        }
+        
+        // For other notification types (like 'placed'), send both email and database
         return ['mail', 'database'];
     }
 
