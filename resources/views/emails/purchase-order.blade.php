@@ -221,7 +221,7 @@
 
                             <!-- Messages -->
                             <div style="margin: 30px 0;">
-                                <p style="margin: 0 0 15px 0; color: #4A5568; font-size: 16px; line-height: 1.7;">The detailed purchase order is attached as a PDF file. Please confirm receipt and provide delivery confirmation.</p>
+                                <p style="margin: 0 0 15px 0; color: #4A5568; font-size: 16px; line-height: 1.7;">The detailed purchase order is attached as a PDF file, along with any additional documents you provided. Please confirm receipt and provide delivery confirmation.</p>
                                 <p style="margin: 0; color: #2D3748; font-size: 16px; font-weight: 500;">Thank you for your partnership! 🚀</p>
                             </div>
                         </td>
