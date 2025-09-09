@@ -2,6 +2,34 @@
 
 @section('title', 'Purchase Orders')
 
+@push('styles')
+<style>
+/* Custom scrollbar styling for the table */
+.overflow-x-auto::-webkit-scrollbar {
+    height: 8px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-track {
+    background: #f7fafc;
+    border-radius: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 4px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+}
+
+/* Ensure table has minimum width to trigger scrolling */
+.min-w-full {
+    min-width: 1200px;
+}
+</style>
+@endpush
+
 @section('content')
 <div class="max-w-7xl mx-auto">
     <!-- Header -->
@@ -80,7 +108,7 @@
                 </h3>
             </div>
             
-            <div class="overflow-hidden">
+            <div class="overflow-x-auto" style="scrollbar-width: thin; scrollbar-color: #cbd5e0 #f7fafc;">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -91,7 +119,7 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -159,7 +187,7 @@
                                     <span class="text-xs">{{ formatDubaiDate($po->created_at, 'H:i') }}</span>
                                 </td>
                                 
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium w-32">
                                     <div class="flex items-center justify-end space-x-2">
                                         <a href="{{ route('admin.purchase-orders.show', $po) }}" class="text-indigo-600 hover:text-indigo-900" title="View Purchase Order">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

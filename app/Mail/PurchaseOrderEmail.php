@@ -52,6 +52,18 @@ class PurchaseOrderEmail extends Mailable
             ]
         );
 
+        // Attach proforma invoice/quote if available
+        if ($this->purchaseOrder->attachments) {
+            $attachments = json_decode($this->purchaseOrder->attachments, true);
+            if (is_array($attachments)) {
+                foreach ($attachments as $attachment) {
+                    if ($attachment['type'] === 'proforma_invoice' && Storage::disk('public')->exists($attachment['path'])) {
+                        $email->attachFromStorageDisk('public', $attachment['path'], $attachment['filename']);
+                    }
+                }
+            }
+        }
+
         return $email;
     }
 } 

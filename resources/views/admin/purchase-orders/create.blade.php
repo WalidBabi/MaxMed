@@ -48,7 +48,7 @@
         @endif
 
         <!-- Form -->
-        <form action="{{ route('admin.purchase-orders.store') }}" method="POST" id="purchaseOrderForm">
+        <form action="{{ route('admin.purchase-orders.store') }}" method="POST" id="purchaseOrderForm" enctype="multipart/form-data">
             @csrf
             <div class="px-4 sm:px-6 lg:px-8">
                 <div class="space-y-8">
@@ -105,8 +105,8 @@
                                 <div>
                                     <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">Currency</label>
                                     <select name="currency" id="currency" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
-                                        <option value="AED" {{ old('currency', 'AED') == 'AED' ? 'selected' : '' }}>AED (UAE Dirham)</option>
-                                        <option value="USD" {{ old('currency') == 'USD' ? 'selected' : '' }}>USD (US Dollar)</option>
+                                        <option value="AED" {{ old('currency') == 'AED' ? 'selected' : '' }}>AED (UAE Dirham)</option>
+                                        <option value="USD" {{ old('currency', 'USD') == 'USD' ? 'selected' : '' }}>USD (US Dollar)</option>
                                         <option value="CYN" {{ old('currency') == 'CYN' ? 'selected' : '' }}>CYN (Chinese Yuan)</option>
                                     </select>
                                     <p class="mt-1 text-sm text-gray-500">This determines which procurement prices to use for products</p>
@@ -262,14 +262,39 @@
                                         <span class="text-sm font-medium text-gray-700">Sub Total:</span>
                                         <span id="subTotal" class="text-sm font-semibold text-gray-900">0.00 <span class="currency-display">AED</span></span>
                                     </div>
-                                    <div class="flex justify-between py-2">
-                                        <span class="text-sm font-medium text-gray-700">Tax:</span>
-                                        <span id="tax-amount" class="text-sm font-semibold text-gray-900">0.00 <span class="currency-display">AED</span></span>
+                                    
+                                    <!-- VAT Input Field -->
+                                    <div class="flex justify-between items-center py-2">
+                                        <span class="text-sm font-medium text-gray-700">VAT:</span>
+                                        <div class="flex items-center space-x-2">
+                                            <input type="number" 
+                                                   id="vat-amount-input" 
+                                                   name="vat_amount" 
+                                                   value="0.00" 
+                                                   step="0.01" 
+                                                   min="0"
+                                                   class="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                                                   onchange="calculateTotals()">
+                                            <span class="text-sm font-semibold text-gray-900 currency-display">AED</span>
+                                        </div>
                                     </div>
-                                    <div class="flex justify-between py-2">
+                                    
+                                    <!-- Shipping Input Field -->
+                                    <div class="flex justify-between items-center py-2">
                                         <span class="text-sm font-medium text-gray-700">Shipping:</span>
-                                        <span id="shipping-amount" class="text-sm font-semibold text-gray-900">0.00 <span class="currency-display">AED</span></span>
+                                        <div class="flex items-center space-x-2">
+                                            <input type="number" 
+                                                   id="shipping-amount-input" 
+                                                   name="shipping_amount" 
+                                                   value="0.00" 
+                                                   step="0.01" 
+                                                   min="0"
+                                                   class="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                                                   onchange="calculateTotals()">
+                                            <span class="text-sm font-semibold text-gray-900 currency-display">AED</span>
+                                        </div>
                                     </div>
+                                    
                                     <div class="border-t border-gray-200 pt-2">
                                         <div class="flex justify-between">
                                             <span class="text-base font-semibold text-gray-900">Total:</span>
@@ -329,6 +354,40 @@
                                               placeholder="Enter any special instructions for the supplier..."
                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('special_instructions') }}</textarea>
                                     <p class="mt-1 text-sm text-gray-500">Special handling, packaging, or delivery instructions</p>
+                                </div>
+                                
+                                <!-- Proforma Invoice/Quote Attachment -->
+                                <div>
+                                    <label for="proforma_attachment" class="block text-sm font-medium text-gray-700 mb-2">Proforma Invoice/Quote Attachment</label>
+                                    <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-gray-400 transition-colors">
+                                        <div class="space-y-1 text-center">
+                                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                            <div class="flex text-sm text-gray-600">
+                                                <label for="proforma_attachment" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                                    <span>Upload a file</span>
+                                                    <input id="proforma_attachment" name="proforma_attachment" type="file" class="sr-only" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" onchange="handleFileSelect(this)">
+                                                </label>
+                                                <p class="pl-1">or drag and drop</p>
+                                            </div>
+                                            <p class="text-xs text-gray-500">PDF, DOC, DOCX, XLS, XLSX, JPG, PNG up to 10MB</p>
+                                        </div>
+                                    </div>
+                                    <div id="file-info" class="mt-2 text-sm text-gray-600 hidden">
+                                        <div class="flex items-center">
+                                            <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            <span id="file-name"></span>
+                                            <button type="button" onclick="removeFile()" class="ml-2 text-red-500 hover:text-red-700">
+                                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-500">Upload proforma invoice or quote document to attach with the purchase order</p>
                                 </div>
                             </div>
                         </div>
@@ -686,6 +745,21 @@ function updateAllProductPrices(currency) {
                 }
                 rateInput.value = parseFloat(price).toFixed(2);
                 calculateRowAmount({ target: rateInput });
+            } else {
+                // If no dropdown item found (e.g., for items populated from order),
+                // try to find the product in the global products array
+                const productId = productIdInput.value;
+                const product = window.products ? window.products.find(p => p.id == productId) : null;
+                if (product) {
+                    let price = 0;
+                    if (currency === 'USD') {
+                        price = product.procurement_price_usd || product.price || 0;
+                    } else if (currency === 'AED') {
+                        price = product.procurement_price_aed || product.price || 0;
+                    }
+                    rateInput.value = parseFloat(price).toFixed(2);
+                    calculateRowAmount({ target: rateInput });
+                }
             }
         }
     });
@@ -707,7 +781,9 @@ function addItem(itemData = null) {
         discount: 0,
         amount: 0.00,
         specifications: '',
-        variation: ''
+        variation: '',
+        has_size_options: false,
+        size_options: []
     };
     
     row.innerHTML = `
@@ -853,6 +929,55 @@ function addItem(itemData = null) {
         }
     });
     
+    // Populate specifications and size options if data is provided
+    if (itemData && itemData.product_id) {
+        const specificationsInput = row.querySelector('.specifications-search-input');
+        const specificationsHidden = row.querySelector('.specifications-hidden');
+        const specificationsDropdown = row.querySelector('.specifications-dropdown-list');
+        const sizeSelect = row.querySelector('.size-options-select');
+        
+        // Populate specifications if available
+        if (data.specifications && data.specifications !== '[]' && data.specifications !== '') {
+            try {
+                const specsArray = typeof data.specifications === 'string' ? JSON.parse(data.specifications) : data.specifications;
+                if (specsArray && specsArray.length > 0) {
+                    specificationsInput.value = specsArray.join(', ');
+                    specificationsHidden.value = JSON.stringify(specsArray);
+                    
+                    // Create checkboxes for specifications
+                    let checkboxesHtml = '';
+                    specsArray.forEach(spec => {
+                        checkboxesHtml += `
+                            <label class="flex items-center p-2 hover:bg-gray-50">
+                                <input type="checkbox" class="spec-checkbox h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" data-spec="${spec}" checked>
+                                <span class="ml-2 text-sm text-gray-700">${spec}</span>
+                            </label>
+                        `;
+                    });
+                    specificationsDropdown.innerHTML = checkboxesHtml;
+                    
+                    // Add event listeners to checkboxes
+                    const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox');
+                    checkboxes.forEach(checkbox => {
+                        checkbox.addEventListener('change', updateSelectedSpecifications);
+                    });
+                }
+            } catch (e) {
+                console.error('Error parsing specifications:', e);
+            }
+        }
+        
+        // Populate size options if available
+        if (data.has_size_options && data.size_options && data.size_options.length > 0) {
+            let options = '<option value="">Select Size (if applicable)</option>';
+            data.size_options.forEach(size => {
+                const selected = data.variation === size ? 'selected' : '';
+                options += `<option value="${size}" ${selected}>${size}</option>`;
+            });
+            sizeSelect.innerHTML = options;
+        }
+    }
+    
     calculateTotals();
 }
 
@@ -879,18 +1004,27 @@ function calculateRowAmount(event) {
 
 function calculateTotals() {
     const amounts = document.querySelectorAll('.amount-display');
-    let total = 0;
+    let subtotal = 0;
     
     amounts.forEach(amount => {
-        total += parseFloat(amount.textContent) || 0;
+        subtotal += parseFloat(amount.textContent) || 0;
     });
     
+    // Get VAT and Shipping amounts
+    const vatAmount = parseFloat(document.getElementById('vat-amount-input').value) || 0;
+    const shippingAmount = parseFloat(document.getElementById('shipping-amount-input').value) || 0;
+    
+    // Calculate total
+    const total = subtotal + vatAmount + shippingAmount;
+    
     const currency = document.getElementById('currency').value;
-    document.getElementById('subTotal').innerHTML = `${total.toFixed(2)} <span class="currency-display">${currency}</span>`;
+    
+    // Update display
+    document.getElementById('subTotal').innerHTML = `${subtotal.toFixed(2)} <span class="currency-display">${currency}</span>`;
     document.getElementById('totalAmount').innerHTML = `${total.toFixed(2)} <span class="currency-display">${currency}</span>`;
     
     // Update hidden inputs for form submission
-    document.getElementById('sub_total_hidden').value = total.toFixed(2);
+    document.getElementById('sub_total_hidden').value = subtotal.toFixed(2);
     document.getElementById('total_amount_hidden').value = total.toFixed(2);
 }
 
@@ -1252,19 +1386,45 @@ function handleOrderSelection() {
                             updateCurrencyDisplay();
                         }
                         
+                        // Update VAT and Shipping fields from order
+                        if (data.order.vat_amount !== undefined) {
+                            document.getElementById('vat-amount-input').value = parseFloat(data.order.vat_amount).toFixed(2);
+                        }
+                        if (data.order.shipping_rate !== undefined) {
+                            document.getElementById('shipping-amount-input').value = parseFloat(data.order.shipping_rate).toFixed(2);
+                        }
+                        
                         // Add items from order
                         if (data.items && data.items.length > 0) {
                             data.items.forEach(function(item) {
+                                // Determine the correct rate and price type based on order currency
+                                let rate = 0;
+                                let priceType = 'aed'; // default
+                                
+                                if (data.order.currency === 'USD') {
+                                    rate = item.procurement_price_usd || item.unit_price || 0;
+                                    priceType = 'usd';
+                                } else if (data.order.currency === 'CYN') {
+                                    rate = item.procurement_price_usd || item.unit_price || 0; // CYN uses USD prices
+                                    priceType = 'usd';
+                                } else {
+                                    // Default to AED
+                                    rate = item.procurement_price_aed || item.unit_price || 0;
+                                    priceType = 'aed';
+                                }
+                                
                                 const itemData = {
                                     product_id: item.product_id,
                                     item_description: item.product_name,
                                     quantity: item.quantity,
-                                    rate: item.procurement_price_aed || item.unit_price || 0,
-                                    price_type: 'aed', // Default to AED procurement price
+                                    rate: rate,
+                                    price_type: priceType,
                                     discount: item.discount_percentage || 0,
-                                    amount: item.line_total || (item.quantity * (item.procurement_price_aed || item.unit_price || 0)),
+                                    amount: item.line_total || (item.quantity * rate),
                                     specifications: item.specifications ? JSON.stringify(item.specifications) : '',
-                                    variation: item.variation || ''
+                                    variation: item.variation || '',
+                                    has_size_options: item.has_size_options || false,
+                                    size_options: item.size_options || []
                                 };
                                 
                                 addItem(itemData);
@@ -1298,6 +1458,11 @@ function handleOrderSelection() {
             itemsTable.innerHTML = '';
             itemCounter = 0;
             addItem();
+            
+            // Clear VAT and Shipping fields
+            document.getElementById('vat-amount-input').value = '0.00';
+            document.getElementById('shipping-amount-input').value = '0.00';
+            
             calculateTotals();
         }
     });
@@ -1313,6 +1478,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add currency change event listener
     document.getElementById('currency').addEventListener('change', updateCurrencyDisplay);
+    
+    // Initialize currency display for default USD selection
+    updateCurrencyDisplay();
     
     document.getElementById('addItem').addEventListener('click', addItem);
     
@@ -1382,10 +1550,370 @@ document.addEventListener('DOMContentLoaded', function() {
             'name' => $product->name,
             'has_size_options' => $product->has_size_options,
             'size_options' => $product->size_options,
-            'price' => $product->price_aed ?? $product->price
+            'price' => $product->price_aed ?? $product->price,
+            'procurement_price_aed' => $product->procurement_price_aed ?? $product->price_aed ?? $product->price,
+            'procurement_price_usd' => $product->procurement_price_usd ?? $product->price
         ];
     })); ?>;
     window.products = products;
+});
+
+// File handling functions
+function handleFileSelect(input) {
+    const file = input.files[0];
+    if (file) {
+        // Validate file size (10MB limit)
+        if (file.size > 10 * 1024 * 1024) {
+            alert('File size must be less than 10MB');
+            input.value = '';
+            return;
+        }
+        
+        // Validate file type
+        const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'image/jpeg', 'image/jpg', 'image/png'];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Please select a valid file type (PDF, DOC, DOCX, XLS, XLSX, JPG, PNG)');
+            input.value = '';
+            return;
+        }
+        
+        // Show file info
+        document.getElementById('file-name').textContent = file.name;
+        document.getElementById('file-info').classList.remove('hidden');
+    }
+}
+
+function removeFile() {
+    document.getElementById('proforma_attachment').value = '';
+    document.getElementById('file-info').classList.add('hidden');
+}
+
+// Form validation functions
+function validateForm() {
+    let isValid = true;
+    let errors = [];
+
+    // Validate supplier type
+    const supplierType = document.querySelector('input[name="supplier_type"]:checked');
+    if (!supplierType) {
+        errors.push('Please select a supplier type (existing or new).');
+        isValid = false;
+    }
+
+    // Validate currency
+    const currency = document.getElementById('currency').value;
+    if (!currency) {
+        errors.push('Please select a currency.');
+        isValid = false;
+    }
+
+    // Validate delivery date
+    const deliveryDate = document.getElementById('delivery_date_requested').value;
+    if (!deliveryDate) {
+        errors.push('Please select a delivery date.');
+        isValid = false;
+    } else {
+        const selectedDate = new Date(deliveryDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (selectedDate <= today) {
+            errors.push('Delivery date must be after today.');
+            isValid = false;
+        }
+    }
+
+    // Validate supplier information based on type
+    if (supplierType && supplierType.value === 'existing') {
+        const supplierId = document.getElementById('supplier_id').value;
+        if (!supplierId) {
+            errors.push('Please select a supplier.');
+            isValid = false;
+        }
+    } else if (supplierType && supplierType.value === 'new') {
+        const supplierName = document.getElementById('supplier_name').value;
+        if (!supplierName.trim()) {
+            errors.push('Please enter the supplier name.');
+            isValid = false;
+        }
+    }
+
+    // Validate items (only for standalone purchase orders)
+    const orderId = document.getElementById('order_id').value;
+    if (!orderId) {
+        const itemRows = document.querySelectorAll('.item-row');
+        if (itemRows.length === 0) {
+            errors.push('Please add at least one item to the purchase order.');
+            isValid = false;
+        } else {
+            itemRows.forEach((row, index) => {
+                const productId = row.querySelector('.product-id-input').value;
+                const quantity = row.querySelector('.quantity-input').value;
+                const unitPrice = row.querySelector('.rate-input').value;
+                
+                if (!productId) {
+                    errors.push(`Please select a product for item ${index + 1}.`);
+                    isValid = false;
+                }
+                if (!quantity || parseFloat(quantity) <= 0) {
+                    errors.push(`Please enter a valid quantity for item ${index + 1}.`);
+                    isValid = false;
+                }
+                if (!unitPrice || parseFloat(unitPrice) < 0) {
+                    errors.push(`Please enter a valid unit price for item ${index + 1}.`);
+                    isValid = false;
+                }
+            });
+        }
+    }
+
+    // Validate payment terms
+    const paymentTerms = document.getElementById('payment_terms').value;
+    if (!paymentTerms || paymentTerms.trim() === '') {
+        errors.push('Please select payment terms.');
+        isValid = false;
+    }
+
+    // Validate shipping method
+    const shippingMethod = document.getElementById('shipping_method').value;
+    if (!shippingMethod || shippingMethod.trim() === '') {
+        errors.push('Please select a shipping method.');
+        isValid = false;
+    }
+
+    // Validate totals
+    const subTotal = document.getElementById('sub_total_hidden').value;
+    const totalAmount = document.getElementById('total_amount_hidden').value;
+    if (!subTotal || parseFloat(subTotal) < 0) {
+        errors.push('Sub total must be a valid positive number.');
+        isValid = false;
+    }
+    if (!totalAmount || parseFloat(totalAmount) < 0) {
+        errors.push('Total amount must be a valid positive number.');
+        isValid = false;
+    }
+
+    // Validate VAT and Shipping amounts
+    const vatAmount = document.getElementById('vat-amount-input').value;
+    const shippingAmount = document.getElementById('shipping-amount-input').value;
+    if (vatAmount && parseFloat(vatAmount) < 0) {
+        errors.push('VAT amount cannot be negative.');
+        isValid = false;
+    }
+    if (shippingAmount && parseFloat(shippingAmount) < 0) {
+        errors.push('Shipping amount cannot be negative.');
+        isValid = false;
+    }
+
+    // Display errors if any
+    if (!isValid) {
+        showValidationErrors(errors);
+    }
+
+    return isValid;
+}
+
+function showValidationErrors(errors) {
+    // Remove existing error display
+    const existingErrorDiv = document.getElementById('validation-errors');
+    if (existingErrorDiv) {
+        existingErrorDiv.remove();
+    }
+
+    // Create error display
+    const errorDiv = document.createElement('div');
+    errorDiv.id = 'validation-errors';
+    errorDiv.className = 'px-4 sm:px-6 lg:px-8 mb-6';
+    errorDiv.innerHTML = `
+        <div class="bg-red-50 border border-red-200 rounded-md p-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+                    <div class="mt-2 text-sm text-red-700">
+                        <ul class="list-disc pl-5 space-y-1">
+                            ${errors.map(error => `<li>${error}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Insert error display at the top of the form
+    const form = document.getElementById('purchaseOrderForm');
+    form.insertBefore(errorDiv, form.firstChild);
+
+    // Scroll to top to show errors
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Real-time field validation
+function validateField(field, value) {
+    const fieldName = field.name || field.id;
+    let isValid = true;
+    let errorMessage = '';
+
+    switch (fieldName) {
+        case 'supplier_name':
+            if (!value.trim()) {
+                isValid = false;
+                errorMessage = 'Please enter the supplier name.';
+            } else if (value.length > 255) {
+                isValid = false;
+                errorMessage = 'Supplier name cannot exceed 255 characters.';
+            }
+            break;
+        case 'supplier_email':
+            if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                isValid = false;
+                errorMessage = 'Please enter a valid email address.';
+            } else if (value && value.length > 255) {
+                isValid = false;
+                errorMessage = 'Email address cannot exceed 255 characters.';
+            }
+            break;
+        case 'supplier_phone':
+            if (value && value.length > 50) {
+                isValid = false;
+                errorMessage = 'Phone number cannot exceed 50 characters.';
+            }
+            break;
+        case 'delivery_date_requested':
+            if (!value) {
+                isValid = false;
+                errorMessage = 'Please select a delivery date.';
+            } else {
+                const selectedDate = new Date(value);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                if (selectedDate <= today) {
+                    isValid = false;
+                    errorMessage = 'Delivery date must be after today.';
+                }
+            }
+            break;
+        case 'payment_terms':
+            if (!value || value.trim() === '') {
+                isValid = false;
+                errorMessage = 'Please select payment terms.';
+            } else if (value.length > 255) {
+                isValid = false;
+                errorMessage = 'Payment terms cannot exceed 255 characters.';
+            }
+            break;
+        case 'shipping_method':
+            if (!value || value.trim() === '') {
+                isValid = false;
+                errorMessage = 'Please select a shipping method.';
+            } else if (value.length > 255) {
+                isValid = false;
+                errorMessage = 'Shipping method cannot exceed 255 characters.';
+            }
+            break;
+        case 'vat-amount-input':
+        case 'shipping-amount-input':
+            if (value && (isNaN(value) || parseFloat(value) < 0)) {
+                isValid = false;
+                errorMessage = 'Amount cannot be negative.';
+            }
+            break;
+    }
+
+    // Show/hide field error
+    showFieldError(field, isValid, errorMessage);
+    return isValid;
+}
+
+function showFieldError(field, isValid, errorMessage) {
+    // Remove existing error
+    const existingError = field.parentNode.querySelector('.field-error');
+    if (existingError) {
+        existingError.remove();
+    }
+
+    // Remove error styling
+    field.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+    field.classList.add('border-gray-300', 'focus:border-indigo-500', 'focus:ring-indigo-500');
+
+    if (!isValid) {
+        // Add error styling
+        field.classList.remove('border-gray-300', 'focus:border-indigo-500', 'focus:ring-indigo-500');
+        field.classList.add('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+
+        // Add error message
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'field-error mt-1 text-sm text-red-600';
+        errorDiv.textContent = errorMessage;
+        field.parentNode.appendChild(errorDiv);
+    }
+}
+
+// Add form submission validation and real-time validation
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('purchaseOrderForm');
+    if (form) {
+        // Form submission validation
+        form.addEventListener('submit', function(e) {
+            if (!validateForm()) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Real-time validation for key fields
+        const fieldsToValidate = [
+            'supplier_name',
+            'supplier_email', 
+            'supplier_phone',
+            'delivery_date_requested',
+            'payment_terms',
+            'shipping_method',
+            'vat-amount-input',
+            'shipping-amount-input'
+        ];
+
+        fieldsToValidate.forEach(fieldName => {
+            const field = document.getElementById(fieldName);
+            if (field) {
+                field.addEventListener('blur', function() {
+                    validateField(this, this.value);
+                });
+                field.addEventListener('input', function() {
+                    // Clear error on input
+                    const existingError = this.parentNode.querySelector('.field-error');
+                    if (existingError) {
+                        existingError.remove();
+                        this.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+                        this.classList.add('border-gray-300', 'focus:border-indigo-500', 'focus:ring-indigo-500');
+                    }
+                });
+            }
+        });
+
+        // Validate supplier type selection
+        const supplierTypeRadios = document.querySelectorAll('input[name="supplier_type"]');
+        supplierTypeRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Clear any existing supplier validation errors
+                const supplierFields = ['supplier_id', 'supplier_name', 'supplier_email', 'supplier_phone'];
+                supplierFields.forEach(fieldName => {
+                    const field = document.getElementById(fieldName);
+                    if (field) {
+                        const existingError = field.parentNode.querySelector('.field-error');
+                        if (existingError) {
+                            existingError.remove();
+                            field.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+                            field.classList.add('border-gray-300', 'focus:border-indigo-500', 'focus:ring-indigo-500');
+                        }
+                    }
+                });
+            });
+        });
+    }
 });
 </script>
 @endpush
