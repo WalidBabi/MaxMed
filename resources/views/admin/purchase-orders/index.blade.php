@@ -209,6 +209,7 @@
                                                 data-supplier-name="{{ $po->supplier_name }}"
                                                 data-po-number="{{ $po->po_number }}"
                                                 data-supplier-email="{{ $po->supplier_email ?? '' }}"
+                                                data-attachments="{{ $po->attachments ? json_encode($po->attachments) : '[]' }}"
                                                 title="Send Email">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
@@ -398,6 +399,12 @@
                                             <svg class="w-3 h-3 mr-2 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                             </svg>
+                                            All uploaded attachments (proforma invoices, quotes, etc.)
+                                        </li>
+                                        <li class="flex items-center">
+                                            <svg class="w-3 h-3 mr-2 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                            </svg>
                                             Personalized email message
                                         </li>
                                         <li class="flex items-center">
@@ -407,6 +414,28 @@
                                             Company branding and contact information
                                         </li>
                                     </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Attachments Preview -->
+                        <div id="attachmentsPreview" class="hidden">
+                            <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                                <div class="flex items-center space-x-3 mb-3">
+                                    <div class="flex-shrink-0">
+                                        <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="text-sm font-semibold text-gray-900">Attachments to be sent:</h4>
+                                        <p class="text-xs text-gray-600">Files uploaded with this purchase order</p>
+                                    </div>
+                                </div>
+                                <div id="attachmentsList" class="space-y-2">
+                                    <!-- Attachments will be populated here -->
                                 </div>
                             </div>
                         </div>
@@ -461,11 +490,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const supplierName = this.getAttribute('data-supplier-name');
             const poNumber = this.getAttribute('data-po-number');
             const supplierEmail = this.getAttribute('data-supplier-email');
+            const attachmentsData = this.getAttribute('data-attachments');
             
             // Store PO ID globally for status updates
             currentPoId = poId;
             
-            console.log('PO data:', { poId, supplierName, poNumber, supplierEmail });
+            console.log('PO data:', { poId, supplierName, poNumber, supplierEmail, attachmentsData });
             
             const sendEmailForm = document.getElementById('sendEmailForm');
             if (!sendEmailForm) {
@@ -482,6 +512,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (emailModalPoNumber) emailModalPoNumber.textContent = `Purchase Order ${poNumber}`;
             if (emailModalSupplierName) emailModalSupplierName.textContent = supplierName;
+            
+            // Handle attachments preview
+            populateAttachmentsPreview(attachmentsData);
             
             // Use existing email or populate field
             if (supplierEmail && supplierEmail.trim() !== '') {
@@ -524,6 +557,98 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+// Function to populate attachments preview
+function populateAttachmentsPreview(attachmentsData) {
+    const attachmentsPreview = document.getElementById('attachmentsPreview');
+    const attachmentsList = document.getElementById('attachmentsList');
+    
+    if (!attachmentsPreview || !attachmentsList) {
+        console.error('Attachments preview elements not found');
+        return;
+    }
+    
+    try {
+        const attachments = JSON.parse(attachmentsData || '[]');
+        
+        if (attachments && attachments.length > 0) {
+            // Show the attachments preview
+            attachmentsPreview.classList.remove('hidden');
+            
+            // Clear existing content
+            attachmentsList.innerHTML = '';
+            
+            // Add each attachment
+            attachments.forEach(attachment => {
+                const attachmentItem = document.createElement('div');
+                attachmentItem.className = 'flex items-center space-x-3 p-2 bg-white rounded-lg border border-gray-200';
+                
+                // Get file icon based on type
+                const fileIcon = getFileIcon(attachment.filename || attachment.path);
+                
+                attachmentItem.innerHTML = `
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                            ${fileIcon}
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-gray-900 truncate">${attachment.filename || 'Attachment'}</p>
+                        <p class="text-xs text-gray-500">${formatFileSize(attachment.size)} • ${attachment.type || 'File'}</p>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                `;
+                
+                attachmentsList.appendChild(attachmentItem);
+            });
+        } else {
+            // Hide the attachments preview if no attachments
+            attachmentsPreview.classList.add('hidden');
+        }
+    } catch (error) {
+        console.error('Error parsing attachments data:', error);
+        attachmentsPreview.classList.add('hidden');
+    }
+}
+
+// Function to get file icon based on filename
+function getFileIcon(filename) {
+    if (!filename) return '<svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>';
+    
+    const extension = filename.split('.').pop().toLowerCase();
+    
+    switch (extension) {
+        case 'pdf':
+            return '<svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>';
+        case 'doc':
+        case 'docx':
+            return '<svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>';
+        case 'xls':
+        case 'xlsx':
+            return '<svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>';
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+            return '<svg class="w-4 h-4 text-purple-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path></svg>';
+        default:
+            return '<svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>';
+    }
+}
+
+// Function to format file size
+function formatFileSize(bytes) {
+    if (!bytes) return 'Unknown size';
+    
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    if (bytes === 0) return '0 Bytes';
+    
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+}
 
 // Form submission handler
 function submitEmailForm(event) {
