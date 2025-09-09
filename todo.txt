@@ -550,3 +550,5 @@ sudo certbot certificates
 
 # Add automatic renewal to crontab
 echo "0 12,18 * * * /usr/bin/certbot renew --quiet --deploy-hook 'docker-compose restart nginx'" | sudo crontab -
+
+php assign_superadmin.php
