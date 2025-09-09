@@ -541,10 +541,10 @@
                         <td class="value">{{ $purchaseOrder->payment_terms }}</td>
                     </tr>
                     @endif
-                    @if($purchaseOrder->order)
+                    @if($purchaseOrder->shipping_method)
                     <tr>
-                        <td class="label">Customer Order:</td>
-                        <td class="value">{{ $purchaseOrder->order->order_number }}</td>
+                        <td class="label">Shipping Method:</td>
+                        <td class="value">{{ $purchaseOrder->shipping_method }}</td>
                     </tr>
                     @endif
                     @if($purchaseOrder->supplier_quotation_id)
@@ -704,7 +704,7 @@
             </div>
         </div>
 
-        <!-- NET ORDER VALUE IN WORDS & PAYMENT TERMS -->
+        <!-- NET ORDER VALUE IN WORDS -->
         <div class="content-section" style="margin-bottom: 15px; background-color: white; border-left: 3px solid var(--primary-color);">
             @php
                 // Avoid global function name conflicts
@@ -753,22 +753,11 @@
                 $finalAmountInWords = $amountInWords . ' ' . $currencyName . ' Only';
             @endphp
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div>
-                    <div class="content-title" style="color: var(--primary-color);">Net Order Value (in Words)</div>
-                    <div style="font-size: 10px; color: var(--text-primary); font-weight: 600; line-height: 1.4;">
-                        {{ $finalAmountInWords }}
-                    </div>
+            <div>
+                <div class="content-title" style="color: var(--primary-color);">Net Order Value (in Words)</div>
+                <div style="font-size: 10px; color: var(--text-primary); font-weight: 600; line-height: 1.4;">
+                    {{ $finalAmountInWords }}
                 </div>
-                
-                @if($purchaseOrder->payment_terms)
-                <div>
-                    <div class="content-title" style="color: var(--primary-color);">Payment Terms</div>
-                    <div style="font-size: 10px; color: var(--text-primary); font-weight: 500; line-height: 1.4;">
-                        {{ $purchaseOrder->payment_terms }}
-                    </div>
-                </div>
-                @endif
             </div>
         </div>
 
@@ -782,11 +771,20 @@
             <img class="stamp" src="{{ $resolvedStamp }}" alt="Company Stamp">
         @endif
 
+
         <!-- TERMS & CONDITIONS -->
         @if(!empty(trim($purchaseOrder->terms_conditions)))
         <div class="content-section">
             <div class="content-title">Terms & Conditions</div>
             <div class="content-text">{{ $purchaseOrder->terms_conditions }}</div>
+        </div>
+        @endif
+
+        <!-- SPECIAL INSTRUCTIONS -->
+        @if(!empty(trim($purchaseOrder->special_instructions)))
+        <div class="content-section">
+            <div class="content-title">Special Instructions</div>
+            <div class="content-text">{{ $purchaseOrder->special_instructions }}</div>
         </div>
         @endif
 

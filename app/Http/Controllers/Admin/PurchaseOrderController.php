@@ -94,10 +94,14 @@ class PurchaseOrderController extends Controller
             'description' => 'nullable|string',
             'terms_conditions' => 'nullable|string',
             'notes' => 'nullable|string',
+            'special_instructions' => 'nullable|string',
+            'payment_terms' => 'required|string|max:255',
+            'shipping_method' => 'required|string|max:255',
             'sub_total' => 'required|numeric|min:0',
             'tax_amount' => 'nullable|numeric|min:0',
             'shipping_cost' => 'nullable|numeric|min:0',
             'total_amount' => 'required|numeric|min:0',
+            'proforma_attachment' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:10240', // 10MB max
         ];
 
         // Add conditional validation based on supplier type
@@ -110,7 +114,66 @@ class PurchaseOrderController extends Controller
             $validationRules['supplier_address'] = 'nullable|string';
         }
 
-        $request->validate($validationRules);
+        // Add items validation for standalone purchase orders
+        if (!$request->order_id) {
+            $validationRules['items'] = 'required|array|min:1';
+            $validationRules['items.*.product_id'] = 'required|exists:products,id';
+            $validationRules['items.*.quantity'] = 'required|numeric|min:0.01';
+            $validationRules['items.*.unit_price'] = 'required|numeric|min:0';
+            $validationRules['items.*.discount_percentage'] = 'nullable|numeric|min:0|max:100';
+        }
+
+        // Custom validation messages
+        $validationMessages = [
+            'supplier_type.required' => 'Please select a supplier type (existing or new).',
+            'supplier_type.in' => 'Supplier type must be either existing or new.',
+            'currency.required' => 'Please select a currency.',
+            'currency.in' => 'Currency must be AED, USD, or CYN.',
+            'delivery_date_requested.required' => 'Please select a delivery date.',
+            'delivery_date_requested.date' => 'Please enter a valid delivery date.',
+            'delivery_date_requested.after' => 'Delivery date must be after today.',
+            'supplier_id.required' => 'Please select a supplier.',
+            'supplier_id.exists' => 'The selected supplier does not exist.',
+            'supplier_name.required' => 'Please enter the supplier name.',
+            'supplier_name.max' => 'Supplier name cannot exceed 255 characters.',
+            'supplier_email.email' => 'Please enter a valid email address.',
+            'supplier_email.max' => 'Email address cannot exceed 255 characters.',
+            'supplier_phone.max' => 'Phone number cannot exceed 50 characters.',
+            'sub_total.required' => 'Sub total is required.',
+            'sub_total.numeric' => 'Sub total must be a valid number.',
+            'sub_total.min' => 'Sub total cannot be negative.',
+            'tax_amount.numeric' => 'Tax amount must be a valid number.',
+            'tax_amount.min' => 'Tax amount cannot be negative.',
+            'shipping_cost.numeric' => 'Shipping cost must be a valid number.',
+            'shipping_cost.min' => 'Shipping cost cannot be negative.',
+            'total_amount.required' => 'Total amount is required.',
+            'total_amount.numeric' => 'Total amount must be a valid number.',
+            'total_amount.min' => 'Total amount cannot be negative.',
+            'payment_terms.required' => 'Please select payment terms.',
+            'payment_terms.max' => 'Payment terms cannot exceed 255 characters.',
+            'shipping_method.required' => 'Please select a shipping method.',
+            'shipping_method.max' => 'Shipping method cannot exceed 255 characters.',
+            'proforma_attachment.file' => 'Please upload a valid file.',
+            'proforma_attachment.mimes' => 'File must be a PDF, DOC, DOCX, XLS, XLSX, JPG, JPEG, or PNG.',
+            'proforma_attachment.max' => 'File size cannot exceed 10MB.',
+            'order_id.exists' => 'The selected order does not exist.',
+            'items.required' => 'Please add at least one item to the purchase order.',
+            'items.array' => 'Items must be provided as a list.',
+            'items.min' => 'Please add at least one item to the purchase order.',
+            'items.*.product_id.required' => 'Please select a product for each item.',
+            'items.*.product_id.exists' => 'The selected product does not exist.',
+            'items.*.quantity.required' => 'Please enter a quantity for each item.',
+            'items.*.quantity.numeric' => 'Quantity must be a valid number.',
+            'items.*.quantity.min' => 'Quantity must be greater than 0.',
+            'items.*.unit_price.required' => 'Please enter a unit price for each item.',
+            'items.*.unit_price.numeric' => 'Unit price must be a valid number.',
+            'items.*.unit_price.min' => 'Unit price cannot be negative.',
+            'items.*.discount_percentage.numeric' => 'Discount percentage must be a valid number.',
+            'items.*.discount_percentage.min' => 'Discount percentage cannot be negative.',
+            'items.*.discount_percentage.max' => 'Discount percentage cannot exceed 100%.',
+        ];
+
+        $request->validate($validationRules, $validationMessages);
 
         try {
             DB::beginTransaction();
@@ -140,17 +203,37 @@ class PurchaseOrderController extends Controller
                 ]);
             }
             
+            // Handle file upload
+            $attachments = [];
+            if ($request->hasFile('proforma_attachment')) {
+                $file = $request->file('proforma_attachment');
+                $filename = 'proforma_' . time() . '_' . $file->getClientOriginalName();
+                $attachmentPath = $file->storeAs('purchase-orders/attachments', $filename, 'public');
+                $attachments[] = [
+                    'type' => 'proforma_invoice',
+                    'filename' => $file->getClientOriginalName(),
+                    'path' => $attachmentPath,
+                    'size' => $file->getSize(),
+                    'mime_type' => $file->getMimeType(),
+                    'uploaded_at' => now()->toISOString()
+                ];
+            }
+
             // Prepare supplier data based on selection type
             $supplierData = [
                 'delivery_date_requested' => $request->delivery_date_requested,
                 'description' => $request->description,
                 'terms_conditions' => $request->terms_conditions,
                 'notes' => $request->notes,
+                'special_instructions' => $request->special_instructions,
+                'payment_terms' => $request->payment_terms,
+                'shipping_method' => $request->shipping_method,
                 'currency' => $request->currency,
                 'sub_total' => $request->sub_total,
                 'tax_amount' => $request->tax_amount ?? 0,
                 'shipping_cost' => $request->shipping_cost ?? 0,
                 'total_amount' => $request->total_amount,
+                'attachments' => !empty($attachments) ? json_encode($attachments) : null,
                 'updated_by' => Auth::id()
             ];
 
@@ -564,7 +647,10 @@ class PurchaseOrderController extends Controller
                     'order_number' => $order->order_number,
                     'customer_name' => $order->getCustomerName(),
                     'total_amount' => $order->total_amount,
-                    'currency' => $order->currency ?? 'AED'
+                    'currency' => $order->currency ?? 'AED',
+                    'vat_rate' => $order->vat_rate ?? 0,
+                    'vat_amount' => $order->vat_amount ?? 0,
+                    'shipping_rate' => $order->shipping_rate ?? 0
                 ]
             ]);
             
