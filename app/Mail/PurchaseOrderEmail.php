@@ -54,11 +54,20 @@ class PurchaseOrderEmail extends Mailable
 
         // Attach all uploaded attachments if available
         if ($this->purchaseOrder->attachments) {
-            $attachments = is_array($this->purchaseOrder->attachments) 
-                ? $this->purchaseOrder->attachments 
-                : json_decode($this->purchaseOrder->attachments, true);
+            // Handle the attachments data - it might be double-encoded JSON
+            $attachments = $this->purchaseOrder->attachments;
+            
+            // If it's a string (double-encoded), decode it
+            if (is_string($attachments)) {
+                $attachments = json_decode($attachments, true);
+            }
+            
+            // If it's still a string after first decode, decode again
+            if (is_string($attachments)) {
+                $attachments = json_decode($attachments, true);
+            }
                 
-            if (is_array($attachments)) {
+            if (is_array($attachments) && !empty($attachments)) {
                 foreach ($attachments as $attachment) {
                     // Check if the attachment file exists and attach it
                     if (isset($attachment['path']) && Storage::disk('public')->exists($attachment['path'])) {
