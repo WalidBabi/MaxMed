@@ -19,18 +19,21 @@ class FeatureAccessService
             
             // User Management
             'users.index' => ['users.view'],
+            'users.view' => ['users.view'],
             'users.create' => ['users.create'],
             'users.edit' => ['users.edit'],
             'users.delete' => ['users.delete'],
             
             // Role Management
             'roles.index' => ['roles.view'],
+            'roles.view' => ['roles.view'],
             'roles.create' => ['roles.create'],
             'roles.edit' => ['roles.edit'],
             'roles.delete' => ['roles.delete'],
             
             // Product Management
             'products.index' => ['products.view'],
+            'products.view' => ['products.view'],
             'products.create' => ['products.create'],
             'products.edit' => ['products.edit'],
             'products.delete' => ['products.delete'],
@@ -38,12 +41,14 @@ class FeatureAccessService
             
             // Category Management
             'categories.index' => ['categories.view'],
+            'categories.view' => ['categories.view'],
             'categories.create' => ['categories.create'],
             'categories.edit' => ['categories.edit'],
             'categories.delete' => ['categories.delete'],
             
             // Brand Management
             'brands.index' => ['brands.view'],
+            'brands.view' => ['brands.view'],
             'brands.create' => ['brands.create'],
             'brands.edit' => ['brands.edit'],
             'brands.delete' => ['brands.delete'],
@@ -63,6 +68,7 @@ class FeatureAccessService
             
             // Supplier Management
             'suppliers.index' => ['suppliers.view'],
+            'suppliers.view' => ['suppliers.view'],
             'suppliers.create' => ['suppliers.create'],
             'suppliers.edit' => ['suppliers.edit'],
             'suppliers.delete' => ['suppliers.delete'],
@@ -70,6 +76,7 @@ class FeatureAccessService
             
             // Purchase Order Management
             'purchase_orders.index' => ['purchase_orders.view'],
+            'purchase_orders.view' => ['purchase_orders.view'],
             'purchase_orders.create' => ['purchase_orders.create'],
             'purchase_orders.edit' => ['purchase_orders.edit'],
             'purchase_orders.delete' => ['purchase_orders.delete'],
@@ -78,6 +85,7 @@ class FeatureAccessService
             
             // Quotation Management
             'quotations.index' => ['quotations.view'],
+            'quotations.view' => ['quotations.view'],
             'quotations.create' => ['quotations.create'],
             'quotations.edit' => ['quotations.edit'],
             'quotations.delete' => ['quotations.delete'],
@@ -92,18 +100,21 @@ class FeatureAccessService
             
             // Delivery Management
             'deliveries.index' => ['deliveries.view'],
+            'deliveries.view' => ['deliveries.view'],
             'deliveries.create' => ['deliveries.create'],
             'deliveries.edit' => ['deliveries.edit'],
             'deliveries.track' => ['deliveries.track'],
             
             // Cash Receipt Management
             'cash_receipts.index' => ['cash_receipts.view'],
+            'cash_receipts.view' => ['cash_receipts.view'],
             'cash_receipts.create' => ['cash_receipts.create'],
             'cash_receipts.edit' => ['cash_receipts.edit'],
             'cash_receipts.delete' => ['cash_receipts.delete'],
             
             // Inquiry Management
             'inquiries.index' => ['inquiries.view'],
+            'inquiries.view' => ['inquiries.view'],
             'inquiries.create' => ['inquiries.create'],
             'inquiries.edit' => ['inquiries.edit'],
             'inquiries.delete' => ['inquiries.delete'],
@@ -113,26 +124,43 @@ class FeatureAccessService
             // CRM System
             'crm.access' => ['crm.access'],
             'crm.leads.index' => ['crm.leads.view'],
+            'crm.leads.view' => ['crm.leads.view'],
             'crm.leads.create' => ['crm.leads.create'],
             'crm.leads.edit' => ['crm.leads.edit'],
             'crm.leads.delete' => ['crm.leads.delete'],
             'crm.contacts.index' => ['crm.contacts.view'],
+            'crm.contacts.view' => ['crm.contacts.view'],
             'crm.contacts.create' => ['crm.contacts.create'],
             'crm.contacts.edit' => ['crm.contacts.edit'],
             'crm.activities.index' => ['crm.activities.view'],
+            'crm.activities.view' => ['crm.activities.view'],
             'crm.activities.create' => ['crm.activities.create'],
-            'crm.tasks.index' => ['crm.tasks.view'],
-            'crm.tasks.create' => ['crm.tasks.create'],
+            'crm.contact-submissions.index' => ['crm.contact-submissions.view'],
+            'crm.contact-submissions.view' => ['crm.contact-submissions.view'],
+            'crm.quotation-requests.index' => ['crm.quotation-requests.view'],
+            'crm.quotation-requests.view' => ['crm.quotation-requests.view'],
             
             // Feedback Management
             'feedback.index' => ['feedback.view'],
+            'feedback.view' => ['feedback.view'],
             'feedback.create' => ['feedback.create'],
             'supplier.feedback.create' => ['supplier.feedback.create'],
             
             // Sales Targets
             'sales_targets.index' => ['sales_targets.view'],
+            'sales_targets.view' => ['sales_targets.view'],
             'sales_targets.create' => ['sales_targets.create'],
             'sales_targets.edit' => ['sales_targets.edit'],
+            
+            // Content Management
+            'news.index' => ['news.view'],
+            'news.create' => ['news.create'],
+            'news.edit' => ['news.edit'],
+            'news.delete' => ['news.delete'],
+            
+            // User Behavior Analytics
+            'user_behavior.index' => ['analytics.view'],
+            'analytics.index' => ['analytics.view'],
         ];
     }
     
@@ -141,6 +169,11 @@ class FeatureAccessService
      */
     public static function canAccess(User $user, string $feature): bool
     {
+        // Super admin has access to everything
+        if ($user->hasRole('super_admin')) {
+            return true;
+        }
+        
         $featurePermissions = self::getFeaturePermissions();
         
         if (!isset($featurePermissions[$feature])) {
@@ -163,8 +196,14 @@ class FeatureAccessService
      */
     public static function getAccessibleFeatures(User $user): array
     {
-        $features = [];
         $featurePermissions = self::getFeaturePermissions();
+        
+        // Super admin has access to all features
+        if ($user->hasRole('super_admin')) {
+            return array_keys($featurePermissions);
+        }
+        
+        $features = [];
         
         foreach ($featurePermissions as $feature => $permissions) {
             if (self::canAccess($user, $feature)) {
