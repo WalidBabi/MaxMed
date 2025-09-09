@@ -501,7 +501,7 @@
                                 @if(Auth::user()->hasPermission('crm.access') || Auth::user()->isAdmin())
                                 <a href="{{ route('crm.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">CRM Dashboard</a>
                                 @endif
-                                @if(Auth::user()->hasPermission('supplier.products.view'))
+                                @if(Auth::user()->hasPermission('supplier.products.view') || Auth::user()->isAdmin())
                                 <a href="{{ route('supplier.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Supplier Dashboard</a>
                                 @endif
                                 <a href="{{ route('orders.index') }}" class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 group">
@@ -836,7 +836,7 @@
                 @if(Auth::user()->hasPermission('crm.access') || Auth::user()->isAdmin())
                 <a href="{{ route('crm.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">CRM Dashboard</a>
                 @endif
-                @if(Auth::user()->hasPermission('supplier.products.view')|| Auth::user()->isAdmin())
+                @if(Auth::user()->hasPermission('supplier.products.view') || Auth::user()->isAdmin())
                 <a href="{{ route('supplier.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Supplier Dashboard</a>
                 @endif
                 <a href="{{ route('orders.index') }}" class="flex items-center justify-between px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 group">
