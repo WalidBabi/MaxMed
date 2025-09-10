@@ -40,7 +40,7 @@
                         <div class="ml-4">
                         <p class="text-sm font-medium text-gray-600">Total AED Sales</p>
                         <p class="text-2xl font-semibold text-gray-900">{{ number_format($salesData['total_aed'], 2) }} AED</p>
-                        <p class="text-xs text-gray-500 mt-1">Last 12 months</p>
+                        <p class="text-xs text-gray-500 mt-1">From first transaction</p>
                         </div>
                     </div>
             </div>
@@ -58,7 +58,7 @@
                     <div class="ml-4">
                         <p class="text-sm font-medium text-gray-600">Total USD Sales</p>
                         <p class="text-2xl font-semibold text-gray-900">${{ number_format($salesData['total_usd'], 2) }}</p>
-                        <p class="text-xs text-gray-500 mt-1">Last 12 months</p>
+                        <p class="text-xs text-gray-500 mt-1">From first transaction</p>
                     </div>
                 </div>
             </div>
@@ -271,7 +271,7 @@
             <div class="mb-6 flex items-center justify-between">
                 <div>
                     <h3 class="text-lg font-semibold text-gray-900">Sales Trends Analysis</h3>
-                    <p class="text-sm text-gray-600 mt-1">Interactive sales data with advanced filtering and export capabilities</p>
+                    <p class="text-sm text-gray-600 mt-1">Interactive sales data from {{ $salesData['labels'][0] ?? 'N/A' }} to {{ end($salesData['labels']) ?? 'N/A' }}</p>
                 </div>
                 <div class="flex items-center space-x-4">
                     <div class="text-sm text-gray-500">
@@ -618,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return {
             datasets: [
                 {
-                    label: 'AED Sales',
+                    label: 'Final Sales (AED)',
                     data: {!! json_encode($salesData['aed_data']) !!},
                     borderColor: 'rgb(34, 197, 94)',
                     backgroundColor: 'rgba(34, 197, 94, 0.1)',
@@ -632,7 +632,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     pointHoverRadius: 8
                 },
                 {
-                    label: 'USD Sales',
+                    label: 'Final Sales (USD)',
                     data: {!! json_encode($salesData['usd_data']) !!},
                     borderColor: 'rgb(59, 130, 246)',
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -646,7 +646,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     pointHoverRadius: 8
                 },
                 {
-                    label: 'Combined Sales (AED)',
+                    label: 'Proforma Only (AED)',
+                    data: {!! json_encode($salesData['proforma_data'] ?? []) !!},
+                    borderColor: 'rgb(251, 146, 60)',
+                    backgroundColor: 'rgba(251, 146, 60, 0.1)',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.4,
+                    pointBackgroundColor: 'rgb(251, 146, 60)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    borderDash: [10, 5]
+                },
+                {
+                    label: 'Total Sales (AED)',
                     data: {!! json_encode($salesData['combined_data']) !!},
                     borderColor: 'rgb(147, 51, 234)',
                     backgroundColor: 'rgba(147, 51, 234, 0.1)',
