@@ -169,26 +169,8 @@ class FeatureAccessService
      */
     public static function canAccess(User $user, string $feature): bool
     {
-        // Super admin has access to everything
-        if ($user->hasRole('super_admin')) {
-            return true;
-        }
-        
-        $featurePermissions = self::getFeaturePermissions();
-        
-        if (!isset($featurePermissions[$feature])) {
-            return false;
-        }
-        
-        $requiredPermissions = $featurePermissions[$feature];
-        
-        foreach ($requiredPermissions as $permission) {
-            if ($user->hasPermission($permission)) {
-                return true;
-            }
-        }
-        
-        return false;
+        // Use the new AccessControlService for consistent permission checking
+        return AccessControlService::canAccess($user, $feature);
     }
     
     /**
@@ -197,11 +179,6 @@ class FeatureAccessService
     public static function getAccessibleFeatures(User $user): array
     {
         $featurePermissions = self::getFeaturePermissions();
-        
-        // Super admin has access to all features
-        if ($user->hasRole('super_admin')) {
-            return array_keys($featurePermissions);
-        }
         
         $features = [];
         

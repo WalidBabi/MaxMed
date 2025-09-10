@@ -34,8 +34,10 @@ class RoleController extends Controller
     public function create()
     {
         $availablePermissions = Role::getAvailablePermissions();
+        $permissionCategories = Permission::getCategories();
+        $permissions = Permission::where('is_active', true)->get()->groupBy('category');
         
-        return view('admin.roles.create', compact('availablePermissions'));
+        return view('admin.roles.create', compact('availablePermissions', 'permissionCategories', 'permissions'));
     }
 
     /**
@@ -47,7 +49,7 @@ class RoleController extends Controller
             'display_name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
             'permissions' => 'nullable|array',
-            'permissions.*' => 'string',
+            'permissions.*' => 'exists:permissions,id',
             'is_active' => 'boolean',
         ]);
 
@@ -55,9 +57,14 @@ class RoleController extends Controller
             'name' => Str::slug($request->display_name),
             'display_name' => $request->display_name,
             'description' => $request->description,
-            'permissions' => $request->permissions ?? [],
+            'permissions' => [], // Keep for backward compatibility
             'is_active' => $request->boolean('is_active', true),
         ]);
+
+        // Sync permissions using the new system
+        if ($request->has('permissions')) {
+            $role->permissions()->sync($request->permissions);
+        }
 
         return redirect()->route('admin.roles.index')
             ->with('success', 'Role created successfully.');

@@ -209,12 +209,32 @@ class CrmLeadController extends Controller
     
     public function edit(CrmLead $lead)
     {
+        // Check if user has permission to edit leads
+        if (!Auth::user()->hasPermission('crm.leads.edit')) {
+            abort(403, 'You do not have permission to edit leads.');
+        }
+        
+        // Check if user is assigned to this lead or is admin
+        if ($lead->assigned_to !== Auth::id() && !Auth::user()->isAdmin()) {
+            abort(403, 'You can only edit leads assigned to you.');
+        }
+        
         $users = User::all();
         return view('crm.leads.edit', compact('lead', 'users'));
     }
     
     public function update(Request $request, CrmLead $lead)
     {
+        // Check if user has permission to edit leads
+        if (!Auth::user()->hasPermission('crm.leads.edit')) {
+            abort(403, 'You do not have permission to edit leads.');
+        }
+        
+        // Check if user is assigned to this lead or is admin
+        if ($lead->assigned_to !== Auth::id() && !Auth::user()->isAdmin()) {
+            abort(403, 'You can only edit leads assigned to you.');
+        }
+        
         \Log::info('CRM Lead update started', [
             'lead_id' => $lead->id,
             'request_data' => $request->except(['_token', '_method', 'attachments']),
@@ -379,6 +399,16 @@ class CrmLeadController extends Controller
      */
     public function updateStatus(Request $request, CrmLead $lead)
     {
+        // Check if user has permission to edit leads
+        if (!Auth::user()->hasPermission('crm.leads.edit')) {
+            abort(403, 'You do not have permission to change lead status.');
+        }
+        
+        // Check if user is assigned to this lead or is admin
+        if ($lead->assigned_to !== Auth::id() && !Auth::user()->isAdmin()) {
+            abort(403, 'You can only change status of leads assigned to you.');
+        }
+        
         \Log::info('Quick status update called', [
             'lead_id' => $lead->id,
             'current_status' => $lead->status,
@@ -477,11 +507,26 @@ class CrmLeadController extends Controller
      */
     public function bulkStatusUpdate(Request $request)
     {
+        // Check if user has permission to edit leads
+        if (!Auth::user()->hasPermission('crm.leads.edit')) {
+            abort(403, 'You do not have permission to change lead status.');
+        }
+        
         $validated = $request->validate([
             'lead_ids' => 'required|array|min:1',
             'lead_ids.*' => 'exists:crm_leads,id',
             'status' => 'required|in:new_inquiry,quote_requested,follow_up_1,follow_up_2,follow_up_3,quote_sent,negotiating_price,payment_pending,order_confirmed,deal_lost'
         ]);
+        
+        // Check if user is assigned to all leads or is admin
+        if (!Auth::user()->isAdmin()) {
+            $leads = CrmLead::whereIn('id', $validated['lead_ids'])->get();
+            $unauthorizedLeads = $leads->where('assigned_to', '!=', Auth::id());
+            
+            if ($unauthorizedLeads->count() > 0) {
+                abort(403, 'You can only change status of leads assigned to you.');
+            }
+        }
 
         try {
             DB::beginTransaction();

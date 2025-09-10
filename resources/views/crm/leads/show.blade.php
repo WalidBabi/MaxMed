@@ -12,14 +12,25 @@
         <div class="mb-8">
             <div class="flex justify-between items-start">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $lead->full_name }}</h1>
-                    <p class="text-gray-600">{{ $lead->company_name }} • {{ $lead->job_title }}</p>
+                    @php
+                        $isPurchasingRole = Auth::user()->hasAnyRole(['purchasing', 'purchasing_manager', 'purchasing_crm_assistant']);
+                    @endphp
+                    
+                    @if($isPurchasingRole)
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">Lead Requirements</h1>
+                        <p class="text-gray-600">View requirements and attachments for this lead</p>
+                    @else
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $lead->full_name }}</h1>
+                        <p class="text-gray-600">{{ $lead->company_name }} • {{ $lead->job_title }}</p>
+                    @endif
                 </div>
                 <div class="flex space-x-3">
+                    @if(!$isPurchasingRole)
                     <a href="{{ route('crm.leads.edit', $lead) }}" 
                        class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         Edit Lead
                     </a>
+                    @endif
                     <a href="{{ route('crm.leads.index') }}" 
                        class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
                         Back to Leads
@@ -31,6 +42,8 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-6">
+
+                @if(!$isPurchasingRole)
                 <!-- Contact Details -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
@@ -92,7 +105,9 @@
                     </div>
                     @endif
                 </div>
+                @endif
 
+                @if(!$isPurchasingRole)
                 <!-- Lead Details -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Lead Details</h3>
@@ -126,14 +141,18 @@
                             <p class="mt-1 text-sm text-gray-900">{{ $lead->expected_close_date ? $lead->expected_close_date->format('M j, Y') : '-' }}</p>
                         </div>
                     </div>
-                    @if($lead->notes)
-                    <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-500">Notes</label>
-                        <p class="mt-1 text-sm text-gray-900">{{ $lead->notes }}</p>
-                    </div>
-                    @endif
                 </div>
+                @endif
 
+                <!-- Notes Section (Always visible for purchasing roles) -->
+                @if($lead->notes)
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Notes</h3>
+                    <p class="text-sm text-gray-900">{{ $lead->notes }}</p>
+                </div>
+                @endif
+
+                @if(!$isPurchasingRole)
                 <!-- Activity Timeline -->
                 <div class="bg-white rounded-lg shadow">
                     <div class="px-6 py-4 border-b border-gray-200">
@@ -232,10 +251,12 @@
                         @endforelse
                     </div>
                 </div>
+                @endif
             </div>
 
             <!-- Sidebar -->
             <div class="space-y-6">
+                @if(!$isPurchasingRole)
                 <!-- Lead Status -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Lead Status</h3>
@@ -297,13 +318,6 @@
                         </div>
                         @endif
                     </div>
-                </div>
-
-                <!-- Notes -->
-                @if($lead->notes)
-                <div class="bg-white rounded-lg shadow p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Notes</h3>
-                    <p class="text-sm text-gray-600">{{ $lead->notes }}</p>
                 </div>
                 @endif
 

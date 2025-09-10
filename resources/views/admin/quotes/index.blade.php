@@ -246,6 +246,7 @@
                                     </button>
                                 </div>
                             </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attachments</th>
                             <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
@@ -310,6 +311,71 @@
                                         </div>
                                     @else
                                         <span class="text-gray-400">No products</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-900">
+                                    @if($quote->attachments && count($quote->attachments) > 0)
+                                        <div class="space-y-2">
+                                            @foreach($quote->attachments->take(2) as $attachment)
+                                                <div class="flex items-center space-x-2">
+                                                    <div class="flex-shrink-0">
+                                                        @php
+                                                            $fileExtension = pathinfo($attachment['name'], PATHINFO_EXTENSION);
+                                                            $isImage = in_array(strtolower($fileExtension), ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff']);
+                                                            $isPdf = strtolower($fileExtension) === 'pdf';
+                                                            $isWord = in_array(strtolower($fileExtension), ['doc', 'docx']);
+                                                            $isExcel = in_array(strtolower($fileExtension), ['xls', 'xlsx']);
+                                                        @endphp
+                                                        
+                                                        @if($isImage)
+                                                            <div class="w-6 h-6 bg-green-100 rounded flex items-center justify-center">
+                                                                <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+                                                                </svg>
+                                                            </div>
+                                                        @elseif($isPdf)
+                                                            <div class="w-6 h-6 bg-red-100 rounded flex items-center justify-center">
+                                                                <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+                                                                </svg>
+                                                            </div>
+                                                        @elseif($isWord)
+                                                            <div class="w-6 h-6 bg-blue-100 rounded flex items-center justify-center">
+                                                                <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+                                                                </svg>
+                                                            </div>
+                                                        @elseif($isExcel)
+                                                            <div class="w-6 h-6 bg-green-100 rounded flex items-center justify-center">
+                                                                <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+                                                                </svg>
+                                                            </div>
+                                                        @else
+                                                            <div class="w-6 h-6 bg-gray-100 rounded flex items-center justify-center">
+                                                                <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+                                                                </svg>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                    <div class="flex-1 min-w-0">
+                                                        <a href="{{ Storage::url($attachment['path']) }}" target="_blank" 
+                                                           class="text-sm text-indigo-600 hover:text-indigo-800 truncate block" 
+                                                           title="{{ $attachment['name'] }}">
+                                                            {{ Str::limit($attachment['name'], 20) }}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                            @if(count($quote->attachments) > 2)
+                                                <div class="text-xs text-gray-500 font-medium">
+                                                    +{{ count($quote->attachments) - 2 }} more files
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <span class="text-gray-400">No attachments</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

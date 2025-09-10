@@ -400,17 +400,30 @@
                             </h3>
                         </div>
                         <div class="p-6">
-                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-300 transition-colors">
-                                <input type="file" id="attachments" name="attachments[]" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" class="hidden">
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-indigo-400 hover:bg-indigo-50 transition-all duration-200 upload-area" id="uploadArea">
+                                <input type="file" id="attachments" name="attachments[]" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.bmp,.tiff,.txt,.xlsx,.xls" class="hidden">
                                 <label for="attachments" class="cursor-pointer block">
-                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div class="mx-auto w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
+                                        <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                                     </svg>
-                                    <p class="mt-2 text-sm font-medium text-gray-900">Click to upload files or drag and drop</p>
-                                    <p class="mt-1 text-xs text-gray-500">You can upload a maximum of 5 files, 10MB each</p>
+                                    </div>
+                                    <p class="text-lg font-medium text-gray-900 mb-2">Upload Files</p>
+                                    <p class="text-sm text-gray-600 mb-1">Click to browse or drag and drop files here</p>
+                                    <p class="text-xs text-gray-500">Supports: PDF, DOC, DOCX, JPG, PNG, GIF, XLS, XLSX, TXT (Max 10MB each)</p>
                                 </label>
                             </div>
-                            <div id="fileList" class="mt-3"></div>
+                            
+                            <!-- File Preview List -->
+                            <div id="fileList" class="mt-4 space-y-3"></div>
+                            
+                            <!-- Upload Progress -->
+                            <div id="uploadProgress" class="mt-4 hidden">
+                                <div class="bg-gray-200 rounded-full h-2">
+                                    <div id="progressBar" class="bg-indigo-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                                <p id="progressText" class="text-sm text-gray-600 mt-2">Uploading files...</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1342,23 +1355,182 @@ document.addEventListener('DOMContentLoaded', function() {
         sizeSelect.addEventListener('change', updateSelectedSpecifications);
     });
     
-    // File upload handling
+    // Enhanced file upload handling
     const fileInput = document.getElementById('attachments');
     const fileList = document.getElementById('fileList');
+    const uploadArea = document.getElementById('uploadArea');
+    const uploadProgress = document.getElementById('uploadProgress');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    
+    let uploadedFiles = [];
+    
+    // Drag and drop functionality
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadArea.classList.add('border-indigo-400', 'bg-indigo-50');
+    });
+    
+    uploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('border-indigo-400', 'bg-indigo-50');
+    });
+    
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('border-indigo-400', 'bg-indigo-50');
+        const files = e.dataTransfer.files;
+        handleFiles(files);
+    });
     
     fileInput.addEventListener('change', function() {
+        handleFiles(this.files);
+    });
+    
+    function handleFiles(files) {
+        const maxFiles = 5;
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        const allowedTypes = [
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'image/jpeg',
+            'image/jpg',
+            'image/png',
+            'image/gif',
+            'image/bmp',
+            'image/tiff',
+            'text/plain',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        ];
+        
+        // Clear existing files if we're adding new ones
+        if (uploadedFiles.length === 0) {
         fileList.innerHTML = '';
-        for (let i = 0; i < this.files.length; i++) {
-            const file = this.files[i];
+        }
+        
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            
+            // Validate file
+            if (!allowedTypes.includes(file.type)) {
+                showFileError(`File "${file.name}" is not a supported file type.`);
+                continue;
+            }
+            
+            if (file.size > maxSize) {
+                showFileError(`File "${file.name}" is too large. Maximum size is 10MB.`);
+                continue;
+            }
+            
+            if (uploadedFiles.length >= maxFiles) {
+                showFileError(`Maximum ${maxFiles} files allowed.`);
+                break;
+            }
+            
+            // Add file to list
+            uploadedFiles.push(file);
+            displayFile(file, uploadedFiles.length - 1);
+        }
+        
+        // Update file input
+        updateFileInput();
+    }
+    
+    function displayFile(file, index) {
             const fileDiv = document.createElement('div');
-            fileDiv.className = 'flex justify-between items-center bg-gray-50 p-3 rounded-md mt-2';
+        fileDiv.className = 'flex items-center justify-between bg-white border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors';
             fileDiv.innerHTML = `
-                <span class="text-sm text-gray-700">${file.name}</span>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+            <div class="flex items-center space-x-3">
+                <div class="flex-shrink-0">
+                    ${getFileIcon(file.type)}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-gray-900 truncate">${file.name}</p>
+                    <p class="text-xs text-gray-500">${formatFileSize(file.size)}</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    Ready
+                </span>
+                <button type="button" onclick="removeFile(${index})" class="text-red-600 hover:text-red-800 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
             `;
             fileList.appendChild(fileDiv);
         }
-    });
+    
+    function getFileIcon(fileType) {
+        if (fileType.includes('pdf')) {
+            return '<div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/></svg></div>';
+        } else if (fileType.includes('word') || fileType.includes('document')) {
+            return '<div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/></svg></div>';
+        } else if (fileType.includes('image')) {
+            return '<div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/></svg></div>';
+        } else if (fileType.includes('excel') || fileType.includes('spreadsheet')) {
+            return '<div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/></svg></div>';
+        } else {
+            return '<div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center"><svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/></svg></div>';
+        }
+    }
+    
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    function removeFile(index) {
+        uploadedFiles.splice(index, 1);
+        updateFileDisplay();
+        updateFileInput();
+    }
+    
+    function updateFileDisplay() {
+        fileList.innerHTML = '';
+        uploadedFiles.forEach((file, index) => {
+            displayFile(file, index);
+        });
+    }
+    
+    function updateFileInput() {
+        // Create a new FileList-like object
+        const dt = new DataTransfer();
+        uploadedFiles.forEach(file => dt.items.add(file));
+        fileInput.files = dt.files;
+    }
+    
+    function showFileError(message) {
+        // Create a temporary error message
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'bg-red-50 border border-red-200 rounded-lg p-3 mb-3';
+        errorDiv.innerHTML = `
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                </svg>
+                <p class="text-sm text-red-800">${message}</p>
+            </div>
+        `;
+        fileList.appendChild(errorDiv);
+        
+        // Remove error after 5 seconds
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.parentNode.removeChild(errorDiv);
+            }
+        }, 5000);
+    }
+    
+    // Make removeFile function global
+    window.removeFile = removeFile;
 });
 </script>
 @endpush 
