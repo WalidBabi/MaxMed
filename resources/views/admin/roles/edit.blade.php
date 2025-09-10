@@ -141,15 +141,20 @@
                                     <div class="space-y-2" data-group="{{ $group }}">
                                         @foreach($groupPermissions as $permission)
                                             @if(isset($availablePermissions[$permission]))
-                                                <div class="flex items-center">
-                                                    <input type="checkbox" id="permission_{{ $permission }}" 
-                                                           name="permissions[]" value="{{ $permission }}"
-                                                           {{ $role->hasPermission($permission) || in_array($permission, old('permissions', [])) ? 'checked' : '' }}
-                                                           class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                                    <label for="permission_{{ $permission }}" class="ml-2 text-sm text-gray-700">
-                                                        {{ $availablePermissions[$permission] }}
-                                                    </label>
-                                                </div>
+                                                @php
+                                                    $permissionModel = \App\Models\Permission::where('name', $permission)->first();
+                                                @endphp
+                                                @if($permissionModel)
+                                                    <div class="flex items-center">
+                                                        <input type="checkbox" id="permission_{{ $permission }}" 
+                                                               name="permissions[]" value="{{ $permissionModel->id }}"
+                                                               {{ $role->hasPermission($permission) || in_array($permissionModel->id, old('permissions', [])) ? 'checked' : '' }}
+                                                               class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                                        <label for="permission_{{ $permission }}" class="ml-2 text-sm text-gray-700">
+                                                            {{ $availablePermissions[$permission] }}
+                                                        </label>
+                                                    </div>
+                                                @endif
                                             @endif
                                         @endforeach
                                     </div>

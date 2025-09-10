@@ -112,7 +112,11 @@ class RoleController extends Controller
         ]);
         
         // Sync permissions using the new system
-        $role->permissions()->sync($request->permissions ?? []);
+        if ($request->has('permissions')) {
+            $role->permissions()->sync($request->permissions);
+        } else {
+            $role->permissions()->sync([]);
+        }
 
         return redirect()->route('admin.roles.index')
             ->with('success', 'Role updated successfully.');
