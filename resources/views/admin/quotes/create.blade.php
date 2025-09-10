@@ -178,7 +178,7 @@
                                         <option value="">Select Payment Terms</option>
                                         <option value="advance_50" {{ old('payment_terms') == 'advance_50' ? 'selected' : '' }}>50% Advance</option>
                                         <option value="advance_100" {{ old('payment_terms') == 'advance_100' ? 'selected' : '' }}>100% Advance</option>
-                                        <option value="on_delivery" {{ old('payment_terms') == 'on_delivery' ? 'selected' : '' }}>On Delivery</option>
+                                        <option value="on_delivery" {{ old('payment_terms') == 'on_delivery' ? 'selected' : '' }}>Cash On Delivery</option>
                                         <option value="net_30" {{ old('payment_terms') == 'net_30' ? 'selected' : '' }}>Net 30</option>
                                         <option value="custom" {{ old('payment_terms') == 'custom' ? 'selected' : '' }}>Custom</option>
                                     </select>

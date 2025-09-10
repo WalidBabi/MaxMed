@@ -757,7 +757,7 @@
                         100% advance payment required before processing order
                         @break
                     @case('on_delivery')
-                        Payment on delivery
+                        Cash On Delivery
                         @break
                     @case('net_30')
                         Net 30 days from invoice date
