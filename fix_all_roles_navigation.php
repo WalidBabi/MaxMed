@@ -71,8 +71,11 @@ try {
                     $currentPermissions[] = $permission;
                 }
             }
-        } else {
+        } elseif ($role->permissions && method_exists($role->permissions, 'pluck')) {
             $currentPermissions = $role->permissions->pluck('name')->toArray();
+        } else {
+            // Handle null or empty permissions
+            $currentPermissions = [];
         }
         
         $missingPermissions = array_diff($navigationPermissions, $currentPermissions);
