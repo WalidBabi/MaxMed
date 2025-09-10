@@ -61,7 +61,20 @@ try {
     foreach ($roles as $role) {
         echo "Processing role: {$role->name}\n";
         
-        $currentPermissions = $role->permissions->pluck('name')->toArray();
+        // Get current permissions - handle both object and string cases
+        $currentPermissions = [];
+        if (is_array($role->permissions)) {
+            foreach ($role->permissions as $permission) {
+                if (is_object($permission)) {
+                    $currentPermissions[] = $permission->name;
+                } else {
+                    $currentPermissions[] = $permission;
+                }
+            }
+        } else {
+            $currentPermissions = $role->permissions->pluck('name')->toArray();
+        }
+        
         $missingPermissions = array_diff($navigationPermissions, $currentPermissions);
         
         if (!empty($missingPermissions)) {
@@ -121,7 +134,7 @@ try {
     // Show final role summary
     echo "\n--- Final Role Summary ---\n";
     foreach ($roles as $role) {
-        $permissionCount = $role->permissions()->count();
+        $permissionCount = is_array($role->permissions) ? count($role->permissions) : $role->permissions()->count();
         echo "{$role->name}: {$permissionCount} permissions\n";
     }
     
