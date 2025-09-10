@@ -17,6 +17,8 @@ use App\Http\Middleware\SupplierCategoryMiddleware;
 use App\Http\Middleware\SupplierBadgeCountsMiddleware;
 use App\Http\Middleware\PreventBackHistory;
 use App\Http\Middleware\CheckSupplierOnboarding;
+use App\Http\Middleware\PermissionMiddleware;
+use App\Http\Middleware\RoleMiddleware;
 
 class Kernel extends HttpKernel
 {
@@ -87,5 +89,7 @@ class Kernel extends HttpKernel
         'supplier.badges' => SupplierBadgeCountsMiddleware::class,
         'prevent-back' => PreventBackHistory::class,
         'supplier.onboarding' => CheckSupplierOnboarding::class,
+        'permission' => PermissionMiddleware::class,
+        'role' => RoleMiddleware::class,
     ];
 } 

@@ -32,6 +32,7 @@ class DashboardController extends Controller
                 'labels' => [],
                 'aed_data' => [],
                 'usd_data' => [],
+                'proforma_data' => [],
                 'combined_data' => [],
                 'total_aed' => 0,
                 'total_usd' => 0,
@@ -91,8 +92,8 @@ class DashboardController extends Controller
     private function getSalesChartData()
     {
         try {
-            // Get the last 12 months of data
-            $startDate = Carbon::now()->subMonths(11)->startOfMonth();
+            // Get the date range from the first transaction to now
+            $startDate = $this->getEarliestTransactionDate();
             $endDate = Carbon::now()->endOfMonth();
             
             // Initialize arrays for chart data
@@ -103,33 +104,39 @@ class DashboardController extends Controller
             $peakMonths = [];
             $zeroMonths = [];
             
-            // Generate month labels
-            for ($i = 0; $i < 12; $i++) {
+            // Calculate the number of months between start and end date
+            $monthsDiff = $startDate->diffInMonths($endDate) + 1;
+            
+            // Generate month labels from first transaction to now
+            for ($i = 0; $i < $monthsDiff; $i++) {
                 $month = $startDate->copy()->addMonths($i);
                 $labels[] = $month->format('M Y');
             }
             
-            // Get invoice data
+            // Get final invoice data (actual sales)
             $invoiceData = $this->getInvoiceSalesData($startDate, $endDate);
             
-            // Get converted quotes data
+            // Get converted quotes data (quotes that became invoices)
             $quoteData = $this->getConvertedQuotesData($startDate, $endDate);
             
+            // Get proforma-only data (quotes converted to proforma but not final)
+            $proformaData = $this->getProformaOnlyData($startDate, $endDate);
+            
             // Combine and process data for each month
-            for ($i = 0; $i < 12; $i++) {
+            for ($i = 0; $i < $monthsDiff; $i++) {
                 $month = $startDate->copy()->addMonths($i);
                 $monthKey = $month->format('Y-m');
                 
                 $aedAmount = 0;
                 $usdAmount = 0;
                 
-                // Add invoice amounts
+                // Add final invoice amounts (actual sales)
                 if (isset($invoiceData[$monthKey])) {
                     $aedAmount += $invoiceData[$monthKey]['aed'] ?? 0;
                     $usdAmount += $invoiceData[$monthKey]['usd'] ?? 0;
                 }
                 
-                // Add converted quote amounts
+                // Add converted quote amounts (quotes that became invoices)
                 if (isset($quoteData[$monthKey])) {
                     $aedAmount += $quoteData[$monthKey]['aed'] ?? 0;
                     $usdAmount += $quoteData[$monthKey]['usd'] ?? 0;
@@ -142,7 +149,7 @@ class DashboardController extends Controller
                 $combinedAmount = $aedAmount + ($usdAmount * 3.67);
                 $combinedData[] = round($combinedAmount, 2);
                 
-                // Track zero sales months
+                // Track zero sales months (only count months with no actual sales)
                 if ($aedAmount == 0 && $usdAmount == 0) {
                     $zeroMonths[] = $month->format('M Y');
                 }
@@ -153,7 +160,7 @@ class DashboardController extends Controller
             $maxUsd = max($usdData);
             $maxCombined = max($combinedData);
             
-            for ($i = 0; $i < 12; $i++) {
+            for ($i = 0; $i < $monthsDiff; $i++) {
                 if ($aedData[$i] == $maxAed && $maxAed > 0) {
                     $peakMonths[] = $labels[$i] . ' (AED: ' . number_format($maxAed, 2) . ')';
                 }
@@ -168,10 +175,31 @@ class DashboardController extends Controller
             // Remove duplicates from peak months
             $peakMonths = array_unique($peakMonths);
             
+            // Process proforma-only data for the chart
+            $proformaAedData = [];
+            $proformaUsdData = [];
+            
+            for ($i = 0; $i < $monthsDiff; $i++) {
+                $month = $startDate->copy()->addMonths($i);
+                $monthKey = $month->format('Y-m');
+                
+                $proformaAed = 0;
+                $proformaUsd = 0;
+                
+                if (isset($proformaData[$monthKey])) {
+                    $proformaAed = $proformaData[$monthKey]['aed'] ?? 0;
+                    $proformaUsd = $proformaData[$monthKey]['usd'] ?? 0;
+                }
+                
+                $proformaAedData[] = round($proformaAed, 2);
+                $proformaUsdData[] = round($proformaUsd, 2);
+            }
+            
             return [
                 'labels' => $labels,
                 'aed_data' => $aedData,
                 'usd_data' => $usdData,
+                'proforma_data' => $proformaAedData, // Proforma-only data for chart
                 'combined_data' => $combinedData,
                 'total_aed' => array_sum($aedData),
                 'total_usd' => array_sum($usdData),
@@ -191,6 +219,7 @@ class DashboardController extends Controller
                 'labels' => [],
                 'aed_data' => [],
                 'usd_data' => [],
+                'proforma_data' => [],
                 'combined_data' => [],
                 'total_aed' => 0,
                 'total_usd' => 0,
@@ -209,8 +238,9 @@ class DashboardController extends Controller
             // Check if invoices table exists
             DB::select("SELECT 1 FROM invoices LIMIT 1");
             
+            // Only get final invoices for sales data, not proforma
             $invoices = DB::table('invoices')
-                ->whereIn('status', ['confirmed', 'paid', 'completed'])
+                ->where('type', 'final') // Only final invoices count as actual sales
                 ->whereBetween('invoice_date', [$startDate, $endDate])
                 ->select(
                     DB::raw('DATE_FORMAT(invoice_date, "%Y-%m") as month'),
@@ -248,8 +278,9 @@ class DashboardController extends Controller
             // Check if quotes table exists
             DB::select("SELECT 1 FROM quotes LIMIT 1");
             
+            // Get quotes that have been converted to invoices (status = 'invoiced')
             $quotes = DB::table('quotes')
-                ->where('status', 'converted')
+                ->where('status', 'invoiced')
                 ->whereBetween('quote_date', [$startDate, $endDate])
                 ->select(
                     DB::raw('DATE_FORMAT(quote_date, "%Y-%m") as month'),
@@ -275,6 +306,52 @@ class DashboardController extends Controller
             
         } catch (\Exception $e) {
             Log::info('Quotes table not available or error occurred', ['error' => $e->getMessage()]);
+            return [];
+        }
+    }
+    
+    private function getProformaOnlyData($startDate, $endDate)
+    {
+        try {
+            $data = [];
+            
+            // Check if invoices table exists
+            DB::select("SELECT 1 FROM invoices LIMIT 1");
+            
+            // Get proforma invoices that don't have corresponding final invoices
+            $proformaInvoices = DB::table('invoices')
+                ->where('type', 'proforma')
+                ->whereBetween('invoice_date', [$startDate, $endDate])
+                ->whereNotExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('invoices as final_invoices')
+                        ->whereColumn('final_invoices.parent_invoice_id', 'invoices.id')
+                        ->where('final_invoices.type', 'final');
+                })
+                ->select(
+                    DB::raw('DATE_FORMAT(invoice_date, "%Y-%m") as month'),
+                    'currency',
+                    DB::raw('SUM(total_amount) as total')
+                )
+                ->groupBy('month', 'currency')
+                ->get();
+            
+            foreach ($proformaInvoices as $invoice) {
+                if (!isset($data[$invoice->month])) {
+                    $data[$invoice->month] = ['aed' => 0, 'usd' => 0];
+                }
+                
+                if (strtoupper($invoice->currency) === 'AED') {
+                    $data[$invoice->month]['aed'] += $invoice->total;
+                } else {
+                    $data[$invoice->month]['usd'] += $invoice->total;
+                }
+            }
+            
+            return $data;
+            
+        } catch (\Exception $e) {
+            Log::info('Error getting proforma-only data', ['error' => $e->getMessage()]);
             return [];
         }
     }
@@ -592,5 +669,46 @@ class DashboardController extends Controller
             'count' => $count,
             'average' => $count > 0 ? round($total / $count, 2) : 0
         ];
+    }
+
+    /**
+     * Get the earliest transaction date from invoices and quotes
+     */
+    private function getEarliestTransactionDate()
+    {
+        try {
+            $earliestInvoice = null;
+            $earliestQuote = null;
+            
+            // Get earliest invoice date
+            try {
+                $earliestInvoice = DB::table('invoices')->min('invoice_date');
+            } catch (\Exception $e) {
+                // Table might not exist
+            }
+            
+            // Get earliest quote date
+            try {
+                $earliestQuote = DB::table('quotes')->min('quote_date');
+            } catch (\Exception $e) {
+                // Table might not exist
+            }
+            
+            // Find the earliest date between invoices and quotes
+            $dates = array_filter([$earliestInvoice, $earliestQuote]);
+            
+            if (empty($dates)) {
+                // If no transactions found, default to 12 months ago
+                return Carbon::now()->subMonths(11)->startOfMonth();
+            }
+            
+            $earliestDate = min($dates);
+            return Carbon::parse($earliestDate)->startOfMonth();
+            
+        } catch (\Exception $e) {
+            Log::error('Error getting earliest transaction date', ['error' => $e->getMessage()]);
+            // Fallback to 12 months ago
+            return Carbon::now()->subMonths(11)->startOfMonth();
+        }
     }
 } 
