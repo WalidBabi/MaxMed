@@ -555,5 +555,5 @@ php assign_superadmin.php
 
 php artisan db:seed --class=DynamicPermissionSeeder
 php fix_lead_permissions.php
-fix_purchasing_assistant_permissions.php
+
 php fix_all_roles_navigation.php
