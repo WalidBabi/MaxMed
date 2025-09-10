@@ -32,7 +32,8 @@ echo "\n--- Current Role Permissions ---\n";
 // Get current permissions
 $currentPermissions = $role->permissions;
 foreach ($currentPermissions as $permission) {
-    echo "✅ {$permission->name}\n";
+    $permissionName = is_object($permission) ? $permission->name : $permission;
+    echo "✅ {$permissionName}\n";
 }
 
 // Remove the crm.leads.edit permission
@@ -50,7 +51,8 @@ $updatedPermissions = $role->permissions;
 
 echo "\n--- Updated Role Permissions ---\n";
 foreach ($updatedPermissions as $permission) {
-    echo "✅ {$permission->name}\n";
+    $permissionName = is_object($permission) ? $permission->name : $permission;
+    echo "✅ {$permissionName}\n";
 }
 
 echo "\n--- Verification ---\n";
