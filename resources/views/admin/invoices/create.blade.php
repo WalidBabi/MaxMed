@@ -193,7 +193,7 @@
                                     <select name="payment_terms" id="payment_terms" required class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                         <option value="advance_50" {{ old('payment_terms', 'advance_50') == 'advance_50' ? 'selected' : '' }}>50% Advance Payment</option>
                                         <option value="advance_100" {{ old('payment_terms') == 'advance_100' ? 'selected' : '' }}>100% Advance Payment</option>
-                                        <option value="on_delivery" {{ old('payment_terms') == 'on_delivery' ? 'selected' : '' }}>Payment on Delivery</option>
+                                        <option value="on_delivery" {{ old('payment_terms') == 'on_delivery' ? 'selected' : '' }}>Cash On Delivery</option>
                                         <option value="net_30" {{ old('payment_terms') == 'net_30' ? 'selected' : '' }}>Net 30 Days</option>
                                         <option value="custom" {{ old('payment_terms') == 'custom' ? 'selected' : '' }}>Custom Terms</option>
                                     </select>

@@ -80,7 +80,7 @@ class Invoice extends Model
     const PAYMENT_TERMS = [
         'advance_50' => '50% Advance Payment',
         'advance_100' => '100% Advance Payment',
-        'on_delivery' => 'Payment on Delivery',
+        'on_delivery' => 'Cash On Delivery',
         'net_30' => 'Net 30 Days',
         'custom' => 'Custom Terms'
     ];
@@ -322,6 +322,9 @@ class Invoice extends Model
         $finalInvoice->invoice_date = now();
         $finalInvoice->due_date = $this->calculateFinalInvoiceDueDate();
         $finalInvoice->created_by = auth()->id() ?? $userId ?? null;
+        
+        // Preserve the original proforma description
+        $finalInvoice->description = $this->description;
 
         // Calculate remaining amount based on payment terms and paid amount
         $remainingAmount = $this->getRemainingAmount();
@@ -341,7 +344,6 @@ class Invoice extends Model
                     $finalInvoice->subtotal = $this->subtotal; // Keep original subtotal structure
                     $finalInvoice->payment_status = $remainingAmount > 0 ? 'pending' : 'paid';
                     $finalInvoice->paid_amount = 0;
-                    $finalInvoice->description = 'Final Invoice - Remaining Balance (50% advance payment received)';
                     
                     if ($remainingAmount <= 0) {
                         $finalInvoice->paid_at = now();
@@ -361,10 +363,6 @@ class Invoice extends Model
                     $finalInvoice->payment_status = 'paid';
                     $finalInvoice->paid_amount = $this->total_amount; // Show actual amount paid
                     $finalInvoice->paid_at = now();
-                    // Only reference delivery completion when we have a delivered record
-                    $finalInvoice->description = $isDelivered
-                        ? 'Final Invoice - Delivery Completed (Full payment received on proforma)'
-                        : 'Final Invoice - Full payment received on proforma';
                 } else {
                     throw new \Exception('Full advance payment not received. Cannot convert to final invoice.');
                 }
@@ -382,18 +380,6 @@ class Invoice extends Model
                     $finalInvoice->paid_amount = $this->total_amount;
                     $finalInvoice->paid_at = now();
                     
-                    // Dynamic description based on actual payment scenario
-                    if ($this->paid_amount > 0) {
-                        // There was some advance payment, but this is on_delivery terms
-                        $finalInvoice->description = $isDelivered 
-                            ? "Final Invoice - Payment completed. Partial advance payment was received: {$this->paid_amount} AED. Remaining balance collected on delivery."
-                            : "Final Invoice - Payment completed. Partial advance payment was received: {$this->paid_amount} AED. Remaining balance to be collected on delivery.";
-                    } else {
-                        // Pure on_delivery payment - no advance
-                        $finalInvoice->description = $isDelivered 
-                            ? "Final Invoice - Payment collected on delivery. Full amount paid upon delivery."
-                            : "Final Invoice - Payment received. Payment collected as per on-delivery terms.";
-                    }
                 } else {
                     // Payment still pending
                     $finalInvoice->total_amount = $this->total_amount;
@@ -402,19 +388,6 @@ class Invoice extends Model
                     $finalInvoice->paid_amount = 0;
                     $finalInvoice->due_date = now(); // Payment due immediately
                     
-                    // Dynamic description for pending payments
-                    if ($this->paid_amount > 0) {
-                        // Some advance payment made
-                        $remainingBalance = $this->total_amount - $this->paid_amount;
-                        $finalInvoice->description = $isDelivered 
-                            ? "Final Invoice - Payment Due. Order delivered. Advance payment received: {$this->paid_amount} AED. Balance due: {$remainingBalance} AED."
-                            : "Final Invoice - Payment Due on Delivery. Advance payment received: {$this->paid_amount} AED. Balance due: {$remainingBalance} AED.";
-                    } else {
-                        // Pure on_delivery - no advance payment
-                        $finalInvoice->description = $isDelivered 
-                            ? "Final Invoice - Payment Due. Order has been delivered. Full payment due as per on-delivery terms."
-                            : "Final Invoice - Payment Due on Delivery. Full payment to be collected upon delivery.";
-                    }
                 }
                 break;
 
@@ -434,9 +407,6 @@ class Invoice extends Model
                     $advancePaymentText = " Previous advance payment received: {$this->paid_amount} AED";
                 }
                 
-                $finalInvoice->description = $isDelivered 
-                    ? "Final Invoice - Payment Due in 30 Days. Order has been delivered." . $advancePaymentText
-                    : "Final Invoice - Payment Due in 30 Days." . $advancePaymentText;
                 
                 if ($remainingAmount <= 0) {
                     $finalInvoice->paid_at = now();
@@ -453,9 +423,6 @@ class Invoice extends Model
                         $finalInvoice->subtotal = $this->subtotal; // Keep original subtotal structure
                         $finalInvoice->payment_status = $remainingAmount > 0 ? 'pending' : 'paid';
                         $finalInvoice->paid_amount = 0;
-                        $finalInvoice->description = $isDelivered 
-                            ? "Final Invoice - Remaining Balance ({$advancePercentage}% advance payment received). Order has been delivered."
-                            : "Final Invoice - Remaining Balance ({$advancePercentage}% advance payment received)";
                         
                         if ($remainingAmount <= 0) {
                             $finalInvoice->paid_at = now();
@@ -469,9 +436,6 @@ class Invoice extends Model
                     $finalInvoice->subtotal = $this->subtotal; // Preserve original subtotal
                     $finalInvoice->payment_status = 'pending';
                     $finalInvoice->paid_amount = 0;
-                    $finalInvoice->description = $isDelivered 
-                        ? 'Final Invoice - Custom Payment Terms. Order has been delivered.'
-                        : 'Final Invoice - Custom Payment Terms';
                 }
                 break;
 
@@ -481,9 +445,6 @@ class Invoice extends Model
                 $finalInvoice->subtotal = $this->subtotal; // Preserve original subtotal structure
                 $finalInvoice->payment_status = $finalInvoice->total_amount > 0 ? 'pending' : 'paid';
                 $finalInvoice->paid_amount = 0;
-                $finalInvoice->description = $isDelivered 
-                    ? 'Final Invoice - Order has been delivered.'
-                    : 'Final Invoice';
                 
                 if ($finalInvoice->total_amount <= 0) {
                     $finalInvoice->paid_at = now();
@@ -734,10 +695,10 @@ class Invoice extends Model
                 return false;
                 
             case 'on_delivery':
-                // For Payment on Delivery, create order when invoice is confirmed
-                // This allows manufacturing/preparation to start while payment is collected on delivery
+                // For Cash On Delivery, create order when invoice is confirmed
+                // This allows manufacturing/preparation to start while cash payment is collected on delivery
                 $canCreate = in_array($this->status, ['confirmed', 'sent']) && $this->hasValidDeliveryAddress();
-                Log::info("Order creation for invoice {$this->id} with payment on delivery: status={$this->status}, has_delivery_address=" . ($this->hasValidDeliveryAddress() ? 'yes' : 'no') . ", approved=" . ($canCreate ? 'yes' : 'no'));
+                Log::info("Order creation for invoice {$this->id} with Cash On Delivery: status={$this->status}, has_delivery_address=" . ($this->hasValidDeliveryAddress() ? 'yes' : 'no') . ", approved=" . ($canCreate ? 'yes' : 'no'));
                 return $canCreate;
                 
             case 'net_30':
@@ -1013,7 +974,7 @@ class Invoice extends Model
         
         switch ($this->payment_terms) {
             case 'on_delivery':
-                $notes .= " | Payment on Delivery - Collect payment before releasing goods";
+                $notes .= " | Cash On Delivery - Collect cash payment before releasing goods";
                 break;
                 
             case 'net_30':

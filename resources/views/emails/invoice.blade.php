@@ -210,7 +210,7 @@
                                         @if($invoice->payment_terms !== 'on_delivery')
                                         <div style="display: inline-block; background-color: #F59E0B; color: #FFFFFF; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">💳 PAYMENT REQUIRED</div>
                                         @else
-                                        <div style="display: inline-block; background-color: #3B82F6; color: #FFFFFF; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">💳 PAYMENT ON DELIVERY</div>
+                                        <div style="display: inline-block; background-color: #3B82F6; color: #FFFFFF; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">💳 CASH ON DELIVERY</div>
                                         @endif
                                         <h4 style="color: #92400E; margin: 0 0 12px 0; font-size: 18px; font-weight: 600;">Payment Information</h4>
                                         <p style="margin: 0 0 15px 0; color: #451A03; line-height: 1.6;">
@@ -219,14 +219,14 @@
                                             @elseif($invoice->payment_terms === 'advance_100')
                                                 This proforma invoice requires <strong>full payment</strong> ({{ number_format($invoice->total_amount, 2) }} {{ $invoice->currency }}) before we proceed with your order.
                                             @elseif($invoice->payment_terms === 'on_delivery')
-                                                This proforma invoice is for <strong>payment on delivery</strong>. No advance payment is required.
+                                                This proforma invoice is for <strong>Cash On Delivery</strong>. No advance payment is required.
                                             @else
                                                 This proforma invoice requires <strong>{{ $invoice->advance_percentage }}% advance payment</strong> ({{ number_format($invoice->getAdvanceAmount(), 2) }} {{ $invoice->currency }}) before we proceed with your order.
                                             @endif
                                         </p>
                                         <p style="margin: 0; color: #451A03; font-size: 14px; opacity: 0.8;">
                                             @if($invoice->payment_terms === 'on_delivery')
-                                                ✅ We will confirm your order and arrange delivery. Payment will be collected upon delivery.
+                                                ✅ We will confirm your order and arrange delivery. Cash payment will be collected upon delivery.
                                             @else
                                                 ✅ Once payment is received, we will confirm your order and provide you with a delivery timeline.
                                             @endif
