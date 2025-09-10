@@ -286,9 +286,9 @@
                                     {{ number_format($quote->total_amount, 2) }} {{ $quote->currency ?? 'AED' }}
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-900 products-column">
-                                    @if($quote->items->count() > 0)
+                                    @if(is_array($quote->items) ? count($quote->items) > 0 : $quote->items->count() > 0)
                                         <div class="space-y-1">
-                                            @foreach($quote->items->take(3) as $item)
+                                            @foreach((is_array($quote->items) ? collect($quote->items)->take(3) : $quote->items->take(3)) as $item)
                                                 <div class="flex items-center space-x-2">
                                                     <div class="flex-1 min-w-0">
                                                         <div class="text-sm font-medium text-gray-900 truncate">
@@ -303,9 +303,9 @@
                                                     </div>
                                                 </div>
                                             @endforeach
-                                            @if($quote->items->count() > 3)
+                                            @if((is_array($quote->items) ? count($quote->items) : $quote->items->count()) > 3)
                                                 <div class="text-xs text-gray-500 font-medium">
-                                                    +{{ $quote->items->count() - 3 }} more items
+                                                    +{{ (is_array($quote->items) ? count($quote->items) : $quote->items->count()) - 3 }} more items
                                                 </div>
                                             @endif
                                         </div>
@@ -316,7 +316,7 @@
                                 <td class="px-6 py-4 text-sm text-gray-900">
                                     @if($quote->attachments && count($quote->attachments) > 0)
                                         <div class="space-y-2">
-                                            @foreach($quote->attachments->take(2) as $attachment)
+                                            @foreach((is_array($quote->attachments) ? collect($quote->attachments)->take(2) : $quote->attachments->take(2)) as $attachment)
                                                 <div class="flex items-center space-x-2">
                                                     <div class="flex-shrink-0">
                                                         @php
