@@ -4,7 +4,7 @@
     <div class="flex h-16 shrink-0 items-center">
         <img class="mb-1 h-12 w-auto" src="{{ asset('Images/logo.png') }}" alt="MaxMed">
         <div class="ml-3">
-            <div class="text-sm font-semibold text-gray-600">CRM Portal</div>
+            <div class="text-sm font-semibold text-gray-600">{{ \App\Helpers\DashboardHelper::crmPortalHeaderName() }}</div>
         </div>
     </div>
 
@@ -23,7 +23,20 @@
                         </a>
                     </li>
 
+                    <!-- Sales Pipeline - Lead to Deal Conversion -->
+                    @if(Auth::user()->hasPermission('crm.leads.view') || Auth::user()->isAdmin())
+                    <li>
+                        <a href="{{ route('crm.leads.index') }}" class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold {{ request()->routeIs('crm.leads.*') ? 'sidebar-active' : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50' }}">
+                            <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l-1-3m1 3l-1-3m-16.5-3h16.5" />
+                            </svg>
+                            Sales Pipeline
+                        </a>
+                    </li>
+                    @endif
+
                     <!-- Customer Interactions Section -->
+                    @if(Auth::user()->hasPermission('customers.view') || Auth::user()->hasPermission('quotations.view') || Auth::user()->isAdmin())
                     <li x-data="{ open: {{ request()->routeIs('crm.contact-submissions.*') || request()->routeIs('crm.quotation-requests.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="group flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm leading-6 font-semibold {{ request()->routeIs('crm.contact-submissions.*') || request()->routeIs('crm.quotation-requests.*') ? 'text-indigo-600 bg-gray-50' : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50' }}">
                             <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -35,6 +48,7 @@
                             </svg>
                         </button>
                         <ul x-show="open" x-transition class="mt-1 px-2 space-y-1">
+                            @if(Auth::user()->hasPermission('customers.view') || Auth::user()->isAdmin())
                             <li>
                                 <a href="{{ route('crm.contact-submissions.index') }}" class="group flex gap-x-3 rounded-md py-2 pl-9 pr-2 text-sm leading-6 {{ request()->routeIs('crm.contact-submissions.*') ? 'text-indigo-600 bg-gray-50 font-semibold' : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50' }}">
                                     <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -43,6 +57,8 @@
                                     Contact Submissions
                                 </a>
                             </li>
+                            @endif
+                            @if(Auth::user()->hasPermission('quotations.view') || Auth::user()->isAdmin())
                             <li>
                                 <a href="{{ route('crm.quotation-requests.index') }}" class="group flex gap-x-3 rounded-md py-2 pl-9 pr-2 text-sm leading-6 {{ request()->routeIs('crm.quotation-requests.*') ? 'text-indigo-600 bg-gray-50 font-semibold' : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50' }}">
                                     <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -51,10 +67,13 @@
                                     Quotation Requests
                                 </a>
                             </li>
+                            @endif
                         </ul>
                     </li>
+                    @endif
 
                     <!-- Customer Management -->
+                    @if(Auth::user()->hasPermission('customers.view') || Auth::user()->isAdmin())
                     <li>
                         <a href="{{ route('crm.customers.index') }}" class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold {{ request()->routeIs('crm.customers.*') ? 'sidebar-active' : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50' }}">
                             <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -63,18 +82,10 @@
                             Customer Management
                         </a>
                     </li>
-
-                    <!-- Sales Pipeline - Lead to Deal Conversion -->
-                    <li>
-                        <a href="{{ route('crm.leads.index') }}" class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold {{ request()->routeIs('crm.leads.*') ? 'sidebar-active' : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50' }}">
-                            <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l-1-3m1 3l-1-3m-16.5-3h16.5" />
-                            </svg>
-                            Sales Pipeline
-                        </a>
-                    </li>
+                    @endif
 
                     <!-- Marketing Section -->
+                    @if(Auth::user()->hasPermission('marketing.view') || Auth::user()->hasPermission('marketing.campaigns.view') || Auth::user()->isAdmin())
                     <li x-data="{ open: {{ request()->routeIs('crm.marketing.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="group flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm leading-6 font-semibold {{ request()->routeIs('crm.marketing.*') ? 'text-indigo-600 bg-gray-50' : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50' }}">
                             <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -86,6 +97,7 @@
                             </svg>
                         </button>
                         <ul x-show="open" x-transition class="mt-1 px-2 space-y-1">
+                            @if(Auth::user()->hasPermission('marketing.view') || Auth::user()->isAdmin())
                             <li>
                                 <a href="{{ route('crm.marketing.dashboard') }}" class="group flex gap-x-3 rounded-md py-2 pl-9 pr-2 text-sm leading-6 {{ request()->routeIs('crm.marketing.dashboard') ? 'text-indigo-600 bg-gray-50 font-semibold' : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50' }}">
                                     <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -94,6 +106,8 @@
                                     Dashboard
                                 </a>
                             </li>
+                            @endif
+                            @if(Auth::user()->hasPermission('marketing.contacts.view') || Auth::user()->isAdmin())
                             <li>
                                 <a href="{{ route('crm.marketing.contacts.index') }}" class="group flex gap-x-3 rounded-md py-2 pl-9 pr-2 text-sm leading-6 {{ request()->routeIs('crm.marketing.contacts.*') ? 'text-indigo-600 bg-gray-50 font-semibold' : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50' }}">
                                     <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -102,6 +116,8 @@
                                     Contacts
                                 </a>
                             </li>
+                            @endif
+                            @if(Auth::user()->hasPermission('marketing.contact-lists.view') || Auth::user()->isAdmin())
                             <li>
                                 <a href="{{ route('crm.marketing.contact-lists.index') }}" class="group flex gap-x-3 rounded-md py-2 pl-9 pr-2 text-sm leading-6 {{ request()->routeIs('crm.marketing.contact-lists.*') ? 'text-indigo-600 bg-gray-50 font-semibold' : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50' }}">
                                     <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -110,6 +126,8 @@
                                     Contact Lists
                                 </a>
                             </li>
+                            @endif
+                            @if(Auth::user()->hasPermission('marketing.campaigns.view') || Auth::user()->isAdmin())
                             <li>
                                 <a href="{{ route('crm.marketing.campaigns.index') }}" class="group flex gap-x-3 rounded-md py-2 pl-9 pr-2 text-sm leading-6 {{ request()->routeIs('crm.marketing.campaigns.*') ? 'text-indigo-600 bg-gray-50 font-semibold' : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50' }}">
                                     <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -118,6 +136,8 @@
                                     Campaigns
                                 </a>
                             </li>
+                            @endif
+                            @if(Auth::user()->hasPermission('marketing.email-templates.view') || Auth::user()->isAdmin())
                             <li>
                                 <a href="{{ route('crm.marketing.email-templates.index') }}" class="group flex gap-x-3 rounded-md py-2 pl-9 pr-2 text-sm leading-6 {{ request()->routeIs('crm.marketing.email-templates.*') ? 'text-indigo-600 bg-gray-50 font-semibold' : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50' }}">
                                     <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -126,6 +146,8 @@
                                     Email Templates
                                 </a>
                             </li>
+                            @endif
+                            @if(Auth::user()->hasPermission('marketing.analytics.view') || Auth::user()->isAdmin())
                             <li>
                                 <a href="{{ route('crm.marketing.analytics.index') }}" class="group flex gap-x-3 rounded-md py-2 pl-9 pr-2 text-sm leading-6 {{ request()->routeIs('crm.marketing.analytics.*') ? 'text-indigo-600 bg-gray-50 font-semibold' : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50' }}">
                                     <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -134,8 +156,10 @@
                                     Analytics
                                 </a>
                             </li>
+                            @endif
                         </ul>
                     </li>
+                    @endif
 
                   
                 </ul>
@@ -144,23 +168,27 @@
             <!-- Settings -->
             <li class="mt-auto">
                 <ul role="list" class="-mx-2 space-y-1">
+                    @if(Auth::user()->hasRole('super_admin') || Auth::user()->isAdmin())
                     <li>
                         <a href="{{ route('admin.dashboard') }}" class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-700 hover:text-indigo-600 hover:bg-gray-50">
                             <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
-                            Admin Portal
+                            {{ \App\Helpers\DashboardHelper::adminPortalHeaderName() }}
                         </a>
                     </li>
-                <li>
-                    <a href="{{ route('supplier.dashboard') }}" class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-700 hover:text-indigo-600 hover:bg-gray-50">
-                        <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-                        </svg>
-                        Supplier Portal
-                    </a>
-                </li>
+                    @endif
+                    @if(Auth::user()->hasPermission('supplier.products.view') || Auth::user()->isAdmin())
+                    <li>
+                        <a href="{{ route('supplier.dashboard') }}" class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-700 hover:text-indigo-600 hover:bg-gray-50">
+                            <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                            </svg>
+                            {{ \App\Helpers\DashboardHelper::supplierPortalHeaderName() }}
+                        </a>
+                    </li>
+                    @endif
                 </ul>
             </li>
         </ul>

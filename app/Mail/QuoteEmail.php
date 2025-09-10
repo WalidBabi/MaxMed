@@ -55,6 +55,24 @@ class QuoteEmail extends Mailable
             ]
         );
 
+        // Attach quote attachments if they exist
+        if ($this->quote->attachments && is_array($this->quote->attachments)) {
+            foreach ($this->quote->attachments as $attachment) {
+                if (isset($attachment['path']) && Storage::disk('public')->exists($attachment['path'])) {
+                    $filePath = Storage::disk('public')->path($attachment['path']);
+                    $fileName = $attachment['name'] ?? basename($attachment['path']);
+                    
+                    // Get MIME type
+                    $mimeType = mime_content_type($filePath) ?: 'application/octet-stream';
+                    
+                    $email->attach($filePath, [
+                        'as' => $fileName,
+                        'mime' => $mimeType,
+                    ]);
+                }
+            }
+        }
+
         return $email;
     }
 } 

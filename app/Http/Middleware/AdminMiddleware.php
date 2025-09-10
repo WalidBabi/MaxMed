@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\AccessControlService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -33,18 +34,23 @@ class AdminMiddleware
 
         $user = auth()->user();
 
-        // Check if user has admin access via role or permissions
-        $hasAdminAccess = $user->isAdmin() || 
-                         $user->hasPermission('dashboard.view') || 
-                         $user->hasAnyRole(['super_admin', 'system_admin', 'business_admin', 'operations_manager', 'purchasing_crm_assistant']);
+        // Use the new AccessControlService for consistent permission checking
+        $hasAdminAccess = AccessControlService::canAccessAdmin($user);
+
+        // Log the access attempt
+        AccessControlService::logAccessAttempt(
+            $user, 
+            'admin.dashboard.access', 
+            $hasAdminAccess, 
+            'AdminMiddleware'
+        );
 
         if (!$hasAdminAccess) {
             Log::warning('AdminMiddleware::handle() - Access denied - User lacks admin permissions', [
                 'user_id' => $user->id,
                 'user_email' => $user->email,
                 'user_role' => $user->role?->name,
-                'has_dashboard_view' => $user->hasPermission('dashboard.view'),
-                'is_admin' => $user->isAdmin(),
+                'role_info' => AccessControlService::getUserRoleInfo($user),
                 'url' => $request->url(),
                 'ip' => $request->ip(),
                 'timestamp' => now()->toISOString()

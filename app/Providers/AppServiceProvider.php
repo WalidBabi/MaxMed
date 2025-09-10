@@ -23,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Load helper functions
         require_once app_path('Helpers/DateHelper.php');
+        require_once app_path('Helpers/DashboardHelper.php');
     }
 
     /**

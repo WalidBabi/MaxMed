@@ -40,19 +40,17 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAnyRole(['super_admin', 'system_admin', 'business_admin']);
         });
 
-        // Register role-specific gates
+        // Register role-specific gates using AccessControlService
         Gate::define('access-admin-area', function (User $user) {
-            return $user->hasAnyRole(['super_admin', 'system_admin', 'business_admin', 'operations_manager', 'purchasing_crm_assistant']) 
-                   || $user->hasPermission('dashboard.view');
+            return \App\Services\AccessControlService::canAccessAdmin($user);
         });
 
         Gate::define('access-supplier-area', function (User $user) {
-            return $user->hasRole('supplier') || $user->hasPermission('admin-override');
+            return \App\Services\AccessControlService::canAccessSupplier($user);
         });
 
         Gate::define('access-crm', function (User $user) {
-            return $user->hasAnyRole(['sales_manager', 'sales_rep', 'customer_service_manager', 'customer_service_rep', 'purchasing_crm_assistant']) 
-                   || $user->hasPermission('crm.access');
+            return \App\Services\AccessControlService::canAccessCrm($user);
         });
 
         Gate::define('manage-users', function (User $user) {

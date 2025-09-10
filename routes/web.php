@@ -1519,6 +1519,19 @@ Route::middleware(['auth', \App\Http\Middleware\PreventBackHistory::class])->gro
 
     // Admin routes
     Route::prefix('admin')->middleware('admin')->group(function () {
+        // Permission Management
+        Route::resource('permissions', \App\Http\Controllers\Admin\PermissionController::class)->names([
+            'index' => 'admin.permissions.index',
+            'create' => 'admin.permissions.create',
+            'store' => 'admin.permissions.store',
+            'show' => 'admin.permissions.show',
+            'edit' => 'admin.permissions.edit',
+            'update' => 'admin.permissions.update',
+            'destroy' => 'admin.permissions.destroy',
+        ]);
+        Route::post('permissions/generate', [\App\Http\Controllers\Admin\PermissionController::class, 'generateController'])->name('admin.permissions.generate');
+        Route::post('permissions/sync', [\App\Http\Controllers\Admin\PermissionController::class, 'syncRoutes'])->name('admin.permissions.sync');
+
         // Inquiries
         Route::resource('inquiries', \App\Http\Controllers\Admin\InquiryController::class)->names([
             'index' => 'admin.inquiries.index',
