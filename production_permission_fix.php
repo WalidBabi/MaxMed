@@ -51,7 +51,7 @@ try {
             [
                 'display_name' => ucwords(str_replace(['.', '_'], [' ', ' '], $permissionName)),
                 'description' => "Permission to {$permissionName}",
-                'category' => $this->getCategoryForPermission($permissionName),
+                'category' => getCategoryForPermission($permissionName),
                 'is_active' => true
             ]
         );
