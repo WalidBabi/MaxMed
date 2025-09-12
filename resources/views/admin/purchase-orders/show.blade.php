@@ -211,15 +211,19 @@
             </div>
 
             <!-- Attachments -->
-            @if($purchaseOrder->attachments && count($purchaseOrder->attachments) > 0)
+            @php
+                $attachments = is_array($purchaseOrder->attachments) ? $purchaseOrder->attachments : [];
+                $attachmentCount = count($attachments);
+            @endphp
+            @if($attachmentCount > 0)
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <h3 class="text-lg font-semibold text-gray-900">Attached Files</h3>
-                        <p class="text-sm text-gray-600 mt-1">{{ count($purchaseOrder->attachments) }} file{{ count($purchaseOrder->attachments) > 1 ? 's' : '' }} attached to this purchase order</p>
+                        <p class="text-sm text-gray-600 mt-1">{{ $attachmentCount }} file{{ $attachmentCount > 1 ? 's' : '' }} attached to this purchase order</p>
                     </div>
                     <div class="p-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            @foreach($purchaseOrder->attachments as $attachment)
+                            @foreach($attachments as $attachment)
                                 <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors duration-200">
                                     <div class="flex items-start space-x-3">
                                         <div class="flex-shrink-0">
