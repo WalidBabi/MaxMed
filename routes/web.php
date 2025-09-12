@@ -521,6 +521,7 @@ Route::get('quotes/search/suggestions', [\App\Http\Controllers\Admin\QuoteContro
         Route::resource('cash-receipts', \App\Http\Controllers\Admin\CashReceiptController::class)->except(['edit', 'update']);
         Route::get('cash-receipts/{cashReceipt}/pdf', [\App\Http\Controllers\Admin\CashReceiptController::class, 'downloadPdf'])->name('cash-receipts.pdf');
         Route::post('cash-receipts/{cashReceipt}/send-email', [\App\Http\Controllers\Admin\CashReceiptController::class, 'sendEmail'])->name('cash-receipts.send-email');
+        Route::patch('cash-receipts/{cashReceipt}/cancel', [\App\Http\Controllers\Admin\CashReceiptController::class, 'cancel'])->name('cash-receipts.cancel');
         Route::post('orders/{order}/quick-cash-receipt', [\App\Http\Controllers\Admin\CashReceiptController::class, 'quickCreate'])->name('orders.quick-cash-receipt');
 
         // Supplier Payments Management
