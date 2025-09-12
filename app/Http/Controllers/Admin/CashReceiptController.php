@@ -241,6 +241,31 @@ class CashReceiptController extends Controller
     }
 
     /**
+     * Cancel the specified cash receipt
+     */
+    public function cancel(CashReceipt $cashReceipt)
+    {
+        try {
+            if ($cashReceipt->status === CashReceipt::STATUS_CANCELLED) {
+                return redirect()->back()->with('error', 'Receipt is already cancelled.');
+            }
+
+            $cashReceipt->update([
+                'status' => CashReceipt::STATUS_CANCELLED,
+                'updated_by' => auth()->id()
+            ]);
+
+            Log::info("Cash receipt {$cashReceipt->receipt_number} cancelled by user " . auth()->id());
+
+            return redirect()->route('admin.cash-receipts.index')
+                ->with('success', 'Cash receipt cancelled successfully!');
+        } catch (\Exception $e) {
+            Log::error('Failed to cancel cash receipt: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to cancel receipt.');
+        }
+    }
+
+    /**
      * Delete the specified cash receipt
      */
     public function destroy(CashReceipt $cashReceipt)

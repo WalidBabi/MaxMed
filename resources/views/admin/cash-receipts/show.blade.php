@@ -48,6 +48,7 @@
                 @if($cashReceipt->status !== 'cancelled')
                     <form method="POST" action="{{ route('admin.cash-receipts.cancel', $cashReceipt) }}" class="inline" onsubmit="return confirm('Are you sure you want to cancel this receipt?')">
                         @csrf
+                        @method('PATCH')
                         <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
