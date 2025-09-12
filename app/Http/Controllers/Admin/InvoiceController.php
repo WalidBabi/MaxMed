@@ -743,6 +743,7 @@ class InvoiceController extends Controller
                 'shipping_rate' => $invoice->shipping_rate ?? 0,
                 'vat_rate' => $invoice->vat_rate ?? 0,
                 'vat_amount' => $invoice->tax_amount ?? 0,
+                'customs_clearance_fee' => $invoice->customs_clearance_fee ?? 0,
                 'status' => 'processing', // Changed to match orders table enum
                 'shipping_address' => $invoice->shipping_address ?: $invoice->billing_address,
                 'shipping_city' => 'N/A', // Extract from address if needed

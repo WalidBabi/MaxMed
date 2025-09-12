@@ -804,6 +804,7 @@ class Invoice extends Model
                 'shipping_rate' => $this->shipping_rate ?? 0,
                 'vat_rate' => $this->vat_rate ?? 0,
                 'vat_amount' => $this->tax_amount ?? 0,
+                'customs_clearance_fee' => $this->customs_clearance_fee ?? 0,
                 'status' => $orderStatus,
                 'shipping_address' => $this->shipping_address ?: $this->billing_address,
                 'shipping_city' => $this->extractCityFromAddress(),

@@ -115,9 +115,35 @@
                             <div class="p-4 bg-gray-50">
                                 <div class="flex justify-end">
                                     <div class="text-right">
-                                        <p class="text-gray-600">Subtotal: <span class="font-medium">{{ $order->currency ?? 'AED' }}{{ number_format($order->total_amount, 2) }}</span></p>
-                                        <p class="text-gray-600">Shipping: <span class="font-medium">{{ $order->currency ?? 'AED' }}0.00</span></p>
-                                        <p class="text-gray-800 text-lg font-bold mt-2">Total: <span>{{ $order->currency ?? 'AED' }}{{ number_format($order->total_amount, 2) }}</span></p>
+                                        @php
+                                            $orderSubtotal = $order->orderItems->sum('line_subtotal');
+                                            $totalDiscount = $order->orderItems->sum('calculated_discount_amount');
+                                            $itemsTotal = $orderSubtotal - $totalDiscount;
+                                            $shippingRate = $order->shipping_rate ?? 0;
+                                            $vatAmount = $order->vat_amount ?? 0;
+                                            $customsClearance = $order->customs_clearance_fee ?? 0;
+                                            $orderTotal = $itemsTotal + $shippingRate + $vatAmount + $customsClearance;
+                                        @endphp
+                                        
+                                        <p class="text-gray-600">Items Subtotal: <span class="font-medium">{{ $order->currency ?? 'AED' }}{{ number_format($orderSubtotal, 2) }}</span></p>
+                                        
+                                        @if($totalDiscount > 0)
+                                            <p class="text-red-600">Discount: <span class="font-medium">-{{ $order->currency ?? 'AED' }}{{ number_format($totalDiscount, 2) }}</span></p>
+                                        @endif
+                                        
+                                        @if($shippingRate > 0)
+                                            <p class="text-gray-600">Shipping: <span class="font-medium">{{ $order->currency ?? 'AED' }}{{ number_format($shippingRate, 2) }}</span></p>
+                                        @endif
+                                        
+                                        @if($customsClearance > 0)
+                                            <p class="text-gray-600">Customs Clearance: <span class="font-medium">{{ $order->currency ?? 'AED' }}{{ number_format($customsClearance, 2) }}</span></p>
+                                        @endif
+                                        
+                                        @if($vatAmount > 0)
+                                            <p class="text-gray-600">VAT ({{ $order->vat_rate ?? 0 }}%): <span class="font-medium">{{ $order->currency ?? 'AED' }}{{ number_format($vatAmount, 2) }}</span></p>
+                                        @endif
+                                        
+                                        <p class="text-gray-800 text-lg font-bold mt-2">Total: <span>{{ $order->currency ?? 'AED' }}{{ number_format($orderTotal, 2) }}</span></p>
                                     </div>
                                 </div>
                             </div>
