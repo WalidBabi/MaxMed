@@ -546,6 +546,16 @@ class InvoiceController extends Controller
             'payment_notes' => 'nullable|string'
         ]);
 
+        // Ensure the payment amount doesn't exceed the remaining balance
+        $invoice->calculateTotals(); // Ensure totals are up to date
+        $remainingAmount = $invoice->total_amount - $invoice->paid_amount;
+        
+        if ($request->amount > $remainingAmount) {
+            return redirect()->back()
+                ->withErrors(['amount' => "Payment amount cannot exceed the remaining balance of {$remainingAmount} {$invoice->currency}"])
+                ->withInput();
+        }
+
         try {
             DB::beginTransaction();
             

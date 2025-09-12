@@ -541,12 +541,22 @@
                                 <!-- Payment Amount -->
                                 <div>
                                     @php
+                                        // Calculate totals exactly like the Invoice model's calculateTotals() method
                                         $subtotal = $invoice->items->sum(function($item) {
                                             return $item->quantity * $item->unit_price;
                                         });
                                         $totalDiscount = $invoice->items->sum('calculated_discount_amount') + ($invoice->discount_amount ?? 0);
+                                        $totalAfterDiscount = $subtotal - $totalDiscount;
+                                        
+                                        // Apply shipping rate and customs clearance fee
+                                        $shippingRate = $invoice->shipping_rate ?? 0;
+                                        $customsClearance = $invoice->customs_clearance_fee ?? 0;
+                                        
+                                        // Get tax amount (VAT)
                                         $taxAmount = $invoice->tax_amount ?? 0;
-                                        $finalTotal = $subtotal - $totalDiscount + $taxAmount;
+                                        
+                                        // Calculate final total including all fees
+                                        $finalTotal = $totalAfterDiscount + $taxAmount + $shippingRate + $customsClearance;
                                         $remainingAmount = $finalTotal - $invoice->paid_amount;
                                     @endphp
                                     <label for="payment_amount" class="block text-sm font-medium text-gray-700 mb-2">Payment Amount <span class="text-red-500">*</span></label>
