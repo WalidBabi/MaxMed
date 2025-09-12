@@ -1,5 +1,9 @@
 @extends('admin.layouts.app')
 
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
+
 @section('title', 'Purchase Order #' . $purchaseOrder->po_number)
 
 @section('content')
@@ -205,6 +209,92 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Attachments -->
+            @if($purchaseOrder->attachments && count($purchaseOrder->attachments) > 0)
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-900">Attached Files</h3>
+                        <p class="text-sm text-gray-600 mt-1">{{ count($purchaseOrder->attachments) }} file{{ count($purchaseOrder->attachments) > 1 ? 's' : '' }} attached to this purchase order</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            @foreach($purchaseOrder->attachments as $attachment)
+                                <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors duration-200">
+                                    <div class="flex items-start space-x-3">
+                                        <div class="flex-shrink-0">
+                                            <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                                                @php
+                                                    $filename = $attachment['filename'] ?? 'attachment';
+                                                    $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+                                                @endphp
+                                                
+                                                @switch($extension)
+                                                    @case('pdf')
+                                                        <svg class="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                                                        </svg>
+                                                        @break
+                                                    @case('doc')
+                                                    @case('docx')
+                                                        <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                                                        </svg>
+                                                        @break
+                                                    @case('xls')
+                                                    @case('xlsx')
+                                                        <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                                                        </svg>
+                                                        @break
+                                                    @case('jpg')
+                                                    @case('jpeg')
+                                                    @case('png')
+                                                    @case('gif')
+                                                        <svg class="w-6 h-6 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+                                                        </svg>
+                                                        @break
+                                                    @default
+                                                        <svg class="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                                                        </svg>
+                                                @endswitch
+                                            </div>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <h4 class="text-sm font-medium text-gray-900 truncate" title="{{ $attachment['filename'] ?? 'Attachment' }}">
+                                                {{ $attachment['filename'] ?? 'Attachment' }}
+                                            </h4>
+                                            <div class="mt-1 flex items-center space-x-2 text-xs text-gray-500">
+                                                @if(isset($attachment['size']))
+                                                    <span>{{ number_format($attachment['size'] / 1024, 1) }} KB</span>
+                                                @endif
+                                                @if(isset($attachment['type']))
+                                                    <span>•</span>
+                                                    <span>{{ $attachment['type'] }}</span>
+                                                @endif
+                                            </div>
+                                            @if(isset($attachment['path']))
+                                                <div class="mt-2">
+                                                    <a href="{{ Storage::url($attachment['path']) }}" 
+                                                       target="_blank" 
+                                                       class="inline-flex items-center text-xs text-indigo-600 hover:text-indigo-700">
+                                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                                        </svg>
+                                                        View File
+                                                    </a>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             <!-- Payments History -->
             @if($purchaseOrder->payments->count() > 0)
