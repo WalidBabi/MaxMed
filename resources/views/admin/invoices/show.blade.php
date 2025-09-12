@@ -572,9 +572,11 @@
                                     @error('amount')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
-                                    <p class="mt-1 text-xs text-gray-500">
-                                        Remaining balance: {{ number_format($remainingAmount, 2) }} {{ $invoice->currency }}
-                                    </p>
+                                    <div class="mt-1 text-xs text-gray-500 space-y-1">
+                                        <p>Total amount: {{ number_format($finalTotal, 2) }} {{ $invoice->currency }}</p>
+                                        <p>Already paid: {{ number_format($invoice->paid_amount, 2) }} {{ $invoice->currency }}</p>
+                                        <p><strong>Remaining balance: {{ number_format($remainingAmount, 2) }} {{ $invoice->currency }}</strong></p>
+                                    </div>
                                 </div>
 
                                 <!-- Payment Method -->
