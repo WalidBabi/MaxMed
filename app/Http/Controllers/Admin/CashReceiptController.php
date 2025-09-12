@@ -114,7 +114,7 @@ class CashReceiptController extends Controller
                 'payment_date' => $request->receipt_date,
                 'payment_method' => $request->payment_method,
                 'description' => $request->description ?: ($order ? "Cash payment for Order #{$order->order_number}" : "Cash payment from {$customer->name}"),
-                'notes' => null,
+                'notes' => $request->notes,
                 'reference_number' => $request->reference_number,
                 'customer_name' => $request->customer_name,
                 'customer_email' => $request->customer_email,

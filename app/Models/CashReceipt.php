@@ -178,6 +178,7 @@ class CashReceipt extends Model
             'payment_date' => now()->format('Y-m-d'),
             'payment_method' => self::METHOD_CASH,
             'description' => "Cash payment for Order #{$order->order_number}",
+            'notes' => null, // Allow notes to be set via additionalData
             'customer_name' => $customer->name,
             'customer_email' => $customer->email,
             'customer_phone' => $customer->phone,
@@ -204,6 +205,7 @@ class CashReceipt extends Model
             'payment_date' => now()->format('Y-m-d'),
             'payment_method' => self::METHOD_CASH,
             'description' => "Cash payment for Invoice #{$invoice->invoice_number}",
+            'notes' => null, // Allow notes to be set via additionalData
             'customer_name' => $customer->name,
             'customer_email' => $customer->email,
             'customer_phone' => $customer->phone,
