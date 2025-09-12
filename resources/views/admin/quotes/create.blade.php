@@ -190,7 +190,7 @@
                                 <div>
                                     <label for="vat_rate" class="block text-sm font-medium text-gray-700 mb-2">VAT Rate (%)</label>
                                     <input type="number" id="vat_rate" name="vat_rate" step="0.01" min="0" max="100"
-                                           value="{{ old('vat_rate', 5) }}"
+                                           value="{{ old('vat_rate', 0) }}"
                                            class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('vat_rate') border-red-300 @enderror"
                                            onchange="updateTotals()" 
                                            oninput="this.setAttribute('data-manual-override', 'true')">
@@ -923,9 +923,9 @@ function calculateTotals() {
         document.getElementById('customs_clearance_fee').value = customsFee.toFixed(2);
     }
     
-    // Auto-set VAT rate to 5% if not manually set
+    // Auto-set VAT rate to 0% if not manually set
     if (!document.getElementById('vat_rate').getAttribute('data-manual-override')) {
-        vatRate = 5;
+        vatRate = 0;
         document.getElementById('vat_rate').value = vatRate.toFixed(1);
     }
     
