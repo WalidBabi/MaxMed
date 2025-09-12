@@ -4,6 +4,31 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto">
+    @if(session('error'))
+        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            {{ session('error') }}
+        </div>
+    @endif
+    
+    @if(session('success'))
+        <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+            {{ session('success') }}
+        </div>
+    @endif
+    
+    <!-- Debug Information (remove in production) -->
+    @if(config('app.debug'))
+        <div class="mb-4 bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded">
+            <strong>Debug Info:</strong><br>
+            Receipt ID: {{ $cashReceipt->id }}<br>
+            Receipt Number: {{ $cashReceipt->receipt_number }}<br>
+            Customer ID: {{ $cashReceipt->customer_id }}<br>
+            Order ID: {{ $cashReceipt->order_id }}<br>
+            Status: {{ $cashReceipt->status }}<br>
+            User ID: {{ auth()->id() }}<br>
+            User Email: {{ auth()->user()?->email }}
+        </div>
+    @endif
     <!-- Header -->
     <div class="mb-8">
         <div class="flex items-center justify-between">
@@ -93,7 +118,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-500 mb-1">Receipt Date</label>
-                            <p class="text-sm font-semibold text-gray-900">{{ formatDubaiDate($cashReceipt->receipt_date, 'M d, Y') }}</p>
+                            <p class="text-sm font-semibold text-gray-900">{{ formatDubaiDate($cashReceipt->payment_date, 'M d, Y') }}</p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500 mb-1">Payment Method</label>
