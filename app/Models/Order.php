@@ -41,6 +41,7 @@ class Order extends Model
         'shipping_rate',
         'vat_rate',
         'vat_amount',
+        'customs_clearance_fee',
         'status',
         'shipping_address',
         'shipping_city',

@@ -132,12 +132,17 @@
                                 @php
                                     $orderSubtotal = $order->orderItems->sum('line_subtotal');
                                     $totalDiscount = $order->orderItems->sum('calculated_discount_amount');
-                                    $orderTotal = $order->orderItems->sum('line_total');
+                                    $itemsTotal = $orderSubtotal - $totalDiscount;
+                                    $shippingRate = $order->shipping_rate ?? 0;
+                                    $vatAmount = $order->vat_amount ?? 0;
+                                    $customsClearance = $order->customs_clearance_fee ?? 0;
+                                    $orderTotal = $itemsTotal + $shippingRate + $vatAmount + $customsClearance;
                                 @endphp
+                                
                                 @if($totalDiscount > 0)
                                     <tr class="bg-yellow-50">
                                         <td colspan="4" class="px-6 py-4 whitespace-nowrap text-right">
-                                            <div class="text-sm font-medium text-gray-900">Subtotal</div>
+                                            <div class="text-sm font-medium text-gray-900">Items Subtotal</div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm font-medium text-gray-900">{{ $order->currency ?? 'AED' }} {{ number_format($orderSubtotal, 2) }}</div>
@@ -152,12 +157,46 @@
                                         </td>
                                     </tr>
                                 @endif
+                                
+                                @if($shippingRate > 0)
+                                    <tr class="bg-blue-50">
+                                        <td colspan="4" class="px-6 py-4 whitespace-nowrap text-right">
+                                            <div class="text-sm font-medium text-gray-900">Shipping</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ $order->currency ?? 'AED' }} {{ number_format($shippingRate, 2) }}</div>
+                                        </td>
+                                    </tr>
+                                @endif
+                                
+                                @if($customsClearance > 0)
+                                    <tr class="bg-purple-50">
+                                        <td colspan="4" class="px-6 py-4 whitespace-nowrap text-right">
+                                            <div class="text-sm font-medium text-gray-900">Customs Clearance</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ $order->currency ?? 'AED' }} {{ number_format($customsClearance, 2) }}</div>
+                                        </td>
+                                    </tr>
+                                @endif
+                                
+                                @if($vatAmount > 0)
+                                    <tr class="bg-green-50">
+                                        <td colspan="4" class="px-6 py-4 whitespace-nowrap text-right">
+                                            <div class="text-sm font-medium text-gray-900">VAT ({{ $order->vat_rate ?? 0 }}%)</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ $order->currency ?? 'AED' }} {{ number_format($vatAmount, 2) }}</div>
+                                        </td>
+                                    </tr>
+                                @endif
+                                
                                 <tr class="bg-gray-50">
                                     <td colspan="4" class="px-6 py-4 whitespace-nowrap text-right">
-                                        <div class="text-sm font-medium text-gray-900">Total</div>
+                                        <div class="text-lg font-bold text-gray-900">Total Amount</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ $order->currency ?? 'AED' }} {{ number_format($orderTotal, 2) }}</div>
+                                        <div class="text-lg font-bold text-gray-900">{{ $order->currency ?? 'AED' }} {{ number_format($orderTotal, 2) }}</div>
                                     </td>
                                 </tr>
                             </tbody>

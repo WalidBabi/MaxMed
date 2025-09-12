@@ -152,9 +152,36 @@ class CashReceiptController extends Controller
      */
     public function show(CashReceipt $cashReceipt)
     {
-        $cashReceipt->load(['customer', 'order', 'creator']);
-        
-        return view('admin.cash-receipts.show', compact('cashReceipt'));
+        try {
+            // Load all necessary relationships
+            $cashReceipt->load([
+                'customer', 
+                'order.customer', 
+                'order.items.product',
+                'creator',
+                'updater'
+            ]);
+            
+            // Log the access for debugging
+            Log::info('Cash receipt show accessed', [
+                'receipt_id' => $cashReceipt->id,
+                'receipt_number' => $cashReceipt->receipt_number,
+                'user_id' => auth()->id(),
+                'user_email' => auth()->user()?->email
+            ]);
+            
+            return view('admin.cash-receipts.show', compact('cashReceipt'));
+            
+        } catch (\Exception $e) {
+            Log::error('Error displaying cash receipt', [
+                'receipt_id' => $cashReceipt->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return redirect()->route('admin.cash-receipts.index')
+                ->with('error', 'Unable to display cash receipt: ' . $e->getMessage());
+        }
     }
 
     /**
