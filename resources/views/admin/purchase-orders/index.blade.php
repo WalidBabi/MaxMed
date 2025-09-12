@@ -25,7 +25,7 @@
 
 /* Ensure table has minimum width to trigger scrolling */
 .min-w-full {
-    min-width: 1200px;
+    min-width: 1400px;
 }
 </style>
 @endpush
@@ -118,6 +118,7 @@
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attachments</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">Actions</th>
                         </tr>
@@ -179,6 +180,31 @@
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $po->payment_status_badge_class }}">
                                         {{ \App\Models\PurchaseOrder::$paymentStatuses[$po->payment_status] ?? ucfirst($po->payment_status) }}
                                     </span>
+                                </td>
+                                
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($po->attachments && count($po->attachments) > 0)
+                                        <div class="flex items-center space-x-1">
+                                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                                            </svg>
+                                            <span class="text-sm text-gray-600">{{ count($po->attachments) }} file{{ count($po->attachments) > 1 ? 's' : '' }}</span>
+                                        </div>
+                                        <div class="text-xs text-gray-500 mt-1">
+                                            @foreach($po->attachments as $index => $attachment)
+                                                @if($index < 2)
+                                                    <div class="truncate max-w-32" title="{{ $attachment['filename'] ?? 'Attachment' }}">
+                                                        {{ $attachment['filename'] ?? 'Attachment' }}
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                            @if(count($po->attachments) > 2)
+                                                <div class="text-gray-400">+{{ count($po->attachments) - 2 }} more</div>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <span class="text-sm text-gray-400">No attachments</span>
+                                    @endif
                                 </td>
                                 
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
