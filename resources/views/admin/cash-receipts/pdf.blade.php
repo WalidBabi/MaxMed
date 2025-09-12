@@ -704,6 +704,12 @@
             <div style="margin-bottom: 15px; font-size: 10px;">{{ $cashReceipt->description }}</div>
             @endif
             
+            @if($cashReceipt->notes)
+            <div style="margin-bottom: 15px; font-size: 10px; color: var(--text-secondary);">
+                <strong>Payment Note:</strong> {{ $cashReceipt->notes }}
+            </div>
+            @endif
+            
             @if($cashReceipt->payment_method === 'check')
             <div style="margin-bottom: 15px; font-size: 10px; color: var(--text-secondary); font-style: italic;">
                 Payment received via bank check. This receipt acknowledges the receipt of the check. 
@@ -897,6 +903,13 @@
                             $netSubtotal = $grossSubtotal - $totalItemDiscounts;
                             $orderLevelDiscount = $cashReceipt->order->discount_amount ?? 0;
                             $totalDiscounts = $totalItemDiscounts + $orderLevelDiscount;
+                            
+                            // Calculate final total with proper VAT and shipping
+                            $finalSubtotal = $netSubtotal - $orderLevelDiscount;
+                            $shipping = $cashReceipt->order->shipping_rate ?? 0;
+                            $vat = $cashReceipt->order->vat_amount ?? 0;
+                            $tax = $cashReceipt->order->tax_amount ?? 0;
+                            $calculatedTotal = $finalSubtotal + $shipping + $vat + $tax;
                         @endphp
                         
                         <tr>
@@ -949,16 +962,7 @@
                         <tr class="grand-total">
                             <td class="total-label">Total Amount:</td>
                             <td class="total-amount">
-                                @php
-                                    // Calculate final total with all discounts applied
-                                    $finalSubtotal = $netSubtotal - $orderLevelDiscount;
-                                    $shipping = $cashReceipt->order->shipping_rate ?? 0;
-                                    $vat = $cashReceipt->order->vat_amount ?? 0;
-                                    $tax = $cashReceipt->order->tax_amount ?? 0;
-                                    $calculatedTotal = $finalSubtotal + $shipping + $vat + $tax;
-                                    $finalTotal = max($calculatedTotal, $cashReceipt->order->total_amount ?? 0);
-                                @endphp
-                                {{ $cashReceipt->currency }} {{ number_format($finalTotal, 2) }}
+                                {{ $cashReceipt->currency }} {{ number_format($calculatedTotal, 2) }}
                             </td>
                         </tr>
                         
