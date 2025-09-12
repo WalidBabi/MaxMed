@@ -183,23 +183,27 @@
                                 </td>
                                 
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($po->attachments && count($po->attachments) > 0)
+                                    @php
+                                        $attachments = is_array($po->attachments) ? $po->attachments : [];
+                                        $attachmentCount = count($attachments);
+                                    @endphp
+                                    @if($attachmentCount > 0)
                                         <div class="flex items-center space-x-1">
                                             <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
                                             </svg>
-                                            <span class="text-sm text-gray-600">{{ count($po->attachments) }} file{{ count($po->attachments) > 1 ? 's' : '' }}</span>
+                                            <span class="text-sm text-gray-600">{{ $attachmentCount }} file{{ $attachmentCount > 1 ? 's' : '' }}</span>
                                         </div>
                                         <div class="text-xs text-gray-500 mt-1">
-                                            @foreach($po->attachments as $index => $attachment)
+                                            @foreach($attachments as $index => $attachment)
                                                 @if($index < 2)
                                                     <div class="truncate max-w-32" title="{{ $attachment['filename'] ?? 'Attachment' }}">
                                                         {{ $attachment['filename'] ?? 'Attachment' }}
                                                     </div>
                                                 @endif
                                             @endforeach
-                                            @if(count($po->attachments) > 2)
-                                                <div class="text-gray-400">+{{ count($po->attachments) - 2 }} more</div>
+                                            @if($attachmentCount > 2)
+                                                <div class="text-gray-400">+{{ $attachmentCount - 2 }} more</div>
                                             @endif
                                         </div>
                                     @else
@@ -235,7 +239,7 @@
                                                 data-supplier-name="{{ $po->supplier_name }}"
                                                 data-po-number="{{ $po->po_number }}"
                                                 data-supplier-email="{{ $po->supplier_email ?? '' }}"
-                                                data-attachments="{{ $po->attachments ? json_encode($po->attachments) : '[]' }}"
+                                                data-attachments="{{ is_array($po->attachments) ? json_encode($po->attachments) : '[]' }}"
                                                 title="Send Email">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
