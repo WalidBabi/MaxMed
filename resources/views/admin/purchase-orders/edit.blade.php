@@ -256,7 +256,7 @@
     @endif
 
     <!-- Form -->
-    <form action="{{ route('admin.purchase-orders.update', $purchaseOrder) }}" method="POST" onsubmit="return validateAndPrepareForm()">
+    <form action="{{ route('admin.purchase-orders.update', $purchaseOrder) }}" method="POST" enctype="multipart/form-data" onsubmit="return validateAndPrepareForm()">
         @csrf
         @method('PUT')
         <div class="px-4 sm:px-6 lg:px-8">
@@ -460,6 +460,136 @@
                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ old('notes', $purchaseOrder->notes) }}</textarea>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Attachments Section -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                        <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                            <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                            </svg>
+                            Attachments
+                        </h3>
+                        <p class="text-sm text-gray-600 mt-1">Upload files related to this purchase order (proforma invoices, quotes, specifications, etc.)</p>
+                    </div>
+                    <div class="p-6">
+                        <!-- File Upload Area -->
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors duration-200" 
+                             id="fileUploadArea">
+                            <div class="space-y-4">
+                                <div class="flex justify-center">
+                                    <svg class="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <label for="attachments" class="cursor-pointer">
+                                        <span class="text-lg font-medium text-gray-900">Upload Files</span>
+                                        <span class="block text-sm text-gray-500 mt-1">Click to browse or drag and drop files here</span>
+                                        <span class="block text-xs text-gray-400 mt-2">PDF, DOC, DOCX, XLS, XLSX, JPG, PNG, GIF (Max 10MB each)</span>
+                                    </label>
+                                    <input type="file" id="attachments" name="attachments[]" multiple 
+                                           accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif"
+                                           class="hidden" 
+                                           onchange="handleFileSelection(this)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- File Preview Area -->
+                        <div id="filePreviewArea" class="mt-6 space-y-3 hidden">
+                            <h4 class="text-sm font-medium text-gray-900">Selected Files:</h4>
+                            <div id="fileList" class="space-y-2">
+                                <!-- Files will be displayed here -->
+                            </div>
+                        </div>
+
+                        <!-- Existing Attachments -->
+                        @php
+                            $existingAttachments = is_array($purchaseOrder->attachments) ? $purchaseOrder->attachments : [];
+                        @endphp
+                        @if(count($existingAttachments) > 0)
+                            <div class="mt-6">
+                                <h4 class="text-sm font-medium text-gray-900 mb-3">Current Attachments:</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    @foreach($existingAttachments as $index => $attachment)
+                                        <div class="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                                            <div class="flex items-start space-x-3">
+                                                <div class="flex-shrink-0">
+                                                    <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                                                        @php
+                                                            $filename = $attachment['filename'] ?? 'attachment';
+                                                            $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+                                                        @endphp
+                                                        
+                                                        @switch($extension)
+                                                            @case('pdf')
+                                                                <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                                                                </svg>
+                                                                @break
+                                                            @case('doc')
+                                                            @case('docx')
+                                                                <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                                                                </svg>
+                                                                @break
+                                                            @case('xls')
+                                                            @case('xlsx')
+                                                                <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                                                                </svg>
+                                                                @break
+                                                            @case('jpg')
+                                                            @case('jpeg')
+                                                            @case('png')
+                                                            @case('gif')
+                                                                <svg class="w-4 h-4 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+                                                                </svg>
+                                                                @break
+                                                            @default
+                                                                <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                                                                </svg>
+                                                        @endswitch
+                                                    </div>
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <h5 class="text-sm font-medium text-gray-900 truncate" title="{{ $attachment['filename'] ?? 'Attachment' }}">
+                                                        {{ $attachment['filename'] ?? 'Attachment' }}
+                                                    </h5>
+                                                    <div class="mt-1 flex items-center space-x-2 text-xs text-gray-500">
+                                                        @if(isset($attachment['size']))
+                                                            <span>{{ number_format($attachment['size'] / 1024, 1) }} KB</span>
+                                                        @endif
+                                                        @if(isset($attachment['type']))
+                                                            <span>•</span>
+                                                            <span>{{ $attachment['type'] }}</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <button type="button" 
+                                                            data-index="{{ $index }}"
+                                                            class="remove-existing-attachment text-red-600 hover:text-red-800 p-1"
+                                                            title="Remove attachment">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                
+                                <!-- Hidden input to track removed attachments -->
+                                <input type="hidden" name="removed_attachments" id="removed_attachments" value="">
+                            </div>
+                        @endif
                     </div>
                 </div>
 
@@ -1295,6 +1425,200 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         addItem();
     }
+});
+
+// File upload and attachment management functions
+let selectedFiles = [];
+let removedAttachmentIndexes = [];
+
+function handleFileSelection(input) {
+    const files = Array.from(input.files);
+    const maxFileSize = 10 * 1024 * 1024; // 10MB
+    const allowedTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'image/jpeg',
+        'image/jpg',
+        'image/png',
+        'image/gif'
+    ];
+    
+    // Validate files
+    const validFiles = [];
+    const errors = [];
+    
+    files.forEach(file => {
+        if (file.size > maxFileSize) {
+            errors.push(`${file.name} is too large. Maximum size is 10MB.`);
+        } else if (!allowedTypes.includes(file.type)) {
+            errors.push(`${file.name} is not a supported file type.`);
+        } else {
+            validFiles.push(file);
+        }
+    });
+    
+    if (errors.length > 0) {
+        alert('File validation errors:\n' + errors.join('\n'));
+    }
+    
+    // Add valid files to selected files
+    validFiles.forEach(file => {
+        if (!selectedFiles.find(f => f.name === file.name && f.size === file.size)) {
+            selectedFiles.push(file);
+        }
+    });
+    
+    updateFilePreview();
+}
+
+function updateFilePreview() {
+    const previewArea = document.getElementById('filePreviewArea');
+    const fileList = document.getElementById('fileList');
+    
+    if (selectedFiles.length === 0) {
+        previewArea.classList.add('hidden');
+        return;
+    }
+    
+    previewArea.classList.remove('hidden');
+    fileList.innerHTML = '';
+    
+    selectedFiles.forEach((file, index) => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-lg';
+        
+        const fileIcon = getFileIcon(file.name);
+        const fileSize = formatFileSize(file.size);
+        
+        fileItem.innerHTML = `
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                    ${fileIcon}
+                </div>
+                <div>
+                    <h5 class="text-sm font-medium text-gray-900">${file.name}</h5>
+                    <p class="text-xs text-gray-500">${fileSize}</p>
+                </div>
+            </div>
+            <button type="button" onclick="removeSelectedFile(${index})" class="text-red-600 hover:text-red-800 p-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        `;
+        
+        fileList.appendChild(fileItem);
+    });
+}
+
+function removeSelectedFile(index) {
+    selectedFiles.splice(index, 1);
+    updateFilePreview();
+    updateFileInput();
+}
+
+function removeExistingAttachment(index) {
+    if (!removedAttachmentIndexes.includes(index)) {
+        removedAttachmentIndexes.push(index);
+    }
+    
+    // Hide the attachment element
+    const attachmentElement = document.querySelector(`[data-index="${index}"]`).closest('.border');
+    if (attachmentElement) {
+        attachmentElement.style.display = 'none';
+    }
+    
+    // Update hidden input
+    document.getElementById('removed_attachments').value = removedAttachmentIndexes.join(',');
+}
+
+function getFileIcon(filename) {
+    const extension = filename.split('.').pop().toLowerCase();
+    
+    switch (extension) {
+        case 'pdf':
+            return '<svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>';
+        case 'doc':
+        case 'docx':
+            return '<svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>';
+        case 'xls':
+        case 'xlsx':
+            return '<svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>';
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+        case 'gif':
+            return '<svg class="w-4 h-4 text-purple-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path></svg>';
+        default:
+            return '<svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path></svg>';
+    }
+}
+
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+function updateFileInput() {
+    const fileInput = document.getElementById('attachments');
+    const dataTransfer = new DataTransfer();
+    
+    selectedFiles.forEach(file => {
+        dataTransfer.items.add(file);
+    });
+    
+    fileInput.files = dataTransfer.files;
+}
+
+// Drag and drop functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const uploadArea = document.getElementById('fileUploadArea');
+    const fileInput = document.getElementById('attachments');
+    
+    // Drag and drop event listeners
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadArea.classList.add('border-indigo-500', 'bg-indigo-50');
+    });
+    
+    uploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('border-indigo-500', 'bg-indigo-50');
+    });
+    
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadArea.classList.remove('border-indigo-500', 'bg-indigo-50');
+        
+        const files = Array.from(e.dataTransfer.files);
+        const dataTransfer = new DataTransfer();
+        files.forEach(file => dataTransfer.items.add(file));
+        fileInput.files = dataTransfer.files;
+        
+        handleFileSelection(fileInput);
+    });
+    
+    // Click to upload
+    uploadArea.addEventListener('click', function(e) {
+        if (e.target.tagName !== 'BUTTON') {
+            fileInput.click();
+        }
+    });
+    
+    // Handle existing attachment removal
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-existing-attachment')) {
+            const button = e.target.closest('.remove-existing-attachment');
+            const index = parseInt(button.getAttribute('data-index'));
+            removeExistingAttachment(index);
+        }
+    });
 });
 </script>
 @endsection 
