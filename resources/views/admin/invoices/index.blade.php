@@ -88,29 +88,30 @@
                 <div class="ml-4">
                     <p class="text-sm font-medium text-gray-600">Total Value</p>
                     <div class="text-base font-bold text-gray-900">
-                        @if($invoiceTotals['aed'] > 0 && $invoiceTotals['usd'] > 0)
-                            <div class="text-lg">{{ number_format($invoiceTotals['aed'], 0) }} AED</div>
-                            <div class="text-lg text-gray-600">{{ number_format($invoiceTotals['usd'], 0) }} USD</div>
-                        @elseif($invoiceTotals['usd'] > 0)
-                            <div class="text-3xl">{{ number_format($invoiceTotals['usd'], 0) }} USD</div>
-                        @elseif($invoiceTotals['aed'] > 0)
-                            <div class="text-3xl">{{ number_format($invoiceTotals['aed'], 0) }} AED</div>
-                        @else
-                            <div class="text-3xl">0 AED</div>
-                        @endif
+                        <div class="text-lg">{{ number_format($invoiceTotals['aed'], 0) }} AED</div>
+                        <div class="text-lg text-gray-600">{{ number_format($invoiceTotals['usd'], 0) }} USD</div>
+                        <div class="text-sm text-blue-600 font-semibold mt-1">Combined: {{ number_format($invoiceTotals['combined'], 0) }} AED</div>
                     </div>
-                    <p class="text-xs text-gray-500 mt-1">Sent final invoices only · Includes all pages</p>
+                    <p class="text-xs text-gray-500 mt-1">Sent final invoices only · Excludes pending payments · Includes all pages</p>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Filters Section -->
-    <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-8">
+    <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-8" x-data="{ filtersOpen: false }">
         <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-900">Filters</h3>
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900">Filters</h3>
+                <button @click="filtersOpen = !filtersOpen" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none">
+                    <span x-text="filtersOpen ? 'Hide Filters' : 'Show Filters'"></span>
+                    <svg class="ml-2 h-4 w-4 transition-transform duration-200" :class="{ 'rotate-180': filtersOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+            </div>
         </div>
-        <div class="p-6">
+        <div class="p-6" x-show="filtersOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform -translate-y-2">
             <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
                 <div class="md:col-span-2">
                     <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
