@@ -91,9 +91,10 @@ class InvoiceController extends Controller
             });
         }
         
-        // Filter to show only sent final invoices
+        // Filter to show only sent final invoices that are not pending payment
         $totalsQuery->where('type', 'final')
-                   ->where('status', 'sent');
+                   ->where('status', 'sent')
+                   ->where('payment_status', '!=', 'pending');
         
         $invoiceTotals = [
             'aed' => $totalsQuery->where('currency', 'AED')->sum('total_amount'),
