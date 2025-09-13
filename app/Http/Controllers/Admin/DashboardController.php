@@ -422,11 +422,11 @@ class DashboardController extends Controller
                 $endDate = Carbon::parse($endDate);
             }
 
-            // Generate labels based on period
-            $labels = $this->generateLabels($period, $startDate, $endDate);
-            
-            // Get sales data
+            // Get sales data first
             $salesData = $this->getSalesDataForPeriod($period, $startDate, $endDate, $currency, $customerId, $categoryId);
+            
+            // Generate labels only for periods that have data
+            $labels = $this->generateLabelsFromData($salesData, $period);
             
             // Format data for Chart.js
             $datasets = $this->formatDataForChart($salesData, $currency);
@@ -634,6 +634,77 @@ class DashboardController extends Controller
         }
         
         return $datasets;
+    }
+
+    /**
+     * Generate labels from actual sales data
+     */
+    private function generateLabelsFromData($salesData, $period)
+    {
+        $labels = [];
+        
+        // Sort data by period key to ensure proper order
+        ksort($salesData);
+        
+        foreach ($salesData as $periodKey => $periodData) {
+            $labels[] = $this->formatPeriodKeyAsLabel($periodKey, $period);
+        }
+        
+        return $labels;
+    }
+
+    /**
+     * Format period key as display label
+     */
+    private function formatPeriodKeyAsLabel($periodKey, $period)
+    {
+        switch ($period) {
+            case 'daily':
+                // periodKey format: "2023-01-15"
+                $date = \Carbon\Carbon::createFromFormat('Y-m-d', $periodKey);
+                return $date->format('M j');
+                
+            case 'quarterly':
+                // periodKey format: "2023-01" (converted from quarter)
+                $date = \Carbon\Carbon::createFromFormat('Y-m', $periodKey);
+                $quarter = ceil($date->month / 3);
+                return 'Q' . $quarter . ' ' . $date->year;
+                
+            default: // monthly
+                // periodKey format: "2023-01"
+                $date = \Carbon\Carbon::createFromFormat('Y-m', $periodKey);
+                return $date->format('M Y');
+        }
+    }
+
+    /**
+     * Convert chart label back to period key format
+     */
+    private function convertLabelToPeriodKey($label)
+    {
+        // Handle different label formats
+        if (strpos($label, 'Q') === 0) {
+            // Quarterly format: "Q1 2023" -> "2023-01"
+            preg_match('/Q(\d) (\d{4})/', $label, $matches);
+            if (count($matches) === 3) {
+                $quarter = (int)$matches[1];
+                $year = $matches[2];
+                $month = ($quarter - 1) * 3 + 1; // Q1=1, Q2=4, Q3=7, Q4=10
+                return sprintf('%04d-%02d', $year, $month);
+            }
+        } elseif (preg_match('/^[A-Za-z]{3} \d{4}$/', $label)) {
+            // Monthly format: "Jan 2023" -> "2023-01"
+            $date = \Carbon\Carbon::createFromFormat('M Y', $label);
+            return $date->format('Y-m');
+        } elseif (preg_match('/^[A-Za-z]{3} \d{1,2}$/', $label)) {
+            // Daily format: "Jan 15" -> current year
+            $currentYear = date('Y');
+            $date = \Carbon\Carbon::createFromFormat('M j', $label)->year($currentYear);
+            return $date->format('Y-m-d');
+        }
+        
+        // Fallback: try to parse as-is
+        return $label;
     }
 
     /**
