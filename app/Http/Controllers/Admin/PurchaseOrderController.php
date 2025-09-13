@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class PurchaseOrderController extends Controller
@@ -358,10 +359,50 @@ class PurchaseOrderController extends Controller
             'items.*.discount_percentage' => 'nullable|numeric|min:0|max:100',
             'items.*.specifications' => 'nullable|string',
             'items.*.size' => 'nullable|string',
+            'attachments' => 'nullable|array',
+            'attachments.*' => 'file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,gif|max:10240', // 10MB max
+            'removed_attachments' => 'nullable|string',
         ]);
 
         try {
             DB::beginTransaction();
+
+            // Handle attachments
+            $currentAttachments = is_array($purchaseOrder->attachments) ? $purchaseOrder->attachments : [];
+            
+            // Remove attachments that were marked for deletion
+            if ($request->filled('removed_attachments')) {
+                $removedIndexes = array_map('intval', explode(',', $request->removed_attachments));
+                foreach ($removedIndexes as $index) {
+                    if (isset($currentAttachments[$index])) {
+                        // Delete the file from storage
+                        $attachment = $currentAttachments[$index];
+                        if (isset($attachment['path'])) {
+                            \Storage::disk('public')->delete($attachment['path']);
+                        }
+                        unset($currentAttachments[$index]);
+                    }
+                }
+                // Re-index the array
+                $currentAttachments = array_values($currentAttachments);
+            }
+            
+            // Handle new file uploads
+            if ($request->hasFile('attachments')) {
+                foreach ($request->file('attachments') as $file) {
+                    $filename = 'attachment_' . time() . '_' . $file->getClientOriginalName();
+                    $attachmentPath = $file->storeAs('purchase-orders/attachments', $filename, 'public');
+                    
+                    $currentAttachments[] = [
+                        'type' => 'attachment',
+                        'filename' => $file->getClientOriginalName(),
+                        'path' => $attachmentPath,
+                        'size' => $file->getSize(),
+                        'mime_type' => $file->getMimeType(),
+                        'uploaded_at' => now()->toISOString()
+                    ];
+                }
+            }
 
             // Update purchase order basic info
             $purchaseOrder->update([
@@ -375,6 +416,7 @@ class PurchaseOrderController extends Controller
                 'notes' => $request->notes,
                 'sub_total' => $request->sub_total,
                 'total_amount' => $request->total_amount,
+                'attachments' => !empty($currentAttachments) ? $currentAttachments : null,
                 'updated_by' => Auth::id()
             ]);
 
