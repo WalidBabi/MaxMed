@@ -181,18 +181,18 @@
 
         @if($invoices->count() > 0)
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
+                <table class="w-full divide-y divide-gray-200" style="min-width: 1000px;">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice #</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Terms</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16">Date</th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-28">Invoice #</th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-14">Type</th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-36">Customer</th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Terms</th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-14">Status</th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-14">Payment</th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Amount</th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-40">
                                 <div class="flex items-center space-x-1">
                                     <span>Products</span>
                                     <button type="button" onclick="toggleInvoiceProductsColumn()" class="text-gray-400 hover:text-gray-600" title="Toggle Products Column">
@@ -202,7 +202,7 @@
                                     </button>
                                 </div>
                             </th>
-                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <th scope="col" class="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-28">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -223,34 +223,26 @@
                                 @continue
                             @endif
                             <tr class="{{ $rowClass }}" id="invoice-row-{{ $invoice->id }}">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ formatDubaiDate($invoice->invoice_date, 'M d, Y') }}
+                                <td class="px-3 py-3 whitespace-nowrap text-xs text-gray-900">
+                                    {{ formatDubaiDate($invoice->invoice_date, 'M d') }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 py-3 whitespace-nowrap">
                                     <div class="flex items-center">
                                         @if($invoice->type === 'final' && $invoice->parentInvoice)
-                                            <button type="button" class="mr-2 text-gray-500 hover:text-gray-700 focus:outline-none toggle-proforma-btn" data-invoice-id="{{ $invoice->id }}" title="Toggle proforma details">
-                                                <svg class="w-4 h-4 transform transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20">
+                                            <button type="button" class="mr-1 text-gray-500 hover:text-gray-700 focus:outline-none toggle-proforma-btn" data-invoice-id="{{ $invoice->id }}" title="Toggle proforma details">
+                                                <svg class="w-3 h-3 transform transition-transform duration-200" fill="currentColor" viewBox="0 0 20 20">
                                                     <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                                                 </svg>
                                             </button>
                                         @endif
                                         <div>
-                                            <div class="text-sm font-medium text-gray-900">
-                                                <a href="{{ route('admin.invoices.show', $invoice) }}" class="text-indigo-600 hover:text-indigo-900">
+                                            <div class="text-xs font-medium text-gray-900">
+                                                <a href="{{ route('admin.invoices.show', $invoice) }}" class="text-indigo-600 hover:text-indigo-900 truncate block">
                                                     {{ $invoice->invoice_number }}
                                                 </a>
                                             </div>
                                             @if($invoice->quote_id)
-                                                <div class="text-xs text-gray-500">from {{ $invoice->quote->quote_number }}</div>
-                                            @endif
-                                            @if($isChildInvoice && $invoice->parentInvoice)
-                                                <div class="text-xs text-green-600">← from {{ $invoice->parentInvoice->invoice_number }}</div>
-                                            @elseif($hasChildInvoice)
-                                                @php $finalInvoice = $invoice->childInvoices()->where('type', 'final')->first(); @endphp
-                                                @if($finalInvoice)
-                                                    <div class="text-xs text-blue-600">→ converted to {{ $finalInvoice->invoice_number }}</div>
-                                                @endif
+                                                <div class="text-xs text-gray-500 truncate">from {{ $invoice->quote->quote_number }}</div>
                                             @endif
                                             
                                             <!-- Related Order Information -->
@@ -300,153 +292,133 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 py-3 whitespace-nowrap">
                                     <div class="flex items-center">
                                         @if($invoice->type === 'proforma')
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                                 Proforma
                                             </span>
-                                            @if($hasChildInvoice)
-                                                <span class="ml-2 text-xs text-blue-600 font-medium">(Converted)</span>
-                                            @endif
                                         @else
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                 Final
                                             </span>
-                                            @if($isChildInvoice)
-                                                <span class="ml-2 text-xs text-green-600 font-medium">(From Proforma)</span>
-                                            @endif
                                         @endif
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ $invoice->customer_name }}</div>
-                                    
+                                <td class="px-3 py-3 whitespace-nowrap">
+                                    <div class="text-xs font-medium text-gray-900 truncate" title="{{ $invoice->customer_name }}">{{ Str::limit($invoice->customer_name, 20) }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">
+                                <td class="px-3 py-3 whitespace-nowrap">
+                                    <div class="text-xs text-gray-900">
                                         {{ $invoice->payment_terms ?? 'Net 30' }}
                                     </div>
                                     @if($invoice->due_date)
                                         <div class="text-xs text-gray-500">
-                                            Due: {{ formatDubaiDate($invoice->due_date, 'M d, Y') }}
+                                            Due: {{ formatDubaiDate($invoice->due_date, 'M d') }}
                                         </div>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 py-3 whitespace-nowrap">
                                     @if($invoice->status === 'draft')
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                                             Draft
                                         </span>
                                     @elseif($invoice->status === 'sent')
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                             Sent
                                         </span>
                                     @elseif($invoice->status === 'approved')
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                             Approved
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                                             {{ ucfirst($invoice->status) }}
                                         </span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 py-3 whitespace-nowrap">
                                     <div class="flex flex-col">
                                         @if($invoice->payment_status === 'pending')
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                                                 Pending
                                             </span>
                                         @elseif($invoice->payment_status === 'paid')
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                 Paid
                                             </span>
                                         @elseif($invoice->payment_status === 'partial')
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                                 Partial
                                             </span>
                                         @else
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                                 {{ ucfirst($invoice->payment_status) }}
                                             </span>
                                         @endif
-                                        @if($invoice->paid_amount > 0)
-                                            <div class="text-xs text-green-600 mt-1">
-                                                Paid: {{ number_format($invoice->paid_amount, 2) }} {{ $invoice->currency }}
-                                            </div>
-                                        @endif
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">
-                                        {{ number_format($invoice->total_amount, 2) }} {{ $invoice->currency }}
+                                <td class="px-3 py-3 whitespace-nowrap">
+                                    <div class="text-xs font-medium text-gray-900">
+                                        {{ number_format($invoice->total_amount, 0) }} {{ $invoice->currency }}
                                     </div>
-                                    @if($invoice->paid_amount > 0 && $invoice->payment_status !== 'paid')
-                                        <div class="text-xs text-gray-500">
-                                            Balance: {{ number_format($invoice->total_amount - $invoice->paid_amount, 2) }}
-                                        </div>
-                                    @endif
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-900 invoice-products-column">
+                                <td class="px-3 py-3 text-xs text-gray-900 invoice-products-column">
                                     @if($invoice->items->count() > 0)
                                         <div class="space-y-1">
-                                            @foreach($invoice->items->take(3) as $item)
-                                                <div class="flex items-center space-x-2">
+                                            @foreach($invoice->items->take(2) as $item)
+                                                <div class="flex items-center space-x-1">
                                                     <div class="flex-1 min-w-0">
-                                                        <div class="text-sm font-medium text-gray-900 truncate">
-                                                            {{ $item->product ? $item->product->name : $item->description }}
+                                                        <div class="text-xs font-medium text-gray-900 truncate">
+                                                            {{ Str::limit($item->product ? $item->product->name : $item->description, 25) }}
                                                         </div>
-                                                        @if($item->product && $item->product->sku)
-                                                            <div class="text-xs text-gray-500">SKU: {{ $item->product->sku }}</div>
-                                                        @endif
                                                         <div class="text-xs text-gray-500">
-                                                            Qty: {{ number_format($item->quantity, 2) }} × {{ number_format($item->unit_price, 2) }}
+                                                            {{ number_format($item->quantity, 0) }} × {{ number_format($item->unit_price, 0) }}
                                                         </div>
                                                     </div>
                                                 </div>
                                             @endforeach
-                                            @if($invoice->items->count() > 3)
+                                            @if($invoice->items->count() > 2)
                                                 <div class="text-xs text-gray-500 font-medium">
-                                                    +{{ $invoice->items->count() - 3 }} more items
+                                                    +{{ $invoice->items->count() - 2 }} more
                                                 </div>
                                             @endif
                                         </div>
                                     @else
-                                        <span class="text-gray-400">No products</span>
+                                        <span class="text-gray-400 text-xs">No products</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <div class="flex items-center justify-end space-x-2">
-                                        <a href="{{ route('admin.invoices.show', $invoice) }}" class="text-indigo-600 hover:text-indigo-900" title="View Invoice">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <td class="px-3 py-3 whitespace-nowrap text-right text-xs font-medium">
+                                    <div class="flex items-center justify-end space-x-1">
+                                        <a href="{{ route('admin.invoices.show', $invoice) }}" class="text-indigo-600 hover:text-indigo-900" title="View">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                             </svg>
                                         </a>
-                                        <a href="{{ route('admin.invoices.edit', $invoice) }}" class="text-green-600 hover:text-green-900" title="Edit Invoice">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <a href="{{ route('admin.invoices.edit', $invoice) }}" class="text-green-600 hover:text-green-900" title="Edit">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                             </svg>
                                         </a>
                                         @if($invoice->type === 'proforma' && $invoice->canConvertToFinalInvoice() && !$hasChildInvoice)
                                             <form action="{{ route('admin.invoices.convert-to-final', $invoice) }}" method="POST" class="inline" onsubmit="return confirm('Convert this proforma invoice to final invoice?');">
                                                 @csrf
-                                                <button type="submit" class="text-yellow-600 hover:text-yellow-900" title="Convert to Final Invoice">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <button type="submit" class="text-yellow-600 hover:text-yellow-900" title="Convert">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"></path>
                                                     </svg>
                                                 </button>
                                             </form>
                                         @elseif($invoice->type === 'proforma' && $invoice->status !== 'cancelled' && !$hasChildInvoice)
                                             <span class="text-gray-400 cursor-help" title="Status: {{ ucfirst($invoice->status) }} - Click invoice to view details and update status">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"></path>
                                                 </svg>
                                             </span>
                                         @endif
-                                        <a href="{{ route('admin.invoices.pdf', $invoice) }}" class="text-red-600 hover:text-red-900" title="Download PDF">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <a href="{{ route('admin.invoices.pdf', $invoice) }}" class="text-red-600 hover:text-red-900" title="PDF">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                             </svg>
                                         </a>
@@ -455,15 +427,15 @@
                                                 data-customer-name="{{ $invoice->customer_name }}"
                                                 data-invoice-number="{{ $invoice->invoice_number }}"
                                                 data-customer-email="{{ $invoice->customer_email ?? '' }}"
-                                                title="Send Email">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                title="Email">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                             </svg>
                                         </button>
                                         <button class="text-red-600 hover:text-red-900 delete-invoice-btn" 
                                                 data-invoice-id="{{ $invoice->id }}"
-                                                title="Delete Invoice">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                title="Delete">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                             </svg>
                                         </button>
@@ -473,107 +445,92 @@
                             @if($invoice->type === 'final' && $invoice->parentInvoice)
                                 @php $parent = $invoice->parentInvoice; @endphp
                                 <tr id="proforma-row-{{ $invoice->id }}" class="bg-blue-50 hidden">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ formatDubaiDate($parent->invoice_date, 'M d, Y') }}
+                                    <td class="px-3 py-3 whitespace-nowrap text-xs text-gray-900">
+                                        {{ formatDubaiDate($parent->invoice_date, 'M d') }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <div class="mr-2 text-blue-600" title="Proforma invoice">
-                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                                    <td class="px-3 py-3 whitespace-nowrap">
+                                        <div>
+                                            <div class="text-xs font-medium text-gray-900">
+                                                <a href="{{ route('admin.invoices.show', $parent) }}" class="text-indigo-600 hover:text-indigo-900 truncate block">{{ $parent->invoice_number }}</a>
                                             </div>
-                                            <div>
-                                                <div class="text-sm font-medium text-gray-900">
-                                                    <a href="{{ route('admin.invoices.show', $parent) }}" class="text-indigo-600 hover:text-indigo-900">{{ $parent->invoice_number }}</a>
-                                                </div>
-                                                @if($parent->quote_id)
-                                                    <div class="text-xs text-gray-500">from {{ $parent->quote->quote_number }}</div>
-                                                @endif
-                                            </div>
+                                            @if($parent->quote_id)
+                                                <div class="text-xs text-gray-500 truncate">from {{ $parent->quote->quote_number }}</div>
+                                            @endif
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Proforma</span>
-                                        <span class="ml-2 text-xs text-blue-600 font-medium">(Converted)</span>
+                                    <td class="px-3 py-3 whitespace-nowrap">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Proforma</span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ $parent->customer_name }}</div>
+                                    <td class="px-3 py-3 whitespace-nowrap">
+                                        <div class="text-xs font-medium text-gray-900 truncate" title="{{ $parent->customer_name }}">{{ Str::limit($parent->customer_name, 20) }}</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">{{ $parent->payment_terms ?? 'Net 30' }}</div>
+                                    <td class="px-3 py-3 whitespace-nowrap">
+                                        <div class="text-xs text-gray-900">{{ $parent->payment_terms ?? 'Net 30' }}</div>
                                         @if($parent->due_date)
-                                            <div class="text-xs text-gray-500">Due: {{ formatDubaiDate($parent->due_date, 'M d, Y') }}</div>
+                                            <div class="text-xs text-gray-500">Due: {{ formatDubaiDate($parent->due_date, 'M d') }}</div>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-3 py-3 whitespace-nowrap">
                                         @if($parent->status === 'draft')
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Draft</span>
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Draft</span>
                                         @elseif($parent->status === 'sent')
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Sent</span>
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Sent</span>
                                         @elseif($parent->status === 'approved')
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Approved</span>
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Approved</span>
                                         @else
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">{{ ucfirst($parent->status) }}</span>
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">{{ ucfirst($parent->status) }}</span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-3 py-3 whitespace-nowrap">
                                         <div class="flex flex-col">
                                             @if($parent->payment_status === 'pending')
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Pending</span>
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Pending</span>
                                             @elseif($parent->payment_status === 'paid')
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Paid</span>
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Paid</span>
                                             @elseif($parent->payment_status === 'partial')
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Partial</span>
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Partial</span>
                                             @else
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ ucfirst($parent->payment_status) }}</span>
-                                            @endif
-                                            @if($parent->paid_amount > 0)
-                                                <div class="text-xs text-green-600 mt-1">Paid: {{ number_format($parent->paid_amount, 2) }} {{ $parent->currency }}</div>
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ ucfirst($parent->payment_status) }}</span>
                                             @endif
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ number_format($parent->total_amount, 2) }} {{ $parent->currency }}</div>
-                                        @if($parent->paid_amount > 0 && $parent->payment_status !== 'paid')
-                                            <div class="text-xs text-gray-500">Balance: {{ number_format($parent->total_amount - $parent->paid_amount, 2) }}</div>
-                                        @endif
+                                    <td class="px-3 py-3 whitespace-nowrap">
+                                        <div class="text-xs font-medium text-gray-900">{{ number_format($parent->total_amount, 0) }} {{ $parent->currency }}</div>
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-900 invoice-products-column">
+                                    <td class="px-3 py-3 text-xs text-gray-900 invoice-products-column">
                                         @if($parent->items && $parent->items->count() > 0)
                                             <div class="space-y-1">
-                                                @foreach($parent->items->take(3) as $pitem)
-                                                    <div class="flex items-center space-x-2">
+                                                @foreach($parent->items->take(2) as $pitem)
+                                                    <div class="flex items-center space-x-1">
                                                         <div class="flex-1 min-w-0">
-                                                            <div class="text-sm font-medium text-gray-900 truncate">{{ $pitem->product ? $pitem->product->name : $pitem->description }}</div>
-                                                            @if($pitem->product && $pitem->product->sku)
-                                                                <div class="text-xs text-gray-500">SKU: {{ $pitem->product->sku }}</div>
-                                                            @endif
-                                                            <div class="text-xs text-gray-500">Qty: {{ number_format($pitem->quantity, 2) }} × {{ number_format($pitem->unit_price, 2) }}</div>
+                                                            <div class="text-xs font-medium text-gray-900 truncate">{{ Str::limit($pitem->product ? $pitem->product->name : $pitem->description, 25) }}</div>
+                                                            <div class="text-xs text-gray-500">{{ number_format($pitem->quantity, 0) }} × {{ number_format($pitem->unit_price, 0) }}</div>
                                                         </div>
                                                     </div>
                                                 @endforeach
-                                                @if($parent->items->count() > 3)
-                                                    <div class="text-xs text-gray-500 font-medium">+{{ $parent->items->count() - 3 }} more items</div>
+                                                @if($parent->items->count() > 2)
+                                                    <div class="text-xs text-gray-500 font-medium">+{{ $parent->items->count() - 2 }} more</div>
                                                 @endif
                                             </div>
                                         @else
-                                            <span class="text-gray-400">No products</span>
+                                            <span class="text-gray-400 text-xs">No products</span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <div class="flex items-center justify-end space-x-2">
-                                            <a href="{{ route('admin.invoices.show', $parent) }}" class="text-indigo-600 hover:text-indigo-900" title="View Invoice">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <td class="px-3 py-3 whitespace-nowrap text-right text-xs font-medium">
+                                        <div class="flex items-center justify-end space-x-1">
+                                            <a href="{{ route('admin.invoices.show', $parent) }}" class="text-indigo-600 hover:text-indigo-900" title="View">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                                 </svg>
                                             </a>
-                                            <a href="{{ route('admin.invoices.edit', $parent) }}" class="text-green-600 hover:text-green-900" title="Edit Invoice">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <a href="{{ route('admin.invoices.edit', $parent) }}" class="text-green-600 hover:text-green-900" title="Edit">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                 </svg>
                                             </a>
-                                            <a href="{{ route('admin.invoices.pdf', $parent) }}" class="text-red-600 hover:text-red-900" title="Download PDF">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <a href="{{ route('admin.invoices.pdf', $parent) }}" class="text-red-600 hover:text-red-900" title="PDF">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                                 </svg>
                                             </a>
@@ -582,15 +539,15 @@
                                                     data-customer-name="{{ $parent->customer_name }}"
                                                     data-invoice-number="{{ $parent->invoice_number }}"
                                                     data-customer-email="{{ $parent->customer_email ?? '' }}"
-                                                    title="Send Email">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    title="Email">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                                 </svg>
                                             </button>
                                             <button class="text-red-600 hover:text-red-900 delete-invoice-btn" 
                                                     data-invoice-id="{{ $parent->id }}"
-                                                    title="Delete Invoice">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    title="Delete">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                                 </svg>
                                             </button>
