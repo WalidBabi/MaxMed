@@ -96,8 +96,9 @@ class InvoiceController extends Controller
                    ->where('status', 'sent')
                    ->where('payment_status', '!=', 'pending');
         
-        $aedTotal = $totalsQuery->where('currency', 'AED')->sum('total_amount');
-        $usdTotal = $totalsQuery->where('currency', 'USD')->sum('total_amount');
+        // Create separate queries for each currency
+        $aedTotal = (clone $totalsQuery)->where('currency', 'AED')->sum('total_amount');
+        $usdTotal = (clone $totalsQuery)->where('currency', 'USD')->sum('total_amount');
         
         // Convert USD to AED for combined total (assuming 1 USD = 3.67 AED)
         $usdToAedRate = 3.67;
