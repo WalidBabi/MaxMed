@@ -1758,6 +1758,14 @@ Route::get('/products?category={category}', function($category) {
 // })->where('product', '.*');
 
 Route::get('/quotation/{product:slug}/form', function($product) {
+    if (is_string($product)) {
+        // If $product is a string (slug), find the actual product
+        $productModel = \App\Models\Product::where('slug', $product)->first();
+        if ($productModel) {
+            return redirect()->route('quotation.form', $productModel->slug, 301);
+        }
+        return redirect('/quotation/form', 301);
+    }
     return redirect()->route('quotation.form', $product->slug, 301);
 })->where('product', '.*');
 

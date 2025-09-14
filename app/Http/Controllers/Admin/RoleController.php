@@ -75,13 +75,11 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        $role->load(['users', 'permissions' => function($query) {
-            $query->where('is_active', true);
-        }]);
+        $role->load('users');
+        $rolePermissions = $role->permissions()->where('is_active', true)->get();
         $availablePermissions = Role::getAvailablePermissions();
         $permissionCategories = Permission::getCategories();
         $permissions = Permission::where('is_active', true)->get()->groupBy('category');
-        $rolePermissions = $role->permissions;
         
         return view('admin.roles.show', compact('role', 'availablePermissions', 'permissionCategories', 'permissions', 'rolePermissions'));
     }
@@ -91,14 +89,13 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $role->load(['permissions' => function($query) {
-            $query->where('is_active', true);
-        }]);
+        // Load permissions using the relationship method instead of eager loading
+        $rolePermissions = $role->permissions()->where('is_active', true)->get();
         $availablePermissions = Role::getAvailablePermissions();
         $permissionCategories = Permission::getCategories();
         $permissions = Permission::where('is_active', true)->get()->groupBy('category');
         
-        return view('admin.roles.edit', compact('role', 'availablePermissions', 'permissionCategories', 'permissions'));
+        return view('admin.roles.edit', compact('role', 'rolePermissions', 'availablePermissions', 'permissionCategories', 'permissions'));
     }
 
     /**

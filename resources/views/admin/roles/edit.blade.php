@@ -114,7 +114,7 @@
                                                     <div class="flex items-center">
                                                         <input type="checkbox" id="permission_{{ $permission->id }}" 
                                                                name="permissions[]" value="{{ $permission->id }}"
-                                                               {{ ($role->permissions && $role->permissions->contains($permission->id)) || in_array($permission->id, old('permissions', [])) ? 'checked' : '' }}
+                                                               {{ ($rolePermissions && $rolePermissions->contains($permission->id)) || in_array($permission->id, old('permissions', [])) ? 'checked' : '' }}
                                                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
                                                         <label for="permission_{{ $permission->id }}" class="ml-2 text-sm text-gray-700">
                                                             {{ $permission->display_name }}
@@ -215,7 +215,7 @@
                     </div>
                     <div class="p-6">
                         @php
-                            $currentPermissions = $role->permissions ? $role->permissions->where('is_active', true)->pluck('name')->toArray() : [];
+                            $currentPermissions = $rolePermissions ? $rolePermissions->pluck('name')->toArray() : [];
                         @endphp
                         @if(count($currentPermissions) > 0)
                             <div class="space-y-2">
