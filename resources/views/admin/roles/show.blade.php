@@ -61,8 +61,8 @@
                             <div class="text-sm text-blue-800">{{ Str::plural('User', $role->users->count()) }}</div>
                         </div>
                         <div class="bg-green-50 rounded-lg p-4 text-center">
-                            <div class="text-2xl font-bold text-green-600">{{ $rolePermissions->count() }}</div>
-                            <div class="text-sm text-green-800">{{ Str::plural('Permission', $rolePermissions->count()) }}</div>
+                            <div class="text-2xl font-bold text-green-600">{{ is_array($rolePermissions) ? count($rolePermissions) : $rolePermissions->count() }}</div>
+                            <div class="text-sm text-green-800">{{ Str::plural('Permission', is_array($rolePermissions) ? count($rolePermissions) : $rolePermissions->count()) }}</div>
                         </div>
                     </div>
 
@@ -124,7 +124,7 @@
                     </h3>
                 </div>
                 <div class="p-6">
-                    @if($rolePermissions->count() > 0)
+                    @if((is_array($rolePermissions) ? count($rolePermissions) : $rolePermissions->count()) > 0)
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             @php
                                 $permissionGroups = [
@@ -159,7 +159,11 @@
 
                             @foreach($permissionCategories as $categoryKey => $categoryName)
                                 @php
-                                    $categoryPermissions = $rolePermissions->where('category', $categoryKey);
+                                    if (is_array($rolePermissions)) {
+                                        $categoryPermissions = collect($rolePermissions)->where('category', $categoryKey);
+                                    } else {
+                                        $categoryPermissions = $rolePermissions->where('category', $categoryKey);
+                                    }
                                 @endphp
                                 @if($categoryPermissions->count() > 0)
                                     <div class="border border-gray-200 rounded-lg">
