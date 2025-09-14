@@ -10,6 +10,15 @@ use Illuminate\Support\Facades\DB;
 
 class FeedbackController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:feedback.view')->only(['index', 'show']);
+        $this->middleware('permission:feedback.respond')->only(['respond', 'storeResponse']);
+        $this->middleware('permission:feedback.delete')->only(['destroy']);
+        $this->middleware('permission:feedback.export')->only(['export']);
+    }
+
     /**
      * Display a listing of feedbacks.
      */

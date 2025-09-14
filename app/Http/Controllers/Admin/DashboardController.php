@@ -10,6 +10,14 @@ use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:dashboard.view')->only(['index']);
+        $this->middleware('permission:dashboard.analytics')->only(['analytics']);
+        $this->middleware('permission:dashboard.admin')->only(['admin']);
+    }
+
     public function index()
     {
         try {

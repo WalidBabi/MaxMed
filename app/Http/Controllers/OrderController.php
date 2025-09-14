@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:orders.view_own')->only(['index', 'show']);
+        $this->middleware('permission:orders.create')->only(['create', 'store']);
+        $this->middleware('permission:orders.edit')->only(['edit', 'update']);
+    }
+
     /**
      * Display the user's orders
      */

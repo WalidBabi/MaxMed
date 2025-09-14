@@ -11,6 +11,16 @@ use Illuminate\Support\Facades\Auth;
 
 class CustomerController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:customers.view')->only(['index', 'show']);
+        $this->middleware('permission:customers.create')->only(['create', 'store']);
+        $this->middleware('permission:customers.edit')->only(['edit', 'update']);
+        $this->middleware('permission:customers.delete')->only(['destroy']);
+        $this->middleware('permission:customers.export')->only(['export']);
+    }
+
     /**
      * Display a listing of the resource.
      */

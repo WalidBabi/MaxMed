@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\Permission;
+use App\Services\PermissionDocumentationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -36,8 +37,9 @@ class RoleController extends Controller
         $availablePermissions = Role::getAvailablePermissions();
         $permissionCategories = Permission::getCategories();
         $permissions = Permission::where('is_active', true)->get()->groupBy('category');
+        $permissionDocumentation = PermissionDocumentationService::getAllPermissionDocumentation();
         
-        return view('admin.roles.create', compact('availablePermissions', 'permissionCategories', 'permissions'));
+        return view('admin.roles.create', compact('availablePermissions', 'permissionCategories', 'permissions', 'permissionDocumentation'));
     }
 
     /**
@@ -94,8 +96,9 @@ class RoleController extends Controller
         $availablePermissions = Role::getAvailablePermissions();
         $permissionCategories = Permission::getCategories();
         $permissions = Permission::where('is_active', true)->get()->groupBy('category');
+        $permissionDocumentation = PermissionDocumentationService::getAllPermissionDocumentation();
         
-        return view('admin.roles.edit', compact('role', 'rolePermissions', 'availablePermissions', 'permissionCategories', 'permissions'));
+        return view('admin.roles.edit', compact('role', 'rolePermissions', 'availablePermissions', 'permissionCategories', 'permissions', 'permissionDocumentation'));
     }
 
     /**

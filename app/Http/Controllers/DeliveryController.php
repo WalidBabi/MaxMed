@@ -13,6 +13,16 @@ use Illuminate\Support\Facades\DB;
 
 class DeliveryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:deliveries.view')->only(['track', 'show']);
+        $this->middleware('permission:deliveries.create')->only(['create', 'store']);
+        $this->middleware('permission:deliveries.edit')->only(['edit', 'update']);
+        $this->middleware('permission:deliveries.delete')->only(['destroy']);
+        $this->middleware('permission:deliveries.confirm')->only(['confirm']);
+    }
+
     /**
      * Show delivery tracking page for customers
      */

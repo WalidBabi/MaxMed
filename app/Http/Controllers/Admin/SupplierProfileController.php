@@ -13,6 +13,20 @@ use Illuminate\Support\Facades\Response;
 
 class SupplierProfileController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:suppliers.view')->only(['index', 'show']);
+        $this->middleware('permission:suppliers.create')->only(['create', 'store']);
+        $this->middleware('permission:suppliers.edit')->only(['edit', 'update']);
+        $this->middleware('permission:suppliers.delete')->only(['destroy']);
+        $this->middleware('permission:suppliers.approve')->only(['approve', 'reject']);
+        $this->middleware('permission:suppliers.manage_categories')->only(['manageCategories']);
+        $this->middleware('permission:suppliers.view_performance')->only(['performance']);
+        $this->middleware('permission:suppliers.manage_contracts')->only(['contracts']);
+        $this->middleware('permission:suppliers.manage_payments')->only(['payments']);
+    }
+
     /**
      * Display a listing of supplier profiles
      */

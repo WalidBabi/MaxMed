@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:news.view')->only(['index', 'show']);
+        $this->middleware('permission:news.create')->only(['create', 'store']);
+        $this->middleware('permission:news.edit')->only(['edit', 'update']);
+        $this->middleware('permission:news.delete')->only(['destroy']);
+        $this->middleware('permission:news.publish')->only(['publish', 'unpublish']);
+    }
+
     public function index()
     {
         $news = News::orderBy('created_at', 'desc')->get();

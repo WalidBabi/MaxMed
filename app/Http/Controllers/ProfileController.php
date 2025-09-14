@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        // Profile management is generally allowed for all authenticated users
+        // No additional permission checks needed for basic profile operations
+    }
+
     /**
      * Display the user's profile form.
      */

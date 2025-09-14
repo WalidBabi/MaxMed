@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductSpecificationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:products.view')->only(['index', 'show']);
+        $this->middleware('permission:products.manage_specifications')->only(['create', 'store', 'edit', 'update', 'destroy']);
+    }
+
     public function index()
     {
         $products = Product::with(['specifications', 'category', 'brand'])

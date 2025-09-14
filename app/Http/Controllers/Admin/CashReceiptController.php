@@ -15,6 +15,16 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class CashReceiptController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:invoices.view')->only(['index', 'show']);
+        $this->middleware('permission:invoices.create')->only(['create', 'store']);
+        $this->middleware('permission:invoices.edit')->only(['edit', 'update']);
+        $this->middleware('permission:invoices.delete')->only(['destroy']);
+        $this->middleware('permission:invoices.manage_payments')->only(['issue', 'print', 'markAsIssued']);
+    }
+
     /**
      * Display a listing of cash receipts
      */

@@ -11,6 +11,15 @@ use Illuminate\Support\Str;
 
 class EmailTemplateController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:marketing.templates.view')->only(['index', 'show']);
+        $this->middleware('permission:marketing.templates.create')->only(['create', 'store']);
+        $this->middleware('permission:marketing.templates.edit')->only(['edit', 'update']);
+        $this->middleware('permission:marketing.templates.delete')->only(['destroy']);
+    }
+
     public function index(Request $request)
     {
         $query = EmailTemplate::with(['creator']);

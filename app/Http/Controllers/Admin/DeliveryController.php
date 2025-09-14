@@ -12,6 +12,17 @@ use Illuminate\Support\Facades\Log;
 
 class DeliveryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:deliveries.view')->only(['index', 'show']);
+        $this->middleware('permission:deliveries.create')->only(['create', 'store']);
+        $this->middleware('permission:deliveries.edit')->only(['edit', 'update']);
+        $this->middleware('permission:deliveries.delete')->only(['destroy']);
+        $this->middleware('permission:deliveries.track')->only(['track']);
+        $this->middleware('permission:deliveries.confirm')->only(['confirm']);
+    }
+
     /**
      * Display a listing of the deliveries.
      */

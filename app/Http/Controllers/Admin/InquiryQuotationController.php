@@ -20,6 +20,15 @@ use App\Models\SupplierPayment;
 
 class InquiryQuotationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:quotations.view')->only(['index', 'show']);
+        $this->middleware('permission:quotations.create')->only(['create', 'store']);
+        $this->middleware('permission:quotations.edit')->only(['edit', 'update']);
+        $this->middleware('permission:quotations.delete')->only(['destroy']);
+        $this->middleware('permission:quotations.approve')->only(['approve', 'reject']);
+    }
     /**
      * Display unified view of inquiries and their quotations
      */

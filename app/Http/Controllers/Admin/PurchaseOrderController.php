@@ -18,6 +18,18 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class PurchaseOrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:purchase_orders.view')->only(['index', 'show']);
+        $this->middleware('permission:purchase_orders.create')->only(['create', 'store']);
+        $this->middleware('permission:purchase_orders.edit')->only(['edit', 'update']);
+        $this->middleware('permission:purchase_orders.delete')->only(['destroy']);
+        $this->middleware('permission:purchase_orders.approve')->only(['approve', 'reject']);
+        $this->middleware('permission:purchase_orders.send')->only(['send']);
+        $this->middleware('permission:purchase_orders.manage_status')->only(['updateStatus']);
+        $this->middleware('permission:purchase_orders.view_financials')->only(['financials']);
+    }
     /**
      * Display a listing of purchase orders
      */

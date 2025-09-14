@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        // Cart operations require authentication but no specific permissions
+    }
+
     private function getTotalQuantityInCart($productId)
     {
         $cart = session()->get('cart', []);

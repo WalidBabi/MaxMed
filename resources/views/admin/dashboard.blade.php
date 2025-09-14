@@ -3,6 +3,7 @@
 @section('title', 'Sales Dashboard - MaxMed Admin')
 
 @section('content')
+@can('dashboard.view')
 <div class="-mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
     <!-- Header -->
     <div class="mb-8">
@@ -1045,4 +1046,5 @@ select:focus, input[type="date"]:focus {
     }
 }
 </style>
+@endcan
 @endsection
