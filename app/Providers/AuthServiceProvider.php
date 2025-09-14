@@ -88,6 +88,7 @@ class AuthServiceProvider extends ServiceProvider
                     return $user->hasPermission($permission->name);
                 });
             }
+            
         } catch (\Exception $e) {
             // Handle case where permissions table doesn't exist yet (during migration)
         }
