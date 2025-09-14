@@ -10,6 +10,14 @@ use Illuminate\Support\Facades\Log;
 
 class OrderQuotationsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:quotations.view')->only(['index', 'show']);
+        $this->middleware('permission:quotations.edit')->only(['update', 'accept', 'reject']);
+        $this->middleware('permission:quotations.delete')->only(['destroy']);
+    }
+
     /**
      * Display quotations for an order
      */

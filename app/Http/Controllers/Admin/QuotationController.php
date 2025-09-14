@@ -16,6 +16,19 @@ use Illuminate\Support\Facades\Notification;
 
 class QuotationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:quotations.view')->only(['index', 'show']);
+        $this->middleware('permission:quotations.create')->only(['create', 'store']);
+        $this->middleware('permission:quotations.edit')->only(['edit', 'update']);
+        $this->middleware('permission:quotations.delete')->only(['destroy']);
+        $this->middleware('permission:quotations.approve')->only(['approve', 'reject']);
+        $this->middleware('permission:quotations.send')->only(['send']);
+        $this->middleware('permission:quotations.compare')->only(['compare']);
+        $this->middleware('permission:quotations.convert')->only(['convertToOrder']);
+    }
+
     /**
      * Display a listing of quotations
      */

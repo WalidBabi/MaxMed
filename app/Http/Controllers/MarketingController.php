@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\Log;
 
 class MarketingController extends Controller
 {
+    public function __construct()
+    {
+        // Unsubscribe doesn't require auth - it's a public endpoint
+        // But other marketing functions would need permissions
+    }
+
     public function unsubscribe($token)
     {
         try {

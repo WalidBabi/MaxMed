@@ -12,6 +12,15 @@ use Illuminate\Support\Facades\Log;
 
 class ContactSubmissionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:crm.access')->only(['index', 'show']);
+        $this->middleware('permission:crm.leads.view')->only(['index', 'show']);
+        $this->middleware('permission:crm.leads.edit')->only(['edit', 'update', 'assign', 'convert']);
+        $this->middleware('permission:crm.leads.delete')->only(['destroy']);
+    }
+
     /**
      * Display contact submissions
      */

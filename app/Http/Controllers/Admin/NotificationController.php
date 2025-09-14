@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:dashboard.view')->only(['index']);
+        $this->middleware('permission:system.notifications')->only(['markAsRead', 'markAllAsRead', 'clearAll']);
+    }
+
     /**
      * Get unread notifications for the admin.
      */

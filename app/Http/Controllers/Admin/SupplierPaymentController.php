@@ -12,6 +12,13 @@ use Illuminate\Support\Facades\Log;
 
 class SupplierPaymentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:suppliers.view')->only(['index', 'show']);
+        $this->middleware('permission:suppliers.manage_payments')->only(['create', 'store', 'edit', 'update', 'destroy', 'approve', 'reject']);
+    }
+
     /**
      * Display a listing of supplier payments
      */

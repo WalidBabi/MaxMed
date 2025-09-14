@@ -12,6 +12,16 @@ use Illuminate\Support\Facades\DB;
 
 class MarketingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:marketing.access')->only(['dashboard', 'index']);
+        $this->middleware('permission:marketing.campaigns.view')->only(['campaigns']);
+        $this->middleware('permission:marketing.contacts.view')->only(['contacts']);
+        $this->middleware('permission:marketing.templates.view')->only(['templates']);
+        $this->middleware('permission:marketing.analytics.view')->only(['analytics']);
+    }
+
     public function dashboard()
     {
         // Get real marketing data from database

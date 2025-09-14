@@ -10,6 +10,15 @@ use Illuminate\Support\Str;
 
 class BrandController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:brands.view')->only(['index', 'show']);
+        $this->middleware('permission:brands.create')->only(['create', 'store']);
+        $this->middleware('permission:brands.edit')->only(['edit', 'update']);
+        $this->middleware('permission:brands.delete')->only(['destroy']);
+    }
+
     /**
      * Display a listing of the brands.
      */

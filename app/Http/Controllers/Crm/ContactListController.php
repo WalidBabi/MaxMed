@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\Auth;
 
 class ContactListController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:marketing.contacts.view')->only(['index', 'show']);
+        $this->middleware('permission:marketing.contacts.create')->only(['create', 'store']);
+        $this->middleware('permission:marketing.contacts.edit')->only(['edit', 'update']);
+        $this->middleware('permission:marketing.contacts.delete')->only(['destroy']);
+    }
+
     public function index()
     {
         $contactLists = ContactList::with('creator')

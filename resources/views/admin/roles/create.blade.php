@@ -119,11 +119,29 @@
                                                            class="permission-checkbox category-{{ $categoryKey }} h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                                                            {{ in_array($permission->id, old('permissions', [])) ? 'checked' : '' }}>
                                                 </div>
-                                                <div class="ml-3 text-sm leading-6">
-                                                    <div class="font-medium text-gray-900">{{ $permission->display_name }}</div>
+                                                <div class="ml-3 text-sm leading-6 flex-1">
+                                                    <div class="font-medium text-gray-900 flex items-center">
+                                                        {{ $permission->display_name }}
+                                                        @if(isset($permissionDocumentation[$permission->name]))
+                                                            @php
+                                                                $doc = $permissionDocumentation[$permission->name];
+                                                                $securityLevel = $doc['security_level'] ?? 'Basic';
+                                                                $securityColor = \App\Services\PermissionDocumentationService::getSecurityLevelColor($securityLevel);
+                                                            @endphp
+                                                            <span class="ml-1 inline-flex items-center">
+                                                                <svg class="w-4 h-4 {{ $securityColor }} cursor-help" 
+                                                                     fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                                     data-tooltip-target="tooltip-{{ $permission->id }}"
+                                                                     data-tooltip-trigger="hover">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                                                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                                </svg>
+                                                            </span>
+                                                        @endif
+                                                    </div>
                                                     @if($permission->description)
                                                         <div class="text-gray-500 text-xs">{{ $permission->description }}</div>
-                                            @endif
+                                                    @endif
                                                 </div>
                                             </label>
                                         @endforeach
@@ -190,7 +208,58 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
+
+    // Initialize tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-tooltip-target]'));
+    const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new Tooltip(tooltipTriggerEl, {
+            placement: 'top',
+            trigger: 'hover focus',
+            offset: [0, 8],
+            arrow: true,
+            animation: 'fade',
+            delay: { show: 500, hide: 200 }
+        });
+    });
 });
 </script>
+
+<!-- Include Flowbite for tooltips -->
+<script src="https://unpkg.com/flowbite@1.8.1/dist/flowbite.min.js"></script>
+
+<!-- Permission Documentation Tooltips -->
+@if(isset($permissionDocumentation))
+    @foreach($permissions as $categoryKey => $categoryPermissions)
+        @foreach($categoryPermissions as $permission)
+            @if(isset($permissionDocumentation[$permission->name]))
+                @php
+                    $doc = $permissionDocumentation[$permission->name];
+                @endphp
+                <div id="tooltip-{{ $permission->id }}" role="tooltip" 
+                     class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
+                    <div class="max-w-xs">
+                        <div class="font-semibold text-white mb-1">{{ $doc['title'] }}</div>
+                        <div class="text-gray-200 text-xs mb-2">{{ $doc['description'] }}</div>
+                        <div class="text-xs space-y-1">
+                            <div><span class="font-medium">Impact:</span> {{ $doc['impact'] }}</div>
+                            <div><span class="font-medium">Security Level:</span> 
+                                <span class="px-1 py-0.5 rounded text-xs {{ \App\Services\PermissionDocumentationService::getSecurityLevelBgColor($doc['security_level'] ?? 'Basic') }} {{ \App\Services\PermissionDocumentationService::getSecurityLevelColor($doc['security_level'] ?? 'Basic') }}">
+                                    {{ $doc['security_level'] ?? 'Basic' }}
+                                </span>
+                            </div>
+                            @if(!empty($doc['modules']))
+                                <div><span class="font-medium">Related:</span> {{ implode(', ', $doc['modules']) }}</div>
+                            @endif
+                            @if(!empty($doc['business_impact']))
+                                <div><span class="font-medium">Business Impact:</span> {{ $doc['business_impact'] }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="tooltip-arrow" data-popper-arrow></div>
+                </div>
+            @endif
+        @endforeach
+    @endforeach
+@endif
 @endpush 
 @endsection

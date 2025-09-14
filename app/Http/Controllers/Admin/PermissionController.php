@@ -50,10 +50,17 @@ class PermissionController extends Controller
             });
         }
 
-        $permissions = $query->orderBy('category')->orderBy('name')->paginate(20);
-        $categories = $this->permissionService->getCategories();
+        $permissions = $query->orderBy('category')->orderBy('name')->get()->groupBy('category');
+        
+        // Get categories from actual permissions in database, with fallback to static method
+        $permissionCategories = Permission::getCategories();
+        $actualCategories = $permissions->keys()->mapWithKeys(function($category) use ($permissionCategories) {
+            return [$category => $permissionCategories[$category] ?? ucwords(str_replace('_', ' ', $category))];
+        });
+        
+        $permissionDocumentation = \App\Services\PermissionDocumentationService::getAllPermissionDocumentation();
 
-        return view('admin.permissions.index', compact('permissions', 'categories'));
+        return view('admin.permissions.index', compact('permissions', 'actualCategories', 'permissionDocumentation'));
     }
 
     /**

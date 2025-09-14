@@ -14,6 +14,16 @@ use Illuminate\Support\Facades\Log;
 
 class CampaignController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:marketing.campaigns.view')->only(['index', 'show']);
+        $this->middleware('permission:marketing.campaigns.create')->only(['create', 'store']);
+        $this->middleware('permission:marketing.campaigns.edit')->only(['edit', 'update']);
+        $this->middleware('permission:marketing.campaigns.delete')->only(['destroy']);
+        $this->middleware('permission:marketing.campaigns.send')->only(['send', 'pause', 'resume']);
+    }
+
     public function index(Request $request)
     {
         $query = Campaign::with(['creator', 'emailTemplate']);

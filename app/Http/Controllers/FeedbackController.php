@@ -13,6 +13,13 @@ use Illuminate\Support\Facades\Log;
 
 class FeedbackController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:feedback.create')->only(['store']);
+        $this->middleware('permission:feedback.view')->only(['index', 'show']);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([

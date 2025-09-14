@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\View;
 
 class CrmLeadController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:crm.leads.view')->only(['index', 'show']);
+        $this->middleware('permission:crm.leads.edit')->only(['create', 'store', 'edit', 'update']);
+        $this->middleware('permission:crm.leads.delete')->only(['destroy']);
+    }
+
     /**
      * Display a listing of leads with enhanced pipeline view
      */

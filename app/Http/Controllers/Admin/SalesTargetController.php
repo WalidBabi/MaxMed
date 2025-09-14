@@ -11,6 +11,13 @@ use Carbon\Carbon;
 
 class SalesTargetController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:analytics.view')->only(['index', 'show']);
+        $this->middleware('permission:analytics.advanced')->only(['create', 'store', 'edit', 'update', 'destroy']);
+    }
+
     /**
      * Display a listing of sales targets
      */

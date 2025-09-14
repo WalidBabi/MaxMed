@@ -17,6 +17,16 @@ use Carbon\Carbon;
 
 class SupplierInvitationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:suppliers.view')->only(['index', 'show']);
+        $this->middleware('permission:suppliers.create')->only(['create', 'store']);
+        $this->middleware('permission:suppliers.edit')->only(['edit', 'update']);
+        $this->middleware('permission:suppliers.delete')->only(['destroy']);
+        $this->middleware('permission:suppliers.approve')->only(['resend', 'cancel']);
+    }
+
     /**
      * Display a listing of supplier invitations.
      */

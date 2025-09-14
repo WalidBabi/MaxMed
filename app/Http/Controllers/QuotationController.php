@@ -15,6 +15,14 @@ use Illuminate\Support\Facades\Http;
 
 class QuotationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:quotations.view')->only(['show', 'index']);
+        $this->middleware('permission:quotations.create')->only(['create', 'store']);
+        $this->middleware('permission:quotations.edit')->only(['edit', 'update']);
+    }
+
     /**
      * Handle direct URL access to quotation/ID which should be redirected
      */

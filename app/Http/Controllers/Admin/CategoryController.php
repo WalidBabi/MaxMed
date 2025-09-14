@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:categories.view')->only(['index', 'show']);
+        $this->middleware('permission:categories.create')->only(['create', 'store']);
+        $this->middleware('permission:categories.edit')->only(['edit', 'update']);
+        $this->middleware('permission:categories.delete')->only(['destroy']);
+        $this->middleware('permission:categories.manage_hierarchy')->only(['updateHierarchy']);
+    }
+
     public function index()
     {
         $categories = Category::all();

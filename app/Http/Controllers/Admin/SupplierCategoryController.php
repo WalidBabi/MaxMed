@@ -17,6 +17,14 @@ use Illuminate\Support\Facades\Response;
 
 class SupplierCategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:suppliers.view')->only(['index', 'show']);
+        $this->middleware('permission:suppliers.manage_categories')->only(['create', 'store', 'edit', 'update', 'destroy']);
+        $this->middleware('permission:suppliers.approve')->only(['approve', 'reject']);
+    }
+
     /**
      * Display a listing of supplier category assignments.
      */

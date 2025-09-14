@@ -18,6 +18,12 @@ use App\Models\PurchaseOrder;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:supplier.orders.view')->only(['index', 'show']);
+        $this->middleware('permission:supplier.orders.manage')->only(['update', 'quotation', 'delivery']);
+    }
     /**
      * Display orders for supplier processing
      */

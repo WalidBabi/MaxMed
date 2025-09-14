@@ -469,6 +469,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class);
         Route::post('roles/{role}/toggle-status', [\App\Http\Controllers\Admin\RoleController::class, 'toggleStatus'])->name('roles.toggle-status');
         
+        // Permission Documentation Guide
+        Route::get('/permission-guide', function () {
+            $permissions = \App\Models\Permission::where('is_active', true)->get()->groupBy('category');
+            
+            // Get categories from actual permissions in database, with fallback to static method
+            $permissionCategories = \App\Models\Permission::getCategories();
+            $actualCategories = $permissions->keys()->mapWithKeys(function($category) use ($permissionCategories) {
+                return [$category => $permissionCategories[$category] ?? ucwords(str_replace('_', ' ', $category))];
+            });
+            
+            $permissionDocumentation = \App\Services\PermissionDocumentationService::getAllPermissionDocumentation();
+            
+            return view('admin.permissions.index', compact('permissions', 'actualCategories', 'permissionDocumentation'));
+        })->name('permissions.guide')->middleware('permission:roles.view');
+        
         // User Management
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
         

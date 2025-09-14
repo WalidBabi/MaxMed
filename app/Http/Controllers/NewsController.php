@@ -7,6 +7,15 @@ use Illuminate\Http\Request;
 
 class NewsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index', 'show']);
+        $this->middleware('permission:news.view')->only(['index', 'show']);
+        $this->middleware('permission:news.create')->only(['create', 'store']);
+        $this->middleware('permission:news.edit')->only(['edit', 'update']);
+        $this->middleware('permission:news.delete')->only(['destroy']);
+    }
+
     public function index()
     {
         $news = News::where('published', true)

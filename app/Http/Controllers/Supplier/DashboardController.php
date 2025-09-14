@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\View;
 
 class DashboardController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:supplier.dashboard')->only(['index']);
+    }
+
     /**
      * Display the supplier dashboard.
      */
