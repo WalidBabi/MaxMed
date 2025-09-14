@@ -98,68 +98,38 @@
                         <p class="text-sm text-gray-600 mb-6">Select the permissions this role should have</p>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            @php
-                                $permissionGroups = [
-                                    'Dashboard' => ['dashboard.view', 'dashboard.analytics'],
-                                    'Users' => ['users.view', 'users.create', 'users.edit', 'users.delete'],
-                                    'Roles' => ['roles.view', 'roles.create', 'roles.edit', 'roles.delete'],
-                                    'Products' => ['products.view', 'products.create', 'products.edit', 'products.delete', 'products.manage_inventory'],
-                                    'Supplier Products' => ['supplier.products.view', 'supplier.products.create', 'supplier.products.edit', 'supplier.products.delete'],
-                                    'Orders' => ['orders.view', 'orders.create', 'orders.edit', 'orders.delete', 'orders.manage_status'],
-                                    'Customers' => ['customers.view', 'customers.create', 'customers.edit', 'customers.delete'],
-                                    'Deliveries' => ['deliveries.view', 'deliveries.create', 'deliveries.edit', 'deliveries.delete'],
-                                    'Categories' => ['categories.view', 'categories.create', 'categories.edit', 'categories.delete'],
-                                    'Brands' => ['brands.view', 'brands.create', 'brands.edit', 'brands.delete'],
-                                    'News' => ['news.view', 'news.create', 'news.edit', 'news.delete'],
-                                    'Purchase Orders' => ['purchase_orders.view', 'purchase_orders.create', 'purchase_orders.edit', 'purchase_orders.delete', 'purchase_orders.approve', 'purchase_orders.send_to_supplier', 'purchase_orders.manage_status', 'purchase_orders.view_financials', 'purchase_orders.manage_payments'],
-                                    'Suppliers' => ['suppliers.view', 'suppliers.create', 'suppliers.edit', 'suppliers.delete', 'suppliers.manage_contracts', 'suppliers.view_performance'],
-                                    'Quotations' => ['quotations.view', 'quotations.create', 'quotations.edit', 'quotations.delete', 'quotations.approve', 'quotations.compare'],
-                                    'Procurement' => ['procurement.analytics', 'procurement.reports', 'procurement.budget_tracking'],
-                                    'CRM Leads' => ['crm.leads.view', 'crm.leads.create', 'crm.leads.edit', 'crm.leads.delete', 'crm.leads.assign', 'crm.leads.convert', 'crm.leads.export', 'crm.leads.import', 'crm.leads.merge', 'crm.leads.bulk_actions'],
-                                    'CRM Deals' => ['crm.deals.view', 'crm.deals.create', 'crm.deals.edit', 'crm.deals.delete', 'crm.deals.assign', 'crm.deals.close', 'crm.deals.export', 'crm.deals.pipeline', 'crm.deals.forecast'],
-                                    'CRM Activities' => ['crm.activities.view', 'crm.activities.create', 'crm.activities.edit', 'crm.activities.delete', 'crm.activities.complete', 'crm.activities.schedule', 'crm.activities.timeline'],
-                                    'CRM Contacts' => ['crm.contacts.view', 'crm.contacts.create', 'crm.contacts.edit', 'crm.contacts.delete', 'crm.contacts.merge', 'crm.contacts.export', 'crm.contacts.import'],
-                                    'CRM Campaigns' => ['crm.campaigns.view', 'crm.campaigns.create', 'crm.campaigns.edit', 'crm.campaigns.delete', 'crm.campaigns.execute', 'crm.campaigns.track'],
-                                    'CRM Tasks' => ['crm.tasks.view', 'crm.tasks.create', 'crm.tasks.edit', 'crm.tasks.delete', 'crm.tasks.assign', 'crm.tasks.complete', 'crm.tasks.overdue'],
-                                    'CRM Reports' => ['crm.reports.view', 'crm.reports.create', 'crm.reports.export', 'crm.analytics.view', 'crm.analytics.dashboard', 'crm.analytics.performance'],
-                                    'CRM Communication' => ['crm.communication.email', 'crm.communication.sms', 'crm.communication.call', 'crm.communication.meeting', 'crm.communication.templates'],
-                                    'CRM Integration' => ['crm.integration.webhooks', 'crm.integration.api', 'crm.automation.workflows', 'crm.automation.rules', 'crm.automation.triggers'],
-                                    'CRM Administration' => ['crm.admin.settings', 'crm.admin.fields', 'crm.admin.workflows', 'crm.admin.integrations', 'crm.admin.backup', 'crm.admin.restore'],
-                                    'Feedback' => ['feedback.view', 'feedback.respond'],
-                                ];
-                            @endphp
-
-                            @foreach($permissionGroups as $group => $groupPermissions)
+                            @if($permissions && count($permissions) > 0)
+                                @foreach($permissions as $categoryKey => $categoryPermissions)
+                                    @if($categoryPermissions->count() > 0)
                                 <div class="border border-gray-200 rounded-lg p-4">
                                     <div class="flex items-center justify-between mb-3">
-                                        <h4 class="text-sm font-medium text-gray-900">{{ $group }}</h4>
-                                        <button type="button" onclick="toggleGroupPermissions('{{ $group }}')" 
+                                                <h4 class="text-sm font-medium text-gray-900">{{ ucfirst(str_replace('_', ' ', $categoryKey)) }}</h4>
+                                                <button type="button" onclick="toggleGroupPermissions('{{ $categoryKey }}')" 
                                                 class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">
                                             Select All
                                         </button>
                                     </div>
-                                    <div class="space-y-2" data-group="{{ $group }}">
-                                        @foreach($groupPermissions as $permission)
-                                            @if(isset($availablePermissions[$permission]))
-                                                @php
-                                                    $permissionModel = \App\Models\Permission::where('name', $permission)->first();
-                                                @endphp
-                                                @if($permissionModel)
+                                            <div class="space-y-2" data-group="{{ $categoryKey }}">
+                                                @foreach($categoryPermissions as $permission)
                                                     <div class="flex items-center">
-                                                        <input type="checkbox" id="permission_{{ $permission }}" 
-                                                               name="permissions[]" value="{{ $permissionModel->id }}"
-                                                               {{ $role->hasPermission($permission) || in_array($permissionModel->id, old('permissions', [])) ? 'checked' : '' }}
+                                                        <input type="checkbox" id="permission_{{ $permission->id }}" 
+                                                               name="permissions[]" value="{{ $permission->id }}"
+                                                               {{ ($role->permissions && $role->permissions->contains($permission->id)) || in_array($permission->id, old('permissions', [])) ? 'checked' : '' }}
                                                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                                        <label for="permission_{{ $permission }}" class="ml-2 text-sm text-gray-700">
-                                                            {{ $availablePermissions[$permission] }}
+                                                        <label for="permission_{{ $permission->id }}" class="ml-2 text-sm text-gray-700">
+                                                            {{ $permission->display_name }}
                                                         </label>
                                                     </div>
-                                                @endif
-                                            @endif
                                         @endforeach
                                     </div>
                                 </div> 
+                                    @endif
                             @endforeach
+                            @else
+                                <div class="col-span-2 text-center py-8">
+                                    <p class="text-gray-500">No permissions available. Please create permissions first.</p>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -245,7 +215,7 @@
                     </div>
                     <div class="p-6">
                         @php
-                            $currentPermissions = $role->permissions()->where('is_active', true)->pluck('name')->toArray();
+                            $currentPermissions = $role->permissions ? $role->permissions->where('is_active', true)->pluck('name')->toArray() : [];
                         @endphp
                         @if(count($currentPermissions) > 0)
                             <div class="space-y-2">

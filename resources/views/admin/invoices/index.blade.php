@@ -23,76 +23,103 @@
         </div>
     </div>
 
-    <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-                        <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <!-- All Cards in One Row -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-6">
+        <!-- Invoices Card -->
+        <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-blue-50 to-indigo-100 p-1.5 shadow-sm ring-1 ring-blue-200/50 transition-all duration-300 hover:shadow-md hover:ring-blue-300/50">
+            <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-blue-200/30 transition-all duration-300 group-hover:scale-110"></div>
+            <div class="relative">
+                <div class="flex items-center justify-between">
+                    <div class="flex h-6 w-6 items-center justify-center rounded-md bg-blue-500 shadow-sm">
+                        <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 00-.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                     </div>
+                    <div class="text-right">
+                        <p class="text-xs font-medium text-blue-600 uppercase tracking-wide">Invoices</p>
+                        <p class="text-xs text-blue-500">All types</p>
                 </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Invoices</p>
-                    <div class="text-base font-bold text-gray-900">
-                        <div class="text-lg">{{ $invoiceCounts['proforma'] }} Proforma</div>
-                        <div class="text-lg text-gray-600">{{ $invoiceCounts['final'] }} Final</div>
                     </div>
+                <div class="mt-1">
+                    <div class="space-y-0">
+                        <p class="text-sm font-bold text-gray-900">{{ $invoiceCounts['final'] }} Final</p>
+                        <p class="text-xs font-semibold text-gray-700">{{ $invoiceCounts['proforma'] }} Proforma</p>
+                    </div>
+                    <p class="text-xs text-blue-600 mt-0.5">Total: {{ $invoiceCounts['total'] }}</p>
                 </div>
             </div>
         </div>
 
-        <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-100">
-                        <svg class="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <!-- Pending Card -->
+        <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-yellow-50 to-amber-100 p-1.5 shadow-sm ring-1 ring-yellow-200/50 transition-all duration-300 hover:shadow-md hover:ring-yellow-300/50">
+            <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-yellow-200/30 transition-all duration-300 group-hover:scale-110"></div>
+            <div class="relative">
+                <div class="flex items-center justify-between">
+                    <div class="flex h-6 w-6 items-center justify-center rounded-md bg-yellow-500 shadow-sm">
+                        <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
+                    <div class="text-right">
+                        <p class="text-xs font-medium text-yellow-600 uppercase tracking-wide">Pending</p>
+                        <p class="text-xs text-yellow-500">Payment status</p>
                 </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Pending</p>
-                    <p class="text-3xl font-bold text-gray-900">{{ $pendingAll ?? $invoices->where('payment_status', 'pending')->count() }}</p>
-                    <p class="text-xs text-gray-500 mt-1">Includes all pages</p>
+                </div>
+                <div class="mt-1">
+                    <p class="text-sm font-bold text-gray-900">{{ $pendingAll ?? $invoices->where('payment_status', 'pending')->count() }}</p>
+                    <p class="text-xs text-yellow-600 mt-0.5">Awaiting payment</p>
                 </div>
             </div>
         </div>
 
-        <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-                        <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <!-- Revenue Card -->
+        <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-emerald-50 to-green-100 p-1.5 shadow-sm ring-1 ring-emerald-200/50 transition-all duration-300 hover:shadow-md hover:ring-emerald-300/50">
+            <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-emerald-200/20 transition-all duration-300 group-hover:scale-110"></div>
+            <div class="relative">
+                <div class="flex items-center justify-between">
+                    <div class="flex h-6 w-6 items-center justify-center rounded-md bg-emerald-500 shadow-sm">
+                        <svg class="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
                         </svg>
                     </div>
+                    <div class="text-right">
+                        <p class="text-xs font-semibold text-emerald-600 uppercase tracking-wide">Revenue</p>
+                        <p class="text-xs text-emerald-500">All sent invoices</p>
                 </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Paid Orders</p>
-                    <p class="text-3xl font-bold text-gray-900">{{ $paidOrdersCount }}</p>
-                    <p class="text-xs text-gray-500 mt-1">Unique orders paid</p>
+                </div>
+                <div class="mt-1">
+                    <div class="space-y-0">
+                        <p class="text-sm font-bold text-gray-900">{{ number_format($invoiceTotals['revenue']['aed'], 2) }} AED</p>
+                        <p class="text-xs font-semibold text-gray-700">${{ number_format($invoiceTotals['revenue']['usd'], 2) }} USD</p>
+                        <p class="text-xs font-bold text-emerald-600">Combined: {{ number_format($invoiceTotals['revenue']['combined'], 2) }} AED</p>
+                    </div>
+                    <p class="text-xs text-emerald-600 mt-0.5">Excludes pending payments</p>
                 </div>
             </div>
         </div>
 
-        <div class="card-hover overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" zoomAndPan="magnify" viewBox="0 0 375 374.999991" height="500" preserveAspectRatio="xMidYMid meet" version="1.2"><defs><clipPath id="e4df17700a"><path d="M 112.5 122.4375 L 262.5 122.4375 L 262.5 252.9375 L 112.5 252.9375 Z M 112.5 122.4375 "/></clipPath><clipPath id="2588f1d57e"><path d="M 142.726562 161.703125 L 144.175781 161.703125 L 144.175781 162.953125 L 142.726562 162.953125 Z M 142.726562 161.703125 "/></clipPath><clipPath id="dcb47909db"><path d="M 144.148438 162.148438 C 143.476562 163.199219 142.875 162.976562 142.800781 162.75 C 142.648438 162.523438 142.800781 161.925781 142.949219 161.773438 C 143.175781 161.625 143.925781 161.851562 143.925781 161.851562 "/></clipPath></defs><g id="fc05cfb7fb"><g clip-rule="nonzero" clip-path="url(#e4df17700a)"><path style=" stroke:none;fill-rule:nonzero;fill:#000000;fill-opacity:1;" d="M 125.828125 122.585938 C 125.898438 122.679688 126.21875 123.082031 126.539062 123.472656 C 128.820312 126.203125 130.542969 130.644531 131.464844 136.242188 C 132.078125 139.917969 132.109375 141.074219 132.109375 155.089844 L 132.109375 168.144531 L 125.859375 168.144531 C 120.144531 168.144531 119.484375 168.117188 118.359375 167.890625 C 116.496094 167.472656 114.890625 166.582031 113.542969 165.21875 C 112.570312 164.183594 112.601562 164.125 112.660156 167.261719 C 112.738281 169.855469 112.765625 170.140625 113.140625 171.558594 C 113.738281 173.777344 114.5625 175.453125 115.804688 176.9375 C 117.492188 178.980469 119.214844 180.121094 121.667969 180.882812 C 122.191406 181.035156 123.300781 181.097656 127.21875 181.125 L 132.113281 181.199219 L 132.113281 194.210938 L 125.214844 194.164062 L 118.285156 194.121094 L 117.089844 193.640625 C 115.667969 193.070312 115.027344 192.648438 113.632812 191.402344 L 112.617188 190.488281 L 112.675781 193.355469 C 112.75 196.011719 112.765625 196.308594 113.140625 197.660156 C 114.441406 202.433594 117.582031 205.839844 121.726562 206.949219 C 122.761719 207.234375 123.164062 207.25 127.492188 207.3125 L 132.113281 207.371094 L 132.113281 220.824219 C 132.113281 228.941406 132.066406 234.925781 131.992188 235.949219 C 131.917969 236.878906 131.679688 238.617188 131.46875 239.832031 C 130.496094 245.433594 128.746094 249.648438 126.234375 252.378906 L 125.722656 252.933594 L 151.027344 252.933594 C 166.152344 252.933594 177.464844 252.875 179.125 252.800781 C 182.042969 252.648438 188.550781 252.003906 190.019531 251.6875 C 190.480469 251.597656 191.347656 251.476562 191.917969 251.375 C 193.132812 251.191406 195.132812 250.773438 198.023438 250.039062 C 201.941406 249.066406 205.746094 247.757812 209.433594 246.113281 C 210.570312 245.605469 213.832031 243.9375 214.699219 243.414062 C 215.164062 243.144531 215.71875 242.8125 215.929688 242.707031 C 216.957031 242.109375 217.949219 241.453125 218.90625 240.742188 C 219.609375 240.234375 220.3125 239.738281 220.460938 239.632812 C 221.089844 239.214844 223.257812 237.398438 224.246094 236.480469 C 227.917969 233.125 231.03125 229.308594 233.582031 225.03125 C 233.925781 224.429688 234.378906 223.683594 234.570312 223.367188 C 235.066406 222.527344 237.097656 218.324219 237.292969 217.695312 C 237.355469 217.46875 237.445312 217.253906 237.5625 217.050781 C 237.953125 216.542969 240.195312 209.457031 240.464844 207.914062 C 240.558594 207.417969 240.601562 207.34375 240.972656 207.269531 C 241.214844 207.222656 244.703125 207.222656 248.726562 207.253906 C 256.777344 207.3125 256.777344 207.3125 258.554688 208.136719 C 259.558594 208.601562 259.859375 208.8125 260.964844 209.816406 C 262.414062 211.125 262.28125 211.335938 262.191406 208.0625 C 262.132812 206.140625 262.058594 204.957031 261.921875 204.476562 C 261.414062 202.628906 261.292969 202.242188 260.851562 201.3125 C 259.382812 198.089844 256.933594 195.804688 253.785156 194.707031 L 252.554688 194.257812 L 247.5625 194.1875 L 242.578125 194.113281 L 242.640625 192.355469 C 242.699219 190.042969 242.699219 185.46875 242.625 183.117188 L 242.5625 181.226562 L 249.234375 181.199219 C 254.953125 181.167969 256.015625 181.199219 256.644531 181.363281 C 258.527344 181.886719 259.800781 182.609375 261.355469 184.035156 L 262.226562 184.84375 L 262.226562 182.625 C 262.226562 179.984375 262.089844 178.8125 261.550781 177.074219 C 260.480469 173.546875 258.394531 170.921875 255.402344 169.300781 C 253.457031 168.25 253.335938 168.226562 246.648438 168.175781 C 242.730469 168.144531 240.675781 168.085938 240.574219 167.996094 C 240.476562 167.894531 240.417969 167.773438 240.410156 167.632812 C 240.273438 166.929688 240.097656 166.234375 239.882812 165.546875 C 236.386719 153.132812 229.855469 143.273438 220.289062 135.972656 C 218.988281 134.964844 215.800781 132.847656 214.503906 132.128906 C 214.007812 131.84375 213.472656 131.542969 213.335938 131.453125 C 212.707031 131.109375 209.101562 129.335938 208.195312 128.964844 C 207.65625 128.722656 206.953125 128.421875 206.640625 128.300781 C 201.359375 126.007812 192.503906 123.832031 185.738281 123.144531 C 184.628906 123.042969 183.167969 122.878906 182.488281 122.816406 C 179.445312 122.484375 175.21875 122.4375 151.171875 122.4375 C 130.855469 122.4375 125.753906 122.484375 125.828125 122.585938 Z M 175.308594 129.097656 C 180.367188 129.394531 183.480469 129.785156 187.117188 130.671875 C 198.21875 133.300781 206.027344 138.882812 211.699219 148.214844 C 212.222656 149.074219 214.4375 153.617188 214.765625 154.53125 C 216.335938 158.78125 217.101562 161.300781 217.765625 164.628906 C 217.929688 165.4375 218.152344 166.519531 218.257812 167.03125 C 218.363281 167.542969 218.410156 167.992188 218.363281 168.035156 C 218.320312 168.082031 203.265625 168.125 184.949219 168.113281 L 151.65625 168.082031 L 151.609375 148.796875 C 151.597656 138.203125 151.609375 129.394531 151.65625 129.230469 L 151.714844 128.945312 L 162.355469 128.945312 C 168.191406 128.945312 174.023438 129.007812 175.296875 129.082031 Z M 219.824219 181.660156 C 219.929688 182.304688 219.929688 193.261719 219.824219 193.800781 L 219.734375 194.203125 L 185.695312 194.175781 L 151.667969 194.132812 L 151.640625 187.769531 C 151.609375 184.273438 151.640625 181.359375 151.667969 181.300781 C 151.699219 181.242188 166.214844 181.179688 185.738281 181.179688 L 219.734375 181.179688 Z M 218.296875 207.425781 C 218.371094 207.640625 218.015625 209.496094 217.28125 212.5 C 216.441406 215.875 215.304688 219.28125 214.152344 221.800781 C 213.585938 223.089844 212.164062 225.882812 211.820312 226.40625 C 211.65625 226.648438 211.175781 227.414062 210.75 228.089844 C 207.882812 232.515625 204.242188 236.160156 199.824219 239.027344 C 198.226562 240.046875 194.933594 241.789062 194.042969 242.058594 C 193.878906 242.097656 193.730469 242.164062 193.589844 242.253906 C 193.488281 242.34375 192.125 242.855469 190.539062 243.425781 C 187.621094 244.460938 182.070312 245.585938 177.613281 246.050781 C 174.726562 246.335938 174.261719 246.351562 163.144531 246.351562 L 151.652344 246.351562 L 151.652344 207.402344 L 184.707031 207.339844 C 202.886719 207.3125 217.863281 207.265625 217.984375 207.234375 C 218.128906 207.226562 218.234375 207.285156 218.296875 207.417969 Z M 218.296875 207.425781 "/></g><g clip-rule="nonzero" clip-path="url(#2588f1d57e)"><g clip-rule="nonzero" clip-path="url(#dcb47909db)"><path style=" stroke:none;fill-rule:nonzero;fill:#000000;fill-opacity:1;" d="M 139.800781 158.773438 L 147.21875 158.773438 L 147.21875 166.050781 L 139.800781 166.050781 Z M 139.800781 158.773438 "/></g></g></g></svg>
+        <!-- Cash Flow Card -->
+        <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-violet-50 to-purple-100 p-1.5 shadow-sm ring-1 ring-violet-200/50 transition-all duration-300 hover:shadow-md hover:ring-violet-300/50">
+            <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-violet-200/20 transition-all duration-300 group-hover:scale-110"></div>
+            <div class="relative">
+                <div class="flex items-center justify-between">
+                    <div class="flex h-6 w-6 items-center justify-center rounded-md bg-violet-500 shadow-sm">
+                        <svg class="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
                     </div>
+                    <div class="text-right">
+                        <p class="text-xs font-semibold text-violet-600 uppercase tracking-wide">Cash Flow</p>
+                        <p class="text-xs text-violet-500">Paid invoices only</p>
                 </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Total Value</p>
-                    <div class="text-base font-bold text-gray-900">
-                        <div class="text-lg">{{ number_format($invoiceTotals['aed'], 0) }} AED</div>
-                        <div class="text-lg text-gray-600">{{ number_format($invoiceTotals['usd'], 0) }} USD</div>
-                        <div class="text-sm text-blue-600 font-semibold mt-1">Combined: {{ number_format($invoiceTotals['combined'], 0) }} AED</div>
                     </div>
-                    <p class="text-xs text-gray-500 mt-1">Sent final invoices only · Excludes pending payments · Includes all pages</p>
+                <div class="mt-1">
+                    <div class="space-y-0">
+                        <p class="text-sm font-bold text-gray-900">{{ number_format($invoiceTotals['cash_flow']['aed'], 2) }} AED</p>
+                        <p class="text-xs font-semibold text-gray-700">${{ number_format($invoiceTotals['cash_flow']['usd'], 2) }} USD</p>
+                        <p class="text-xs font-bold text-violet-600">Combined: {{ number_format($invoiceTotals['cash_flow']['combined'], 2) }} AED</p>
+                    </div>
+                    <p class="text-xs text-violet-600 mt-0.5">Actual money received</p>
                 </div>
             </div>
         </div>
@@ -102,14 +129,14 @@
     <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mb-8" x-data="{ filtersOpen: false }">
         <div class="px-6 py-4 border-b border-gray-200">
             <div class="flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-gray-900">Filters</h3>
+            <h3 class="text-lg font-semibold text-gray-900">Filters</h3>
                 <button @click="filtersOpen = !filtersOpen" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 focus:outline-none">
                     <span x-text="filtersOpen ? 'Hide Filters' : 'Show Filters'"></span>
                     <svg class="ml-2 h-4 w-4 transition-transform duration-200" :class="{ 'rotate-180': filtersOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </button>
-            </div>
+        </div>
         </div>
         <div class="p-6" x-show="filtersOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform -translate-y-2">
             <div class="grid grid-cols-1 md:grid-cols-6 gap-4">
@@ -325,12 +352,16 @@
                                             Draft
                                         </span>
                                     @elseif($invoice->status === 'sent')
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                             Sent
                                         </span>
                                     @elseif($invoice->status === 'approved')
                                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                             Approved
+                                        </span>
+                                    @elseif($invoice->status === 'completed')
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            Completed
                                         </span>
                                     @else
                                         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
@@ -445,18 +476,18 @@
                             </tr>
                             @if($invoice->type === 'final' && $invoice->parentInvoice)
                                 @php $parent = $invoice->parentInvoice; @endphp
-                                <tr id="proforma-row-{{ $invoice->id }}" class="bg-blue-50 hidden">
+                                <tr id="proforma-row-{{ $invoice->id }}" class="{{ ($parent->status === 'completed' && $parent->payment_status === 'paid') ? 'bg-green-50' : 'bg-blue-50' }} hidden">
                                     <td class="px-3 py-3 whitespace-nowrap text-xs text-gray-900">
                                         {{ formatDubaiDate($parent->invoice_date, 'M d') }}
                                     </td>
                                     <td class="px-3 py-3 whitespace-nowrap">
-                                        <div>
+                                            <div>
                                             <div class="text-xs font-medium text-gray-900">
                                                 <a href="{{ route('admin.invoices.show', $parent) }}" class="text-indigo-600 hover:text-indigo-900 truncate block">{{ $parent->invoice_number }}</a>
-                                            </div>
-                                            @if($parent->quote_id)
+                                                </div>
+                                                @if($parent->quote_id)
                                                 <div class="text-xs text-gray-500 truncate">from {{ $parent->quote->quote_number }}</div>
-                                            @endif
+                                                @endif
                                         </div>
                                     </td>
                                     <td class="px-3 py-3 whitespace-nowrap">
@@ -475,9 +506,11 @@
                                         @if($parent->status === 'draft')
                                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Draft</span>
                                         @elseif($parent->status === 'sent')
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Sent</span>
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Sent</span>
                                         @elseif($parent->status === 'approved')
                                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Approved</span>
+                                        @elseif($parent->status === 'completed')
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Completed</span>
                                         @else
                                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">{{ ucfirst($parent->status) }}</span>
                                         @endif
@@ -1267,10 +1300,13 @@ function updateInvoiceResultsCount(visible, total) {
                             statusBadge = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Draft</span>`;
                             break;
                         case 'sent':
-                            statusBadge = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Sent</span>`;
+                            statusBadge = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Sent</span>`;
                             break;
                         case 'approved':
                             statusBadge = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Approved</span>`;
+                            break;
+                        case 'completed':
+                            statusBadge = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Completed</span>`;
                             break;
                         default:
                             statusBadge = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}</span>`;
@@ -1287,6 +1323,26 @@ function updateInvoiceResultsCount(visible, total) {
                 // Update statistics if needed (for draft->sent conversion)
                 if (newStatus === 'sent') {
                     updateInvoiceStatistics();
+                }
+                
+                // Update proforma row background color if status changed to completed AND payment is paid
+                if (newStatus === 'completed') {
+                    const proformaRow = document.getElementById(`proforma-row-${invoiceId}`);
+                    if (proformaRow) {
+                        // Check if payment status is also paid
+                        const paymentStatusCell = row.querySelector('td:nth-child(7)'); // Payment status column
+                        const isPaid = paymentStatusCell && paymentStatusCell.textContent.toLowerCase().includes('paid');
+                        
+                        if (isPaid) {
+                            // Remove any existing background classes and add green background
+                            proformaRow.classList.remove('bg-blue-50', 'bg-yellow-50', 'bg-gray-50');
+                            proformaRow.classList.add('bg-green-50');
+                        } else {
+                            // Keep blue background if not paid
+                            proformaRow.classList.remove('bg-green-50', 'bg-yellow-50', 'bg-gray-50');
+                            proformaRow.classList.add('bg-blue-50');
+                        }
+                    }
                 }
             }
         });

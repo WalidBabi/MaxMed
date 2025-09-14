@@ -94,7 +94,7 @@ class AccessControlService
      */
     public static function canAccessCrm(User $user): bool
     {
-        return self::canAccess($user, 'crm.dashboard.access');
+        return self::canAccess($user, 'crm.access');
     }
 
     /**

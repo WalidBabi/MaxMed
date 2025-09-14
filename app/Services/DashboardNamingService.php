@@ -39,7 +39,7 @@ class DashboardNamingService
     {
         // Super admin gets full admin access
         if ($user->hasRole('super_admin')) {
-            return 'Admin Dashboard';
+            return 'Admin';
         }
 
         // Role-specific naming
@@ -47,19 +47,19 @@ class DashboardNamingService
             case 'one-task-role-create-leads':
                 return 'Dashboard';
             case 'sales_rep':
-                return 'Sales Dashboard';
+                return 'Sales';
             case 'purchasing_crm_assistant':
-                return 'Purchasing Dashboard';
+                return 'Purchasing';
             case 'customer_service':
-                return 'Support Dashboard';
+                return 'Support';
             case 'inventory_manager':
-                return 'Inventory Dashboard';
+                return 'Inventory';
             case 'accountant':
-                return 'Finance Dashboard';
+                return 'Finance';
             default:
                 // Use display name if available, otherwise generic
                 if ($displayName) {
-                    return $displayName . ' Dashboard';
+                    return $displayName;
                 }
                 return 'Dashboard';
         }
@@ -72,13 +72,13 @@ class DashboardNamingService
     {
         // Super admin gets full CRM access
         if ($user->hasRole('super_admin')) {
-            return 'CRM Dashboard';
+            return 'CRM';
         }
 
         // Role-specific naming
         switch ($roleName) {
             case 'one-task-role-create-leads':
-                return 'CRM Dashboard';
+                return 'CRM';
             case 'sales_rep':
                 return 'Sales CRM';
             case 'purchasing_crm_assistant':
@@ -90,7 +90,7 @@ class DashboardNamingService
                 if ($displayName) {
                     return $displayName . ' CRM';
                 }
-                return 'CRM Dashboard';
+                return 'CRM';
         }
     }
 
@@ -101,17 +101,17 @@ class DashboardNamingService
     {
         // Super admin gets full supplier access
         if ($user->hasRole('super_admin')) {
-            return 'Supplier Dashboard';
+            return 'Supplier';
         }
 
         // Role-specific naming
         switch ($roleName) {
             case 'supplier':
-                return 'My Dashboard';
+                return 'My Portal';
             case 'supplier_admin':
                 return 'Supplier Admin';
             default:
-                return 'Supplier Dashboard';
+                return 'Supplier';
         }
     }
 
@@ -124,9 +124,9 @@ class DashboardNamingService
             case 'admin':
                 return 'Dashboard';
             case 'crm':
-                return 'CRM Dashboard';
+                return 'CRM';
             case 'supplier':
-                return 'Supplier Dashboard';
+                return 'Supplier';
             default:
                 return 'Dashboard';
         }
@@ -165,29 +165,29 @@ class DashboardNamingService
     {
         // Super admin gets full admin access
         if ($user->hasRole('super_admin')) {
-            return 'Admin Portal';
+            return 'Admin';
         }
 
         // Role-specific naming
         switch ($roleName) {
             case 'one-task-role-create-leads':
-                return 'Lead Management Portal';
+                return 'Leads';
             case 'sales_rep':
-                return 'Sales Portal';
+                return 'Sales';
             case 'purchasing_crm_assistant':
-                return 'Purchasing Portal';
+                return 'Purchasing';
             case 'customer_service':
-                return 'Support Portal';
+                return 'Support';
             case 'inventory_manager':
-                return 'Inventory Portal';
+                return 'Inventory';
             case 'accountant':
-                return 'Finance Portal';
+                return 'Finance';
             default:
                 // Use display name if available, otherwise generic
                 if ($displayName) {
-                    return $displayName . ' Portal';
+                    return $displayName;
                 }
-                return 'Admin Portal';
+                return 'Admin';
         }
     }
 
@@ -198,25 +198,25 @@ class DashboardNamingService
     {
         // Super admin gets full CRM access
         if ($user->hasRole('super_admin')) {
-            return 'CRM Portal';
+            return 'CRM';
         }
 
         // Role-specific naming
         switch ($roleName) {
             case 'one-task-role-create-leads':
-                return 'Lead Management Portal';
+                return 'Leads';
             case 'sales_rep':
-                return 'Sales CRM Portal';
+                return 'Sales CRM';
             case 'purchasing_crm_assistant':
-                return 'Purchasing CRM Portal';
+                return 'Purchasing CRM';
             case 'customer_service':
-                return 'Support CRM Portal';
+                return 'Support CRM';
             default:
                 // Use display name if available, otherwise generic
                 if ($displayName) {
-                    return $displayName . ' CRM Portal';
+                    return $displayName . ' CRM';
                 }
-                return 'CRM Portal';
+                return 'CRM';
         }
     }
 
@@ -227,17 +227,17 @@ class DashboardNamingService
     {
         // Super admin gets full supplier access
         if ($user->hasRole('super_admin')) {
-            return 'Supplier Portal';
+            return 'Supplier';
         }
 
         // Role-specific naming
         switch ($roleName) {
             case 'supplier':
-                return 'My Supplier Portal';
+                return 'My Portal';
             case 'supplier_admin':
-                return 'Supplier Admin Portal';
+                return 'Supplier Admin';
             default:
-                return 'Supplier Portal';
+                return 'Supplier';
         }
     }
 
@@ -248,11 +248,11 @@ class DashboardNamingService
     {
         switch ($portalType) {
             case 'admin':
-                return 'Admin Portal';
+                return 'Admin';
             case 'crm':
-                return 'CRM Portal';
+                return 'CRM';
             case 'supplier':
-                return 'Supplier Portal';
+                return 'Supplier';
             default:
                 return 'Portal';
         }

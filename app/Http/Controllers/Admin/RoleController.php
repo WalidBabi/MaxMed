@@ -75,7 +75,9 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        $role->load(['users', 'permissions']);
+        $role->load(['users', 'permissions' => function($query) {
+            $query->where('is_active', true);
+        }]);
         $availablePermissions = Role::getAvailablePermissions();
         $permissionCategories = Permission::getCategories();
         $permissions = Permission::where('is_active', true)->get()->groupBy('category');
@@ -89,7 +91,9 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $role->load('permissions');
+        $role->load(['permissions' => function($query) {
+            $query->where('is_active', true);
+        }]);
         $availablePermissions = Role::getAvailablePermissions();
         $permissionCategories = Permission::getCategories();
         $permissions = Permission::where('is_active', true)->get()->groupBy('category');

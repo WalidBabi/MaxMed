@@ -104,10 +104,32 @@ class InvoiceController extends Controller
         $usdToAedRate = 3.67;
         $combinedTotal = $aedTotal + ($usdTotal * $usdToAedRate);
         
+        // Calculate Revenue metrics (all sent invoices regardless of payment status)
+        $revenueQuery = Invoice::where('type', 'final')->where('status', 'sent');
+        $aedRevenue = (clone $revenueQuery)->where('currency', 'AED')->sum('total_amount');
+        $usdRevenue = (clone $revenueQuery)->where('currency', 'USD')->sum('total_amount');
+        $combinedRevenue = $aedRevenue + ($usdRevenue * $usdToAedRate);
+        
+        // Calculate Cash Flow metrics (only paid invoices)
+        $cashFlowQuery = Invoice::where('type', 'final')->where('status', 'sent')->where('payment_status', 'paid');
+        $aedCashFlow = (clone $cashFlowQuery)->where('currency', 'AED')->sum('total_amount');
+        $usdCashFlow = (clone $cashFlowQuery)->where('currency', 'USD')->sum('total_amount');
+        $combinedCashFlow = $aedCashFlow + ($usdCashFlow * $usdToAedRate);
+        
         $invoiceTotals = [
             'aed' => $aedTotal,
             'usd' => $usdTotal,
-            'combined' => $combinedTotal
+            'combined' => $combinedTotal,
+            'revenue' => [
+                'aed' => $aedRevenue,
+                'usd' => $usdRevenue,
+                'combined' => $combinedRevenue
+            ],
+            'cash_flow' => [
+                'aed' => $aedCashFlow,
+                'usd' => $usdCashFlow,
+                'combined' => $combinedCashFlow
+            ]
         ];
 
         // Calculate invoice counts by type
