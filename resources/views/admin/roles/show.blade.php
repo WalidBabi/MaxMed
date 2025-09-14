@@ -145,7 +145,7 @@
                                             </div>
                                         </div>
                                         <div class="flex items-center space-x-2">
-                                            @if($user->is_active)
+                                            @if($user->email_verified_at && $user->role)
                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                     Active
                                                 </span>
