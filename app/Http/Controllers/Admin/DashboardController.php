@@ -195,6 +195,10 @@ class DashboardController extends Controller
                 $proformaUsdData[] = round($proformaUsd, 2);
             }
             
+            // Calculate Revenue and Cash Flow metrics
+            $revenueMetrics = $this->getRevenueMetrics();
+            $cashFlowMetrics = $this->getCashFlowMetrics();
+            
             return [
                 'labels' => $labels,
                 'aed_data' => $aedData,
@@ -205,7 +209,9 @@ class DashboardController extends Controller
                 'total_usd' => array_sum($usdData),
                 'total_combined' => array_sum($combinedData),
                 'peak_months' => array_values($peakMonths),
-                'zero_months' => $zeroMonths
+                'zero_months' => $zeroMonths,
+                'revenue' => $revenueMetrics,
+                'cash_flow' => $cashFlowMetrics
             ];
             
         } catch (\Exception $e) {
@@ -780,6 +786,67 @@ class DashboardController extends Controller
             Log::error('Error getting earliest transaction date', ['error' => $e->getMessage()]);
             // Fallback to 12 months ago
             return Carbon::now()->subMonths(11)->startOfMonth();
+        }
+    }
+    
+    /**
+     * Get Revenue metrics (all sent invoices regardless of payment status)
+     */
+    private function getRevenueMetrics()
+    {
+        try {
+            // Revenue = All sent final invoices (regardless of payment status)
+            $revenueQuery = DB::table('invoices')
+                ->where('type', 'final')
+                ->where('status', 'sent');
+            
+            $aedRevenue = (clone $revenueQuery)->where('currency', 'AED')->sum('total_amount');
+            $usdRevenue = (clone $revenueQuery)->where('currency', 'USD')->sum('total_amount');
+            
+            // Convert USD to AED for combined total
+            $usdToAedRate = 3.67;
+            $combinedRevenue = $aedRevenue + ($usdRevenue * $usdToAedRate);
+            
+            return [
+                'aed' => $aedRevenue,
+                'usd' => $usdRevenue,
+                'combined' => $combinedRevenue
+            ];
+            
+        } catch (\Exception $e) {
+            Log::error('Error calculating revenue metrics', ['error' => $e->getMessage()]);
+            return ['aed' => 0, 'usd' => 0, 'combined' => 0];
+        }
+    }
+    
+    /**
+     * Get Cash Flow metrics (only paid invoices)
+     */
+    private function getCashFlowMetrics()
+    {
+        try {
+            // Cash Flow = Only paid final invoices
+            $cashFlowQuery = DB::table('invoices')
+                ->where('type', 'final')
+                ->where('status', 'sent')
+                ->where('payment_status', 'paid');
+            
+            $aedCashFlow = (clone $cashFlowQuery)->where('currency', 'AED')->sum('total_amount');
+            $usdCashFlow = (clone $cashFlowQuery)->where('currency', 'USD')->sum('total_amount');
+            
+            // Convert USD to AED for combined total
+            $usdToAedRate = 3.67;
+            $combinedCashFlow = $aedCashFlow + ($usdCashFlow * $usdToAedRate);
+            
+            return [
+                'aed' => $aedCashFlow,
+                'usd' => $usdCashFlow,
+                'combined' => $combinedCashFlow
+            ];
+            
+        } catch (\Exception $e) {
+            Log::error('Error calculating cash flow metrics', ['error' => $e->getMessage()]);
+            return ['aed' => 0, 'usd' => 0, 'combined' => 0];
         }
     }
 } 
