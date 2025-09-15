@@ -317,6 +317,7 @@ class Invoice extends Model
         $finalInvoice->type = 'final';
         $finalInvoice->is_proforma = false;
         $finalInvoice->parent_invoice_id = $this->id;
+        $finalInvoice->order_id = $this->order_id; // Preserve the order relationship
         $finalInvoice->delivery_id = $deliveryId;
         $finalInvoice->status = 'sent';
         $finalInvoice->invoice_date = now();

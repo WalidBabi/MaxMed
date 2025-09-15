@@ -87,6 +87,7 @@ class AccessControlService
     public static function canAccessAdmin(User $user): bool
     {
         return self::canAccess($user, 'admin.dashboard.access') || 
+               self::canAccess($user, 'purchasing.dashboard.access') ||
                self::isAdminRole($user);
     }
 
