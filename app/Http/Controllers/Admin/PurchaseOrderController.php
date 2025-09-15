@@ -102,7 +102,7 @@ class PurchaseOrderController extends Controller
         $validationRules = [
             'order_id' => 'nullable|exists:orders,id',
             'supplier_type' => 'required|in:existing,new',
-            'currency' => 'required|in:AED,USD,CYN',
+            'currency' => 'required|in:AED,USD,CNY',
             'delivery_date_requested' => 'required|date|after:today',  
             'description' => 'nullable|string',
             'terms_conditions' => 'nullable|string',
@@ -141,7 +141,7 @@ class PurchaseOrderController extends Controller
             'supplier_type.required' => 'Please select a supplier type (existing or new).',
             'supplier_type.in' => 'Supplier type must be either existing or new.',
             'currency.required' => 'Please select a currency.',
-            'currency.in' => 'Currency must be AED, USD, or CYN.',
+            'currency.in' => 'Currency must be AED, USD, or CNY.',
             'delivery_date_requested.required' => 'Please select a delivery date.',
             'delivery_date_requested.date' => 'Please enter a valid delivery date.',
             'delivery_date_requested.after' => 'Delivery date must be after today.',
@@ -285,7 +285,7 @@ class PurchaseOrderController extends Controller
                             'product_id' => $itemData['product_id'],
                             'quantity' => $quantity,
                             'unit_price' => $unitPrice,
-                            // Only set price_type for AED/USD. For CYN (or others), keep null so editing rules remain valid
+                            // Only set price_type for AED/USD. For CNY (or others), keep null so editing rules remain valid
                             'price_type' => in_array(strtoupper($request->currency), ['AED','USD']) ? strtolower($request->currency) : null,
                             'discount_percentage' => $discountPercentage,
                             'discount_amount' => $discountAmount,
@@ -356,7 +356,7 @@ class PurchaseOrderController extends Controller
             'supplier_name' => 'required|string|max:255',
             'supplier_email' => 'nullable|email|max:255',
             'supplier_phone' => 'nullable|string|max:50',
-            'currency' => 'required|in:AED,USD,CYN',
+            'currency' => 'required|in:AED,USD,CNY',
             'delivery_date_requested' => 'required|date',
             'description' => 'nullable|string',
             'terms_conditions' => 'nullable|string',
