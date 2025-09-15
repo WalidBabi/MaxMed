@@ -278,7 +278,7 @@
                                 <select id="currency" name="currency" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                     <option value="AED" {{ old('currency', $purchaseOrder->currency) == 'AED' ? 'selected' : '' }}>AED (UAE Dirham)</option>
                                     <option value="USD" {{ old('currency', $purchaseOrder->currency) == 'USD' ? 'selected' : '' }}>USD (US Dollar)</option>
-                                    <option value="CYN" {{ old('currency', $purchaseOrder->currency) == 'CYN' ? 'selected' : '' }}>CYN (Chinese Yuan)</option>
+                                    <option value="CNY" {{ old('currency', $purchaseOrder->currency) == 'CNY' ? 'selected' : '' }}>CNY (Chinese Yuan)</option>
                                 </select>
                             </div>
                             <div>
@@ -1392,7 +1392,7 @@ function updatePriceTypeControlsByCurrency() {
                 updateRateFromPriceType(priceTypeSelect);
             }
         } else {
-            // For CYN or others: disable price type selection and leave manual rate
+            // For CNY or others: disable price type selection and leave manual rate
             priceTypeSelect.value = '';
             priceTypeSelect.disabled = true;
             // Do not auto-change rate; keep whatever user set

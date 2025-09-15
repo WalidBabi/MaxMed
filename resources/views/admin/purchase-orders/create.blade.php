@@ -107,7 +107,7 @@
                                     <select name="currency" id="currency" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
                                         <option value="AED" {{ old('currency') == 'AED' ? 'selected' : '' }}>AED (UAE Dirham)</option>
                                         <option value="USD" {{ old('currency', 'USD') == 'USD' ? 'selected' : '' }}>USD (US Dollar)</option>
-                                        <option value="CYN" {{ old('currency') == 'CYN' ? 'selected' : '' }}>CYN (Chinese Yuan)</option>
+                                        <option value="CNY" {{ old('currency') == 'CNY' ? 'selected' : '' }}>CNY (Chinese Yuan)</option>
                                     </select>
                                     <p class="mt-1 text-sm text-gray-500">This determines which procurement prices to use for products</p>
                                 </div>
@@ -740,7 +740,7 @@ function updateAllProductPrices(currency) {
                 } else if (currency === 'AED') {
                     price = dropdownItem.getAttribute('data-procurement-price-aed') || dropdownItem.getAttribute('data-price-aed') || '0';
                 } else {
-                    // For CYN or other currencies, do not auto-populate
+                    // For CNY or other currencies, do not auto-populate
                     price = '0';
                 }
                 rateInput.value = parseFloat(price).toFixed(2);
@@ -1169,7 +1169,7 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         } else if (currency === 'AED') {
             price = item.dataset.procurementPriceAed || item.dataset.priceAed || '0';
         } else {
-            // For CYN or other currencies, keep zero and let user input manually
+            // For CNY or other currencies, keep zero and let user input manually
             price = '0';
         }
         rateInput.value = parseFloat(price).toFixed(2);
@@ -1404,8 +1404,8 @@ function handleOrderSelection() {
                                 if (data.order.currency === 'USD') {
                                     rate = item.procurement_price_usd || item.unit_price || 0;
                                     priceType = 'usd';
-                                } else if (data.order.currency === 'CYN') {
-                                    rate = item.procurement_price_usd || item.unit_price || 0; // CYN uses USD prices
+                                } else if (data.order.currency === 'CNY') {
+                                    rate = item.procurement_price_usd || item.unit_price || 0; // CNY uses USD prices
                                     priceType = 'usd';
                                 } else {
                                     // Default to AED
