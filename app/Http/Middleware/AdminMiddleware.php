@@ -59,6 +59,33 @@ class AdminMiddleware
             abort(403, 'Unauthorized access to admin area.');
         }
 
+        // Check if user is trying to access dashboard without permission and redirect them
+        if ($request->routeIs('admin.dashboard') && !$user->hasPermission('dashboard.view')) {
+            if ($user->hasPermission('purchase_orders.view')) {
+                return redirect(route('admin.purchase-orders.index'));
+            } elseif ($user->hasPermission('quotations.view')) {
+                return redirect(route('admin.quotes.index'));
+            } elseif ($user->hasPermission('orders.view')) {
+                return redirect(route('admin.orders.index'));
+            } elseif ($user->hasPermission('products.view')) {
+                return redirect(route('admin.products.index'));
+            } elseif ($user->hasPermission('crm.leads.view')) {
+                return redirect(route('crm.dashboard'));
+            } elseif ($user->hasPermission('suppliers.view')) {
+                return redirect(route('admin.supplier-profiles.index'));
+            } elseif ($user->hasPermission('news.manage')) {
+                return redirect(route('admin.news.index'));
+            } elseif ($user->hasPermission('feedback.view')) {
+                return redirect(route('admin.feedback.index'));
+            } elseif ($user->hasPermission('analytics.view')) {
+                return redirect(route('admin.analytics.dashboard'));
+            } elseif ($user->hasPermission('users.view')) {
+                return redirect(route('admin.users.index'));
+            } elseif ($user->hasPermission('roles.view')) {
+                return redirect(route('admin.roles.index'));
+            }
+        }
+
         return $next($request);
     }
     

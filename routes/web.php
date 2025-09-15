@@ -328,6 +328,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('leads/{lead}/convert', [CrmLeadController::class, 'convert'])->name('leads.convert');
     Route::post('leads/{lead}/convert-to-deal', [CrmLeadController::class, 'convertToDeal'])->name('leads.convert-to-deal');
     Route::patch('leads/{lead}/status', [CrmLeadController::class, 'updateStatus'])->name('leads.update-status');
+    Route::get('leads/{lead}/requirements', [CrmLeadController::class, 'viewRequirements'])->name('leads.view-requirements');
     
     // Enhanced Lead Management Features
     Route::post('leads/bulk-status-update', [CrmLeadController::class, 'bulkStatusUpdate'])->name('leads.bulk-status-update');
@@ -389,6 +390,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware(['web', 'auth', 'verified', \App\Http\Middleware\AdminMiddleware::class])->name('admin.')->prefix('admin')->group(function () {
         Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
         Route::get('/dashboard/sales-data', [\App\Http\Controllers\Admin\DashboardController::class, 'getSalesData'])->name('dashboard.sales-data');
+
+        // Advanced Analytics Routes
+        Route::get('/analytics', [\App\Http\Controllers\Admin\SalesAnalyticsController::class, 'index'])->name('analytics.dashboard');
+        Route::get('/analytics/data', [\App\Http\Controllers\Admin\SalesAnalyticsController::class, 'getAnalyticsData'])->name('analytics.data');
+        Route::get('/analytics/revenue', [\App\Http\Controllers\Admin\SalesAnalyticsController::class, 'getRevenueAnalytics'])->name('analytics.revenue');
+        Route::get('/analytics/cash-flow', [\App\Http\Controllers\Admin\SalesAnalyticsController::class, 'getCashFlowAnalytics'])->name('analytics.cash-flow');
+        Route::get('/analytics/sales-performance', [\App\Http\Controllers\Admin\SalesAnalyticsController::class, 'getSalesPerformanceAnalytics'])->name('analytics.sales-performance');
+        Route::get('/analytics/customers', [\App\Http\Controllers\Admin\SalesAnalyticsController::class, 'getCustomerAnalytics'])->name('analytics.customers');
+        Route::get('/analytics/products', [\App\Http\Controllers\Admin\SalesAnalyticsController::class, 'getProductAnalytics'])->name('analytics.products');
+        Route::get('/analytics/export', [\App\Http\Controllers\Admin\SalesAnalyticsController::class, 'exportAnalytics'])->name('analytics.export');
 
         // Inquiry Management
         Route::resource('inquiries', \App\Http\Controllers\Admin\InquiryController::class)->names([
@@ -540,9 +551,6 @@ Route::get('quotes/search/suggestions', [\App\Http\Controllers\Admin\QuoteContro
         Route::post('orders/{order}/quick-cash-receipt', [\App\Http\Controllers\Admin\CashReceiptController::class, 'quickCreate'])->name('orders.quick-cash-receipt');
 
         // Supplier Payments Management
-        Route::resource('supplier-payments', \App\Http\Controllers\Admin\SupplierPaymentController::class)->only(['index', 'show', 'edit', 'update']);
-        Route::post('supplier-payments/{supplierPayment}/mark-completed', [\App\Http\Controllers\Admin\SupplierPaymentController::class, 'markAsCompleted'])->name('supplier-payments.mark-completed');
-        Route::post('supplier-payments/{supplierPayment}/mark-failed', [\App\Http\Controllers\Admin\SupplierPaymentController::class, 'markAsFailed'])->name('supplier-payments.mark-failed');
         
         // Supplier Category Management
         Route::get('supplier-categories', [SupplierCategoryController::class, 'index'])->name('supplier-categories.index');

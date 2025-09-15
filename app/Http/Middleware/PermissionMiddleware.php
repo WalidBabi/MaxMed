@@ -52,12 +52,12 @@ class PermissionMiddleware
             if ($request->expectsJson()) {
                 return response()->json([
                     'error' => 'Forbidden',
-                    'message' => "You don't have permission to perform this action.",
+                    'message' => "You don't have permission to access this resource. Please contact your administrator if you believe this is an error.",
                     'required_permission' => $permission
                 ], 403);
             }
 
-            abort(403, "Access denied. Required permission: {$permission}");
+            abort(403, "Access denied. You don't have permission to access this resource. Please contact your administrator if you believe this is an error.");
         }
 
         return $next($request);

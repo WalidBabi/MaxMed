@@ -157,6 +157,16 @@ class CrmLead extends Model
         $this->update(['last_contacted_at' => now()]);
     }
 
+    // Scopes
+    public function scopeOverdue($query)
+    {
+        return $query->where(function($q) {
+            $q->whereNull('last_contacted_at')
+              ->where('created_at', '<', now()->subDays(7))
+              ->orWhere('last_contacted_at', '<', now()->subDays(7));
+        });
+    }
+
     /**
      * Create a customer from this lead if one doesn't exist
      */

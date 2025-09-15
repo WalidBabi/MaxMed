@@ -25,6 +25,7 @@ class AccessControlService
         'financial_manager' => 5,
         'sales_rep' => 6,
         'purchasing_assistant' => 6,
+        'purchasing_employee' => 6,
         'customer_service_rep' => 6,
         'supplier' => 7,
         'viewer' => 8,
@@ -102,7 +103,7 @@ class AccessControlService
      */
     public static function canAccessSupplier(User $user): bool
     {
-        return self::canAccess($user, 'supplier.dashboard.access') || 
+        return self::canAccess($user, 'supplier.dashboard') || 
                $user->hasRole('supplier');
     }
 
@@ -115,7 +116,12 @@ class AccessControlService
             return false;
         }
 
-        $userRolePriority = self::$roleHierarchy[$user->role->name] ?? 999;
+        // If user's role is not in the hierarchy, they don't inherit permissions
+        if (!isset(self::$roleHierarchy[$user->role->name])) {
+            return false;
+        }
+
+        $userRolePriority = self::$roleHierarchy[$user->role->name];
         
         // Check if any higher priority role has this permission
         foreach (self::$roleHierarchy as $roleName => $priority) {

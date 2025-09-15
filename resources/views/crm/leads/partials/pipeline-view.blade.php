@@ -12,6 +12,12 @@
                          @case('quote_requested')
                              bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200 hover:border-gray-400 hover:from-gray-100 hover:to-gray-150
                              @break
+                         @case('getting_price')
+                             bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200 hover:border-indigo-400 hover:from-indigo-100 hover:to-indigo-150
+                             @break
+                         @case('price_submitted')
+                             bg-gradient-to-br from-teal-50 to-teal-100 border-teal-200 hover:border-teal-400 hover:from-teal-100 hover:to-teal-150
+                             @break
                          @case('follow_up_1')
                              bg-gradient-to-br from-sky-50 to-sky-100 border-sky-200 hover:border-sky-400 hover:from-sky-100 hover:to-sky-150
                              @break
@@ -20,9 +26,6 @@
                              @break
                          @case('follow_up_3')
                              bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200 hover:border-indigo-400 hover:from-indigo-100 hover:to-indigo-150
-                             @break
-                         @case('quote_sent')
-                             bg-gradient-to-br from-teal-50 to-teal-100 border-teal-200 hover:border-teal-400 hover:from-teal-100 hover:to-teal-150
                              @break
                          @case('negotiating_price')
                              bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200 hover:border-orange-400 hover:from-orange-100 hover:to-orange-150
@@ -48,6 +51,12 @@
                             @case('quote_requested')
                                 bg-gradient-to-r from-gray-400 to-gray-600
                                 @break
+                            @case('getting_price')
+                                bg-gradient-to-r from-indigo-400 to-indigo-600
+                                @break
+                            @case('price_submitted')
+                                bg-gradient-to-r from-teal-400 to-teal-600
+                                @break
                             @case('follow_up_1')
                                 bg-gradient-to-r from-sky-400 to-sky-600
                                 @break
@@ -56,9 +65,6 @@
                                 @break
                             @case('follow_up_3')
                                 bg-gradient-to-r from-indigo-400 to-indigo-600
-                                @break
-                            @case('quote_sent')
-                                bg-gradient-to-r from-teal-400 to-teal-600
                                 @break
                             @case('negotiating_price')
                                 bg-gradient-to-r from-orange-400 to-orange-600
@@ -87,6 +93,12 @@
                                         @case('quote_requested')
                                             bg-gray-100
                                             @break
+                                        @case('getting_price')
+                                            bg-indigo-100
+                                            @break
+                                        @case('price_submitted')
+                                            bg-teal-100
+                                            @break
                                         @case('follow_up_1')
                                             bg-sky-100
                                             @break
@@ -95,9 +107,6 @@
                                             @break
                                         @case('follow_up_3')
                                             bg-indigo-100
-                                            @break
-                                        @case('quote_sent')
-                                            bg-teal-100
                                             @break
                                         @case('negotiating_price')
                                             bg-orange-100
@@ -221,6 +230,12 @@
                                         @case('quote_requested')
                                             text-gray-700
                                             @break
+                                        @case('getting_price')
+                                            text-indigo-700
+                                            @break
+                                        @case('price_submitted')
+                                            text-teal-700
+                                            @break
                                         @case('follow_up_1')
                                             text-sky-700
                                             @break
@@ -229,9 +244,6 @@
                                             @break
                                         @case('follow_up_3')
                                             text-indigo-700
-                                            @break
-                                        @case('quote_sent')
-                                            text-teal-700
                                             @break
                                         @case('negotiating_price')
                                             text-orange-700
@@ -484,48 +496,13 @@
                                                 @endif
                                         </div>
 
-                                        <!-- Status Badge -->
+                                        <!-- Value Row -->
                                         <div class="flex items-center justify-between mb-2">
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-{{ $stage['color'] }}-100 text-{{ $stage['color'] }}-800 border border-{{ $stage['color'] }}-200">
-                                                @switch($status)
-                                                    @case('new_inquiry')
-                                                        📩 New Inquiry
-                                                        @break
-                                                    @case('quote_requested')
-                                                        💰 Quote Requested
-                                                        @break
-                                                    @case('follow_up_1')
-                                                        ⏰ Follow-up 1
-                                                        @break
-                                                    @case('follow_up_2')
-                                                        🔔 Follow-up 2
-                                                        @break
-                                                    @case('follow_up_3')
-                                                        🚨 Follow-up 3
-                                                        @break
-                                                    @case('quote_sent')
-                                                        📤 Quote Sent
-                                                        @break
-                                                    @case('negotiating_price')
-                                                        🤝 Price Negotiation
-                                                        @break
-                                                    @case('payment_pending')
-                                                        💳 Payment Pending
-                                                        @break
-                                                    @case('order_confirmed')
-                                                        ✅ Confirmed
-                                                        @break
-                                                    @case('deal_lost')
-                                                        ❌ Lost
-                                                        @break
-                                                    @default
-                                                        {{ ucfirst(str_replace('_', ' ', $status)) }}
-                                                @endswitch
-                                            </span>
-                                            
                                             <!-- Value -->
                                             @if($lead->estimated_value)
                                                 <span class="text-xs font-semibold text-green-600">AED {{ number_format($lead->estimated_value, 0) }}</span>
+                                            @else
+                                                <span></span>
                                             @endif
                                         </div>
 
@@ -605,11 +582,20 @@
                                                         title="View Details">
                                                 View
                                                 </button>
+                                                @can('crm.leads.edit')
                                                 <button onclick="event.stopPropagation(); window.location.href='/crm/leads/{{ $lead->id }}/edit'" 
                                                     class="flex-1 text-xs py-1 px-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
                                                         title="Edit Lead">
                                                 Edit
                                                 </button>
+                                                @endcan
+                                                @can('crm.leads.view_requirements')
+                                                <button onclick="event.stopPropagation(); viewLeadRequirements({{ $lead->id }})" 
+                                                    class="flex-1 text-xs py-1 px-2 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition-colors"
+                                                        title="View Requirements">
+                                                Requirements
+                                                </button>
+                                                @endcan
                                         </div>
                                     </div>
 
@@ -652,4 +638,75 @@
             @endif
         </div>
     </div>
-</div> 
+</div>
+
+<script>
+// Function to view lead requirements for purchasing employees
+function viewLeadRequirements(leadId) {
+    fetch(`/crm/leads/${leadId}/requirements`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Create a modal to display the requirements
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50';
+            modal.innerHTML = `
+                <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                    <div class="mt-3">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-medium text-gray-900">Lead Requirements</h3>
+                            <button onclick="this.closest('.fixed').remove()" class="text-gray-400 hover:text-gray-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Lead ID</label>
+                                <p class="text-sm text-gray-900">#${data.lead_id}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Estimated Value</label>
+                                <p class="text-sm text-gray-900">AED ${data.estimated_value ? data.estimated_value.toLocaleString() : 'Not specified'}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Status</label>
+                                <p class="text-sm text-gray-900">${data.status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Requirements</label>
+                                <div class="mt-1 p-3 bg-gray-50 rounded-md">
+                                    <p class="text-sm text-gray-900 whitespace-pre-wrap">${data.requirements || 'No requirements specified'}</p>
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span>Created: ${new Date(data.created_at).toLocaleDateString()}</span>
+                                <span>Updated: ${new Date(data.updated_at).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 flex justify-end">
+                            <button onclick="this.closest('.fixed').remove()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        } else {
+            alert('Failed to load lead requirements');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error loading lead requirements');
+    });
+}
+</script> 

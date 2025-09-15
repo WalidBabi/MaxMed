@@ -729,7 +729,7 @@ class InvoiceController extends Controller
      */
     public function generatePdf(Invoice $invoice)
     {
-        $invoice->load(['items.product.specifications', 'delivery', 'parentInvoice', 'order.cashReceipts', 'payments']);
+        $invoice->load(['items.product.specifications', 'delivery', 'parentInvoice', 'order.cashReceipts', 'order.delivery', 'payments']);
         
         // Get customer data for company name display
         $customer = \App\Models\Customer::where('name', $invoice->customer_name)->first();
