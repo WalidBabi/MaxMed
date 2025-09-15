@@ -14,12 +14,94 @@ use Illuminate\Support\Facades\View;
 
 class CrmLeadController extends Controller
 {
+    /**
+     * Get valid status options with labels for validation
+     */
+    private function getValidStatuses()
+    {
+        return [
+            'new_inquiry' => 'New Inquiry',
+            'quote_requested' => 'Quote Requested',
+            'getting_price' => 'Getting Price',
+            'price_submitted' => 'Price Submitted',
+            'quote_sent' => 'Quote Sent',
+            'follow_up_1' => 'Follow-up 1',
+            'follow_up_2' => 'Follow-up 2',
+            'follow_up_3' => 'Follow-up 3',
+            'negotiating_price' => 'Negotiating Price',
+            'payment_pending' => 'Payment Pending',
+            'order_confirmed' => 'Order Confirmed',
+            'deal_lost' => 'Deal Lost',
+            'on_hold' => 'On Hold',
+            'cancelled' => 'Cancelled',
+            'pending_approval' => 'Pending Approval',
+            'approved' => 'Approved',
+            'rejected' => 'Rejected',
+            'in_progress' => 'In Progress',
+            'completed' => 'Completed',
+            'archived' => 'Archived'
+        ];
+    }
+
+    /**
+     * Get status validation rule with custom error message
+     */
+    private function getStatusValidationRule()
+    {
+        $validStatuses = $this->getValidStatuses();
+        
+        return [
+            'required',
+            function ($attribute, $value, $fail) use ($validStatuses) {
+                if (!array_key_exists($value, $validStatuses)) {
+                    $statusOptions = array_map(function($key, $label) {
+                        return "• {$label}";
+                    }, array_keys($validStatuses), $validStatuses);
+                    
+                    $fail("❌ **Invalid Status**: The status '{$value}' is not available in the system. Please choose from one of these valid statuses:\n\n" . implode("\n", $statusOptions) . "\n\n💡 **Tip**: Make sure you're using the correct status from the dropdown menu. If you believe this is an error, please contact your administrator.");
+                }
+            }
+        ];
+    }
     public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('permission:crm.leads.view')->only(['index', 'show']);
         $this->middleware('permission:crm.leads.edit')->only(['create', 'store', 'edit', 'update']);
         $this->middleware('permission:crm.leads.delete')->only(['destroy']);
+        
+        // Block users with purchasing permissions from accessing CRM leads (except superadmins)
+        $this->middleware(function ($request, $next) {
+            if (Auth::check() && !Auth::user()->isAdmin() && $this->hasPurchasingPermissions(Auth::user())) {
+                abort(403, 'Access Denied: Users with purchasing permissions cannot access CRM lead information.');
+            }
+            return $next($request);
+        })->only(['index', 'show', 'create', 'store', 'edit', 'update', 'destroy']);
+    }
+    
+    /**
+     * Check if user has any purchasing permissions
+     */
+    private function hasPurchasingPermissions($user)
+    {
+        $purchasingPermissions = [
+            'purchase_orders.view',
+            'purchase_orders.create',
+            'purchase_orders.edit',
+            'purchase_orders.delete',
+            'purchase_orders.approve',
+            'purchase_orders.send',
+            'purchase_orders.manage_status',
+            'purchase_orders.view_financials'
+        ];
+        
+        foreach ($purchasingPermissions as $permission) {
+            if ($user->hasPermission($permission)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     /**
@@ -86,13 +168,13 @@ class CrmLeadController extends Controller
     {
         $stages = [
             'new_inquiry' => ['title' => '📩 New Inquiry', 'color' => 'blue'],
-            'quote_requested' => ['title' => '💰 Quote Requested', 'color' => 'purple'],
+            'quote_requested' => ['title' => '💰 Quote Requested', 'color' => 'slate'],
             'getting_price' => ['title' => '🔍 Getting Price', 'color' => 'indigo'],
             'price_submitted' => ['title' => '📋 Price Submitted', 'color' => 'teal'],
-            'follow_up_1' => ['title' => '⏰ Follow-up 1', 'color' => 'amber'],
-            'follow_up_2' => ['title' => '🔔 Follow-up 2', 'color' => 'orange'],
-            'follow_up_3' => ['title' => '🚨 Follow-up 3', 'color' => 'red'],
-            'negotiating_price' => ['title' => '🤝 Price Negotiation', 'color' => 'yellow'],
+            'follow_up_1' => ['title' => '⏰ Follow-up 1', 'color' => 'sky'],
+            'follow_up_2' => ['title' => '🔔 Follow-up 2', 'color' => 'blue'],
+            'follow_up_3' => ['title' => '🚨 Follow-up 3', 'color' => 'indigo'],
+            'negotiating_price' => ['title' => '🤝 Price Negotiation', 'color' => 'orange'],
             'payment_pending' => ['title' => '💳 Payment Pending', 'color' => 'emerald'],
             'order_confirmed' => ['title' => '✅ Order Confirmed', 'color' => 'green'],
             'deal_lost' => ['title' => '❌ Deal Lost', 'color' => 'gray']
@@ -120,7 +202,16 @@ class CrmLeadController extends Controller
     
     public function create()
     {
-        $users = User::all();
+        // Get users who have CRM permissions and can be assigned leads
+        $users = User::whereHas('role.permissions', function($query) {
+            $query->whereIn('name', [
+                'crm.leads.view',
+                'crm.leads.create',
+                'crm.leads.edit', 
+                'crm.access'
+            ]);
+        })->get();
+        
         return view('crm.leads.create', compact('users'));
     }
     
@@ -219,7 +310,7 @@ class CrmLeadController extends Controller
     public function edit(CrmLead $lead)
     {
         // Check if user has permission to edit leads
-        if (!Auth::user()->hasPermission('crm.leads.edit')) {
+        if (!Auth::user()->isAdmin() && !Auth::user()->hasPermission('crm.leads.edit')) {
             abort(403, 'You do not have permission to edit leads.');
         }
         
@@ -228,20 +319,30 @@ class CrmLeadController extends Controller
             abort(403, 'You can only edit leads assigned to you.');
         }
         
-        $users = User::all();
+        // Get users who have CRM permissions and can be assigned leads
+        $users = User::whereHas('role.permissions', function($query) {
+            $query->whereIn('name', [
+                'crm.leads.view',
+                'crm.leads.create',
+                'crm.leads.edit', 
+                'crm.access'
+            ]);
+        })->get();
+        
         return view('crm.leads.edit', compact('lead', 'users'));
     }
     
     public function update(Request $request, CrmLead $lead)
     {
         // Check if user has permission to edit leads
-        if (!Auth::user()->hasPermission('crm.leads.edit')) {
-            abort(403, 'You do not have permission to edit leads.');
+        if (!Auth::user()->isAdmin() && !Auth::user()->hasPermission('crm.leads.edit')) {
+            abort(403, 'Access Denied: You do not have permission to edit leads. Please contact your administrator to request CRM lead editing permissions.');
         }
         
         // Check if user is assigned to this lead or is admin
         if ($lead->assigned_to !== Auth::id() && !Auth::user()->isAdmin()) {
-            abort(403, 'You can only edit leads assigned to you.');
+            $assignedUser = $lead->assignedUser ? $lead->assignedUser->name : 'Unassigned';
+            abort(403, "Access Denied: This lead '{$lead->full_name}' is assigned to '{$assignedUser}'. You can only edit leads assigned to you. Please ask your manager to assign this lead to you, or work with leads that are already assigned to you.");
         }
         
         \Log::info('CRM Lead update started', [
@@ -260,7 +361,7 @@ class CrmLeadController extends Controller
             'company_name' => 'required|string|max:255',
             'job_title' => 'nullable|string|max:255',
             'company_address' => 'nullable|string',
-            'status' => 'required|in:new_inquiry,quote_requested,follow_up_1,follow_up_2,follow_up_3,quote_sent,negotiating_price,payment_pending,order_confirmed,deal_lost',
+            'status' => $this->getStatusValidationRule(),
             'source' => 'required|in:website,linkedin,email,phone,whatsapp,on_site_visit,referral,trade_show,google_ads,other',
             'priority' => 'required|in:low,medium,high',
             'estimated_value' => 'nullable|numeric|min:0',
@@ -408,28 +509,86 @@ class CrmLeadController extends Controller
      */
     public function updateStatus(Request $request, CrmLead $lead)
     {
+        // Get the requested status
+        $requestedStatus = $request->input('status');
+        
+        // Define purchasing-related statuses
+        $purchasingStatuses = ['getting_price', 'price_submitted', 'quote_sent', 'negotiating_price', 'payment_pending', 'order_confirmed'];
+        $isPurchasingStatus = in_array($requestedStatus, $purchasingStatuses);
+        
         // Check if user has permission to edit leads
-        if (!Auth::user()->hasPermission('crm.leads.edit')) {
-            if ($request->expectsJson() || $request->ajax()) {
+        if (!Auth::user()->isAdmin() && !Auth::user()->hasPermission('crm.leads.edit')) {
+            $message = "🚫 **Permission Required**: You don't have permission to update lead statuses. To update lead statuses, you need the 'CRM Lead Editing' permission. Please contact your administrator to request this permission.";
+            
+            // Log request details for debugging
+            \Log::info('Permission check failed', [
+                'user_id' => Auth::id(),
+                'expects_json' => $request->expectsJson(),
+                'is_ajax' => $request->ajax(),
+                'headers' => $request->headers->all(),
+                'content_type' => $request->header('Content-Type'),
+                'accept' => $request->header('Accept')
+            ]);
+            
+            // Always return JSON for PATCH requests (which are used for status updates)
+            if ($request->expectsJson() || $request->ajax() || $request->header('Accept') === 'application/json' || str_contains($request->header('Accept', ''), 'application/json') || $request->isMethod('PATCH')) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'You do not have permission to change lead status. Please contact your administrator for access.',
-                    'error_type' => 'permission_denied'
+                    'message' => $message,
+                    'error_type' => 'permission_denied',
+                    'permission_required' => 'crm.leads.edit',
+                    'permission_name' => 'CRM Lead Editing',
+                    'dismissible' => true,
+                    'notification_type' => 'error'
                 ], 403);
             }
-            abort(403, 'You do not have permission to change lead status. Please contact your administrator for access.');
+            abort(403, $message);
+        }
+        
+        // Check if user has purchasing permissions for purchasing-related statuses
+        if ($isPurchasingStatus && !Auth::user()->isAdmin() && !Auth::user()->hasPermission('purchase_orders.view')) {
+            $statusLabel = $this->getValidStatuses()[$requestedStatus] ?? $requestedStatus;
+            $message = "🔒 **Purchasing Permission Required**: You don't have permission to change lead status to '{$statusLabel}'. This status requires 'Purchase Orders View' permission. Please contact your administrator to request purchasing permissions or ask a purchasing team member to update this status.";
+            
+            // Always return JSON for PATCH requests (which are used for status updates)
+            if ($request->expectsJson() || $request->ajax() || $request->header('Accept') === 'application/json' || str_contains($request->header('Accept', ''), 'application/json') || $request->isMethod('PATCH')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                    'error_type' => 'purchasing_permission_denied',
+                    'permission_required' => 'purchase_orders.view',
+                    'permission_name' => 'Purchase Orders View',
+                    'requested_status' => $requestedStatus,
+                    'status_label' => $statusLabel,
+                    'dismissible' => true,
+                    'notification_type' => 'warning'
+                ], 403);
+            }
+            abort(403, $message);
         }
         
         // Check if user is assigned to this lead or is admin
         if ($lead->assigned_to !== Auth::id() && !Auth::user()->isAdmin()) {
-            if ($request->expectsJson() || $request->ajax()) {
+            $assignedUser = $lead->assignedUser ? $lead->assignedUser->name : 'Unassigned';
+            
+            // User-friendly error message
+            $message = "👤 **Access Restricted**: You can only update leads assigned to you. This lead '{$lead->full_name}' is currently assigned to '{$assignedUser}'. Please ask your manager to assign this lead to you, or work with leads that are already assigned to you.";
+            
+            // Always return JSON for PATCH requests (which are used for status updates)
+            if ($request->expectsJson() || $request->ajax() || $request->header('Accept') === 'application/json' || str_contains($request->header('Accept', ''), 'application/json') || $request->isMethod('PATCH')) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'You can only change the status of leads assigned to you.',
-                    'error_type' => 'access_denied'
+                    'message' => $message,
+                    'error_type' => 'access_denied',
+                    'assigned_to' => $assignedUser,
+                    'lead_name' => $lead->full_name,
+                    'requested_status' => $requestedStatus,
+                    'is_purchasing_status' => $isPurchasingStatus,
+                    'dismissible' => true,
+                    'notification_type' => 'info'
                 ], 403);
             }
-            abort(403, 'You can only change the status of leads assigned to you.');
+            abort(403, $message);
         }
         
         \Log::info('Quick status update called', [
@@ -441,7 +600,7 @@ class CrmLeadController extends Controller
         ]);
         
         $validated = $request->validate([
-            'status' => 'required|in:new_inquiry,quote_requested,getting_price,price_submitted,follow_up_1,follow_up_2,follow_up_3,negotiating_price,payment_pending,order_confirmed,deal_lost'
+            'status' => $this->getStatusValidationRule()
         ]);
         
         $oldStatus = $lead->status;
@@ -551,22 +710,58 @@ class CrmLeadController extends Controller
      */
     public function bulkStatusUpdate(Request $request)
     {
+        // Get the requested status
+        $requestedStatus = $request->input('status');
+        
+        // Define purchasing-related statuses
+        $purchasingStatuses = ['getting_price', 'price_submitted', 'quote_sent', 'negotiating_price', 'payment_pending', 'order_confirmed'];
+        $isPurchasingStatus = in_array($requestedStatus, $purchasingStatuses);
+        
         // Check if user has permission to edit leads
-        if (!Auth::user()->hasPermission('crm.leads.edit')) {
-            if ($request->expectsJson() || $request->ajax()) {
+        if (!Auth::user()->isAdmin() && !Auth::user()->hasPermission('crm.leads.edit')) {
+            $message = "🚫 **Permission Required**: You don't have permission to update lead statuses. To update lead statuses, you need the 'CRM Lead Editing' permission. Please contact your administrator to request this permission.";
+                
+            // Always return JSON for PATCH requests (which are used for status updates)
+            if ($request->expectsJson() || $request->ajax() || $request->header('Accept') === 'application/json' || str_contains($request->header('Accept', ''), 'application/json') || $request->isMethod('PATCH')) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'You do not have permission to change lead status. Please contact your administrator for access.',
-                    'error_type' => 'permission_denied'
+                    'message' => $message,
+                    'error_type' => 'permission_denied',
+                    'permission_required' => 'crm.leads.edit',
+                    'permission_name' => 'CRM Lead Editing',
+                    'dismissible' => true,
+                    'notification_type' => 'error'
                 ], 403);
             }
-            abort(403, 'You do not have permission to change lead status. Please contact your administrator for access.');
+            abort(403, $message);
+        }
+        
+        // Check if user has purchasing permissions for purchasing-related statuses
+        if ($isPurchasingStatus && !Auth::user()->isAdmin() && !Auth::user()->hasPermission('purchase_orders.view')) {
+            $statusLabel = $this->getValidStatuses()[$requestedStatus] ?? $requestedStatus;
+            $message = "🔒 **Purchasing Permission Required**: You don't have permission to change lead status to '{$statusLabel}'. This status requires 'Purchase Orders View' permission. Please contact your administrator to request purchasing permissions or ask a purchasing team member to update this status.";
+            
+            // Always return JSON for PATCH requests (which are used for status updates)
+            if ($request->expectsJson() || $request->ajax() || $request->header('Accept') === 'application/json' || str_contains($request->header('Accept', ''), 'application/json') || $request->isMethod('PATCH')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                    'error_type' => 'purchasing_permission_denied',
+                    'permission_required' => 'purchase_orders.view',
+                    'permission_name' => 'Purchase Orders View',
+                    'requested_status' => $requestedStatus,
+                    'status_label' => $statusLabel,
+                    'dismissible' => true,
+                    'notification_type' => 'warning'
+                ], 403);
+            }
+            abort(403, $message);
         }
         
         $validated = $request->validate([
             'lead_ids' => 'required|array|min:1',
             'lead_ids.*' => 'exists:crm_leads,id',
-            'status' => 'required|in:new_inquiry,quote_requested,follow_up_1,follow_up_2,follow_up_3,quote_sent,negotiating_price,payment_pending,order_confirmed,deal_lost'
+            'status' => $this->getStatusValidationRule()
         ]);
         
         // Check if user is assigned to all leads or is admin
@@ -575,14 +770,27 @@ class CrmLeadController extends Controller
             $unauthorizedLeads = $leads->where('assigned_to', '!=', Auth::id());
             
             if ($unauthorizedLeads->count() > 0) {
-                if ($request->expectsJson() || $request->ajax()) {
+                $unauthorizedLeadNames = $unauthorizedLeads->pluck('full_name')->implode(', ');
+                
+                // Different messages based on the status being changed
+                if ($isPurchasingStatus) {
+                    $message = "Access Denied: You can only change purchasing-related statuses for leads assigned to you. The following leads are not assigned to you: {$unauthorizedLeadNames}. Please ask your manager to assign these leads to you, or work with leads that are already assigned to you.";
+                } else {
+                    $message = "Access Denied: You can only change the status of leads assigned to you. The following leads are not assigned to you: {$unauthorizedLeadNames}. Please ask your manager to assign these leads to you, or work with leads that are already assigned to you.";
+                }
+                
+                // Always return JSON for PATCH requests (which are used for status updates)
+            if ($request->expectsJson() || $request->ajax() || $request->header('Accept') === 'application/json' || str_contains($request->header('Accept', ''), 'application/json') || $request->isMethod('PATCH')) {
                     return response()->json([
                         'success' => false,
-                        'message' => 'You can only change the status of leads assigned to you.',
-                        'error_type' => 'access_denied'
+                        'message' => $message,
+                        'error_type' => 'access_denied',
+                        'unauthorized_leads' => $unauthorizedLeadNames,
+                        'requested_status' => $requestedStatus,
+                        'is_purchasing_status' => $isPurchasingStatus
                     ], 403);
                 }
-                abort(403, 'You can only change the status of leads assigned to you.');
+                abort(403, $message);
             }
         }
 

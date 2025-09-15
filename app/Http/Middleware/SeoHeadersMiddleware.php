@@ -17,13 +17,14 @@ class SeoHeadersMiddleware
     {
         $response = $next($request);
         
-        // Only add headers for successful HTML responses
-        if ($response->getStatusCode() === 200 && 
+        // Only add headers for successful HTML responses in production
+        if (app()->environment('production') && 
+            $response->getStatusCode() === 200 && 
             $request->accepts('text/html') && 
             !$request->ajax() && 
             !$request->wantsJson()) {
             
-            // Add cache control headers for better crawling
+            // Add cache control headers for better crawling (only in production)
             $response->headers->set('Cache-Control', 'public, max-age=3600');
             
             // Add ETag for better caching

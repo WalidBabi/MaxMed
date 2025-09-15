@@ -37,8 +37,8 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        CanonicalDomainMiddleware::class,
-        \App\Http\Middleware\SeoHeadersMiddleware::class,
+        // CanonicalDomainMiddleware::class, // Moved to route level for better performance
+        // \App\Http\Middleware\SeoHeadersMiddleware::class, // Disabled in development
     ];
 
     /**
@@ -91,5 +91,8 @@ class Kernel extends HttpKernel
         'supplier.onboarding' => CheckSupplierOnboarding::class,
         'permission' => PermissionMiddleware::class,
         'role' => RoleMiddleware::class,
+        'canonical' => CanonicalDomainMiddleware::class,
+        'seo-headers' => \App\Http\Middleware\SeoHeadersMiddleware::class,
+        'query-optimization' => \App\Http\Middleware\QueryOptimizationMiddleware::class,
     ];
 } 

@@ -15,15 +15,22 @@ class SearchController extends Controller
     {
         $query = $request->input('query');
         
-        // Check for exact category match and redirect if found
-        $category = DB::table('categories')->whereRaw('LOWER(name) = ?', [strtolower(trim($query))])->first();
-        if ($category) {
-            return redirect()->route('categories.show', $category->slug);
-        }
-
         // Return all products if no query is provided
         if (!$query) {
             return redirect()->route('products.index');
+        }
+
+        // Cache category lookup
+        $category = \App\Services\PerformanceCacheService::cacheQuery(
+            "category_search_" . md5(strtolower(trim($query))),
+            function() use ($query) {
+                return DB::table('categories')->whereRaw('LOWER(name) = ?', [strtolower(trim($query))])->first();
+            },
+            1800 // 30 minutes
+        );
+
+        if ($category) {
+            return redirect()->route('categories.show', $category->slug);
         }
 
         try {

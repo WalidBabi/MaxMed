@@ -171,9 +171,9 @@
                             <select id="assigned_to" name="assigned_to" required
                                     class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                 <option value="">Select User</option>
-                                @foreach($users->where('role_id', 1) as $user)
+                                @foreach($users as $user)
                                     <option value="{{ $user->id }}" {{ old('assigned_to') == $user->id ? 'selected' : '' }}>
-                                        {{ $user->name }}
+                                        {{ $user->name }} @if($user->role) - {{ $user->role->display_name }} @endif
                                     </option>
                                 @endforeach
                             </select>

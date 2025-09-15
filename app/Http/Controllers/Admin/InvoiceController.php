@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\View\View;
 
@@ -37,6 +38,11 @@ class InvoiceController extends Controller
      * Display a listing of invoices
      */
     public function index(Request $request)
+    {
+        return $this->buildInvoiceQuery($request);
+    }
+
+    private function buildInvoiceQuery(Request $request)
     {
         $query = Invoice::with(['quote', 'order', 'order.delivery', 'delivery', 'creator', 'payments', 'parentInvoice', 'childInvoices']);
 

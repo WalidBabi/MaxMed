@@ -24,7 +24,7 @@
          x-transition:leave-end="transform opacity-0 scale-95"
          @click.away="closeDropdown()"
          class="notification-dropdown absolute right-0 z-50 mt-3 w-[30rem] max-w-[90vw] origin-top-right rounded-xl bg-white shadow-2xl ring-1 ring-gray-900/10 border border-gray-100"
-         style="display: none;">
+         style="min-width: 300px !important;">
         
         <!-- Header -->
         <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-green-50 to-emerald-50 rounded-t-xl">
@@ -136,6 +136,14 @@ function supplierNotificationDropdown() {
             this.requestNotificationPermission();
         },
         
+        destroy() {
+            // Clean up polling interval to prevent memory leaks
+            if (this.pollingInterval) {
+                clearInterval(this.pollingInterval);
+                this.pollingInterval = null;
+            }
+        },
+        
         async initializeAudio() {
             try {
                 this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -210,11 +218,18 @@ function supplierNotificationDropdown() {
         },
         
         startRealTimePolling() {
-            setInterval(() => {
-                if (!this.isOpen) {
+            // Initial check after 2 seconds
+            setTimeout(() => {
+                this.checkForNewNotifications();
+            }, 2000);
+            
+            // Then check every 5 seconds (less aggressive)
+            this.pollingInterval = setInterval(() => {
+                // Only poll if page is visible and dropdown is closed
+                if (!this.isOpen && !document.hidden) {
                     this.checkForNewNotifications();
                 }
-            }, 3000); // Check every 3 seconds for more responsive notifications
+            }, 5000); // Check every 5 seconds to reduce flashing
         },
         
         async checkForNewNotifications() {

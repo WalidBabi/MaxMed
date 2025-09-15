@@ -81,16 +81,25 @@ class CrmLead extends Model
     {
         return match($this->status) {
             'new_inquiry' => 'blue',
-            'quote_requested' => 'purple',
+            'quote_requested' => 'slate',
             'getting_price' => 'indigo',
             'price_submitted' => 'teal',
-            'follow_up_1' => 'amber',
-            'follow_up_2' => 'orange', 
-            'follow_up_3' => 'red',
-            'negotiating_price' => 'yellow',
+            'quote_sent' => 'cyan',
+            'follow_up_1' => 'sky',
+            'follow_up_2' => 'blue', 
+            'follow_up_3' => 'indigo',
+            'negotiating_price' => 'orange',
             'payment_pending' => 'emerald',
             'order_confirmed' => 'green',
             'deal_lost' => 'gray',
+            'on_hold' => 'slate',
+            'cancelled' => 'red',
+            'pending_approval' => 'yellow',
+            'approved' => 'green',
+            'rejected' => 'red',
+            'in_progress' => 'blue',
+            'completed' => 'green',
+            'archived' => 'gray',
             default => 'gray'
         };
     }

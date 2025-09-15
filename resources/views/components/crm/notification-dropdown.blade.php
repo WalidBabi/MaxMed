@@ -24,7 +24,7 @@
          x-transition:leave-end="transform opacity-0 scale-95"
          @click.away="closeDropdown()"
          class="notification-dropdown absolute right-0 z-50 mt-3 w-[30rem] max-w-[90vw] origin-top-right rounded-xl bg-white shadow-2xl ring-1 ring-gray-900/10 border border-gray-100"
-         style="display: none;">
+         style="min-width: 300px !important;">
         
         <!-- Header -->
         <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-t-xl">
@@ -140,6 +140,14 @@ function crmNotificationDropdown() {
             
             // Add this component to global scope for manual triggering
             window.crmNotificationComponent = this;
+        },
+        
+        destroy() {
+            // Clean up polling interval to prevent memory leaks
+            if (this.pollingInterval) {
+                clearInterval(this.pollingInterval);
+                this.pollingInterval = null;
+            }
         },
         
         async initializeAudio() {
@@ -267,18 +275,20 @@ function crmNotificationDropdown() {
         },
         
         startRealTimePolling() {
-            console.log('Starting real-time polling every 3 seconds'); // Debug log
+            console.log('Starting real-time polling every 5 seconds'); // Debug log
             
-            // Initial check after 1 second
+            // Initial check after 2 seconds
             setTimeout(() => {
                 this.checkForNewNotifications();
-            }, 1000);
+            }, 2000);
             
-            // Then check every 3 seconds
-            setInterval(() => {
-                console.log('Polling for notifications...'); // Debug log
-                this.checkForNewNotifications();
-            }, 3000); // Check every 3 seconds for more responsive notifications
+            // Then check every 10 seconds (much less aggressive)
+            this.pollingInterval = setInterval(() => {
+                // Only poll if page is visible, dropdown is closed, and not during navigation
+                if (!this.isOpen && !document.hidden && !window.navigating) {
+                    this.checkForNewNotifications();
+                }
+            }, 10000); // Check every 10 seconds to reduce flashing
         },
         
         async checkForNewNotifications() {
