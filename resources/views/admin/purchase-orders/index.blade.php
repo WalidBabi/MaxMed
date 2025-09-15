@@ -4,28 +4,19 @@
 
 @push('styles')
 <style>
-/* Custom scrollbar styling for the table */
+/* Hide scrollbar for the table */
 .overflow-x-auto::-webkit-scrollbar {
-    height: 8px;
+    display: none;
 }
 
-.overflow-x-auto::-webkit-scrollbar-track {
-    background: #f7fafc;
-    border-radius: 4px;
+.overflow-x-auto {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
-.overflow-x-auto::-webkit-scrollbar-thumb {
-    background: #cbd5e0;
-    border-radius: 4px;
-}
-
-.overflow-x-auto::-webkit-scrollbar-thumb:hover {
-    background: #a0aec0;
-}
-
-/* Ensure table has minimum width to trigger scrolling */
-.min-w-full {
-    min-width: 1400px;
+/* Ensure table fits without horizontal scroll */
+.overflow-x-auto {
+    overflow-x: hidden;
 }
 </style>
 @endpush
@@ -108,81 +99,80 @@
                 </h3>
             </div>
             
-            <div class="overflow-x-auto" style="scrollbar-width: thin; scrollbar-color: #cbd5e0 #f7fafc;">
-                <table class="min-w-full divide-y divide-gray-200">
+            <div class="overflow-x-auto">
+                <table class="w-full divide-y divide-gray-200" style="min-width: 1000px;">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PO Number</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supplier</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attachments</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">Actions</th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">PO Number</th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-40">Source</th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-40">Supplier</th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Amount</th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Status</th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Payment</th>
+                            <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">Attachments</th>
+                            <th scope="col" class="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach($purchaseOrders as $po)
                             <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 py-3 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div>
-                                            <div class="text-sm font-medium text-gray-900">{{ $po->po_number }}</div>
-                                            <div class="text-sm text-gray-500">{{ formatDubaiDate($po->po_date, 'M d, Y') }}</div>
+                                            <div class="text-xs font-medium text-gray-900">{{ $po->po_number }}</div>
+                                            <div class="text-xs text-gray-500">{{ formatDubaiDate($po->po_date, 'M d, Y') }}</div>
                                         </div>
                                     </div>
                                 </td>
                                 
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 py-3 whitespace-nowrap">
                                     @if($po->hasCustomerOrder())
-                                        <div class="text-sm font-medium text-gray-900">
+                                        <div class="text-xs font-medium text-gray-900">
                                             <a href="{{ route('admin.orders.show', $po->order) }}" class="text-indigo-600 hover:text-indigo-700">
                                                 {{ $po->order->order_number }}
                                             </a>
                                         </div>
-                                        <div class="text-sm text-gray-500">{{ $po->order->getCustomerName() }}</div>
+                                        <div class="text-xs text-gray-500">{{ $po->order->getCustomerName() }}</div>
                                         <div class="text-xs text-gray-400">Customer Order</div>
                                     @elseif($po->isFromSupplierInquiry())
-                                        <div class="text-sm font-medium text-gray-900">Inquiry #{{ $po->supplier_quotation_id }}</div>
+                                        <div class="text-xs font-medium text-gray-900">Inquiry #{{ $po->supplier_quotation_id }}</div>
                                         @if($po->supplierQuotation && $po->supplierQuotation->product)
-                                            <div class="text-sm text-gray-500">{{ $po->supplierQuotation->product->name }}</div>
+                                            <div class="text-xs text-gray-500">{{ $po->supplierQuotation->product->name }}</div>
                                         @endif
                                         <div class="text-xs text-gray-400">Supplier Inquiry</div>
                                     @else
-                                        <div class="text-sm font-medium text-gray-900">Direct Purchase</div>
+                                        <div class="text-xs font-medium text-gray-900">Direct Purchase</div>
                                         <div class="text-xs text-gray-400">Internal Purchase</div>
                                     @endif
                                 </td>
                                 
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ $po->supplier_name }}</div>
+                                <td class="px-3 py-3 whitespace-nowrap">
+                                    <div class="text-xs font-medium text-gray-900">{{ $po->supplier_name }}</div>
                                     @if($po->supplier_email)
-                                        <div class="text-sm text-gray-500">{{ $po->supplier_email }}</div>
+                                        <div class="text-xs text-gray-500">{{ $po->supplier_email }}</div>
                                     @endif
                                 </td>
                                 
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ $po->currency }} {{ $po->formatted_total }}</div>
+                                <td class="px-3 py-3 whitespace-nowrap">
+                                    <div class="text-xs font-medium text-gray-900">{{ $po->currency }} {{ $po->formatted_total }}</div>
                                     @if($po->paid_amount > 0)
-                                        <div class="text-sm text-gray-500">Paid: {{ $po->currency }} {{ $po->formatted_paid_amount }}</div>
+                                        <div class="text-xs text-gray-500">Paid: {{ $po->currency }} {{ $po->formatted_paid_amount }}</div>
                                     @endif
                                 </td>
                                 
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 py-3 whitespace-nowrap">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $po->status_badge_class }}">
                                         {{ \App\Models\PurchaseOrder::$statuses[$po->status] ?? ucfirst($po->status) }}
                                     </span>
                                 </td>
                                 
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 py-3 whitespace-nowrap">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $po->payment_status_badge_class }}">
                                         {{ \App\Models\PurchaseOrder::$paymentStatuses[$po->payment_status] ?? ucfirst($po->payment_status) }}
                                     </span>
                                 </td>
                                 
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 py-3 whitespace-nowrap">
                                     @php
                                         $attachments = is_array($po->attachments) ? $po->attachments : [];
                                         $attachmentCount = count($attachments);
@@ -211,16 +201,10 @@
                                     @endif
                                 </td>
                                 
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ formatDubaiDate($po->created_at, 'M d, Y') }}
-                                    <br>
-                                    <span class="text-xs">{{ formatDubaiDate($po->created_at, 'H:i') }}</span>
-                                </td>
-                                
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium w-32">
-                                    <div class="flex items-center justify-end space-x-2">
+                                <td class="px-3 py-3 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex items-center justify-end space-x-1">
                                         <a href="{{ route('admin.purchase-orders.show', $po) }}" class="text-indigo-600 hover:text-indigo-900" title="View Purchase Order">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                             </svg>
@@ -228,7 +212,7 @@
                                         
                                         @if($po->status === 'draft')
                                             <a href="{{ route('admin.purchase-orders.edit', $po) }}" class="text-green-600 hover:text-green-900" title="Edit Purchase Order">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                 </svg>
                                             </a>
@@ -241,23 +225,31 @@
                                                 data-supplier-email="{{ $po->supplier_email ?? '' }}"
                                                 data-attachments="{{ is_array($po->attachments) ? json_encode($po->attachments) : '[]' }}"
                                                 title="Send Email">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                             </svg>
                                         </button>
                                         
                                         <a href="{{ route('admin.purchase-orders.pdf', $po) }}" class="text-red-600 hover:text-red-900" title="Download PDF">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                             </svg>
                                         </a>
+                                        
+                                        @if($po->payment_status === 'pending' || $po->payment_status === 'partial')
+                                            <a href="{{ route('admin.purchase-orders.show', $po) }}#payment" class="text-green-600 hover:text-green-900" title="Record Payment">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                                </svg>
+                                            </a>
+                                        @endif
                                         
                                         @if($po->status === 'draft')
                                             <form action="{{ route('admin.purchase-orders.destroy', $po) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this purchase order? This action cannot be undone.')">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-red-600 hover:text-red-900" title="Delete Purchase Order">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                                     </svg>
                                                 </button>

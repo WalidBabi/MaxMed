@@ -81,10 +81,10 @@
                     </button>
                 @endif
                 
-                @if($purchaseOrder->payment_status === 'unpaid')
+                @if($purchaseOrder->payment_status === 'pending' || $purchaseOrder->payment_status === 'partial')
                     <button onclick="openPaymentModal()" class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
                         Record Payment
                     </button>
@@ -449,54 +449,194 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Payment History -->
+            @if($purchaseOrder->payments && $purchaseOrder->payments->count() > 0)
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">Payment History</h3>
+                                <p class="text-sm text-gray-600 mt-1">{{ $purchaseOrder->payments->count() }} payment{{ $purchaseOrder->payments->count() > 1 ? 's' : '' }} recorded</p>
+                            </div>
+                            @if($purchaseOrder->payment_status === 'pending' || $purchaseOrder->payment_status === 'partial')
+                                <button onclick="openPaymentModal()" class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                    Record Payment
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="overflow-hidden">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment #</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Method</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reference</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach($purchaseOrder->payments as $payment)
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ $payment->payment_number }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ $payment->currency }} {{ number_format($payment->amount, 2) }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">{{ ucfirst(str_replace('_', ' ', $payment->payment_method)) }}</div>
+                                            @if($payment->bank_name)
+                                                <div class="text-sm text-gray-500">{{ $payment->bank_name }}</div>
+                                            @endif
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $payment->status_badge_class }}">
+                                                {{ \App\Models\SupplierPayment::$statuses[$payment->status] ?? ucfirst($payment->status) }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ formatDubaiDate($payment->payment_date, 'M d, Y') }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ $payment->reference_number ?: 'N/A' }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </div>
 
 <!-- Payment Modal -->
 <div id="paymentModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+    <div class="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
         <div class="mt-3">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Record Payment to Supplier</h3>
-            <form action="{{ route('admin.purchase-orders.create-payment', $purchaseOrder) }}" method="POST">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-900">Record Payment to Supplier</h3>
+                    <p class="text-sm text-gray-600 mt-1">Record a payment made to {{ $purchaseOrder->supplier_name }}</p>
+                </div>
+                <button onclick="closePaymentModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Payment Summary -->
+            <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                        <div class="text-sm text-gray-500">Total Amount</div>
+                        <div class="text-lg font-semibold text-gray-900">{{ $purchaseOrder->currency }} {{ number_format($purchaseOrder->total_amount, 2) }}</div>
+                    </div>
+                    <div>
+                        <div class="text-sm text-gray-500">Paid Amount</div>
+                        <div class="text-lg font-semibold text-green-600">{{ $purchaseOrder->currency }} {{ number_format($purchaseOrder->paid_amount, 2) }}</div>
+                    </div>
+                    <div>
+                        <div class="text-sm text-gray-500">Remaining</div>
+                        <div class="text-lg font-semibold text-red-600">{{ $purchaseOrder->currency }} {{ number_format($purchaseOrder->total_amount - $purchaseOrder->paid_amount, 2) }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <form action="{{ route('admin.purchase-orders.create-payment', $purchaseOrder) }}" method="POST" id="paymentForm">
                 @csrf
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Left Column -->
                 <div class="space-y-4">
                     <div>
-                        <label for="payment_amount" class="block text-sm font-medium text-gray-700">Amount *</label>
-                        <input type="number" id="payment_amount" name="amount" step="0.01" min="0" 
+                            <label for="payment_amount" class="block text-sm font-medium text-gray-700">Payment Amount *</label>
+                            <div class="mt-1 relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">{{ $purchaseOrder->currency }}</span>
+                                </div>
+                                <input type="number" id="payment_amount" name="amount" step="0.01" min="0.01" 
                                max="{{ $purchaseOrder->total_amount - $purchaseOrder->paid_amount }}" 
                                value="{{ $purchaseOrder->total_amount - $purchaseOrder->paid_amount }}" required
-                               class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                       class="pl-12 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
+                            <p class="mt-1 text-xs text-gray-500">Maximum: {{ $purchaseOrder->currency }} {{ number_format($purchaseOrder->total_amount - $purchaseOrder->paid_amount, 2) }}</p>
+                        </div>
+
                     <div>
                         <label for="payment_method" class="block text-sm font-medium text-gray-700">Payment Method *</label>
                         <select id="payment_method" name="payment_method" required
-                                class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             <option value="bank_transfer">Bank Transfer</option>
-                            <option value="wire_transfer">Wire Transfer</option>
+                                <option value="online_transfer">Online Transfer</option>
                             <option value="check">Check</option>
                             <option value="credit_card">Credit Card</option>
                             <option value="cash">Cash</option>
+                                <option value="other">Other</option>
                         </select>
                     </div>
+
                     <div>
                         <label for="payment_date" class="block text-sm font-medium text-gray-700">Payment Date *</label>
                         <input type="date" id="payment_date" name="payment_date" value="{{ date('Y-m-d') }}" required
-                               class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                   class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
+
                     <div>
                         <label for="reference_number" class="block text-sm font-medium text-gray-700">Reference Number</label>
-                        <input type="text" id="reference_number" name="reference_number"
-                               class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <input type="text" id="reference_number" name="reference_number" placeholder="Transaction ID, Check number, etc."
+                                   class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
                 </div>
-                <div class="flex items-center justify-end space-x-3 mt-6">
+
+                    <!-- Right Column -->
+                    <div class="space-y-4">
+                        <div>
+                            <label for="bank_name" class="block text-sm font-medium text-gray-700">Bank Name</label>
+                            <input type="text" id="bank_name" name="bank_name" placeholder="Bank or financial institution"
+                                   class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+
+                        <div>
+                            <label for="account_number" class="block text-sm font-medium text-gray-700">Account Number</label>
+                            <input type="text" id="account_number" name="account_number" placeholder="Account or card number"
+                                   class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+
+                        <div>
+                            <label for="transaction_id" class="block text-sm font-medium text-gray-700">Transaction ID</label>
+                            <input type="text" id="transaction_id" name="transaction_id" placeholder="Unique transaction identifier"
+                                   class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+
+                        <div>
+                            <label for="notes" class="block text-sm font-medium text-gray-700">Notes</label>
+                            <textarea id="notes" name="notes" rows="3" placeholder="Additional payment details or comments"
+                                      class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex items-center justify-end space-x-3 mt-8 pt-6 border-t border-gray-200">
                     <button type="button" onclick="closePaymentModal()" 
-                            class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                            class="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Cancel
                     </button>
                     <button type="submit" 
-                            class="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700">
+                            class="px-6 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
                         Record Payment
                     </button>
                 </div>
@@ -778,6 +918,18 @@ function closePaymentModal() {
 document.getElementById('paymentModal').addEventListener('click', function(e) {
     if (e.target === this) {
         closePaymentModal();
+    }
+});
+
+// Auto-open payment modal if URL has #payment hash
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.hash === '#payment') {
+        // Small delay to ensure page is fully loaded
+        setTimeout(function() {
+            openPaymentModal();
+            // Remove the hash from URL without triggering page reload
+            history.replaceState(null, null, window.location.pathname);
+        }, 100);
     }
 });
 </script>

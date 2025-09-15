@@ -25,75 +25,103 @@
 
     <!-- Revenue vs Cash Flow Section -->
     <div class="mb-8">
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <!-- Revenue AED -->
-            <div class="overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-green-500">
-                            <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
+            <!-- Revenue AED Card -->
+            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-green-50 to-emerald-100 p-1.5 shadow-sm ring-1 ring-green-200/50 transition-all duration-300 hover:shadow-md hover:ring-green-300/50">
+                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-green-200/30 transition-all duration-300 group-hover:scale-110"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between">
+                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-green-500 shadow-sm">
+                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"></path>
                             </svg>
                         </div>
+                        <div class="text-right">
+                            <p class="text-xs font-medium text-green-600 uppercase tracking-wide">Revenue</p>
+                            <p class="text-xs text-green-500">AED currency</p>
+                        </div>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Revenue (AED)</p>
-                        <p class="text-2xl font-semibold text-gray-900">{{ number_format($salesData['revenue']['aed'], 2) }} AED</p>
-                        <p class="text-xs text-gray-500 mt-1">All sent invoices</p>
+                    <div class="mt-1">
+                        <div class="space-y-0">
+                            <p class="text-sm font-bold text-gray-900">{{ number_format($salesData['revenue']['aed'], 0) }} AED</p>
+                            <p class="text-xs font-semibold text-gray-700">All sent invoices</p>
+                        </div>
+                        <p class="text-xs text-green-600 mt-0.5">Total revenue</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Revenue USD -->
-            <div class="overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500">
-                            <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <!-- Revenue USD Card -->
+            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-blue-50 to-indigo-100 p-1.5 shadow-sm ring-1 ring-blue-200/50 transition-all duration-300 hover:shadow-md hover:ring-blue-300/50">
+                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-blue-200/30 transition-all duration-300 group-hover:scale-110"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between">
+                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-blue-500 shadow-sm">
+                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
+                        <div class="text-right">
+                            <p class="text-xs font-medium text-blue-600 uppercase tracking-wide">Revenue</p>
+                            <p class="text-xs text-blue-500">USD currency</p>
+                        </div>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Revenue (USD)</p>
-                        <p class="text-2xl font-semibold text-gray-900">${{ number_format($salesData['revenue']['usd'], 2) }}</p>
-                        <p class="text-xs text-gray-500 mt-1">All sent invoices</p>
+                    <div class="mt-1">
+                        <div class="space-y-0">
+                            <p class="text-sm font-bold text-gray-900">${{ number_format($salesData['revenue']['usd'], 0) }}</p>
+                            <p class="text-xs font-semibold text-gray-700">All sent invoices</p>
+                        </div>
+                        <p class="text-xs text-blue-600 mt-0.5">Total revenue</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Cash Flow AED -->
-            <div class="overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-500">
-                            <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <!-- Cash Flow AED Card -->
+            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-emerald-50 to-teal-100 p-1.5 shadow-sm ring-1 ring-emerald-200/50 transition-all duration-300 hover:shadow-md hover:ring-emerald-300/50">
+                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-emerald-200/30 transition-all duration-300 group-hover:scale-110"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between">
+                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-emerald-500 shadow-sm">
+                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
+                        <div class="text-right">
+                            <p class="text-xs font-medium text-emerald-600 uppercase tracking-wide">Cash Flow</p>
+                            <p class="text-xs text-emerald-500">AED currency</p>
+                        </div>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Cash Flow (AED)</p>
-                        <p class="text-2xl font-semibold text-gray-900">{{ number_format($salesData['cash_flow']['aed'], 2) }} AED</p>
-                        <p class="text-xs text-gray-500 mt-1">Paid invoices only</p>
+                    <div class="mt-1">
+                        <div class="space-y-0">
+                            <p class="text-sm font-bold text-gray-900">{{ number_format($salesData['cash_flow']['aed'], 0) }} AED</p>
+                            <p class="text-xs font-semibold text-gray-700">Paid invoices only</p>
+                        </div>
+                        <p class="text-xs text-emerald-600 mt-0.5">Actual received</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Cash Flow USD -->
-            <div class="overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-teal-500">
-                            <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <!-- Cash Flow USD Card -->
+            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-teal-50 to-cyan-100 p-1.5 shadow-sm ring-1 ring-teal-200/50 transition-all duration-300 hover:shadow-md hover:ring-teal-300/50">
+                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-teal-200/30 transition-all duration-300 group-hover:scale-110"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between">
+                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-teal-500 shadow-sm">
+                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
+                        <div class="text-right">
+                            <p class="text-xs font-medium text-teal-600 uppercase tracking-wide">Cash Flow</p>
+                            <p class="text-xs text-teal-500">USD currency</p>
+                        </div>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Cash Flow (USD)</p>
-                        <p class="text-2xl font-semibold text-gray-900">${{ number_format($salesData['cash_flow']['usd'], 2) }}</p>
-                        <p class="text-xs text-gray-500 mt-1">Paid invoices only</p>
+                    <div class="mt-1">
+                        <div class="space-y-0">
+                            <p class="text-sm font-bold text-gray-900">${{ number_format($salesData['cash_flow']['usd'], 0) }}</p>
+                            <p class="text-xs font-semibold text-gray-700">Paid invoices only</p>
+                        </div>
+                        <p class="text-xs text-teal-600 mt-0.5">Actual received</p>
                     </div>
                 </div>
             </div>
@@ -104,37 +132,51 @@
     <div class="mb-8">
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <!-- Combined Revenue -->
-            <div class="overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500">
-                            <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-purple-50 to-violet-100 p-1.5 shadow-sm ring-1 ring-purple-200/50 transition-all duration-300 hover:shadow-md hover:ring-purple-300/50">
+                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-purple-200/30 transition-all duration-300 group-hover:scale-110"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between">
+                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-purple-500 shadow-sm">
+                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"></path>
                             </svg>
                         </div>
+                        <div class="text-right">
+                            <p class="text-xs font-medium text-purple-600 uppercase tracking-wide">Total Revenue</p>
+                            <p class="text-xs text-purple-500">AED + USD converted</p>
+                        </div>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Total Revenue</p>
-                        <p class="text-2xl font-semibold text-gray-900">{{ number_format($salesData['revenue']['combined'], 2) }} AED</p>
-                        <p class="text-xs text-gray-500 mt-1">AED + USD converted</p>
+                    <div class="mt-1">
+                        <div class="space-y-0">
+                            <p class="text-sm font-bold text-gray-900">{{ number_format($salesData['revenue']['combined'], 2) }} AED</p>
+                            <p class="text-xs font-semibold text-gray-700">All currencies combined</p>
+                        </div>
+                        <p class="text-xs text-purple-600 mt-0.5">Total revenue</p>
                     </div>
                 </div>
             </div>
 
             <!-- Combined Cash Flow -->
-            <div class="overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-500">
-                            <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-indigo-50 to-blue-100 p-1.5 shadow-sm ring-1 ring-indigo-200/50 transition-all duration-300 hover:shadow-md hover:ring-indigo-300/50">
+                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-indigo-200/30 transition-all duration-300 group-hover:scale-110"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between">
+                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-indigo-500 shadow-sm">
+                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
+                        <div class="text-right">
+                            <p class="text-xs font-medium text-indigo-600 uppercase tracking-wide">Total Cash Flow</p>
+                            <p class="text-xs text-indigo-500">AED + USD converted</p>
+                        </div>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Total Cash Flow</p>
-                        <p class="text-2xl font-semibold text-gray-900">{{ number_format($salesData['cash_flow']['combined'], 2) }} AED</p>
-                        <p class="text-xs text-gray-500 mt-1">AED + USD converted</p>
+                    <div class="mt-1">
+                        <div class="space-y-0">
+                            <p class="text-sm font-bold text-gray-900">{{ number_format($salesData['cash_flow']['combined'], 2) }} AED</p>
+                            <p class="text-xs font-semibold text-gray-700">All currencies combined</p>
+                        </div>
+                        <p class="text-xs text-indigo-600 mt-0.5">Actual received</p>
                     </div>
                 </div>
             </div>
@@ -143,95 +185,128 @@
 
     <!-- Sales Summary Cards -->
     <div class="mb-8">
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
             <!-- Total AED Sales -->
-            <div class="overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-green-500">
-                                <svg class="h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 375 374.999991" preserveAspectRatio="xMidYMid meet">
-                                    <g clip-rule="nonzero">
-                                        <path style="stroke:none;fill-rule:nonzero;fill:#ffffff;fill-opacity:1;" d="M 125.828125 122.585938 C 125.898438 122.679688 126.21875 123.082031 126.539062 123.472656 C 128.820312 126.203125 130.542969 130.644531 131.464844 136.242188 C 132.078125 139.917969 132.109375 141.074219 132.109375 155.089844 L 132.109375 168.144531 L 125.859375 168.144531 C 120.144531 168.144531 119.484375 168.117188 118.359375 167.890625 C 116.496094 167.472656 114.890625 166.582031 113.542969 165.21875 C 112.570312 164.183594 112.601562 164.125 112.660156 167.261719 C 112.738281 169.855469 112.765625 170.140625 113.140625 171.558594 C 113.738281 173.777344 114.5625 175.453125 115.804688 176.9375 C 117.492188 178.980469 119.214844 180.121094 121.667969 180.882812 C 122.191406 181.035156 123.300781 181.097656 127.21875 181.125 L 132.113281 181.199219 L 132.113281 194.210938 L 125.214844 194.164062 L 118.285156 194.121094 L 117.089844 193.640625 C 115.667969 193.070312 115.027344 192.648438 113.632812 191.402344 L 112.617188 190.488281 L 112.675781 193.355469 C 112.75 196.011719 112.765625 196.308594 113.140625 197.660156 C 114.441406 202.433594 117.582031 205.839844 121.726562 206.949219 C 122.761719 207.234375 123.164062 207.25 127.492188 207.3125 L 132.113281 207.371094 L 132.113281 220.824219 C 132.113281 228.941406 132.066406 234.925781 131.992188 235.949219 C 131.917969 236.878906 131.679688 238.617188 131.46875 239.832031 C 130.496094 245.433594 128.746094 249.648438 126.234375 252.378906 L 125.722656 252.933594 L 151.027344 252.933594 C 166.152344 252.933594 177.464844 252.875 179.125 252.800781 C 182.042969 252.648438 188.550781 252.003906 190.019531 251.6875 C 190.480469 251.597656 191.347656 251.476562 191.917969 251.375 C 193.132812 251.191406 195.132812 250.773438 198.023438 250.039062 C 201.941406 249.066406 205.746094 247.757812 209.433594 246.113281 C 210.570312 245.605469 213.832031 243.9375 214.699219 243.414062 C 215.164062 243.144531 215.71875 242.8125 215.929688 242.707031 C 216.957031 242.109375 217.949219 241.453125 218.90625 240.742188 C 219.609375 240.234375 220.3125 239.738281 220.460938 239.632812 C 221.089844 239.214844 223.257812 237.398438 224.246094 236.480469 C 227.917969 233.125 231.03125 229.308594 233.582031 225.03125 C 233.925781 224.429688 234.378906 223.683594 234.570312 223.367188 C 235.066406 222.527344 237.097656 218.324219 237.292969 217.695312 C 237.355469 217.46875 237.445312 217.253906 237.5625 217.050781 C 237.953125 216.542969 240.195312 209.457031 240.464844 207.914062 C 240.558594 207.417969 240.601562 207.34375 240.972656 207.269531 C 241.214844 207.222656 244.703125 207.222656 248.726562 207.253906 C 256.777344 207.3125 256.777344 207.3125 258.554688 208.136719 C 259.558594 208.601562 259.859375 208.8125 260.964844 209.816406 C 262.414062 211.125 262.28125 211.335938 262.191406 208.0625 C 262.132812 206.140625 262.058594 204.957031 261.921875 204.476562 C 261.414062 202.628906 261.292969 202.242188 260.851562 201.3125 C 259.382812 198.089844 256.933594 195.804688 253.785156 194.707031 L 252.554688 194.257812 L 247.5625 194.1875 L 242.578125 194.113281 L 242.640625 192.355469 C 242.699219 190.042969 242.699219 185.46875 242.625 183.117188 L 242.5625 181.226562 L 249.234375 181.199219 C 254.953125 181.167969 256.015625 181.199219 256.644531 181.363281 C 258.527344 181.886719 259.800781 182.609375 261.355469 184.035156 L 262.226562 184.84375 L 262.226562 182.625 C 262.226562 179.984375 262.089844 178.8125 261.550781 177.074219 C 260.480469 173.546875 258.394531 170.921875 255.402344 169.300781 C 253.457031 168.25 253.335938 168.226562 246.648438 168.175781 C 242.730469 168.144531 240.675781 168.085938 240.574219 167.996094 C 240.476562 167.894531 240.417969 167.773438 240.410156 167.632812 C 240.273438 166.929688 240.097656 166.234375 239.882812 165.546875 C 236.386719 153.132812 229.855469 143.273438 220.289062 135.972656 C 218.988281 134.964844 215.800781 132.847656 214.503906 132.128906 C 214.007812 131.84375 213.472656 131.542969 213.335938 131.453125 C 212.707031 131.109375 209.101562 129.335938 208.195312 128.964844 C 207.65625 128.722656 206.953125 128.421875 206.640625 128.300781 C 201.359375 126.007812 192.503906 123.832031 185.738281 123.144531 C 184.628906 123.042969 183.167969 122.878906 182.488281 122.816406 C 179.445312 122.484375 175.21875 122.4375 151.171875 122.4375 C 130.855469 122.4375 125.753906 122.484375 125.828125 122.585938 Z M 175.308594 129.097656 C 180.367188 129.394531 183.480469 129.785156 187.117188 130.671875 C 198.21875 133.300781 206.027344 138.882812 211.699219 148.214844 C 212.222656 149.074219 214.4375 153.617188 214.765625 154.53125 C 216.335938 158.78125 217.101562 161.300781 217.765625 164.628906 C 217.929688 165.4375 218.152344 166.519531 218.257812 167.03125 C 218.363281 167.542969 218.410156 167.992188 218.363281 168.035156 C 218.320312 168.082031 203.265625 168.125 184.949219 168.113281 L 151.65625 168.082031 L 151.609375 148.796875 C 151.597656 138.203125 151.609375 129.394531 151.65625 129.230469 L 151.714844 128.945312 L 162.355469 128.945312 C 168.191406 128.945312 174.023438 129.007812 175.296875 129.082031 Z M 219.824219 181.660156 C 219.929688 182.304688 219.929688 193.261719 219.824219 193.800781 L 219.734375 194.203125 L 185.695312 194.175781 L 151.667969 194.132812 L 151.640625 187.769531 C 151.609375 184.273438 151.640625 181.359375 151.667969 181.300781 C 151.699219 181.242188 166.214844 181.179688 185.738281 181.179688 L 219.734375 181.179688 Z M 218.296875 207.425781 C 218.371094 207.640625 218.015625 209.496094 217.28125 212.5 C 216.441406 215.875 215.304688 219.28125 214.152344 221.800781 C 213.585938 223.089844 212.164062 225.882812 211.820312 226.40625 C 211.65625 226.648438 211.175781 227.414062 210.75 228.089844 C 207.882812 232.515625 204.242188 236.160156 199.824219 239.027344 C 198.226562 240.046875 194.933594 241.789062 194.042969 242.058594 C 193.878906 242.097656 193.730469 242.164062 193.589844 242.253906 C 193.488281 242.34375 192.125 242.855469 190.539062 243.425781 C 187.621094 244.460938 182.070312 245.585938 177.613281 246.050781 C 174.726562 246.335938 174.261719 246.351562 163.144531 246.351562 L 151.652344 246.351562 L 151.652344 207.402344 L 184.707031 207.339844 C 202.886719 207.3125 217.863281 207.265625 217.984375 207.234375 C 218.128906 207.226562 218.234375 207.285156 218.296875 207.417969 Z M 218.296875 207.425781 "/>
-                                    </g>
-                                </svg>
-                            </div>
+            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-green-50 to-emerald-100 p-1.5 shadow-sm ring-1 ring-green-200/50 transition-all duration-300 hover:shadow-md hover:ring-green-300/50">
+                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-green-200/30 transition-all duration-300 group-hover:scale-110"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between">
+                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-green-500 shadow-sm">
+                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
                         </div>
-                        <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Total AED Sales</p>
-                        <p class="text-2xl font-semibold text-gray-900">{{ number_format($salesData['total_aed'], 2) }} AED</p>
-                        <p class="text-xs text-gray-500 mt-1">From first transaction</p>
+                        <div class="text-right">
+                            <p class="text-xs font-medium text-green-600 uppercase tracking-wide">Total AED Sales</p>
+                            <p class="text-xs text-green-500">From first transaction</p>
                         </div>
                     </div>
+                    <div class="mt-1">
+                        <div class="space-y-0">
+                            <p class="text-sm font-bold text-gray-900">{{ number_format($salesData['total_aed'], 2) }} AED</p>
+                            <p class="text-xs font-semibold text-gray-700">AED currency sales</p>
+                        </div>
+                        <p class="text-xs text-green-600 mt-0.5">Total AED sales</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Total USD Sales -->
-            <div class="overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500">
-                            <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-blue-50 to-indigo-100 p-1.5 shadow-sm ring-1 ring-blue-200/50 transition-all duration-300 hover:shadow-md hover:ring-blue-300/50">
+                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-blue-200/30 transition-all duration-300 group-hover:scale-110"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between">
+                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-blue-500 shadow-sm">
+                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
+                        <div class="text-right">
+                            <p class="text-xs font-medium text-blue-600 uppercase tracking-wide">Total USD Sales</p>
+                            <p class="text-xs text-blue-500">From first transaction</p>
+                        </div>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Total USD Sales</p>
-                        <p class="text-2xl font-semibold text-gray-900">${{ number_format($salesData['total_usd'], 2) }}</p>
-                        <p class="text-xs text-gray-500 mt-1">From first transaction</p>
+                    <div class="mt-1">
+                        <div class="space-y-0">
+                            <p class="text-sm font-bold text-gray-900">${{ number_format($salesData['total_usd'], 2) }}</p>
+                            <p class="text-xs font-semibold text-gray-700">USD currency sales</p>
+                        </div>
+                        <p class="text-xs text-blue-600 mt-0.5">Total USD sales</p>
                     </div>
                 </div>
             </div>
 
             <!-- Peak Sales Months -->
-            <div class="overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-500">
-                            <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-yellow-50 to-orange-100 p-1.5 shadow-sm ring-1 ring-yellow-200/50 transition-all duration-300 hover:shadow-md hover:ring-yellow-300/50">
+                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-yellow-200/30 transition-all duration-300 group-hover:scale-110"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between">
+                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-yellow-500 shadow-sm">
+                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"></path>
                             </svg>
                         </div>
+                        <div class="text-right">
+                            <p class="text-xs font-medium text-yellow-600 uppercase tracking-wide">Peak Months</p>
+                            <p class="text-xs text-yellow-500">Highest sales periods</p>
+                        </div>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Peak Months</p>
-                        <p class="text-lg font-semibold text-gray-900">{{ count($salesData['peak_months']) }}</p>
-                        <p class="text-xs text-gray-500 mt-1">Highest sales periods</p>
+                    <div class="mt-1">
+                        <div class="space-y-0">
+                            <p class="text-sm font-bold text-gray-900">{{ count($salesData['peak_months']) }}</p>
+                            <p class="text-xs font-semibold text-gray-700">Peak sales months</p>
+                        </div>
+                        <p class="text-xs text-yellow-600 mt-0.5">Highest performance</p>
                     </div>
                 </div>
             </div>
 
             <!-- Total Combined Sales -->
-            <div class="overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500">
-                            <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-purple-50 to-violet-100 p-1.5 shadow-sm ring-1 ring-purple-200/50 transition-all duration-300 hover:shadow-md hover:ring-purple-300/50">
+                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-purple-200/30 transition-all duration-300 group-hover:scale-110"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between">
+                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-purple-500 shadow-sm">
+                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"></path>
                             </svg>
                         </div>
+                        <div class="text-right">
+                            <p class="text-xs font-medium text-purple-600 uppercase tracking-wide">Total Combined Sales</p>
+                            <p class="text-xs text-purple-500">AED + USD converted</p>
+                        </div>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Total Combined Sales</p>
-                        <p class="text-2xl font-semibold text-gray-900">{{ number_format($salesData['total_combined'], 2) }} AED</p>
-                        <p class="text-xs text-gray-500 mt-1">AED + USD converted</p>
+                    <div class="mt-1">
+                        <div class="space-y-0">
+                            <p class="text-sm font-bold text-gray-900">{{ number_format($salesData['total_combined'], 2) }} AED</p>
+                            <p class="text-xs font-semibold text-gray-700">All currencies combined</p>
+                        </div>
+                        <p class="text-xs text-purple-600 mt-0.5">Total sales volume</p>
                     </div>
                 </div>
             </div>
 
             <!-- Zero Sales Months -->
-            <div class="overflow-hidden rounded-xl bg-white px-4 py-6 shadow-sm ring-1 ring-gray-900/5">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-red-500">
-                            <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-red-50 to-pink-100 p-1.5 shadow-sm ring-1 ring-red-200/50 transition-all duration-300 hover:shadow-md hover:ring-red-300/50">
+                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-red-200/30 transition-all duration-300 group-hover:scale-110"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between">
+                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-red-500 shadow-sm">
+                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"></path>
                             </svg>
                         </div>
+                        <div class="text-right">
+                            <p class="text-xs font-medium text-red-600 uppercase tracking-wide">Zero Sales Months</p>
+                            <p class="text-xs text-red-500">Months with no sales</p>
+                        </div>
                     </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Zero Sales Months</p>
-                        <p class="text-lg font-semibold text-gray-900">{{ count($salesData['zero_months']) }}</p>
-                        <p class="text-xs text-gray-500 mt-1">Months with no sales</p>
+                    <div class="mt-1">
+                        <div class="space-y-0">
+                            <p class="text-sm font-bold text-gray-900">{{ count($salesData['zero_months']) }}</p>
+                            <p class="text-xs font-semibold text-gray-700">Zero sales months</p>
+                        </div>
+                        <p class="text-xs text-red-600 mt-0.5">Requires attention</p>
                     </div>
                 </div>
             </div>

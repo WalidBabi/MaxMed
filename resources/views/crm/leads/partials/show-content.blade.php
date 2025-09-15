@@ -77,10 +77,11 @@
                 <div class="flex flex-wrap gap-2">
                     <button onclick="quickStatusChange('{{ $lead->id }}', 'new_inquiry')" class="px-3 py-1 text-xs bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200">📩 New Inquiry</button>
                     <button onclick="quickStatusChange('{{ $lead->id }}', 'quote_requested')" class="px-3 py-1 text-xs bg-purple-100 text-purple-800 rounded-full hover:bg-purple-200">💰 Quote Requested</button>
+                    <button onclick="quickStatusChange('{{ $lead->id }}', 'getting_price')" class="px-3 py-1 text-xs bg-indigo-100 text-indigo-800 rounded-full hover:bg-indigo-200">🔍 Getting Price</button>
+                    <button onclick="quickStatusChange('{{ $lead->id }}', 'price_submitted')" class="px-3 py-1 text-xs bg-teal-100 text-teal-800 rounded-full hover:bg-teal-200">📋 Price Submitted</button>
                     <button onclick="quickStatusChange('{{ $lead->id }}', 'follow_up_1')" class="px-3 py-1 text-xs bg-amber-100 text-amber-800 rounded-full hover:bg-amber-200">⏰ Follow-up 1</button>
                     <button onclick="quickStatusChange('{{ $lead->id }}', 'follow_up_2')" class="px-3 py-1 text-xs bg-orange-100 text-orange-800 rounded-full hover:bg-orange-200">🔔 Follow-up 2</button>
                     <button onclick="quickStatusChange('{{ $lead->id }}', 'follow_up_3')" class="px-3 py-1 text-xs bg-red-100 text-red-800 rounded-full hover:bg-red-200">🚨 Follow-up 3</button>
-                    <button onclick="quickStatusChange('{{ $lead->id }}', 'quote_sent')" class="px-3 py-1 text-xs bg-indigo-100 text-indigo-800 rounded-full hover:bg-indigo-200">📤 Quote Sent</button>
                     <button onclick="quickStatusChange('{{ $lead->id }}', 'negotiating_price')" class="px-3 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full hover:bg-yellow-200">🤝 Price Negotiation</button>
                     <button onclick="quickStatusChange('{{ $lead->id }}', 'payment_pending')" class="px-3 py-1 text-xs bg-emerald-100 text-emerald-800 rounded-full hover:bg-emerald-200">💳 Payment Pending</button>
                     <button onclick="quickStatusChange('{{ $lead->id }}', 'order_confirmed')" class="px-3 py-1 text-xs bg-green-100 text-green-800 rounded-full hover:bg-green-200">✅ Order Confirmed</button>

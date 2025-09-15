@@ -890,8 +890,14 @@
         <div class="payment-section">
             <div class="payment-title">Final Invoice</div>
             @php
-                $isDelivered = $invoice->delivery && in_array($invoice->delivery->status, ['delivered']);
-                $isShipped = $invoice->delivery && in_array($invoice->delivery->status, ['in_transit', 'delivered']);
+                // Check delivery status from multiple sources
+                $delivery = $invoice->delivery;
+                if (!$delivery && $invoice->order && $invoice->order->delivery) {
+                    $delivery = $invoice->order->delivery;
+                }
+                
+                $isDelivered = $delivery && in_array($delivery->status, ['delivered']);
+                $isShipped = $delivery && in_array($delivery->status, ['in_transit', 'delivered']);
                 $parentInvoice = $invoice->parentInvoice;
                 $hasAdvancePayment = $parentInvoice && $parentInvoice->paid_amount > 0;
                 $isOnDeliveryTerms = $parentInvoice && $parentInvoice->payment_terms === 'on_delivery';

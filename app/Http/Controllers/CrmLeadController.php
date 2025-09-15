@@ -87,10 +87,11 @@ class CrmLeadController extends Controller
         $stages = [
             'new_inquiry' => ['title' => '📩 New Inquiry', 'color' => 'blue'],
             'quote_requested' => ['title' => '💰 Quote Requested', 'color' => 'purple'],
+            'getting_price' => ['title' => '🔍 Getting Price', 'color' => 'indigo'],
+            'price_submitted' => ['title' => '📋 Price Submitted', 'color' => 'teal'],
             'follow_up_1' => ['title' => '⏰ Follow-up 1', 'color' => 'amber'],
             'follow_up_2' => ['title' => '🔔 Follow-up 2', 'color' => 'orange'],
             'follow_up_3' => ['title' => '🚨 Follow-up 3', 'color' => 'red'],
-            'quote_sent' => ['title' => '📤 Quote Sent', 'color' => 'indigo'],
             'negotiating_price' => ['title' => '🤝 Price Negotiation', 'color' => 'yellow'],
             'payment_pending' => ['title' => '💳 Payment Pending', 'color' => 'emerald'],
             'order_confirmed' => ['title' => '✅ Order Confirmed', 'color' => 'green'],
@@ -409,12 +410,26 @@ class CrmLeadController extends Controller
     {
         // Check if user has permission to edit leads
         if (!Auth::user()->hasPermission('crm.leads.edit')) {
-            abort(403, 'You do not have permission to change lead status.');
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You do not have permission to change lead status. Please contact your administrator for access.',
+                    'error_type' => 'permission_denied'
+                ], 403);
+            }
+            abort(403, 'You do not have permission to change lead status. Please contact your administrator for access.');
         }
         
         // Check if user is assigned to this lead or is admin
         if ($lead->assigned_to !== Auth::id() && !Auth::user()->isAdmin()) {
-            abort(403, 'You can only change status of leads assigned to you.');
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You can only change the status of leads assigned to you.',
+                    'error_type' => 'access_denied'
+                ], 403);
+            }
+            abort(403, 'You can only change the status of leads assigned to you.');
         }
         
         \Log::info('Quick status update called', [
@@ -426,7 +441,7 @@ class CrmLeadController extends Controller
         ]);
         
         $validated = $request->validate([
-            'status' => 'required|in:new_inquiry,quote_requested,follow_up_1,follow_up_2,follow_up_3,quote_sent,negotiating_price,payment_pending,order_confirmed,deal_lost'
+            'status' => 'required|in:new_inquiry,quote_requested,getting_price,price_submitted,follow_up_1,follow_up_2,follow_up_3,negotiating_price,payment_pending,order_confirmed,deal_lost'
         ]);
         
         $oldStatus = $lead->status;
@@ -511,13 +526,41 @@ class CrmLeadController extends Controller
     }
 
     /**
+     * View lead requirements for purchasing (without personal information)
+     */
+    public function viewRequirements(CrmLead $lead)
+    {
+        // Check if user has permission to view lead requirements
+        if (!Auth::user()->hasPermission('crm.leads.view_requirements')) {
+            abort(403, 'You do not have permission to view lead requirements.');
+        }
+        
+        return response()->json([
+            'success' => true,
+            'lead_id' => $lead->id,
+            'requirements' => $lead->notes,
+            'estimated_value' => $lead->estimated_value,
+            'status' => $lead->status,
+            'created_at' => $lead->created_at->format('Y-m-d H:i:s'),
+            'updated_at' => $lead->updated_at->format('Y-m-d H:i:s')
+        ]);
+    }
+
+    /**
      * Bulk status update for multiple leads
      */
     public function bulkStatusUpdate(Request $request)
     {
         // Check if user has permission to edit leads
         if (!Auth::user()->hasPermission('crm.leads.edit')) {
-            abort(403, 'You do not have permission to change lead status.');
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You do not have permission to change lead status. Please contact your administrator for access.',
+                    'error_type' => 'permission_denied'
+                ], 403);
+            }
+            abort(403, 'You do not have permission to change lead status. Please contact your administrator for access.');
         }
         
         $validated = $request->validate([
@@ -532,7 +575,14 @@ class CrmLeadController extends Controller
             $unauthorizedLeads = $leads->where('assigned_to', '!=', Auth::id());
             
             if ($unauthorizedLeads->count() > 0) {
-                abort(403, 'You can only change status of leads assigned to you.');
+                if ($request->expectsJson() || $request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'You can only change the status of leads assigned to you.',
+                        'error_type' => 'access_denied'
+                    ], 403);
+                }
+                abort(403, 'You can only change the status of leads assigned to you.');
             }
         }
 
