@@ -896,6 +896,24 @@
                     $delivery = $invoice->order->delivery;
                 }
                 
+                // Additional fallback: try to find delivery by customer name and invoice date
+                if (!$delivery && $invoice->customer_name) {
+                    $relatedDeliveries = \App\Models\Delivery::with('order')
+                        ->whereHas('order', function($query) use ($invoice) {
+                            $query->whereHas('customer', function($customerQuery) use ($invoice) {
+                                $customerQuery->where('name', $invoice->customer_name);
+                            });
+                        })
+                        ->whereDate('created_at', '>=', $invoice->created_at->subDays(30))
+                        ->whereDate('created_at', '<=', $invoice->created_at->addDays(30))
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+                    
+                    if ($relatedDeliveries->count() > 0) {
+                        $delivery = $relatedDeliveries->first();
+                    }
+                }
+                
                 $isDelivered = $delivery && in_array($delivery->status, ['delivered']);
                 $isShipped = $delivery && in_array($delivery->status, ['in_transit', 'delivered']);
                 $parentInvoice = $invoice->parentInvoice;

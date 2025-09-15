@@ -24,6 +24,7 @@ class UserRedirectService
         // Permission-based redirect logic - check permissions in priority order
         $redirectRoutes = [
             'dashboard.view' => 'admin.dashboard',
+            'purchasing.dashboard.access' => 'admin.dashboard',
             'purchase_orders.view' => 'admin.purchase-orders.index',
             'quotations.view' => 'admin.quotes.index',
             'orders.view' => 'admin.orders.index',
@@ -150,6 +151,7 @@ class UserRedirectService
         // Permission-based titles
         $permissionTitles = [
             'dashboard.view' => 'Dashboard',
+            'purchasing.dashboard.access' => 'Purchasing Dashboard',
             'purchase_orders.view' => 'Purchase Orders',
             'quotations.view' => 'Quotes',
             'orders.view' => 'Sales Orders',

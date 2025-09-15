@@ -4,7 +4,7 @@
     <div class="flex h-16 shrink-0 items-center">
         <img class="mb-1 h-12 w-auto" src="{{ asset('Images/logo.png') }}" alt="MaxMed">
         <div class="ml-3">
-            <div class="text-sm font-semibold text-gray-600">{{ \App\Helpers\DashboardHelper::crmPortalHeaderName() }}</div>
+            <div class="text-xs font-semibold text-gray-600">{{ \App\Helpers\DashboardHelper::crmPortalHeaderName() }}</div>
         </div>
     </div>
 

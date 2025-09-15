@@ -498,6 +498,9 @@
                                 @if(\App\Services\AccessControlService::canAccessAdmin(Auth::user()))
                                 <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{{ \App\Helpers\DashboardHelper::adminPortalHeaderName() }}</a>
                                 @endif
+                                @if(Auth::user()->hasPermission('purchasing.dashboard.access') && !\App\Services\AccessControlService::canAccessAdmin(Auth::user()))
+                                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Purchasing</a>
+                                @endif
                                 @if(\App\Services\AccessControlService::canAccessCrm(Auth::user()))
                                 <a href="{{ route('crm.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{{ \App\Helpers\DashboardHelper::crmPortalHeaderName() }}</a>
                                 @endif
@@ -832,6 +835,9 @@
                 @auth
                 @if(\App\Services\AccessControlService::canAccessAdmin(Auth::user()))
                 <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">{{ \App\Helpers\DashboardHelper::adminPortalHeaderName() }}</a>
+                @endif
+                @if(Auth::user()->hasPermission('purchasing.dashboard.access') && !\App\Services\AccessControlService::canAccessAdmin(Auth::user()))
+                <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Purchasing</a>
                 @endif
                 @if(\App\Services\AccessControlService::canAccessCrm(Auth::user()))
                 <a href="{{ route('crm.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">{{ \App\Helpers\DashboardHelper::crmPortalHeaderName() }}</a>

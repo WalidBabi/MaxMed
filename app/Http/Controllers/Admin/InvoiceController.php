@@ -38,7 +38,7 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Invoice::with(['quote', 'order', 'delivery', 'creator', 'payments', 'parentInvoice', 'childInvoices']);
+        $query = Invoice::with(['quote', 'order', 'order.delivery', 'delivery', 'creator', 'payments', 'parentInvoice', 'childInvoices']);
 
         // Apply filters
         if ($request->filled('type')) {
