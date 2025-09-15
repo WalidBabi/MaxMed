@@ -8,6 +8,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Custom404Handler
 {
+    // Cache the arrays to avoid recreating them on every request
+    private static $fourOhFourProductIds = null;
+    private static $legacyCategoryNames = null;
+    private static $legacyCategoryIds = null;
+    private static $legacyCategoryPaths = null;
+
     /**
      * Handle an incoming request.
      *
@@ -23,18 +29,20 @@ class Custom404Handler
         if ($response->getStatusCode() === 404) {
             $path = $request->path();
             
-            // 404 Product IDs from Search Console data - redirect to products page
-            $fourOhFourProductIds = [
-                138, 147, 150, 129, 124, 169, 121, 149, 148, 158, 145, 142, 
-                181, 151, 116, 160, 155, 68, 162, 173, 122, 32, 275, 31, 
-                170, 30, 139, 114, 172, 182, 236, 167, 67, 177, 180, 171, 
-                178, 176, 179, 282, 270, 281, 285
-            ];
+            // Initialize cached arrays if not already done
+            if (self::$fourOhFourProductIds === null) {
+                self::$fourOhFourProductIds = [
+                    138, 147, 150, 129, 124, 169, 121, 149, 148, 158, 145, 142, 
+                    181, 151, 116, 160, 155, 68, 162, 173, 122, 32, 275, 31, 
+                    170, 30, 139, 114, 172, 182, 236, 167, 67, 177, 180, 171, 
+                    178, 176, 179, 282, 270, 281, 285
+                ];
+            }
             
             // Check if it's a 404 product URL
             if (preg_match('/^product\/(\d+)$/', $path, $matches)) {
                 $productId = (int)$matches[1];
-                if (in_array($productId, $fourOhFourProductIds)) {
+                if (in_array($productId, self::$fourOhFourProductIds)) {
                     return redirect('/products', 301);
                 }
             }

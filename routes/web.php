@@ -1958,3 +1958,10 @@ Route::get('/test-logging', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     // Additional authenticated routes can be added here
 });
+
+// Performance monitoring routes (admin only)
+Route::middleware(['auth', 'admin'])->prefix('admin/performance')->group(function () {
+    Route::get('/metrics', [\App\Http\Controllers\PerformanceController::class, 'metrics'])->name('admin.performance.metrics');
+    Route::post('/clear-cache', [\App\Http\Controllers\PerformanceController::class, 'clearCache'])->name('admin.performance.clear-cache');
+    Route::get('/recommendations', [\App\Http\Controllers\PerformanceController::class, 'recommendations'])->name('admin.performance.recommendations');
+});

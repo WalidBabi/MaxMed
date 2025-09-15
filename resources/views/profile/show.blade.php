@@ -129,8 +129,16 @@
                 <!-- Role Permissions Details -->
                 @if($user->role && $userPermissions && $permissionCount > 0)
                 <div class="mt-6 pt-6 border-t border-gray-200">
-                    <h4 class="text-lg font-semibold text-gray-900 mb-4">Your Permissions & Access</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-lg font-semibold text-gray-900">Your Permissions & Access</h4>
+                        <button onclick="toggleDetailedPermissions()" id="togglePermissionsBtn" class="inline-flex items-center px-3 py-1.5 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                            Show Details
+                        </button>
+                    </div>
+                    <div id="detailedPermissions" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" style="display: none;">
                         @php
                             $permissions = $userPermissions;
                             $categories = $permissions->groupBy(function($permission) {
@@ -141,26 +149,29 @@
 
                         @foreach($categories as $category => $categoryPermissions)
                         <div class="bg-gray-50 rounded-lg p-4">
-                            <h5 class="font-medium text-gray-900 mb-2 flex items-center">
-                                <svg class="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                {{ $category }}
-                            </h5>
-                            <div class="space-y-1">
-                                @foreach($categoryPermissions->take(5) as $permission)
-                                <div class="text-sm text-gray-600 flex items-center">
-                                    <svg class="w-3 h-3 mr-2 text-green-500" fill="currentColor" viewBox="0 0 8 8">
-                                        <circle cx="4" cy="4" r="3"/>
+                            <h5 class="font-medium text-gray-900 mb-3 flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <svg class="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
-                                    {{ ucfirst(str_replace(['.', '_'], [' ', ' '], explode('.', $permission->name)[1] ?? $permission->name)) }}
+                                    {{ $category }}
+                                </div>
+                                <span class="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded-full">
+                                    {{ $categoryPermissions->count() }} permissions
+                                </span>
+                            </h5>
+                            <div class="space-y-2">
+                                @foreach($categoryPermissions as $permission)
+                                <div class="text-sm text-gray-700 flex items-center justify-between bg-white rounded-md px-3 py-2 border border-gray-200">
+                                    <div class="flex items-center">
+                                        <svg class="w-3 h-3 mr-2 text-green-500" fill="currentColor" viewBox="0 0 8 8">
+                                            <circle cx="4" cy="4" r="3"/>
+                                        </svg>
+                                        <span class="font-medium">{{ $permission->display_name ?? ucfirst(str_replace(['.', '_'], [' ', ' '], explode('.', $permission->name)[1] ?? $permission->name)) }}</span>
+                                    </div>
+                                    <span class="text-xs text-gray-500 font-mono">{{ $permission->name }}</span>
                                 </div>
                                 @endforeach
-                                @if($categoryPermissions->count() > 5)
-                                <div class="text-xs text-gray-500">
-                                    +{{ $categoryPermissions->count() - 5 }} more permissions
-                                </div>
-                                @endif
                             </div>
                         </div>
                         @endforeach
@@ -213,4 +224,30 @@
         </div>
     </div>
 </div>
+
+<script>
+function toggleDetailedPermissions() {
+    const detailedPermissions = document.getElementById('detailedPermissions');
+    const toggleBtn = document.getElementById('togglePermissionsBtn');
+    const icon = toggleBtn.querySelector('svg');
+    
+    if (detailedPermissions.style.display === 'none') {
+        detailedPermissions.style.display = 'grid';
+        toggleBtn.innerHTML = `
+            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+            </svg>
+            Hide Details
+        `;
+    } else {
+        detailedPermissions.style.display = 'none';
+        toggleBtn.innerHTML = `
+            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+            Show Details
+        `;
+    }
+}
+</script>
 @endsection 

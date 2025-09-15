@@ -23,9 +23,8 @@
          x-transition:leave-start="transform opacity-100 scale-100" 
          x-transition:leave-end="transform opacity-0 scale-95"
          @click.away="closeDropdown()"
-         class="notification-dropdown absolute right-0 z-50 mt-3 w-[75rem] max-w-[90vw] origin-top-right rounded-xl bg-white shadow-2xl ring-1 ring-gray-900/10 border border-gray-100"
-         style="width: 30rem !important; max-width: 55vw !important; min-width: 300px !important;"
-         style="display: none;">
+         class="notification-dropdown absolute right-0 z-50 mt-3 w-[30rem] max-w-[90vw] origin-top-right rounded-xl bg-white shadow-2xl ring-1 ring-gray-900/10 border border-gray-100"
+         style="min-width: 300px !important;">
         
         <!-- Header - Improved spacing and typography -->
         <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-t-xl">
@@ -152,6 +151,14 @@ function notificationDropdown() {
             
             // Add this component to global scope for manual triggering
             window.adminNotificationComponent = this;
+        },
+        
+        destroy() {
+            // Clean up polling interval to prevent memory leaks
+            if (this.pollingInterval) {
+                clearInterval(this.pollingInterval);
+                this.pollingInterval = null;
+            }
         },
         
         initializeAudio() {
@@ -336,18 +343,20 @@ function notificationDropdown() {
         },
         
         startRealTimePolling() {
-            console.log('Starting real-time polling every 3 seconds for admin notifications');
+            console.log('Starting real-time polling every 5 seconds for admin notifications');
             
-            // Initial check after 1 second
+            // Initial check after 2 seconds
             setTimeout(() => {
                 this.checkForNewNotifications();
-            }, 1000);
+            }, 2000);
             
-            // Then check every 3 seconds
-            setInterval(() => {
-                console.log('Polling for admin notifications...');
-                this.checkForNewNotifications();
-            }, 3000);
+            // Then check every 5 seconds (less aggressive)
+            this.pollingInterval = setInterval(() => {
+                // Only poll if page is visible and dropdown is closed
+                if (!this.isOpen && !document.hidden) {
+                    this.checkForNewNotifications();
+                }
+            }, 5000); // Check every 5 seconds to reduce flashing
         },
         
         async checkForNewNotifications() {

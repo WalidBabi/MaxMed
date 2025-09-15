@@ -19,6 +19,9 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
+    <!-- Navigation Optimization Script -->
+    <script src="{{ asset('js/navigation-optimization.js') }}" defer></script>
+    
     <!-- Notification trigger script for immediate sound feedback -->
     <script>
         // Notification trigger for immediate feedback after form submissions

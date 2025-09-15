@@ -3,6 +3,22 @@ import laravel from 'laravel-vite-plugin';
 import compressionPlugin from 'vite-plugin-compression';
 
 export default defineConfig({
+    // Development server configuration
+    server: {
+        hmr: {
+            overlay: false
+        },
+        // Disable caching for development
+        force: true,
+        // Optimize for better performance
+        fs: {
+            strict: false
+        }
+    },
+    // Optimize build performance
+    optimizeDeps: {
+        include: ['alpinejs']
+    },
     plugins: [
         laravel({
             input: [
@@ -10,6 +26,8 @@ export default defineConfig({
                 'resources/js/app.js',
             ],
             refresh: true,
+            // Disable caching in development
+            detectTls: false,
         }),
         compressionPlugin({
             algorithm: 'gzip',

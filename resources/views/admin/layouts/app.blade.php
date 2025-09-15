@@ -26,6 +26,9 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <!-- Navigation Optimization Script -->
+    <script src="{{ asset('js/navigation-optimization.js') }}" defer></script>
 
     <!-- Page Specific Styles -->
     @stack('styles')

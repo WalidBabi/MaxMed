@@ -9,11 +9,6 @@
             <h2 class="text-2xl font-bold text-gray-900">{{ $lead->full_name }}</h2>
             <p class="text-gray-600">{{ $lead->company_name }} • {{ $lead->job_title }}</p>
         </div>
-        <button type="button" onclick="closeLeadModal()" class="text-gray-400 hover:text-gray-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-        </button>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -79,6 +74,7 @@
                     <button onclick="quickStatusChange('{{ $lead->id }}', 'quote_requested')" class="px-3 py-1 text-xs bg-purple-100 text-purple-800 rounded-full hover:bg-purple-200">💰 Quote Requested</button>
                     <button onclick="quickStatusChange('{{ $lead->id }}', 'getting_price')" class="px-3 py-1 text-xs bg-indigo-100 text-indigo-800 rounded-full hover:bg-indigo-200">🔍 Getting Price</button>
                     <button onclick="quickStatusChange('{{ $lead->id }}', 'price_submitted')" class="px-3 py-1 text-xs bg-teal-100 text-teal-800 rounded-full hover:bg-teal-200">📋 Price Submitted</button>
+                    <button onclick="quickStatusChange('{{ $lead->id }}', 'quote_sent')" class="px-3 py-1 text-xs bg-indigo-100 text-indigo-800 rounded-full hover:bg-indigo-200">📤 Quote Sent</button>
                     <button onclick="quickStatusChange('{{ $lead->id }}', 'follow_up_1')" class="px-3 py-1 text-xs bg-amber-100 text-amber-800 rounded-full hover:bg-amber-200">⏰ Follow-up 1</button>
                     <button onclick="quickStatusChange('{{ $lead->id }}', 'follow_up_2')" class="px-3 py-1 text-xs bg-orange-100 text-orange-800 rounded-full hover:bg-orange-200">🔔 Follow-up 2</button>
                     <button onclick="quickStatusChange('{{ $lead->id }}', 'follow_up_3')" class="px-3 py-1 text-xs bg-red-100 text-red-800 rounded-full hover:bg-red-200">🚨 Follow-up 3</button>

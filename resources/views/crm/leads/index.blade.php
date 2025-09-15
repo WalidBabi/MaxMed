@@ -2,6 +2,12 @@
 
 @section('title', 'CRM Leads Pipeline')
 
+@push('head')
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+@endpush
+
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <!-- Header with View Toggle -->
@@ -39,13 +45,16 @@
                     <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
                     <select name="status" id="status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         <option value="">All Statuses</option>
-                        <option value="new" {{ request('status') === 'new' ? 'selected' : '' }}>New</option>
-                        <option value="contacted" {{ request('status') === 'contacted' ? 'selected' : '' }}>Contacted</option>
-                        <option value="qualified" {{ request('status') === 'qualified' ? 'selected' : '' }}>Qualified</option>
-                        <option value="proposal" {{ request('status') === 'proposal' ? 'selected' : '' }}>Proposal</option>
-                        <option value="negotiation" {{ request('status') === 'negotiation' ? 'selected' : '' }}>Negotiation</option>
-                        <option value="won" {{ request('status') === 'won' ? 'selected' : '' }}>Won</option>
-                        <option value="lost" {{ request('status') === 'lost' ? 'selected' : '' }}>Lost</option>
+                        <option value="new_inquiry" {{ request('status') === 'new_inquiry' ? 'selected' : '' }}>New Inquiry</option>
+                        <option value="quote_requested" {{ request('status') === 'quote_requested' ? 'selected' : '' }}>Quote Requested</option>
+                        <option value="quote_sent" {{ request('status') === 'quote_sent' ? 'selected' : '' }}>Quote Sent</option>
+                        <option value="follow_up_1" {{ request('status') === 'follow_up_1' ? 'selected' : '' }}>Follow-up 1</option>
+                        <option value="follow_up_2" {{ request('status') === 'follow_up_2' ? 'selected' : '' }}>Follow-up 2</option>
+                        <option value="follow_up_3" {{ request('status') === 'follow_up_3' ? 'selected' : '' }}>Follow-up 3</option>
+                        <option value="negotiating_price" {{ request('status') === 'negotiating_price' ? 'selected' : '' }}>Negotiating Price</option>
+                        <option value="payment_pending" {{ request('status') === 'payment_pending' ? 'selected' : '' }}>Payment Pending</option>
+                        <option value="order_confirmed" {{ request('status') === 'order_confirmed' ? 'selected' : '' }}>Order Confirmed</option>
+                        <option value="deal_lost" {{ request('status') === 'deal_lost' ? 'selected' : '' }}>Deal Lost</option>
                     </select>
                 </div>
                 
@@ -495,7 +504,21 @@ select:focus {
 </style>
 
 <script>
+// Cache-busting: Updated {{ now()->timestamp }}
 // Enhanced Pipeline JavaScript with Advanced Features and Smooth Navigation
+
+console.log('🚀 CRM Leads JavaScript loaded - Version: {{ now()->timestamp }} - Cache Buster: {{ uniqid() }}');
+console.log('🔥 COMPLETELY NEW LOGIC - Error handling rewritten from scratch!');
+console.log('🔄 Cache busting timestamp: ' + new Date().getTime());
+console.log('🎯 BRAND NEW APPROACH - Simple and direct error handling!');
+console.log('✨ NEW STYLE - Short and clean error messages!');
+
+// Clear any unwanted URL parameters on page load
+if (window.location.search.includes('lead=')) {
+    console.log('🧹 Clearing lead parameter from URL');
+    const cleanUrl = window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
+}
 
 // Global variables
 let draggedLead = null;
@@ -935,7 +958,7 @@ function updateLeadStatusAndRefreshKanban(leadId, newStatus) {
         return;
     }
     
-    console.log('Updating lead status via AJAX...');
+    console.log('🔄 NEW LOGIC: Updating lead status via AJAX...');
     
     // Make AJAX call to update lead status
     fetch(`/crm/leads/${leadId}/status`, {
@@ -948,33 +971,78 @@ function updateLeadStatusAndRefreshKanban(leadId, newStatus) {
         body: JSON.stringify({ status: newStatus })
     })
     .then(response => {
-        console.log('Response received:', response.status, response.statusText);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Response data:', data);
-        if (data.success) {
-            console.log('Lead status updated successfully, refreshing kanban...');
-            showNotification(`Lead moved to ${newStatus} stage`, 'success');
-            
-            // Refresh only the kanban board
-            refreshKanbanBoard();
+        console.log('🔄 NEW LOGIC: Response received:', response.status, response.statusText);
+        
+        // Check if response is ok
+        if (response.ok) {
+            // Success case
+            return response.json().then(data => {
+                console.log('🔄 NEW LOGIC: Success data:', data);
+                if (data.success) {
+                    console.log('✅ Lead status updated successfully, refreshing kanban...');
+                    showNotification(`Lead moved to ${newStatus} stage`, 'success');
+                    
+                    // Clear any URL parameters that might have been added
+                    if (window.history.replaceState) {
+                        const cleanUrl = window.location.pathname;
+                        window.history.replaceState({}, document.title, cleanUrl);
+                    }
+                    
+                    refreshKanbanBoard();
+                } else {
+                    console.log('❌ Server returned success: false');
+                    showNotification(data.message || 'Failed to update lead status', 'error');
+                }
+                
+                // Remove loading state
+                if (draggedLead) {
+                    draggedLead.classList.remove('loading');
+                    draggedLead.style.opacity = '';
+                }
+            });
         } else {
-            console.error('Server returned success: false');
-            showNotification(data.message || 'Failed to update lead status', 'error');
-            // Remove loading state
-            if (draggedLead) {
-                draggedLead.classList.remove('loading');
-                draggedLead.style.opacity = '';
-            }
+            // Error case - handle directly
+            console.log('🔄 NEW LOGIC: Error response, parsing...');
+            return response.json().then(errorData => {
+                console.log('🔄 NEW LOGIC: Error data:', errorData);
+                let errorMessage = errorData.message || `HTTP error! status: ${response.status}`;
+                
+                // Make error message shorter and more user-friendly
+                if (errorMessage.includes('Cannot update lead')) {
+                    errorMessage = errorMessage.replace('🚫 Cannot update lead \'', '❌ Lead \'');
+                    errorMessage = errorMessage.replace(' - Assigned to ', ' → ');
+                } else if (errorMessage.includes('No permission')) {
+                    errorMessage = '❌ Access denied';
+                } else if (errorMessage.includes('purchasing permission')) {
+                    errorMessage = '❌ Requires purchasing access';
+                }
+                
+                console.log('🔄 NEW LOGIC: Showing error message:', errorMessage);
+                
+                // Show the error notification
+                showNotification(errorMessage, 'error');
+                
+                // Remove loading state
+                if (draggedLead) {
+                    draggedLead.classList.remove('loading');
+                    draggedLead.style.opacity = '';
+                }
+            }).catch(parseError => {
+                console.error('🔄 NEW LOGIC: Failed to parse error response:', parseError);
+                showNotification(`HTTP error! status: ${response.status}`, 'error');
+                
+                // Remove loading state
+                if (draggedLead) {
+                    draggedLead.classList.remove('loading');
+                    draggedLead.style.opacity = '';
+                }
+            });
         }
     })
     .catch(error => {
-        console.error('AJAX Error:', error);
-        showNotification(`Error updating lead status: ${error.message}`, 'error');
+        console.error('🔄 NEW LOGIC: Network or other error:', error);
+        showNotification('Network error occurred. Please try again.', 'error');
+        
         // Remove loading state
         if (draggedLead) {
             draggedLead.classList.remove('loading');
@@ -1220,14 +1288,43 @@ function changeLeadStatusOptimistic(leadId, newStatus, oldStatus) {
     .then(response => {
         console.log('Response received:', response.status, response.statusText);
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            // Try to parse the error response for detailed message
+            return response.json().then(errorData => {
+                console.log('Error data received:', errorData);
+                // Use the detailed message from server if available
+                const errorMessage = errorData.message || `HTTP error! status: ${response.status}`;
+                throw new Error(errorMessage);
+            }).catch(parseError => {
+                console.log('JSON parsing failed:', parseError);
+                // If JSON parsing fails, try to get text response
+                return response.text().then(textResponse => {
+                    console.log('Text response received:', textResponse);
+                    // Try to extract message from text response or use generic message
+                    let errorMessage = textResponse || `HTTP error! status: ${response.status}`;
+                    
+                    // If the text response is just the status code, provide a more helpful message
+                    if (errorMessage.includes('403') && !errorMessage.includes('Permission') && !errorMessage.includes('Access')) {
+                        errorMessage = '🚫 **Access Denied**: You don\'t have permission to perform this action. Please contact your administrator if you believe this is an error.';
+                    }
+                    
+                    throw new Error(errorMessage);
+                }).catch(textError => {
+                    console.log('Text parsing also failed:', textError);
+                    // Final fallback with more helpful message
+                    let errorMessage = `HTTP error! status: ${response.status}`;
+                    if (response.status === 403) {
+                        errorMessage = '🚫 **Access Denied**: You don\'t have permission to perform this action. Please contact your administrator if you believe this is an error.';
+                    }
+                    throw new Error(errorMessage);
+                });
+            });
         }
         return response.json();
     })
     .then(data => {
         console.log('Response data:', data);
         if (data.success) {
-            // Remove loading state
+            // Remove loading state immediately
             if (leadCard) {
                 leadCard.classList.remove('loading');
             }
@@ -1240,13 +1337,17 @@ function changeLeadStatusOptimistic(leadId, newStatus, oldStatus) {
             setTimeout(() => {
                 console.log('Refreshing page to show updated status...');
                 window.location.reload();
-            }, 1500); // Wait 1.5 seconds to show the notification
+            }, 1000); // Reduced from 1.5 seconds to 1 second
             
         } else {
             // Revert optimistic update on failure
             console.error('Server returned success: false');
             revertLeadStatusUpdate(leadId, oldStatus, newStatus);
             showNotification(data.message || 'Failed to update lead status', 'error');
+            // Remove loading state immediately
+            if (leadCard) {
+                leadCard.classList.remove('loading');
+            }
         }
     })
     .catch(error => {
@@ -1254,6 +1355,10 @@ function changeLeadStatusOptimistic(leadId, newStatus, oldStatus) {
         // Revert optimistic update on error
         revertLeadStatusUpdate(leadId, oldStatus, newStatus);
         showNotification(`Error updating lead status: ${error.message}`, 'error');
+        // Remove loading state immediately
+        if (leadCard) {
+            leadCard.classList.remove('loading');
+        }
     });
 }
 
@@ -1376,7 +1481,7 @@ function toggleBulkActions() {
         </div>
         
         <div class="space-y-3">
-            <button onclick="bulkStatusChange('contacted')" class="w-full text-left px-4 py-3 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition-colors">
+            <button onclick="bulkStatusChange('follow_up_1')" class="w-full text-left px-4 py-3 bg-yellow-50 hover:bg-yellow-100 rounded-lg transition-colors">
                 <div class="flex items-center space-x-3">
                     <div class="w-8 h-8 bg-yellow-200 rounded-full flex items-center justify-center">
                         <svg class="w-4 h-4 text-yellow-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1384,13 +1489,13 @@ function toggleBulkActions() {
                         </svg>
                     </div>
                     <div>
-                        <p class="font-medium text-gray-900">Mark as Contacted</p>
-                        <p class="text-sm text-gray-600">Move all selected leads to contacted stage</p>
+                        <p class="font-medium text-gray-900">Mark as Follow-up 1</p>
+                        <p class="text-sm text-gray-600">Move all selected leads to follow-up 1 stage</p>
                     </div>
                 </div>
             </button>
             
-            <button onclick="bulkStatusChange('qualified')" class="w-full text-left px-4 py-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
+            <button onclick="bulkStatusChange('quote_requested')" class="w-full text-left px-4 py-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
                 <div class="flex items-center space-x-3">
                     <div class="w-8 h-8 bg-purple-200 rounded-full flex items-center justify-center">
                         <svg class="w-4 h-4 text-purple-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1398,8 +1503,8 @@ function toggleBulkActions() {
                         </svg>
                     </div>
                     <div>
-                        <p class="font-medium text-gray-900">Mark as Qualified</p>
-                        <p class="text-sm text-gray-600">Move all selected leads to qualified stage</p>
+                        <p class="font-medium text-gray-900">Mark as Quote Requested</p>
+                        <p class="text-sm text-gray-600">Move all selected leads to quote requested stage</p>
                     </div>
                 </div>
             </button>
@@ -1452,7 +1557,22 @@ function bulkStatusChange(newStatus) {
             status: newStatus
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            // Try to parse the error response for detailed message
+            return response.json().then(errorData => {
+                console.log('Bulk update error response data:', errorData);
+                // Use the detailed message from the server
+                const errorMessage = errorData.message || `HTTP error! status: ${response.status}`;
+                throw new Error(errorMessage);
+            }).catch(parseError => {
+                console.error('Failed to parse bulk update error response:', parseError);
+                // If JSON parsing fails, throw generic error
+                throw new Error(`HTTP error! status: ${response.status}`);
+            });
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.success) {
             // Move cards optimistically
@@ -1481,12 +1601,12 @@ function bulkStatusChange(newStatus) {
             closeBulkActionsModal();
             showNotification(`${leadIds.length} leads moved to ${newStatus} stage`, 'success');
         } else {
-            showNotification('Failed to update leads', 'error');
+            showNotification(data.message || 'Failed to update leads', 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showNotification('Error updating leads', 'error');
+        showNotification(`Error updating leads: ${error.message}`, 'error');
     })
     .finally(() => {
         // Remove loading state
@@ -1772,7 +1892,19 @@ function testStatusUpdate(leadId, newStatus) {
         },
         body: JSON.stringify({ status: newStatus })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(errorData => {
+                console.log('Manual test error response:', errorData);
+                const errorMessage = errorData.message || `HTTP error! status: ${response.status}`;
+                throw new Error(errorMessage);
+            }).catch(parseError => {
+                console.error('Failed to parse manual test error response:', parseError);
+                throw new Error(`HTTP error! status: ${response.status}`);
+            });
+        }
+        return response.json();
+    })
     .then(data => {
         console.log('Manual test result:', data);
         if (data.success) {

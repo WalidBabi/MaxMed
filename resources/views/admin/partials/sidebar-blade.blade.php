@@ -23,8 +23,8 @@
                         </a>
                     </li>
 
-                    <!-- Sales Management - Only show for non-purchasing users -->
-                    @if((\App\Services\AccessControlService::canAccess(Auth::user(), 'sales.orders.view') || \App\Services\AccessControlService::canAccess(Auth::user(), 'sales.quotations.view')) && !Auth::user()->hasPermission('purchasing.dashboard.access'))
+                    <!-- Sales Management - Show for users with sales permissions (superadmins always allowed) -->
+                    @if((\App\Services\AccessControlService::canAccess(Auth::user(), 'sales.orders.view') || \App\Services\AccessControlService::canAccess(Auth::user(), 'sales.quotations.view')) && (Auth::user()->isAdmin() || !Auth::user()->hasPermission('purchasing.dashboard.access')))
                     <li x-data="{ open: {{ request()->routeIs('admin.quotes.*', 'admin.invoices.*', 'admin.orders.*', 'admin.deliveries.*', 'admin.cash-receipts.*', 'admin.sales-targets.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="group flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm leading-6 font-semibold text-gray-700 hover:text-indigo-600 hover:bg-gray-50">
                             <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
