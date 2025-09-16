@@ -70,13 +70,16 @@ class CrmLeadController extends Controller
         $this->middleware('permission:crm.leads.edit')->only(['create', 'store', 'edit', 'update']);
         $this->middleware('permission:crm.leads.delete')->only(['destroy']);
         
-        // Block users with purchasing permissions from accessing CRM leads (except superadmins)
+        // Allow purchasing specialists to view pipeline but restrict detailed access
         $this->middleware(function ($request, $next) {
             if (Auth::check() && !Auth::user()->isAdmin() && $this->hasPurchasingPermissions(Auth::user())) {
-                abort(403, 'Access Denied: Users with purchasing permissions cannot access CRM lead information.');
+                // Allow index (pipeline view) and show (with filtered data) but block other actions
+                if (in_array($request->route()->getActionMethod(), ['create', 'store', 'edit', 'update', 'destroy'])) {
+                    abort(403, 'Access Denied: Users with purchasing permissions can only view the sales pipeline overview and basic lead information. Detailed lead editing is restricted.');
+                }
             }
             return $next($request);
-        })->only(['index', 'show', 'create', 'store', 'edit', 'update', 'destroy']);
+        })->only(['create', 'store', 'edit', 'update', 'destroy']);
     }
     
     /**
@@ -103,6 +106,113 @@ class CrmLeadController extends Controller
         
         return false;
     }
+    
+    /**
+     * Filter lead data for purchasing users (hide personal information)
+     */
+    private function filterLeadForPurchasingUser($lead)
+    {
+        // Create a filtered version of the lead for purchasing users
+        $filteredLead = new class($lead) extends \stdClass {
+            private $originalLead;
+            
+            public function __construct($originalLead) {
+                $this->originalLead = $originalLead;
+                
+                // Set all the properties that purchasing users can see
+                $this->id = $originalLead->id;
+                $this->company_name = $originalLead->company_name;
+                $this->status = $originalLead->status;
+                $this->priority = $originalLead->priority;
+                $this->estimated_value = $originalLead->estimated_value;
+                $this->created_at = $originalLead->created_at;
+                $this->updated_at = $originalLead->updated_at;
+                $this->assignedUser = $originalLead->assignedUser ? (object) ['name' => $originalLead->assignedUser->name] : null;
+                $this->notes = $originalLead->notes; // Allow viewing notes for purchasing context
+                $this->source = $originalLead->source;
+                $this->expected_close_date = $originalLead->expected_close_date;
+                $this->last_contacted_at = $originalLead->last_contacted_at;
+                $this->attachments = $originalLead->attachments;
+                
+                // Hide personal information
+                $this->first_name = '***';
+                $this->last_name = '***';
+                $this->full_name = '***';
+                $this->email = '***@***.***';
+                $this->phone = '***';
+                $this->mobile = '***';
+                $this->job_title = '***';
+                $this->company_address = '***';
+                
+                // Add computed properties
+                $this->created_ago = $originalLead->created_ago;
+                $this->status_color = $originalLead->status_color;
+                $this->priority_color = $originalLead->priority_color;
+                
+                // Filter activities to remove personal information
+                $this->activities = $originalLead->activities->map(function($activity) {
+                    return (object) [
+                        'id' => $activity->id,
+                        'type' => $activity->type,
+                        'subject' => $activity->subject,
+                        'description' => $activity->description,
+                        'activity_date' => $activity->activity_date,
+                        'status' => $activity->status,
+                        'due_date' => $activity->due_date,
+                        'created_at' => $activity->created_at,
+                        'updated_at' => $activity->updated_at,
+                        'user' => $activity->user ? (object) ['name' => $activity->user->name] : null,
+                    ];
+                });
+                
+                // Filter deals to remove personal information
+                $this->deals = $originalLead->deals->map(function($deal) {
+                    return (object) [
+                        'id' => $deal->id,
+                        'deal_name' => $deal->deal_name,
+                        'deal_value' => $deal->deal_value,
+                        'stage' => $deal->stage,
+                        'probability' => $deal->probability,
+                        'expected_close_date' => $deal->expected_close_date,
+                        'description' => $deal->description,
+                        'created_at' => $deal->created_at,
+                        'updated_at' => $deal->updated_at,
+                        'assignedUser' => $deal->assignedUser ? (object) ['name' => $deal->assignedUser->name] : null,
+                    ];
+                });
+            }
+            
+            public function isOverdue() {
+                return $this->originalLead->isOverdue();
+            }
+            
+            public function daysSinceLastContact() {
+                return $this->originalLead->daysSinceLastContact();
+            }
+            
+            public function hasAttachments() {
+                return $this->originalLead->hasAttachments();
+            }
+            
+            public function getAttachmentCount() {
+                return $this->originalLead->getAttachmentCount();
+            }
+            
+            public function getAttachmentsByType() {
+                return $this->originalLead->getAttachmentsByType();
+            }
+            
+            // Delegate other methods to original lead
+            public function __call($method, $args) {
+                if (method_exists($this->originalLead, $method)) {
+                    return call_user_func_array([$this->originalLead, $method], $args);
+                }
+                throw new \BadMethodCallException("Method {$method} not found");
+            }
+        };
+        
+        return $filteredLead;
+    }
 
     /**
      * Display a listing of leads with enhanced pipeline view
@@ -117,15 +227,23 @@ class CrmLeadController extends Controller
         $dateFrom = $request->get('date_from');
         $dateTo = $request->get('date_to');
 
+        // Check if user is purchasing specialist
+        $isPurchasingUser = Auth::check() && !Auth::user()->isAdmin() && $this->hasPurchasingPermissions(Auth::user());
+
         // Build query with filters
         $query = CrmLead::with(['assignedUser', 'activities'])
-            ->when($search, function($q) use ($search) {
-                $q->where(function($subQ) use ($search) {
-                    $subQ->where('first_name', 'like', "%{$search}%")
-                         ->orWhere('last_name', 'like', "%{$search}%")
-                         ->orWhere('email', 'like', "%{$search}%")
-                         ->orWhere('company_name', 'like', "%{$search}%");
-                });
+            ->when($search, function($q) use ($search, $isPurchasingUser) {
+                if ($isPurchasingUser) {
+                    // For purchasing users, only allow searching by company name
+                    $q->where('company_name', 'like', "%{$search}%");
+                } else {
+                    $q->where(function($subQ) use ($search) {
+                        $subQ->where('first_name', 'like', "%{$search}%")
+                             ->orWhere('last_name', 'like', "%{$search}%")
+                             ->orWhere('email', 'like', "%{$search}%")
+                             ->orWhere('company_name', 'like', "%{$search}%");
+                    });
+                }
             })
             ->when($assignedTo, function($q) use ($assignedTo) {
                 $q->where('assigned_to', $assignedTo);
@@ -146,7 +264,7 @@ class CrmLeadController extends Controller
         $leads = $query->orderBy('created_at', 'desc')->get();
 
         // Group leads by status for pipeline view
-        $pipelineData = $this->getPipelineData($query);
+        $pipelineData = $this->getPipelineData($query, $isPurchasingUser);
 
         // Get additional data for filters
         $users = User::select('id', 'name')->orderBy('name')->get();
@@ -155,16 +273,16 @@ class CrmLeadController extends Controller
 
         // Check if this is an AJAX request for kanban only
         if ($request->get('kanban_only') === '1' && $request->ajax()) {
-            return view('crm.leads.partials.pipeline-view', compact('pipelineData'));
+            return view('crm.leads.partials.pipeline-view', compact('pipelineData', 'isPurchasingUser'));
         }
 
-        return view('crm.leads.index', compact('pipelineData', 'users', 'priorities', 'sources'));
+        return view('crm.leads.index', compact('pipelineData', 'users', 'priorities', 'sources', 'isPurchasingUser'));
     }
     
     /**
      * Get leads organized by pipeline stages
      */
-    private function getPipelineData($baseQuery)
+    private function getPipelineData($baseQuery, $isPurchasingUser = false)
     {
         $stages = [
             'new_inquiry' => ['title' => '📩 New Inquiry', 'color' => 'blue'],
@@ -186,6 +304,57 @@ class CrmLeadController extends Controller
             $stageQuery = clone $baseQuery;
             $leads = $stageQuery->where('status', $status)->orderBy('created_at', 'desc')->get();
             
+            // Filter lead information for purchasing users
+            if ($isPurchasingUser) {
+                $leads = $leads->map(function($lead) {
+                    // Create a class that extends stdClass to allow method calls
+                    $filteredLead = new class($lead) extends \stdClass {
+                        private $originalLead;
+                        
+                        public function __construct($originalLead) {
+                            $this->originalLead = $originalLead;
+                            
+                            // Set all the properties
+                            $this->id = $originalLead->id;
+                            $this->company_name = $originalLead->company_name;
+                            $this->status = $originalLead->status;
+                            $this->priority = $originalLead->priority;
+                            $this->estimated_value = $originalLead->estimated_value;
+                            $this->created_at = $originalLead->created_at;
+                            $this->updated_at = $originalLead->updated_at;
+                            $this->assignedUser = $originalLead->assignedUser ? (object) ['name' => $originalLead->assignedUser->name] : null;
+                            $this->notes = $originalLead->notes;
+                            $this->source = $originalLead->source;
+                            $this->expected_close_date = $originalLead->expected_close_date;
+                            $this->last_contacted_at = $originalLead->last_contacted_at;
+                            
+                            // Hide personal information but provide full_name for view compatibility
+                            $this->first_name = '***';
+                            $this->last_name = '***';
+                            $this->full_name = '***';
+                            $this->email = '***@***.***';
+                            $this->phone = '***';
+                            $this->mobile = '***';
+                            $this->job_title = '***';
+                            $this->company_address = '***';
+                            
+                            // Add computed properties
+                            $this->created_ago = $originalLead->created_ago;
+                        }
+                        
+                        public function isOverdue() {
+                            return $this->originalLead->isOverdue();
+                        }
+                        
+                        public function daysSinceLastContact() {
+                            return $this->originalLead->daysSinceLastContact();
+                        }
+                    };
+                    
+                    return $filteredLead;
+                });
+            }
+            
             $pipelineData[$status] = [
                 'title' => $config['title'],
                 'color' => $config['color'],
@@ -193,7 +362,9 @@ class CrmLeadController extends Controller
                 'count' => $leads->count(),
                 'total_value' => $leads->sum('estimated_value'),
                 'high_priority_count' => $leads->where('priority', 'high')->count(),
-                'overdue_count' => $leads->filter(function($lead) { return $lead->isOverdue(); })->count()
+                'overdue_count' => $leads->filter(function($lead) { 
+                    return isset($lead->expected_close_date) && $lead->expected_close_date < now(); 
+                })->count()
             ];
         }
         
@@ -299,9 +470,18 @@ class CrmLeadController extends Controller
     public function show(CrmLead $lead)
     {
         $lead->load(['assignedUser', 'activities.user', 'deals.assignedUser']);
+        
+        // Check if user is purchasing specialist
+        $isPurchasingUser = Auth::check() && !Auth::user()->isAdmin() && $this->hasPurchasingPermissions(Auth::user());
+        
+        // Filter lead data for purchasing users
+        if ($isPurchasingUser) {
+            $lead = $this->filterLeadForPurchasingUser($lead);
+        }
+        
         // When requested via AJAX, return the modal-friendly partial
         if (request()->ajax() || request()->wantsJson()) {
-            return view('crm.leads.partials.show-content', compact('lead'));
+            return view('crm.leads.partials.show-content', compact('lead', 'isPurchasingUser'));
         }
         // Remove standalone show page: redirect back to index with a helper query param
         return redirect()->route('crm.leads.index', ['lead' => $lead->id]);
@@ -694,7 +874,10 @@ class CrmLeadController extends Controller
             abort(403, 'You do not have permission to view lead requirements.');
         }
         
-        return response()->json([
+        // For purchasing users, only show requirements and basic info (no personal details)
+        $isPurchasingUser = Auth::check() && !Auth::user()->isAdmin() && $this->hasPurchasingPermissions(Auth::user());
+        
+        $response = [
             'success' => true,
             'lead_id' => $lead->id,
             'requirements' => $lead->notes,
@@ -702,7 +885,14 @@ class CrmLeadController extends Controller
             'status' => $lead->status,
             'created_at' => $lead->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $lead->updated_at->format('Y-m-d H:i:s')
-        ]);
+        ];
+        
+        // Add company name for purchasing users (they can see this in the pipeline)
+        if ($isPurchasingUser) {
+            $response['company_name'] = $lead->company_name;
+        }
+        
+        return response()->json($response);
     }
 
     /**

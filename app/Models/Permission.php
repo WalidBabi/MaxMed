@@ -228,6 +228,7 @@ class Permission extends Model
             ['name' => 'crm.leads.delete', 'display_name' => 'Delete Leads', 'description' => 'Remove leads', 'category' => 'crm'],
             ['name' => 'crm.leads.assign', 'display_name' => 'Assign Leads', 'description' => 'Assign leads to users', 'category' => 'crm'],
             ['name' => 'crm.leads.convert', 'display_name' => 'Convert Leads', 'description' => 'Convert leads to customers', 'category' => 'crm'],
+            ['name' => 'crm.leads.view_requirements', 'display_name' => 'View Lead Requirements', 'description' => 'View lead requirements for purchasing context', 'category' => 'crm'],
             ['name' => 'crm.contacts.view', 'display_name' => 'View Contacts', 'description' => 'View CRM contacts', 'category' => 'crm'],
             ['name' => 'crm.contacts.create', 'display_name' => 'Create Contacts', 'description' => 'Add new contacts', 'category' => 'crm'],
             ['name' => 'crm.contacts.edit', 'display_name' => 'Edit Contacts', 'description' => 'Modify contact information', 'category' => 'crm'],

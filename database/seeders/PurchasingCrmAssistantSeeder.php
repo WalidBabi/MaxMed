@@ -67,6 +67,7 @@ class PurchasingCrmAssistantSeeder extends Seeder
             // CRM Access (LIMITED - Own Leads Only)
             'crm.access',
             'crm.leads.view', // Can view leads (but middleware will restrict to own)
+            'crm.leads.view_requirements', // Can view lead requirements for purchasing context
             'crm.leads.create', // Can create new leads
             'crm.leads.edit', // Can edit own leads only
             'crm.leads.convert', // Can convert own leads
