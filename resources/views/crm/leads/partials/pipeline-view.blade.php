@@ -412,7 +412,7 @@
                 <div class="relative">
                     <input type="text" 
                            id="pipeline-search" 
-                           placeholder="Search leads by name, company, or email..." 
+                           placeholder="@if(isset($isPurchasingUser) && $isPurchasingUser)Search leads by company name...@elseSearch leads by name, company, or email...@endif" 
                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                            onkeyup="filterPipeline()">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -577,13 +577,13 @@
                                 <div class="group relative bg-white rounded-lg shadow-sm border-l-4 border-{{ $stage['color'] }}-500 hover:shadow-md transition-all duration-200 cursor-pointer lead-card" 
                                      data-lead-id="{{ $lead->id }}"
                                      data-current-status="{{ $status }}"
-                                     data-lead-name="{{ $lead->full_name }}"
-                                     data-lead-company="{{ $lead->company_name }}"
+                                     data-lead-name="@if(isset($isPurchasingUser) && $isPurchasingUser){{ $lead->notes ? Str::limit($lead->notes, 50) : 'No Requirements' }}@else{{ $lead->full_name }}@endif"
+                                     data-lead-company="@if(isset($isPurchasingUser) && $isPurchasingUser)Lead #{{ $lead->id }}@else{{ $lead->company_name }}@endif"
                                      data-lead-email="{{ $lead->email }}"
                                      data-lead-priority="{{ $lead->priority }}"
                                      data-lead-source="{{ $lead->source }}"
                                      data-lead-overdue="{{ $lead->isOverdue() ? 'true' : 'false' }}"
-                                     data-lead-full-name="{{ $lead->full_name }}"
+                                     data-lead-full-name="@if(isset($isPurchasingUser) && $isPurchasingUser){{ $lead->notes ? Str::limit($lead->notes, 50) : 'No Requirements' }}@else{{ $lead->full_name }}@endif"
                                      draggable="true"
                                      ondragstart="handleDragStart(event)"
                                      ondragend="handleDragEnd(event)">
@@ -598,8 +598,17 @@
                                                 
                                                 <!-- Name & Company -->
                                                     <div class="min-w-0 flex-1">
-                                                    <p class="text-sm font-semibold text-gray-900 truncate">{{ $lead->full_name }}</p>
-                                                    <p class="text-xs text-gray-500 truncate">{{ $lead->company_name }}</p>
+                                                    @if(isset($isPurchasingUser) && $isPurchasingUser)
+                                                        @if($lead->notes)
+                                                            <p class="text-sm font-semibold text-gray-900 truncate" title="{{ $lead->notes }}">{{ Str::limit($lead->notes, 50) }}</p>
+                                                        @else
+                                                            <p class="text-sm font-semibold text-gray-900 truncate">No Requirements</p>
+                                                        @endif
+                                                        <p class="text-xs text-gray-500 truncate">Lead #{{ $lead->id }}</p>
+                                                    @else
+                                                        <p class="text-sm font-semibold text-gray-900 truncate">{{ $lead->full_name }}</p>
+                                                        <p class="text-xs text-gray-500 truncate">{{ $lead->company_name }}</p>
+                                                    @endif
                                                 </div>
                                             </div>
                                             
@@ -626,15 +635,25 @@
                                         <!-- Contact & Source Row -->
                                         <div class="flex items-center justify-between text-xs text-gray-500">
                                             <div class="flex items-center space-x-1">
-                                                @if($lead->phone || $lead->mobile)
-                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                                                    </svg>
-                                                @endif
-                                                @if($lead->email)
-                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                                    </svg>
+                                                @if(isset($isPurchasingUser) && $isPurchasingUser)
+                                                    <!-- For purchasing users, show only requirements indicator -->
+                                                    @if($lead->notes)
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 00-.293.707V19a2 2 0 01-2 2z"></path>
+                                                        </svg>
+                                                        <span class="text-indigo-600 font-medium">Requirements Available</span>
+                                                    @endif
+                                                @else
+                                                    @if($lead->phone || $lead->mobile)
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                                        </svg>
+                                                    @endif
+                                                    @if($lead->email)
+                                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                                        </svg>
+                                                    @endif
                                                 @endif
                                                 
                                                 <!-- Assigned User -->
@@ -694,25 +713,36 @@
 
                                         <!-- Quick Action Buttons (Hidden by default, shown on hover) -->
                                         <div class="mt-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                                <button onclick="event.stopPropagation(); window.location.href='/crm/leads/{{ $lead->id }}'" 
-                                                    class="flex-1 text-xs py-1 px-2 bg-{{ $stage['color'] }}-100 text-{{ $stage['color'] }}-700 rounded hover:bg-{{ $stage['color'] }}-200 transition-colors"
-                                                        title="View Details">
-                                                View
-                                                </button>
-                                                @can('crm.leads.edit')
-                                                <button onclick="event.stopPropagation(); window.location.href='/crm/leads/{{ $lead->id }}/edit'" 
-                                                    class="flex-1 text-xs py-1 px-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
-                                                        title="Edit Lead">
-                                                Edit
-                                                </button>
-                                                @endcan
-                                                @can('crm.leads.view_requirements')
-                                                <button onclick="event.stopPropagation(); viewLeadRequirements({{ $lead->id }})" 
-                                                    class="flex-1 text-xs py-1 px-2 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition-colors"
-                                                        title="View Requirements">
-                                                Requirements
-                                                </button>
-                                                @endcan
+                                                @if(isset($isPurchasingUser) && $isPurchasingUser)
+                                                    <!-- For purchasing users, only show requirements button -->
+                                                    @if($lead->notes)
+                                                        <button onclick="event.stopPropagation(); viewLeadRequirements({{ $lead->id }})" 
+                                                            class="flex-1 text-xs py-1 px-2 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition-colors"
+                                                                title="View Requirements">
+                                                            Requirements
+                                                        </button>
+                                                    @endif
+                                                @else
+                                                    <button onclick="event.stopPropagation(); window.location.href='/crm/leads/{{ $lead->id }}'" 
+                                                        class="flex-1 text-xs py-1 px-2 bg-{{ $stage['color'] }}-100 text-{{ $stage['color'] }}-700 rounded hover:bg-{{ $stage['color'] }}-200 transition-colors"
+                                                            title="View Details">
+                                                        View
+                                                    </button>
+                                                    @can('crm.leads.edit')
+                                                    <button onclick="event.stopPropagation(); window.location.href='/crm/leads/{{ $lead->id }}/edit'" 
+                                                        class="flex-1 text-xs py-1 px-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
+                                                            title="Edit Lead">
+                                                        Edit
+                                                    </button>
+                                                    @endcan
+                                                    @can('crm.leads.view_requirements')
+                                                    <button onclick="event.stopPropagation(); viewLeadRequirements({{ $lead->id }})" 
+                                                        class="flex-1 text-xs py-1 px-2 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition-colors"
+                                                            title="View Requirements">
+                                                        Requirements
+                                                    </button>
+                                                    @endcan
+                                                @endif
                                         </div>
                                     </div>
 

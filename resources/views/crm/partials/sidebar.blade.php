@@ -24,7 +24,7 @@
                     </li>
 
                     <!-- Sales Pipeline - Lead to Deal Conversion -->
-                    @if((Auth::user()->hasPermission('crm.leads.view') || Auth::user()->isAdmin()) && (Auth::user()->isAdmin() || !Auth::user()->hasAnyPermission(['purchase_orders.view', 'purchase_orders.create', 'purchase_orders.edit', 'purchase_orders.delete', 'purchase_orders.approve', 'purchase_orders.send', 'purchase_orders.manage_status', 'purchase_orders.view_financials'])))
+                    @if(Auth::user()->hasPermission('crm.leads.view') || Auth::user()->isAdmin())
                     <li>
                         <a href="{{ route('crm.leads.index') }}" class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold {{ request()->routeIs('crm.leads.*') ? 'sidebar-active' : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50' }}">
                             <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">

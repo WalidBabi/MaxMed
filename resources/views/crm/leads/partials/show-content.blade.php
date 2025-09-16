@@ -6,14 +6,20 @@
     <!-- Header -->
     <div class="flex items-start justify-between">
         <div>
-            <h2 class="text-2xl font-bold text-gray-900">{{ $lead->full_name }}</h2>
-            <p class="text-gray-600">{{ $lead->company_name }} • {{ $lead->job_title }}</p>
+            @if(isset($isPurchasingUser) && $isPurchasingUser)
+                <h2 class="text-2xl font-bold text-gray-900">Lead Requirements</h2>
+                <p class="text-gray-600">Lead #{{ $lead->id }} • {{ ucfirst(str_replace('_', ' ', $lead->status)) }}</p>
+            @else
+                <h2 class="text-2xl font-bold text-gray-900">{{ $lead->full_name }}</h2>
+                <p class="text-gray-600">{{ $lead->company_name }} • {{ $lead->job_title }}</p>
+            @endif
         </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Main Content -->
         <div class="lg:col-span-2 space-y-6">
+            @if(!isset($isPurchasingUser) || !$isPurchasingUser)
             <!-- Contact Information -->
             <div class="bg-white rounded-lg border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
@@ -37,31 +43,38 @@
                 </div>
             </div>
 
-                         <!-- Company Information -->
-             <div class="bg-white rounded-lg border border-gray-200 p-6">
-                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Company Information</h3>
-                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                     <div>
-                         <label class="block text-sm font-medium text-gray-500">Company Name</label>
-                         <p class="mt-1 text-sm text-gray-900">{{ $lead->company_name }}</p>
-                     </div>
-                     <div>
-                         <label class="block text-sm font-medium text-gray-500">Job Title</label>
-                         <p class="mt-1 text-sm text-gray-900">{{ $lead->job_title ?: '-' }}</p>
-                     </div>
-                 </div>
-                 @if($lead->company_address)
-                 <div class="mt-4">
-                     <label class="block text-sm font-medium text-gray-500">Company Address</label>
-                     <p class="mt-1 text-sm text-gray-900">{{ $lead->company_address }}</p>
-                 </div>
-                 @endif
-             </div>
+            <!-- Company Information -->
+            <div class="bg-white rounded-lg border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Company Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500">Company Name</label>
+                        <p class="mt-1 text-sm text-gray-900">{{ $lead->company_name }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-500">Job Title</label>
+                        <p class="mt-1 text-sm text-gray-900">{{ $lead->job_title ?: '-' }}</p>
+                    </div>
+                </div>
+                @if($lead->company_address)
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-500">Company Address</label>
+                    <p class="mt-1 text-sm text-gray-900">{{ $lead->company_address }}</p>
+                </div>
+                @endif
+            </div>
+            @endif
  
-             <!-- Notes -->
+             <!-- Notes/Requirements -->
              @if($lead->notes)
              <div class="bg-white rounded-lg border border-gray-200 p-6">
-                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Notes</h3>
+                 <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                     @if(isset($isPurchasingUser) && $isPurchasingUser)
+                         Requirements
+                     @else
+                         Notes
+                     @endif
+                 </h3>
                  <p class="text-sm text-gray-900 whitespace-pre-wrap">{{ $lead->notes }}</p>
              </div>
              @endif
