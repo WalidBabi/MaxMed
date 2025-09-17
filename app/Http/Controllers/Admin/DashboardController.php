@@ -786,43 +786,18 @@ class DashboardController extends Controller
     }
 
     /**
-     * Get the earliest transaction date from invoices and quotes
+     * Get the start date for charts (always January 1st of current year)
      */
     private function getEarliestTransactionDate()
     {
         try {
-            $earliestInvoice = null;
-            $earliestQuote = null;
-            
-            // Get earliest invoice date
-            try {
-                $earliestInvoice = DB::table('invoices')->min('invoice_date');
-            } catch (\Exception $e) {
-                // Table might not exist
-            }
-            
-            // Get earliest quote date
-            try {
-                $earliestQuote = DB::table('quotes')->min('quote_date');
-            } catch (\Exception $e) {
-                // Table might not exist
-            }
-            
-            // Find the earliest date between invoices and quotes
-            $dates = array_filter([$earliestInvoice, $earliestQuote]);
-            
-            if (empty($dates)) {
-                // If no transactions found, default to 12 months ago
-                return Carbon::now()->subMonths(11)->startOfMonth();
-            }
-            
-            $earliestDate = min($dates);
-            return Carbon::parse($earliestDate)->startOfMonth();
+            // Always start from January 1st of the current year for complete yearly view
+            return Carbon::now()->startOfYear();
             
         } catch (\Exception $e) {
             Log::error('Error getting earliest transaction date', ['error' => $e->getMessage()]);
-            // Fallback to 12 months ago
-            return Carbon::now()->subMonths(11)->startOfMonth();
+            // Fallback to start of current year
+            return Carbon::now()->startOfYear();
         }
     }
     
