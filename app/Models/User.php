@@ -168,7 +168,16 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasAnyRole(array $roleNames): bool
     {
-        return $this->role && in_array($this->role->name, $roleNames);
+        if (!$this->role) {
+            return false;
+        }
+        
+        // Super admin has access to all roles
+        if ($this->hasRole('super_admin')) {
+            return true;
+        }
+        
+        return in_array($this->role->name, $roleNames);
     }
 
     public function orders()
@@ -301,6 +310,16 @@ class User extends Authenticatable implements MustVerifyEmail
                 'role_name' => $this->role->name,
                 'role_id' => $this->role->id
             ]);
+
+            // Super admin can access supplier functions
+            if ($this->role->name === 'super_admin') {
+                Log::info('User::isSupplier() - Super admin accessing supplier functions', [
+                    'user_id' => $this->id,
+                    'role_name' => $this->role->name,
+                    'result' => true
+                ]);
+                return true;
+            }
 
             $isSupplier = $this->role->name === 'supplier';
 

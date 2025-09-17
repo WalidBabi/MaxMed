@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Carbon\Carbon;
 
 class CrmLead extends Model
@@ -302,5 +305,29 @@ class CrmLead extends Model
         
         $this->attachments = $attachments;
         return $this;
+    }
+
+    /**
+     * Get price submissions for this lead
+     */
+    public function priceSubmissions(): HasMany
+    {
+        return $this->hasMany(LeadPriceSubmission::class, 'crm_lead_id');
+    }
+
+    /**
+     * Get the latest price submission
+     */
+    public function latestPriceSubmission(): HasOne
+    {
+        return $this->hasOne(LeadPriceSubmission::class, 'crm_lead_id')->latest();
+    }
+
+    /**
+     * Check if lead has any price submissions
+     */
+    public function hasPriceSubmissions()
+    {
+        return $this->priceSubmissions()->exists();
     }
 } 

@@ -182,6 +182,12 @@
             </li>
 
             <!-- Settings -->
+            @php
+                // Check if user has access to any other portals
+                $hasPortalAccess = \App\Services\AccessControlService::canAccessCrm(Auth::user()) || 
+                                 \App\Services\AccessControlService::canAccess(Auth::user(), 'supplier.dashboard');
+            @endphp
+            @if($hasPortalAccess)
             <li class="mt-auto">
                 <ul role="list" class="-mx-2 space-y-1">
                     @if(\App\Services\AccessControlService::canAccessCrm(Auth::user()))
@@ -206,6 +212,7 @@
                     @endif
                 </ul>
             </li>
+            @endif
         </ul>
     </nav>
 </div>
