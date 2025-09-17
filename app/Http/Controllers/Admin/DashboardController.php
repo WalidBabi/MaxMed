@@ -373,12 +373,12 @@ class DashboardController extends Controller
                 if ($selectedDate) {
                     $date = Carbon::parse($selectedDate);
                     // For daily view, show the selected day plus surrounding days (e.g., ±15 days)
-                    $startDate = $date->copy()->subDays(15);
-                    $endDate = $date->copy()->addDays(15);
+                    $startDate = $date->copy()->subDays(15)->startOfDay();
+                    $endDate = $date->copy()->addDays(15)->endOfDay();
                 } else {
                     // Default: last 30 days
-                    $endDate = Carbon::now();
-                    $startDate = Carbon::now()->subDays(30);
+                    $endDate = Carbon::now()->endOfDay();
+                    $startDate = Carbon::now()->subDays(30)->startOfDay();
                 }
                 break;
                 

@@ -1,0 +1,356 @@
+<div class="sidebar" style="overflow: visible;" x-data="{}" x-init="$nextTick(() => { $el.classList.add('initialized'); })">
+    <style>
+        /* Prevent sidebar flashing during navigation */
+        .sidebar {
+            opacity: 1 !important; /* Make sidebar visible by default */
+            visibility: visible !important;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+        
+        /* Only hide Alpine components until initialized */
+        [x-cloak] { 
+            display: none !important; 
+        }
+        
+        /* Show Alpine components once initialized */
+        .alpine-ready [x-cloak] {
+            display: block !important;
+        }
+        
+        /* Ensure sidebar is always visible during page load */
+        .sidebar.initialized {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+    </style>
+    <div 
+        class="flex flex-col h-auto min-h-full text-gray-100 bg-gradient-to-b from-[#171e60] to-[#0c1244] shadow-xl rounded-lg"
+        style="width: 360px; padding-right: 10px;"
+    >
+        <!-- Navigation -->
+        <div class="flex-grow overflow-y-auto pr-3">
+            <div class="pl-4 py-2">
+                <!-- Header -->
+                <h2 class="text-xs uppercase tracking-wider text-gray-400 font-semibold mb-3 mt-4 flex items-center">
+                    <span class="flex-grow">Browse Categories</span>
+                </h2>
+                
+                <a class="flex items-center h-10 px-3 mb-3 rounded-lg hover:bg-[#2a3387] transition-colors" 
+                   href="<?php echo e(route('categories.index')); ?>"
+                   style="cursor: pointer !important;">
+                    <span class="text-sm font-medium">All Categories</span>
+                </a>
+                
+                <!-- Categories section -->
+                <div class="space-y-1 pr-2">
+                    <?php $__currentLoopData = \App\Models\Category::whereNull('parent_id')->with(['subcategories.subcategories.subcategories'])->get()->sortBy(function($category) {
+                        // Define your preferred order here - same as welcome page
+                        $order = [
+                            'Molecular & Clinical Diagnostics' => 1,
+                            'Lab Equipment' => 2, 
+                            'Medical Consumables' => 3,
+                            'Life Science & Research' => 4,
+                            'Lab Consumables' => 5
+                            // Add more as needed
+                        ];
+                        return $order[$category->name] ?? 999; // Categories not in list will appear last
+                    }); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="category-item mb-1" x-data="{ open: false }" x-cloak>
+                        <div class="flex items-center h-10 px-3 rounded-lg transition-colors <?php echo e(request('category') === $category->name ? 'bg-[#0a5694] text-white' : 'hover:bg-[#2a3387] group'); ?>"
+                             @click="open = !open"
+                             style="cursor: pointer !important;">
+                            <span class="flex-grow text-sm font-medium">
+                                <?php echo e($category->name); ?>
+
+                            </span>
+                            <?php if($category->subcategories->isNotEmpty()): ?>
+                            <span class="ml-auto transform transition-transform duration-200" 
+                                  :class="{ 'rotate-180': open }">▼</span>
+                            <?php endif; ?>
+                        </div>
+                        <?php if($category->subcategories->isNotEmpty()): ?>
+                        <div class="pl-4 ml-2 border-l border-[#2a3387] mt-1 space-y-1"
+                             x-show="open"
+                             x-cloak
+                             x-transition:enter="transition ease-out duration-300"
+                             x-transition:enter-start="opacity-0 transform -translate-y-2"
+                             x-transition:enter-end="opacity-100 transform translate-y-0"
+                             x-transition:leave="transition ease-in duration-200"
+                             x-transition:leave-start="opacity-100 transform translate-y-0"
+                             x-transition:leave-end="opacity-0 transform -translate-y-2">
+                            <?php $__currentLoopData = $category->subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <div class="subcategory-item" x-data="{ subOpen: false }" x-cloak>
+                                <?php if($subcategory->subcategories->isNotEmpty()): ?>
+                                <div class="flex items-center h-8 px-3 rounded-lg transition-colors <?php echo e(request('subcategory') === $subcategory->name ? 'bg-[#0a5694] text-white' : 'text-gray-300 hover:bg-[#2a3387] hover:text-white group'); ?>"
+                                     @click="subOpen = !subOpen"
+                                     style="cursor: pointer !important;">
+                                    <span class="flex-grow text-xs font-medium">
+                                        <?php echo e($subcategory->name); ?>
+
+                                    </span>
+                                    <span class="ml-auto transform transition-transform duration-200 text-xs" 
+                                          :class="{ 'rotate-180': subOpen }">▼</span>
+                                </div>
+                                <?php else: ?>
+                                <div class="flex items-center h-8 px-3 rounded-lg transition-colors <?php echo e(request('subcategory') === $subcategory->name ? 'bg-[#0a5694] text-white' : 'text-gray-300 hover:bg-[#2a3387] hover:text-white group'); ?>">
+                                    <a href="<?php echo e(route('categories.subcategory.show', [$category, $subcategory])); ?>" 
+                                       class="flex-grow text-xs font-medium"
+                                       style="cursor: pointer !important;">
+                                        <?php echo e($subcategory->name); ?>
+
+                                    </a>
+                                </div>
+                                <?php endif; ?>
+                                
+                                <?php if($subcategory->subcategories->isNotEmpty()): ?>
+                                <div class="pl-3 ml-2 border-l border-[#2a3387] mt-1 space-y-1"
+                                    x-show="subOpen"
+                                    x-cloak
+                                    x-transition:enter="transition ease-out duration-300"
+                                    x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                    x-transition:enter-end="opacity-100 transform translate-y-0"
+                                    x-transition:leave="transition ease-in duration-200"
+                                    x-transition:leave-start="opacity-100 transform translate-y-0"
+                                    x-transition:leave-end="opacity-0 transform -translate-y-2">
+                                    <?php $__currentLoopData = $subcategory->subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subsubcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <div class="subsubcategory-item" x-data="{ subsubOpen: false }">
+                                        <?php if($subsubcategory->subcategories->isNotEmpty()): ?>
+                                        <div class="flex items-center h-7 px-3 rounded-lg transition-colors <?php echo e(request('subsubcategory') === $subsubcategory->name ? 'bg-[#0a5694] text-white' : 'text-gray-400 hover:bg-[#2a3387] hover:text-white group'); ?>"
+                                             @click="subsubOpen = !subsubOpen"
+                                             style="cursor: pointer !important;">
+                                            <span class="text-xs font-medium"><?php echo e($subsubcategory->name); ?></span>
+                                            <span class="ml-auto transform transition-transform duration-200 text-xs" 
+                                                  :class="{ 'rotate-180': subsubOpen }">▼</span>
+                                        </div>
+                                        <?php else: ?>
+                                        <a href="<?php echo e(route('categories.subsubcategory.show', [$category, $subcategory, $subsubcategory])); ?>"
+                                           class="flex items-center h-7 px-3 rounded-lg transition-colors <?php echo e(request('subsubcategory') === $subsubcategory->name ? 'bg-[#0a5694] text-white' : 'text-gray-400 hover:bg-[#2a3387] hover:text-white group'); ?>"
+                                           style="cursor: pointer !important;">
+                                            <span class="text-xs font-medium"><?php echo e($subsubcategory->name); ?></span>
+                                        </a>
+                                        <?php endif; ?>
+                                        
+                                        <?php if($subsubcategory->subcategories->isNotEmpty()): ?>
+                                        <div class="pl-3 ml-2 border-l border-[#2a3387] mt-1 space-y-1"
+                                             x-show="subsubOpen"
+                                             x-transition:enter="transition ease-out duration-200"
+                                             x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                             x-transition:enter-end="opacity-100 transform translate-y-0"
+                                             x-transition:leave="transition ease-in duration-150"
+                                             x-transition:leave-start="opacity-100 transform translate-y-0"
+                                             x-transition:leave-end="opacity-0 transform -translate-y-2">
+                                            <?php $__currentLoopData = $subsubcategory->subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subsubsubcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <a href="<?php echo e(route('categories.subsubsubcategory.show', [$category, $subcategory, $subsubcategory, $subsubsubcategory])); ?>"
+                                               class="flex items-center h-6 px-3 rounded-lg transition-colors <?php echo e(request('subsubsubcategory') === $subsubsubcategory->name ? 'bg-[#0a5694] text-white' : 'text-gray-500 hover:bg-[#2a3387] hover:text-white group'); ?>"
+                                               style="cursor: pointer !important;">
+                                                <span class="text-xs font-medium"><?php echo e($subsubsubcategory->name); ?></span>
+                                            </a>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </div>
+                
+                <!-- Product Filters -->
+                <?php if(request()->routeIs('categories.subcategory.show') || request()->routeIs('categories.subsubcategory.show') || request()->routeIs('categories.subsubsubcategory.show') || request()->routeIs('product.show') || (request()->is('products*') && !request()->routeIs('products.index')) || (request()->is('search*')) || (request()->routeIs('categories.show') && isset($products))): ?>
+                <div class="mt-8 filter-section" 
+                    x-data="{ 
+                        filtersOpen: true, 
+                        showHint: false,
+                        checkFirstVisit() {
+                            if (!localStorage.getItem('filter_hint_seen')) {
+                                this.showHint = true;
+                                setTimeout(() => {
+                                    this.showHint = false;
+                                    localStorage.setItem('filter_hint_seen', 'true');
+                                }, 5000);
+                            }
+                        }
+                    }" 
+                    x-cloak
+                    x-init="$nextTick(() => { setTimeout(() => { $el.classList.add('initialized'); }, 50); checkFirstVisit(); })">
+                    <h2 class="text-xs uppercase tracking-wider text-gray-400 font-semibold mb-3 relative">
+                        <button class="flex items-center w-full filter-button" @click="filtersOpen = !filtersOpen">
+                            <span>Filter Products</span>
+                            <?php if(request()->hasAny(['search', 'in_stock', 'price_min', 'price_max', 'brand', 'application'])): ?>
+                                <span class="ml-2 px-2 py-0.5 text-xs font-semibold bg-[#0a5694] text-white rounded-full">
+                                    <?php echo e(count(array_filter(request()->only(['search', 'in_stock', 'price_min', 'price_max', 'brand', 'application'])))); ?>
+
+                                </span>
+                            <?php endif; ?>
+                            <svg :class="{'rotate-180': filtersOpen}" class="w-4 h-4 ml-2 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        
+                        <!-- Filter hint tooltip -->
+                        <div 
+                            x-show="showHint" 
+                            x-cloak
+                            x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0 transform translate-y-2"
+                            x-transition:enter-end="opacity-100 transform translate-y-0"
+                            x-transition:leave="transition ease-in duration-200"
+                            x-transition:leave-start="opacity-100 transform translate-y-0"
+                            x-transition:leave-end="opacity-0 transform translate-y-2"
+                            class="absolute -right-4 top-full mt-2 bg-[#0a5694] text-white text-xs py-2 px-3 rounded shadow-lg z-10 w-48"
+                        >
+                            <div class="absolute -top-2 right-6 w-4 h-4 bg-[#0a5694] transform rotate-45"></div>
+                            <p>Filter products by price, brand & more to find exactly what you need!</p>
+                        </div>
+                    </h2>
+                    
+                    <div x-show="filtersOpen"
+                         x-cloak
+                         x-transition:enter="transition ease-out duration-300"
+                         x-transition:enter-start="opacity-0 transform -translate-y-4"
+                         x-transition:enter-end="opacity-100 transform translate-y-0"
+                         x-transition:leave="transition ease-in duration-200"
+                         x-transition:leave-start="opacity-100 transform translate-y-0"
+                         x-transition:leave-end="opacity-0 transform -translate-y-4">
+                        
+                        <form action="<?php echo e(request()->url()); ?>" method="GET" id="product-filter-form" class="space-y-4">
+                            <!-- Search Filter -->
+                            <div class="mb-3">
+                                <label for="search" class="block text-xs font-medium text-gray-300 mb-1">Search</label>
+                                <input type="text" class="w-full bg-white border-0 rounded-lg text-xs text-black placeholder-gray-500 p-2 focus:ring-[#0a5694] focus:ring-2" 
+                                    id="search" name="search" placeholder="Product name or keywords" value="<?php echo e(request('search')); ?>">
+                            </div>
+                                
+                            <!-- Available in stock -->
+                            <div class="mb-3">
+                                <label for="in_stock" class="block text-xs font-medium text-gray-300 mb-1">Availability</label>
+                                <select class="w-full bg-white border-0 rounded-lg text-xs text-black p-2 focus:ring-[#0a5694] focus:ring-2" 
+                                    id="in_stock" name="in_stock">
+                                    <option value="">All Products</option>
+                                    <option value="1" <?php echo e(request('in_stock') == '1' ? 'selected' : ''); ?>>In Stock</option>
+                                    <option value="0" <?php echo e(request('in_stock') == '0' ? 'selected' : ''); ?>>Out of Stock</option>
+                                </select>
+                            </div>
+                                
+                            <!-- Price Range -->
+                            <div class="mb-3">
+                                <label class="block text-xs font-medium text-gray-300 mb-1">Price Range (AED)</label>
+                                <div class="flex space-x-2">
+                                    <input type="number" class="w-1/2 bg-white border-0 rounded-lg text-xs text-black p-2 focus:ring-[#0a5694] focus:ring-2" 
+                                        id="price_min" name="price_min" min="0" step="0.01" placeholder="Min" value="<?php echo e(request('price_min')); ?>">
+                                    <input type="number" class="w-1/2 bg-white border-0 rounded-lg text-xs text-black p-2 focus:ring-[#0a5694] focus:ring-2" 
+                                        id="price_max" name="price_max" min="0" step="0.01" placeholder="Max" value="<?php echo e(request('price_max')); ?>">
+                                </div>
+                            </div>
+                                
+                            <!-- Sort By -->
+                            <div class="mb-3">
+                                <label for="sort" class="block text-xs font-medium text-gray-300 mb-1">Sort By</label>
+                                <select class="w-full bg-white border-0 rounded-lg text-xs text-black p-2 focus:ring-[#0a5694] focus:ring-2" 
+                                    id="sort" name="sort">
+                                    <option value="newest" <?php echo e(request('sort') == 'newest' ? 'selected' : ''); ?>>Newest First</option>
+                                    <option value="price_asc" <?php echo e(request('sort') == 'price_asc' ? 'selected' : ''); ?>>Price: Low to High</option>
+                                    <option value="price_desc" <?php echo e(request('sort') == 'price_desc' ? 'selected' : ''); ?>>Price: High to Low</option>
+                                    <option value="name_asc" <?php echo e(request('sort') == 'name_asc' ? 'selected' : ''); ?>>Name: A to Z</option>
+                                </select>
+                            </div>
+                                
+                            <!-- Brand -->
+                            <div class="mb-3">
+                                <label for="brand" class="block text-xs font-medium text-gray-300 mb-1">Brand/Manufacturer</label>
+                                <select class="w-full bg-white border-0 rounded-lg text-xs text-black p-2 focus:ring-[#0a5694] focus:ring-2" 
+                                    id="brand" name="brand">
+                                    <option value="">All Brands</option>
+                                    <?php $__currentLoopData = App\Models\Brand::orderBy('name')->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <option value="<?php echo e($brand->id); ?>" <?php echo e(request('brand') == $brand->id ? 'selected' : ''); ?>>
+                                            <?php echo e($brand->name); ?>
+
+                                        </option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </select>
+                            </div>
+                                
+                            <!-- Action Buttons -->
+                            <div class="flex flex-col space-y-2">
+                                <button type="submit" class="w-full bg-[#0a5694] hover:bg-[#084980] text-white py-2 rounded-lg text-xs font-medium transition-colors">
+                                    <i class="fas fa-search mr-1"></i> Apply Filters
+                                </button>
+                                <a href="<?php echo e(request()->url()); ?>" class="w-full bg-[#404e8d] hover:bg-[#323c6d] text-white py-2 px-4 rounded-lg text-xs font-medium transition-colors text-center">
+                                    <i class="fas fa-redo mr-1"></i> Reset
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Filter form localStorage functionality
+        const filterForm = document.getElementById('product-filter-form');
+        if (filterForm) {
+            const filterInputs = filterForm.querySelectorAll('input, select');
+            const storagePrefix = 'product_filter_';
+            
+            // Save filter values to localStorage
+            filterInputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    localStorage.setItem(`${storagePrefix}${input.name}`, input.value);
+                });
+            });
+            
+            // Function to restore saved filters
+            const restoreFilters = () => {
+                filterInputs.forEach(input => {
+                    const savedValue = localStorage.getItem(`${storagePrefix}${input.name}`);
+                    if (savedValue !== null && savedValue !== '') {
+                        input.value = savedValue;
+                    }
+                });
+            };
+            
+            // Reset button functionality
+            const resetButton = filterForm.querySelector('a');
+            resetButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Clear localStorage for filters
+                filterInputs.forEach(input => {
+                    localStorage.removeItem(`${storagePrefix}${input.name}`);
+                });
+                
+                // Redirect to the current URL without query parameters
+                window.location.href = window.location.pathname;
+            });
+            
+            // Only restore filters if not already set in URL
+            if (!window.location.search) {
+                restoreFilters();
+                
+                // Check if there are any restored filters
+                let hasFilters = false;
+                filterInputs.forEach(input => {
+                    if (input.value && input.name !== 'sort') {
+                        hasFilters = true;
+                    }
+                });
+                
+                // Submit form if filters were restored
+                if (hasFilters) {
+                    filterForm.submit();
+                }
+            }
+        }
+    });
+</script> <?php /**PATH C:\Users\Walid\OneDrive\Desktop\MaxMed\resources\views/layouts/sidebar.blade.php ENDPATH**/ ?>

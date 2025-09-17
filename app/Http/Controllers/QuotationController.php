@@ -17,9 +17,10 @@ class QuotationController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        // Allow public access to quotation form, store, confirmation, and redirect methods
+        $this->middleware('auth')->except(['form', 'store', 'confirmation', 'redirect']);
         $this->middleware('permission:quotations.view')->only(['show', 'index']);
-        $this->middleware('permission:quotations.create')->only(['create', 'store']);
+        $this->middleware('permission:quotations.create')->only(['create']);
         $this->middleware('permission:quotations.edit')->only(['edit', 'update']);
     }
 

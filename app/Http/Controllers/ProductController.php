@@ -16,8 +16,8 @@ class ProductController extends Controller
     public function __construct(SeoService $seoService)
     {
         $this->seoService = $seoService;
-        $this->middleware('auth')->except(['index', 'show']);
-        $this->middleware('permission:products.view')->only(['index', 'show']);
+        $this->middleware('auth')->except(['index', 'show', 'checkAvailability', 'showProducts']);
+        // Remove permission middleware for public methods - index and show should be publicly accessible
         $this->middleware('permission:products.create')->only(['create', 'store']);
         $this->middleware('permission:products.edit')->only(['edit', 'update']);
         $this->middleware('permission:products.delete')->only(['destroy']);
