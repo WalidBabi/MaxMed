@@ -10,7 +10,7 @@ class NewsController extends Controller
     public function __construct()
     {
         $this->middleware('auth')->except(['index', 'show']);
-        $this->middleware('permission:news.view')->only(['index', 'show']);
+        // Remove permission middleware for public methods - index and show should be publicly accessible
         $this->middleware('permission:news.create')->only(['create', 'store']);
         $this->middleware('permission:news.edit')->only(['edit', 'update']);
         $this->middleware('permission:news.delete')->only(['destroy']);

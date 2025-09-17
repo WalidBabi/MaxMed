@@ -12,7 +12,8 @@ class CartController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        // Allow public access to view cart for SEO, but require auth for cart operations
+        $this->middleware('auth')->except(['viewCart']);
         // Cart operations require authentication but no specific permissions
     }
 
