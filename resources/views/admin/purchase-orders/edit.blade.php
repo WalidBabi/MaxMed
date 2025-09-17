@@ -255,6 +255,30 @@
         </div>
     @endif
 
+    <!-- Warning for Sent Purchase Orders -->
+    @if($purchaseOrder->status !== 'draft')
+        <div class="px-4 sm:px-6 lg:px-8 mb-6">
+            <div class="bg-amber-50 border border-amber-200 rounded-md p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-amber-800">Editing Sent Purchase Order</h3>
+                        <div class="mt-2 text-sm text-amber-700">
+                            <p>⚠️ <strong>Warning:</strong> This purchase order has already been sent to the supplier (Status: {{ \App\Models\PurchaseOrder::$statuses[$purchaseOrder->status] }}). Any changes you make will be logged for audit purposes and you must provide a reason for the edit.</p>
+                            @if($purchaseOrder->sent_to_supplier_at)
+                                <p class="mt-1">📧 Originally sent on: {{ $purchaseOrder->sent_to_supplier_at->format('M d, Y \a\t H:i') }}</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <!-- Form -->
     <form action="{{ route('admin.purchase-orders.update', $purchaseOrder) }}" method="POST" enctype="multipart/form-data" onsubmit="return validateAndPrepareForm()">
         @csrf
@@ -328,6 +352,32 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Edit Reason (for sent purchase orders) -->
+                @if($purchaseOrder->status !== 'draft')
+                <div class="bg-yellow-50 rounded-lg shadow-sm border border-yellow-200">
+                    <div class="px-6 py-4 border-b border-yellow-200 bg-yellow-100">
+                        <h3 class="text-lg font-semibold text-yellow-800 flex items-center">
+                            <svg class="h-5 w-5 text-yellow-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                            </svg>
+                            Edit Reason Required
+                        </h3>
+                        <p class="text-sm text-yellow-700 mt-1">This purchase order has been sent to the supplier. Please provide a reason for making changes.</p>
+                    </div>
+                    <div class="p-6">
+                        <div>
+                            <label for="edit_reason" class="block text-sm font-medium text-yellow-800 mb-2">Reason for Edit *</label>
+                            <textarea id="edit_reason" name="edit_reason" rows="3" required
+                                      class="block w-full rounded-md border-yellow-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 sm:text-sm"
+                                      placeholder="Please explain why you need to edit this sent purchase order...">{{ old('edit_reason') }}</textarea>
+                            @error('edit_reason')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                @endif
 
                 <!-- Supplier Information -->
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200">

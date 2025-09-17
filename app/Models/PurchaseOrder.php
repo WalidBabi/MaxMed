@@ -220,6 +220,40 @@ class PurchaseOrder extends Model
     }
 
     /**
+     * Get the edit history for this purchase order
+     */
+    public function edits(): HasMany
+    {
+        return $this->hasMany(PurchaseOrderEdit::class)->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Check if this purchase order can be edited
+     */
+    public function canBeEdited(): bool
+    {
+        // Allow editing for all statuses except cancelled and completed
+        return !in_array($this->status, [self::STATUS_CANCELLED, self::STATUS_COMPLETED]);
+    }
+
+    /**
+     * Log an edit to this purchase order
+     */
+    public function logEdit(string $fieldName, $oldValue, $newValue, ?string $reason = null): void
+    {
+        if ($oldValue != $newValue) {
+            $this->edits()->create([
+                'edited_by' => auth()->id(),
+                'field_name' => $fieldName,
+                'old_value' => is_array($oldValue) ? json_encode($oldValue) : (string)$oldValue,
+                'new_value' => is_array($newValue) ? json_encode($newValue) : (string)$newValue,
+                'po_status_when_edited' => $this->status,
+                'edit_reason' => $reason
+            ]);
+        }
+    }
+
+    /**
      * Get display name for the source
      */
     public function getSourceDisplayName(): string
