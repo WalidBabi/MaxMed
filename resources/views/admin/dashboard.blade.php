@@ -42,11 +42,11 @@
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between">
                             <span class="text-xs font-semibold text-gray-600">AED currency</span>
                             <span class="text-sm font-bold text-gray-900">{{ number_format($salesData['revenue']['aed'], 0) }} AED</span>
                         </div>
-                        <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between">
                             <span class="text-xs font-semibold text-gray-600">USD currency</span>
                             <span class="text-sm font-bold text-gray-900">${{ number_format($salesData['revenue']['usd'], 0) }}</span>
                         </div>
@@ -75,11 +75,11 @@
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between">
                             <span class="text-xs font-semibold text-gray-600">AED currency</span>
                             <span class="text-sm font-bold text-gray-900">{{ number_format($salesData['cash_flow']['aed'], 0) }} AED</span>
                         </div>
-                        <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between">
                             <span class="text-xs font-semibold text-gray-600">USD currency</span>
                             <span class="text-sm font-bold text-gray-900">${{ number_format($salesData['cash_flow']['usd'], 0) }}</span>
                         </div>
@@ -123,8 +123,7 @@
                 </div>
             </div>
 
-                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-purple-200/30 transition-all duration-300 group-hover:scale-110"></div>
-                <div class="relative">
+                {{-- <div class="relative"> --}}
                     <div class="flex items-center justify-between">
                         <div class="flex h-6 w-6 items-center justify-center rounded-md bg-purple-500 shadow-sm">
                             <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,22 +131,17 @@
                             </svg>
                         </div>
                         <div class="text-right">
-                            <p class="text-xs font-medium text-purple-600 uppercase tracking-wide">REMOVED</p>
-                            <p class="text-xs text-purple-500">Card Removed</p>
                         </div>
                     </div>
                     <div class="mt-1">
                         <div class="space-y-0">
-                            <p class="text-sm font-bold text-gray-900">{{ number_format($salesData['total_combined'], 2) }} AED</p>
-                            <p class="text-xs font-semibold text-gray-700">All currencies combined</p>
                         </div>
-                        <p class="text-xs text-purple-600 mt-0.5">Total sales volume</p>
                     </div>
                 </div>
             </div>
 
             <!-- Zero Sales Months -->
-            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-red-50 to-pink-100 p-1.5 shadow-sm ring-1 ring-red-200/50 transition-all duration-300 hover:shadow-md hover:ring-red-300/50">
+            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-red-50 to-pink-100 p-1.5 shadow-sm ring-1 ring-red-200/50 transition-all duration-300 hover:shadow-md hover:ring-red-300/50 mt-6">
                 <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-red-200/30 transition-all duration-300 group-hover:scale-110"></div>
                 <div class="relative">
                     <div class="flex items-center justify-between">
