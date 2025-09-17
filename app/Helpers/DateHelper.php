@@ -135,6 +135,10 @@ if (!function_exists('getCurrencyWords')) {
                 'major' => $amount == 1 ? 'Yuan' : 'Yuan',
                 'minor' => 'Jiao'
             ],
+            'HKD' => [
+                'major' => $amount == 1 ? 'Hong Kong Dollar' : 'Hong Kong Dollars',
+                'minor' => 'Cents'
+            ],
             'EUR' => [
                 'major' => $amount == 1 ? 'Euro' : 'Euros',
                 'minor' => 'Cents'

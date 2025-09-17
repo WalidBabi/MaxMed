@@ -566,9 +566,9 @@
         @endif
 
         @php
-            // Prefer explicit PO currency if available (supports AED, USD, CNY)
+            // Prefer explicit PO currency if available (supports AED, USD, CNY, HKD)
             $poCurrency = strtoupper($purchaseOrder->currency ?? '');
-            if (in_array($poCurrency, ['AED', 'USD', 'CNY'])) {
+            if (in_array($poCurrency, ['AED', 'USD', 'CNY', 'HKD'])) {
                 $displayCurrency = $poCurrency;
             } else {
                 // Fallback: derive from item price_type prevalence
@@ -750,6 +750,7 @@
                 $currencyName = 'UAE Dirhams';
                 if ($displayCurrency === 'USD') { $currencyName = 'US Dollars'; }
                 elseif ($displayCurrency === 'CNY') { $currencyName = 'Chinese Yuan'; }
+                elseif ($displayCurrency === 'HKD') { $currencyName = 'Hong Kong Dollars'; }
                 $finalAmountInWords = $amountInWords . ' ' . $currencyName . ' Only';
             @endphp
             
