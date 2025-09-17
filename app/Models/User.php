@@ -81,7 +81,7 @@ class User extends Authenticatable implements MustVerifyEmail
                 return false;
             }
             
-            return in_array($this->role->name, ['admin', 'super_admin']);
+            return in_array($this->role->name, ['admin', 'super_admin', 'super-administrator']);
             
         } catch (\Exception $e) {
             // Return false as fallback
