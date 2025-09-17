@@ -23,218 +23,80 @@
         </div>
     </div>
 
-    <!-- Revenue vs Cash Flow Section -->
-    <div class="mb-8">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-            <!-- Revenue AED Card -->
-            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-green-50 to-emerald-100 p-1.5 shadow-sm ring-1 ring-green-200/50 transition-all duration-300 hover:shadow-md hover:ring-green-300/50">
-                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-green-200/30 transition-all duration-300 group-hover:scale-110"></div>
-                <div class="relative">
-                    <div class="flex items-center justify-between">
-                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-green-500 shadow-sm">
-                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"></path>
-                            </svg>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs font-medium text-green-600 uppercase tracking-wide">Revenue</p>
-                            <p class="text-xs text-green-500">AED currency</p>
-                        </div>
-                    </div>
-                    <div class="mt-1">
-                        <div class="space-y-0">
-                            <p class="text-sm font-bold text-gray-900">{{ number_format($salesData['revenue']['aed'], 0) }} AED</p>
-                            <p class="text-xs font-semibold text-gray-700">All sent invoices</p>
-                        </div>
-                        <p class="text-xs text-green-600 mt-0.5">Total revenue</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Revenue USD Card -->
-            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-blue-50 to-indigo-100 p-1.5 shadow-sm ring-1 ring-blue-200/50 transition-all duration-300 hover:shadow-md hover:ring-blue-300/50">
-                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-blue-200/30 transition-all duration-300 group-hover:scale-110"></div>
-                <div class="relative">
-                    <div class="flex items-center justify-between">
-                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-blue-500 shadow-sm">
-                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs font-medium text-blue-600 uppercase tracking-wide">Revenue</p>
-                            <p class="text-xs text-blue-500">USD currency</p>
-                        </div>
-                    </div>
-                    <div class="mt-1">
-                        <div class="space-y-0">
-                            <p class="text-sm font-bold text-gray-900">${{ number_format($salesData['revenue']['usd'], 0) }}</p>
-                            <p class="text-xs font-semibold text-gray-700">All sent invoices</p>
-                        </div>
-                        <p class="text-xs text-blue-600 mt-0.5">Total revenue</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Cash Flow AED Card -->
-            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-emerald-50 to-teal-100 p-1.5 shadow-sm ring-1 ring-emerald-200/50 transition-all duration-300 hover:shadow-md hover:ring-emerald-300/50">
-                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-emerald-200/30 transition-all duration-300 group-hover:scale-110"></div>
-                <div class="relative">
-                    <div class="flex items-center justify-between">
-                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-emerald-500 shadow-sm">
-                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs font-medium text-emerald-600 uppercase tracking-wide">Cash Flow</p>
-                            <p class="text-xs text-emerald-500">AED currency</p>
-                        </div>
-                    </div>
-                    <div class="mt-1">
-                        <div class="space-y-0">
-                            <p class="text-sm font-bold text-gray-900">{{ number_format($salesData['cash_flow']['aed'], 0) }} AED</p>
-                            <p class="text-xs font-semibold text-gray-700">Paid invoices only</p>
-                        </div>
-                        <p class="text-xs text-emerald-600 mt-0.5">Actual received</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Cash Flow USD Card -->
-            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-teal-50 to-cyan-100 p-1.5 shadow-sm ring-1 ring-teal-200/50 transition-all duration-300 hover:shadow-md hover:ring-teal-300/50">
-                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-teal-200/30 transition-all duration-300 group-hover:scale-110"></div>
-                <div class="relative">
-                    <div class="flex items-center justify-between">
-                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-teal-500 shadow-sm">
-                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs font-medium text-teal-600 uppercase tracking-wide">Cash Flow</p>
-                            <p class="text-xs text-teal-500">USD currency</p>
-                        </div>
-                    </div>
-                    <div class="mt-1">
-                        <div class="space-y-0">
-                            <p class="text-sm font-bold text-gray-900">${{ number_format($salesData['cash_flow']['usd'], 0) }}</p>
-                            <p class="text-xs font-semibold text-gray-700">Paid invoices only</p>
-                        </div>
-                        <p class="text-xs text-teal-600 mt-0.5">Actual received</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Combined Revenue vs Cash Flow -->
+    <!-- Revenue and Cash Flow Section -->
     <div class="mb-8">
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            <!-- Combined Revenue -->
-            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-purple-50 to-violet-100 p-1.5 shadow-sm ring-1 ring-purple-200/50 transition-all duration-300 hover:shadow-md hover:ring-purple-300/50">
-                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-purple-200/30 transition-all duration-300 group-hover:scale-110"></div>
+            <!-- Combined Revenue Card -->
+            <div class="group relative overflow-hidden rounded-lg bg-gradient-to-br from-green-50 to-emerald-100 p-4 shadow-sm ring-1 ring-green-200/50 transition-all duration-300 hover:shadow-md hover:ring-green-300/50">
+                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-green-200/30 transition-all duration-300 group-hover:scale-110"></div>
                 <div class="relative">
-                    <div class="flex items-center justify-between">
-                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-purple-500 shadow-sm">
-                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-green-500 shadow-sm">
+                            <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"></path>
                             </svg>
                         </div>
                         <div class="text-right">
-                            <p class="text-xs font-medium text-purple-600 uppercase tracking-wide">Total Revenue</p>
-                            <p class="text-xs text-purple-500">AED + USD converted</p>
+                            <p class="text-sm font-medium text-green-600 uppercase tracking-wide">Revenue</p>
+                            <p class="text-xs text-green-500">All sent invoices</p>
                         </div>
                     </div>
-                    <div class="mt-1">
-                        <div class="space-y-0">
-                            <p class="text-sm font-bold text-gray-900">{{ number_format($salesData['revenue']['combined'], 2) }} AED</p>
-                            <p class="text-xs font-semibold text-gray-700">All currencies combined</p>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-gray-600">AED currency</span>
+                            <span class="text-sm font-bold text-gray-900">{{ number_format($salesData['revenue']['aed'], 0) }} AED</span>
                         </div>
-                        <p class="text-xs text-purple-600 mt-0.5">Total revenue</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-gray-600">USD currency</span>
+                            <span class="text-sm font-bold text-gray-900">${{ number_format($salesData['revenue']['usd'], 0) }}</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-green-200">
+                            <span class="text-xs font-bold text-green-700">Combined Total</span>
+                            <span class="text-lg font-bold text-green-700">{{ number_format($salesData['revenue']['combined'], 2) }} AED</span>
+                        </div>
                     </div>
+                    <p class="text-xs text-green-600 mt-2">Total revenue</p>
                 </div>
             </div>
 
-            <!-- Combined Cash Flow -->
-            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-indigo-50 to-blue-100 p-1.5 shadow-sm ring-1 ring-indigo-200/50 transition-all duration-300 hover:shadow-md hover:ring-indigo-300/50">
-                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-indigo-200/30 transition-all duration-300 group-hover:scale-110"></div>
+            <!-- Combined Cash Flow Card -->
+            <div class="group relative overflow-hidden rounded-lg bg-gradient-to-br from-teal-50 to-cyan-100 p-4 shadow-sm ring-1 ring-teal-200/50 transition-all duration-300 hover:shadow-md hover:ring-teal-300/50">
+                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-teal-200/30 transition-all duration-300 group-hover:scale-110"></div>
                 <div class="relative">
-                    <div class="flex items-center justify-between">
-                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-indigo-500 shadow-sm">
-                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-500 shadow-sm">
+                            <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
                         <div class="text-right">
-                            <p class="text-xs font-medium text-indigo-600 uppercase tracking-wide">Total Cash Flow</p>
-                            <p class="text-xs text-indigo-500">AED + USD converted</p>
+                            <p class="text-sm font-medium text-teal-600 uppercase tracking-wide">Cash Flow</p>
+                            <p class="text-xs text-teal-500">Paid invoices only</p>
                         </div>
                     </div>
-                    <div class="mt-1">
-                        <div class="space-y-0">
-                            <p class="text-sm font-bold text-gray-900">{{ number_format($salesData['cash_flow']['combined'], 2) }} AED</p>
-                            <p class="text-xs font-semibold text-gray-700">All currencies combined</p>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-gray-600">AED currency</span>
+                            <span class="text-sm font-bold text-gray-900">{{ number_format($salesData['cash_flow']['aed'], 0) }} AED</span>
                         </div>
-                        <p class="text-xs text-indigo-600 mt-0.5">Actual received</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold text-gray-600">USD currency</span>
+                            <span class="text-sm font-bold text-gray-900">${{ number_format($salesData['cash_flow']['usd'], 0) }}</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-teal-200">
+                            <span class="text-xs font-bold text-teal-700">Combined Total</span>
+                            <span class="text-lg font-bold text-teal-700">{{ number_format($salesData['cash_flow']['combined'], 2) }} AED</span>
+                        </div>
                     </div>
+                    <p class="text-xs text-teal-600 mt-2">Actual received</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Sales Summary Cards -->
+    <!-- Performance Metrics Cards -->
     <div class="mb-8">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-            <!-- Total AED Sales -->
-            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-green-50 to-emerald-100 p-1.5 shadow-sm ring-1 ring-green-200/50 transition-all duration-300 hover:shadow-md hover:ring-green-300/50">
-                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-green-200/30 transition-all duration-300 group-hover:scale-110"></div>
-                <div class="relative">
-                    <div class="flex items-center justify-between">
-                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-green-500 shadow-sm">
-                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs font-medium text-green-600 uppercase tracking-wide">Total AED Sales</p>
-                            <p class="text-xs text-green-500">From first transaction</p>
-                        </div>
-                    </div>
-                    <div class="mt-1">
-                        <div class="space-y-0">
-                            <p class="text-sm font-bold text-gray-900">{{ number_format($salesData['total_aed'], 2) }} AED</p>
-                            <p class="text-xs font-semibold text-gray-700">AED currency sales</p>
-                        </div>
-                        <p class="text-xs text-green-600 mt-0.5">Total AED sales</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Total USD Sales -->
-            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-blue-50 to-indigo-100 p-1.5 shadow-sm ring-1 ring-blue-200/50 transition-all duration-300 hover:shadow-md hover:ring-blue-300/50">
-                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-blue-200/30 transition-all duration-300 group-hover:scale-110"></div>
-                <div class="relative">
-                    <div class="flex items-center justify-between">
-                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-blue-500 shadow-sm">
-                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs font-medium text-blue-600 uppercase tracking-wide">Total USD Sales</p>
-                            <p class="text-xs text-blue-500">From first transaction</p>
-                        </div>
-                    </div>
-                    <div class="mt-1">
-                        <div class="space-y-0">
-                            <p class="text-sm font-bold text-gray-900">${{ number_format($salesData['total_usd'], 2) }}</p>
-                            <p class="text-xs font-semibold text-gray-700">USD currency sales</p>
-                        </div>
-                        <p class="text-xs text-blue-600 mt-0.5">Total USD sales</p>
-                    </div>
-                </div>
-            </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
             <!-- Peak Sales Months -->
             <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-yellow-50 to-orange-100 p-1.5 shadow-sm ring-1 ring-yellow-200/50 transition-all duration-300 hover:shadow-md hover:ring-yellow-300/50">
@@ -261,8 +123,6 @@
                 </div>
             </div>
 
-            <!-- Total Combined Sales -->
-            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-purple-50 to-violet-100 p-1.5 shadow-sm ring-1 ring-purple-200/50 transition-all duration-300 hover:shadow-md hover:ring-purple-300/50">
                 <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-purple-200/30 transition-all duration-300 group-hover:scale-110"></div>
                 <div class="relative">
                     <div class="flex items-center justify-between">
@@ -272,8 +132,8 @@
                             </svg>
                         </div>
                         <div class="text-right">
-                            <p class="text-xs font-medium text-purple-600 uppercase tracking-wide">Total Combined Sales</p>
-                            <p class="text-xs text-purple-500">AED + USD converted</p>
+                            <p class="text-xs font-medium text-purple-600 uppercase tracking-wide">REMOVED</p>
+                            <p class="text-xs text-purple-500">Card Removed</p>
                         </div>
                     </div>
                     <div class="mt-1">
@@ -620,21 +480,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('export-pdf').addEventListener('click', exportChartAsPDF);
 
     function initializeDateInputs() {
+        // Set default start date to July 1st, 2025
+        const startDate = new Date(2025, 6, 1); // July 1st, 2025 (month is 0-indexed)
         const endDate = new Date();
-        const startDate = new Date();
-        
-        // Set default date range based on current period
-        switch (currentFilters.period) {
-            case 'daily':
-                startDate.setDate(endDate.getDate() - 30);
-                break;
-            case 'quarterly':
-                startDate.setMonth(endDate.getMonth() - 12);
-                break;
-            default: // monthly
-                startDate.setMonth(endDate.getMonth() - 12);
-                break;
-        }
         
         document.getElementById('start-date').value = startDate.toISOString().split('T')[0];
         document.getElementById('end-date').value = endDate.toISOString().split('T')[0];

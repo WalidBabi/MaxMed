@@ -28,6 +28,22 @@
                         @endif
                     </a>
                 @endif
+
+                @if($purchaseOrder->canBeEdited())
+                    <form action="{{ route('admin.purchase-orders.destroy', $purchaseOrder) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this purchase order?{{ $purchaseOrder->status !== 'draft' ? ' Note: This purchase order has already been sent to the supplier.' : '' }} This action cannot be undone.')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                            Delete
+                            @if($purchaseOrder->status !== 'draft')
+                                <span class="ml-1 text-xs text-yellow-200">(Sent)</span>
+                            @endif
+                        </button>
+                    </form>
+                @endif
                 
                 <a href="{{ route('admin.purchase-orders.pdf', $purchaseOrder) }}" 
                    class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">

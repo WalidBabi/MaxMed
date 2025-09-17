@@ -679,16 +679,29 @@ class PurchaseOrderController extends Controller
     public function destroy(PurchaseOrder $purchaseOrder)
     {
         try {
-            if ($purchaseOrder->status !== PurchaseOrder::STATUS_DRAFT) {
-                return redirect()->back()->with('error', 'Only draft purchase orders can be deleted.');
+            // Check if purchase order can be deleted (same logic as editing)
+            if (!$purchaseOrder->canBeEdited()) {
+                return redirect()->back()->with('error', 'This purchase order cannot be deleted as it is ' . strtolower(PurchaseOrder::$statuses[$purchaseOrder->status]) . '.');
             }
 
             $poNumber = $purchaseOrder->po_number;
+            $status = $purchaseOrder->status;
+            
+            // Log the deletion for audit purposes if it was sent
+            if ($status !== PurchaseOrder::STATUS_DRAFT) {
+                Log::info("Purchase order {$poNumber} deleted by " . Auth::user()->name . " (Status: {$status})");
+            }
+
             $purchaseOrder->delete();
+
+            $message = "Purchase order {$poNumber} deleted successfully.";
+            if ($status !== PurchaseOrder::STATUS_DRAFT) {
+                $message .= " Note: This purchase order was previously sent to the supplier.";
+            }
 
             return redirect()
                 ->route('admin.purchase-orders.index')
-                ->with('success', "Purchase order {$poNumber} deleted successfully.");
+                ->with('success', $message);
 
         } catch (\Exception $e) {
             Log::error('Failed to delete purchase order: ' . $e->getMessage());
