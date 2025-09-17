@@ -244,7 +244,7 @@ class CrmLeadController extends Controller
         // Superadmins should always see customer info regardless of purchasing permissions
         $user = Auth::user();
         $isAdmin = $user->isAdmin();
-        $isSuperAdmin = $user->hasRole('super_admin') || $user->hasRole('superadmin') || $user->hasRole('admin');
+        $isSuperAdmin = $user->hasRole('super_admin') || $user->hasRole('superadmin') || $user->hasRole('admin') || $user->hasRole('super-administrator');
         $hasPurchasing = $this->hasPurchasingPermissions($user);
         
         // Log for debugging in production
@@ -508,7 +508,7 @@ class CrmLeadController extends Controller
         // Superadmins should always see customer info regardless of purchasing permissions
         $user = Auth::user();
         $isAdmin = $user->isAdmin();
-        $isSuperAdmin = $user->hasRole('super_admin') || $user->hasRole('superadmin') || $user->hasRole('admin');
+        $isSuperAdmin = $user->hasRole('super_admin') || $user->hasRole('superadmin') || $user->hasRole('admin') || $user->hasRole('super-administrator');
         $hasPurchasing = $this->hasPurchasingPermissions($user);
         
         // Log for debugging in production
@@ -929,7 +929,7 @@ class CrmLeadController extends Controller
         // Superadmins should always see customer info regardless of purchasing permissions
         $user = Auth::user();
         $isAdmin = $user->isAdmin();
-        $isSuperAdmin = $user->hasRole('super_admin') || $user->hasRole('superadmin') || $user->hasRole('admin');
+        $isSuperAdmin = $user->hasRole('super_admin') || $user->hasRole('superadmin') || $user->hasRole('admin') || $user->hasRole('super-administrator');
         $hasPurchasing = $this->hasPurchasingPermissions($user);
         
         // Log for debugging in production
