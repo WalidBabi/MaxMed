@@ -331,7 +331,13 @@ class PurchaseOrderController extends Controller
      */
     public function edit(PurchaseOrder $purchaseOrder)
     {
-        $purchaseOrder->load(['items.product']);
+        // Check if purchase order can be edited
+        if (!$purchaseOrder->canBeEdited()) {
+            return redirect()->route('admin.purchase-orders.show', $purchaseOrder)
+                ->with('error', 'This purchase order cannot be edited as it is ' . strtolower(PurchaseOrder::$statuses[$purchaseOrder->status]) . '.');
+        }
+
+        $purchaseOrder->load(['items.product', 'edits.editor']);
         
         // Get products for the dropdown
         try {
@@ -352,7 +358,13 @@ class PurchaseOrderController extends Controller
      */
     public function update(Request $request, PurchaseOrder $purchaseOrder)
     {
-        $request->validate([
+        // Check if purchase order can be edited
+        if (!$purchaseOrder->canBeEdited()) {
+            return redirect()->route('admin.purchase-orders.show', $purchaseOrder)
+                ->with('error', 'This purchase order cannot be edited as it is ' . strtolower(PurchaseOrder::$statuses[$purchaseOrder->status]) . '.');
+        }
+
+        $validationRules = [
             'supplier_name' => 'required|string|max:255',
             'supplier_email' => 'nullable|email|max:255',
             'supplier_phone' => 'nullable|string|max:50',
@@ -374,10 +386,21 @@ class PurchaseOrderController extends Controller
             'attachments' => 'nullable|array',
             'attachments.*' => 'file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,gif|max:10240', // 10MB max
             'removed_attachments' => 'nullable|string',
-        ]);
+        ];
+
+        // Add edit reason validation for sent purchase orders
+        if ($purchaseOrder->status !== PurchaseOrder::STATUS_DRAFT) {
+            $validationRules['edit_reason'] = 'required|string|max:500';
+        }
+
+        $request->validate($validationRules);
 
         try {
             DB::beginTransaction();
+
+            // Store original values for audit logging
+            $originalValues = $purchaseOrder->toArray();
+            $editReason = $request->edit_reason ?? null;
 
             // Handle attachments
             $currentAttachments = is_array($purchaseOrder->attachments) ? $purchaseOrder->attachments : [];
@@ -416,8 +439,8 @@ class PurchaseOrderController extends Controller
                 }
             }
 
-            // Update purchase order basic info
-            $purchaseOrder->update([
+            // Prepare update data
+            $updateData = [
                 'supplier_name' => $request->supplier_name,
                 'supplier_email' => $request->supplier_email,
                 'supplier_phone' => $request->supplier_phone,
@@ -430,7 +453,18 @@ class PurchaseOrderController extends Controller
                 'total_amount' => $request->total_amount,
                 'attachments' => !empty($currentAttachments) ? $currentAttachments : null,
                 'updated_by' => Auth::id()
-            ]);
+            ];
+
+            // Log changes for audit trail
+            foreach ($updateData as $field => $newValue) {
+                if (isset($originalValues[$field])) {
+                    $oldValue = $originalValues[$field];
+                    $purchaseOrder->logEdit($field, $oldValue, $newValue, $editReason);
+                }
+            }
+
+            // Update purchase order basic info
+            $purchaseOrder->update($updateData);
 
             // Delete existing items and create new ones
             $purchaseOrder->items()->delete();
@@ -461,9 +495,14 @@ class PurchaseOrderController extends Controller
 
             DB::commit();
 
+            $successMessage = 'Purchase order updated successfully.';
+            if ($purchaseOrder->status !== PurchaseOrder::STATUS_DRAFT) {
+                $successMessage .= ' Note: This purchase order was already sent to the supplier. The changes have been logged for audit purposes.';
+            }
+
             return redirect()
                 ->route('admin.purchase-orders.show', $purchaseOrder)
-                ->with('success', 'Purchase order updated successfully.');
+                ->with('success', $successMessage);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -640,16 +679,29 @@ class PurchaseOrderController extends Controller
     public function destroy(PurchaseOrder $purchaseOrder)
     {
         try {
-            if ($purchaseOrder->status !== PurchaseOrder::STATUS_DRAFT) {
-                return redirect()->back()->with('error', 'Only draft purchase orders can be deleted.');
+            // Check if purchase order can be deleted (same logic as editing)
+            if (!$purchaseOrder->canBeEdited()) {
+                return redirect()->back()->with('error', 'This purchase order cannot be deleted as it is ' . strtolower(PurchaseOrder::$statuses[$purchaseOrder->status]) . '.');
             }
 
             $poNumber = $purchaseOrder->po_number;
+            $status = $purchaseOrder->status;
+            
+            // Log the deletion for audit purposes if it was sent
+            if ($status !== PurchaseOrder::STATUS_DRAFT) {
+                Log::info("Purchase order {$poNumber} deleted by " . Auth::user()->name . " (Status: {$status})");
+            }
+
             $purchaseOrder->delete();
+
+            $message = "Purchase order {$poNumber} deleted successfully.";
+            if ($status !== PurchaseOrder::STATUS_DRAFT) {
+                $message .= " Note: This purchase order was previously sent to the supplier.";
+            }
 
             return redirect()
                 ->route('admin.purchase-orders.index')
-                ->with('success', "Purchase order {$poNumber} deleted successfully.");
+                ->with('success', $message);
 
         } catch (\Exception $e) {
             Log::error('Failed to delete purchase order: ' . $e->getMessage());

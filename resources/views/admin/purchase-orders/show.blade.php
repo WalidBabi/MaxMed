@@ -16,14 +16,33 @@
                 <p class="text-gray-600 mt-2">Created {{ formatDubaiDate($purchaseOrder->created_at, 'M d, Y \a\t H:i') }}</p>
             </div>
             <div class="flex items-center space-x-3">
-                @if($purchaseOrder->status === 'draft')
+                @if($purchaseOrder->canBeEdited())
                     <a href="{{ route('admin.purchase-orders.edit', $purchaseOrder) }}" 
                        class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                         </svg>
                         Edit
+                        @if($purchaseOrder->status !== 'draft')
+                            <span class="ml-1 text-xs text-yellow-200">(Sent)</span>
+                        @endif
                     </a>
+                @endif
+
+                @if($purchaseOrder->canBeEdited())
+                    <form action="{{ route('admin.purchase-orders.destroy', $purchaseOrder) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this purchase order?{{ $purchaseOrder->status !== 'draft' ? ' Note: This purchase order has already been sent to the supplier.' : '' }} This action cannot be undone.')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                            Delete
+                            @if($purchaseOrder->status !== 'draft')
+                                <span class="ml-1 text-xs text-yellow-200">(Sent)</span>
+                            @endif
+                        </button>
+                    </form>
                 @endif
                 
                 <a href="{{ route('admin.purchase-orders.pdf', $purchaseOrder) }}" 
@@ -516,6 +535,53 @@
             @endif
         </div>
     </div>
+
+    <!-- Edit History Section -->
+    @if($purchaseOrder->edits->count() > 0)
+    <div class="mt-6">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Edit History
+                </h3>
+                <p class="text-sm text-gray-600 mt-1">{{ $purchaseOrder->edits->count() }} edit{{ $purchaseOrder->edits->count() > 1 ? 's' : '' }} made to this purchase order</p>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    @foreach($purchaseOrder->edits as $edit)
+                    <div class="flex items-start space-x-3 p-4 bg-gray-50 rounded-lg">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm font-medium text-gray-900">{{ $edit->editor->name }}</p>
+                                <p class="text-sm text-gray-500">{{ $edit->created_at->format('M d, Y \a\t H:i') }}</p>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-1">{{ $edit->change_description }}</p>
+                            @if($edit->edit_reason)
+                                <div class="mt-2 p-2 bg-yellow-50 rounded border border-yellow-200">
+                                    <p class="text-xs text-yellow-800"><strong>Reason:</strong> {{ $edit->edit_reason }}</p>
+                                </div>
+                            @endif
+                            <div class="mt-2 text-xs text-gray-500">
+                                Status when edited: <span class="font-medium">{{ \App\Models\PurchaseOrder::$statuses[$edit->po_status_when_edited] ?? ucfirst($edit->po_status_when_edited) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>
 
 <!-- Payment Modal -->
