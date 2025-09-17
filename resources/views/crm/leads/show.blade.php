@@ -148,7 +148,7 @@
                 @if($lead->notes)
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Notes</h3>
-                    <p class="text-sm text-gray-900">{{ $lead->notes }}</p>
+                    <div class="text-sm text-gray-900 formatted-content">{!! nl2br(strip_tags($lead->notes, '<p><br><strong><b><em><i><u><ul><ol><li><a><span><div>')) !!}</div>
                 </div>
                 @endif
 
@@ -583,6 +583,68 @@
         </div>
     </div>
 </div>
+
+@push('styles')
+<style>
+.formatted-content {
+    line-height: 1.6;
+}
+
+.formatted-content p {
+    margin-bottom: 0.75rem;
+}
+
+.formatted-content p:last-child {
+    margin-bottom: 0;
+}
+
+.formatted-content strong,
+.formatted-content b {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.formatted-content em,
+.formatted-content i {
+    font-style: italic;
+}
+
+.formatted-content u {
+    text-decoration: underline;
+}
+
+.formatted-content ul,
+.formatted-content ol {
+    margin-left: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.formatted-content ul {
+    list-style-type: disc;
+}
+
+.formatted-content ol {
+    list-style-type: decimal;
+}
+
+.formatted-content li {
+    margin-bottom: 0.25rem;
+}
+
+.formatted-content a {
+    color: #3b82f6;
+    text-decoration: underline;
+}
+
+.formatted-content a:hover {
+    color: #1d4ed8;
+}
+
+.formatted-content div {
+    margin-bottom: 0.5rem;
+}
+</style>
+@endpush
 
 @push('scripts')
 <script>

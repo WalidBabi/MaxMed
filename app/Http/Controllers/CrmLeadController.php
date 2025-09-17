@@ -202,6 +202,19 @@ class CrmLeadController extends Controller
                 return $this->originalLead->getAttachmentsByType();
             }
             
+            // Add price submissions methods
+            public function hasPriceSubmissions() {
+                return $this->originalLead->hasPriceSubmissions();
+            }
+            
+            public function priceSubmissions() {
+                return $this->originalLead->priceSubmissions();
+            }
+            
+            public function latestPriceSubmission() {
+                return $this->originalLead->latestPriceSubmission();
+            }
+            
             // Delegate other methods to original lead
             public function __call($method, $args) {
                 if (method_exists($this->originalLead, $method)) {
@@ -231,7 +244,7 @@ class CrmLeadController extends Controller
         $isPurchasingUser = Auth::check() && !Auth::user()->isAdmin() && $this->hasPurchasingPermissions(Auth::user());
 
         // Build query with filters
-        $query = CrmLead::with(['assignedUser', 'activities'])
+        $query = CrmLead::with(['assignedUser', 'activities', 'priceSubmissions'])
             ->when($search, function($q) use ($search, $isPurchasingUser) {
                 if ($isPurchasingUser) {
                     // For purchasing users, only allow searching by company name
@@ -348,6 +361,10 @@ class CrmLeadController extends Controller
                         
                         public function daysSinceLastContact() {
                             return $this->originalLead->daysSinceLastContact();
+                        }
+                        
+                        public function hasPriceSubmissions() {
+                            return $this->originalLead->hasPriceSubmissions();
                         }
                     };
                     

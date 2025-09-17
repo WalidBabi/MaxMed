@@ -89,6 +89,12 @@
             <!-- Portal Access -->
             <li class="mt-auto">
                 <ul role="list" class="-mx-2 space-y-1">
+                    @php
+                        // Check if user has access to any other portals
+                        $hasPortalAccess = \App\Services\AccessControlService::canAccessAdmin(Auth::user()) || 
+                                         \App\Services\AccessControlService::canAccessCrm(Auth::user());
+                    @endphp
+                    @if($hasPortalAccess)
                     <li x-data="{ open: false }">
                         <button @click="open = !open" class="group flex w-full items-center gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-700 hover:text-indigo-600 hover:bg-gray-50">
                             <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -124,6 +130,7 @@
                             @endif
                         </ul>
                     </li>
+                    @endif
                     <li>
                         <a href="{{ route('profile.show') }}" class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold text-gray-700 hover:text-indigo-600 hover:bg-gray-50">
                             <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">

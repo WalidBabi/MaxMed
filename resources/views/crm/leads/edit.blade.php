@@ -209,9 +209,16 @@
 
                 <!-- Notes -->
                 <div class="mb-8">
-                    <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Notes</label>
-                    <textarea id="notes" name="notes" rows="4" placeholder="Additional notes about this lead..."
-                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">{{ old('notes', $lead->notes) }}</textarea>
+                    <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">
+                        Notes
+                        <span class="text-xs text-gray-500 ml-2">(Supports basic formatting from copy/paste)</span>
+                    </label>
+                    <textarea id="notes" name="notes" rows="6" placeholder="Additional notes about this lead... You can paste formatted text from Outlook or other applications."
+                              class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                              style="font-family: system-ui, -apple-system, sans-serif; line-height: 1.5;">{{ old('notes', $lead->notes) }}</textarea>
+                    <p class="mt-1 text-xs text-gray-500">
+                        💡 Tip: When copying from Outlook or Word, the basic formatting (bold, italic, lists) will be preserved when viewing the lead.
+                    </p>
                     @error('notes')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror

@@ -337,6 +337,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('leads-quick-add', [CrmLeadController::class, 'quickAdd'])->name('leads.quick-add');
     Route::get('leads-export', [CrmLeadController::class, 'export'])->name('leads.export');
     
+    // Lead Price Submissions
+    Route::post('leads/{lead}/price-submissions', [\App\Http\Controllers\CrmLeadPriceController::class, 'store'])->name('leads.price-submissions.store');
+    Route::get('leads/{lead}/price-submissions', [\App\Http\Controllers\CrmLeadPriceController::class, 'index'])->name('leads.price-submissions.index');
+    Route::get('price-submissions/{priceSubmission}/attachments/{attachmentIndex}', [\App\Http\Controllers\CrmLeadPriceController::class, 'downloadAttachment'])->name('price-submissions.download-attachment');
+    
     // Customer Management
     Route::resource('customers', \App\Http\Controllers\Crm\CustomerController::class);
     Route::post('customers/{customer}/convert-to-lead', [\App\Http\Controllers\Crm\CustomerController::class, 'convertToLead'])->name('customers.convert-to-lead');

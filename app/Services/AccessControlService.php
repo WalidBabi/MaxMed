@@ -110,9 +110,42 @@ class AccessControlService
 
     /**
      * Check if user has role hierarchy access
+     * FIXED: Proper role hierarchy that only allows higher roles to inherit
+     * permissions from lower roles, not the other way around.
      */
     private static function hasRoleHierarchyAccess(User $user, string $permission): bool
     {
+        if (!$user->role) {
+            return false;
+        }
+
+        // Super admin has access to everything
+        if ($user->hasRole('super_admin')) {
+            return true;
+        }
+
+        // If user's role is not in the hierarchy, they don't inherit permissions
+        if (!isset(self::$roleHierarchy[$user->role->name])) {
+            return false;
+        }
+
+        $userRolePriority = self::$roleHierarchy[$user->role->name];
+        
+        // SECURITY FIX: Only allow higher priority roles (lower numbers) to inherit 
+        // permissions from lower priority roles (higher numbers)
+        // This means admins can access supplier functions, but suppliers can't access admin functions
+        foreach (self::$roleHierarchy as $roleName => $priority) {
+            if ($priority > $userRolePriority) { // Changed from < to >
+                $role = Role::where('name', $roleName)->first();
+                if ($role && $role->hasPermission($permission)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+        
+        /* ORIGINAL PROBLEMATIC CODE:
         if (!$user->role) {
             return false;
         }
@@ -135,6 +168,7 @@ class AccessControlService
         }
 
         return false;
+        */
     }
 
     /**
