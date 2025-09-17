@@ -424,9 +424,9 @@ class DashboardController extends Controller
                     case 'daily':
                         $startDate = Carbon::now()->subDays(30);
                         break;
-                    case 'quarterly':
-                        $startDate = Carbon::now()->subQuarters(4);
-                        break;
+                case 'quarterly':
+                    $startDate = Carbon::now()->subYear();
+                    break;
                     default: // monthly
                         $startDate = Carbon::now()->subMonths(12);
                         break;
@@ -443,7 +443,7 @@ class DashboardController extends Controller
             $labels = $this->generateLabelsFromData($salesData, $period);
             
             // Format data for Chart.js
-            $datasets = $this->formatDataForChart($salesData, $currency);
+            $datasets = $this->formatDataForChart($salesData, $currency, $period);
             
             return [
                 'labels' => $labels,
@@ -573,7 +573,7 @@ class DashboardController extends Controller
     /**
      * Format data for Chart.js
      */
-    private function formatDataForChart($salesData, $currency)
+    private function formatDataForChart($salesData, $currency, $period = null)
     {
         $datasets = [];
         
@@ -581,6 +581,34 @@ class DashboardController extends Controller
         $aedData = [];
         $usdData = [];
         $combinedData = [];
+        
+        // For quarterly data, ensure we have all 4 quarters
+        if ($period === 'quarterly') {
+            $currentDate = Carbon::now();
+            $quarterData = [];
+            
+            // Generate last 4 quarters with zero data as default
+            for ($i = 3; $i >= 0; $i--) {
+                $quarterDate = $currentDate->copy()->subQuarters($i);
+                $year = $quarterDate->year;
+                $quarter = $quarterDate->quarter;
+                $quarterKey = $year . '-Q' . $quarter;
+                $quarterData[$quarterKey] = ['AED' => 0, 'USD' => 0];
+            }
+            
+            // Merge actual sales data with quarter template
+            foreach ($salesData as $periodKey => $periodData) {
+                if (isset($quarterData[$periodKey])) {
+                    $quarterData[$periodKey] = $periodData;
+                }
+            }
+            
+            // Sort quarters chronologically
+            ksort($quarterData);
+            
+            // Use the complete quarter data
+            $salesData = $quarterData;
+        }
         
         // Sort data by period key to ensure proper order
         ksort($salesData);
@@ -657,6 +685,26 @@ class DashboardController extends Controller
     {
         $labels = [];
         
+        // For quarterly, ensure we have all 4 quarters represented
+        if ($period === 'quarterly') {
+            $currentDate = Carbon::now();
+            $quarters = [];
+            
+            // Generate last 4 quarters in chronological order
+            for ($i = 3; $i >= 0; $i--) {
+                $quarterDate = $currentDate->copy()->subQuarters($i);
+                $year = $quarterDate->year;
+                $quarter = $quarterDate->quarter;
+                $quarterKey = $year . '-Q' . $quarter;
+                $quarters[$quarterKey] = 'Q' . $quarter . ' ' . $year;
+            }
+            
+            // Sort quarters chronologically (Q1, Q2, Q3, Q4)
+            ksort($quarters);
+            
+            return array_values($quarters);
+        }
+        
         // Sort data by period key to ensure proper order
         ksort($salesData);
         
@@ -679,10 +727,17 @@ class DashboardController extends Controller
                 return $date->format('M j');
                 
             case 'quarterly':
-                // periodKey format: "2023-01" (converted from quarter)
-                $date = \Carbon\Carbon::createFromFormat('Y-m', $periodKey);
-                $quarter = ceil($date->month / 3);
-                return 'Q' . $quarter . ' ' . $date->year;
+                // periodKey format: "2023-Q1" (converted from quarter)
+                if (strpos($periodKey, '-Q') !== false) {
+                    // Format: "2023-Q1"
+                    $parts = explode('-Q', $periodKey);
+                    return 'Q' . $parts[1] . ' ' . $parts[0];
+                } else {
+                    // Fallback for old format: "2023-01"
+                    $date = \Carbon\Carbon::createFromFormat('Y-m', $periodKey);
+                    $quarter = ceil($date->month / 3);
+                    return 'Q' . $quarter . ' ' . $date->year;
+                }
                 
             default: // monthly
                 // periodKey format: "2023-01"

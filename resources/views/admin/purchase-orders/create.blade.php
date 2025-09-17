@@ -108,6 +108,7 @@
                                         <option value="AED" {{ old('currency') == 'AED' ? 'selected' : '' }}>AED (UAE Dirham)</option>
                                         <option value="USD" {{ old('currency', 'USD') == 'USD' ? 'selected' : '' }}>USD (US Dollar)</option>
                                         <option value="CNY" {{ old('currency') == 'CNY' ? 'selected' : '' }}>CNY (Chinese Yuan)</option>
+                                        <option value="HKD" {{ old('currency') == 'HKD' ? 'selected' : '' }}>HKD (Hong Kong Dollar)</option>
                                     </select>
                                     <p class="mt-1 text-sm text-gray-500">This determines which procurement prices to use for products</p>
                                 </div>
@@ -1406,6 +1407,9 @@ function handleOrderSelection() {
                                     priceType = 'usd';
                                 } else if (data.order.currency === 'CNY') {
                                     rate = item.procurement_price_usd || item.unit_price || 0; // CNY uses USD prices
+                                    priceType = 'usd';
+                                } else if (data.order.currency === 'HKD') {
+                                    rate = item.procurement_price_usd || item.unit_price || 0; // HKD uses USD prices
                                     priceType = 'usd';
                                 } else {
                                     // Default to AED

@@ -303,6 +303,7 @@
                                     <option value="AED" {{ old('currency', $purchaseOrder->currency) == 'AED' ? 'selected' : '' }}>AED (UAE Dirham)</option>
                                     <option value="USD" {{ old('currency', $purchaseOrder->currency) == 'USD' ? 'selected' : '' }}>USD (US Dollar)</option>
                                     <option value="CNY" {{ old('currency', $purchaseOrder->currency) == 'CNY' ? 'selected' : '' }}>CNY (Chinese Yuan)</option>
+                                    <option value="HKD" {{ old('currency', $purchaseOrder->currency) == 'HKD' ? 'selected' : '' }}>HKD (Hong Kong Dollar)</option>
                                 </select>
                             </div>
                             <div>
