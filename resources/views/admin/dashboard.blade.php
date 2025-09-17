@@ -42,11 +42,11 @@
                         </div>
                     </div>
                     <div class="space-y-2">
-                    <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between">
                             <span class="text-xs font-semibold text-gray-600">AED currency</span>
                             <span class="text-sm font-bold text-gray-900">{{ number_format($salesData['revenue']['aed'], 0) }} AED</span>
                         </div>
-                    <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between">
                             <span class="text-xs font-semibold text-gray-600">USD currency</span>
                             <span class="text-sm font-bold text-gray-900">${{ number_format($salesData['revenue']['usd'], 0) }}</span>
                         </div>
@@ -75,11 +75,11 @@
                         </div>
                     </div>
                     <div class="space-y-2">
-                    <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between">
                             <span class="text-xs font-semibold text-gray-600">AED currency</span>
                             <span class="text-sm font-bold text-gray-900">{{ number_format($salesData['cash_flow']['aed'], 0) }} AED</span>
                         </div>
-                    <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between">
                             <span class="text-xs font-semibold text-gray-600">USD currency</span>
                             <span class="text-sm font-bold text-gray-900">${{ number_format($salesData['cash_flow']['usd'], 0) }}</span>
                         </div>
@@ -99,31 +99,34 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
             <!-- Peak Sales Months -->
-            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-yellow-50 to-orange-100 p-1.5 shadow-sm ring-1 ring-yellow-200/50 transition-all duration-300 hover:shadow-md hover:ring-yellow-300/50">
-                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-yellow-200/30 transition-all duration-300 group-hover:scale-110"></div>
+            <div class="group relative overflow-hidden rounded-lg bg-gradient-to-br from-yellow-50 to-orange-100 p-4 shadow-sm ring-1 ring-yellow-200/50 transition-all duration-300 hover:shadow-md hover:ring-yellow-300/50">
+                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-yellow-200/30 transition-all duration-300 group-hover:scale-110"></div>
                 <div class="relative">
                     <div class="flex items-center justify-between">
-                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-yellow-500 shadow-sm">
-                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-500 shadow-sm">
+                            <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"></path>
                             </svg>
                         </div>
                         <div class="text-right">
-                            <p class="text-xs font-medium text-yellow-600 uppercase tracking-wide">Peak Months</p>
+                            <p class="text-sm font-medium text-yellow-600 uppercase tracking-wide">Peak Months</p>
                             <p class="text-xs text-yellow-500">Highest sales periods</p>
                         </div>
                     </div>
-                    <div class="mt-1">
+                    <div class="mt-3">
                         <div class="space-y-0">
-                            <p class="text-sm font-bold text-gray-900">{{ count($salesData['peak_months']) }}</p>
-                            <p class="text-xs font-semibold text-gray-700">Peak sales months</p>
+                            <p class="text-2xl font-bold text-gray-900">{{ count($salesData['peak_months']) }}</p>
+                            <p class="text-sm font-semibold text-gray-700">Peak sales months</p>
                         </div>
-                        <p class="text-xs text-yellow-600 mt-0.5">Highest performance</p>
+                        <p class="text-xs text-yellow-600 mt-2">Highest performance</p>
                     </div>
                 </div>
             </div>
 
-                {{-- <div class="relative"> --}}
+            <!-- CARD COMPLETELY REMOVED -->
+            <div class="hidden">
+                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-purple-200/30 transition-all duration-300 group-hover:scale-110"></div>
+                <div class="relative">
                     <div class="flex items-center justify-between">
                         <div class="flex h-6 w-6 items-center justify-center rounded-md bg-purple-500 shadow-sm">
                             <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -131,36 +134,41 @@
                             </svg>
                         </div>
                         <div class="text-right">
+                            <p class="text-xs font-medium text-purple-600 uppercase tracking-wide">REMOVED</p>
+                            <p class="text-xs text-purple-500">Card Removed</p>
                         </div>
                     </div>
                     <div class="mt-1">
                         <div class="space-y-0">
+                            <p class="text-sm font-bold text-gray-900">{{ number_format($salesData['total_combined'], 2) }} AED</p>
+                            <p class="text-xs font-semibold text-gray-700">All currencies combined</p>
                         </div>
+                        <p class="text-xs text-purple-600 mt-0.5">Total sales volume</p>
                     </div>
                 </div>
             </div>
 
             <!-- Zero Sales Months -->
-            <div class="group relative overflow-hidden rounded-md bg-gradient-to-br from-red-50 to-pink-100 p-1.5 shadow-sm ring-1 ring-red-200/50 transition-all duration-300 hover:shadow-md hover:ring-red-300/50 mt-6">
-                <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full bg-red-200/30 transition-all duration-300 group-hover:scale-110"></div>
+            <div class="group relative overflow-hidden rounded-lg bg-gradient-to-br from-red-50 to-pink-100 p-4 shadow-sm ring-1 ring-red-200/50 transition-all duration-300 hover:shadow-md hover:ring-red-300/50">
+                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-red-200/30 transition-all duration-300 group-hover:scale-110"></div>
                 <div class="relative">
                     <div class="flex items-center justify-between">
-                        <div class="flex h-6 w-6 items-center justify-center rounded-md bg-red-500 shadow-sm">
-                            <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-red-500 shadow-sm">
+                            <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"></path>
                             </svg>
                         </div>
                         <div class="text-right">
-                            <p class="text-xs font-medium text-red-600 uppercase tracking-wide">Zero Sales Months</p>
+                            <p class="text-sm font-medium text-red-600 uppercase tracking-wide">Zero Sales Months</p>
                             <p class="text-xs text-red-500">Months with no sales</p>
                         </div>
                     </div>
-                    <div class="mt-1">
+                    <div class="mt-3">
                         <div class="space-y-0">
-                            <p class="text-sm font-bold text-gray-900">{{ count($salesData['zero_months']) }}</p>
-                            <p class="text-xs font-semibold text-gray-700">Zero sales months</p>
+                            <p class="text-2xl font-bold text-gray-900">{{ count($salesData['zero_months']) }}</p>
+                            <p class="text-sm font-semibold text-gray-700">Zero sales months</p>
                         </div>
-                        <p class="text-xs text-red-600 mt-0.5">Requires attention</p>
+                        <p class="text-xs text-red-600 mt-2">Requires attention</p>
                     </div>
                 </div>
             </div>
@@ -341,9 +349,37 @@
                 </div>
             </div>
 
-            <!-- Chart container -->
+            <!-- Single Chart container -->
             <div id="chart-container" class="relative h-96" style="display: none;">
                 <canvas id="salesChart"></canvas>
+            </div>
+
+            <!-- Quarterly Charts container -->
+            <div id="quarterly-charts-container" class="grid grid-cols-1 md:grid-cols-2 gap-6" style="display: none;">
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-3" id="quarter-1-title">Q1</h4>
+                    <div class="relative h-64">
+                        <canvas id="quarterChart1"></canvas>
+                    </div>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-3" id="quarter-2-title">Q2</h4>
+                    <div class="relative h-64">
+                        <canvas id="quarterChart2"></canvas>
+                    </div>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-3" id="quarter-3-title">Q3</h4>
+                    <div class="relative h-64">
+                        <canvas id="quarterChart3"></canvas>
+                    </div>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-3" id="quarter-4-title">Q4</h4>
+                    <div class="relative h-64">
+                        <canvas id="quarterChart4"></canvas>
+                    </div>
+                </div>
             </div>
 
             <!-- No data message -->
@@ -419,6 +455,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     let salesChart = null;
+    let quarterlyCharts = [];
     let currentFilters = {
         period: 'monthly',
         currency: 'all',
@@ -440,6 +477,10 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.period-toggle').forEach(btn => btn.classList.remove('active', 'bg-white', 'text-gray-900', 'shadow-sm'));
             this.classList.add('active', 'bg-white', 'text-gray-900', 'shadow-sm');
             currentFilters.period = this.dataset.period;
+            
+            // Update date inputs based on new period
+            initializeDateInputs();
+            
             loadChartData();
         });
     });
@@ -474,9 +515,23 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('export-pdf').addEventListener('click', exportChartAsPDF);
 
     function initializeDateInputs() {
-        // Set default start date to July 1st, 2025
-        const startDate = new Date(2025, 6, 1); // July 1st, 2025 (month is 0-indexed)
         const endDate = new Date();
+        let startDate = new Date();
+        
+        // Set default date range based on current period
+        switch (currentFilters.period) {
+            case 'daily':
+                startDate.setDate(endDate.getDate() - 30);
+                break;
+            case 'quarterly':
+                // Show last 4 quarters (12 months)
+                startDate.setMonth(endDate.getMonth() - 12);
+                break;
+            default: // monthly
+                // Set default start date to July 1st, 2025 for monthly view
+                startDate = new Date(2025, 6, 1); // July 1st, 2025 (month is 0-indexed)
+                break;
+        }
         
         document.getElementById('start-date').value = startDate.toISOString().split('T')[0];
         document.getElementById('end-date').value = endDate.toISOString().split('T')[0];
@@ -512,6 +567,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateChart(data) {
+        // Check if quarterly view should show separate charts
+        if (currentFilters.period === 'quarterly') {
+            updateQuarterlyCharts(data);
+        } else {
+            updateSingleChart(data);
+        }
+    }
+
+    function updateSingleChart(data) {
         const ctx = document.getElementById('salesChart').getContext('2d');
         
         if (salesChart) {
@@ -641,6 +705,101 @@ document.addEventListener('DOMContentLoaded', function() {
         showChart();
     }
 
+    function updateQuarterlyCharts(data) {
+        // Destroy existing quarterly charts
+        quarterlyCharts.forEach(chart => {
+            if (chart) chart.destroy();
+        });
+        quarterlyCharts = [];
+
+        // Show quarterly charts container
+        showQuarterlyCharts();
+
+        // Create individual charts for each quarter
+        for (let i = 0; i < data.labels.length && i < 4; i++) {
+            const quarterLabel = data.labels[i];
+            const ctx = document.getElementById(`quarterChart${i + 1}`).getContext('2d');
+            
+            // Update quarter title
+            document.getElementById(`quarter-${i + 1}-title`).textContent = quarterLabel;
+
+            // Get data for this specific quarter
+            const quarterData = data.datasets.map(dataset => ({
+                ...dataset,
+                data: [dataset.data[i] || 0] // Single data point for this quarter
+            }));
+
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Sales'],
+                    datasets: quarterData
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: quarterLabel,
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            color: '#374151'
+                        },
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 10,
+                                font: {
+                                    size: 10
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.parsed.y;
+                                    const currency = context.dataset.label.includes('USD') ? 'USD' : 'AED';
+                                    return `${context.dataset.label}: ${currency} ${value.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: false
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Sales Amount',
+                                font: {
+                                    size: 12,
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            quarterlyCharts.push(chart);
+        }
+    }
+
     function processChartData(data) {
         const datasets = [];
         
@@ -736,18 +895,28 @@ document.addEventListener('DOMContentLoaded', function() {
     function showLoading() {
         document.getElementById('chart-loading').style.display = 'flex';
         document.getElementById('chart-container').style.display = 'none';
+        document.getElementById('quarterly-charts-container').style.display = 'none';
         document.getElementById('no-data-message').style.display = 'none';
     }
 
     function showChart() {
         document.getElementById('chart-loading').style.display = 'none';
         document.getElementById('chart-container').style.display = 'block';
+        document.getElementById('quarterly-charts-container').style.display = 'none';
+        document.getElementById('no-data-message').style.display = 'none';
+    }
+
+    function showQuarterlyCharts() {
+        document.getElementById('chart-loading').style.display = 'none';
+        document.getElementById('chart-container').style.display = 'none';
+        document.getElementById('quarterly-charts-container').style.display = 'grid';
         document.getElementById('no-data-message').style.display = 'none';
     }
 
     function showNoData() {
         document.getElementById('chart-loading').style.display = 'none';
         document.getElementById('chart-container').style.display = 'none';
+        document.getElementById('quarterly-charts-container').style.display = 'none';
         document.getElementById('no-data-message').style.display = 'flex';
         document.getElementById('total-sales').textContent = 'AED 0';
         document.getElementById('period-count').textContent = '0';
