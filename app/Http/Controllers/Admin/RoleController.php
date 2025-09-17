@@ -172,10 +172,11 @@ class RoleController extends Controller
     {
         $permissionCategories = Permission::getCategories();
         
-        // Get permissions ordered consistently: by category first, then by display_name within each category
+        // Get permissions ordered consistently: by category first, then by display_name, then by name for deterministic ordering
         $allPermissions = Permission::where('is_active', true)
             ->orderBy('category')
             ->orderBy('display_name')
+            ->orderBy('name')
             ->get();
         
         // Group permissions by category while maintaining order
