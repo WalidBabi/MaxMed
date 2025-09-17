@@ -36,7 +36,7 @@ class RoleController extends Controller
     {
         $availablePermissions = Role::getAvailablePermissions();
         $permissionCategories = Permission::getCategories();
-        $permissions = Permission::where('is_active', true)->get()->groupBy('category');
+        $permissions = $this->getOrderedPermissions();
         $permissionDocumentation = PermissionDocumentationService::getAllPermissionDocumentation();
         
         return view('admin.roles.create', compact('availablePermissions', 'permissionCategories', 'permissions', 'permissionDocumentation'));
@@ -81,7 +81,7 @@ class RoleController extends Controller
         $rolePermissions = $role->permissions()->where('is_active', true)->get();
         $availablePermissions = Role::getAvailablePermissions();
         $permissionCategories = Permission::getCategories();
-        $permissions = Permission::where('is_active', true)->get()->groupBy('category');
+        $permissions = $this->getOrderedPermissions();
         
         return view('admin.roles.show', compact('role', 'availablePermissions', 'permissionCategories', 'permissions', 'rolePermissions'));
     }
@@ -95,7 +95,7 @@ class RoleController extends Controller
         $rolePermissions = $role->permissions()->where('is_active', true)->get();
         $availablePermissions = Role::getAvailablePermissions();
         $permissionCategories = Permission::getCategories();
-        $permissions = Permission::where('is_active', true)->get()->groupBy('category');
+        $permissions = $this->getOrderedPermissions();
         $permissionDocumentation = PermissionDocumentationService::getAllPermissionDocumentation();
         
         return view('admin.roles.edit', compact('role', 'rolePermissions', 'availablePermissions', 'permissionCategories', 'permissions', 'permissionDocumentation'));
@@ -163,5 +163,41 @@ class RoleController extends Controller
         
         return redirect()->route('admin.roles.index')
             ->with('success', "Role {$status} successfully.");
+    }
+
+    /**
+     * Get permissions ordered consistently by category and display name
+     */
+    private function getOrderedPermissions()
+    {
+        $permissionCategories = Permission::getCategories();
+        
+        // Get permissions ordered consistently: by category first, then by display_name within each category
+        $allPermissions = Permission::where('is_active', true)
+            ->orderBy('category')
+            ->orderBy('display_name')
+            ->get();
+        
+        // Group permissions by category while maintaining order
+        $permissions = collect();
+        $categoryOrder = array_keys($permissionCategories);
+        
+        foreach ($categoryOrder as $category) {
+            $categoryPermissions = $allPermissions->where('category', $category);
+            if ($categoryPermissions->isNotEmpty()) {
+                $permissions->put($category, $categoryPermissions->values());
+            }
+        }
+        
+        // Add any categories not in the predefined list (for dynamic categories)
+        $remainingCategories = $allPermissions->pluck('category')->unique()->diff($categoryOrder);
+        foreach ($remainingCategories as $category) {
+            $categoryPermissions = $allPermissions->where('category', $category);
+            if ($categoryPermissions->isNotEmpty()) {
+                $permissions->put($category, $categoryPermissions->values());
+            }
+        }
+        
+        return $permissions;
     }
 } 
