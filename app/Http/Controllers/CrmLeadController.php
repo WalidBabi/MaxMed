@@ -241,7 +241,8 @@ class CrmLeadController extends Controller
         $dateTo = $request->get('date_to');
 
         // Check if user is purchasing specialist
-        $isPurchasingUser = Auth::check() && !Auth::user()->isAdmin() && $this->hasPurchasingPermissions(Auth::user());
+        // Superadmins should always see customer info regardless of purchasing permissions
+        $isPurchasingUser = Auth::check() && !Auth::user()->isAdmin() && !Auth::user()->hasRole('superadmin') && $this->hasPurchasingPermissions(Auth::user());
 
         // Build query with filters
         $query = CrmLead::with(['assignedUser', 'activities', 'priceSubmissions'])
@@ -489,7 +490,8 @@ class CrmLeadController extends Controller
         $lead->load(['assignedUser', 'activities.user', 'deals.assignedUser', 'priceSubmissions.user']);
         
         // Check if user is purchasing specialist
-        $isPurchasingUser = Auth::check() && !Auth::user()->isAdmin() && $this->hasPurchasingPermissions(Auth::user());
+        // Superadmins should always see customer info regardless of purchasing permissions
+        $isPurchasingUser = Auth::check() && !Auth::user()->isAdmin() && !Auth::user()->hasRole('superadmin') && $this->hasPurchasingPermissions(Auth::user());
         
         // Filter lead data for purchasing users
         if ($isPurchasingUser) {
@@ -893,7 +895,8 @@ class CrmLeadController extends Controller
         }
         
         // For purchasing users, only show requirements and basic info (no personal details)
-        $isPurchasingUser = Auth::check() && !Auth::user()->isAdmin() && $this->hasPurchasingPermissions(Auth::user());
+        // Superadmins should always see customer info regardless of purchasing permissions
+        $isPurchasingUser = Auth::check() && !Auth::user()->isAdmin() && !Auth::user()->hasRole('superadmin') && $this->hasPurchasingPermissions(Auth::user());
         
         $response = [
             'success' => true,

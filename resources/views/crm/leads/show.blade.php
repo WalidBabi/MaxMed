@@ -13,7 +13,9 @@
             <div class="flex justify-between items-start">
                 <div>
                     @php
-                        $isPurchasingRole = Auth::user()->hasAnyRole(['purchasing', 'purchasing_manager', 'purchasing_crm_assistant']);
+                        // Use the isPurchasingUser variable passed from controller, 
+                        // but keep the old variable name for compatibility
+                        $isPurchasingRole = $isPurchasingUser ?? false;
                     @endphp
                     
                     @if($isPurchasingRole)
