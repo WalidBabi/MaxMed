@@ -737,11 +737,6 @@
                                                         @endif
                                                     </div>
                                                 @else
-                                                    <button onclick="event.stopPropagation(); window.location.href='/crm/leads/{{ $lead->id }}'" 
-                                                        class="flex-1 text-xs py-1 px-2 bg-{{ $stage['color'] }}-100 text-{{ $stage['color'] }}-700 rounded hover:bg-{{ $stage['color'] }}-200 transition-colors"
-                                                            title="View Details">
-                                                        View
-                                                    </button>
                                                     @can('crm.leads.edit')
                                                     <button onclick="event.stopPropagation(); window.location.href='/crm/leads/{{ $lead->id }}/edit'" 
                                                         class="flex-1 text-xs py-1 px-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"

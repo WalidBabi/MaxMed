@@ -486,7 +486,7 @@ class CrmLeadController extends Controller
     
     public function show(CrmLead $lead)
     {
-        $lead->load(['assignedUser', 'activities.user', 'deals.assignedUser']);
+        $lead->load(['assignedUser', 'activities.user', 'deals.assignedUser', 'priceSubmissions.user']);
         
         // Check if user is purchasing specialist
         $isPurchasingUser = Auth::check() && !Auth::user()->isAdmin() && $this->hasPurchasingPermissions(Auth::user());
@@ -500,8 +500,9 @@ class CrmLeadController extends Controller
         if (request()->ajax() || request()->wantsJson()) {
             return view('crm.leads.partials.show-content', compact('lead', 'isPurchasingUser'));
         }
-        // Remove standalone show page: redirect back to index with a helper query param
-        return redirect()->route('crm.leads.index', ['lead' => $lead->id]);
+        
+        // For non-AJAX requests, show the full lead details page
+        return view('crm.leads.show', compact('lead', 'isPurchasingUser'));
     }
     
     public function edit(CrmLead $lead)

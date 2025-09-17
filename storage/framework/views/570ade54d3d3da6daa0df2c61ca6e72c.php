@@ -75,7 +75,46 @@
                          Notes
                      <?php endif; ?>
                  </h3>
-                 <p class="text-sm text-gray-900 whitespace-pre-wrap"><?php echo e($lead->notes); ?></p>
+                 <div class="text-sm text-gray-900 formatted-content" data-cache-bust="<?php echo e(time()); ?>"><?php echo \App\Helpers\HtmlSanitizer::sanitizeRichContent($lead->notes); ?></div>
+                <!-- Debug: Content length: <?php echo e(strlen($lead->notes)); ?> chars -->
+                
+                <style>
+                .formatted-content { line-height: 1.6; max-width: 100%; word-wrap: break-word; }
+                .formatted-content p { margin-bottom: 0.75rem; }
+                .formatted-content p:last-child { margin-bottom: 0; }
+                .formatted-content strong, .formatted-content b { font-weight: 600; color: #1f2937; }
+                .formatted-content em, .formatted-content i { font-style: italic; }
+                .formatted-content u { text-decoration: underline; }
+                .formatted-content strike, .formatted-content del { text-decoration: line-through; }
+                .formatted-content ins { text-decoration: underline; background-color: #fef3c7; }
+                .formatted-content mark { background-color: #fde047; padding: 0.125rem 0.25rem; }
+                .formatted-content small { font-size: 0.875em; }
+                .formatted-content sup { vertical-align: super; font-size: 0.75em; }
+                .formatted-content sub { vertical-align: sub; font-size: 0.75em; }
+                .formatted-content h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: #1f2937; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; }
+                .formatted-content h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem; color: #374151; }
+                .formatted-content h3 { font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; color: #4b5563; }
+                .formatted-content h4, .formatted-content h5, .formatted-content h6 { font-size: 1rem; font-weight: 500; margin-bottom: 0.5rem; color: #6b7280; }
+                .formatted-content ul, .formatted-content ol { margin-left: 1.5rem; margin-bottom: 0.75rem; }
+                .formatted-content ul { list-style-type: disc; }
+                .formatted-content ol { list-style-type: decimal; }
+                .formatted-content li { margin-bottom: 0.25rem; }
+                .formatted-content a { color: #3b82f6; text-decoration: underline; }
+                .formatted-content a:hover { color: #1d4ed8; }
+                .formatted-content table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; border: 1px solid #d1d5db; background-color: #ffffff; }
+                .formatted-content th, .formatted-content td { padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; text-align: left; vertical-align: top; }
+                .formatted-content th { background-color: #f9fafb; font-weight: 600; color: #374151; }
+                .formatted-content tbody tr:nth-child(even) { background-color: #f9fafb; }
+                .formatted-content tbody tr:hover { background-color: #f3f4f6; }
+                .formatted-content blockquote { border-left: 4px solid #3b82f6; margin: 1rem 0; padding: 0.5rem 1rem; background-color: #f8fafc; font-style: italic; color: #4b5563; }
+                .formatted-content pre { background-color: #1f2937; color: #f9fafb; padding: 1rem; border-radius: 0.375rem; overflow-x: auto; margin-bottom: 1rem; font-family: 'Courier New', monospace; font-size: 0.875rem; }
+                .formatted-content code { background-color: #f3f4f6; color: #1f2937; padding: 0.125rem 0.25rem; border-radius: 0.25rem; font-family: 'Courier New', monospace; font-size: 0.875rem; }
+                .formatted-content pre code { background-color: transparent; color: inherit; padding: 0; }
+                .formatted-content hr { border: none; height: 1px; background-color: #d1d5db; margin: 1.5rem 0; }
+                .formatted-content img { max-width: 100%; height: auto; border-radius: 0.375rem; margin: 0.5rem 0; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); }
+                .formatted-content div { margin-bottom: 0.5rem; }
+                @media (max-width: 768px) { .formatted-content { overflow-x: auto; } .formatted-content table { min-width: 600px; } }
+                </style>
              </div>
              <?php endif; ?>
  
@@ -97,6 +136,59 @@
                     <button onclick="quickStatusChange('<?php echo e($lead->id); ?>', 'deal_lost')" class="px-3 py-1 text-xs bg-gray-100 text-gray-800 rounded-full hover:bg-gray-200">❌ Deal Lost</button>
                 </div>
             </div>
+
+            <!-- Price Submissions (for Admin users) -->
+            <?php if(!isset($isPurchasingUser) || !$isPurchasingUser): ?>
+                <?php if($lead->hasPriceSubmissions()): ?>
+                <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Price Submissions</h3>
+                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                            <?php echo e($lead->priceSubmissions->count()); ?> <?php echo e($lead->priceSubmissions->count() === 1 ? 'submission' : 'submissions'); ?>
+
+                        </span>
+                    </div>
+                    
+                    <div class="space-y-4 max-h-64 overflow-y-auto">
+                        <?php $__currentLoopData = $lead->priceSubmissions->sortByDesc('created_at'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $submission): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="text-lg font-semibold text-green-600">
+                                    <?php echo e($submission->currency); ?> <?php echo e(number_format($submission->price, 2)); ?>
+
+                                </div>
+                                <div class="text-xs text-gray-500">
+                                    <?php echo e($submission->created_at->format('M j, Y g:i A')); ?>
+
+                                </div>
+                            </div>
+                            <div class="text-sm text-gray-600 mb-1">
+                                Submitted by: <span class="font-medium"><?php echo e($submission->user->name); ?></span>
+                            </div>
+                            <?php if($submission->notes): ?>
+                                <div class="text-sm text-gray-700 bg-gray-50 p-2 rounded mt-2"><?php echo e($submission->notes); ?></div>
+                            <?php endif; ?>
+                            <?php if($submission->attachments && count($submission->attachments) > 0): ?>
+                                <div class="mt-2">
+                                    <p class="text-xs font-medium text-gray-600 mb-1">Attachments:</p>
+                                    <div class="flex flex-wrap gap-1">
+                                        <?php $__currentLoopData = $submission->attachments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $attachment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <a href="<?php echo e(route('crm.price-submissions.download-attachment', [$submission->id, $index])); ?>" 
+                                               class="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-md hover:bg-blue-200" 
+                                               title="Download <?php echo e($attachment['original_name']); ?>">
+                                                📎 <?php echo e($attachment['original_name']); ?>
+
+                                            </a>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </div>
+                </div>
+                <?php endif; ?>
+            <?php endif; ?>
 
             <!-- Requirements Attachments -->
             <?php if($lead->hasAttachments()): ?>

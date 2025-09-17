@@ -1,37 +1,36 @@
-@extends('layouts.crm')
-@php
+<?php
     use Illuminate\Support\Facades\Storage;
-@endphp
+?>
 
-@section('title', 'Lead Details - ' . $lead->full_name)
+<?php $__env->startSection('title', 'Lead Details - ' . $lead->full_name); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-6xl mx-auto">
         <!-- Header -->
         <div class="mb-8">
             <div class="flex justify-between items-start">
                 <div>
-                    @php
+                    <?php
                         $isPurchasingRole = Auth::user()->hasAnyRole(['purchasing', 'purchasing_manager', 'purchasing_crm_assistant']);
-                    @endphp
+                    ?>
                     
-                    @if($isPurchasingRole)
+                    <?php if($isPurchasingRole): ?>
                         <h1 class="text-3xl font-bold text-gray-900 mb-2">Lead Requirements</h1>
                         <p class="text-gray-600">View requirements and attachments for this lead</p>
-                    @else
-                        <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $lead->full_name }}</h1>
-                        <p class="text-gray-600">{{ $lead->company_name }} • {{ $lead->job_title }}</p>
-                    @endif
+                    <?php else: ?>
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2"><?php echo e($lead->full_name); ?></h1>
+                        <p class="text-gray-600"><?php echo e($lead->company_name); ?> • <?php echo e($lead->job_title); ?></p>
+                    <?php endif; ?>
                 </div>
                 <div class="flex space-x-3">
-                    @if(!$isPurchasingRole)
-                    <a href="{{ route('crm.leads.edit', $lead) }}" 
+                    <?php if(!$isPurchasingRole): ?>
+                    <a href="<?php echo e(route('crm.leads.edit', $lead)); ?>" 
                        class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         Edit Lead
                     </a>
-                    @endif
-                    <a href="{{ route('crm.leads.index') }}" 
+                    <?php endif; ?>
+                    <a href="<?php echo e(route('crm.leads.index')); ?>" 
                        class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
                         Back to Leads
                     </a>
@@ -43,43 +42,43 @@
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-6">
 
-                @if(!$isPurchasingRole)
+                <?php if(!$isPurchasingRole): ?>
                 <!-- Contact Details -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-500">First Name</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $lead->first_name }}</p>
+                            <p class="mt-1 text-sm text-gray-900"><?php echo e($lead->first_name); ?></p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Last Name</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $lead->last_name }}</p>
+                            <p class="mt-1 text-sm text-gray-900"><?php echo e($lead->last_name); ?></p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Email</label>
                             <p class="mt-1 text-sm text-gray-900">
-                                <a href="mailto:{{ $lead->email }}" class="text-blue-600 hover:text-blue-800">{{ $lead->email }}</a>
+                                <a href="mailto:<?php echo e($lead->email); ?>" class="text-blue-600 hover:text-blue-800"><?php echo e($lead->email); ?></a>
                             </p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Mobile</label>
                             <p class="mt-1 text-sm text-gray-900">
-                                @if($lead->mobile)
-                                    <a href="tel:{{ $lead->mobile }}" class="text-blue-600 hover:text-blue-800">{{ $lead->mobile }}</a>
-                                @else
+                                <?php if($lead->mobile): ?>
+                                    <a href="tel:<?php echo e($lead->mobile); ?>" class="text-blue-600 hover:text-blue-800"><?php echo e($lead->mobile); ?></a>
+                                <?php else: ?>
                                     -
-                                @endif
+                                <?php endif; ?>
                             </p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Phone</label>
                             <p class="mt-1 text-sm text-gray-900">
-                                @if($lead->phone)
-                                    <a href="tel:{{ $lead->phone }}" class="text-blue-600 hover:text-blue-800">{{ $lead->phone }}</a>
-                                @else
+                                <?php if($lead->phone): ?>
+                                    <a href="tel:<?php echo e($lead->phone); ?>" class="text-blue-600 hover:text-blue-800"><?php echo e($lead->phone); ?></a>
+                                <?php else: ?>
                                     -
-                                @endif
+                                <?php endif; ?>
                             </p>
                         </div>
                     </div>
@@ -91,69 +90,71 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Company Name</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $lead->company_name }}</p>
+                            <p class="mt-1 text-sm text-gray-900"><?php echo e($lead->company_name); ?></p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Job Title</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $lead->job_title ?: '-' }}</p>
+                            <p class="mt-1 text-sm text-gray-900"><?php echo e($lead->job_title ?: '-'); ?></p>
                         </div>
                     </div>
-                    @if($lead->company_address)
+                    <?php if($lead->company_address): ?>
                     <div class="mt-4">
                         <label class="block text-sm font-medium text-gray-500">Company Address</label>
-                        <p class="mt-1 text-sm text-gray-900">{{ $lead->company_address }}</p>
+                        <p class="mt-1 text-sm text-gray-900"><?php echo e($lead->company_address); ?></p>
                     </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
-                @endif
+                <?php endif; ?>
 
-                @if(!$isPurchasingRole)
+                <?php if(!$isPurchasingRole): ?>
                 <!-- Lead Details -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Lead Details</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Status</label>
-                            <span class="mt-1 inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-{{ $lead->status_color }}-100 text-{{ $lead->status_color }}-800">
-                                {{ ucfirst($lead->status) }}
+                            <span class="mt-1 inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-<?php echo e($lead->status_color); ?>-100 text-<?php echo e($lead->status_color); ?>-800">
+                                <?php echo e(ucfirst($lead->status)); ?>
+
                             </span>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Priority</label>
-                            <span class="mt-1 inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-{{ $lead->priority_color }}-100 text-{{ $lead->priority_color }}-800">
-                                {{ ucfirst($lead->priority) }}
+                            <span class="mt-1 inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-<?php echo e($lead->priority_color); ?>-100 text-<?php echo e($lead->priority_color); ?>-800">
+                                <?php echo e(ucfirst($lead->priority)); ?>
+
                             </span>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Source</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ ucfirst(str_replace('_', ' ', $lead->source)) }}</p>
+                            <p class="mt-1 text-sm text-gray-900"><?php echo e(ucfirst(str_replace('_', ' ', $lead->source))); ?></p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Assigned To</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $lead->assignedUser->name }}</p>
+                            <p class="mt-1 text-sm text-gray-900"><?php echo e($lead->assignedUser->name); ?></p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Estimated Value</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $lead->estimated_value ? 'AED ' . number_format($lead->estimated_value, 2) : '-' }}</p>
+                            <p class="mt-1 text-sm text-gray-900"><?php echo e($lead->estimated_value ? 'AED ' . number_format($lead->estimated_value, 2) : '-'); ?></p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Expected Close Date</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $lead->expected_close_date ? $lead->expected_close_date->format('M j, Y') : '-' }}</p>
+                            <p class="mt-1 text-sm text-gray-900"><?php echo e($lead->expected_close_date ? $lead->expected_close_date->format('M j, Y') : '-'); ?></p>
                         </div>
                     </div>
                 </div>
-                @endif
+                <?php endif; ?>
 
                 <!-- Notes Section (Always visible for purchasing roles) -->
-                @if($lead->notes)
+                <?php if($lead->notes): ?>
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Notes</h3>
-                    <div class="text-sm text-gray-900 formatted-content" data-cache-bust="{{ time() }}">{!! \App\Helpers\HtmlSanitizer::sanitizeRichContent($lead->notes) !!}</div>
-                    <!-- Debug: Content length: {{ strlen($lead->notes) }} chars, Sanitized: {{ strlen(\App\Helpers\HtmlSanitizer::sanitizeRichContent($lead->notes)) }} chars -->
+                    <div class="text-sm text-gray-900 formatted-content" data-cache-bust="<?php echo e(time()); ?>"><?php echo \App\Helpers\HtmlSanitizer::sanitizeRichContent($lead->notes); ?></div>
+                    <!-- Debug: Content length: <?php echo e(strlen($lead->notes)); ?> chars, Sanitized: <?php echo e(strlen(\App\Helpers\HtmlSanitizer::sanitizeRichContent($lead->notes))); ?> chars -->
                 </div>
-                @endif
+                <?php endif; ?>
 
-                @if(!$isPurchasingRole)
+                <?php if(!$isPurchasingRole): ?>
                 <!-- Activity Timeline -->
                 <div class="bg-white rounded-lg shadow">
                     <div class="px-6 py-4 border-b border-gray-200">
@@ -171,8 +172,8 @@
 
                     <!-- Activity Form -->
                     <div id="activityForm" class="hidden border-b border-gray-200 p-6">
-                        <form action="{{ route('crm.leads.activity.add', $lead) }}" method="POST">
-                            @csrf
+                        <form action="<?php echo e(route('crm.leads.activity.add', $lead)); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label for="type" class="block text-sm font-medium text-gray-700 mb-1">Activity Type</label>
@@ -217,77 +218,81 @@
 
                     <!-- Activities List -->
                     <div class="divide-y divide-gray-200">
-                        @forelse($lead->activities as $activity)
+                        <?php $__empty_1 = true; $__currentLoopData = $lead->activities; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $activity): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                             <div class="p-6">
                                 <div class="flex items-start space-x-3">
                                     <div class="flex-shrink-0">
-                                        <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-{{ $activity->type_color }}-100">
-                                            <span class="text-{{ $activity->type_color }}-600 text-sm font-medium">
-                                                {{ strtoupper(substr($activity->type, 0, 1)) }}
+                                        <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-<?php echo e($activity->type_color); ?>-100">
+                                            <span class="text-<?php echo e($activity->type_color); ?>-600 text-sm font-medium">
+                                                <?php echo e(strtoupper(substr($activity->type, 0, 1))); ?>
+
                                             </span>
                                         </span>
                                     </div>
                                     <div class="min-w-0 flex-1">
                                         <div class="flex items-center justify-between">
-                                            <p class="text-sm font-medium text-gray-900">{{ $activity->subject }}</p>
-                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-{{ $activity->status_color }}-100 text-{{ $activity->status_color }}-800">
-                                                {{ ucfirst($activity->status) }}
+                                            <p class="text-sm font-medium text-gray-900"><?php echo e($activity->subject); ?></p>
+                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-<?php echo e($activity->status_color); ?>-100 text-<?php echo e($activity->status_color); ?>-800">
+                                                <?php echo e(ucfirst($activity->status)); ?>
+
                                             </span>
                                         </div>
-                                        @if($activity->description)
-                                            <p class="mt-1 text-sm text-gray-600">{{ $activity->description }}</p>
-                                        @endif
+                                        <?php if($activity->description): ?>
+                                            <p class="mt-1 text-sm text-gray-600"><?php echo e($activity->description); ?></p>
+                                        <?php endif; ?>
                                         <div class="mt-2 flex items-center text-xs text-gray-500">
-                                            <span class="font-medium text-{{ $activity->type_color }}-600 mr-2">{{ ucfirst(str_replace('_', ' ', $activity->type)) }}</span>
+                                            <span class="font-medium text-<?php echo e($activity->type_color); ?>-600 mr-2"><?php echo e(ucfirst(str_replace('_', ' ', $activity->type))); ?></span>
                                             <span class="mr-2">•</span>
-                                            <span>{{ $activity->activity_date ? $activity->activity_date->format('M j, Y g:i A') : 'N/A' }}</span>
+                                            <span><?php echo e($activity->activity_date ? $activity->activity_date->format('M j, Y g:i A') : 'N/A'); ?></span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        @empty
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                             <div class="p-6 text-center text-gray-500">
                                 No activities recorded yet.
                             </div>
-                        @endforelse
+                        <?php endif; ?>
                     </div>
                 </div>
-                @endif
+                <?php endif; ?>
             </div>
 
             <!-- Sidebar -->
             <div class="space-y-6">
-                @if(!$isPurchasingRole)
+                <?php if(!$isPurchasingRole): ?>
                 <!-- Lead Status -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Lead Status</h3>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
                             <span class="text-sm font-medium text-gray-500">Status</span>
-                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-{{ $lead->status_color }}-100 text-{{ $lead->status_color }}-800">
-                                {{ ucfirst($lead->status) }}
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-<?php echo e($lead->status_color); ?>-100 text-<?php echo e($lead->status_color); ?>-800">
+                                <?php echo e(ucfirst($lead->status)); ?>
+
                             </span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-sm font-medium text-gray-500">Priority</span>
-                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-{{ $lead->priority_color }}-100 text-{{ $lead->priority_color }}-800">
-                                {{ ucfirst($lead->priority) }}
+                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-<?php echo e($lead->priority_color); ?>-100 text-<?php echo e($lead->priority_color); ?>-800">
+                                <?php echo e(ucfirst($lead->priority)); ?>
+
                             </span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-sm font-medium text-gray-500">Source</span>
-                            <span class="text-sm text-gray-900">{{ ucfirst(str_replace('_', ' ', $lead->source)) }}</span>
+                            <span class="text-sm text-gray-900"><?php echo e(ucfirst(str_replace('_', ' ', $lead->source))); ?></span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-sm font-medium text-gray-500">Assigned To</span>
-                            <span class="text-sm text-gray-900">{{ $lead->assignedUser->name }}</span>
+                            <span class="text-sm text-gray-900"><?php echo e($lead->assignedUser->name); ?></span>
                         </div>
-                        @if($lead->estimated_value)
+                        <?php if($lead->estimated_value): ?>
                         <div class="flex justify-between items-center">
                             <span class="text-sm font-medium text-gray-500">Est. Value</span>
-                            <span class="text-sm text-gray-900">AED {{ number_format($lead->estimated_value, 2) }}</span>
+                            <span class="text-sm text-gray-900">AED <?php echo e(number_format($lead->estimated_value, 2)); ?></span>
                         </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -297,129 +302,135 @@
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
                             <span class="text-sm font-medium text-gray-500">Created</span>
-                            <span class="text-sm text-gray-900">{{ $lead->created_at->format('M j, Y') }}</span>
+                            <span class="text-sm text-gray-900"><?php echo e($lead->created_at->format('M j, Y')); ?></span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-sm font-medium text-gray-500">Last Contact</span>
                             <span class="text-sm text-gray-900">
-                                @if($lead->last_contacted_at)
-                                    {{ $lead->last_contacted_at->format('M j, Y') }}
-                                    @if($lead->isOverdue())
+                                <?php if($lead->last_contacted_at): ?>
+                                    <?php echo e($lead->last_contacted_at->format('M j, Y')); ?>
+
+                                    <?php if($lead->isOverdue()): ?>
                                         <span class="text-red-600 ml-1">⚠️</span>
-                                    @endif
-                                @else
+                                    <?php endif; ?>
+                                <?php else: ?>
                                     <span class="text-red-600">Never</span>
-                                @endif
+                                <?php endif; ?>
                             </span>
                         </div>
-                        @if($lead->expected_close_date)
+                        <?php if($lead->expected_close_date): ?>
                         <div class="flex justify-between items-center">
                             <span class="text-sm font-medium text-gray-500">Expected Close</span>
-                            <span class="text-sm text-gray-900">{{ $lead->expected_close_date->format('M j, Y') }}</span>
+                            <span class="text-sm text-gray-900"><?php echo e($lead->expected_close_date->format('M j, Y')); ?></span>
                         </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
-                @endif
+                <?php endif; ?>
 
                 <!-- Price Submissions (for Admin users) -->
-                @if(!$isPurchasingRole)
-                    @if($lead->hasPriceSubmissions())
+                <?php if(!$isPurchasingRole): ?>
+                    <?php if($lead->hasPriceSubmissions()): ?>
                     <div class="bg-white rounded-lg shadow p-6">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-lg font-semibold text-gray-900">Price Submissions</h3>
                             <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                                {{ $lead->priceSubmissions->count() }} {{ $lead->priceSubmissions->count() === 1 ? 'submission' : 'submissions' }}
+                                <?php echo e($lead->priceSubmissions->count()); ?> <?php echo e($lead->priceSubmissions->count() === 1 ? 'submission' : 'submissions'); ?>
+
                             </span>
                         </div>
                         
                         <div class="space-y-4 max-h-80 overflow-y-auto">
-                            @foreach($lead->priceSubmissions->sortByDesc('created_at') as $submission)
+                            <?php $__currentLoopData = $lead->priceSubmissions->sortByDesc('created_at'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $submission): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="border border-gray-200 rounded-lg p-4">
                                 <div class="flex justify-between items-start mb-2">
                                     <div class="text-lg font-semibold text-green-600">
-                                        {{ $submission->currency }} {{ number_format($submission->price, 2) }}
+                                        <?php echo e($submission->currency); ?> <?php echo e(number_format($submission->price, 2)); ?>
+
                                     </div>
                                     <div class="text-xs text-gray-500">
-                                        {{ $submission->created_at->format('M j, Y g:i A') }}
+                                        <?php echo e($submission->created_at->format('M j, Y g:i A')); ?>
+
                                     </div>
                                 </div>
                                 <div class="text-sm text-gray-600 mb-1">
-                                    Submitted by: <span class="font-medium">{{ $submission->user->name }}</span>
+                                    Submitted by: <span class="font-medium"><?php echo e($submission->user->name); ?></span>
                                 </div>
-                                @if($submission->notes)
-                                    <div class="text-sm text-gray-700 bg-gray-50 p-2 rounded mt-2">{{ $submission->notes }}</div>
-                                @endif
-                                @if($submission->attachments && count($submission->attachments) > 0)
+                                <?php if($submission->notes): ?>
+                                    <div class="text-sm text-gray-700 bg-gray-50 p-2 rounded mt-2"><?php echo e($submission->notes); ?></div>
+                                <?php endif; ?>
+                                <?php if($submission->attachments && count($submission->attachments) > 0): ?>
                                     <div class="mt-2">
                                         <p class="text-xs font-medium text-gray-600 mb-1">Attachments:</p>
                                         <div class="flex flex-wrap gap-1">
-                                            @foreach($submission->attachments as $index => $attachment)
-                                                <a href="{{ route('crm.price-submissions.download-attachment', [$submission->id, $index]) }}" 
+                                            <?php $__currentLoopData = $submission->attachments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $attachment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <a href="<?php echo e(route('crm.price-submissions.download-attachment', [$submission->id, $index])); ?>" 
                                                    class="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-md hover:bg-blue-200" 
-                                                   title="Download {{ $attachment['original_name'] }}">
-                                                    📎 {{ $attachment['original_name'] }}
+                                                   title="Download <?php echo e($attachment['original_name']); ?>">
+                                                    📎 <?php echo e($attachment['original_name']); ?>
+
                                                 </a>
-                                            @endforeach
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </div>
                                     </div>
-                                @endif
+                                <?php endif; ?>
                             </div>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                     </div>
-                    @endif
-                @endif
+                    <?php endif; ?>
+                <?php endif; ?>
 
                 <!-- Requirements Attachments -->
-                @if($lead->hasAttachments())
+                <?php if($lead->hasAttachments()): ?>
                 <div class="bg-white rounded-lg shadow p-6">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold text-gray-900">Requirements Attachments</h3>
                         <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                            {{ $lead->getAttachmentCount() }} {{ $lead->getAttachmentCount() === 1 ? 'file' : 'files' }}
+                            <?php echo e($lead->getAttachmentCount()); ?> <?php echo e($lead->getAttachmentCount() === 1 ? 'file' : 'files'); ?>
+
                         </span>
                     </div>
 
-                    @php
+                    <?php
                         $attachmentsByType = $lead->getAttachmentsByType();
-                    @endphp
+                    ?>
 
                     <!-- Images Section -->
-                    @if(!empty($attachmentsByType['images']))
+                    <?php if(!empty($attachmentsByType['images'])): ?>
                     <div class="mb-6">
                         <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
                             <span class="mr-2">🖼️</span>
-                            Images ({{ count($attachmentsByType['images']) }})
+                            Images (<?php echo e(count($attachmentsByType['images'])); ?>)
                         </h4>
                         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                            @foreach($attachmentsByType['images'] as $attachment)
-                            @if(Storage::disk('public')->exists($attachment['path']))
+                            <?php $__currentLoopData = $attachmentsByType['images']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attachment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php if(Storage::disk('public')->exists($attachment['path'])): ?>
                             <div class="relative group">
                                 <div class="aspect-square bg-gray-200 rounded-lg overflow-hidden">
-                                    <img src="{{ Storage::url($attachment['path']) }}" 
-                                         alt="{{ $attachment['original_name'] }}"
+                                    <img src="<?php echo e(Storage::url($attachment['path'])); ?>" 
+                                         alt="<?php echo e($attachment['original_name']); ?>"
                                          class="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform"
-                                         onclick="openImageModal('{{ Storage::url($attachment['path']) }}', '{{ $attachment['original_name'] }}')">
+                                         onclick="openImageModal('<?php echo e(Storage::url($attachment['path'])); ?>', '<?php echo e($attachment['original_name']); ?>')">
                                 </div>
                                 <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg flex items-center justify-center">
                                     <div class="opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <a href="{{ Storage::url($attachment['path']) }}" target="_blank" 
+                                        <a href="<?php echo e(Storage::url($attachment['path'])); ?>" target="_blank" 
                                            class="bg-white text-gray-800 px-3 py-1 rounded-md text-sm font-medium shadow-lg hover:bg-gray-100">
                                             View
                                         </a>
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <p class="text-xs text-gray-600 truncate">{{ $attachment['original_name'] }}</p>
+                                    <p class="text-xs text-gray-600 truncate"><?php echo e($attachment['original_name']); ?></p>
                                     <p class="text-xs text-gray-400">
-                                        @if(isset($attachment['size']))
-                                            {{ number_format($attachment['size'] / 1024, 1) }} KB
-                                        @endif
+                                        <?php if(isset($attachment['size'])): ?>
+                                            <?php echo e(number_format($attachment['size'] / 1024, 1)); ?> KB
+                                        <?php endif; ?>
                                     </p>
                                 </div>
                             </div>
-                            @else
+                            <?php else: ?>
                             <div class="relative group">
                                 <div class="aspect-square bg-red-100 rounded-lg overflow-hidden flex items-center justify-center">
                                     <div class="text-center">
@@ -428,50 +439,51 @@
                                     </div>
                                 </div>
                                 <div class="mt-2">
-                                    <p class="text-xs text-red-600 truncate">{{ $attachment['original_name'] }}</p>
+                                    <p class="text-xs text-red-600 truncate"><?php echo e($attachment['original_name']); ?></p>
                                     <p class="text-xs text-red-400">File not found</p>
                                 </div>
                             </div>
-                            @endif
-                            @endforeach
+                            <?php endif; ?>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                     </div>
-                    @endif
+                    <?php endif; ?>
 
                     <!-- PDFs Section -->
-                    @if(!empty($attachmentsByType['pdfs']))
+                    <?php if(!empty($attachmentsByType['pdfs'])): ?>
                     <div class="mb-6">
                         <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
                             <span class="mr-2">📄</span>
-                            PDF Documents ({{ count($attachmentsByType['pdfs']) }})
+                            PDF Documents (<?php echo e(count($attachmentsByType['pdfs'])); ?>)
                         </h4>
                         <div class="space-y-2">
-                            @foreach($attachmentsByType['pdfs'] as $attachment)
-                            @if(Storage::disk('public')->exists($attachment['path']))
+                            <?php $__currentLoopData = $attachmentsByType['pdfs']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attachment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php if(Storage::disk('public')->exists($attachment['path'])): ?>
                             <div class="flex items-center justify-between p-3 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors">
                                 <div class="flex items-center min-w-0">
                                     <span class="text-2xl mr-3">📄</span>
                                     <div class="min-w-0">
-                                        <p class="text-sm font-medium text-gray-900 truncate">{{ $attachment['original_name'] }}</p>
+                                        <p class="text-sm font-medium text-gray-900 truncate"><?php echo e($attachment['original_name']); ?></p>
                                         <p class="text-xs text-gray-500">
-                                            @if(isset($attachment['size']))
-                                                {{ number_format($attachment['size'] / 1024, 1) }} KB
-                                            @endif
-                                            • {{ \Carbon\Carbon::parse($attachment['uploaded_at'])->format('M j, Y') }}
+                                            <?php if(isset($attachment['size'])): ?>
+                                                <?php echo e(number_format($attachment['size'] / 1024, 1)); ?> KB
+                                            <?php endif; ?>
+                                            • <?php echo e(\Carbon\Carbon::parse($attachment['uploaded_at'])->format('M j, Y')); ?>
+
                                         </p>
                                     </div>
                                 </div>
-                                <a href="{{ Storage::url($attachment['path']) }}" target="_blank" 
+                                <a href="<?php echo e(Storage::url($attachment['path'])); ?>" target="_blank" 
                                    class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm font-medium">
                                     View PDF
                                 </a>
                             </div>
-                            @else
+                            <?php else: ?>
                             <div class="flex items-center justify-between p-3 bg-red-100 border border-red-300 rounded-lg">
                                 <div class="flex items-center min-w-0">
                                     <span class="text-2xl mr-3">❌</span>
                                     <div class="min-w-0">
-                                        <p class="text-sm font-medium text-red-700 truncate">{{ $attachment['original_name'] }}</p>
+                                        <p class="text-sm font-medium text-red-700 truncate"><?php echo e($attachment['original_name']); ?></p>
                                         <p class="text-xs text-red-500">File not found</p>
                                     </div>
                                 </div>
@@ -479,80 +491,82 @@
                                     Missing
                                 </span>
                             </div>
-                            @endif
-                            @endforeach
+                            <?php endif; ?>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                     </div>
-                    @endif
+                    <?php endif; ?>
 
                     <!-- Documents Section -->
-                    @if(!empty($attachmentsByType['documents']))
+                    <?php if(!empty($attachmentsByType['documents'])): ?>
                     <div class="mb-6">
                         <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
                             <span class="mr-2">📝</span>
-                            Word Documents ({{ count($attachmentsByType['documents']) }})
+                            Word Documents (<?php echo e(count($attachmentsByType['documents'])); ?>)
                         </h4>
                         <div class="space-y-2">
-                            @foreach($attachmentsByType['documents'] as $attachment)
+                            <?php $__currentLoopData = $attachmentsByType['documents']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attachment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors">
                                 <div class="flex items-center min-w-0">
                                     <span class="text-2xl mr-3">📝</span>
                                     <div class="min-w-0">
-                                        <p class="text-sm font-medium text-gray-900 truncate">{{ $attachment['original_name'] }}</p>
+                                        <p class="text-sm font-medium text-gray-900 truncate"><?php echo e($attachment['original_name']); ?></p>
                                         <p class="text-xs text-gray-500">
-                                            @if(isset($attachment['size']))
-                                                {{ number_format($attachment['size'] / 1024, 1) }} KB
-                                            @endif
-                                            • {{ \Carbon\Carbon::parse($attachment['uploaded_at'])->format('M j, Y') }}
+                                            <?php if(isset($attachment['size'])): ?>
+                                                <?php echo e(number_format($attachment['size'] / 1024, 1)); ?> KB
+                                            <?php endif; ?>
+                                            • <?php echo e(\Carbon\Carbon::parse($attachment['uploaded_at'])->format('M j, Y')); ?>
+
                                         </p>
                                     </div>
                                 </div>
-                                <a href="{{ Storage::url($attachment['path']) }}" download 
+                                <a href="<?php echo e(Storage::url($attachment['path'])); ?>" download 
                                    class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm font-medium">
                                     Download
                                 </a>
                             </div>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                     </div>
-                    @endif
+                    <?php endif; ?>
 
                     <!-- Other Files Section -->
-                    @if(!empty($attachmentsByType['others']))
+                    <?php if(!empty($attachmentsByType['others'])): ?>
                     <div class="mb-6">
                         <h4 class="text-md font-medium text-gray-700 mb-3 flex items-center">
                             <span class="mr-2">📎</span>
-                            Other Files ({{ count($attachmentsByType['others']) }})
+                            Other Files (<?php echo e(count($attachmentsByType['others'])); ?>)
                         </h4>
                         <div class="space-y-2">
-                            @foreach($attachmentsByType['others'] as $attachment)
+                            <?php $__currentLoopData = $attachmentsByType['others']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attachment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors">
                                 <div class="flex items-center min-w-0">
                                     <span class="text-2xl mr-3">📎</span>
                                     <div class="min-w-0">
-                                        <p class="text-sm font-medium text-gray-900 truncate">{{ $attachment['original_name'] }}</p>
+                                        <p class="text-sm font-medium text-gray-900 truncate"><?php echo e($attachment['original_name']); ?></p>
                                         <p class="text-xs text-gray-500">
-                                            @if(isset($attachment['size']))
-                                                {{ number_format($attachment['size'] / 1024, 1) }} KB
-                                            @endif
-                                            • {{ \Carbon\Carbon::parse($attachment['uploaded_at'])->format('M j, Y') }}
+                                            <?php if(isset($attachment['size'])): ?>
+                                                <?php echo e(number_format($attachment['size'] / 1024, 1)); ?> KB
+                                            <?php endif; ?>
+                                            • <?php echo e(\Carbon\Carbon::parse($attachment['uploaded_at'])->format('M j, Y')); ?>
+
                                         </p>
                                     </div>
                                 </div>
-                                <a href="{{ Storage::url($attachment['path']) }}" download 
+                                <a href="<?php echo e(Storage::url($attachment['path'])); ?>" download 
                                    class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded-md text-sm font-medium">
                                     Download
                                 </a>
                             </div>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                     </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
-                @endif
+                <?php endif; ?>
 
                 <!-- Deal Conversion -->
-                @if(in_array($lead->status, ['qualified', 'proposal']) && $lead->deals->count() === 0)
+                <?php if(in_array($lead->status, ['qualified', 'proposal']) && $lead->deals->count() === 0): ?>
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Convert to Deal</h3>
                     <p class="text-sm text-gray-600 mb-4">This qualified lead is ready to be converted to a formal deal.</p>
@@ -563,26 +577,26 @@
                     
                     <!-- Deal Creation Form -->
                     <div id="dealForm" class="hidden mt-4 border-t pt-4">
-                        <form action="{{ route('crm.leads.convert-to-deal', $lead) }}" method="POST">
-                            @csrf
+                        <form action="<?php echo e(route('crm.leads.convert-to-deal', $lead)); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
                             <div class="space-y-4">
                                 <div>
                                     <label for="deal_name" class="block text-sm font-medium text-gray-700 mb-1">Deal Name</label>
                                     <input type="text" name="deal_name" id="deal_name" required 
-                                           value="{{ $lead->company_name }} - Equipment Purchase"
+                                           value="<?php echo e($lead->company_name); ?> - Equipment Purchase"
                                            class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                                 </div>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label for="deal_value" class="block text-sm font-medium text-gray-700 mb-1">Deal Value (AED)</label>
                                         <input type="number" name="deal_value" id="deal_value" required min="0" step="0.01"
-                                               value="{{ $lead->estimated_value }}"
+                                               value="<?php echo e($lead->estimated_value); ?>"
                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                                     </div>
                                     <div>
                                         <label for="expected_close_date" class="block text-sm font-medium text-gray-700 mb-1">Expected Close Date</label>
                                         <input type="date" name="expected_close_date" id="expected_close_date" required
-                                               value="{{ $lead->expected_close_date ? $lead->expected_close_date->format('Y-m-d') : now()->addDays(30)->format('Y-m-d') }}"
+                                               value="<?php echo e($lead->expected_close_date ? $lead->expected_close_date->format('Y-m-d') : now()->addDays(30)->format('Y-m-d')); ?>"
                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
                                     </div>
                                 </div>
@@ -590,7 +604,7 @@
                                     <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Deal Description</label>
                                     <textarea name="description" id="description" rows="3"
                                               class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-                                              placeholder="Describe the deal, products interested, specific requirements...">{{ $lead->notes }}</textarea>
+                                              placeholder="Describe the deal, products interested, specific requirements..."><?php echo e($lead->notes); ?></textarea>
                                 </div>
                                 <div class="flex justify-end space-x-3">
                                     <button type="button" onclick="toggleDealForm()" 
@@ -606,10 +620,10 @@
                         </form>
                     </div>
                 </div>
-                @endif
+                <?php endif; ?>
 
                 <!-- Supplier Quotation Process -->
-                @if(in_array($lead->status, ['contacted', 'qualified']) && !$lead->hasActiveQuotationRequest())
+                <?php if(in_array($lead->status, ['contacted', 'qualified']) && !$lead->hasActiveQuotationRequest()): ?>
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Get Supplier Pricing</h3>
                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
@@ -628,19 +642,19 @@
                     </div>
                     <!-- Removed Create Quotation Request button as the route no longer exists -->
                 </div>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
     </div>
 </div>
 
-@push('head')
+<?php $__env->startPush('head'); ?>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
 .formatted-content {
     line-height: 1.6;
@@ -962,9 +976,9 @@
     }
 }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
     function toggleActivityForm() {
         const form = document.getElementById('activityForm');
@@ -976,6 +990,7 @@
         form.classList.toggle('hidden');
     }
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@endsection 
+<?php $__env->stopSection(); ?> 
+<?php echo $__env->make('layouts.crm', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Walid\OneDrive\Desktop\MaxMed\resources\views/crm/leads/show.blade.php ENDPATH**/ ?>
