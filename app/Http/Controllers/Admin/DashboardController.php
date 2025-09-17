@@ -111,16 +111,10 @@ class DashboardController extends Controller
                 $labels[] = $month->format('M Y');
             }
             
-            // Get final invoice data (actual sales)
+            // Get ONLY final invoice data (actual sales) - no quotes, no proforma
             $invoiceData = $this->getInvoiceSalesData($startDate, $endDate);
             
-            // Get converted quotes data (quotes that became invoices)
-            $quoteData = $this->getConvertedQuotesData($startDate, $endDate);
-            
-            // Get proforma-only data (quotes converted to proforma but not final)
-            $proformaData = $this->getProformaOnlyData($startDate, $endDate);
-            
-            // Combine and process data for each month
+            // Process data for each month using ONLY final invoices
             for ($i = 0; $i < $monthsDiff; $i++) {
                 $month = $startDate->copy()->addMonths($i);
                 $monthKey = $month->format('Y-m');
@@ -128,16 +122,10 @@ class DashboardController extends Controller
                 $aedAmount = 0;
                 $usdAmount = 0;
                 
-                // Add final invoice amounts (actual sales)
+                // Add ONLY final invoice amounts (actual sales)
                 if (isset($invoiceData[$monthKey])) {
-                    $aedAmount += $invoiceData[$monthKey]['aed'] ?? 0;
-                    $usdAmount += $invoiceData[$monthKey]['usd'] ?? 0;
-                }
-                
-                // Add converted quote amounts (quotes that became invoices)
-                if (isset($quoteData[$monthKey])) {
-                    $aedAmount += $quoteData[$monthKey]['aed'] ?? 0;
-                    $usdAmount += $quoteData[$monthKey]['usd'] ?? 0;
+                    $aedAmount = $invoiceData[$monthKey]['aed'] ?? 0;
+                    $usdAmount = $invoiceData[$monthKey]['usd'] ?? 0;
                 }
                 
                 $aedData[] = round($aedAmount, 2);
@@ -173,26 +161,6 @@ class DashboardController extends Controller
             // Remove duplicates from peak months
             $peakMonths = array_unique($peakMonths);
             
-            // Process proforma-only data for the chart
-            $proformaAedData = [];
-            $proformaUsdData = [];
-            
-            for ($i = 0; $i < $monthsDiff; $i++) {
-                $month = $startDate->copy()->addMonths($i);
-                $monthKey = $month->format('Y-m');
-                
-                $proformaAed = 0;
-                $proformaUsd = 0;
-                
-                if (isset($proformaData[$monthKey])) {
-                    $proformaAed = $proformaData[$monthKey]['aed'] ?? 0;
-                    $proformaUsd = $proformaData[$monthKey]['usd'] ?? 0;
-                }
-                
-                $proformaAedData[] = round($proformaAed, 2);
-                $proformaUsdData[] = round($proformaUsd, 2);
-            }
-            
             // Calculate Revenue and Cash Flow metrics
             $revenueMetrics = $this->getRevenueMetrics();
             $cashFlowMetrics = $this->getCashFlowMetrics();
@@ -201,7 +169,7 @@ class DashboardController extends Controller
                 'labels' => $labels,
                 'aed_data' => $aedData,
                 'usd_data' => $usdData,
-                'proforma_data' => $proformaAedData, // Proforma-only data for chart
+                'proforma_data' => [], // No proforma data - using final invoices only
                 'combined_data' => $combinedData,
                 'total_aed' => array_sum($aedData),
                 'total_usd' => array_sum($usdData),
