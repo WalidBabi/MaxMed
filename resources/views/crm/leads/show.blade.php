@@ -132,7 +132,9 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Assigned To</label>
-                            <p class="mt-1 text-sm text-gray-900">{{ $lead->assignedUser->name }}</p>
+                            <p class="mt-1 text-sm {{ $lead->assignedUser->id === Auth::id() ? 'text-green-600 font-semibold' : 'text-gray-900' }}">
+                                {{ $lead->assignedUser->name }}{{ $lead->assignedUser->id === Auth::id() ? ' (You)' : '' }}
+                            </p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Estimated Value</label>
@@ -282,7 +284,9 @@
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-sm font-medium text-gray-500">Assigned To</span>
-                            <span class="text-sm text-gray-900">{{ $lead->assignedUser->name }}</span>
+                            <span class="text-sm {{ $lead->assignedUser->id === Auth::id() ? 'text-green-600 font-semibold' : 'text-gray-900' }}">
+                                {{ $lead->assignedUser->name }}{{ $lead->assignedUser->id === Auth::id() ? ' (You)' : '' }}
+                            </span>
                         </div>
                         @if($lead->estimated_value)
                         <div class="flex justify-between items-center">

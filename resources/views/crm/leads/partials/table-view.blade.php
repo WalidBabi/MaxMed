@@ -54,7 +54,15 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ $lead->assignedUser->name ?? 'Unassigned' }}
+                            @if($lead->assignedUser)
+                                @if($lead->assignedUser->id === Auth::id())
+                                    <span class="font-semibold text-blue-600">{{ $lead->assignedUser->name }}</span>
+                                @else
+                                    <span>{{ $lead->assignedUser->name }}</span>
+                                @endif
+                            @else
+                                <span class="text-gray-500">Unassigned</span>
+                            @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             @if($lead->last_contacted_at)
