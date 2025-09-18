@@ -94,6 +94,5 @@ class Kernel extends HttpKernel
         'canonical' => CanonicalDomainMiddleware::class,
         'seo-headers' => \App\Http\Middleware\SeoHeadersMiddleware::class,
         'query-optimization' => \App\Http\Middleware\QueryOptimizationMiddleware::class,
-        'prevent-crawler-indexing' => \App\Http\Middleware\PreventCrawlerIndexing::class,
     ];
 } 

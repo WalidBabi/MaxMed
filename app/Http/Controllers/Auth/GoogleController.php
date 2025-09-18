@@ -52,12 +52,6 @@ class GoogleController extends Controller
                 ]);
             }
             
-            // Set headers to prevent indexing for all responses
-            $headers = [
-                'X-Robots-Tag' => 'noindex, nofollow, noarchive, nosnippet',
-                'Cache-Control' => 'no-cache, no-store, must-revalidate',
-            ];
-            
             // Verify CSRF token
             $request->validate([
                 'g_csrf_token' => 'required|string',
@@ -98,7 +92,7 @@ class GoogleController extends Controller
             
             return response()->json([
                 'redirect' => route('dashboard')
-            ])->withHeaders($headers);
+            ]);
             
         } catch (\Exception $e) {
             Log::error('Google One Tap Error: ' . $e->getMessage());
@@ -106,20 +100,16 @@ class GoogleController extends Controller
             
             return response()->json([
                 'error' => 'Failed to authenticate with Google. Please try again.'
-            ], 401)->withHeaders($headers);
+            ], 401);
         }
     }
 
     public function handleOneTapGet()
     {
-        // Set proper headers to prevent indexing
         return response()->json([
             'error' => 'This endpoint only accepts POST requests for Google One Tap authentication.',
             'message' => 'Please use the POST method with proper authentication credentials.'
-        ], 405)->withHeaders([
-            'X-Robots-Tag' => 'noindex, nofollow, noarchive, nosnippet',
-            'Cache-Control' => 'no-cache, no-store, must-revalidate',
-        ]);
+        ], 405);
     }
     
     protected function findOrCreateUser($googleUser)

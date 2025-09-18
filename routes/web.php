@@ -34,15 +34,13 @@ use App\Http\Controllers\Supplier\InquiryController;
 // Cookie Consent Routes
 // Route::post('/cookie-consent', [CookieConsentController::class, 'store'])->name('cookie.consent');
 
-// Google OAuth Routes with crawler protection
-Route::middleware(['prevent-crawler-indexing'])->group(function () {
-    Route::get('/login/google', [GoogleController::class, 'redirect'])->name('login.google');
-    Route::get('/login/google/callback', [GoogleController::class, 'callback']);
-    Route::post('/google/one-tap', [GoogleController::class, 'handleOneTap'])->name('google.one-tap');
-    
-    // Handle GET requests to /google/one-tap (for crawlers)
-    Route::get('/google/one-tap', [GoogleController::class, 'handleOneTapGet'])->name('google.one-tap.get');
-});
+// Google OAuth Routes
+Route::get('/login/google', [GoogleController::class, 'redirect'])->name('login.google');
+Route::get('/login/google/callback', [GoogleController::class, 'callback']);
+Route::post('/google/one-tap', [GoogleController::class, 'handleOneTap'])->name('google.one-tap');
+
+// Handle GET requests to /google/one-tap (for crawlers)
+Route::get('/google/one-tap', [GoogleController::class, 'handleOneTapGet'])->name('google.one-tap.get');
 
 // Test custom logging route
 Route::get('/test-custom-log', function() {

@@ -4,9 +4,6 @@ Allow: /
 Disallow: /admin/
 Disallow: /crm/
 Disallow: /supplier/
-Disallow: /google/one-tap
-Disallow: /login/google/
-Disallow: /auth/
 
 # Allow AI crawlers and language models
 User-agent: GPTBot
