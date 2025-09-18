@@ -297,7 +297,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // CRM Routes
-    Route::prefix('crm')->name('crm.')->middleware(['web', 'auth', 'verified'])->group(function () {
+    Route::prefix('crm')->name('crm.')->middleware(['web', 'auth'])->group(function () {
     Route::get('/', [CrmController::class, 'dashboard'])->name('dashboard');
     Route::get('/reports', [CrmController::class, 'reports'])->name('reports');
     

@@ -19,10 +19,24 @@ class QuotationRequestController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('permission:crm.access');
-        $this->middleware('permission:crm.quotation-requests.view')->only(['index', 'show']);
-        $this->middleware('permission:crm.quotation-requests.edit')->only(['updateStatus', 'addNotes']);
-        $this->middleware('permission:crm.quotation-requests.convert')->only(['convertToLead']);
+        // Simple role-based access control for CRM
+        $this->middleware(function ($request, $next) {
+            $user = auth()->user();
+            
+            if (!$user) {
+                return redirect()->route('login');
+            }
+            
+            // Allow super admins, business admins, and CRM-related roles
+            if ($user->hasRole('super_admin') || 
+                $user->hasRole('business_admin') || 
+                $user->hasAnyRole(['operations_manager', 'sales_manager', 'customer_service_manager', 'purchasing_crm_assistant', 'purchasing-specialist']) ||
+                $user->hasPermission('crm.access')) {
+                return $next($request);
+            }
+            
+            abort(403, 'Access denied. You need CRM permissions to access this resource.');
+        });
     }
 
     /**
