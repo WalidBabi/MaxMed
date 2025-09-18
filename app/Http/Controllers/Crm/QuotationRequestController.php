@@ -14,6 +14,18 @@ use Illuminate\Support\Facades\Log;
 class QuotationRequestController extends Controller
 {
     /**
+     * Constructor - Apply middleware for permissions
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('permission:crm.access');
+        $this->middleware('permission:crm.quotation-requests.view')->only(['index', 'show']);
+        $this->middleware('permission:crm.quotation-requests.edit')->only(['updateStatus', 'addNotes']);
+        $this->middleware('permission:crm.quotation-requests.convert')->only(['convertToLead']);
+    }
+
+    /**
      * Display quotation requests for CRM
      */
     public function index(Request $request)
