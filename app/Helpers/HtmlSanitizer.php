@@ -16,6 +16,20 @@ class HtmlSanitizer
             return '';
         }
 
+        // Check if content is plain text (no HTML tags) and convert newlines to breaks
+        if (!preg_match('/<[^>]+>/', $html)) {
+            // This is plain text, convert newlines to HTML breaks
+            $html = htmlspecialchars($html, ENT_QUOTES, 'UTF-8');
+            $html = nl2br($html);
+        } else {
+            // This is HTML content, but we still need to handle newlines that aren't already in tags
+            // Convert standalone newlines (not within tags) to <br> tags
+            $html = preg_replace('/(?<=>)\s*\n+\s*(?=<)/', '<br />', $html);
+            $html = preg_replace('/(?<=>)\s*\n+\s*(?=[^<])/', '<br />', $html);
+            $html = preg_replace('/(?<=[^>])\s*\n+\s*(?=<)/', '<br />', $html);
+            $html = preg_replace('/(?<=[^>])\s*\n+\s*(?=[^<])/', '<br />', $html);
+        }
+
         // Comprehensive list of allowed tags for rich text formatting
         $allowedTags = [
             // Basic formatting
