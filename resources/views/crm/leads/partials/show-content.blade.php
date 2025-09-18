@@ -331,10 +331,12 @@
                          <span class="text-sm font-medium text-gray-500">Priority</span>
                          <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-{{ $lead->priority_color }}-100 text-{{ $lead->priority_color }}-800">{{ ucfirst($lead->priority) }}</span>
                      </div>
-                     <div class="flex justify-between items-center">
-                         <span class="text-sm font-medium text-gray-500">Assigned To</span>
-                         <span class="text-sm text-gray-900">{{ $lead->assignedUser->name }}</span>
-                     </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm font-medium text-gray-500">Assigned To</span>
+                        <span class="text-sm {{ $lead->assignedUser->id === Auth::id() ? 'text-green-600 font-semibold' : 'text-gray-900' }}">
+                            {{ $lead->assignedUser->name }}{{ $lead->assignedUser->id === Auth::id() ? ' (You)' : '' }}
+                        </span>
+                    </div>
                      <div class="flex justify-between items-center">
                          <span class="text-sm font-medium text-gray-500">Created</span>
                          <span class="text-sm text-gray-900">{{ $lead->created_at->format('M d, Y') }}</span>

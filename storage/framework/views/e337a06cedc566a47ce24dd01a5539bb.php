@@ -663,13 +663,20 @@
                                                 <!-- Assigned User -->
                                                 <?php if($lead->assignedUser): ?>
                                                     <div class="flex items-center space-x-1 ml-2">
-                                                        <svg class="w-3 h-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <svg class="w-3 h-3 <?php echo e($lead->assignedUser->id === Auth::id() ? 'text-green-500' : 'text-blue-500'); ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                                         </svg>
-                                                        <span class="text-blue-600 font-medium" title="<?php echo e($lead->assignedUser->name); ?>">
-                                                            <?php echo e($lead->assignedUser->name); ?>
+                                                        <?php if($lead->assignedUser->id === Auth::id()): ?>
+                                                            <span class="text-green-600 font-bold" title="<?php echo e($lead->assignedUser->name); ?> (You)">
+                                                                <?php echo e($lead->assignedUser->name); ?>
 
-                                                        </span>
+                                                            </span>
+                                                        <?php else: ?>
+                                                            <span class="text-blue-600 font-medium" title="<?php echo e($lead->assignedUser->name); ?>">
+                                                                <?php echo e($lead->assignedUser->name); ?>
+
+                                                            </span>
+                                                        <?php endif; ?>
                                                     </div>
                                                 <?php endif; ?>
                                             </div>
