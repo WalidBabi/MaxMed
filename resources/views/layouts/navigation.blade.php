@@ -1227,3 +1227,6 @@
 @endphp
 @endif
 @endauth
+
+<!-- Google One Tap Script -->
+<script src="{{ asset('js/google-one-tap.js') }}"></script>

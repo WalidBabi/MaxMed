@@ -26,6 +26,11 @@
         to { transform: translateY(0); opacity: 1; }
     }
     
+    @keyframes fadeOut {
+        from { transform: translateY(0); opacity: 1; }
+        to { transform: translateY(-20px); opacity: 0; }
+    }
+    
     .google-one-tap-container:hover {
         box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
         transform: translateY(-2px);
