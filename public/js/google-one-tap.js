@@ -117,6 +117,48 @@ function isUserAuthenticated() {
     return meta && meta.content === 'true';
 }
 
+// Hide the Google One Tap container
+function hideGoogleOneTapContainer() {
+    const container = document.getElementById('google-one-tap-container');
+    if (container) {
+        container.style.animation = 'fadeOut 0.3s ease-out forwards';
+        setTimeout(() => {
+            container.style.display = 'none';
+            // Remove click outside event listener if it exists
+            if (typeof handleClickOutside === 'function') {
+                document.removeEventListener('click', handleClickOutside);
+            }
+        }, 300);
+    }
+}
+
+// Show the Google One Tap container
+function showGoogleOneTapContainer() {
+    const container = document.getElementById('google-one-tap-container');
+    if (container) {
+        container.style.display = 'block';
+        container.style.animation = 'slideIn 0.3s ease-out forwards';
+        
+        // Add click outside to close
+        setTimeout(() => {
+            if (typeof handleClickOutside === 'function') {
+                document.addEventListener('click', handleClickOutside);
+            }
+        }, 100);
+    }
+}
+
+// Handle clicks outside the container
+function handleClickOutside(event) {
+    const container = document.getElementById('google-one-tap-container');
+    const button = document.querySelector('.g_id_signin iframe');
+    
+    if (container && !container.contains(event.target) && 
+        button && !button.contains(event.target)) {
+        hideGoogleOneTapContainer();
+    }
+}
+
 // Initialize when the page loads
 document.addEventListener('DOMContentLoaded', function() {
     // Only initialize if user is not authenticated
