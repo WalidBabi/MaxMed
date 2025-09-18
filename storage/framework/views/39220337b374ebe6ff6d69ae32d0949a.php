@@ -832,7 +832,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return {
             datasets: [
                 {
-                    label: 'Final Sales (AED)',
+                    label: 'AED Sales',
                     data: <?php echo json_encode($salesData['aed_data']); ?>,
                     borderColor: 'rgb(34, 197, 94)',
                     backgroundColor: 'rgba(34, 197, 94, 0.1)',
@@ -846,7 +846,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     pointHoverRadius: 8
                 },
                 {
-                    label: 'Final Sales (USD)',
+                    label: 'USD Sales',
                     data: <?php echo json_encode($salesData['usd_data']); ?>,
                     borderColor: 'rgb(59, 130, 246)',
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -860,22 +860,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     pointHoverRadius: 8
                 },
                 {
-                    label: 'Proforma Only (AED)',
-                    data: <?php echo json_encode($salesData['proforma_data'] ?? []); ?>,
-                    borderColor: 'rgb(251, 146, 60)',
-                    backgroundColor: 'rgba(251, 146, 60, 0.1)',
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.4,
-                    pointBackgroundColor: 'rgb(251, 146, 60)',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 5,
-                    pointHoverRadius: 7,
-                    borderDash: [10, 5]
-                },
-                {
-                    label: 'Total Sales (AED)',
+                    label: 'Combined Sales (AED)',
                     data: <?php echo json_encode($salesData['combined_data']); ?>,
                     borderColor: 'rgb(147, 51, 234)',
                     backgroundColor: 'rgba(147, 51, 234, 0.1)',

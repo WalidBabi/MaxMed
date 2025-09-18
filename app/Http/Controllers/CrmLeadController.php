@@ -127,7 +127,10 @@ class CrmLeadController extends Controller
                 $this->estimated_value = $originalLead->estimated_value;
                 $this->created_at = $originalLead->created_at;
                 $this->updated_at = $originalLead->updated_at;
-                $this->assignedUser = $originalLead->assignedUser ? (object) ['name' => $originalLead->assignedUser->name] : null;
+                $this->assignedUser = $originalLead->assignedUser ? (object) [
+                    'id' => $originalLead->assignedUser->id,
+                    'name' => $originalLead->assignedUser->name
+                ] : null;
                 $this->notes = $originalLead->notes; // Allow viewing notes for purchasing context
                 $this->source = $originalLead->source;
                 $this->expected_close_date = $originalLead->expected_close_date;
@@ -177,7 +180,10 @@ class CrmLeadController extends Controller
                         'description' => $deal->description,
                         'created_at' => $deal->created_at,
                         'updated_at' => $deal->updated_at,
-                        'assignedUser' => $deal->assignedUser ? (object) ['name' => $deal->assignedUser->name] : null,
+                        'assignedUser' => $deal->assignedUser ? (object) [
+                            'id' => $deal->assignedUser->id,
+                            'name' => $deal->assignedUser->name
+                        ] : null,
                     ];
                 });
             }
@@ -351,7 +357,10 @@ class CrmLeadController extends Controller
                             $this->estimated_value = $originalLead->estimated_value;
                             $this->created_at = $originalLead->created_at;
                             $this->updated_at = $originalLead->updated_at;
-                            $this->assignedUser = $originalLead->assignedUser ? (object) ['name' => $originalLead->assignedUser->name] : null;
+                            $this->assignedUser = $originalLead->assignedUser ? (object) [
+                                'id' => $originalLead->assignedUser->id,
+                                'name' => $originalLead->assignedUser->name
+                            ] : null;
                             $this->notes = $originalLead->notes;
                             $this->source = $originalLead->source;
                             $this->expected_close_date = $originalLead->expected_close_date;
