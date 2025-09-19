@@ -636,6 +636,12 @@
                             @if($item->product)
                                 <div style="font-size: 9px; margin-top: 3px;">
                                     <a href="{{ route('product.show', $item->product) }}" style="color: #0ea5e9; text-decoration: none;">View product page</a>
+                                    @if($item->product->pdf_file)
+                                        <span style="color: #6b7280; margin: 0 5px;">|</span>
+                                        <a href="{{ Storage::url($item->product->pdf_file) }}" target="_blank" style="color: #dc2626; text-decoration: none;">
+                                            <i class="fas fa-file-pdf" style="margin-right: 2px;"></i>Product PDF
+                                        </a>
+                                    @endif
                                 </div>
                             @endif
                             @if($item->product && $item->product->brand)
