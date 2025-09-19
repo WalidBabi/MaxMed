@@ -357,38 +357,26 @@
                                     <p class="mt-1 text-sm text-gray-500">Special handling, packaging, or delivery instructions</p>
                                 </div>
                                 
-                                <!-- Proforma Invoice/Quote Attachment -->
+                                <!-- Proforma Invoice/Quote Attachments -->
                                 <div>
-                                    <label for="proforma_attachment" class="block text-sm font-medium text-gray-700 mb-2">Proforma Invoice/Quote Attachment</label>
+                                    <label for="proforma_attachments" class="block text-sm font-medium text-gray-700 mb-2">Proforma Invoice/Quote Attachments (Multiple)</label>
                                     <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-gray-400 transition-colors">
                                         <div class="space-y-1 text-center">
                                             <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                                                 <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                             </svg>
                                             <div class="flex text-sm text-gray-600">
-                                                <label for="proforma_attachment" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-                                                    <span>Upload a file</span>
-                                                    <input id="proforma_attachment" name="proforma_attachment" type="file" class="sr-only" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" onchange="handleFileSelect(this)">
+                                                <label for="proforma_attachments" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                                    <span>Upload files</span>
+                                                    <input id="proforma_attachments" name="proforma_attachments[]" type="file" class="sr-only" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" multiple onchange="handleMultipleFileSelect(this)">
                                                 </label>
                                                 <p class="pl-1">or drag and drop</p>
                                             </div>
-                                            <p class="text-xs text-gray-500">PDF, DOC, DOCX, XLS, XLSX, JPG, PNG up to 10MB</p>
+                                            <p class="text-xs text-gray-500">PDF, DOC, DOCX, XLS, XLSX, JPG, PNG up to 10MB each</p>
                                         </div>
                                     </div>
-                                    <div id="file-info" class="mt-2 text-sm text-gray-600 hidden">
-                                        <div class="flex items-center">
-                                            <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                            </svg>
-                                            <span id="file-name"></span>
-                                            <button type="button" onclick="removeFile()" class="ml-2 text-red-500 hover:text-red-700">
-                                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <p class="mt-1 text-sm text-gray-500">Upload proforma invoice or quote document to attach with the purchase order</p>
+                                    <div id="files-info" class="mt-2 space-y-2"></div>
+                                    <p class="mt-1 text-sm text-gray-500">Upload proforma invoice or quote documents to attach with the purchase order</p>
                                 </div>
                             </div>
                         </div>
@@ -1563,6 +1551,86 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // File handling functions
+function handleMultipleFileSelect(input) {
+    const files = Array.from(input.files);
+    const filesInfoContainer = document.getElementById('files-info');
+    
+    // Clear previous file info
+    filesInfoContainer.innerHTML = '';
+    
+    if (files.length === 0) return;
+    
+    // Validate files
+    const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'image/jpeg', 'image/jpg', 'image/png'];
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    
+    let validFiles = [];
+    let hasErrors = false;
+    
+    files.forEach((file, index) => {
+        // Validate file size
+        if (file.size > maxSize) {
+            alert(`File "${file.name}" is too large. Maximum size is 10MB.`);
+            hasErrors = true;
+            return;
+        }
+        
+        // Validate file type
+        if (!allowedTypes.includes(file.type)) {
+            alert(`File "${file.name}" has an invalid type. Please select PDF, DOC, DOCX, XLS, XLSX, JPG, or PNG files.`);
+            hasErrors = true;
+            return;
+        }
+        
+        validFiles.push(file);
+    });
+    
+    if (hasErrors) {
+        input.value = '';
+        return;
+    }
+    
+    // Display file info for each valid file
+    validFiles.forEach((file, index) => {
+        const fileDiv = document.createElement('div');
+        fileDiv.className = 'flex items-center justify-between p-2 bg-gray-50 rounded border';
+        fileDiv.innerHTML = `
+            <div class="flex items-center">
+                <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="text-sm text-gray-700">${file.name}</span>
+                <span class="text-xs text-gray-500 ml-2">(${(file.size / 1024 / 1024).toFixed(2)} MB)</span>
+            </div>
+            <button type="button" onclick="removeFileFromList(this, ${index})" class="text-red-500 hover:text-red-700">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        `;
+        filesInfoContainer.appendChild(fileDiv);
+    });
+}
+
+function removeFileFromList(button, index) {
+    const input = document.getElementById('proforma_attachments');
+    const dt = new DataTransfer();
+    
+    // Get current files and remove the selected one
+    Array.from(input.files).forEach((file, i) => {
+        if (i !== index) {
+            dt.items.add(file);
+        }
+    });
+    
+    // Update the input files
+    input.files = dt.files;
+    
+    // Remove the file display element
+    button.closest('div').remove();
+}
+
+// Legacy function for backward compatibility
 function handleFileSelect(input) {
     const file = input.files[0];
     if (file) {

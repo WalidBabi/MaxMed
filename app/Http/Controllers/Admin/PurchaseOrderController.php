@@ -122,7 +122,8 @@ class PurchaseOrderController extends Controller
             'tax_amount' => 'nullable|numeric|min:0',
             'shipping_cost' => 'nullable|numeric|min:0',
             'total_amount' => 'required|numeric|min:0',
-            'proforma_attachment' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:10240', // 10MB max
+            'proforma_attachments' => 'nullable|array',
+            'proforma_attachments.*' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png|max:10240', // 10MB max
         ];
 
         // Add conditional validation based on supplier type
@@ -224,20 +225,21 @@ class PurchaseOrderController extends Controller
                 ]);
             }
             
-            // Handle file upload
+            // Handle multiple file uploads
             $attachments = [];
-            if ($request->hasFile('proforma_attachment')) {
-                $file = $request->file('proforma_attachment');
-                $filename = 'proforma_' . time() . '_' . $file->getClientOriginalName();
-                $attachmentPath = $file->storeAs('purchase-orders/attachments', $filename, 'public');
-                $attachments[] = [
-                    'type' => 'proforma_invoice',
-                    'filename' => $file->getClientOriginalName(),
-                    'path' => $attachmentPath,
-                    'size' => $file->getSize(),
-                    'mime_type' => $file->getMimeType(),
-                    'uploaded_at' => now()->toISOString()
-                ];
+            if ($request->hasFile('proforma_attachments')) {
+                foreach ($request->file('proforma_attachments') as $index => $file) {
+                    $filename = 'proforma_' . time() . '_' . $index . '_' . $file->getClientOriginalName();
+                    $attachmentPath = $file->storeAs('purchase-orders/attachments', $filename, 'public');
+                    $attachments[] = [
+                        'type' => 'proforma_invoice',
+                        'filename' => $file->getClientOriginalName(),
+                        'path' => $attachmentPath,
+                        'size' => $file->getSize(),
+                        'mime_type' => $file->getMimeType(),
+                        'uploaded_at' => now()->toISOString()
+                    ];
+                }
             }
 
             // Prepare supplier data based on selection type
