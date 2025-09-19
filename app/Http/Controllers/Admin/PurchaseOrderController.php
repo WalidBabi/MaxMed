@@ -63,8 +63,16 @@ class PurchaseOrderController extends Controller
      */
     public function create(Request $request)
     {
-        // Get orders that don't have purchase orders yet
-        $availableOrders = Order::whereDoesntHave('purchaseOrder')
+        // Get orders that can have purchase orders created
+        // Include orders without purchase orders and orders that might need additional purchase orders
+        $availableOrders = Order::with(['purchaseOrder', 'items'])
+            ->where(function($query) {
+                $query->whereDoesntHave('purchaseOrder')  // Orders without purchase orders
+                      ->orWhereHas('purchaseOrder', function($subQuery) {
+                          // Or orders with purchase orders that might need additional ones
+                          $subQuery->whereIn('status', ['cancelled', 'completed']);
+                      });
+            })
             ->latest()
             ->get();
 

@@ -79,26 +79,36 @@ class Order extends Model
             self::STATUS_CANCELLED
         ],
         self::STATUS_AWAITING_QUOTATIONS => [
+            self::STATUS_PENDING,               // Allow reverting to pending
             self::STATUS_QUOTATIONS_RECEIVED,   // Quotations received
             self::STATUS_CANCELLED
         ],
         self::STATUS_QUOTATIONS_RECEIVED => [
+            self::STATUS_PENDING,               // Allow reverting to pending
+            self::STATUS_AWAITING_QUOTATIONS,   // Allow reverting to quotation workflow
             self::STATUS_APPROVED,              // Order approved
             self::STATUS_CANCELLED
         ],
         self::STATUS_APPROVED => [
+            self::STATUS_PENDING,               // Allow reverting to pending
+            self::STATUS_AWAITING_QUOTATIONS,   // Allow reverting to quotation workflow
+            self::STATUS_QUOTATIONS_RECEIVED,   // Allow reverting to quotations received
             self::STATUS_PROCESSING,            // Start processing approved order
             self::STATUS_CANCELLED
         ],
         self::STATUS_PROCESSING => [
+            self::STATUS_PENDING,               // Allow reverting to pending (admin correction)
+            self::STATUS_AWAITING_QUOTATIONS,   // Allow reverting to quotation workflow
             self::STATUS_SHIPPED,               // Order shipped
             self::STATUS_CANCELLED
         ],
         self::STATUS_SHIPPED => [
+            self::STATUS_PROCESSING,            // Allow reverting to processing
             self::STATUS_DELIVERED,             // Order delivered
             self::STATUS_CANCELLED
         ],
         self::STATUS_DELIVERED => [
+            self::STATUS_SHIPPED,               // Allow reverting to shipped
             self::STATUS_COMPLETED,             // Order completed
             self::STATUS_CANCELLED
         ],
