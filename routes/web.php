@@ -331,6 +331,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('leads/{lead}/convert', [CrmLeadController::class, 'convert'])->name('leads.convert');
     Route::post('leads/{lead}/convert-to-deal', [CrmLeadController::class, 'convertToDeal'])->name('leads.convert-to-deal');
     Route::patch('leads/{lead}/status', [CrmLeadController::class, 'updateStatus'])->name('leads.update-status');
+    Route::post('leads/{lead}/send-email', [CrmLeadController::class, 'sendEmail'])->name('leads.send-email');
     Route::get('leads/{lead}/requirements', [CrmLeadController::class, 'viewRequirements'])->name('leads.view-requirements');
     
     // Enhanced Lead Management Features
