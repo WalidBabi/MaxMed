@@ -1,8 +1,6 @@
-@extends('admin.layouts.app')
+<?php $__env->startSection('title', 'Orders Management'); ?>
 
-@section('title', 'Orders Management')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="-mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
     <!-- Header -->
     <div class="mb-8">
@@ -12,7 +10,7 @@
                 <p class="text-gray-600 mt-2">Track and manage customer orders and sales</p>
             </div>
             <div class="flex items-center space-x-3">
-                <a href="{{ route('admin.orders.create') }}" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                <a href="<?php echo e(route('admin.orders.create')); ?>" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
                     <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                     </svg>
@@ -29,7 +27,7 @@
         </div>
         
         <div class="overflow-hidden">
-            @if($orders->count() > 0)
+            <?php if($orders->count() > 0): ?>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
@@ -43,10 +41,10 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach($orders as $order)
+                            <?php $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <tr class="hover:bg-gray-50">
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ $order->order_number }}</div>
+                                        <div class="text-sm font-medium text-gray-900"><?php echo e($order->order_number); ?></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
@@ -58,17 +56,17 @@
                                                 </div>
                                             </div>
                                             <div class="ml-4">
-                                                <div class="text-sm font-medium text-gray-900">{{ $order->getCustomerName() }}</div>
-                                                <div class="text-sm text-gray-500">{{ $order->getCustomerEmail() }}</div>
+                                                <div class="text-sm font-medium text-gray-900"><?php echo e($order->getCustomerName()); ?></div>
+                                                <div class="text-sm text-gray-500"><?php echo e($order->getCustomerEmail()); ?></div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ $order->currency ?? 'AED' }} {{ number_format($order->total_amount, 2) }}</div>
+                                        <div class="text-sm font-medium text-gray-900"><?php echo e($order->currency ?? 'AED'); ?> <?php echo e(number_format($order->total_amount, 2)); ?></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center space-x-2">
-                                            @php
+                                            <?php
                                                 $statusBadgeClass = match($order->status) {
                                                     'pending' => 'bg-yellow-100 text-yellow-800',
                                                     'awaiting_quotations' => 'bg-orange-100 text-orange-800',
@@ -92,14 +90,15 @@
                                                     'completed' => 'Completed',
                                                     'cancelled' => 'Cancelled'
                                                 ];
-                                            @endphp
-                                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {{ $statusBadgeClass }}">
+                                            ?>
+                                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium <?php echo e($statusBadgeClass); ?>">
                                                 <svg class="mr-1 h-3 w-3" fill="currentColor" viewBox="0 0 8 8">
                                                     <circle cx="4" cy="4" r="3" />
                                                 </svg>
-                                                {{ $statusLabels[$order->status] ?? ucfirst(str_replace('_', ' ', $order->status)) }}
+                                                <?php echo e($statusLabels[$order->status] ?? ucfirst(str_replace('_', ' ', $order->status))); ?>
+
                                             </span>
-                                            <button onclick="openStatusModal('{{ $order->id }}', '{{ $order->order_number }}', '{{ $order->status }}')" 
+                                            <button onclick="openStatusModal('<?php echo e($order->id); ?>', '<?php echo e($order->order_number); ?>', '<?php echo e($order->status); ?>')" 
                                                     class="text-gray-600 hover:text-gray-900" title="Update Status">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -108,26 +107,26 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-900">{{ formatDubaiDate($order->created_at, 'M d, Y') }}</div>
-                                        <div class="text-sm text-gray-500">{{ formatDubaiDate($order->created_at, 'H:i') }} Dubai</div>
+                                        <div class="text-sm text-gray-900"><?php echo e(formatDubaiDate($order->created_at, 'M d, Y')); ?></div>
+                                        <div class="text-sm text-gray-500"><?php echo e(formatDubaiDate($order->created_at, 'H:i')); ?> Dubai</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="flex items-center justify-end space-x-2">
-                                            <a href="{{ route('admin.orders.show', $order) }}" class="text-indigo-600 hover:text-indigo-900" title="View Order Details">
+                                            <a href="<?php echo e(route('admin.orders.show', $order)); ?>" class="text-indigo-600 hover:text-indigo-900" title="View Order Details">
                                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 </svg>
                                             </a>
-                                            <button onclick="generateAdminTrackingLink('{{ $order->id }}', '{{ $order->order_number }}', '{{ $order->getCustomerName() }}', '{{ $order->getCustomerEmail() }}')" 
+                                            <button onclick="generateAdminTrackingLink('<?php echo e($order->id); ?>', '<?php echo e($order->order_number); ?>', '<?php echo e($order->getCustomerName()); ?>', '<?php echo e($order->getCustomerEmail()); ?>')" 
                                                     class="text-green-600 hover:text-green-900" title="Generate Customer Tracking Link">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
                                                 </svg>
                                             </button>
-                                            <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this order? This action cannot be undone.')">
-                                                @csrf
-                                                @method('DELETE')
+                                            <form action="<?php echo e(route('admin.orders.destroy', $order)); ?>" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this order? This action cannot be undone.')">
+                                                <?php echo csrf_field(); ?>
+                                                <?php echo method_field('DELETE'); ?>
                                                 <button type="submit" class="text-red-600 hover:text-red-900" title="Delete Order">
                                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
@@ -137,54 +136,55 @@
                                         </div>
                                     </td>
                                 </tr>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </tbody>
                     </table>
                 </div>
 
                 <!-- Pagination -->
-                @if($orders->hasPages())
+                <?php if($orders->hasPages()): ?>
                     <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
                         <div class="flex-1 flex justify-between sm:hidden">
-                            @if($orders->onFirstPage())
+                            <?php if($orders->onFirstPage()): ?>
                                 <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-500 bg-white cursor-default">
                                     Previous
                                 </span>
-                            @else
-                                <a href="{{ $orders->previousPageUrl() }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            <?php else: ?>
+                                <a href="<?php echo e($orders->previousPageUrl()); ?>" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                                     Previous
                                 </a>
-                            @endif
+                            <?php endif; ?>
 
-                            @if($orders->hasMorePages())
-                                <a href="{{ $orders->nextPageUrl() }}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            <?php if($orders->hasMorePages()): ?>
+                                <a href="<?php echo e($orders->nextPageUrl()); ?>" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                                     Next
                                 </a>
-                            @else
+                            <?php else: ?>
                                 <span class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-500 bg-white cursor-default">
                                     Next
                                 </span>
-                            @endif
+                            <?php endif; ?>
                         </div>
                         <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                             <div>
                                 <p class="text-sm text-gray-700">
                                     Showing
-                                    <span class="font-medium">{{ $orders->firstItem() }}</span>
+                                    <span class="font-medium"><?php echo e($orders->firstItem()); ?></span>
                                     to
-                                    <span class="font-medium">{{ $orders->lastItem() }}</span>
+                                    <span class="font-medium"><?php echo e($orders->lastItem()); ?></span>
                                     of
-                                    <span class="font-medium">{{ $orders->total() }}</span>
+                                    <span class="font-medium"><?php echo e($orders->total()); ?></span>
                                     orders
                                 </p>
                             </div>
                             <div>
-                                {{ $orders->links() }}
+                                <?php echo e($orders->links()); ?>
+
                             </div>
                         </div>
                     </div>
-                @endif
-            @else
+                <?php endif; ?>
+            <?php else: ?>
                 <div class="text-center py-12">
                     <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
@@ -192,7 +192,7 @@
                     <h3 class="mt-2 text-sm font-semibold text-gray-900">No orders found</h3>
                     <p class="mt-1 text-sm text-gray-500">Get started by creating your first order.</p>
                     <div class="mt-6">
-                        <a href="{{ route('admin.orders.create') }}" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                        <a href="<?php echo e(route('admin.orders.create')); ?>" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
                             <svg class="-ml-0.5 mr-1.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                             </svg>
@@ -200,7 +200,7 @@
                         </a>
                     </div>
                 </div>
-            @endif
+            <?php endif; ?>
         </div>
     </div>
 </div>
@@ -448,4 +448,5 @@ document.addEventListener('click', function(e) {
 });
 </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Walid\OneDrive\Desktop\MaxMed\resources\views/admin/orders/index.blade.php ENDPATH**/ ?>

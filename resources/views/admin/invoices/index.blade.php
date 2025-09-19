@@ -433,6 +433,14 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                             </svg>
                                         </a>
+                                        @if($invoice->payment_status !== 'paid')
+                                            <button onclick="openInvoicePaymentModal('{{ $invoice->id }}', '{{ $invoice->invoice_number }}', '{{ $invoice->customer_name }}', '{{ number_format($invoice->total_amount - $invoice->paid_amount, 2) }}', '{{ $invoice->currency }}')" 
+                                                    class="text-purple-600 hover:text-purple-900" title="Record Payment">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                                </svg>
+                                            </button>
+                                        @endif
                                         @if($invoice->type === 'proforma' && $invoice->canConvertToFinalInvoice() && !$hasChildInvoice)
                                             <form action="{{ route('admin.invoices.convert-to-final', $invoice) }}" method="POST" class="inline" onsubmit="return confirm('Convert this proforma invoice to final invoice?');">
                                                 @csrf
@@ -1403,6 +1411,136 @@ function updateInvoiceResultsCount(visible, total) {
                 }
             }, 300);
         }, 5000);
+    }
+});
+
+// Invoice Payment Modal functionality
+function openInvoicePaymentModal(invoiceId, invoiceNumber, customerName, remainingAmount, currency) {
+    console.log('Opening payment modal for invoice:', invoiceId, invoiceNumber);
+    
+    const modalHTML = `
+        <div id="invoicePaymentModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div class="relative top-10 mx-auto p-6 border w-full max-w-lg shadow-lg rounded-lg bg-white">
+                <div class="mt-3">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-900">Record Payment</h3>
+                            <p class="text-sm text-gray-600 mt-1">Invoice #${invoiceNumber} - ${customerName}</p>
+                        </div>
+                        <button onclick="closeInvoicePaymentModal()" class="text-gray-400 hover:text-gray-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Payment Summary -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                        <div class="text-center">
+                            <div class="text-sm text-gray-500">Remaining Amount</div>
+                            <div class="text-2xl font-bold text-red-600">${currency} ${remainingAmount}</div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Form -->
+                    <form action="/admin/invoices/${invoiceId}/record-payment" method="POST" enctype="multipart/form-data" class="space-y-4">
+                        <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
+                        
+                        <!-- Payment Amount -->
+                        <div>
+                            <label for="payment_amount" class="block text-sm font-medium text-gray-700 mb-2">Payment Amount *</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">${currency}</span>
+                                </div>
+                                <input type="number" id="payment_amount" name="amount" step="0.01" min="0.01" 
+                                       max="${remainingAmount}" value="${remainingAmount}" required
+                                       class="pl-12 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                        </div>
+
+                        <!-- Payment Method -->
+                        <div>
+                            <label for="payment_method" class="block text-sm font-medium text-gray-700 mb-2">Payment Method *</label>
+                            <select id="payment_method" name="payment_method" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="">Select Payment Method</option>
+                                <option value="bank_transfer">Bank Transfer</option>
+                                <option value="credit_card">Credit Card</option>
+                                <option value="check">Check</option>
+                                <option value="cash">Cash</option>
+                                <option value="online">Online Payment</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Payment Date -->
+                        <div>
+                            <label for="payment_date" class="block text-sm font-medium text-gray-700 mb-2">Payment Date *</label>
+                            <input type="date" id="payment_date" name="payment_date" value="${new Date().toISOString().split('T')[0]}" required
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+
+                        <!-- Transaction Reference -->
+                        <div>
+                            <label for="transaction_reference" class="block text-sm font-medium text-gray-700 mb-2">Transaction Reference</label>
+                            <input type="text" id="transaction_reference" name="transaction_reference" 
+                                   placeholder="e.g., Check #1234, Transfer ID, etc."
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+
+                        <!-- Payment Notes -->
+                        <div>
+                            <label for="payment_notes" class="block text-sm font-medium text-gray-700 mb-2">Payment Notes</label>
+                            <textarea id="payment_notes" name="payment_notes" rows="2" 
+                                      placeholder="Additional notes about this payment..."
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                        </div>
+
+                        <!-- Attachments -->
+                        <div>
+                            <label for="payment_attachments" class="block text-sm font-medium text-gray-700 mb-2">Attachments</label>
+                            <input type="file" id="payment_attachments" name="attachments[]" multiple 
+                                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.webp,.xls,.xlsx"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            <p class="text-xs text-gray-500 mt-1">Max 10MB per file. Supported: PDF, DOC, DOCX, JPG, PNG, XLS, XLSX</p>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex items-center justify-end space-x-3 mt-6 pt-4 border-t border-gray-200">
+                            <button type="button" onclick="closeInvoicePaymentModal()" 
+                                    class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                                Cancel
+                            </button>
+                            <button type="submit" 
+                                    class="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-green-600 hover:bg-green-700">
+                                <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                Record Payment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+function closeInvoicePaymentModal() {
+    const modal = document.getElementById('invoicePaymentModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+    if (e.target.id === 'invoicePaymentModal') {
+        closeInvoicePaymentModal();
     }
 });
 </script>

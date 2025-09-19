@@ -333,8 +333,16 @@ class PurchaseOrderController extends Controller
     {
         // Check if purchase order can be edited
         if (!$purchaseOrder->canBeEdited()) {
+            $errorMessage = 'This purchase order cannot be edited.';
+            
+            if (in_array($purchaseOrder->status, [PurchaseOrder::STATUS_CANCELLED, PurchaseOrder::STATUS_COMPLETED])) {
+                $errorMessage .= ' It is ' . strtolower(PurchaseOrder::$statuses[$purchaseOrder->status]) . '.';
+            } elseif ($purchaseOrder->status !== PurchaseOrder::STATUS_DRAFT) {
+                $errorMessage .= ' Only superadmin users can edit purchase orders that have been sent to suppliers.';
+            }
+            
             return redirect()->route('admin.purchase-orders.show', $purchaseOrder)
-                ->with('error', 'This purchase order cannot be edited as it is ' . strtolower(PurchaseOrder::$statuses[$purchaseOrder->status]) . '.');
+                ->with('error', $errorMessage);
         }
 
         $purchaseOrder->load(['items.product', 'edits.editor']);
@@ -360,8 +368,16 @@ class PurchaseOrderController extends Controller
     {
         // Check if purchase order can be edited
         if (!$purchaseOrder->canBeEdited()) {
+            $errorMessage = 'This purchase order cannot be edited.';
+            
+            if (in_array($purchaseOrder->status, [PurchaseOrder::STATUS_CANCELLED, PurchaseOrder::STATUS_COMPLETED])) {
+                $errorMessage .= ' It is ' . strtolower(PurchaseOrder::$statuses[$purchaseOrder->status]) . '.';
+            } elseif ($purchaseOrder->status !== PurchaseOrder::STATUS_DRAFT) {
+                $errorMessage .= ' Only superadmin users can edit purchase orders that have been sent to suppliers.';
+            }
+            
             return redirect()->route('admin.purchase-orders.show', $purchaseOrder)
-                ->with('error', 'This purchase order cannot be edited as it is ' . strtolower(PurchaseOrder::$statuses[$purchaseOrder->status]) . '.');
+                ->with('error', $errorMessage);
         }
 
         $validationRules = [
@@ -635,6 +651,7 @@ class PurchaseOrderController extends Controller
             'bank_name' => 'nullable|string|max:255',
             'account_number' => 'nullable|string|max:255',
             'transaction_id' => 'nullable|string|max:255',
+            'attachments.*' => 'nullable|file|max:10240|mimes:pdf,doc,docx,jpg,jpeg,png,gif,webp,xls,xlsx',
         ]);
 
         try {
@@ -652,6 +669,22 @@ class PurchaseOrderController extends Controller
                 'status' => SupplierPayment::STATUS_PENDING,
                 'created_by' => Auth::id()
             ]);
+
+            // Handle file uploads
+            if ($request->hasFile('attachments')) {
+                $attachments = [];
+                foreach ($request->file('attachments') as $file) {
+                    $path = $file->store('supplier-payments', 'public');
+                    $attachments[] = [
+                        'path' => $path,
+                        'original_name' => $file->getClientOriginalName(),
+                        'size' => $file->getSize(),
+                        'mime_type' => $file->getMimeType(),
+                        'uploaded_at' => now()->toISOString(),
+                    ];
+                }
+                $payment->update(['attachments' => $attachments]);
+            }
 
             return redirect()->back()->with('success', 'Payment record created successfully.');
 
@@ -681,7 +714,15 @@ class PurchaseOrderController extends Controller
         try {
             // Check if purchase order can be deleted (same logic as editing)
             if (!$purchaseOrder->canBeEdited()) {
-                return redirect()->back()->with('error', 'This purchase order cannot be deleted as it is ' . strtolower(PurchaseOrder::$statuses[$purchaseOrder->status]) . '.');
+                $errorMessage = 'This purchase order cannot be deleted.';
+                
+                if (in_array($purchaseOrder->status, [PurchaseOrder::STATUS_CANCELLED, PurchaseOrder::STATUS_COMPLETED])) {
+                    $errorMessage .= ' It is ' . strtolower(PurchaseOrder::$statuses[$purchaseOrder->status]) . '.';
+                } elseif ($purchaseOrder->status !== PurchaseOrder::STATUS_DRAFT) {
+                    $errorMessage .= ' Only superadmin users can delete purchase orders that have been sent to suppliers.';
+                }
+                
+                return redirect()->back()->with('error', $errorMessage);
             }
 
             $poNumber = $purchaseOrder->po_number;

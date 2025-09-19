@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <style>
     @keyframes pulse-feedback {
         0% {
@@ -27,15 +25,15 @@
             <div>
                 <h1 class="text-3xl font-bold text-gray-900">My Orders</h1>
                 <p class="mt-1 text-sm text-gray-600">
-                    @if($orders->isEmpty())
+                    <?php if($orders->isEmpty()): ?>
                         You haven't placed any orders yet.
-                    @else
-                        Showing {{ $orders->firstItem() ?? 0 }} - {{ $orders->lastItem() ?? 0 }} of {{ $orders->total() }} orders
-                    @endif
+                    <?php else: ?>
+                        Showing <?php echo e($orders->firstItem() ?? 0); ?> - <?php echo e($orders->lastItem() ?? 0); ?> of <?php echo e($orders->total()); ?> orders
+                    <?php endif; ?>
                 </p>
             </div>
             <div class="mt-4 md:mt-0">
-                <a href="{{ route('products.index') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                <a href="<?php echo e(route('products.index')); ?>" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
@@ -45,7 +43,7 @@
         </div>
 
         <!-- Success Message -->
-        @if(session('success'))
+        <?php if(session('success')): ?>
             <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-6 mx-4 sm:mx-0 rounded shadow-sm" role="alert">
                 <div class="flex">
                     <div class="flex-shrink-0">
@@ -54,13 +52,13 @@
                         </svg>
                     </div>
                     <div class="ml-3">
-                        <p class="text-sm text-green-700">{{ session('success') }}</p>
+                        <p class="text-sm text-green-700"><?php echo e(session('success')); ?></p>
                     </div>
                 </div>
             </div>
-        @endif
+        <?php endif; ?>
 
-        @if($orders->isEmpty())
+        <?php if($orders->isEmpty()): ?>
             <!-- Empty State -->
             <div class="bg-white shadow sm:rounded-lg">
                 <div class="py-16 px-4 sm:px-6 lg:px-8 text-center">
@@ -70,48 +68,49 @@
                     <h3 class="mt-2 text-lg font-medium text-gray-900">No orders yet</h3>
                     <p class="mt-1 text-sm text-gray-500">Start shopping to see your orders here.</p>
                     <div class="mt-6">
-                        <a href="{{ route('products.index') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <a href="<?php echo e(route('products.index')); ?>" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Browse Products
                         </a>
                     </div>
                 </div>
             </div>
-        @else
+        <?php else: ?>
             <!-- Orders List -->
             <div class="space-y-4">
-                @foreach($orders as $order)
+                <?php $__currentLoopData = $orders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $order): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="bg-white shadow overflow-hidden sm:rounded-lg hover:shadow-md transition-shadow duration-300">
                         <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
                             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
                                 <div>
                                     <h3 class="text-lg font-bold text-gray-900">
-                                        Order #{{ $order->order_number }}
+                                        Order #<?php echo e($order->order_number); ?>
+
                                     </h3>
                                     <div class="mt-1 flex items-center">
                                         <svg class="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
-                                        <p class="text-sm text-gray-500">Placed on {{ formatDubaiDate($order->created_at, 'M d, Y') }} (Dubai Time)</p>
+                                        <p class="text-sm text-gray-500">Placed on <?php echo e(formatDubaiDate($order->created_at, 'M d, Y')); ?> (Dubai Time)</p>
                                     </div>
                                 </div>
                                 <div class="mt-3 sm:mt-0 flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
                                     <span class="inline-flex px-3 py-1 rounded-full text-sm font-medium
-                                        @if($order->status === 'pending') bg-yellow-100 text-yellow-800
-                                        @elseif($order->status === 'awaiting_quotations') bg-orange-100 text-orange-800
-                                        @elseif($order->status === 'quotations_received') bg-blue-100 text-blue-800
-                                        @elseif($order->status === 'approved') bg-indigo-100 text-indigo-800
-                                        @elseif($order->status === 'processing') bg-purple-100 text-purple-800
-                                        @elseif($order->status === 'shipped') bg-cyan-100 text-cyan-800
-                                        @elseif($order->status === 'delivered') bg-green-100 text-green-800
-                                        @elseif($order->status === 'completed') bg-emerald-100 text-emerald-800
-                                        @elseif($order->status === 'cancelled') bg-red-100 text-red-800
-                                        @else bg-gray-100 text-gray-800
-                                        @endif">
-                                        @php
+                                        <?php if($order->status === 'pending'): ?> bg-yellow-100 text-yellow-800
+                                        <?php elseif($order->status === 'awaiting_quotations'): ?> bg-orange-100 text-orange-800
+                                        <?php elseif($order->status === 'quotations_received'): ?> bg-blue-100 text-blue-800
+                                        <?php elseif($order->status === 'approved'): ?> bg-indigo-100 text-indigo-800
+                                        <?php elseif($order->status === 'processing'): ?> bg-purple-100 text-purple-800
+                                        <?php elseif($order->status === 'shipped'): ?> bg-cyan-100 text-cyan-800
+                                        <?php elseif($order->status === 'delivered'): ?> bg-green-100 text-green-800
+                                        <?php elseif($order->status === 'completed'): ?> bg-emerald-100 text-emerald-800
+                                        <?php elseif($order->status === 'cancelled'): ?> bg-red-100 text-red-800
+                                        <?php else: ?> bg-gray-100 text-gray-800
+                                        <?php endif; ?>">
+                                        <?php
                                             $statusLabels = [
-                                                'pending' => 'Order Placed',
-                                                'awaiting_quotations' => 'Order Review',
-                                                'quotations_received' => 'Order Confirmed',
+                                                'pending' => 'Pending',
+                                                'awaiting_quotations' => 'Awaiting Quotations',
+                                                'quotations_received' => 'Quotations Received',
                                                 'approved' => 'Approved',
                                                 'processing' => 'Processing',
                                                 'shipped' => 'Shipped',
@@ -119,10 +118,11 @@
                                                 'completed' => 'Completed',
                                                 'cancelled' => 'Cancelled'
                                             ];
-                                        @endphp
-                                        {{ $statusLabels[$order->status] ?? ucfirst(str_replace('_', ' ', $order->status)) }}
+                                        ?>
+                                        <?php echo e($statusLabels[$order->status] ?? ucfirst(str_replace('_', ' ', $order->status))); ?>
+
                                     </span>
-                                    <button onclick="generateTrackingLink('{{ $order->id }}', '{{ $order->order_number }}')" 
+                                    <button onclick="generateTrackingLink('<?php echo e($order->id); ?>', '<?php echo e($order->order_number); ?>')" 
                                             class="inline-flex items-center px-2 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                         <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
@@ -141,19 +141,19 @@
                                     <span class="text-gray-600 text-sm">Total Amount</span>
                                 </div>
                                 <div>
-                                    <p class="text-xl font-bold text-gray-900">{{ $order->currency ?? 'AED' }}{{ number_format($order->total_amount, 2) }}</p>
+                                    <p class="text-xl font-bold text-gray-900"><?php echo e($order->currency ?? 'AED'); ?><?php echo e(number_format($order->total_amount, 2)); ?></p>
                                 </div>
                             </div>
                         </div>
                         <div class="px-4 py-4 sm:px-6 flex justify-end space-x-3">
-                            <a href="{{ route('orders.show', $order) }}" 
+                            <a href="<?php echo e(route('orders.show', $order)); ?>" 
                                class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                 View Details
                                 <svg class="ml-2 -mr-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                                 </svg>
                             </a>
-                            <button onclick="openFeedbackModal('{{ $order->id }}', '{{ $order->order_number }}')" 
+                            <button onclick="openFeedbackModal('<?php echo e($order->id); ?>', '<?php echo e($order->order_number); ?>')" 
                                     class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-black bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 animate-pulse-feedback">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
@@ -162,7 +162,7 @@
                             </button>
                         </div>
                     </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
 
             <!-- Feedback Modal -->
@@ -179,8 +179,8 @@
                                 </button>
                             </div>
                         </div>
-                        <form action="{{ route('feedback.store') }}" method="POST" class="px-6 py-4">
-                            @csrf
+                        <form action="<?php echo e(route('feedback.store')); ?>" method="POST" class="px-6 py-4">
+                            <?php echo csrf_field(); ?>
                             <input type="hidden" name="order_id" id="orderId">
                             <div class="space-y-4">
                                 <div>
@@ -327,8 +327,9 @@
                     }
                 });
             </script>
-        @endif
+        <?php endif; ?>
     </div>
 </div>
-{{-- Footer is included in app.blade.php --}}
-@endsection
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Walid\OneDrive\Desktop\MaxMed\resources\views/orders/index.blade.php ENDPATH**/ ?>

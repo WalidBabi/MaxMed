@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\View\View;
 
@@ -592,7 +593,8 @@ class InvoiceController extends Controller
             'payment_method' => 'required|in:' . implode(',', array_keys(Payment::PAYMENT_METHODS)),
             'payment_date' => 'required|date',
             'transaction_reference' => 'nullable|string|max:255',
-            'payment_notes' => 'nullable|string'
+            'payment_notes' => 'nullable|string',
+            'attachments.*' => 'nullable|file|max:10240|mimes:pdf,doc,docx,jpg,jpeg,png,gif,webp,xls,xlsx',
         ]);
 
         // Ensure the payment amount doesn't exceed the remaining balance
@@ -629,6 +631,22 @@ class InvoiceController extends Controller
                 'processed_by' => Auth::id(),
                 'processed_at' => now()
             ]);
+
+            // Handle file uploads
+            if ($request->hasFile('attachments')) {
+                $attachments = [];
+                foreach ($request->file('attachments') as $file) {
+                    $path = $file->store('invoice-payments', 'public');
+                    $attachments[] = [
+                        'path' => $path,
+                        'original_name' => $file->getClientOriginalName(),
+                        'size' => $file->getSize(),
+                        'mime_type' => $file->getMimeType(),
+                        'uploaded_at' => now()->toISOString(),
+                    ];
+                }
+                $payment->update(['attachments' => $attachments]);
+            }
 
             Log::info("Payment {$payment->id} created successfully for invoice {$invoice->id}");
             

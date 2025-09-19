@@ -277,6 +277,9 @@ foreach ($categoryCombinations as $oldPath => $newPath) {
     });
 }
 
+// Guest Order Tracking Routes (no authentication required)
+Route::get('/track-order/{order}', [\App\Http\Controllers\OrderTrackingController::class, 'track'])->name('orders.track');
+
 // Authenticated Routes
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');

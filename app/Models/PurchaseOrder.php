@@ -232,8 +232,22 @@ class PurchaseOrder extends Model
      */
     public function canBeEdited(): bool
     {
-        // Allow editing for all statuses except cancelled and completed
-        return !in_array($this->status, [self::STATUS_CANCELLED, self::STATUS_COMPLETED]);
+        // Cannot edit if cancelled or completed
+        if (in_array($this->status, [self::STATUS_CANCELLED, self::STATUS_COMPLETED])) {
+            return false;
+        }
+        
+        // If not sent to supplier yet (draft status), anyone with edit permission can edit
+        if ($this->status === self::STATUS_DRAFT) {
+            return true;
+        }
+        
+        // If sent to supplier, only superadmin can edit
+        if ($this->status !== self::STATUS_DRAFT) {
+            return auth()->check() && auth()->user()->hasRole('super_admin');
+        }
+        
+        return true;
     }
 
     /**

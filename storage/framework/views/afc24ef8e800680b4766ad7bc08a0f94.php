@@ -1,51 +1,49 @@
-@extends('admin.layouts.app')
-
-@php
+<?php
     use Illuminate\Support\Facades\Storage;
-@endphp
+?>
 
-@section('title', 'Purchase Order #' . $purchaseOrder->po_number)
+<?php $__env->startSection('title', 'Purchase Order #' . $purchaseOrder->po_number); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="max-w-6xl mx-auto">
     <!-- Header -->
     <div class="mb-8">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-3xl font-bold text-gray-900">Purchase Order #{{ $purchaseOrder->po_number }}</h1>
-                <p class="text-gray-600 mt-2">Created {{ formatDubaiDate($purchaseOrder->created_at, 'M d, Y \a\t H:i') }}</p>
+                <h1 class="text-3xl font-bold text-gray-900">Purchase Order #<?php echo e($purchaseOrder->po_number); ?></h1>
+                <p class="text-gray-600 mt-2">Created <?php echo e(formatDubaiDate($purchaseOrder->created_at, 'M d, Y \a\t H:i')); ?></p>
             </div>
             <div class="flex items-center space-x-3">
-                @if($purchaseOrder->canBeEdited())
-                    <a href="{{ route('admin.purchase-orders.edit', $purchaseOrder) }}" 
+                <?php if($purchaseOrder->canBeEdited()): ?>
+                    <a href="<?php echo e(route('admin.purchase-orders.edit', $purchaseOrder)); ?>" 
                        class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                         </svg>
                         Edit
-                        @if($purchaseOrder->status !== 'draft')
+                        <?php if($purchaseOrder->status !== 'draft'): ?>
                             <span class="ml-1 text-xs text-yellow-200">(Sent)</span>
-                        @endif
+                        <?php endif; ?>
                     </a>
-                @endif
+                <?php endif; ?>
 
-                @if($purchaseOrder->canBeEdited())
-                    <form action="{{ route('admin.purchase-orders.destroy', $purchaseOrder) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this purchase order?{{ $purchaseOrder->status !== 'draft' ? ' Note: This purchase order has already been sent to the supplier.' : '' }} This action cannot be undone.')">
-                        @csrf
-                        @method('DELETE')
+                <?php if($purchaseOrder->canBeEdited()): ?>
+                    <form action="<?php echo e(route('admin.purchase-orders.destroy', $purchaseOrder)); ?>" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this purchase order?<?php echo e($purchaseOrder->status !== 'draft' ? ' Note: This purchase order has already been sent to the supplier.' : ''); ?> This action cannot be undone.')">
+                        <?php echo csrf_field(); ?>
+                        <?php echo method_field('DELETE'); ?>
                         <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                             </svg>
                             Delete
-                            @if($purchaseOrder->status !== 'draft')
+                            <?php if($purchaseOrder->status !== 'draft'): ?>
                                 <span class="ml-1 text-xs text-yellow-200">(Sent)</span>
-                            @endif
+                            <?php endif; ?>
                         </button>
                     </form>
-                @endif
+                <?php endif; ?>
                 
-                <a href="{{ route('admin.purchase-orders.pdf', $purchaseOrder) }}" 
+                <a href="<?php echo e(route('admin.purchase-orders.pdf', $purchaseOrder)); ?>" 
                    class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -53,7 +51,7 @@
                     Download PDF
                 </a>
                 
-                <a href="{{ route('admin.purchase-orders.index') }}" 
+                <a href="<?php echo e(route('admin.purchase-orders.index')); ?>" 
                    class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
@@ -70,44 +68,46 @@
             <div class="flex items-center space-x-4">
                 <div>
                     <span class="text-sm font-medium text-gray-500">Status:</span>
-                    <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $purchaseOrder->status_badge_class }}">
-                        {{ \App\Models\PurchaseOrder::$statuses[$purchaseOrder->status] ?? ucfirst($purchaseOrder->status) }}
+                    <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo e($purchaseOrder->status_badge_class); ?>">
+                        <?php echo e(\App\Models\PurchaseOrder::$statuses[$purchaseOrder->status] ?? ucfirst($purchaseOrder->status)); ?>
+
                     </span>
                 </div>
                 <div>
                     <span class="text-sm font-medium text-gray-500">Payment:</span>
-                    <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $purchaseOrder->payment_status_badge_class }}">
-                        {{ \App\Models\PurchaseOrder::$paymentStatuses[$purchaseOrder->payment_status] ?? ucfirst($purchaseOrder->payment_status) }}
+                    <span class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo e($purchaseOrder->payment_status_badge_class); ?>">
+                        <?php echo e(\App\Models\PurchaseOrder::$paymentStatuses[$purchaseOrder->payment_status] ?? ucfirst($purchaseOrder->payment_status)); ?>
+
                     </span>
                 </div>
                 <div>
                     <span class="text-sm font-medium text-gray-500">Total:</span>
-                    <span class="ml-2 text-lg font-bold text-gray-900">{{ $purchaseOrder->currency }} {{ $purchaseOrder->formatted_total }}</span>
+                    <span class="ml-2 text-lg font-bold text-gray-900"><?php echo e($purchaseOrder->currency); ?> <?php echo e($purchaseOrder->formatted_total); ?></span>
                 </div>
             </div>
             
             <div class="flex items-center space-x-2">
-                @if($purchaseOrder->status === 'draft')
+                <?php if($purchaseOrder->status === 'draft'): ?>
                     <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 send-email-btn"
-                            data-po-id="{{ $purchaseOrder->id }}"
-                            data-supplier-name="{{ $purchaseOrder->supplier_name }}"
-                            data-po-number="{{ $purchaseOrder->po_number }}"
-                            data-supplier-email="{{ $purchaseOrder->supplier_email ?? '' }}">
+                            data-po-id="<?php echo e($purchaseOrder->id); ?>"
+                            data-supplier-name="<?php echo e($purchaseOrder->supplier_name); ?>"
+                            data-po-number="<?php echo e($purchaseOrder->po_number); ?>"
+                            data-supplier-email="<?php echo e($purchaseOrder->supplier_email ?? ''); ?>">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                         </svg>
                         Send Email to Supplier
                     </button>
-                @endif
+                <?php endif; ?>
                 
-                @if($purchaseOrder->payment_status === 'pending' || $purchaseOrder->payment_status === 'partial')
+                <?php if($purchaseOrder->payment_status === 'pending' || $purchaseOrder->payment_status === 'partial'): ?>
                     <button onclick="openPaymentModal()" class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
                         Record Payment
                     </button>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -124,65 +124,67 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-500">PO Number</label>
-                            <p class="text-lg font-semibold text-gray-900">{{ $purchaseOrder->po_number }}</p>
+                            <p class="text-lg font-semibold text-gray-900"><?php echo e($purchaseOrder->po_number); ?></p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">PO Date</label>
-                            <p class="text-lg font-semibold text-gray-900">{{ formatDubaiDate($purchaseOrder->po_date, 'M d, Y') }}</p>
+                            <p class="text-lg font-semibold text-gray-900"><?php echo e(formatDubaiDate($purchaseOrder->po_date, 'M d, Y')); ?></p>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Source</label>
-                            @if($purchaseOrder->hasCustomerOrder())
+                            <?php if($purchaseOrder->hasCustomerOrder()): ?>
                                 <div>
                                     <span class="text-sm text-gray-500">Customer Order</span>
-                                    <a href="{{ route('admin.orders.show', $purchaseOrder->order) }}" class="block text-lg font-semibold text-indigo-600 hover:text-indigo-700">
-                                        {{ $purchaseOrder->order->order_number }}
+                                    <a href="<?php echo e(route('admin.orders.show', $purchaseOrder->order)); ?>" class="block text-lg font-semibold text-indigo-600 hover:text-indigo-700">
+                                        <?php echo e($purchaseOrder->order->order_number); ?>
+
                                     </a>
-                                    <p class="text-sm text-gray-500">{{ $purchaseOrder->order->getCustomerName() }}</p>
+                                    <p class="text-sm text-gray-500"><?php echo e($purchaseOrder->order->getCustomerName()); ?></p>
                                 </div>
-                            @elseif($purchaseOrder->isFromSupplierInquiry())
+                            <?php elseif($purchaseOrder->isFromSupplierInquiry()): ?>
                                 <div>
                                     <span class="text-sm text-gray-500">Supplier Inquiry</span>
-                                    <p class="text-lg font-semibold text-gray-900">Inquiry #{{ $purchaseOrder->supplier_quotation_id }}</p>
-                                    @if($purchaseOrder->supplierQuotation)
-                                        <p class="text-sm text-gray-500">{{ $purchaseOrder->supplierQuotation->product->name }}</p>
-                                    @endif
+                                    <p class="text-lg font-semibold text-gray-900">Inquiry #<?php echo e($purchaseOrder->supplier_quotation_id); ?></p>
+                                    <?php if($purchaseOrder->supplierQuotation): ?>
+                                        <p class="text-sm text-gray-500"><?php echo e($purchaseOrder->supplierQuotation->product->name); ?></p>
+                                    <?php endif; ?>
                                 </div>
-                            @else
+                            <?php else: ?>
                                 <div>
                                     <span class="text-sm text-gray-500">Internal Purchase</span>
                                     <p class="text-lg font-semibold text-gray-900">Direct Purchase</p>
                                 </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Requested Delivery</label>
                             <p class="text-lg font-semibold text-gray-900">
-                                {{ $purchaseOrder->delivery_date_requested ? $purchaseOrder->delivery_date_requested->format('M d, Y') : 'Not specified' }}
+                                <?php echo e($purchaseOrder->delivery_date_requested ? $purchaseOrder->delivery_date_requested->format('M d, Y') : 'Not specified'); ?>
+
                             </p>
                         </div>
                     </div>
 
-                    @if($purchaseOrder->description)
+                    <?php if($purchaseOrder->description): ?>
                         <div class="mt-6">
                             <label class="block text-sm font-medium text-gray-500">Description</label>
-                            <p class="text-gray-900">{{ $purchaseOrder->description }}</p>
+                            <p class="text-gray-900"><?php echo e($purchaseOrder->description); ?></p>
                         </div>
-                    @endif
+                    <?php endif; ?>
 
-                    @if($purchaseOrder->terms_conditions)
+                    <?php if($purchaseOrder->terms_conditions): ?>
                         <div class="mt-6">
                             <label class="block text-sm font-medium text-gray-500">Terms & Conditions</label>
-                            <p class="text-gray-900">{{ $purchaseOrder->terms_conditions }}</p>
+                            <p class="text-gray-900"><?php echo e($purchaseOrder->terms_conditions); ?></p>
                         </div>
-                    @endif
+                    <?php endif; ?>
 
-                    @if($purchaseOrder->notes)
+                    <?php if($purchaseOrder->notes): ?>
                         <div class="mt-6">
                             <label class="block text-sm font-medium text-gray-500">Internal Notes</label>
-                            <p class="text-gray-900">{{ $purchaseOrder->notes }}</p>
+                            <p class="text-gray-900"><?php echo e($purchaseOrder->notes); ?></p>
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -195,112 +197,113 @@
                     <div class="space-y-3">
                         <div class="flex justify-between">
                             <span class="text-gray-600">Subtotal:</span>
-                            <span class="text-gray-900">{{ $purchaseOrder->currency }} {{ $purchaseOrder->formatted_sub_total }}</span>
+                            <span class="text-gray-900"><?php echo e($purchaseOrder->currency); ?> <?php echo e($purchaseOrder->formatted_sub_total); ?></span>
                         </div>
-                        @if($purchaseOrder->tax_amount > 0)
+                        <?php if($purchaseOrder->tax_amount > 0): ?>
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Tax:</span>
-                                <span class="text-gray-900">{{ $purchaseOrder->currency }} {{ $purchaseOrder->formatted_tax_amount }}</span>
+                                <span class="text-gray-900"><?php echo e($purchaseOrder->currency); ?> <?php echo e($purchaseOrder->formatted_tax_amount); ?></span>
                             </div>
-                        @endif
-                        @if($purchaseOrder->shipping_cost > 0)
+                        <?php endif; ?>
+                        <?php if($purchaseOrder->shipping_cost > 0): ?>
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Shipping:</span>
-                                <span class="text-gray-900">{{ $purchaseOrder->currency }} {{ $purchaseOrder->formatted_shipping_cost }}</span>
+                                <span class="text-gray-900"><?php echo e($purchaseOrder->currency); ?> <?php echo e($purchaseOrder->formatted_shipping_cost); ?></span>
                             </div>
-                        @endif
+                        <?php endif; ?>
                         <div class="border-t border-gray-200 pt-3">
                             <div class="flex justify-between text-lg font-semibold">
                                 <span class="text-gray-900">Total:</span>
-                                <span class="text-gray-900">{{ $purchaseOrder->currency }} {{ $purchaseOrder->formatted_total }}</span>
+                                <span class="text-gray-900"><?php echo e($purchaseOrder->currency); ?> <?php echo e($purchaseOrder->formatted_total); ?></span>
                             </div>
                         </div>
-                        @if($purchaseOrder->paid_amount > 0)
+                        <?php if($purchaseOrder->paid_amount > 0): ?>
                             <div class="flex justify-between text-green-600">
                                 <span>Paid:</span>
-                                <span>{{ $purchaseOrder->currency }} {{ $purchaseOrder->formatted_paid_amount }}</span>
+                                <span><?php echo e($purchaseOrder->currency); ?> <?php echo e($purchaseOrder->formatted_paid_amount); ?></span>
                             </div>
                             <div class="flex justify-between text-red-600">
                                 <span>Outstanding:</span>
-                                <span>{{ $purchaseOrder->currency }} {{ number_format($purchaseOrder->total_amount - $purchaseOrder->paid_amount, 2) }}</span>
+                                <span><?php echo e($purchaseOrder->currency); ?> <?php echo e(number_format($purchaseOrder->total_amount - $purchaseOrder->paid_amount, 2)); ?></span>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
 
             <!-- Attachments -->
-            @php
+            <?php
                 $attachments = is_array($purchaseOrder->attachments) ? $purchaseOrder->attachments : [];
                 $attachmentCount = count($attachments);
-            @endphp
-            @if($attachmentCount > 0)
+            ?>
+            <?php if($attachmentCount > 0): ?>
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <h3 class="text-lg font-semibold text-gray-900">Attached Files</h3>
-                        <p class="text-sm text-gray-600 mt-1">{{ $attachmentCount }} file{{ $attachmentCount > 1 ? 's' : '' }} attached to this purchase order</p>
+                        <p class="text-sm text-gray-600 mt-1"><?php echo e($attachmentCount); ?> file<?php echo e($attachmentCount > 1 ? 's' : ''); ?> attached to this purchase order</p>
                     </div>
                     <div class="p-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            @foreach($attachments as $attachment)
+                            <?php $__currentLoopData = $attachments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attachment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors duration-200">
                                     <div class="flex items-start space-x-3">
                                         <div class="flex-shrink-0">
                                             <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                                                @php
+                                                <?php
                                                     $filename = $attachment['filename'] ?? 'attachment';
                                                     $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-                                                @endphp
+                                                ?>
                                                 
-                                                @switch($extension)
-                                                    @case('pdf')
+                                                <?php switch($extension):
+                                                    case ('pdf'): ?>
                                                         <svg class="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
                                                             <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
                                                         </svg>
-                                                        @break
-                                                    @case('doc')
-                                                    @case('docx')
+                                                        <?php break; ?>
+                                                    <?php case ('doc'): ?>
+                                                    <?php case ('docx'): ?>
                                                         <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
                                                             <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
                                                         </svg>
-                                                        @break
-                                                    @case('xls')
-                                                    @case('xlsx')
+                                                        <?php break; ?>
+                                                    <?php case ('xls'): ?>
+                                                    <?php case ('xlsx'): ?>
                                                         <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                                                             <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
                                                         </svg>
-                                                        @break
-                                                    @case('jpg')
-                                                    @case('jpeg')
-                                                    @case('png')
-                                                    @case('gif')
+                                                        <?php break; ?>
+                                                    <?php case ('jpg'): ?>
+                                                    <?php case ('jpeg'): ?>
+                                                    <?php case ('png'): ?>
+                                                    <?php case ('gif'): ?>
                                                         <svg class="w-6 h-6 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
                                                             <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
                                                         </svg>
-                                                        @break
-                                                    @default
+                                                        <?php break; ?>
+                                                    <?php default: ?>
                                                         <svg class="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                                                             <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
                                                         </svg>
-                                                @endswitch
+                                                <?php endswitch; ?>
                                             </div>
                                         </div>
                                         <div class="flex-1 min-w-0">
-                                            <h4 class="text-sm font-medium text-gray-900 truncate" title="{{ $attachment['filename'] ?? 'Attachment' }}">
-                                                {{ $attachment['filename'] ?? 'Attachment' }}
+                                            <h4 class="text-sm font-medium text-gray-900 truncate" title="<?php echo e($attachment['filename'] ?? 'Attachment'); ?>">
+                                                <?php echo e($attachment['filename'] ?? 'Attachment'); ?>
+
                                             </h4>
                                             <div class="mt-1 flex items-center space-x-2 text-xs text-gray-500">
-                                                @if(isset($attachment['size']))
-                                                    <span>{{ number_format($attachment['size'] / 1024, 1) }} KB</span>
-                                                @endif
-                                                @if(isset($attachment['type']))
+                                                <?php if(isset($attachment['size'])): ?>
+                                                    <span><?php echo e(number_format($attachment['size'] / 1024, 1)); ?> KB</span>
+                                                <?php endif; ?>
+                                                <?php if(isset($attachment['type'])): ?>
                                                     <span>•</span>
-                                                    <span>{{ $attachment['type'] }}</span>
-                                                @endif
+                                                    <span><?php echo e($attachment['type']); ?></span>
+                                                <?php endif; ?>
                                             </div>
-                                            @if(isset($attachment['path']))
+                                            <?php if(isset($attachment['path'])): ?>
                                                 <div class="mt-2">
-                                                    <a href="{{ Storage::url($attachment['path']) }}" 
+                                                    <a href="<?php echo e(Storage::url($attachment['path'])); ?>" 
                                                        target="_blank" 
                                                        class="inline-flex items-center text-xs text-indigo-600 hover:text-indigo-700">
                                                         <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -309,18 +312,18 @@
                                                         View File
                                                     </a>
                                                 </div>
-                                            @endif
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                     </div>
                 </div>
-            @endif
+            <?php endif; ?>
 
             <!-- Payments History -->
-            @if($purchaseOrder->payments->count() > 0)
+            <?php if($purchaseOrder->payments->count() > 0): ?>
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <h3 class="text-lg font-semibold text-gray-900">Payment History</h3>
@@ -337,34 +340,39 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                @foreach($purchaseOrder->payments as $payment)
+                                <?php $__currentLoopData = $purchaseOrder->payments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $payment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <a href="{{ route('admin.supplier-payments.show', $payment) }}" class="text-indigo-600 hover:text-indigo-700">
-                                                {{ $payment->payment_number }}
+                                            <a href="<?php echo e(route('admin.supplier-payments.show', $payment)); ?>" class="text-indigo-600 hover:text-indigo-700">
+                                                <?php echo e($payment->payment_number); ?>
+
                                             </a>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-gray-900">
-                                            {{ $payment->currency }} {{ $payment->formatted_amount }}
+                                            <?php echo e($payment->currency); ?> <?php echo e($payment->formatted_amount); ?>
+
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-gray-900">
-                                            {{ ucfirst($payment->payment_method) }}
+                                            <?php echo e(ucfirst($payment->payment_method)); ?>
+
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $payment->status_badge_class }}">
-                                                {{ \App\Models\SupplierPayment::$statuses[$payment->status] ?? ucfirst($payment->status) }}
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo e($payment->status_badge_class); ?>">
+                                                <?php echo e(\App\Models\SupplierPayment::$statuses[$payment->status] ?? ucfirst($payment->status)); ?>
+
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-gray-500">
-                                            {{ formatDubaiDate($payment->payment_date, 'M d, Y') }}
+                                            <?php echo e(formatDubaiDate($payment->payment_date, 'M d, Y')); ?>
+
                                         </td>
                                     </tr>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            @endif
+            <?php endif; ?>
         </div>
 
         <!-- Sidebar -->
@@ -377,30 +385,32 @@
                 <div class="p-6 space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-500">Name</label>
-                        <p class="text-gray-900">{{ $purchaseOrder->supplier_name }}</p>
+                        <p class="text-gray-900"><?php echo e($purchaseOrder->supplier_name); ?></p>
                     </div>
-                    @if($purchaseOrder->supplier_email)
+                    <?php if($purchaseOrder->supplier_email): ?>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Email</label>
-                            <a href="mailto:{{ $purchaseOrder->supplier_email }}" class="text-indigo-600 hover:text-indigo-700">
-                                {{ $purchaseOrder->supplier_email }}
+                            <a href="mailto:<?php echo e($purchaseOrder->supplier_email); ?>" class="text-indigo-600 hover:text-indigo-700">
+                                <?php echo e($purchaseOrder->supplier_email); ?>
+
                             </a>
                         </div>
-                    @endif
-                    @if($purchaseOrder->supplier_phone)
+                    <?php endif; ?>
+                    <?php if($purchaseOrder->supplier_phone): ?>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Phone</label>
-                            <a href="tel:{{ $purchaseOrder->supplier_phone }}" class="text-indigo-600 hover:text-indigo-700">
-                                {{ $purchaseOrder->supplier_phone }}
+                            <a href="tel:<?php echo e($purchaseOrder->supplier_phone); ?>" class="text-indigo-600 hover:text-indigo-700">
+                                <?php echo e($purchaseOrder->supplier_phone); ?>
+
                             </a>
                         </div>
-                    @endif
-                    @if($purchaseOrder->supplier_address)
+                    <?php endif; ?>
+                    <?php if($purchaseOrder->supplier_address): ?>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Address</label>
-                            <p class="text-gray-900">{{ $purchaseOrder->supplier_address }}</p>
+                            <p class="text-gray-900"><?php echo e($purchaseOrder->supplier_address); ?></p>
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -422,13 +432,13 @@
                                         </div>
                                         <div class="min-w-0 flex-1">
                                             <p class="text-sm text-gray-500">Created</p>
-                                            <p class="text-xs text-gray-400">{{ formatDubaiDate($purchaseOrder->created_at, 'M d, Y H:i') }}</p>
+                                            <p class="text-xs text-gray-400"><?php echo e(formatDubaiDate($purchaseOrder->created_at, 'M d, Y H:i')); ?></p>
                                         </div>
                                     </div>
                                 </div>
                             </li>
 
-                            @if($purchaseOrder->sent_to_supplier_at)
+                            <?php if($purchaseOrder->sent_to_supplier_at): ?>
                                 <li>
                                     <div class="relative pb-8">
                                         <div class="relative flex space-x-3">
@@ -440,14 +450,14 @@
                                             </div>
                                             <div class="min-w-0 flex-1">
                                                 <p class="text-sm text-gray-500">Sent to Supplier</p>
-                                                <p class="text-xs text-gray-400">{{ formatDubaiDate($purchaseOrder->sent_to_supplier_at, 'M d, Y H:i') }}</p>
+                                                <p class="text-xs text-gray-400"><?php echo e(formatDubaiDate($purchaseOrder->sent_to_supplier_at, 'M d, Y H:i')); ?></p>
                                             </div>
                                         </div>
                                     </div>
                                 </li>
-                            @endif
+                            <?php endif; ?>
 
-                            @if($purchaseOrder->acknowledged_at)
+                            <?php if($purchaseOrder->acknowledged_at): ?>
                                 <li>
                                     <div class="relative">
                                         <div class="relative flex space-x-3">
@@ -458,34 +468,34 @@
                                             </div>
                                             <div class="min-w-0 flex-1">
                                                 <p class="text-sm text-gray-500">Acknowledged by Supplier</p>
-                                                <p class="text-xs text-gray-400">{{ formatDubaiDate($purchaseOrder->acknowledged_at, 'M d, Y H:i') }}</p>
+                                                <p class="text-xs text-gray-400"><?php echo e(formatDubaiDate($purchaseOrder->acknowledged_at, 'M d, Y H:i')); ?></p>
                                             </div>
                                         </div>
                                     </div>
                                 </li>
-                            @endif
+                            <?php endif; ?>
                         </ul>
                     </div>
                 </div>
             </div>
 
             <!-- Payment History -->
-            @if($purchaseOrder->payments && $purchaseOrder->payments->count() > 0)
+            <?php if($purchaseOrder->payments && $purchaseOrder->payments->count() > 0): ?>
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200">
                     <div class="px-6 py-4 border-b border-gray-200">
                         <div class="flex items-center justify-between">
                             <div>
                                 <h3 class="text-lg font-semibold text-gray-900">Payment History</h3>
-                                <p class="text-sm text-gray-600 mt-1">{{ $purchaseOrder->payments->count() }} payment{{ $purchaseOrder->payments->count() > 1 ? 's' : '' }} recorded</p>
+                                <p class="text-sm text-gray-600 mt-1"><?php echo e($purchaseOrder->payments->count()); ?> payment<?php echo e($purchaseOrder->payments->count() > 1 ? 's' : ''); ?> recorded</p>
                             </div>
-                            @if($purchaseOrder->payment_status === 'pending' || $purchaseOrder->payment_status === 'partial')
+                            <?php if($purchaseOrder->payment_status === 'pending' || $purchaseOrder->payment_status === 'partial'): ?>
                                 <button onclick="openPaymentModal()" class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
                                     </svg>
                                     Record Payment
                                 </button>
-                            @endif
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="overflow-hidden">
@@ -502,56 +512,60 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                                @foreach($purchaseOrder->payments as $payment)
+                                <?php $__currentLoopData = $purchaseOrder->payments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $payment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ $payment->payment_number }}</div>
+                                            <div class="text-sm font-medium text-gray-900"><?php echo e($payment->payment_number); ?></div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">{{ $payment->currency }} {{ number_format($payment->amount, 2) }}</div>
+                                            <div class="text-sm font-medium text-gray-900"><?php echo e($payment->currency); ?> <?php echo e(number_format($payment->amount, 2)); ?></div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">{{ ucfirst(str_replace('_', ' ', $payment->payment_method)) }}</div>
-                                            @if($payment->bank_name)
-                                                <div class="text-sm text-gray-500">{{ $payment->bank_name }}</div>
-                                            @endif
+                                            <div class="text-sm text-gray-900"><?php echo e(ucfirst(str_replace('_', ' ', $payment->payment_method))); ?></div>
+                                            <?php if($payment->bank_name): ?>
+                                                <div class="text-sm text-gray-500"><?php echo e($payment->bank_name); ?></div>
+                                            <?php endif; ?>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $payment->status_badge_class }}">
-                                                {{ \App\Models\SupplierPayment::$statuses[$payment->status] ?? ucfirst($payment->status) }}
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo e($payment->status_badge_class); ?>">
+                                                <?php echo e(\App\Models\SupplierPayment::$statuses[$payment->status] ?? ucfirst($payment->status)); ?>
+
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ formatDubaiDate($payment->payment_date, 'M d, Y') }}
+                                            <?php echo e(formatDubaiDate($payment->payment_date, 'M d, Y')); ?>
+
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ $payment->reference_number ?: 'N/A' }}
+                                            <?php echo e($payment->reference_number ?: 'N/A'); ?>
+
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            @if($payment->attachments && count($payment->attachments) > 0)
-                                                <button onclick="openAttachmentModal('{{ $payment->payment_number }}', {{ json_encode($payment->attachments) }})"
+                                            <?php if($payment->attachments && count($payment->attachments) > 0): ?>
+                                                <button onclick="openAttachmentModal('<?php echo e($payment->payment_number); ?>', <?php echo e(json_encode($payment->attachments)); ?>)"
                                                         class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors">
                                                     <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
                                                     </svg>
-                                                    {{ count($payment->attachments) }} file{{ count($payment->attachments) > 1 ? 's' : '' }}
+                                                    <?php echo e(count($payment->attachments)); ?> file<?php echo e(count($payment->attachments) > 1 ? 's' : ''); ?>
+
                                                 </button>
-                                            @else
+                                            <?php else: ?>
                                                 <span class="text-gray-400">No attachments</span>
-                                            @endif
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            @endif
+            <?php endif; ?>
         </div>
     </div>
 
     <!-- Edit History Section -->
-    @if($purchaseOrder->edits->count() > 0)
+    <?php if($purchaseOrder->edits->count() > 0): ?>
     <div class="mt-6">
         <div class="bg-white rounded-lg shadow-sm border border-gray-200">
             <div class="px-6 py-4 border-b border-gray-200">
@@ -561,11 +575,11 @@
                     </svg>
                     Edit History
                 </h3>
-                <p class="text-sm text-gray-600 mt-1">{{ $purchaseOrder->edits->count() }} edit{{ $purchaseOrder->edits->count() > 1 ? 's' : '' }} made to this purchase order</p>
+                <p class="text-sm text-gray-600 mt-1"><?php echo e($purchaseOrder->edits->count()); ?> edit<?php echo e($purchaseOrder->edits->count() > 1 ? 's' : ''); ?> made to this purchase order</p>
             </div>
             <div class="p-6">
                 <div class="space-y-4">
-                    @foreach($purchaseOrder->edits as $edit)
+                    <?php $__currentLoopData = $purchaseOrder->edits; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $edit): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="flex items-start space-x-3 p-4 bg-gray-50 rounded-lg">
                         <div class="flex-shrink-0">
                             <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
@@ -576,26 +590,26 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center justify-between">
-                                <p class="text-sm font-medium text-gray-900">{{ $edit->editor->name }}</p>
-                                <p class="text-sm text-gray-500">{{ $edit->created_at->format('M d, Y \a\t H:i') }}</p>
+                                <p class="text-sm font-medium text-gray-900"><?php echo e($edit->editor->name); ?></p>
+                                <p class="text-sm text-gray-500"><?php echo e($edit->created_at->format('M d, Y \a\t H:i')); ?></p>
                             </div>
-                            <p class="text-sm text-gray-600 mt-1">{{ $edit->change_description }}</p>
-                            @if($edit->edit_reason)
+                            <p class="text-sm text-gray-600 mt-1"><?php echo e($edit->change_description); ?></p>
+                            <?php if($edit->edit_reason): ?>
                                 <div class="mt-2 p-2 bg-yellow-50 rounded border border-yellow-200">
-                                    <p class="text-xs text-yellow-800"><strong>Reason:</strong> {{ $edit->edit_reason }}</p>
+                                    <p class="text-xs text-yellow-800"><strong>Reason:</strong> <?php echo e($edit->edit_reason); ?></p>
                                 </div>
-                            @endif
+                            <?php endif; ?>
                             <div class="mt-2 text-xs text-gray-500">
-                                Status when edited: <span class="font-medium">{{ \App\Models\PurchaseOrder::$statuses[$edit->po_status_when_edited] ?? ucfirst($edit->po_status_when_edited) }}</span>
+                                Status when edited: <span class="font-medium"><?php echo e(\App\Models\PurchaseOrder::$statuses[$edit->po_status_when_edited] ?? ucfirst($edit->po_status_when_edited)); ?></span>
                             </div>
                         </div>
                     </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
         </div>
     </div>
-    @endif
+    <?php endif; ?>
 </div>
 
 <!-- Payment Modal -->
@@ -606,7 +620,7 @@
             <div class="flex items-center justify-between mb-6">
                 <div>
                     <h3 class="text-xl font-semibold text-gray-900">Record Payment to Supplier</h3>
-                    <p class="text-sm text-gray-600 mt-1">Record a payment made to {{ $purchaseOrder->supplier_name }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Record a payment made to <?php echo e($purchaseOrder->supplier_name); ?></p>
                 </div>
                 <button onclick="closePaymentModal()" class="text-gray-400 hover:text-gray-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -620,21 +634,21 @@
                 <div class="grid grid-cols-3 gap-4 text-center">
                     <div>
                         <div class="text-sm text-gray-500">Total Amount</div>
-                        <div class="text-lg font-semibold text-gray-900">{{ $purchaseOrder->currency }} {{ number_format($purchaseOrder->total_amount, 2) }}</div>
+                        <div class="text-lg font-semibold text-gray-900"><?php echo e($purchaseOrder->currency); ?> <?php echo e(number_format($purchaseOrder->total_amount, 2)); ?></div>
                     </div>
                     <div>
                         <div class="text-sm text-gray-500">Paid Amount</div>
-                        <div class="text-lg font-semibold text-green-600">{{ $purchaseOrder->currency }} {{ number_format($purchaseOrder->paid_amount, 2) }}</div>
+                        <div class="text-lg font-semibold text-green-600"><?php echo e($purchaseOrder->currency); ?> <?php echo e(number_format($purchaseOrder->paid_amount, 2)); ?></div>
                     </div>
                     <div>
                         <div class="text-sm text-gray-500">Remaining</div>
-                        <div class="text-lg font-semibold text-red-600">{{ $purchaseOrder->currency }} {{ number_format($purchaseOrder->total_amount - $purchaseOrder->paid_amount, 2) }}</div>
+                        <div class="text-lg font-semibold text-red-600"><?php echo e($purchaseOrder->currency); ?> <?php echo e(number_format($purchaseOrder->total_amount - $purchaseOrder->paid_amount, 2)); ?></div>
                     </div>
                 </div>
             </div>
 
-            <form action="{{ route('admin.purchase-orders.create-payment', $purchaseOrder) }}" method="POST" id="paymentForm" enctype="multipart/form-data">
-                @csrf
+            <form action="<?php echo e(route('admin.purchase-orders.create-payment', $purchaseOrder)); ?>" method="POST" id="paymentForm" enctype="multipart/form-data">
+                <?php echo csrf_field(); ?>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Left Column -->
                 <div class="space-y-4">
@@ -642,14 +656,14 @@
                             <label for="payment_amount" class="block text-sm font-medium text-gray-700">Payment Amount *</label>
                             <div class="mt-1 relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <span class="text-gray-500 sm:text-sm">{{ $purchaseOrder->currency }}</span>
+                                    <span class="text-gray-500 sm:text-sm"><?php echo e($purchaseOrder->currency); ?></span>
                                 </div>
                                 <input type="number" id="payment_amount" name="amount" step="0.01" min="0.01" 
-                               max="{{ $purchaseOrder->total_amount - $purchaseOrder->paid_amount }}" 
-                               value="{{ $purchaseOrder->total_amount - $purchaseOrder->paid_amount }}" required
+                               max="<?php echo e($purchaseOrder->total_amount - $purchaseOrder->paid_amount); ?>" 
+                               value="<?php echo e($purchaseOrder->total_amount - $purchaseOrder->paid_amount); ?>" required
                                        class="pl-12 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
-                            <p class="mt-1 text-xs text-gray-500">Maximum: {{ $purchaseOrder->currency }} {{ number_format($purchaseOrder->total_amount - $purchaseOrder->paid_amount, 2) }}</p>
+                            <p class="mt-1 text-xs text-gray-500">Maximum: <?php echo e($purchaseOrder->currency); ?> <?php echo e(number_format($purchaseOrder->total_amount - $purchaseOrder->paid_amount, 2)); ?></p>
                         </div>
 
                     <div>
@@ -667,7 +681,7 @@
 
                     <div>
                         <label for="payment_date" class="block text-sm font-medium text-gray-700">Payment Date *</label>
-                        <input type="date" id="payment_date" name="payment_date" value="{{ date('Y-m-d') }}" required
+                        <input type="date" id="payment_date" name="payment_date" value="<?php echo e(date('Y-m-d')); ?>" required
                                    class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
 
@@ -746,7 +760,7 @@
 
     <div x-show="show" class="mb-6 bg-white rounded-2xl overflow-hidden shadow-2xl transform transition-all sm:w-full sm:max-w-2xl sm:mx-auto border border-gray-200" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
         <form id="sendEmailForm" method="POST" action="" x-data="{ submitting: false }" @submit.prevent="submitEmailForm($event)">
-            @csrf
+            <?php echo csrf_field(); ?>
             
             <!-- Header with gradient background -->
             <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-5">
@@ -1200,4 +1214,5 @@ document.addEventListener('click', function(e) {
     }
 });
 </script>
-@endsection 
+<?php $__env->stopSection(); ?> 
+<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Walid\OneDrive\Desktop\MaxMed\resources\views/admin/purchase-orders/show.blade.php ENDPATH**/ ?>
