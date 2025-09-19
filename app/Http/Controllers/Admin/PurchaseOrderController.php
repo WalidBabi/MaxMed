@@ -357,6 +357,18 @@ class PurchaseOrderController extends Controller
 
         $purchaseOrder->load(['items.product', 'edits.editor']);
         
+        // Get orders that can have purchase orders created (same as create method)
+        $availableOrders = Order::with(['purchaseOrder', 'items'])
+            ->where(function($query) {
+                $query->whereDoesntHave('purchaseOrder')  // Orders without purchase orders
+                      ->orWhereHas('purchaseOrder', function($subQuery) {
+                          // Or orders with purchase orders that might need additional ones
+                          $subQuery->whereIn('status', ['cancelled', 'completed']);
+                      });
+            })
+            ->latest()
+            ->get();
+        
         // Get products for the dropdown
         try {
             $products = Product::with(['brand', 'specifications'])
@@ -368,7 +380,7 @@ class PurchaseOrderController extends Controller
             \Log::error('Error loading products for purchase order edit: ' . $e->getMessage());
         }
         
-        return view('admin.purchase-orders.edit', compact('purchaseOrder', 'products'));
+        return view('admin.purchase-orders.edit', compact('purchaseOrder', 'products', 'availableOrders'));
     }
 
     /**
@@ -391,9 +403,14 @@ class PurchaseOrderController extends Controller
         }
 
         $validationRules = [
+            'order_id' => 'nullable|exists:orders,id',
             'supplier_name' => 'required|string|max:255',
             'supplier_email' => 'nullable|email|max:255',
             'supplier_phone' => 'nullable|string|max:50',
+            'supplier_contact_person' => 'nullable|string|max:255',
+            'supplier_address' => 'nullable|string',
+            'payment_terms' => 'nullable|string|max:255',
+            'shipping_method' => 'nullable|string|max:255',
             'currency' => 'required|in:AED,USD,CNY,HKD',
             'delivery_date_requested' => 'required|date',
             'description' => 'nullable|string',
@@ -467,9 +484,14 @@ class PurchaseOrderController extends Controller
 
             // Prepare update data
             $updateData = [
+                'order_id' => $request->order_id,
                 'supplier_name' => $request->supplier_name,
                 'supplier_email' => $request->supplier_email,
                 'supplier_phone' => $request->supplier_phone,
+                'supplier_contact_person' => $request->supplier_contact_person,
+                'supplier_address' => $request->supplier_address,
+                'payment_terms' => $request->payment_terms,
+                'shipping_method' => $request->shipping_method,
                 'currency' => $request->currency,
                 'delivery_date_requested' => $request->delivery_date_requested,
                 'description' => $request->description,

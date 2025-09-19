@@ -298,6 +298,20 @@
                     <div class="p-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
+                                <label for="order_id" class="block text-sm font-medium text-gray-700 mb-2">Customer Order (Optional)</label>
+                                <select name="order_id" id="order_id" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    <option value="">Select a customer order (optional)</option>
+                                    @if(isset($availableOrders))
+                                        @foreach($availableOrders as $order)
+                                            <option value="{{ $order->id }}" {{ old('order_id', $purchaseOrder->order_id) == $order->id ? 'selected' : '' }}>
+                                                {{ $order->order_number }} - {{ $order->getCustomerName() }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                <p class="mt-1 text-sm text-gray-500">Link to an existing customer order or create a standalone purchase order</p>
+                            </div>
+                            <div>
                                 <label for="currency" class="block text-sm font-medium text-gray-700 mb-2">Currency</label>
                                 <select id="currency" name="currency" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                     <option value="AED" {{ old('currency', $purchaseOrder->currency) == 'AED' ? 'selected' : '' }}>AED (UAE Dirham)</option>
@@ -349,6 +363,31 @@
                                         @endif
                                     </p>
                                 @endif
+                            </div>
+                            <div>
+                                <label for="payment_terms" class="block text-sm font-medium text-gray-700 mb-2">Payment Terms</label>
+                                <select name="payment_terms" id="payment_terms" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    <option value="">Select payment terms</option>
+                                    <option value="Net 30" {{ old('payment_terms', $purchaseOrder->payment_terms) == 'Net 30' ? 'selected' : '' }}>Net 30</option>
+                                    <option value="Net 60" {{ old('payment_terms', $purchaseOrder->payment_terms) == 'Net 60' ? 'selected' : '' }}>Net 60</option>
+                                    <option value="Net 90" {{ old('payment_terms', $purchaseOrder->payment_terms) == 'Net 90' ? 'selected' : '' }}>Net 90</option>
+                                    <option value="Due on Receipt" {{ old('payment_terms', $purchaseOrder->payment_terms) == 'Due on Receipt' ? 'selected' : '' }}>Due on Receipt</option>
+                                    <option value="Cash on Delivery" {{ old('payment_terms', $purchaseOrder->payment_terms) == 'Cash on Delivery' ? 'selected' : '' }}>Cash on Delivery</option>
+                                    <option value="50% Advance, 50% on Delivery" {{ old('payment_terms', $purchaseOrder->payment_terms) == '50% Advance, 50% on Delivery' ? 'selected' : '' }}>50% Advance, 50% on Delivery</option>
+                                    <option value="Advance Payment" {{ old('payment_terms', $purchaseOrder->payment_terms) == 'Advance Payment' ? 'selected' : '' }}>Advance Payment</option>
+                                    <option value="Custom" {{ old('payment_terms', $purchaseOrder->payment_terms) == 'Custom' ? 'selected' : '' }}>Custom</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="shipping_method" class="block text-sm font-medium text-gray-700 mb-2">Shipping Method</label>
+                                <select name="shipping_method" id="shipping_method" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    <option value="">Select shipping method</option>
+                                    <option value="Standard Shipping" {{ old('shipping_method', $purchaseOrder->shipping_method) == 'Standard Shipping' ? 'selected' : '' }}>Standard Shipping</option>
+                                    <option value="Express Shipping" {{ old('shipping_method', $purchaseOrder->shipping_method) == 'Express Shipping' ? 'selected' : '' }}>Express Shipping</option>
+                                    <option value="Overnight Shipping" {{ old('shipping_method', $purchaseOrder->shipping_method) == 'Overnight Shipping' ? 'selected' : '' }}>Overnight Shipping</option>
+                                    <option value="Local Pickup" {{ old('shipping_method', $purchaseOrder->shipping_method) == 'Local Pickup' ? 'selected' : '' }}>Local Pickup</option>
+                                    <option value="Supplier Delivery" {{ old('shipping_method', $purchaseOrder->shipping_method) == 'Supplier Delivery' ? 'selected' : '' }}>Supplier Delivery</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -408,6 +447,12 @@
                                 <label for="supplier_phone" class="block text-sm font-medium text-gray-700 mb-2">Supplier Phone</label>
                                 <input type="text" id="supplier_phone" name="supplier_phone" 
                                        value="{{ old('supplier_phone', $purchaseOrder->supplier_phone) }}"
+                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="supplier_contact_person" class="block text-sm font-medium text-gray-700 mb-2">Contact Person</label>
+                                <input type="text" id="supplier_contact_person" name="supplier_contact_person" 
+                                       value="{{ old('supplier_contact_person', $purchaseOrder->supplier_contact_person) }}"
                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
                             <div>
