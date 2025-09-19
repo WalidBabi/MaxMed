@@ -385,7 +385,7 @@
                                             </span>
                                             @if($invoice->paid_amount > 0)
                                                 <div class="text-xs text-green-600 font-medium mt-1">
-                                                    {{ number_format($invoice->paid_amount, 0) }} {{ $invoice->currency }} paid
+                                                    {{ number_format($invoice->paid_amount, 2) }} {{ $invoice->currency }} paid
                                                 </div>
                                             @endif
                                         @else
@@ -538,7 +538,7 @@
                                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Partial</span>
                                                 @if($parent->paid_amount > 0)
                                                     <div class="text-xs text-green-600 font-medium mt-1">
-                                                        {{ number_format($parent->paid_amount, 0) }} {{ $parent->currency }} paid
+                                                        {{ number_format($parent->paid_amount, 2) }} {{ $parent->currency }} paid
                                                     </div>
                                                 @endif
                                             @else
