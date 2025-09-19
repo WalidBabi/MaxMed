@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>{{ $invoice->type === 'proforma' ? 'Proforma Invoice' : 'Invoice' }} {{ $invoice->invoice_number }}</title>
+    <title><?php echo e($invoice->type === 'proforma' ? 'Proforma Invoice' : 'Invoice'); ?> <?php echo e($invoice->invoice_number); ?></title>
     <style>
         @page {
             margin: 0;
@@ -573,34 +573,34 @@
     </style>
 </head>
 <body>
-    @if($invoice->type === 'proforma')
-    @php 
+    <?php if($invoice->type === 'proforma'): ?>
+    <?php 
         $stampPathUpper = public_path('Images/stamp.png');
         $stampPathLower = public_path('images/stamp.png');
         $resolvedStamp = file_exists($stampPathUpper) ? $stampPathUpper : (file_exists($stampPathLower) ? $stampPathLower : null);
-    @endphp
-    @if($resolvedStamp)
-        <img class="stamp" src="{{ $resolvedStamp }}" alt="Company Stamp">
-    @endif
-    @endif
-    @if($invoice->type === 'final')
-    @php 
+    ?>
+    <?php if($resolvedStamp): ?>
+        <img class="stamp" src="<?php echo e($resolvedStamp); ?>" alt="Company Stamp">
+    <?php endif; ?>
+    <?php endif; ?>
+    <?php if($invoice->type === 'final'): ?>
+    <?php 
         $paidStampUpper = public_path('Images/paid.png');
         $paidStampLower = public_path('images/paid.png');
         $paidStamp = file_exists($paidStampUpper) ? $paidStampUpper : (file_exists($paidStampLower) ? $paidStampLower : null);
         $isPaidFinal = (float)($invoice->total_amount ?? 0) - (float)($invoice->paid_amount ?? 0) <= 0.0001;
-    @endphp
-    @if($paidStamp && $isPaidFinal)
-        <img class="stamp" src="{{ $paidStamp }}" alt="Paid Stamp">
-    @endif
-    @endif
+    ?>
+    <?php if($paidStamp && $isPaidFinal): ?>
+        <img class="stamp" src="<?php echo e($paidStamp); ?>" alt="Paid Stamp">
+    <?php endif; ?>
+    <?php endif; ?>
     <div class="document-container">
         <!-- HEADER WITH COMPANY INFO & DOCUMENT TITLE -->
         <div class="header-wrapper">
             <div class="header-section">
                 <div class="company-section">
                     <div class="company-logo">
-                        <img src="{{ public_path('Images/logo.png') }}" alt="MaxMed Logo">
+                        <img src="<?php echo e(public_path('Images/logo.png')); ?>" alt="MaxMed Logo">
                     </div>
                     <div class="company-details">
                         <div class="company-name">MaxMed Scientific and Laboratory Equipment Trading Co. LLC</div>
@@ -612,8 +612,8 @@
                 </div>
                 
                 <div class="document-title-section">
-                    <div class="document-title">{{ $invoice->type === 'proforma' ? 'Proforma Invoice' : 'Invoice' }}</div>
-                    <div class="document-number">{{ $invoice->invoice_number }}</div>
+                    <div class="document-title"><?php echo e($invoice->type === 'proforma' ? 'Proforma Invoice' : 'Invoice'); ?></div>
+                    <div class="document-number"><?php echo e($invoice->invoice_number); ?></div>
                 </div>
             </div>
         </div>
@@ -624,92 +624,94 @@
                 <div class="client-info">
                     <div class="section-heading">Bill To</div>
                     <div class="client-name">
-                        {{ $invoice->customer_name }}
-                        @if($customer && $customer->company_name)
+                        <?php echo e($invoice->customer_name); ?>
+
+                        <?php if($customer && $customer->company_name): ?>
                             <div style="font-size: 12px; color: var(--text-secondary); margin-top: 3px; font-weight: 500;">
-                                {{ $customer->company_name }}
+                                <?php echo e($customer->company_name); ?>
+
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
-                    @if($customer)
+                    <?php if($customer): ?>
                         <div class="client-address">
-                            @if($customer->email)
-                                <div><strong>Email:</strong> {{ $customer->email }}</div>
-                            @endif
-                            @if($customer->phone)
-                                <div><strong>Phone:</strong> {{ $customer->phone }}</div>
-                            @endif
-                            @if($customer->tax_id)
-                                <div><strong>Tax ID:</strong> {{ $customer->tax_id }}</div>
-                            @endif
-                            @php $billing = $customer->billing_address; @endphp
-                            @if(!empty($billing))
-                                <div style="margin-top: 6px;"><strong>Billing Address:</strong><br>{!! nl2br(e($billing)) !!}</div>
-                            @endif
-                            @php $shipping = $customer->shipping_address; @endphp
-                            @if(!empty($shipping) && $shipping !== $billing)
-                                <div style="margin-top: 6px;"><strong>Shipping Address:</strong><br>{!! nl2br(e($shipping)) !!}</div>
-                            @endif
+                            <?php if($customer->email): ?>
+                                <div><strong>Email:</strong> <?php echo e($customer->email); ?></div>
+                            <?php endif; ?>
+                            <?php if($customer->phone): ?>
+                                <div><strong>Phone:</strong> <?php echo e($customer->phone); ?></div>
+                            <?php endif; ?>
+                            <?php if($customer->tax_id): ?>
+                                <div><strong>Tax ID:</strong> <?php echo e($customer->tax_id); ?></div>
+                            <?php endif; ?>
+                            <?php $billing = $customer->billing_address; ?>
+                            <?php if(!empty($billing)): ?>
+                                <div style="margin-top: 6px;"><strong>Billing Address:</strong><br><?php echo nl2br(e($billing)); ?></div>
+                            <?php endif; ?>
+                            <?php $shipping = $customer->shipping_address; ?>
+                            <?php if(!empty($shipping) && $shipping !== $billing): ?>
+                                <div style="margin-top: 6px;"><strong>Shipping Address:</strong><br><?php echo nl2br(e($shipping)); ?></div>
+                            <?php endif; ?>
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
 
-                @if($invoice->shipping_address && $invoice->shipping_address !== $invoice->billing_address)
+                <?php if($invoice->shipping_address && $invoice->shipping_address !== $invoice->billing_address): ?>
                 <div class="shipping-section">
                     <div class="shipping-info">
                         <div class="section-heading">Ship To</div>
-                        <div class="client-address">{{ nl2br($invoice->shipping_address) }}</div>
+                        <div class="client-address"><?php echo e(nl2br($invoice->shipping_address)); ?></div>
                     </div>
                 </div>
-                @endif
+                <?php endif; ?>
             </div>
 
             <div class="meta-section">
                 <table class="meta-table">
                     <tr>
                         <td class="label">Invoice Date:</td>
-                        <td class="value">{{ formatDubaiDate($invoice->invoice_date, 'd M Y') }}</td>
+                        <td class="value"><?php echo e(formatDubaiDate($invoice->invoice_date, 'd M Y')); ?></td>
                     </tr>
                     <tr>
                         <td class="label">Due Date:</td>
-                        <td class="value">{{ formatDubaiDate($invoice->due_date, 'd M Y') }}</td>
+                        <td class="value"><?php echo e(formatDubaiDate($invoice->due_date, 'd M Y')); ?></td>
                     </tr>
                     <tr>
                         <td class="label">Payment Terms:</td>
-                        <td class="value">{{ $invoice::PAYMENT_TERMS[$invoice->payment_terms] ?? ucfirst($invoice->payment_terms) }}</td>
+                        <td class="value"><?php echo e($invoice::PAYMENT_TERMS[$invoice->payment_terms] ?? ucfirst($invoice->payment_terms)); ?></td>
                     </tr>
-                    @if($invoice->reference_number)
+                    <?php if($invoice->reference_number): ?>
                     <tr>
                         <td class="label">Reference:</td>
-                        <td class="value">{{ $invoice->reference_number }}</td>
+                        <td class="value"><?php echo e($invoice->reference_number); ?></td>
                     </tr>
-                    @endif
-                    @if($invoice->po_number)
+                    <?php endif; ?>
+                    <?php if($invoice->po_number): ?>
                     <tr>
                         <td class="label">PO Number:</td>
-                        <td class="value">{{ $invoice->po_number }}</td>
+                        <td class="value"><?php echo e($invoice->po_number); ?></td>
                     </tr>
-                    @endif
-                    @if($invoice->quote)
+                    <?php endif; ?>
+                    <?php if($invoice->quote): ?>
                     <tr>
                         <td class="label">Quote Number:</td>
-                        <td class="value">{{ $invoice->quote->quote_number }}</td>
+                        <td class="value"><?php echo e($invoice->quote->quote_number); ?></td>
                     </tr>
-                    @endif
+                    <?php endif; ?>
                 </table>
             </div>
         </div>
 
         <!-- DESCRIPTION SECTION -->
-        @if($invoice->description)
+        <?php if($invoice->description): ?>
         <div class="description-section">
             <div class="description-title">Description</div>
-            <div class="description-content">{{ $invoice->description }}</div>
+            <div class="description-content"><?php echo e($invoice->description); ?></div>
         </div>
-        @endif
+        <?php endif; ?>
 
         <!-- ITEMS TABLE -->
-        @if($invoice->items->count() > 0)
+        <?php if($invoice->items->count() > 0): ?>
         <div class="items-section">
             <table class="items-table">
                 <thead>
@@ -717,38 +719,40 @@
                         <th style="width: 25%;">Item Description</th>
                         <th style="width: 20%;" class="text-center">Specifications</th>
                         <th style="width: 12%;" class="text-center">Quantity</th>
-                        <th style="width: 13%;" class="text-right">Rate ({{ $invoice->currency ?? 'AED' }})</th>
+                        <th style="width: 13%;" class="text-right">Rate (<?php echo e($invoice->currency ?? 'AED'); ?>)</th>
                         <th style="width: 10%;" class="text-center">Discount</th>
-                        <th style="width: 20%;" class="text-right">Amount After Discount ({{ $invoice->currency ?? 'AED' }})</th>
+                        <th style="width: 20%;" class="text-right">Amount After Discount (<?php echo e($invoice->currency ?? 'AED'); ?>)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($invoice->items as $index => $item)
+                    <?php $__currentLoopData = $invoice->items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr>
                         <td>
                             <div class="item-description">
-                                {{ $item->description }}
-                                @if($item->product)
+                                <?php echo e($item->description); ?>
+
+                                <?php if($item->product): ?>
                                     <div style="font-size: 9px; margin-top: 3px;">
-                                        <a href="{{ route('product.show', $item->product) }}" style="color: #0ea5e9; text-decoration: none;">View product page</a>
-                                        @if($item->product->pdf_file)
+                                        <a href="<?php echo e(route('product.show', $item->product)); ?>" style="color: #0ea5e9; text-decoration: none;">View product page</a>
+                                        <?php if($item->product->pdf_file): ?>
                                             <span style="color: #6b7280; margin: 0 5px;">|</span>
-                                            <a href="{{ asset('storage/' . $item->product->pdf_file) }}" target="_blank" style="color: #dc2626; text-decoration: none;">
+                                            <a href="<?php echo e(Storage::url($item->product->pdf_file)); ?>" target="_blank" style="color: #dc2626; text-decoration: none;">
                                                 <i class="fas fa-file-pdf" style="margin-right: 2px;"></i>Product PDF
                                             </a>
-                                        @endif
+                                        <?php endif; ?>
                                     </div>
-                                @endif
-                                @if($item->product && $item->product->brand)
+                                <?php endif; ?>
+                                <?php if($item->product && $item->product->brand): ?>
                                     <div style="font-size: 9px; color: var(--text-secondary); margin-top: 2px;">
-                                        <span style="font-weight: 600;">Brand:</span> {{ $item->product->brand->name }}
+                                        <span style="font-weight: 600;">Brand:</span> <?php echo e($item->product->brand->name); ?>
+
                                     </div>
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </td>
                         <td class="text-center">
-                            @if($item->specifications && !empty(trim($item->specifications)))
-                                @php
+                            <?php if($item->specifications && !empty(trim($item->specifications))): ?>
+                                <?php
                                     $selectedSpecs = [];
                                     try {
                                         if (is_string($item->specifications) && (str_starts_with($item->specifications, '[') && str_ends_with($item->specifications, ']'))) {
@@ -760,45 +764,46 @@
                                     } catch (Exception $e) {
                                         $selectedSpecs = [$item->specifications];
                                     }
-                                @endphp
+                                ?>
                                 
-                                @if(count($selectedSpecs) > 0)
+                                <?php if(count($selectedSpecs) > 0): ?>
                                     <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
-                                        @foreach($selectedSpecs as $spec)
-                                            <div style="margin-bottom: 2px;">{{ $spec }}</div>
-                                        @endforeach
+                                        <?php $__currentLoopData = $selectedSpecs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $spec): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <div style="margin-bottom: 2px;"><?php echo e($spec); ?></div>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </div>
-                                @endif
-                            @endif
+                                <?php endif; ?>
+                            <?php endif; ?>
                             
-                            @if($item->size && !empty(trim($item->size)))
+                            <?php if($item->size && !empty(trim($item->size))): ?>
                                 <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3; margin-top: 3px;">
                                     <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1px;">Size:</div>
-                                    <div>{{ $item->size }}</div>
+                                    <div><?php echo e($item->size); ?></div>
                                 </div>
-                            @endif
+                            <?php endif; ?>
                             
-                            @if((!$item->specifications || empty(trim($item->specifications))) && (!$item->size || empty(trim($item->size))))
+                            <?php if((!$item->specifications || empty(trim($item->specifications))) && (!$item->size || empty(trim($item->size)))): ?>
                                 <span style="color: var(--text-muted);">-</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
-                        <td class="text-center">{{ number_format($item->quantity, 2) }}</td>
-                        <td class="text-right">{{ number_format($item->unit_price, 2) }}</td>
+                        <td class="text-center"><?php echo e(number_format($item->quantity, 2)); ?></td>
+                        <td class="text-right"><?php echo e(number_format($item->unit_price, 2)); ?></td>
                         <td class="text-center">
-                            @if($item->discount_percentage > 0)
-                                {{ number_format($item->discount_percentage, 2) }}%
-                                @if($item->calculated_discount_amount > 0)
-                                    <br><span style="font-size: 8px; color: var(--text-secondary);">(-{{ number_format($item->calculated_discount_amount, 2) }})</span>
-                                @endif
-                            @elseif($item->calculated_discount_amount > 0)
-                                -{{ number_format($item->calculated_discount_amount, 2) }}
-                            @else
+                            <?php if($item->discount_percentage > 0): ?>
+                                <?php echo e(number_format($item->discount_percentage, 2)); ?>%
+                                <?php if($item->calculated_discount_amount > 0): ?>
+                                    <br><span style="font-size: 8px; color: var(--text-secondary);">(-<?php echo e(number_format($item->calculated_discount_amount, 2)); ?>)</span>
+                                <?php endif; ?>
+                            <?php elseif($item->calculated_discount_amount > 0): ?>
+                                -<?php echo e(number_format($item->calculated_discount_amount, 2)); ?>
+
+                            <?php else: ?>
                                 -
-                            @endif
+                            <?php endif; ?>
                         </td>
-                        <td class="text-right">{{ number_format($item->line_total, 2) }}</td>
+                        <td class="text-right"><?php echo e(number_format($item->line_total, 2)); ?></td>
                     </tr>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
             </table>
         </div>
@@ -809,57 +814,58 @@
                 <table class="totals-table">
                     <tr>
                         <td class="total-label">Subtotal:</td>
-                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->subtotal ?? $invoice->items->sum('line_total'), 2) }}</td>
+                        <td class="total-amount"><?php echo e($invoice->currency ?? 'AED'); ?> <?php echo e(number_format($invoice->subtotal ?? $invoice->items->sum('line_total'), 2)); ?></td>
                     </tr>
-                    @if(($invoice->discount_amount ?? 0) > 0)
+                    <?php if(($invoice->discount_amount ?? 0) > 0): ?>
                     <tr>
                         <td class="total-label">Total Discount:</td>
-                        <td class="total-amount">-{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->discount_amount, 2) }}</td>
+                        <td class="total-amount">-<?php echo e($invoice->currency ?? 'AED'); ?> <?php echo e(number_format($invoice->discount_amount, 2)); ?></td>
                     </tr>
-                    @endif
-                    @if($invoice->shipping_rate > 0)
+                    <?php endif; ?>
+                    <?php if($invoice->shipping_rate > 0): ?>
                     <tr>
                         <td class="total-label">Shipping:</td>
-                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->shipping_rate, 2) }}</td>
+                        <td class="total-amount"><?php echo e($invoice->currency ?? 'AED'); ?> <?php echo e(number_format($invoice->shipping_rate, 2)); ?></td>
                     </tr>
-                    @endif
-                    @if(($invoice->customs_clearance_fee ?? 0) > 0)
+                    <?php endif; ?>
+                    <?php if(($invoice->customs_clearance_fee ?? 0) > 0): ?>
                     <tr>
                         <td class="total-label">Customs Clearance:</td>
-                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->customs_clearance_fee, 2) }}</td>
+                        <td class="total-amount"><?php echo e($invoice->currency ?? 'AED'); ?> <?php echo e(number_format($invoice->customs_clearance_fee, 2)); ?></td>
                     </tr>
-                    @endif
-                    @if(($invoice->tax_amount ?? 0) > 0)
+                    <?php endif; ?>
+                    <?php if(($invoice->tax_amount ?? 0) > 0): ?>
                     <tr>
-                        <td class="total-label">VAT{{ ($invoice->vat_rate ?? 0) > 0 ? ' (' . number_format($invoice->vat_rate, 1) . '%)' : '' }}:</td>
-                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->tax_amount, 2) }}</td>
+                        <td class="total-label">VAT<?php echo e(($invoice->vat_rate ?? 0) > 0 ? ' (' . number_format($invoice->vat_rate, 1) . '%)' : ''); ?>:</td>
+                        <td class="total-amount"><?php echo e($invoice->currency ?? 'AED'); ?> <?php echo e(number_format($invoice->tax_amount, 2)); ?></td>
                     </tr>
-                    @endif
+                    <?php endif; ?>
                     <tr class="grand-total">
                         <td class="total-label">Total Amount:</td>
-                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->total_amount, 2) }}</td>
+                        <td class="total-amount"><?php echo e($invoice->currency ?? 'AED'); ?> <?php echo e(number_format($invoice->total_amount, 2)); ?></td>
                     </tr>
-                    @if($invoice->type === 'final')
-                    @php
+                    <?php if($invoice->type === 'final'): ?>
+                    <?php
                         $paidToDate = (float)($invoice->paid_amount ?? 0);
                         $amountDue = max(0, (float)($invoice->total_amount ?? 0) - $paidToDate);
-                    @endphp
-                    @if($paidToDate > 0)
+                    ?>
+                    <?php if($paidToDate > 0): ?>
                     <tr>
                         <td class="total-label">Paid to Date:</td>
-                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($paidToDate, 2) }}</td>
+                        <td class="total-amount"><?php echo e($invoice->currency ?? 'AED'); ?> <?php echo e(number_format($paidToDate, 2)); ?></td>
                     </tr>
-                    @endif
+                    <?php endif; ?>
                     <tr>
                         <td class="total-label">Amount Due:</td>
                         <td class="total-amount">
-                            {{ $invoice->currency ?? 'AED' }} {{ number_format($amountDue, 2) }}
-                            @if($amountDue == 0)
+                            <?php echo e($invoice->currency ?? 'AED'); ?> <?php echo e(number_format($amountDue, 2)); ?>
+
+                            <?php if($amountDue == 0): ?>
                                 <span style="font-size:9px; color: var(--success-color); font-weight:700;">(Paid)</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                     </tr>
-                    @endif
+                    <?php endif; ?>
                 </table>
             </div>
         </div>
@@ -867,35 +873,35 @@
         <!-- TOTAL IN WORDS -->
         <div class="total-words-section">
             <div class="total-words-title">Amount in Words:</div>
-            <div class="total-words-text">{{ numberToWords($invoice->total_amount, $invoice->currency ?? 'AED') }}</div>
+            <div class="total-words-text"><?php echo e(numberToWords($invoice->total_amount, $invoice->currency ?? 'AED')); ?></div>
         </div>
-        @endif
+        <?php endif; ?>
 
         <!-- PAYMENT INFORMATION -->
-        @if($invoice->type === 'proforma' && ($invoice->requires_advance_payment || $invoice->payment_terms === 'on_delivery'))
+        <?php if($invoice->type === 'proforma' && ($invoice->requires_advance_payment || $invoice->payment_terms === 'on_delivery')): ?>
         <div class="payment-section">
             <div class="payment-title">Payment Information</div>
-            @if($invoice->payment_terms === 'advance_50')
-                <div class="payment-text">This is a proforma invoice requiring <strong>50% advance payment ({{ number_format($invoice->getAdvanceAmount(), 2) }} {{ $invoice->currency }})</strong> before we proceed with your order.</div>
-            @elseif($invoice->payment_terms === 'advance_100')
-                <div class="payment-text">This is a proforma invoice requiring <strong>full payment ({{ number_format($invoice->total_amount, 2) }} {{ $invoice->currency }})</strong> before we proceed with your order.</div>
-            @elseif($invoice->payment_terms === 'on_delivery')
+            <?php if($invoice->payment_terms === 'advance_50'): ?>
+                <div class="payment-text">This is a proforma invoice requiring <strong>50% advance payment (<?php echo e(number_format($invoice->getAdvanceAmount(), 2)); ?> <?php echo e($invoice->currency); ?>)</strong> before we proceed with your order.</div>
+            <?php elseif($invoice->payment_terms === 'advance_100'): ?>
+                <div class="payment-text">This is a proforma invoice requiring <strong>full payment (<?php echo e(number_format($invoice->total_amount, 2)); ?> <?php echo e($invoice->currency); ?>)</strong> before we proceed with your order.</div>
+            <?php elseif($invoice->payment_terms === 'on_delivery'): ?>
                 <div class="payment-text">This is a proforma invoice for <strong>Cash On Delivery</strong>. No advance payment is required.</div>
-            @elseif($invoice->payment_terms === 'custom' && $invoice->advance_percentage)
-                <div class="payment-text">This is a proforma invoice requiring <strong>{{ $invoice->advance_percentage }}% advance payment ({{ number_format($invoice->getAdvanceAmount(), 2) }} {{ $invoice->currency }})</strong> before we proceed with your order.</div>
-            @endif
-            @if($invoice->payment_terms === 'on_delivery')
+            <?php elseif($invoice->payment_terms === 'custom' && $invoice->advance_percentage): ?>
+                <div class="payment-text">This is a proforma invoice requiring <strong><?php echo e($invoice->advance_percentage); ?>% advance payment (<?php echo e(number_format($invoice->getAdvanceAmount(), 2)); ?> <?php echo e($invoice->currency); ?>)</strong> before we proceed with your order.</div>
+            <?php endif; ?>
+            <?php if($invoice->payment_terms === 'on_delivery'): ?>
                 <div class="payment-text">We will confirm your order and arrange delivery. Cash payment will be collected upon delivery.</div>
-            @else
+            <?php else: ?>
                 <div class="payment-text">Once payment is received, we will confirm your order and provide you with a delivery timeline.</div>
-            @endif
+            <?php endif; ?>
         </div>
-        @endif
+        <?php endif; ?>
 
-        @if($invoice->type === 'final')
+        <?php if($invoice->type === 'final'): ?>
         <div class="payment-section">
             <div class="payment-title">Final Invoice</div>
-            @php
+            <?php
                 // Check delivery status from multiple sources
                 $delivery = $invoice->delivery;
                 if (!$delivery && $invoice->order && $invoice->order->delivery) {
@@ -934,67 +940,67 @@
                 $paidToDateFinal = (float)($invoice->paid_amount ?? 0);
                 $amountDueFinal = max(0, (float)($invoice->total_amount ?? 0) - $paidToDateFinal);
                 $paymentRecorded = $amountDueFinal == 0;
-            @endphp
+            ?>
 
-            @if($paymentRecorded)
+            <?php if($paymentRecorded): ?>
                 <div class="payment-text">Payment received in full. No amount due. Thank you for your business.</div>
-                @if($isDelivered)
+                <?php if($isDelivered): ?>
                     <div class="payment-text">Order status: Delivered.</div>
-                @elseif($isShipped)
+                <?php elseif($isShipped): ?>
                     <div class="payment-text">Order status: In transit.</div>
-                @endif
-                @if($invoice->paid_at)
-                    <div class="payment-text">Paid on: {{ formatDubaiDate($invoice->paid_at, 'd M Y') }}</div>
-                @endif
-            @else
-                <div class="payment-text">Amount Due: <strong>{{ $invoice->currency ?? 'AED' }} {{ number_format($amountDueFinal, 2) }}</strong> @if($paidToDateFinal > 0) (Paid to date: {{ $invoice->currency ?? 'AED' }} {{ number_format($paidToDateFinal, 2) }}) @endif</div>
-                @if($isDelivered)
+                <?php endif; ?>
+                <?php if($invoice->paid_at): ?>
+                    <div class="payment-text">Paid on: <?php echo e(formatDubaiDate($invoice->paid_at, 'd M Y')); ?></div>
+                <?php endif; ?>
+            <?php else: ?>
+                <div class="payment-text">Amount Due: <strong><?php echo e($invoice->currency ?? 'AED'); ?> <?php echo e(number_format($amountDueFinal, 2)); ?></strong> <?php if($paidToDateFinal > 0): ?> (Paid to date: <?php echo e($invoice->currency ?? 'AED'); ?> <?php echo e(number_format($paidToDateFinal, 2)); ?>) <?php endif; ?></div>
+                <?php if($isDelivered): ?>
                     <div class="payment-text">Your order has been delivered. Please arrange payment for the balance.</div>
-                @elseif($isShipped)
+                <?php elseif($isShipped): ?>
                     <div class="payment-text">Your order is in transit. Please arrange payment for the balance.</div>
-                @else
+                <?php else: ?>
                     <div class="payment-text">Your order is being processed for delivery. Please arrange payment for the balance.</div>
-                @endif
-                @if($hasAdvancePayment && !$paymentCollectedOnDelivery)
-                    <div class="payment-text">Previous advance payment received: <strong>{{ number_format($parentInvoice->paid_amount, 2) }} {{ $invoice->currency ?? 'AED' }}</strong></div>
-                @endif
-            @endif
+                <?php endif; ?>
+                <?php if($hasAdvancePayment && !$paymentCollectedOnDelivery): ?>
+                    <div class="payment-text">Previous advance payment received: <strong><?php echo e(number_format($parentInvoice->paid_amount, 2)); ?> <?php echo e($invoice->currency ?? 'AED'); ?></strong></div>
+                <?php endif; ?>
+            <?php endif; ?>
         </div>
-        @endif
+        <?php endif; ?>
 
          <!-- PAYMENT DETAILS (only for final invoices with payments) -->
-         @if($invoice->type === 'final' && ($invoice->payments && $invoice->payments->count() > 0))
+         <?php if($invoice->type === 'final' && ($invoice->payments && $invoice->payments->count() > 0)): ?>
          <div class="banking-section">
              <div class="banking-title">Payment Details</div>
              <div class="banking-grid">
-                 @php $lastPayment = $invoice->payments->sortByDesc('payment_date')->first(); @endphp
+                 <?php $lastPayment = $invoice->payments->sortByDesc('payment_date')->first(); ?>
                  <div class="banking-item">
                      <div class="banking-label">Paid To Date</div>
-                     <div class="banking-value">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->paid_amount ?? 0, 2) }}</div>
+                     <div class="banking-value"><?php echo e($invoice->currency ?? 'AED'); ?> <?php echo e(number_format($invoice->paid_amount ?? 0, 2)); ?></div>
                  </div>
-                 @if($lastPayment)
+                 <?php if($lastPayment): ?>
                  <div class="banking-item">
                      <div class="banking-label">Last Payment Date</div>
-                     <div class="banking-value">{{ formatDubaiDate($lastPayment->payment_date ?? $invoice->paid_at, 'd M Y') }}</div>
+                     <div class="banking-value"><?php echo e(formatDubaiDate($lastPayment->payment_date ?? $invoice->paid_at, 'd M Y')); ?></div>
                  </div>
                  <div class="banking-item">
                      <div class="banking-label">Payment Method</div>
-                     <div class="banking-value">{{ \App\Models\Payment::PAYMENT_METHODS[$lastPayment->payment_method] ?? ucfirst(str_replace('_',' ',$lastPayment->payment_method)) }}</div>
+                     <div class="banking-value"><?php echo e(\App\Models\Payment::PAYMENT_METHODS[$lastPayment->payment_method] ?? ucfirst(str_replace('_',' ',$lastPayment->payment_method))); ?></div>
                  </div>
-                 @if($lastPayment->transaction_reference)
+                 <?php if($lastPayment->transaction_reference): ?>
                  <div class="banking-item">
                      <div class="banking-label">Transaction Ref</div>
-                     <div class="banking-value">{{ $lastPayment->transaction_reference }}</div>
+                     <div class="banking-value"><?php echo e($lastPayment->transaction_reference); ?></div>
                  </div>
-                 @endif
-                 @endif
+                 <?php endif; ?>
+                 <?php endif; ?>
              </div>
          </div>
-         @endif
+         <?php endif; ?>
 
          <!-- BANKING SECTION -->
-         @php $isPaidInFull = ($invoice->type === 'final') && (float)($invoice->total_amount ?? 0) - (float)($invoice->paid_amount ?? 0) <= 0.0001; @endphp
-         @if(!$isPaidInFull)
+         <?php $isPaidInFull = ($invoice->type === 'final') && (float)($invoice->total_amount ?? 0) - (float)($invoice->paid_amount ?? 0) <= 0.0001; ?>
+         <?php if(!$isPaidInFull): ?>
          <div class="banking-section">
              <div class="banking-title">Banking Details</div>
              <div class="banking-grid">
@@ -1020,31 +1026,31 @@
                  </div>
              </div>
          </div>
-         @endif
+         <?php endif; ?>
 
          <!-- TERMS & CONDITIONS -->
-         @if($invoice->terms_conditions)
+         <?php if($invoice->terms_conditions): ?>
         <div class="content-section">
             <div class="content-title">Terms & Conditions</div>
-            <div class="content-text">{{ $invoice->terms_conditions }}</div>
+            <div class="content-text"><?php echo e($invoice->terms_conditions); ?></div>
         </div>
-        @endif
+        <?php endif; ?>
 
         <!-- NOTES -->
-        @if($invoice->notes)
+        <?php if($invoice->notes): ?>
         <div class="content-section">
             <div class="content-title">Notes</div>
-            <div class="content-text">{{ $invoice->notes }}</div>
+            <div class="content-text"><?php echo e($invoice->notes); ?></div>
         </div>
-        @endif
+        <?php endif; ?>
 
 
 
         <!-- FOOTER -->
         <div class="footer">
-            <p><strong>{{ $invoice->type === 'proforma' ? 'Proforma Invoice' : 'Invoice' }} Generated:</strong> {{ nowDubai('d M Y \a\t H:i') }}</p>
-            <p>Invoice ID: {{ $invoice->invoice_number }}</p>
+            <p><strong><?php echo e($invoice->type === 'proforma' ? 'Proforma Invoice' : 'Invoice'); ?> Generated:</strong> <?php echo e(nowDubai('d M Y \a\t H:i')); ?></p>
+            <p>Invoice ID: <?php echo e($invoice->invoice_number); ?></p>
         </div>
     </div>
 </body>
-</html> 
+</html> <?php /**PATH C:\Users\Walid\OneDrive\Desktop\MaxMed\resources\views/admin/invoices/pdf.blade.php ENDPATH**/ ?>

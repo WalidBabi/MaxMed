@@ -1235,4 +1235,7 @@
     session()->forget('show_orders_hint');
 ?>
 <?php endif; ?>
-<?php endif; ?><?php /**PATH C:\Users\Walid\OneDrive\Desktop\MaxMed\resources\views/layouts/navigation.blade.php ENDPATH**/ ?>
+<?php endif; ?>
+
+<!-- Google One Tap Script -->
+<script src="<?php echo e(asset('js/google-one-tap.js')); ?>"></script><?php /**PATH C:\Users\Walid\OneDrive\Desktop\MaxMed\resources\views/layouts/navigation.blade.php ENDPATH**/ ?>
