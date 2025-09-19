@@ -499,31 +499,46 @@ class CrmLeadController extends Controller
             // Non-fatal: keep going even if customer creation fails
         }
 
-        // Send email notification to assigned user
+        // Send email notification to assigned user (immediate sending like quotes/invoices)
         try {
             $assignedUser = User::find($lead->assigned_to);
             if ($assignedUser) {
-                // Send email using Mailable
+                // Send email immediately using Mail facade (same as quotes/invoices)
                 Mail::to($assignedUser->email)->send(new LeadAssignmentMail($lead, $assignedUser, null, Auth::user(), true));
+                
+                // Update email history like quotes/invoices
+                $emailHistory = $lead->email_history ?? [];
+                $emailHistory[] = [
+                    'sent_at' => now()->toISOString(),
+                    'to' => $assignedUser->email,
+                    'subject' => '👥 New Lead Assigned - ' . $lead->full_name,
+                    'type' => 'assignment',
+                    'sent_by' => Auth::user()->name
+                ];
+                
+                $lead->update([
+                    'email_history' => $emailHistory,
+                    'last_email_sent_at' => now()
+                ]);
                 
                 // Also send database notification for dashboard
                 $assignedUser->notify(new LeadCreatedNotification($lead));
                 
-                \Log::info('Lead assignment email and notification sent', [
+                \Log::info('Lead assignment email sent successfully', [
                     'lead_id' => $lead->id,
                     'assigned_to' => $assignedUser->id,
                     'assigned_to_email' => $assignedUser->email
                 ]);
                 
-                $lead->logActivity('note', 'Assignment notification sent', "Email notification sent to {$assignedUser->name} ({$assignedUser->email})");
+                $lead->logActivity('note', 'Assignment email sent', "Assignment email sent to {$assignedUser->name} ({$assignedUser->email})");
             }
         } catch (\Exception $e) {
-            \Log::error('Failed to send lead assignment notification', [
+            \Log::error('Failed to send lead assignment email', [
                 'lead_id' => $lead->id,
                 'assigned_to' => $lead->assigned_to,
                 'error' => $e->getMessage()
             ]);
-            // Non-fatal: continue even if notification fails
+            // Non-fatal: continue even if email fails
         }
             
             \Log::info('CRM Lead created successfully', ['lead_id' => $lead->id, 'lead_name' => $lead->full_name]);
@@ -731,13 +746,29 @@ class CrmLeadController extends Controller
                 $reassignedBy = Auth::user();
 
                 if ($newAssignee) {
-                    // Send email using Mailable
+                    // Send email immediately using Mail facade (same as quotes/invoices)
                     Mail::to($newAssignee->email)->send(new LeadAssignmentMail($lead, $newAssignee, $previousAssignee, $reassignedBy, false));
+                    
+                    // Update email history like quotes/invoices
+                    $emailHistory = $lead->email_history ?? [];
+                    $emailHistory[] = [
+                        'sent_at' => now()->toISOString(),
+                        'to' => $newAssignee->email,
+                        'subject' => '🔄 Lead Reassigned - ' . $lead->full_name,
+                        'type' => 'reassignment',
+                        'sent_by' => $reassignedBy->name,
+                        'previous_assignee' => $previousAssignee?->name ?? 'Unassigned'
+                    ];
+                    
+                    $lead->update([
+                        'email_history' => $emailHistory,
+                        'last_email_sent_at' => now()
+                    ]);
                     
                     // Also send database notification for dashboard
                     $newAssignee->notify(new LeadReassignedNotification($lead, $previousAssignee, $newAssignee, $reassignedBy));
                     
-                    \Log::info('Lead reassignment email and notification sent', [
+                    \Log::info('Lead reassignment email sent successfully', [
                         'lead_id' => $lead->id,
                         'previous_assignee' => $previousAssignee?->name ?? 'Unassigned',
                         'new_assignee' => $newAssignee->name,
@@ -747,16 +778,16 @@ class CrmLeadController extends Controller
                     // Log the assignment change
                     $previousName = $previousAssignee?->name ?? 'Unassigned';
                     $lead->logActivity('note', 'Lead reassigned', "Lead reassigned from {$previousName} to {$newAssignee->name} by {$reassignedBy->name}");
-                    $lead->logActivity('note', 'Reassignment notification sent', "Email notification sent to {$newAssignee->name} ({$newAssignee->email})");
+                    $lead->logActivity('note', 'Reassignment email sent', "Reassignment email sent to {$newAssignee->name} ({$newAssignee->email})");
                 }
             } catch (\Exception $e) {
-                \Log::error('Failed to send lead reassignment notification', [
+                \Log::error('Failed to send lead reassignment email', [
                     'lead_id' => $lead->id,
                     'old_assigned_to' => $oldAssignedTo,
                     'new_assigned_to' => $validated['assigned_to'],
                     'error' => $e->getMessage()
                 ]);
-                // Non-fatal: continue even if notification fails
+                // Non-fatal: continue even if email fails
             }
         }
         
@@ -1205,13 +1236,29 @@ class CrmLeadController extends Controller
                 try {
                     $reassignedBy = Auth::user();
                     
-                    // Send email using Mailable
+                    // Send email immediately using Mail facade (same as quotes/invoices)
                     Mail::to($assignedUser->email)->send(new LeadAssignmentMail($lead, $assignedUser, $previousAssignee, $reassignedBy, false));
+                    
+                    // Update email history like quotes/invoices
+                    $emailHistory = $lead->email_history ?? [];
+                    $emailHistory[] = [
+                        'sent_at' => now()->toISOString(),
+                        'to' => $assignedUser->email,
+                        'subject' => '🔄 Lead Reassigned - ' . $lead->full_name,
+                        'type' => 'bulk_reassignment',
+                        'sent_by' => $reassignedBy->name,
+                        'previous_assignee' => $oldAssignee
+                    ];
+                    
+                    $lead->update([
+                        'email_history' => $emailHistory,
+                        'last_email_sent_at' => now()
+                    ]);
                     
                     // Also send database notification for dashboard
                     $assignedUser->notify(new LeadReassignedNotification($lead, $previousAssignee, $assignedUser, $reassignedBy));
                     
-                    \Log::info('Bulk reassignment email and notification sent', [
+                    \Log::info('Bulk reassignment email sent successfully', [
                         'lead_id' => $lead->id,
                         'previous_assignee' => $oldAssignee,
                         'new_assignee' => $assignedUser->name,
@@ -1221,15 +1268,15 @@ class CrmLeadController extends Controller
                     // Log the assignment change
                     $lead->logActivity('note', 'Lead reassigned (bulk)', 
                         "Lead reassigned from {$oldAssignee} to {$assignedUser->name} via bulk action by {$reassignedBy->name}");
-                    $lead->logActivity('note', 'Reassignment notification sent', "Email notification sent to {$assignedUser->name} ({$assignedUser->email})");
+                    $lead->logActivity('note', 'Reassignment email sent', "Bulk reassignment email sent to {$assignedUser->name} ({$assignedUser->email})");
                 } catch (\Exception $e) {
-                    \Log::error('Failed to send bulk reassignment notification', [
+                    \Log::error('Failed to send bulk reassignment email', [
                         'lead_id' => $lead->id,
                         'new_assignee' => $assignedUser->name,
                         'error' => $e->getMessage()
                     ]);
                     
-                    // Still log the assignment change even if notification fails
+                    // Still log the assignment change even if email fails
                     $lead->logActivity('note', 'Lead reassigned (bulk)', 
                         "Lead reassigned from {$oldAssignee} to {$assignedUser->name} via bulk action");
                 }
@@ -1389,27 +1436,42 @@ class CrmLeadController extends Controller
             try {
                 $assignedUser = auth()->user();
                 if ($assignedUser) {
-                    // Send email using Mailable
+                    // Send email immediately using Mail facade (same as quotes/invoices)
                     Mail::to($assignedUser->email)->send(new LeadAssignmentMail($lead, $assignedUser, null, $assignedUser, true));
+                    
+                    // Update email history like quotes/invoices
+                    $emailHistory = $lead->email_history ?? [];
+                    $emailHistory[] = [
+                        'sent_at' => now()->toISOString(),
+                        'to' => $assignedUser->email,
+                        'subject' => '👥 New Lead Assigned - ' . $lead->full_name,
+                        'type' => 'assignment',
+                        'sent_by' => $assignedUser->name
+                    ];
+                    
+                    $lead->update([
+                        'email_history' => $emailHistory,
+                        'last_email_sent_at' => now()
+                    ]);
                     
                     // Also send database notification for dashboard
                     $assignedUser->notify(new LeadCreatedNotification($lead));
                     
-                    \Log::info('Lead assignment email and notification sent (quick add)', [
+                    \Log::info('Lead assignment email sent successfully (quick add)', [
                         'lead_id' => $lead->id,
                         'assigned_to' => $assignedUser->id,
                         'assigned_to_email' => $assignedUser->email
                     ]);
                     
-                    $lead->logActivity('note', 'Assignment notification sent', "Email notification sent to {$assignedUser->name} ({$assignedUser->email})");
+                    $lead->logActivity('note', 'Assignment email sent', "Assignment email sent to {$assignedUser->name} ({$assignedUser->email})");
                 }
             } catch (\Exception $e) {
-                \Log::error('Failed to send lead assignment notification (quick add)', [
+                \Log::error('Failed to send lead assignment email (quick add)', [
                     'lead_id' => $lead->id,
                     'assigned_to' => $lead->assigned_to,
                     'error' => $e->getMessage()
                 ]);
-                // Non-fatal: continue even if notification fails
+                // Non-fatal: continue even if email fails
             }
 
             return response()->json([

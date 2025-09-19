@@ -31,13 +31,17 @@ class CrmLead extends Model
         'expected_close_date',
         'last_contacted_at',
         'assigned_to',
+        'email_history',
+        'last_email_sent_at',
     ];
 
     protected $casts = [
         'estimated_value' => 'decimal:2',
         'expected_close_date' => 'date',
         'last_contacted_at' => 'datetime',
+        'last_email_sent_at' => 'datetime',
         'attachments' => 'array',
+        'email_history' => 'array',
     ];
 
     // Relationships
