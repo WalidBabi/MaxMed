@@ -609,9 +609,15 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex-1 min-w-0">
-                                                    <h5 class="text-sm font-medium text-gray-900 truncate" title="{{ $attachment['filename'] ?? 'Attachment' }}">
-                                                        {{ $attachment['filename'] ?? 'Attachment' }}
-                                                    </h5>
+                                                    @if(isset($attachment['path']))
+                                                        <a href="{{ asset('storage/' . $attachment['path']) }}" target="_blank" class="text-sm font-medium text-indigo-600 hover:text-indigo-500 truncate block" title="{{ $attachment['filename'] ?? 'Attachment' }}">
+                                                            {{ $attachment['filename'] ?? 'Attachment' }}
+                                                        </a>
+                                                    @else
+                                                        <h5 class="text-sm font-medium text-gray-900 truncate" title="{{ $attachment['filename'] ?? 'Attachment' }}">
+                                                            {{ $attachment['filename'] ?? 'Attachment' }}
+                                                        </h5>
+                                                    @endif
                                                     <div class="mt-1 flex items-center space-x-2 text-xs text-gray-500">
                                                         @if(isset($attachment['size']))
                                                             <span>{{ number_format($attachment['size'] / 1024, 1) }} KB</span>
@@ -620,15 +626,30 @@
                                                             <span>•</span>
                                                             <span>{{ $attachment['type'] }}</span>
                                                         @endif
+                                                        @if(isset($attachment['uploaded_at']))
+                                                            <span>•</span>
+                                                            <span>{{ \Carbon\Carbon::parse($attachment['uploaded_at'])->format('M j, Y') }}</span>
+                                                        @endif
                                                     </div>
                                                 </div>
-                                                <div class="flex-shrink-0">
+                                                <div class="flex-shrink-0 flex items-center space-x-1">
+                                                    @if(isset($attachment['path']))
+                                                        <a href="{{ asset('storage/' . $attachment['path']) }}" target="_blank" 
+                                                           class="text-indigo-600 hover:text-indigo-800 p-1"
+                                                           title="View attachment">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                                            </svg>
+                                                        </a>
+                                                    @endif
                                                     <button type="button" 
                                                             data-index="{{ $index }}"
                                                             class="remove-existing-attachment text-red-600 hover:text-red-800 p-1"
-                                                            title="Remove attachment">
+                                                            title="Remove attachment"
+                                                            onclick="if(confirm('Are you sure you want to remove this attachment?')) { removeExistingAttachment({{ $index }}); }">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                                         </svg>
                                                     </button>
                                                 </div>
@@ -899,8 +920,9 @@ function addItem(itemData = null) {
         
         initializeExistingItemSpecifications(row, data);
         
-        // If there's a price type, update the rate based on it
-        if (data.price_type && priceTypeSelect) {
+        // If there's a price type but no saved rate, update the rate based on it
+        // For existing items with saved rates, don't override the rate
+        if (data.price_type && priceTypeSelect && (!data.rate || data.rate == 0)) {
             setTimeout(() => {
                 updateRateFromPriceType(priceTypeSelect);
             }, 100);
@@ -1431,34 +1453,40 @@ function updatePriceTypeControlsByCurrency() {
         const rateInput = row.querySelector('.rate-input');
         const productIdInput = row.querySelector('.product-id-input');
         if (!priceTypeSelect) return;
+        // Check if this is an existing item with saved values
+        const hasExistingRate = rateInput && rateInput.value && parseFloat(rateInput.value) > 0;
+        const hasExistingPriceType = priceTypeSelect.value && priceTypeSelect.value !== '';
+        
         if (currency === 'AED') {
             priceTypeSelect.disabled = false;
             if (!priceTypeSelect.value) priceTypeSelect.value = 'aed';
-            // If product selected, update rate from AED
-            if (productIdInput && productIdInput.value) {
+            // Only update rate if it's a new item without existing values
+            if (productIdInput && productIdInput.value && !hasExistingRate) {
                 updateRateFromPriceType(priceTypeSelect);
             }
         } else if (currency === 'USD') {
             priceTypeSelect.disabled = false;
             if (!priceTypeSelect.value) priceTypeSelect.value = 'usd';
-            if (productIdInput && productIdInput.value) {
+            if (productIdInput && productIdInput.value && !hasExistingRate) {
                 updateRateFromPriceType(priceTypeSelect);
             }
         } else if (currency === 'CNY') {
             priceTypeSelect.disabled = false;
             if (!priceTypeSelect.value) priceTypeSelect.value = 'cny';
-            if (productIdInput && productIdInput.value) {
+            if (productIdInput && productIdInput.value && !hasExistingRate) {
                 updateRateFromPriceType(priceTypeSelect);
             }
         } else if (currency === 'HKD') {
             priceTypeSelect.disabled = false;
             if (!priceTypeSelect.value) priceTypeSelect.value = 'hkd';
-            if (productIdInput && productIdInput.value) {
+            if (productIdInput && productIdInput.value && !hasExistingRate) {
                 updateRateFromPriceType(priceTypeSelect);
             }
         } else {
             // For other currencies: disable price type selection and leave manual rate
-            priceTypeSelect.value = '';
+            if (!hasExistingPriceType) {
+                priceTypeSelect.value = '';
+            }
             priceTypeSelect.disabled = true;
             // Do not auto-change rate; keep whatever user set
             if (rateInput && !rateInput.value) {
@@ -1676,14 +1704,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Handle existing attachment removal
-    document.addEventListener('click', function(e) {
-        if (e.target.closest('.remove-existing-attachment')) {
-            const button = e.target.closest('.remove-existing-attachment');
-            const index = parseInt(button.getAttribute('data-index'));
-            removeExistingAttachment(index);
-        }
-    });
+    // Attachment removal is handled by individual onclick handlers
 });
 </script>
 @endsection 
