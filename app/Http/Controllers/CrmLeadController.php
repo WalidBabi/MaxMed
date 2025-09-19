@@ -8,10 +8,12 @@ use App\Models\User;
 use App\Models\CrmDeal;
 use App\Notifications\LeadCreatedNotification;
 use App\Notifications\LeadReassignedNotification;
+use App\Mail\LeadAssignmentMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
 
 class CrmLeadController extends Controller
@@ -497,12 +499,17 @@ class CrmLeadController extends Controller
             // Non-fatal: keep going even if customer creation fails
         }
 
-        // Send notification to assigned user
+        // Send email notification to assigned user
         try {
             $assignedUser = User::find($lead->assigned_to);
             if ($assignedUser) {
+                // Send email using Mailable
+                Mail::to($assignedUser->email)->send(new LeadAssignmentMail($lead, $assignedUser, null, Auth::user(), true));
+                
+                // Also send database notification for dashboard
                 $assignedUser->notify(new LeadCreatedNotification($lead));
-                \Log::info('Lead assignment notification sent', [
+                
+                \Log::info('Lead assignment email and notification sent', [
                     'lead_id' => $lead->id,
                     'assigned_to' => $assignedUser->id,
                     'assigned_to_email' => $assignedUser->email
@@ -724,10 +731,13 @@ class CrmLeadController extends Controller
                 $reassignedBy = Auth::user();
 
                 if ($newAssignee) {
-                    // Send notification to the new assignee
+                    // Send email using Mailable
+                    Mail::to($newAssignee->email)->send(new LeadAssignmentMail($lead, $newAssignee, $previousAssignee, $reassignedBy, false));
+                    
+                    // Also send database notification for dashboard
                     $newAssignee->notify(new LeadReassignedNotification($lead, $previousAssignee, $newAssignee, $reassignedBy));
                     
-                    \Log::info('Lead reassignment notification sent', [
+                    \Log::info('Lead reassignment email and notification sent', [
                         'lead_id' => $lead->id,
                         'previous_assignee' => $previousAssignee?->name ?? 'Unassigned',
                         'new_assignee' => $newAssignee->name,
@@ -1191,12 +1201,17 @@ class CrmLeadController extends Controller
                 
                 $lead->update(['assigned_to' => $validated['assigned_to']]);
                 
-                // Send notification to the new assignee
+                // Send email notification to the new assignee
                 try {
                     $reassignedBy = Auth::user();
+                    
+                    // Send email using Mailable
+                    Mail::to($assignedUser->email)->send(new LeadAssignmentMail($lead, $assignedUser, $previousAssignee, $reassignedBy, false));
+                    
+                    // Also send database notification for dashboard
                     $assignedUser->notify(new LeadReassignedNotification($lead, $previousAssignee, $assignedUser, $reassignedBy));
                     
-                    \Log::info('Bulk reassignment notification sent', [
+                    \Log::info('Bulk reassignment email and notification sent', [
                         'lead_id' => $lead->id,
                         'previous_assignee' => $oldAssignee,
                         'new_assignee' => $assignedUser->name,
@@ -1370,12 +1385,17 @@ class CrmLeadController extends Controller
                 \Log::error("Customer creation from lead {$lead->id} failed: " . $e->getMessage());
             }
 
-            // Send notification to assigned user (which is the current user in quick add)
+            // Send email notification to assigned user (which is the current user in quick add)
             try {
                 $assignedUser = auth()->user();
                 if ($assignedUser) {
+                    // Send email using Mailable
+                    Mail::to($assignedUser->email)->send(new LeadAssignmentMail($lead, $assignedUser, null, $assignedUser, true));
+                    
+                    // Also send database notification for dashboard
                     $assignedUser->notify(new LeadCreatedNotification($lead));
-                    \Log::info('Lead assignment notification sent (quick add)', [
+                    
+                    \Log::info('Lead assignment email and notification sent (quick add)', [
                         'lead_id' => $lead->id,
                         'assigned_to' => $assignedUser->id,
                         'assigned_to_email' => $assignedUser->email
