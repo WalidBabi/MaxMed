@@ -7,6 +7,7 @@ use App\Models\CrmLead;
 use App\Models\User;
 use App\Models\CrmDeal;
 use App\Notifications\LeadCreatedNotification;
+use App\Notifications\LeadReassignedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -637,6 +638,7 @@ class CrmLeadController extends Controller
         ]);
         
         $oldStatus = $lead->status;
+        $oldAssignedTo = $lead->assigned_to;
         
         // Handle attachment removal
         $removeAttachments = $request->input('remove_attachments', []);
@@ -712,6 +714,40 @@ class CrmLeadController extends Controller
         // Log status change if it changed
         if ($oldStatus !== $validated['status']) {
             $lead->logActivity('note', 'Status changed', "Status changed from {$oldStatus} to {$validated['status']}");
+        }
+
+        // Handle assignment change notification
+        if ($oldAssignedTo != $validated['assigned_to']) {
+            try {
+                $previousAssignee = $oldAssignedTo ? User::find($oldAssignedTo) : null;
+                $newAssignee = User::find($validated['assigned_to']);
+                $reassignedBy = Auth::user();
+
+                if ($newAssignee) {
+                    // Send notification to the new assignee
+                    $newAssignee->notify(new LeadReassignedNotification($lead, $previousAssignee, $newAssignee, $reassignedBy));
+                    
+                    \Log::info('Lead reassignment notification sent', [
+                        'lead_id' => $lead->id,
+                        'previous_assignee' => $previousAssignee?->name ?? 'Unassigned',
+                        'new_assignee' => $newAssignee->name,
+                        'reassigned_by' => $reassignedBy->name
+                    ]);
+
+                    // Log the assignment change
+                    $previousName = $previousAssignee?->name ?? 'Unassigned';
+                    $lead->logActivity('note', 'Lead reassigned', "Lead reassigned from {$previousName} to {$newAssignee->name} by {$reassignedBy->name}");
+                    $lead->logActivity('note', 'Reassignment notification sent', "Email notification sent to {$newAssignee->name} ({$newAssignee->email})");
+                }
+            } catch (\Exception $e) {
+                \Log::error('Failed to send lead reassignment notification', [
+                    'lead_id' => $lead->id,
+                    'old_assigned_to' => $oldAssignedTo,
+                    'new_assigned_to' => $validated['assigned_to'],
+                    'error' => $e->getMessage()
+                ]);
+                // Non-fatal: continue even if notification fails
+            }
         }
         
         return redirect()->route('crm.leads.show', $lead)
@@ -1150,13 +1186,38 @@ class CrmLeadController extends Controller
 
             foreach ($validated['lead_ids'] as $leadId) {
                 $lead = CrmLead::findOrFail($leadId);
-                $oldAssignee = $lead->assignedUser->name ?? 'Unassigned';
+                $previousAssignee = $lead->assignedUser;
+                $oldAssignee = $previousAssignee?->name ?? 'Unassigned';
                 
                 $lead->update(['assigned_to' => $validated['assigned_to']]);
                 
-                // Log the assignment change
-                $lead->logActivity('note', 'Lead reassigned (bulk)', 
-                    "Lead reassigned from {$oldAssignee} to {$assignedUser->name} via bulk action");
+                // Send notification to the new assignee
+                try {
+                    $reassignedBy = Auth::user();
+                    $assignedUser->notify(new LeadReassignedNotification($lead, $previousAssignee, $assignedUser, $reassignedBy));
+                    
+                    \Log::info('Bulk reassignment notification sent', [
+                        'lead_id' => $lead->id,
+                        'previous_assignee' => $oldAssignee,
+                        'new_assignee' => $assignedUser->name,
+                        'reassigned_by' => $reassignedBy->name
+                    ]);
+                    
+                    // Log the assignment change
+                    $lead->logActivity('note', 'Lead reassigned (bulk)', 
+                        "Lead reassigned from {$oldAssignee} to {$assignedUser->name} via bulk action by {$reassignedBy->name}");
+                    $lead->logActivity('note', 'Reassignment notification sent', "Email notification sent to {$assignedUser->name} ({$assignedUser->email})");
+                } catch (\Exception $e) {
+                    \Log::error('Failed to send bulk reassignment notification', [
+                        'lead_id' => $lead->id,
+                        'new_assignee' => $assignedUser->name,
+                        'error' => $e->getMessage()
+                    ]);
+                    
+                    // Still log the assignment change even if notification fails
+                    $lead->logActivity('note', 'Lead reassigned (bulk)', 
+                        "Lead reassigned from {$oldAssignee} to {$assignedUser->name} via bulk action");
+                }
                 
                 $updatedCount++;
             }
