@@ -27,17 +27,26 @@
                     @endif
                 </div>
                 <div class="flex space-x-3">
-                    @if(!$isPurchasingRole)
-                    <button class="send-email-btn inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    <!-- Send Email Button - Always visible -->
+                    <button class="send-email-btn inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-lg"
                             data-lead-id="{{ $lead->id }}"
                             data-lead-name="{{ $lead->full_name }}"
                             data-assigned-user-email="{{ $lead->assignedUser->email ?? '' }}"
-                            data-assigned-user-name="{{ $lead->assignedUser->name ?? '' }}">
+                            data-assigned-user-name="{{ $lead->assignedUser->name ?? 'No User Assigned' }}"
+                            title="Send assignment email to {{ $lead->assignedUser->name ?? 'assigned user' }}"
+                            style="display: block !important; visibility: visible !important;">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                         </svg>
-                        Send Email
+                        📧 Send Email
                     </button>
+                    
+                    <!-- Debug info - remove after testing -->
+                    <div class="text-xs text-gray-500 bg-yellow-100 px-2 py-1 rounded">
+                        Debug: Lead ID {{ $lead->id }}, Assigned: {{ $lead->assignedUser->name ?? 'None' }}
+                    </div>
+                    
+                    @if(!$isPurchasingRole)
                     <a href="{{ route('crm.leads.edit', $lead) }}" 
                        class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         Edit Lead
