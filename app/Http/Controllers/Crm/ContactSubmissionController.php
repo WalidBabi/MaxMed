@@ -8,9 +8,11 @@ use App\Models\CrmLead;
 use App\Models\QuotationRequest;
 use App\Models\Product;
 use App\Notifications\LeadCreatedNotification;
+use App\Mail\LeadAssignmentMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class ContactSubmissionController extends Controller
 {
@@ -117,12 +119,17 @@ class ContactSubmissionController extends Controller
                 'assigned_to' => auth()->id(),
             ]);
 
-            // Send notification to assigned user (which is the current user in this case)
+            // Send email notification to assigned user (which is the current user in this case)
             try {
                 $assignedUser = auth()->user();
                 if ($assignedUser) {
+                    // Send email using Mailable
+                    Mail::to($assignedUser->email)->send(new LeadAssignmentMail($lead, $assignedUser, null, $assignedUser, true));
+                    
+                    // Also send database notification for dashboard
                     $assignedUser->notify(new LeadCreatedNotification($lead));
-                    \Log::info('Lead assignment notification sent (converted from contact)', [
+                    
+                    \Log::info('Lead assignment email and notification sent (converted from contact)', [
                         'lead_id' => $lead->id,
                         'assigned_to' => $assignedUser->id,
                         'assigned_to_email' => $assignedUser->email,
