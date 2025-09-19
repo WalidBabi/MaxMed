@@ -651,6 +651,7 @@ class PurchaseOrderController extends Controller
             'bank_name' => 'nullable|string|max:255',
             'account_number' => 'nullable|string|max:255',
             'transaction_id' => 'nullable|string|max:255',
+            'attachments.*' => 'nullable|file|max:10240|mimes:pdf,doc,docx,jpg,jpeg,png,gif,webp,xls,xlsx',
         ]);
 
         try {
@@ -668,6 +669,22 @@ class PurchaseOrderController extends Controller
                 'status' => SupplierPayment::STATUS_PENDING,
                 'created_by' => Auth::id()
             ]);
+
+            // Handle file uploads
+            if ($request->hasFile('attachments')) {
+                $attachments = [];
+                foreach ($request->file('attachments') as $file) {
+                    $path = $file->store('supplier-payments', 'public');
+                    $attachments[] = [
+                        'path' => $path,
+                        'original_name' => $file->getClientOriginalName(),
+                        'size' => $file->getSize(),
+                        'mime_type' => $file->getMimeType(),
+                        'uploaded_at' => now()->toISOString(),
+                    ];
+                }
+                $payment->update(['attachments' => $attachments]);
+            }
 
             return redirect()->back()->with('success', 'Payment record created successfully.');
 

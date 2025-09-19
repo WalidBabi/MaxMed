@@ -194,4 +194,51 @@ class SupplierPayment extends Model
             default => 'bg-gray-100 text-gray-800'
         };
     }
+
+    /**
+     * Get attachments grouped by type
+     */
+    public function getAttachmentsByType()
+    {
+        if (!$this->attachments) {
+            return [];
+        }
+
+        $grouped = [];
+        foreach ($this->attachments as $attachment) {
+            $extension = strtolower(pathinfo($attachment['original_name'], PATHINFO_EXTENSION));
+            
+            if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                $grouped['images'][] = $attachment;
+            } elseif (in_array($extension, ['pdf'])) {
+                $grouped['pdfs'][] = $attachment;
+            } elseif (in_array($extension, ['doc', 'docx'])) {
+                $grouped['documents'][] = $attachment;
+            } elseif (in_array($extension, ['xls', 'xlsx'])) {
+                $grouped['spreadsheets'][] = $attachment;
+            } else {
+                $grouped['others'][] = $attachment;
+            }
+        }
+        
+        return $grouped;
+    }
+
+    /**
+     * Add an attachment to this payment
+     */
+    public function addAttachment($filePath, $originalName, $size = null, $mimeType = null)
+    {
+        $attachments = $this->attachments ?: [];
+        $attachments[] = [
+            'path' => $filePath,
+            'original_name' => $originalName,
+            'size' => $size,
+            'mime_type' => $mimeType,
+            'uploaded_at' => now()->toISOString(),
+        ];
+        
+        $this->attachments = $attachments;
+        return $this;
+    }
 } 

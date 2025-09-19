@@ -179,25 +179,14 @@
                                         $attachmentCount = count($attachments);
                                     ?>
                                     <?php if($attachmentCount > 0): ?>
-                                        <div class="flex items-center space-x-1">
-                                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <button onclick="openAttachmentModal('<?php echo e($po->po_number); ?>', <?php echo e(json_encode($attachments)); ?>)"
+                                                class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
                                             </svg>
-                                            <span class="text-sm text-gray-600"><?php echo e($attachmentCount); ?> file<?php echo e($attachmentCount > 1 ? 's' : ''); ?></span>
-                                        </div>
-                                        <div class="text-xs text-gray-500 mt-1">
-                                            <?php $__currentLoopData = $attachments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $attachment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <?php if($index < 2): ?>
-                                                    <div class="truncate max-w-32" title="<?php echo e($attachment['filename'] ?? 'Attachment'); ?>">
-                                                        <?php echo e($attachment['filename'] ?? 'Attachment'); ?>
+                                            <?php echo e($attachmentCount); ?> file<?php echo e($attachmentCount > 1 ? 's' : ''); ?>
 
-                                                    </div>
-                                                <?php endif; ?>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                            <?php if($attachmentCount > 2): ?>
-                                                <div class="text-gray-400">+<?php echo e($attachmentCount - 2); ?> more</div>
-                                            <?php endif; ?>
-                                        </div>
+                                        </button>
                                     <?php else: ?>
                                         <span class="text-sm text-gray-400">No attachments</span>
                                     <?php endif; ?>
@@ -731,6 +720,187 @@ function submitEmailForm(event) {
         }
     });
 }
+
+// Attachment modal functionality (same as in show page)
+function openAttachmentModal(poNumber, attachments) {
+    console.log('Opening attachment modal for PO:', poNumber, attachments);
+    
+    // Create modal HTML
+    const modalHTML = `
+        <div id="attachmentModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div class="relative top-10 mx-auto p-6 border w-full max-w-4xl shadow-lg rounded-lg bg-white">
+                <div class="mt-3">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-900">Purchase Order Attachments</h3>
+                            <p class="text-sm text-gray-600 mt-1">PO #${poNumber} - ${attachments.length} file${attachments.length > 1 ? 's' : ''}</p>
+                        </div>
+                        <button onclick="closeAttachmentModal()" class="text-gray-400 hover:text-gray-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Attachments Grid -->
+                    <div class="max-h-96 overflow-y-auto">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            ${attachments.map(attachment => {
+                                const fileName = attachment.filename || attachment.original_name || 'Unknown file';
+                                const filePath = attachment.path || attachment.file_path;
+                                const extension = fileName.split('.').pop().toLowerCase();
+                                const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension);
+                                const isPdf = extension === 'pdf';
+                                const fileUrl = '/storage/' + filePath;
+                                
+                                let iconColor = 'text-gray-600';
+                                let bgColor = 'bg-gray-100';
+                                let icon = 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z';
+                                
+                                if (isPdf) {
+                                    iconColor = 'text-red-600';
+                                    bgColor = 'bg-red-100';
+                                    icon = 'M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z';
+                                } else if (isImage) {
+                                    iconColor = 'text-blue-600';
+                                    bgColor = 'bg-blue-100';
+                                    icon = 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z';
+                                } else if (['doc', 'docx'].includes(extension)) {
+                                    iconColor = 'text-blue-800';
+                                    bgColor = 'bg-blue-100';
+                                } else if (['xls', 'xlsx'].includes(extension)) {
+                                    iconColor = 'text-green-600';
+                                    bgColor = 'bg-green-100';
+                                }
+                                
+                                return `
+                                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                        <div class="flex flex-col items-center">
+                                            ${isImage ? 
+                                                `<div class="w-full h-32 mb-3 rounded-lg overflow-hidden bg-gray-100">
+                                                    <img src="${fileUrl}" alt="${fileName}" 
+                                                         class="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform"
+                                                         onclick="openImagePreview('${fileUrl}', '${fileName}')">
+                                                </div>` :
+                                                `<div class="w-16 h-16 ${bgColor} rounded-lg flex items-center justify-center mb-3">
+                                                    <svg class="w-8 h-8 ${iconColor}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${icon}"></path>
+                                                    </svg>
+                                                </div>`
+                                            }
+                                            <div class="text-center">
+                                                <p class="text-sm font-medium text-gray-900 mb-2 truncate w-full" title="${fileName}">
+                                                    ${fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName}
+                                                </p>
+                                                <div class="flex space-x-2">
+                                                    ${isPdf ? 
+                                                        `<button onclick="openPdfViewer('${fileUrl}', '${fileName}')" 
+                                                                class="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition-colors">
+                                                            View PDF
+                                                        </button>` :
+                                                        `<a href="${fileUrl}" target="_blank" 
+                                                           class="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors">
+                                                            Open
+                                                        </a>`
+                                                    }
+                                                    <a href="${fileUrl}" download="${fileName}"
+                                                       class="px-3 py-1 bg-gray-600 text-white text-xs rounded hover:bg-gray-700 transition-colors">
+                                                        Download
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="flex justify-end mt-6 pt-4 border-t border-gray-200">
+                        <button onclick="closeAttachmentModal()" 
+                                class="px-6 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Add modal to page
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+function closeAttachmentModal() {
+    const modal = document.getElementById('attachmentModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function openImagePreview(imageUrl, imageName) {
+    const previewHTML = `
+        <div id="imagePreview" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-60" onclick="closeImagePreview()">
+            <div class="relative max-w-4xl max-h-full p-4" onclick="event.stopPropagation()">
+                <button onclick="closeImagePreview()" class="absolute top-2 right-2 text-white hover:text-gray-300 z-10">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                <img src="${imageUrl}" alt="${imageName}" class="max-w-full max-h-full object-contain rounded-lg">
+                <div class="text-center mt-2">
+                    <p class="text-white text-sm">${imageName}</p>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', previewHTML);
+}
+
+function closeImagePreview() {
+    const preview = document.getElementById('imagePreview');
+    if (preview) {
+        preview.remove();
+    }
+}
+
+function openPdfViewer(pdfUrl, pdfName) {
+    const pdfViewerHTML = `
+        <div id="pdfViewer" class="fixed inset-0 bg-white z-60">
+            <div class="flex flex-col h-full">
+                <div class="bg-gray-800 text-white p-4 flex items-center justify-between">
+                    <h3 class="text-lg font-medium">${pdfName}</h3>
+                    <div class="flex space-x-2">
+                        <a href="${pdfUrl}" target="_blank" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
+                            Open in New Tab
+                        </a>
+                        <button onclick="closePdfViewer()" class="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700">
+                            Close
+                        </button>
+                    </div>
+                </div>
+                <iframe src="${pdfUrl}" class="flex-1 w-full border-none" title="${pdfName}"></iframe>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', pdfViewerHTML);
+}
+
+function closePdfViewer() {
+    const viewer = document.getElementById('pdfViewer');
+    if (viewer) {
+        viewer.remove();
+    }
+}
+
+// Close modals when clicking outside
+document.addEventListener('click', function(e) {
+    if (e.target.id === 'attachmentModal') {
+        closeAttachmentModal();
+    }
+});
 </script>
 <?php $__env->stopPush(); ?>
 
