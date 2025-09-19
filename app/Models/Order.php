@@ -100,11 +100,14 @@ class Order extends Model
             self::STATUS_PENDING,               // Allow reverting to pending (admin correction)
             self::STATUS_AWAITING_QUOTATIONS,   // Allow reverting to quotation workflow
             self::STATUS_SHIPPED,               // Order shipped
+            self::STATUS_DELIVERED,             // Direct to delivered (skip shipping)
+            self::STATUS_COMPLETED,             // Direct to completed (skip shipping/delivery)
             self::STATUS_CANCELLED
         ],
         self::STATUS_SHIPPED => [
             self::STATUS_PROCESSING,            // Allow reverting to processing
             self::STATUS_DELIVERED,             // Order delivered
+            self::STATUS_COMPLETED,             // Direct to completed (skip delivery confirmation)
             self::STATUS_CANCELLED
         ],
         self::STATUS_DELIVERED => [

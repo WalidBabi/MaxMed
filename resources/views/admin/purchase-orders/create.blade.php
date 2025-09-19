@@ -1407,10 +1407,10 @@ function handleOrderSelection() {
                                     priceType = 'usd';
                                 } else if (data.order.currency === 'CNY') {
                                     rate = item.procurement_price_usd || item.unit_price || 0; // CNY uses USD prices
-                                    priceType = 'usd';
+                                    priceType = 'cny';
                                 } else if (data.order.currency === 'HKD') {
                                     rate = item.procurement_price_usd || item.unit_price || 0; // HKD uses USD prices
-                                    priceType = 'usd';
+                                    priceType = 'hkd';
                                 } else {
                                     // Default to AED
                                     rate = item.procurement_price_aed || item.unit_price || 0;
