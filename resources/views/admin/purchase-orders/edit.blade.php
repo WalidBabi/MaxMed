@@ -676,7 +676,7 @@ $itemsData = $purchaseOrder->items->map(function($item) {
     
     return [
         'item_details' => $itemDetails,
-        'product_id' => $item->product_id,
+        'product_id' => $item->product_id ? (string) $item->product_id : '',
         'specifications' => $item->specifications ?? '',
         'size' => $item->size ?? '',
         'quantity' => (float) $item->quantity,
@@ -779,8 +779,8 @@ function addItem(itemData = null) {
                        placeholder="Select specifications..." 
                        autocomplete="off"
                        readonly
-                                              value="">
-                 <input type="hidden" name="items[${itemCounter}][specifications]" class="specifications-hidden" value="">
+                       value="">
+                 <input type="hidden" name="items[${itemCounter}][specifications]" class="specifications-hidden" value="${data.specifications || ''}">
                 
                 <!-- Size Options Dropdown -->
                 <div class="mt-2">
