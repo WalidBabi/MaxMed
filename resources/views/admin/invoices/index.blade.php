@@ -383,6 +383,11 @@
                                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                                 Partial
                                             </span>
+                                            @if($invoice->paid_amount > 0)
+                                                <div class="text-xs text-green-600 font-medium mt-1">
+                                                    {{ number_format($invoice->paid_amount, 0) }} {{ $invoice->currency }} paid
+                                                </div>
+                                            @endif
                                         @else
                                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                                 {{ ucfirst($invoice->payment_status) }}
@@ -531,6 +536,11 @@
                                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Paid</span>
                                             @elseif($parent->payment_status === 'partial')
                                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Partial</span>
+                                                @if($parent->paid_amount > 0)
+                                                    <div class="text-xs text-green-600 font-medium mt-1">
+                                                        {{ number_format($parent->paid_amount, 0) }} {{ $parent->currency }} paid
+                                                    </div>
+                                                @endif
                                             @else
                                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">{{ ucfirst($parent->payment_status) }}</span>
                                             @endif
