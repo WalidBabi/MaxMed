@@ -28,6 +28,16 @@
                 </div>
                 <div class="flex space-x-3">
                     @if(!$isPurchasingRole)
+                    <button class="send-email-btn inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                            data-lead-id="{{ $lead->id }}"
+                            data-lead-name="{{ $lead->full_name }}"
+                            data-assigned-user-email="{{ $lead->assignedUser->email ?? '' }}"
+                            data-assigned-user-name="{{ $lead->assignedUser->name ?? '' }}">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        Send Email
+                    </button>
                     <a href="{{ route('crm.leads.edit', $lead) }}" 
                        class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         Edit Lead
@@ -970,17 +980,300 @@
 </style>
 @endpush
 
+<!-- Send Email Modal -->
+<div x-data="{ show: false, isLoading: false }" 
+     x-on:open-modal.window="console.log('Modal event received:', $event.detail); $event.detail == 'send-lead-email' ? show = true : null" 
+     x-on:close-modal.window="$event.detail == 'send-lead-email' ? show = false : null" 
+     x-show="show" 
+     class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50" 
+     style="display: none;">
+    <div x-show="show" class="fixed inset-0 transform transition-all" x-on:click="show = false" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div class="absolute inset-0 bg-gray-900 bg-opacity-75 backdrop-blur-sm"></div>
+    </div>
+
+    <div x-show="show" class="mb-6 bg-white rounded-2xl overflow-hidden shadow-2xl transform transition-all sm:w-full sm:max-w-2xl sm:mx-auto border border-gray-200" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+        <form id="sendEmailForm" method="POST" action="" x-data="{ submitting: false }" @submit.prevent="submitEmailForm($event)">
+            @csrf
+            
+            <!-- Header with gradient background -->
+            <div class="bg-gradient-to-r from-green-600 to-emerald-700 px-6 py-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-white bg-opacity-20 backdrop-blur-sm">
+                            <svg class="h-7 w-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-4 flex-1">
+                        <h3 class="text-xl font-semibold text-white">Send Lead Assignment Email</h3>
+                        <p class="text-sm mt-1 text-green-100">Notify the assigned user about this lead</p>
+                    </div>
+                    <button type="button" x-on:click="show = false" class="rounded-full p-2 hover:bg-white hover:bg-opacity-20 transition-colors duration-200 text-white">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="px-6 py-6">
+                <div class="space-y-6">
+                    <!-- Lead Information Card -->
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                        <div class="flex items-center space-x-3">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="text-sm font-semibold text-gray-900" id="emailModalLeadName">{{ $lead->full_name }}</h4>
+                                <p class="text-sm text-gray-600" id="emailModalCompanyName">{{ $lead->company_name }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email Fields -->
+                    <div class="space-y-5">
+                        <div>
+                            <label for="assigned_user_email" class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                                </svg>
+                                Assigned User Email
+                                <span class="text-red-500 ml-1">*</span>
+                            </label>
+                            <div class="relative">
+                                <input type="email" 
+                                       id="assigned_user_email" 
+                                       name="assigned_user_email" 
+                                       required
+                                       value="{{ $lead->assignedUser->email ?? '' }}"
+                                       class="block w-full px-4 py-3 pr-10 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200" 
+                                       placeholder="Enter assigned user email address">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="cc_emails" class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                CC Email Addresses
+                            </label>
+                            <input type="text" 
+                                   id="cc_emails" 
+                                   name="cc_emails" 
+                                   value="sales@maxmedme.com" 
+                                   class="block w-full px-4 py-3 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
+                                   placeholder="Additional email addresses (comma separated)">
+                            <p class="mt-2 text-xs text-gray-500 flex items-center">
+                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                </svg>
+                                Separate multiple email addresses with commas
+                            </p>
+                        </div>
+
+                        <div>
+                            <label for="message" class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.955 8.955 0 01-3.946-.905L3 21l1.905-6.054A8.955 8.955 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z"></path>
+                                </svg>
+                                Custom Message (Optional)
+                            </label>
+                            <textarea id="message" 
+                                      name="message" 
+                                      rows="3"
+                                      class="block w-full px-4 py-3 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200 resize-none"
+                                      placeholder="Add a personal message to include with the lead assignment email..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="bg-gray-50 px-6 py-4 flex items-center justify-between border-t border-gray-200">
+                <div class="flex items-center text-sm text-gray-500">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                    </svg>
+                    Email will be sent immediately
+                </div>
+                
+                <div class="flex items-center space-x-3">
+                    <button type="button" 
+                            x-on:click="show = false"
+                            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                            x-bind:disabled="submitting"
+                            x-bind:class="submitting ? 'opacity-75 cursor-not-allowed' : ''"
+                            class="px-6 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200 flex items-center">
+                        <svg x-show="submitting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span x-show="!submitting">Send Email</span>
+                        <span x-show="submitting">Sending...</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 @push('scripts')
 <script>
-    function toggleActivityForm() {
-        const form = document.getElementById('activityForm');
-        form.classList.toggle('hidden');
-    }
+let currentLeadId = null; // Store current lead ID for status updates
 
-    function toggleDealForm() {
-        const form = document.getElementById('dealForm');
-        form.classList.toggle('hidden');
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    // Enhanced send email functionality
+    document.querySelectorAll('.send-email-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            console.log('Send email button clicked for lead');
+            const leadId = this.getAttribute('data-lead-id');
+            const leadName = this.getAttribute('data-lead-name');
+            const assignedUserEmail = this.getAttribute('data-assigned-user-email');
+            const assignedUserName = this.getAttribute('data-assigned-user-name');
+            
+            // Store lead ID globally for status updates
+            currentLeadId = leadId;
+            
+            console.log('Lead data:', { leadId, leadName, assignedUserEmail, assignedUserName });
+            
+            const sendEmailForm = document.getElementById('sendEmailForm');
+            if (!sendEmailForm) {
+                console.error('Send email form not found');
+                return;
+            }
+            
+            sendEmailForm.action = `/crm/leads/${leadId}/send-email`;
+            console.log('Form action set to:', sendEmailForm.action);
+            
+            // Update modal content
+            const emailModalLeadName = document.getElementById('emailModalLeadName');
+            const emailModalCompanyName = document.getElementById('emailModalCompanyName');
+            
+            if (emailModalLeadName) emailModalLeadName.textContent = leadName;
+            if (emailModalCompanyName) emailModalCompanyName.textContent = '{{ $lead->company_name }}';
+            
+            // Populate assigned user email
+            const assignedUserEmailField = document.getElementById('assigned_user_email');
+            if (assignedUserEmailField && assignedUserEmail) {
+                assignedUserEmailField.value = assignedUserEmail;
+            }
+            
+            console.log('Dispatching open-modal event for send-lead-email');
+            window.dispatchEvent(new CustomEvent('open-modal', { detail: 'send-lead-email' }));
+        });
+    });
+});
+
+// Function to handle email form submission
+window.submitEmailForm = function(event) {
+    const form = event.target;
+    const formData = new FormData(form);
+    const submitButton = form.querySelector('button[type="submit"]');
+    
+    // Set submitting state
+    Alpine.store('emailModal', { submitting: true });
+    
+    console.log('Submitting email form...');
+    
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            return response.text().then(text => {
+                console.error('Non-JSON response received:', text);
+                throw new Error('Server did not return JSON response');
+            });
+        }
+        
+        return response.json();
+    })
+    .then(data => {
+        console.log('Email response:', data);
+        
+        // Reset submitting state
+        Alpine.store('emailModal', { submitting: false });
+        
+        if (data.success) {
+            // Close modal
+            window.dispatchEvent(new CustomEvent('close-modal', { detail: 'send-lead-email' }));
+            
+            // Show success message
+            showNotification('Lead assignment email sent successfully!', 'success');
+            
+            // Reset form
+            form.reset();
+        } else {
+            // Show error message
+            showNotification(data.message || 'Failed to send email. Please try again.', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error sending email:', error);
+        
+        // Reset submitting state
+        Alpine.store('emailModal', { submitting: false });
+        
+        // Show error message
+        showNotification('Failed to send email. Please try again.', 'error');
+    });
+};
+
+// Utility function to show notifications (you may need to adjust this based on your notification system)
+function showNotification(message, type) {
+    // Create a simple notification
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 ${
+        type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+    }`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+function toggleActivityForm() {
+    const form = document.getElementById('activityForm');
+    form.classList.toggle('hidden');
+}
+
+function toggleDealForm() {
+    const form = document.getElementById('dealForm');
+    form.classList.toggle('hidden');
+}
 </script>
 @endpush
 
