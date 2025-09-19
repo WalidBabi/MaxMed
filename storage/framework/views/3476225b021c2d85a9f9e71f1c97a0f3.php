@@ -65,29 +65,46 @@
                                         <div class="text-sm font-medium text-gray-900"><?php echo e($order->currency ?? 'AED'); ?> <?php echo e(number_format($order->total_amount, 2)); ?></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <?php if($order->status == 'completed'): ?>
-                                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800">
+                                        <div class="flex items-center space-x-2">
+                                            <?php
+                                                $statusBadgeClass = match($order->status) {
+                                                    'pending' => 'bg-yellow-100 text-yellow-800',
+                                                    'awaiting_quotations' => 'bg-orange-100 text-orange-800',
+                                                    'quotations_received' => 'bg-blue-100 text-blue-800',
+                                                    'approved' => 'bg-indigo-100 text-indigo-800',
+                                                    'processing' => 'bg-purple-100 text-purple-800',
+                                                    'shipped' => 'bg-cyan-100 text-cyan-800',
+                                                    'delivered' => 'bg-green-100 text-green-800',
+                                                    'completed' => 'bg-emerald-100 text-emerald-800',
+                                                    'cancelled' => 'bg-red-100 text-red-800',
+                                                    default => 'bg-gray-100 text-gray-800'
+                                                };
+                                                $statusLabels = [
+                                                    'pending' => 'Order Placed',
+                                                    'awaiting_quotations' => 'Order Review',
+                                                    'quotations_received' => 'Order Confirmed',
+                                                    'approved' => 'Approved',
+                                                    'processing' => 'Processing',
+                                                    'shipped' => 'Shipped',
+                                                    'delivered' => 'Delivered',
+                                                    'completed' => 'Completed',
+                                                    'cancelled' => 'Cancelled'
+                                                ];
+                                            ?>
+                                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium <?php echo e($statusBadgeClass); ?>">
                                                 <svg class="mr-1 h-3 w-3" fill="currentColor" viewBox="0 0 8 8">
                                                     <circle cx="4" cy="4" r="3" />
                                                 </svg>
-                                                Completed
-                                            </span>
-                                        <?php elseif($order->status == 'cancelled'): ?>
-                                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-red-100 text-red-800">
-                                                <svg class="mr-1 h-3 w-3" fill="currentColor" viewBox="0 0 8 8">
-                                                    <circle cx="4" cy="4" r="3" />
-                                                </svg>
-                                                Cancelled
-                                            </span>
-                                        <?php else: ?>
-                                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800">
-                                                <svg class="mr-1 h-3 w-3" fill="currentColor" viewBox="0 0 8 8">
-                                                    <circle cx="4" cy="4" r="3" />
-                                                </svg>
-                                                <?php echo e(ucfirst($order->status)); ?>
+                                                <?php echo e($statusLabels[$order->status] ?? ucfirst(str_replace('_', ' ', $order->status))); ?>
 
                                             </span>
-                                        <?php endif; ?>
+                                            <button onclick="openStatusModal('<?php echo e($order->id); ?>', '<?php echo e($order->order_number); ?>', '<?php echo e($order->status); ?>')" 
+                                                    class="text-gray-600 hover:text-gray-900" title="Update Status">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900"><?php echo e(formatDubaiDate($order->created_at, 'M d, Y')); ?></div>
@@ -335,10 +352,98 @@ function openTrackingPreview(trackingUrl) {
     window.open(trackingUrl, '_blank');
 }
 
+// Order Status Update Modal functionality
+function openStatusModal(orderId, orderNumber, currentStatus) {
+    console.log('Opening status modal for order:', orderId, orderNumber, currentStatus);
+    
+    const statusOptions = [
+        { value: 'pending', label: 'Order Placed', color: 'bg-yellow-100 text-yellow-800' },
+        { value: 'awaiting_quotations', label: 'Order Review', color: 'bg-orange-100 text-orange-800' },
+        { value: 'quotations_received', label: 'Order Confirmed', color: 'bg-blue-100 text-blue-800' },
+        { value: 'approved', label: 'Approved', color: 'bg-indigo-100 text-indigo-800' },
+        { value: 'processing', label: 'Processing', color: 'bg-purple-100 text-purple-800' },
+        { value: 'shipped', label: 'Shipped', color: 'bg-cyan-100 text-cyan-800' },
+        { value: 'delivered', label: 'Delivered', color: 'bg-green-100 text-green-800' },
+        { value: 'completed', label: 'Completed', color: 'bg-emerald-100 text-emerald-800' },
+        { value: 'cancelled', label: 'Cancelled', color: 'bg-red-100 text-red-800' }
+    ];
+    
+    const statusOptionsHTML = statusOptions.map(option => 
+        `<option value="${option.value}" ${option.value === currentStatus ? 'selected' : ''}>${option.label}</option>`
+    ).join('');
+    
+    const modalHTML = `
+        <div id="statusModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+            <div class="relative top-10 mx-auto p-6 border w-full max-w-md shadow-lg rounded-lg bg-white">
+                <div class="mt-3">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900">Update Order Status</h3>
+                            <p class="text-sm text-gray-600 mt-1">Order #${orderNumber}</p>
+                        </div>
+                        <button onclick="closeStatusModal()" class="text-gray-400 hover:text-gray-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Status Update Form -->
+                    <form action="/admin/orders/${orderId}/status" method="POST" class="space-y-4">
+                        <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
+                        <input type="hidden" name="_method" value="PUT">
+                        
+                        <div>
+                            <label for="status" class="block text-sm font-medium text-gray-700 mb-2">New Status</label>
+                            <select id="status" name="status" required
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                ${statusOptionsHTML}
+                            </select>
+                            <p class="text-xs text-gray-500 mt-1">This will update the order status and notify the customer</p>
+                        </div>
+
+                        <div>
+                            <label for="status_notes" class="block text-sm font-medium text-gray-700 mb-2">Status Update Notes (Optional)</label>
+                            <textarea id="status_notes" name="notes" rows="3" 
+                                      placeholder="Add any notes about this status change..."
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex justify-end space-x-3 pt-4">
+                            <button type="button" onclick="closeStatusModal()" 
+                                    class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                                Cancel
+                            </button>
+                            <button type="submit" 
+                                    class="px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700">
+                                Update Status
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+function closeStatusModal() {
+    const modal = document.getElementById('statusModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
 // Close modal when clicking outside
 document.addEventListener('click', function(e) {
     if (e.target.id === 'adminTrackingModal') {
         closeAdminTrackingModal();
+    }
+    if (e.target.id === 'statusModal') {
+        closeStatusModal();
     }
 });
 </script>

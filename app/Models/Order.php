@@ -518,6 +518,14 @@ class Order extends Model
     }
 
     /**
+     * Get all invoices associated with the order
+     */
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class, 'order_id', 'id');
+    }
+
+    /**
      * Get the proforma invoice that created this order.
      */
     public function proformaInvoice()
@@ -531,6 +539,14 @@ class Order extends Model
     public function supplierQuotations()
     {
         return $this->hasMany(SupplierQuotation::class);
+    }
+
+    /**
+     * Alias for supplierQuotations for easier use
+     */
+    public function quotations()
+    {
+        return $this->supplierQuotations();
     }
 
     /**

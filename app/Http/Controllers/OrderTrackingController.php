@@ -14,8 +14,17 @@ class OrderTrackingController extends Controller
     public function track(Order $order)
     {
         try {
-            // Load order with related data
-            $order->load(['items.product', 'user', 'delivery']);
+            // Load order with comprehensive related data
+            $order->load([
+                'items.product.brand',
+                'items.product.category', 
+                'items.product.images',
+                'items.product.specifications',
+                'user', 
+                'delivery',
+                'invoices.payments',
+                'quotations.supplier'
+            ]);
             
             // Get order status progression
             $statusProgression = $this->getStatusProgression($order->status);
