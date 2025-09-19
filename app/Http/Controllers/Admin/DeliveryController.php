@@ -28,7 +28,7 @@ class DeliveryController extends Controller
      */
     public function index()
     {
-        $deliveries = Delivery::with('order')
+        $deliveries = Delivery::with(['order', 'order.user'])
             ->latest()
             ->paginate(15);
 
