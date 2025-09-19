@@ -75,8 +75,20 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="{{ route('crm.leads.show', $lead) }}" class="text-blue-600 hover:text-blue-900 mr-3">View</a>
-                            <a href="{{ route('crm.leads.edit', $lead) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                            <div class="flex items-center justify-end space-x-2">
+                                <button class="send-email-btn text-green-600 hover:text-green-900" 
+                                        data-lead-id="{{ $lead->id }}"
+                                        data-lead-name="{{ $lead->full_name }}"
+                                        data-assigned-user-email="{{ $lead->assignedUser->email ?? '' }}"
+                                        data-assigned-user-name="{{ $lead->assignedUser->name ?? '' }}"
+                                        title="Send Email">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                </button>
+                                <a href="{{ route('crm.leads.show', $lead) }}" class="text-blue-600 hover:text-blue-900">View</a>
+                                <a href="{{ route('crm.leads.edit', $lead) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                            </div>
                         </td>
                     </tr>
                 @empty

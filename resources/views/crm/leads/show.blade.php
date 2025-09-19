@@ -26,24 +26,32 @@
                         <p class="text-gray-600">{{ $lead->company_name }} • {{ $lead->job_title }}</p>
                     @endif
                 </div>
-                <div class="flex space-x-3">
-                    <!-- Send Email Button - Always visible -->
-                    <button class="send-email-btn inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-lg"
+                <div class="flex flex-wrap gap-3">
+                    <!-- SEND EMAIL BUTTON - VERY VISIBLE -->
+                    <button type="button" 
+                            class="send-email-btn inline-flex items-center px-6 py-3 bg-green-600 border-2 border-green-700 rounded-lg font-bold text-sm text-white uppercase tracking-wide hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 shadow-xl transform hover:scale-105 transition-all duration-200"
                             data-lead-id="{{ $lead->id }}"
                             data-lead-name="{{ $lead->full_name }}"
                             data-assigned-user-email="{{ $lead->assignedUser->email ?? '' }}"
                             data-assigned-user-name="{{ $lead->assignedUser->name ?? 'No User Assigned' }}"
-                            title="Send assignment email to {{ $lead->assignedUser->name ?? 'assigned user' }}"
-                            style="display: block !important; visibility: visible !important;">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            title="Click to send assignment email"
+                            style="display: block !important; visibility: visible !important; z-index: 10; position: relative;">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                         </svg>
-                        📧 Send Email
+                        📧 SEND EMAIL
                     </button>
                     
-                    <!-- Debug info - remove after testing -->
-                    <div class="text-xs text-gray-500 bg-yellow-100 px-2 py-1 rounded">
-                        Debug: Lead ID {{ $lead->id }}, Assigned: {{ $lead->assignedUser->name ?? 'None' }}
+                    <!-- Alternative button if the above doesn't work -->
+                    <div style="background: red; color: white; padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer; display: block !important;" 
+                         class="send-email-btn-backup"
+                         onclick="alert('Send Email Button Clicked! Lead ID: {{ $lead->id }}')">
+                        🚨 BACKUP SEND EMAIL BUTTON - CLICK ME
+                    </div>
+                    
+                    <!-- Debug info -->
+                    <div class="bg-yellow-200 border-2 border-yellow-400 px-3 py-2 rounded text-sm font-bold text-black">
+                        🔍 DEBUG: Lead {{ $lead->id }} | User: {{ $lead->assignedUser->name ?? 'NONE' }} | Email: {{ $lead->assignedUser->email ?? 'NONE' }}
                     </div>
                     
                     @if(!$isPurchasingRole)
