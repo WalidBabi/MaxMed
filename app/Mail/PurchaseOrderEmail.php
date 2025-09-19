@@ -53,24 +53,13 @@ class PurchaseOrderEmail extends Mailable
         );
 
         // Attach all uploaded attachments if available
-        if ($this->purchaseOrder->attachments) {
-            // Handle the attachments data - it might be double-encoded JSON
-            $attachments = $this->purchaseOrder->attachments;
+        if ($this->purchaseOrder->attachments && is_array($this->purchaseOrder->attachments)) {
+            \Log::info('Purchase Order Email: Found ' . count($this->purchaseOrder->attachments) . ' attachments for PO ' . $this->purchaseOrder->po_number);
             
-            // If it's a string (double-encoded), decode it
-            if (is_string($attachments)) {
-                $attachments = json_decode($attachments, true);
-            }
-            
-            // If it's still a string after first decode, decode again
-            if (is_string($attachments)) {
-                $attachments = json_decode($attachments, true);
-            }
-                
-            if (is_array($attachments) && !empty($attachments)) {
-                foreach ($attachments as $attachment) {
-                    // Check if the attachment file exists and attach it using the same method as PO PDF
-                    if (isset($attachment['path']) && Storage::disk('public')->exists($attachment['path'])) {
+            foreach ($this->purchaseOrder->attachments as $index => $attachment) {
+                // Check if the attachment file exists and attach it
+                if (isset($attachment['path']) && Storage::disk('public')->exists($attachment['path'])) {
+                    try {
                         $filename = $attachment['filename'] ?? basename($attachment['path']);
                         $fileContent = Storage::disk('public')->get($attachment['path']);
                         $mimeType = $attachment['mime_type'] ?? Storage::disk('public')->mimeType($attachment['path']);
@@ -82,9 +71,18 @@ class PurchaseOrderEmail extends Mailable
                                 'mime' => $mimeType,
                             ]
                         );
+                        
+                        \Log::info('Purchase Order Email: Successfully attached file: ' . $filename);
+                    } catch (\Exception $e) {
+                        // Log error but continue with other attachments
+                        \Log::warning('Purchase Order Email: Failed to attach file: ' . $attachment['path'] . '. Error: ' . $e->getMessage());
                     }
+                } else {
+                    \Log::warning('Purchase Order Email: Attachment file not found or path missing: ' . ($attachment['path'] ?? 'no path'));
                 }
             }
+        } else {
+            \Log::info('Purchase Order Email: No attachments found for PO ' . $this->purchaseOrder->po_number);
         }
 
         return $email;

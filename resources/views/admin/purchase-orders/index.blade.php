@@ -724,25 +724,25 @@ function openAttachmentModal(poNumber, attachments) {
     
     // Create modal HTML
     const modalHTML = `
-        <div id="attachmentModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-            <div class="relative top-10 mx-auto p-6 border w-full max-w-4xl shadow-lg rounded-lg bg-white">
-                <div class="mt-3">
+        <div id="attachmentModal" class="fixed inset-0 bg-black bg-opacity-75 overflow-y-auto h-full w-full z-[9999]" onclick="closeAttachmentModal()">
+            <div class="relative top-4 mx-auto p-0 w-full max-w-6xl" onclick="event.stopPropagation()">
+                <div class="bg-white rounded-lg shadow-2xl">
                     <!-- Header -->
-                    <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center justify-between p-6 border-b border-gray-200">
                         <div>
                             <h3 class="text-xl font-semibold text-gray-900">Purchase Order Attachments</h3>
                             <p class="text-sm text-gray-600 mt-1">PO #${poNumber} - ${attachments.length} file${attachments.length > 1 ? 's' : ''}</p>
                         </div>
-                        <button onclick="closeAttachmentModal()" class="text-gray-400 hover:text-gray-600">
+                        <button onclick="closeAttachmentModal()" class="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-full">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </button>
                     </div>
 
-                    <!-- Attachments Grid -->
-                    <div class="max-h-96 overflow-y-auto">
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Attachments Content -->
+                    <div class="p-6 max-h-[80vh] overflow-y-auto">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             ${attachments.map(attachment => {
                                 const fileName = attachment.filename || attachment.original_name || 'Unknown file';
                                 const filePath = attachment.path || attachment.file_path;
@@ -751,71 +751,69 @@ function openAttachmentModal(poNumber, attachments) {
                                 const isPdf = extension === 'pdf';
                                 const fileUrl = '/storage/' + filePath;
                                 
-                                let iconColor = 'text-gray-600';
-                                let bgColor = 'bg-gray-100';
-                                let icon = 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z';
-                                
                                 if (isPdf) {
-                                    iconColor = 'text-red-600';
-                                    bgColor = 'bg-red-100';
-                                    icon = 'M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z';
+                                    return `
+                                        <div class="mb-6">
+                                            <div class="mb-2 font-medium text-gray-700">${fileName}</div>
+                                            <iframe src="${fileUrl}" width="100%" height="500px" class="border rounded"></iframe>
+                                            <div class="mt-2 flex space-x-2">
+                                                <a href="${fileUrl}" target="_blank" class="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
+                                                    Open in New Tab
+                                                </a>
+                                                <a href="${fileUrl}" download="${fileName}" class="px-3 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700">
+                                                    Download
+                                                </a>
+                                            </div>
+                                        </div>
+                                    `;
                                 } else if (isImage) {
-                                    iconColor = 'text-blue-600';
-                                    bgColor = 'bg-blue-100';
-                                    icon = 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z';
-                                } else if (['doc', 'docx'].includes(extension)) {
-                                    iconColor = 'text-blue-800';
-                                    bgColor = 'bg-blue-100';
-                                } else if (['xls', 'xlsx'].includes(extension)) {
-                                    iconColor = 'text-green-600';
-                                    bgColor = 'bg-green-100';
-                                }
-                                
-                                return `
-                                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                                        <div class="flex flex-col items-center">
-                                            ${isImage ? 
-                                                `<div class="w-full h-32 mb-3 rounded-lg overflow-hidden bg-gray-100">
-                                                    <img src="${fileUrl}" alt="${fileName}" 
-                                                         class="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform"
-                                                         onclick="openImagePreview('${fileUrl}', '${fileName}')">
-                                                </div>` :
-                                                `<div class="w-16 h-16 ${bgColor} rounded-lg flex items-center justify-center mb-3">
-                                                    <svg class="w-8 h-8 ${iconColor}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${icon}"></path>
+                                    return `
+                                        <div class="mb-6">
+                                            <div class="mb-2 font-medium text-gray-700">${fileName}</div>
+                                            <div class="border rounded overflow-hidden bg-gray-50">
+                                                <img src="${fileUrl}" alt="${fileName}" class="w-full h-auto max-h-96 object-contain cursor-pointer" onclick="openImagePreview('${fileUrl}', '${fileName}')">
+                                                <div class="p-3 bg-white border-t">
+                                                    <div class="flex space-x-2">
+                                                        <button onclick="openImagePreview('${fileUrl}', '${fileName}')" class="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
+                                                            View Full Size
+                                                        </button>
+                                                        <a href="${fileUrl}" download="${fileName}" class="px-3 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700">
+                                                            Download
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `;
+                                } else {
+                                    return `
+                                        <div class="mb-6">
+                                            <div class="mb-2 font-medium text-gray-700">${fileName}</div>
+                                            <div class="border rounded p-6 bg-gray-50 text-center">
+                                                <div class="mx-auto w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center mb-3">
+                                                    <svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
                                                     </svg>
-                                                </div>`
-                                            }
-                                            <div class="text-center">
-                                                <p class="text-sm font-medium text-gray-900 mb-2 truncate w-full" title="${fileName}">
-                                                    ${fileName.length > 20 ? fileName.substring(0, 20) + '...' : fileName}
-                                                </p>
-                                                <div class="flex space-x-2">
-                                                    ${isPdf ? 
-                                                        `<button onclick="openPdfViewer('${fileUrl}', '${fileName}')" 
-                                                                class="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition-colors">
-                                                            View PDF
-                                                        </button>` :
-                                                        `<a href="${fileUrl}" target="_blank" 
-                                                           class="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors">
-                                                            Open
-                                                        </a>`
-                                                    }
-                                                    <a href="${fileUrl}" download="${fileName}"
-                                                       class="px-3 py-1 bg-gray-600 text-white text-xs rounded hover:bg-gray-700 transition-colors">
+                                                </div>
+                                                <p class="text-sm text-gray-600 mb-3">${extension.toUpperCase()} File</p>
+                                                <div class="flex space-x-2 justify-center">
+                                                    <a href="${fileUrl}" target="_blank" class="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
+                                                        Open
+                                                    </a>
+                                                    <a href="${fileUrl}" download="${fileName}" class="px-4 py-2 bg-gray-600 text-white text-sm rounded hover:bg-gray-700">
                                                         Download
                                                     </a>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                `;
+                                    `;
+                                }
                             }).join('')}
                         </div>
                     </div>
 
                     <!-- Footer -->
-                    <div class="flex justify-end mt-6 pt-4 border-t border-gray-200">
+                    <div class="flex justify-end p-6 pt-4 border-t border-gray-200 bg-gray-50">
                         <button onclick="closeAttachmentModal()" 
                                 class="px-6 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors">
                             Close
@@ -839,7 +837,7 @@ function closeAttachmentModal() {
 
 function openImagePreview(imageUrl, imageName) {
     const previewHTML = `
-        <div id="imagePreview" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-60" onclick="closeImagePreview()">
+        <div id="imagePreview" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[10000]" onclick="closeImagePreview()">
             <div class="relative max-w-4xl max-h-full p-4" onclick="event.stopPropagation()">
                 <button onclick="closeImagePreview()" class="absolute top-2 right-2 text-white hover:text-gray-300 z-10">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -865,7 +863,7 @@ function closeImagePreview() {
 
 function openPdfViewer(pdfUrl, pdfName) {
     const pdfViewerHTML = `
-        <div id="pdfViewer" class="fixed inset-0 bg-white z-60">
+        <div id="pdfViewer" class="fixed inset-0 bg-white z-[10000]">
             <div class="flex flex-col h-full">
                 <div class="bg-gray-800 text-white p-4 flex items-center justify-between">
                     <h3 class="text-lg font-medium">${pdfName}</h3>
