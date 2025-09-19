@@ -2,406 +2,408 @@
 <div class="mb-6">
     <!-- Modern Pipeline Status Overview -->
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 mb-6">
-        @if(isset($pipelineData))
-            @foreach($pipelineData as $status => $stage)
+        <?php if(isset($pipelineData)): ?>
+            <?php $__currentLoopData = $pipelineData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $status => $stage): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="group relative overflow-hidden rounded-md p-1.5 shadow-sm ring-1 transition-all duration-300 hover:shadow-md cursor-pointer metric-card
-                     @switch($status)
-                         @case('new_inquiry')
+                     <?php switch($status):
+                         case ('new_inquiry'): ?>
                              !bg-gradient-to-br !from-cyan-50 !to-cyan-100 ring-cyan-200/50 hover:ring-cyan-300/50
-                             @break
-                         @case('quote_requested')
+                             <?php break; ?>
+                         <?php case ('quote_requested'): ?>
                              !bg-gradient-to-br !from-slate-50 !to-slate-100 ring-slate-200/50 hover:ring-slate-300/50
-                             @break
-                         @case('getting_price')
+                             <?php break; ?>
+                         <?php case ('getting_price'): ?>
                              !bg-gradient-to-br !from-indigo-50 !to-indigo-100 ring-indigo-200/50 hover:ring-indigo-300/50
-                             @break
-                         @case('price_submitted')
+                             <?php break; ?>
+                         <?php case ('price_submitted'): ?>
                              !bg-gradient-to-br !from-teal-50 !to-teal-100 ring-teal-200/50 hover:ring-teal-300/50
-                             @break
-                         @case('follow_up_1')
+                             <?php break; ?>
+                         <?php case ('follow_up_1'): ?>
                              !bg-gradient-to-br !from-sky-50 !to-sky-100 ring-sky-200/50 hover:ring-sky-300/50
-                             @break
-                         @case('follow_up_2')
+                             <?php break; ?>
+                         <?php case ('follow_up_2'): ?>
                              !bg-gradient-to-br !from-blue-50 !to-blue-100 ring-blue-200/50 hover:ring-blue-300/50
-                             @break
-                         @case('follow_up_3')
+                             <?php break; ?>
+                         <?php case ('follow_up_3'): ?>
                              !bg-gradient-to-br !from-indigo-50 !to-indigo-100 ring-indigo-200/50 hover:ring-indigo-300/50
-                             @break
-                         @case('negotiating_price')
+                             <?php break; ?>
+                         <?php case ('negotiating_price'): ?>
                              !bg-gradient-to-br !from-orange-50 !to-orange-100 ring-orange-200/50 hover:ring-orange-300/50
-                             @break
-                         @case('payment_pending')
+                             <?php break; ?>
+                         <?php case ('payment_pending'): ?>
                              !bg-gradient-to-br !from-green-50 !to-green-100 ring-green-200/50 hover:ring-green-300/50
-                             @break
-                         @case('order_confirmed')
+                             <?php break; ?>
+                         <?php case ('order_confirmed'): ?>
                              !bg-gradient-to-br !from-emerald-50 !to-emerald-100 ring-emerald-200/50 hover:ring-emerald-300/50
-                             @break
-                         @case('deal_lost')
+                             <?php break; ?>
+                         <?php case ('deal_lost'): ?>
                              !bg-gradient-to-br !from-slate-50 !to-slate-100 ring-slate-200/50 hover:ring-slate-300/50
-                             @break
-                     @endswitch"
-                     style="background: @switch($status)
-                         @case('new_inquiry')
+                             <?php break; ?>
+                     <?php endswitch; ?>"
+                     style="background: <?php switch($status):
+                         case ('new_inquiry'): ?>
                              linear-gradient(to bottom right, #ecfeff, #cffafe) !important;
-                             @break
-                         @case('quote_requested')
+                             <?php break; ?>
+                         <?php case ('quote_requested'): ?>
                              linear-gradient(to bottom right, #f8fafc, #e2e8f0) !important;
-                             @break
-                         @case('getting_price')
+                             <?php break; ?>
+                         <?php case ('getting_price'): ?>
                              linear-gradient(to bottom right, #eef2ff, #e0e7ff) !important;
-                             @break
-                         @case('price_submitted')
+                             <?php break; ?>
+                         <?php case ('price_submitted'): ?>
                              linear-gradient(to bottom right, #f0fdfa, #ccfbf1) !important;
-                             @break
-                         @case('follow_up_1')
+                             <?php break; ?>
+                         <?php case ('follow_up_1'): ?>
                              linear-gradient(to bottom right, #f0f9ff, #e0f2fe) !important;
-                             @break
-                         @case('follow_up_2')
+                             <?php break; ?>
+                         <?php case ('follow_up_2'): ?>
                              linear-gradient(to bottom right, #eff6ff, #dbeafe) !important;
-                             @break
-                         @case('follow_up_3')
+                             <?php break; ?>
+                         <?php case ('follow_up_3'): ?>
                              linear-gradient(to bottom right, #eef2ff, #e0e7ff) !important;
-                             @break
-                         @case('negotiating_price')
+                             <?php break; ?>
+                         <?php case ('negotiating_price'): ?>
                              linear-gradient(to bottom right, #fff7ed, #fed7aa) !important;
-                             @break
-                         @case('payment_pending')
+                             <?php break; ?>
+                         <?php case ('payment_pending'): ?>
                              linear-gradient(to bottom right, #f0fdf4, #dcfce7) !important;
-                             @break
-                         @case('order_confirmed')
+                             <?php break; ?>
+                         <?php case ('order_confirmed'): ?>
                              linear-gradient(to bottom right, #ecfdf5, #d1fae5) !important;
-                             @break
-                         @case('deal_lost')
+                             <?php break; ?>
+                         <?php case ('deal_lost'): ?>
                              linear-gradient(to bottom right, #f8fafc, #e2e8f0) !important;
-                             @break
-                     @endswitch" 
-                     data-stage="{{ $status }}">
+                             <?php break; ?>
+                     <?php endswitch; ?>" 
+                     data-stage="<?php echo e($status); ?>">
                     
                     <!-- Decorative Element -->
                     <div class="absolute -right-1 -top-1 h-12 w-12 rounded-full transition-all duration-300 group-hover:scale-110
-                        @switch($status)
-                            @case('new_inquiry')
+                        <?php switch($status):
+                            case ('new_inquiry'): ?>
                                 bg-cyan-200/30
-                                @break
-                            @case('quote_requested')
+                                <?php break; ?>
+                            <?php case ('quote_requested'): ?>
                                 bg-slate-200/30
-                                @break
-                            @case('getting_price')
+                                <?php break; ?>
+                            <?php case ('getting_price'): ?>
                                 bg-indigo-200/30
-                                @break
-                            @case('price_submitted')
+                                <?php break; ?>
+                            <?php case ('price_submitted'): ?>
                                 bg-teal-200/30
-                                @break
-                            @case('follow_up_1')
+                                <?php break; ?>
+                            <?php case ('follow_up_1'): ?>
                                 bg-sky-200/30
-                                @break
-                            @case('follow_up_2')
+                                <?php break; ?>
+                            <?php case ('follow_up_2'): ?>
                                 bg-blue-200/30
-                                @break
-                            @case('follow_up_3')
+                                <?php break; ?>
+                            <?php case ('follow_up_3'): ?>
                                 bg-indigo-200/30
-                                @break
-                            @case('negotiating_price')
+                                <?php break; ?>
+                            <?php case ('negotiating_price'): ?>
                                 bg-orange-200/30
-                                @break
-                            @case('payment_pending')
+                                <?php break; ?>
+                            <?php case ('payment_pending'): ?>
                                 bg-green-200/30
-                                @break
-                            @case('order_confirmed')
+                                <?php break; ?>
+                            <?php case ('order_confirmed'): ?>
                                 bg-emerald-200/30
-                                @break
-                            @case('deal_lost')
+                                <?php break; ?>
+                            <?php case ('deal_lost'): ?>
                                 bg-slate-200/30
-                                @break
-                        @endswitch"></div>
+                                <?php break; ?>
+                        <?php endswitch; ?>"></div>
                     
                     <!-- Card Content -->
                     <div class="relative">
                         <div class="flex items-center justify-between">
                             <div class="flex h-6 w-6 items-center justify-center rounded-md shadow-sm
-                                @switch($status)
-                                    @case('new_inquiry')
+                                <?php switch($status):
+                                    case ('new_inquiry'): ?>
                                         bg-cyan-500
-                                        @break
-                                    @case('quote_requested')
+                                        <?php break; ?>
+                                    <?php case ('quote_requested'): ?>
                                         bg-slate-500
-                                        @break
-                                    @case('getting_price')
+                                        <?php break; ?>
+                                    <?php case ('getting_price'): ?>
                                         bg-indigo-500
-                                        @break
-                                    @case('price_submitted')
+                                        <?php break; ?>
+                                    <?php case ('price_submitted'): ?>
                                         bg-teal-500
-                                        @break
-                                    @case('follow_up_1')
+                                        <?php break; ?>
+                                    <?php case ('follow_up_1'): ?>
                                         bg-sky-500
-                                        @break
-                                    @case('follow_up_2')
+                                        <?php break; ?>
+                                    <?php case ('follow_up_2'): ?>
                                         bg-blue-500
-                                        @break
-                                    @case('follow_up_3')
+                                        <?php break; ?>
+                                    <?php case ('follow_up_3'): ?>
                                         bg-indigo-500
-                                        @break
-                                    @case('negotiating_price')
+                                        <?php break; ?>
+                                    <?php case ('negotiating_price'): ?>
                                         bg-orange-500
-                                        @break
-                                    @case('payment_pending')
+                                        <?php break; ?>
+                                    <?php case ('payment_pending'): ?>
                                         bg-green-500
-                                        @break
-                                    @case('order_confirmed')
+                                        <?php break; ?>
+                                    <?php case ('order_confirmed'): ?>
                                         bg-emerald-500
-                                        @break
-                                    @case('deal_lost')
+                                        <?php break; ?>
+                                    <?php case ('deal_lost'): ?>
                                         bg-slate-500
-                                        @break
-                                @endswitch">
-                                @switch($status)
-                                    @case('new_inquiry')
+                                        <?php break; ?>
+                                <?php endswitch; ?>">
+                                <?php switch($status):
+                                    case ('new_inquiry'): ?>
                                         <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                         </svg>
-                                        @break
-                                    @case('quote_requested')
+                                        <?php break; ?>
+                                    <?php case ('quote_requested'): ?>
                                         <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                                         </svg>
-                                        @break
-                                    @case('getting_price')
+                                        <?php break; ?>
+                                    <?php case ('getting_price'): ?>
                                         <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 00-.293.707V19a2 2 0 01-2 2z"></path>
                                         </svg>
-                                        @break
-                                    @case('price_submitted')
+                                        <?php break; ?>
+                                    <?php case ('price_submitted'): ?>
                                         <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 00-.293.707V19a2 2 0 01-2 2z"></path>
                                         </svg>
-                                        @break
-                                    @case('follow_up_1')
+                                        <?php break; ?>
+                                    <?php case ('follow_up_1'): ?>
                                         <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                         </svg>
-                                        @break
-                                    @case('follow_up_2')
+                                        <?php break; ?>
+                                    <?php case ('follow_up_2'): ?>
                                         <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                         </svg>
-                                        @break
-                                    @case('follow_up_3')
+                                        <?php break; ?>
+                                    <?php case ('follow_up_3'): ?>
                                         <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                         </svg>
-                                        @break
-                                    @case('negotiating_price')
+                                        <?php break; ?>
+                                    <?php case ('negotiating_price'): ?>
                                         <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                                         </svg>
-                                        @break
-                                    @case('payment_pending')
+                                        <?php break; ?>
+                                    <?php case ('payment_pending'): ?>
                                         <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
                                         </svg>
-                                        @break
-                                    @case('order_confirmed')
+                                        <?php break; ?>
+                                    <?php case ('order_confirmed'): ?>
                                         <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                         </svg>
-                                        @break
-                                    @case('deal_lost')
+                                        <?php break; ?>
+                                    <?php case ('deal_lost'): ?>
                                         <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                         </svg>
-                                        @break
-                                    @default
+                                        <?php break; ?>
+                                    <?php default: ?>
                                         <svg class="h-3 w-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                                         </svg>
-                                @endswitch
+                                <?php endswitch; ?>
                             </div>
                             <div class="text-right">
                                 <p class="text-xs font-medium uppercase tracking-wide
-                                    @switch($status)
-                                        @case('new_inquiry')
+                                    <?php switch($status):
+                                        case ('new_inquiry'): ?>
                                             text-cyan-600
-                                            @break
-                                        @case('quote_requested')
+                                            <?php break; ?>
+                                        <?php case ('quote_requested'): ?>
                                             text-slate-600
-                                            @break
-                                        @case('getting_price')
+                                            <?php break; ?>
+                                        <?php case ('getting_price'): ?>
                                             text-indigo-600
-                                            @break
-                                        @case('price_submitted')
+                                            <?php break; ?>
+                                        <?php case ('price_submitted'): ?>
                                             text-teal-600
-                                            @break
-                                        @case('follow_up_1')
+                                            <?php break; ?>
+                                        <?php case ('follow_up_1'): ?>
                                             text-sky-600
-                                            @break
-                                        @case('follow_up_2')
+                                            <?php break; ?>
+                                        <?php case ('follow_up_2'): ?>
                                             text-blue-600
-                                            @break
-                                        @case('follow_up_3')
+                                            <?php break; ?>
+                                        <?php case ('follow_up_3'): ?>
                                             text-indigo-600
-                                            @break
-                                        @case('negotiating_price')
+                                            <?php break; ?>
+                                        <?php case ('negotiating_price'): ?>
                                             text-orange-600
-                                            @break
-                                        @case('payment_pending')
+                                            <?php break; ?>
+                                        <?php case ('payment_pending'): ?>
                                             text-green-600
-                                            @break
-                                        @case('order_confirmed')
+                                            <?php break; ?>
+                                        <?php case ('order_confirmed'): ?>
                                             text-emerald-600
-                                            @break
-                                        @case('deal_lost')
+                                            <?php break; ?>
+                                        <?php case ('deal_lost'): ?>
                                             text-slate-600
-                                            @break
-                                    @endswitch">
-                                    @switch($status)
-                                        @case('new_inquiry')
+                                            <?php break; ?>
+                                    <?php endswitch; ?>">
+                                    <?php switch($status):
+                                        case ('new_inquiry'): ?>
                                             New Inquiry
-                                            @break
-                                        @case('quote_requested')
+                                            <?php break; ?>
+                                        <?php case ('quote_requested'): ?>
                                             Quote Request
-                                            @break
-                                        @case('getting_price')
+                                            <?php break; ?>
+                                        <?php case ('getting_price'): ?>
                                             Getting Price
-                                            @break
-                                        @case('price_submitted')
+                                            <?php break; ?>
+                                        <?php case ('price_submitted'): ?>
                                             Price Submitted
-                                            @break
-                                        @case('follow_up_1')
+                                            <?php break; ?>
+                                        <?php case ('follow_up_1'): ?>
                                             Follow-up 1
-                                            @break
-                                        @case('follow_up_2')
+                                            <?php break; ?>
+                                        <?php case ('follow_up_2'): ?>
                                             Follow-up 2
-                                            @break
-                                        @case('follow_up_3')
+                                            <?php break; ?>
+                                        <?php case ('follow_up_3'): ?>
                                             Follow-up 3
-                                            @break
-                                        @case('negotiating_price')
+                                            <?php break; ?>
+                                        <?php case ('negotiating_price'): ?>
                                             Negotiating
-                                            @break
-                                        @case('payment_pending')
+                                            <?php break; ?>
+                                        <?php case ('payment_pending'): ?>
                                             Payment Due
-                                            @break
-                                        @case('order_confirmed')
+                                            <?php break; ?>
+                                        <?php case ('order_confirmed'): ?>
                                             Confirmed
-                                            @break
-                                        @case('deal_lost')
+                                            <?php break; ?>
+                                        <?php case ('deal_lost'): ?>
                                             Lost
-                                            @break
-                                        @default
-                                            {{ ucfirst(str_replace('_', ' ', $status)) }}
-                                    @endswitch
+                                            <?php break; ?>
+                                        <?php default: ?>
+                                            <?php echo e(ucfirst(str_replace('_', ' ', $status))); ?>
+
+                                    <?php endswitch; ?>
                                 </p>
                                 <p class="text-xs
-                                    @switch($status)
-                                        @case('new_inquiry')
+                                    <?php switch($status):
+                                        case ('new_inquiry'): ?>
                                             text-cyan-500
-                                            @break
-                                        @case('quote_requested')
+                                            <?php break; ?>
+                                        <?php case ('quote_requested'): ?>
                                             text-slate-500
-                                            @break
-                                        @case('getting_price')
+                                            <?php break; ?>
+                                        <?php case ('getting_price'): ?>
                                             text-indigo-500
-                                            @break
-                                        @case('price_submitted')
+                                            <?php break; ?>
+                                        <?php case ('price_submitted'): ?>
                                             text-teal-500
-                                            @break
-                                        @case('follow_up_1')
+                                            <?php break; ?>
+                                        <?php case ('follow_up_1'): ?>
                                             text-sky-500
-                                            @break
-                                        @case('follow_up_2')
+                                            <?php break; ?>
+                                        <?php case ('follow_up_2'): ?>
                                             text-blue-500
-                                            @break
-                                        @case('follow_up_3')
+                                            <?php break; ?>
+                                        <?php case ('follow_up_3'): ?>
                                             text-indigo-500
-                                            @break
-                                        @case('negotiating_price')
+                                            <?php break; ?>
+                                        <?php case ('negotiating_price'): ?>
                                             text-orange-500
-                                            @break
-                                        @case('payment_pending')
+                                            <?php break; ?>
+                                        <?php case ('payment_pending'): ?>
                                             text-green-500
-                                            @break
-                                        @case('order_confirmed')
+                                            <?php break; ?>
+                                        <?php case ('order_confirmed'): ?>
                                             text-emerald-500
-                                            @break
-                                        @case('deal_lost')
+                                            <?php break; ?>
+                                        <?php case ('deal_lost'): ?>
                                             text-slate-500
-                                            @break
-                                    @endswitch">
-                                    @if($stage['total_value'] > 0)
-                                        AED {{ number_format($stage['total_value'], 0) }}
-                                    @else
+                                            <?php break; ?>
+                                    <?php endswitch; ?>">
+                                    <?php if($stage['total_value'] > 0): ?>
+                                        AED <?php echo e(number_format($stage['total_value'], 0)); ?>
+
+                                    <?php else: ?>
                                         Lead stage
-                                    @endif
+                                    <?php endif; ?>
                                 </p>
                             </div>
                         </div>
                         <div class="mt-1">
                             <div class="space-y-0">
-                                <p class="text-sm font-bold text-gray-900">{{ $stage['count'] }} Leads</p>
-                                @if($stage['high_priority_count'] > 0 || $stage['overdue_count'] > 0)
+                                <p class="text-sm font-bold text-gray-900"><?php echo e($stage['count']); ?> Leads</p>
+                                <?php if($stage['high_priority_count'] > 0 || $stage['overdue_count'] > 0): ?>
                                     <div class="flex items-center space-x-2 mt-1">
-                                        @if($stage['high_priority_count'] > 0)
+                                        <?php if($stage['high_priority_count'] > 0): ?>
                                             <div class="flex items-center space-x-1">
                                                 <div class="w-2 h-2 rounded-full bg-red-500"></div>
-                                                <span class="text-xs font-medium text-red-600">{{ $stage['high_priority_count'] }}</span>
+                                                <span class="text-xs font-medium text-red-600"><?php echo e($stage['high_priority_count']); ?></span>
                                             </div>
-                                        @endif
-                                        @if($stage['overdue_count'] > 0)
+                                        <?php endif; ?>
+                                        <?php if($stage['overdue_count'] > 0): ?>
                                             <div class="flex items-center space-x-1">
                                                 <div class="w-2 h-2 rounded-full bg-orange-500"></div>
-                                                <span class="text-xs font-medium text-orange-600">{{ $stage['overdue_count'] }}</span>
+                                                <span class="text-xs font-medium text-orange-600"><?php echo e($stage['overdue_count']); ?></span>
                                             </div>
-                                        @endif
+                                        <?php endif; ?>
                                     </div>
-                                @endif
+                                <?php endif; ?>
                             </div>
                             <p class="text-xs mt-0.5
-                                @switch($status)
-                                    @case('new_inquiry')
+                                <?php switch($status):
+                                    case ('new_inquiry'): ?>
                                         text-cyan-600
-                                        @break
-                                    @case('quote_requested')
+                                        <?php break; ?>
+                                    <?php case ('quote_requested'): ?>
                                         text-slate-600
-                                        @break
-                                    @case('getting_price')
+                                        <?php break; ?>
+                                    <?php case ('getting_price'): ?>
                                         text-indigo-600
-                                        @break
-                                    @case('price_submitted')
+                                        <?php break; ?>
+                                    <?php case ('price_submitted'): ?>
                                         text-teal-600
-                                        @break
-                                    @case('follow_up_1')
+                                        <?php break; ?>
+                                    <?php case ('follow_up_1'): ?>
                                         text-sky-600
-                                        @break
-                                    @case('follow_up_2')
+                                        <?php break; ?>
+                                    <?php case ('follow_up_2'): ?>
                                         text-blue-600
-                                        @break
-                                    @case('follow_up_3')
+                                        <?php break; ?>
+                                    <?php case ('follow_up_3'): ?>
                                         text-indigo-600
-                                        @break
-                                    @case('negotiating_price')
+                                        <?php break; ?>
+                                    <?php case ('negotiating_price'): ?>
                                         text-orange-600
-                                        @break
-                                    @case('payment_pending')
+                                        <?php break; ?>
+                                    <?php case ('payment_pending'): ?>
                                         text-green-600
-                                        @break
-                                    @case('order_confirmed')
+                                        <?php break; ?>
+                                    <?php case ('order_confirmed'): ?>
                                         text-emerald-600
-                                        @break
-                                    @case('deal_lost')
+                                        <?php break; ?>
+                                    <?php case ('deal_lost'): ?>
                                         text-slate-600
-                                        @break
-                                @endswitch">
-                                @if($stage['count'] > 0)
-                                    {{ $stage['count'] }} {{ $stage['count'] == 1 ? 'lead' : 'leads' }} in pipeline
-                                @else
+                                        <?php break; ?>
+                                <?php endswitch; ?>">
+                                <?php if($stage['count'] > 0): ?>
+                                    <?php echo e($stage['count']); ?> <?php echo e($stage['count'] == 1 ? 'lead' : 'leads'); ?> in pipeline
+                                <?php else: ?>
                                     No leads in this stage
-                                @endif
+                                <?php endif; ?>
                             </p>
                         </div>
                     </div>
                 </div>
-            @endforeach
-        @endif
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        <?php endif; ?>
     </div>
 
     <!-- Enhanced Search and Filter Bar -->
@@ -412,7 +414,7 @@
                 <div class="relative">
                     <input type="text" 
                            id="pipeline-search" 
-                           placeholder="@if(isset($isPurchasingUser) && $isPurchasingUser)Search leads by company name...@elseSearch leads by name, company, or email...@endif" 
+                           placeholder="<?php if(isset($isPurchasingUser) && $isPurchasingUser): ?>Search leads by company name...@elseSearch leads by name, company, or email...<?php endif; ?>" 
                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                            onkeyup="filterPipeline()">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -510,51 +512,53 @@
 
         <!-- Pipeline Container -->
         <div class="flex overflow-x-auto space-x-6 pb-6 pipeline-scroll-container scroll-smooth pt-12" id="pipeline-container">
-            @if(isset($pipelineData))
-                @foreach($pipelineData as $status => $stage)
-                    <div class="flex-shrink-0 w-64 pipeline-column" data-stage="{{ $status }}">
+            <?php if(isset($pipelineData)): ?>
+                <?php $__currentLoopData = $pipelineData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $status => $stage): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <div class="flex-shrink-0 w-64 pipeline-column" data-stage="<?php echo e($status); ?>">
                         <!-- Enhanced Column Header -->
-                        <div class="bg-gradient-to-r from-{{ $stage['color'] }}-50 to-{{ $stage['color'] }}-100 border border-{{ $stage['color'] }}-200 rounded-t-xl p-4 sticky top-0 z-10">
+                        <div class="bg-gradient-to-r from-<?php echo e($stage['color']); ?>-50 to-<?php echo e($stage['color']); ?>-100 border border-<?php echo e($stage['color']); ?>-200 rounded-t-xl p-4 sticky top-0 z-10">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center space-x-3">
-                                    <h3 class="text-lg font-bold text-{{ $stage['color'] }}-900">
-                                        {{ $stage['title'] }}
+                                    <h3 class="text-lg font-bold text-<?php echo e($stage['color']); ?>-900">
+                                        <?php echo e($stage['title']); ?>
+
                                     </h3>
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-{{ $stage['color'] }}-200 text-{{ $stage['color'] }}-800 border border-{{ $stage['color'] }}-300 transform transition-all duration-300 hover:scale-110">
-                                        <span class="stage-count" data-stage="{{ $status }}">{{ $stage['count'] }}</span>
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-<?php echo e($stage['color']); ?>-200 text-<?php echo e($stage['color']); ?>-800 border border-<?php echo e($stage['color']); ?>-300 transform transition-all duration-300 hover:scale-110">
+                                        <span class="stage-count" data-stage="<?php echo e($status); ?>"><?php echo e($stage['count']); ?></span>
                                     </span>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    @if($stage['total_value'] > 0)
-                                        <span class="text-sm font-bold text-{{ $stage['color'] }}-800 bg-{{ $stage['color'] }}-200 px-2 py-1 rounded-md">
-                                            AED {{ number_format($stage['total_value'], 0) }}
+                                    <?php if($stage['total_value'] > 0): ?>
+                                        <span class="text-sm font-bold text-<?php echo e($stage['color']); ?>-800 bg-<?php echo e($stage['color']); ?>-200 px-2 py-1 rounded-md">
+                                            AED <?php echo e(number_format($stage['total_value'], 0)); ?>
+
                                         </span>
-                                    @endif
+                                    <?php endif; ?>
                                     <div class="relative">
-                                        <button class="text-{{ $stage['color'] }}-600 hover:text-{{ $stage['color'] }}-800 p-1 rounded-full hover:bg-{{ $stage['color'] }}-200 transition-all duration-200" 
-                                                onclick="toggleColumnMenu('{{ $status }}')">
+                                        <button class="text-<?php echo e($stage['color']); ?>-600 hover:text-<?php echo e($stage['color']); ?>-800 p-1 rounded-full hover:bg-<?php echo e($stage['color']); ?>-200 transition-all duration-200" 
+                                                onclick="toggleColumnMenu('<?php echo e($status); ?>')">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
                                             </svg>
                                         </button>
                                         <!-- Column Menu -->
-                                        <div id="column-menu-{{ $status }}" 
+                                        <div id="column-menu-<?php echo e($status); ?>" 
                                              class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-20">
                                             <div class="py-1">
                                                 <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" 
-                                                        onclick="sortColumn('{{ $status }}', 'name')">
+                                                        onclick="sortColumn('<?php echo e($status); ?>', 'name')">
                                                     Sort by Name
                                                 </button>
                                                 <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" 
-                                                        onclick="sortColumn('{{ $status }}', 'value')">
+                                                        onclick="sortColumn('<?php echo e($status); ?>', 'value')">
                                                     Sort by Value
                                                 </button>
                                                 <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" 
-                                                        onclick="sortColumn('{{ $status }}', 'priority')">
+                                                        onclick="sortColumn('<?php echo e($status); ?>', 'priority')">
                                                     Sort by Priority
                                                 </button>
                                                 <button class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" 
-                                                        onclick="sortColumn('{{ $status }}', 'date')">
+                                                        onclick="sortColumn('<?php echo e($status); ?>', 'date')">
                                                     Sort by Date
                                                 </button>
                                             </div>
@@ -565,25 +569,25 @@
                         </div>
 
                         <!-- Compact Lead Cards Container -->
-                        <div class="bg-gradient-to-b from-{{ $stage['color'] }}-25 to-{{ $stage['color'] }}-50 border-l border-r border-b border-{{ $stage['color'] }}-200 rounded-b-xl min-h-[400px] p-2 space-y-2 drop-zone transition-all duration-300" 
-                             data-status="{{ $status }}"
+                        <div class="bg-gradient-to-b from-<?php echo e($stage['color']); ?>-25 to-<?php echo e($stage['color']); ?>-50 border-l border-r border-b border-<?php echo e($stage['color']); ?>-200 rounded-b-xl min-h-[400px] p-2 space-y-2 drop-zone transition-all duration-300" 
+                             data-status="<?php echo e($status); ?>"
                              ondragover="handleDragOver(event)"
                              ondrop="handleDrop(event)"
                              ondragenter="handleDragEnter(event)"
                              ondragleave="handleDragLeave(event)">
                             
-                            @forelse($stage['leads'] as $lead)
+                            <?php $__empty_1 = true; $__currentLoopData = $stage['leads']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $lead): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                 <!-- Compact Status Card -->
-                                <div class="group relative bg-white rounded-lg shadow-sm border-l-4 border-{{ $stage['color'] }}-500 hover:shadow-md transition-all duration-200 cursor-pointer lead-card" 
-                                     data-lead-id="{{ $lead->id }}"
-                                     data-current-status="{{ $status }}"
-                                     data-lead-name="@if(isset($isPurchasingUser) && $isPurchasingUser){{ $lead->notes ? Str::limit($lead->notes, 50) : 'No Requirements' }}@else{{ $lead->full_name }}@endif"
-                                     data-lead-company="@if(isset($isPurchasingUser) && $isPurchasingUser)Lead #{{ $lead->id }}@else{{ $lead->company_name }}@endif"
-                                     data-lead-email="{{ $lead->email }}"
-                                     data-lead-priority="{{ $lead->priority }}"
-                                     data-lead-source="{{ $lead->source }}"
-                                     data-lead-overdue="{{ $lead->isOverdue() ? 'true' : 'false' }}"
-                                     data-lead-full-name="@if(isset($isPurchasingUser) && $isPurchasingUser){{ $lead->notes ? Str::limit($lead->notes, 50) : 'No Requirements' }}@else{{ $lead->full_name }}@endif"
+                                <div class="group relative bg-white rounded-lg shadow-sm border-l-4 border-<?php echo e($stage['color']); ?>-500 hover:shadow-md transition-all duration-200 cursor-pointer lead-card" 
+                                     data-lead-id="<?php echo e($lead->id); ?>"
+                                     data-current-status="<?php echo e($status); ?>"
+                                     data-lead-name="<?php if(isset($isPurchasingUser) && $isPurchasingUser): ?><?php echo e($lead->notes ? Str::limit($lead->notes, 50) : 'No Requirements'); ?><?php else: ?><?php echo e($lead->full_name); ?><?php endif; ?>"
+                                     data-lead-company="<?php if(isset($isPurchasingUser) && $isPurchasingUser): ?>Lead #<?php echo e($lead->id); ?><?php else: ?><?php echo e($lead->company_name); ?><?php endif; ?>"
+                                     data-lead-email="<?php echo e($lead->email); ?>"
+                                     data-lead-priority="<?php echo e($lead->priority); ?>"
+                                     data-lead-source="<?php echo e($lead->source); ?>"
+                                     data-lead-overdue="<?php echo e($lead->isOverdue() ? 'true' : 'false'); ?>"
+                                     data-lead-full-name="<?php if(isset($isPurchasingUser) && $isPurchasingUser): ?><?php echo e($lead->notes ? Str::limit($lead->notes, 50) : 'No Requirements'); ?><?php else: ?><?php echo e($lead->full_name); ?><?php endif; ?>"
                                      draggable="true"
                                      ondragstart="handleDragStart(event)"
                                      ondragend="handleDragEnd(event)">
@@ -594,186 +598,190 @@
                                         <div class="flex items-center justify-between mb-2">
                                             <div class="flex items-center space-x-2 min-w-0 flex-1">
                                                 <!-- Status Indicator -->
-                                                <div class="w-2 h-2 rounded-full bg-{{ $stage['color'] }}-500 flex-shrink-0"></div>
+                                                <div class="w-2 h-2 rounded-full bg-<?php echo e($stage['color']); ?>-500 flex-shrink-0"></div>
                                                 
                                                 <!-- Name & Company -->
                                                     <div class="min-w-0 flex-1">
-                                                    @if(isset($isPurchasingUser) && $isPurchasingUser)
-                                                        @if($lead->notes)
-                                                            <p class="text-sm font-semibold text-gray-900 truncate" title="{{ $lead->notes }}">{{ Str::limit($lead->notes, 50) }}</p>
-                                                        @else
+                                                    <?php if(isset($isPurchasingUser) && $isPurchasingUser): ?>
+                                                        <?php if($lead->notes): ?>
+                                                            <p class="text-sm font-semibold text-gray-900 truncate" title="<?php echo e($lead->notes); ?>"><?php echo e(Str::limit($lead->notes, 50)); ?></p>
+                                                        <?php else: ?>
                                                             <p class="text-sm font-semibold text-gray-900 truncate">No Requirements</p>
-                                                        @endif
-                                                        <p class="text-xs text-gray-500 truncate">Lead #{{ $lead->id }}</p>
-                                                    @else
-                                                        <p class="text-sm font-semibold text-gray-900 truncate">{{ $lead->full_name }}</p>
-                                                        <p class="text-xs text-gray-500 truncate">{{ $lead->company_name }}</p>
-                                                    @endif
+                                                        <?php endif; ?>
+                                                        <p class="text-xs text-gray-500 truncate">Lead #<?php echo e($lead->id); ?></p>
+                                                    <?php else: ?>
+                                                        <p class="text-sm font-semibold text-gray-900 truncate"><?php echo e($lead->full_name); ?></p>
+                                                        <p class="text-xs text-gray-500 truncate"><?php echo e($lead->company_name); ?></p>
+                                                    <?php endif; ?>
                                                 </div>
                                             </div>
                                             
                                             <!-- Priority Indicator -->
-                                                @if($lead->priority === 'high')
+                                                <?php if($lead->priority === 'high'): ?>
                                                 <div class="w-3 h-3 rounded-full bg-red-500 flex-shrink-0" title="High Priority"></div>
-                                                @elseif($lead->priority === 'medium')
+                                                <?php elseif($lead->priority === 'medium'): ?>
                                                 <div class="w-3 h-3 rounded-full bg-yellow-500 flex-shrink-0" title="Medium Priority"></div>
-                                                @else
+                                                <?php else: ?>
                                                 <div class="w-3 h-3 rounded-full bg-green-500 flex-shrink-0" title="Low Priority"></div>
-                                                @endif
+                                                <?php endif; ?>
                                         </div>
 
                                         <!-- Value Row -->
                                         <div class="flex items-center justify-between mb-2">
                                             <!-- Value -->
-                                            @if($lead->estimated_value)
-                                                <span class="text-xs font-semibold text-green-600">AED {{ number_format($lead->estimated_value, 0) }}</span>
-                                            @else
+                                            <?php if($lead->estimated_value): ?>
+                                                <span class="text-xs font-semibold text-green-600">AED <?php echo e(number_format($lead->estimated_value, 0)); ?></span>
+                                            <?php else: ?>
                                                 <span></span>
-                                            @endif
+                                            <?php endif; ?>
                                         </div>
 
                                         <!-- Contact & Source Row -->
                                         <div class="flex items-center justify-between text-xs text-gray-500">
                                             <div class="flex items-center space-x-1">
-                                                @if(isset($isPurchasingUser) && $isPurchasingUser)
+                                                <?php if(isset($isPurchasingUser) && $isPurchasingUser): ?>
                                                     <!-- For purchasing users, show only requirements indicator -->
-                                                    @if($lead->notes)
+                                                    <?php if($lead->notes): ?>
                                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 00-.293.707V19a2 2 0 01-2 2z"></path>
                                                         </svg>
                                                         <span class="text-indigo-600 font-medium">Requirements Available</span>
-                                                    @endif
-                                                @else
-                                                    @if($lead->phone || $lead->mobile)
+                                                    <?php endif; ?>
+                                                <?php else: ?>
+                                                    <?php if($lead->phone || $lead->mobile): ?>
                                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                                                         </svg>
-                                                    @endif
-                                                    @if($lead->email)
+                                                    <?php endif; ?>
+                                                    <?php if($lead->email): ?>
                                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                                         </svg>
-                                                    @endif
-                                                @endif
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
                                                 
                                                 <!-- Assigned User -->
-                                                @if($lead->assignedUser)
+                                                <?php if($lead->assignedUser): ?>
                                                     <div class="flex items-center space-x-1 ml-2">
-                                                        <svg class="w-3 h-3 {{ $lead->assignedUser->id === Auth::id() ? 'text-green-500' : 'text-blue-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <svg class="w-3 h-3 <?php echo e($lead->assignedUser->id === Auth::id() ? 'text-green-500' : 'text-blue-500'); ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                                         </svg>
-                                                        @if($lead->assignedUser->id === Auth::id())
-                                                            <span class="text-green-600 font-bold" title="{{ $lead->assignedUser->name }} (You)">
-                                                                {{ $lead->assignedUser->name }}
+                                                        <?php if($lead->assignedUser->id === Auth::id()): ?>
+                                                            <span class="text-green-600 font-bold" title="<?php echo e($lead->assignedUser->name); ?> (You)">
+                                                                <?php echo e($lead->assignedUser->name); ?>
+
                                                             </span>
-                                                        @else
-                                                            <span class="text-blue-600 font-medium" title="{{ $lead->assignedUser->name }}">
-                                                                {{ $lead->assignedUser->name }}
+                                                        <?php else: ?>
+                                                            <span class="text-blue-600 font-medium" title="<?php echo e($lead->assignedUser->name); ?>">
+                                                                <?php echo e($lead->assignedUser->name); ?>
+
                                                             </span>
-                                                        @endif
+                                                        <?php endif; ?>
                                                     </div>
-                                                @endif
+                                                <?php endif; ?>
                                             </div>
                                             
                                             <!-- Age Since Creation (days hours minutes) -->
-                                            <span class="text-gray-400 font-medium" title="{{ $lead->created_at->format('Y-m-d H:i') }}">
-                                                {{ $lead->created_ago }}
+                                            <span class="text-gray-400 font-medium" title="<?php echo e($lead->created_at->format('Y-m-d H:i')); ?>">
+                                                <?php echo e($lead->created_ago); ?>
+
                                             </span>
                                         </div>
 
                                         <!-- Source Row -->
                                         <div class="flex items-center justify-end text-xs text-gray-500">
                                             <!-- Source -->
-                                            <span class="capitalize text-{{ $stage['color'] }}-600 font-medium">
-                                                @switch($lead->source)
-                                                    @case('whatsapp')
+                                            <span class="capitalize text-<?php echo e($stage['color']); ?>-600 font-medium">
+                                                <?php switch($lead->source):
+                                                    case ('whatsapp'): ?>
                                                         📱 WhatsApp
-                                                        @break
-                                                    @case('email')
+                                                        <?php break; ?>
+                                                    <?php case ('email'): ?>
                                                         📧 Email
-                                                        @break
-                                                    @case('website')
+                                                        <?php break; ?>
+                                                    <?php case ('website'): ?>
                                                         🌐 Web
-                                                        @break
-                                                    @case('phone')
+                                                        <?php break; ?>
+                                                    <?php case ('phone'): ?>
                                                         ☎️ Phone
-                                                        @break
-                                                    @case('linkedin')
+                                                        <?php break; ?>
+                                                    <?php case ('linkedin'): ?>
                                                         💼 LinkedIn
-                                                        @break
-                                                    @default
-                                                        {{ ucfirst(str_replace('_', ' ', $lead->source)) }}
-                                                @endswitch
+                                                        <?php break; ?>
+                                                    <?php default: ?>
+                                                        <?php echo e(ucfirst(str_replace('_', ' ', $lead->source))); ?>
+
+                                                <?php endswitch; ?>
                                             </span>
                                         </div>
 
                                         <!-- Overdue Indicator -->
-                                        @if($lead->isOverdue())
+                                        <?php if($lead->isOverdue()): ?>
                                             <div class="mt-2 flex items-center text-xs text-red-600">
                                                 <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
                                                 </svg>
-                                                Overdue ({{ (int) floor($lead->daysSinceLastContact()) }} days)
+                                                Overdue (<?php echo e((int) floor($lead->daysSinceLastContact())); ?> days)
                                             </div>
-                                        @endif
+                                        <?php endif; ?>
 
                                         <!-- Quick Action Buttons (Hidden by default, shown on hover) -->
                                         <div class="mt-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                                @if(isset($isPurchasingUser) && $isPurchasingUser)
+                                                <?php if(isset($isPurchasingUser) && $isPurchasingUser): ?>
                                                     <!-- For purchasing users, show requirements and submit price buttons -->
                                                     <div class="flex space-x-1 w-full">
-                                                    @if($lead->notes)
-                                                        <button onclick="event.stopPropagation(); viewLeadRequirements({{ $lead->id }})" 
+                                                    <?php if($lead->notes): ?>
+                                                        <button onclick="event.stopPropagation(); viewLeadRequirements(<?php echo e($lead->id); ?>)" 
                                                             class="flex-1 text-xs py-1 px-2 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition-colors"
                                                                 title="View Requirements">
                                                             Requirements
                                                         </button>
-                                                    @endif
-                                                        <button onclick="event.stopPropagation(); openPriceSubmissionModal({{ $lead->id }})" 
+                                                    <?php endif; ?>
+                                                        <button onclick="event.stopPropagation(); openPriceSubmissionModal(<?php echo e($lead->id); ?>)" 
                                                             class="flex-1 text-xs py-1 px-2 bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
                                                                 title="Submit Price">
                                                             Submit Price
                                                         </button>
-                                                        @if($lead->hasPriceSubmissions())
-                                                            <button onclick="event.stopPropagation(); viewPriceSubmissions({{ $lead->id }})" 
+                                                        <?php if($lead->hasPriceSubmissions()): ?>
+                                                            <button onclick="event.stopPropagation(); viewPriceSubmissions(<?php echo e($lead->id); ?>)" 
                                                                 class="flex-1 text-xs py-1 px-2 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
                                                                     title="View Price Submissions">
                                                                 Prices
                                                             </button>
-                                                        @endif
+                                                        <?php endif; ?>
                                                     </div>
-                                                @else
+                                                <?php else: ?>
                                                     <button onclick="event.stopPropagation();" 
                                                         class="send-email-btn flex-1 text-xs py-1 px-2 bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
-                                                        data-lead-id="{{ $lead->id }}"
-                                                        data-lead-name="{{ $lead->full_name }}"
-                                                        data-assigned-user-email="{{ $lead->assignedUser->email ?? '' }}"
-                                                        data-assigned-user-name="{{ $lead->assignedUser->name ?? '' }}"
+                                                        data-lead-id="<?php echo e($lead->id); ?>"
+                                                        data-lead-name="<?php echo e($lead->full_name); ?>"
+                                                        data-assigned-user-email="<?php echo e($lead->assignedUser->email ?? ''); ?>"
+                                                        data-assigned-user-name="<?php echo e($lead->assignedUser->name ?? ''); ?>"
                                                         title="Send Email">
                                                         📧 Email
                                                     </button>
-                                                    @can('crm.leads.edit')
-                                                    <button onclick="event.stopPropagation(); window.location.href='/crm/leads/{{ $lead->id }}/edit'" 
+                                                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('crm.leads.edit')): ?>
+                                                    <button onclick="event.stopPropagation(); window.location.href='/crm/leads/<?php echo e($lead->id); ?>/edit'" 
                                                         class="flex-1 text-xs py-1 px-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
                                                             title="Edit Lead">
                                                         Edit
                                                     </button>
-                                                    @endcan
-                                                    @can('crm.leads.view_requirements')
-                                                    <button onclick="event.stopPropagation(); viewLeadRequirements({{ $lead->id }})" 
+                                                    <?php endif; ?>
+                                                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('crm.leads.view_requirements')): ?>
+                                                    <button onclick="event.stopPropagation(); viewLeadRequirements(<?php echo e($lead->id); ?>)" 
                                                         class="flex-1 text-xs py-1 px-2 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition-colors"
                                                             title="View Requirements">
                                                         Requirements
                                                     </button>
-                                                    @endcan
-                                                @endif
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
                                         </div>
                                     </div>
 
                                     <!-- Hover Effect -->
-                                    <div class="absolute inset-0 bg-{{ $stage['color'] }}-50 opacity-0 group-hover:opacity-20 transition-opacity duration-200 rounded-lg pointer-events-none"></div>
+                                    <div class="absolute inset-0 bg-<?php echo e($stage['color']); ?>-50 opacity-0 group-hover:opacity-20 transition-opacity duration-200 rounded-lg pointer-events-none"></div>
                                 </div>
-                            @empty
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                 <!-- Enhanced Empty State -->
                                 <div class="flex flex-col items-center justify-center py-16 text-gray-500">
                                     <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
@@ -781,14 +789,14 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                                         </svg>
                                     </div>
-                                    <p class="text-sm font-medium text-gray-700 mb-2">No leads in {{ $stage['title'] }}</p>
+                                    <p class="text-sm font-medium text-gray-700 mb-2">No leads in <?php echo e($stage['title']); ?></p>
                                     <p class="text-xs text-gray-500 text-center max-w-40">Leads will appear here when they reach this stage</p>
                                 </div>
-                            @endforelse
+                            <?php endif; ?>
                         </div>
                     </div>
-                @endforeach
-            @else
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <?php else: ?>
                 <!-- Enhanced No Data State -->
                 <div class="col-span-full text-center py-16">
                     <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -798,7 +806,7 @@
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 mb-2">No leads found</h3>
                     <p class="text-gray-500 mb-6 max-w-md mx-auto">Get started by creating your first lead and watch your sales pipeline come to life.</p>
-                    <a href="{{ route('crm.leads.create') }}" 
+                    <a href="<?php echo e(route('crm.leads.create')); ?>" 
                        class="inline-flex items-center px-6 py-3 border border-transparent shadow-lg text-base font-medium rounded-xl text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform hover:scale-105 transition-all duration-200">
                         <svg class="-ml-1 mr-3 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
@@ -806,7 +814,7 @@
                         Create Your First Lead
                     </a>
                 </div>
-            @endif
+            <?php endif; ?>
         </div>
     </div>
 </div>
@@ -1110,4 +1118,4 @@ function showNotification(message, type = 'info') {
         }
     }, 5000);
 }
-</script> 
+</script> <?php /**PATH C:\Users\Walid\OneDrive\Desktop\MaxMed\resources\views/crm/leads/partials/pipeline-view.blade.php ENDPATH**/ ?>

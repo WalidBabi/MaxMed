@@ -1,14 +1,12 @@
-@extends('layouts.crm')
+<?php $__env->startSection('title', 'CRM Leads Pipeline'); ?>
 
-@section('title', 'CRM Leads Pipeline')
-
-@push('head')
+<?php $__env->startPush('head'); ?>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="container mx-auto px-4 py-8">
     <!-- Header with View Toggle -->
     <div class="flex justify-between items-center mb-8">
@@ -18,7 +16,7 @@
         </div>
         <div class="flex items-center space-x-4">
             <!-- Add Lead Button -->
-            <a href="{{ route('crm.leads.create') }}" 
+            <a href="<?php echo e(route('crm.leads.create')); ?>" 
                class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 <svg class="-ml-1 mr-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
@@ -29,14 +27,14 @@
     </div>
 
     <!-- Filters Section (for table view) -->
-    @if(isset($viewType) && $viewType === 'table')
+    <?php if(isset($viewType) && $viewType === 'table'): ?>
         <div class="bg-white shadow rounded-lg p-6 mb-6">
-            <form method="GET" action="{{ route('crm.leads.index') }}" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <form method="GET" action="<?php echo e(route('crm.leads.index')); ?>" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <input type="hidden" name="view" value="table">
                 
                 <div>
                     <label for="search" class="block text-sm font-medium text-gray-700">Search</label>
-                    <input type="text" name="search" id="search" value="{{ request('search') }}" 
+                    <input type="text" name="search" id="search" value="<?php echo e(request('search')); ?>" 
                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                            placeholder="Name, email, company...">
                 </div>
@@ -45,16 +43,16 @@
                     <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
                     <select name="status" id="status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         <option value="">All Statuses</option>
-                        <option value="new_inquiry" {{ request('status') === 'new_inquiry' ? 'selected' : '' }}>New Inquiry</option>
-                        <option value="quote_requested" {{ request('status') === 'quote_requested' ? 'selected' : '' }}>Quote Requested</option>
-                        <option value="quote_sent" {{ request('status') === 'quote_sent' ? 'selected' : '' }}>Quote Sent</option>
-                        <option value="follow_up_1" {{ request('status') === 'follow_up_1' ? 'selected' : '' }}>Follow-up 1</option>
-                        <option value="follow_up_2" {{ request('status') === 'follow_up_2' ? 'selected' : '' }}>Follow-up 2</option>
-                        <option value="follow_up_3" {{ request('status') === 'follow_up_3' ? 'selected' : '' }}>Follow-up 3</option>
-                        <option value="negotiating_price" {{ request('status') === 'negotiating_price' ? 'selected' : '' }}>Negotiating Price</option>
-                        <option value="payment_pending" {{ request('status') === 'payment_pending' ? 'selected' : '' }}>Payment Pending</option>
-                        <option value="order_confirmed" {{ request('status') === 'order_confirmed' ? 'selected' : '' }}>Order Confirmed</option>
-                        <option value="deal_lost" {{ request('status') === 'deal_lost' ? 'selected' : '' }}>Deal Lost</option>
+                        <option value="new_inquiry" <?php echo e(request('status') === 'new_inquiry' ? 'selected' : ''); ?>>New Inquiry</option>
+                        <option value="quote_requested" <?php echo e(request('status') === 'quote_requested' ? 'selected' : ''); ?>>Quote Requested</option>
+                        <option value="quote_sent" <?php echo e(request('status') === 'quote_sent' ? 'selected' : ''); ?>>Quote Sent</option>
+                        <option value="follow_up_1" <?php echo e(request('status') === 'follow_up_1' ? 'selected' : ''); ?>>Follow-up 1</option>
+                        <option value="follow_up_2" <?php echo e(request('status') === 'follow_up_2' ? 'selected' : ''); ?>>Follow-up 2</option>
+                        <option value="follow_up_3" <?php echo e(request('status') === 'follow_up_3' ? 'selected' : ''); ?>>Follow-up 3</option>
+                        <option value="negotiating_price" <?php echo e(request('status') === 'negotiating_price' ? 'selected' : ''); ?>>Negotiating Price</option>
+                        <option value="payment_pending" <?php echo e(request('status') === 'payment_pending' ? 'selected' : ''); ?>>Payment Pending</option>
+                        <option value="order_confirmed" <?php echo e(request('status') === 'order_confirmed' ? 'selected' : ''); ?>>Order Confirmed</option>
+                        <option value="deal_lost" <?php echo e(request('status') === 'deal_lost' ? 'selected' : ''); ?>>Deal Lost</option>
                     </select>
                 </div>
                 
@@ -62,16 +60,16 @@
                     <label for="source" class="block text-sm font-medium text-gray-700">Source</label>
                     <select name="source" id="source" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         <option value="">All Sources</option>
-                        <option value="website" {{ request('source') === 'website' ? 'selected' : '' }}>Website</option>
-                        <option value="linkedin" {{ request('source') === 'linkedin' ? 'selected' : '' }}>LinkedIn</option>
-                        <option value="email" {{ request('source') === 'email' ? 'selected' : '' }}>Email</option>
-                        <option value="phone" {{ request('source') === 'phone' ? 'selected' : '' }}>Phone</option>
-                        <option value="whatsapp" {{ request('source') === 'whatsapp' ? 'selected' : '' }}>WhatsApp</option>
-                        <option value="on_site_visit" {{ request('source') === 'on_site_visit' ? 'selected' : '' }}>On-site Visit</option>
-                        <option value="referral" {{ request('source') === 'referral' ? 'selected' : '' }}>Referral</option>
-                        <option value="trade_show" {{ request('source') === 'trade_show' ? 'selected' : '' }}>Trade Show</option>
-                        <option value="google_ads" {{ request('source') === 'google_ads' ? 'selected' : '' }}>Google Ads</option>
-                        <option value="other" {{ request('source') === 'other' ? 'selected' : '' }}>Other</option>
+                        <option value="website" <?php echo e(request('source') === 'website' ? 'selected' : ''); ?>>Website</option>
+                        <option value="linkedin" <?php echo e(request('source') === 'linkedin' ? 'selected' : ''); ?>>LinkedIn</option>
+                        <option value="email" <?php echo e(request('source') === 'email' ? 'selected' : ''); ?>>Email</option>
+                        <option value="phone" <?php echo e(request('source') === 'phone' ? 'selected' : ''); ?>>Phone</option>
+                        <option value="whatsapp" <?php echo e(request('source') === 'whatsapp' ? 'selected' : ''); ?>>WhatsApp</option>
+                        <option value="on_site_visit" <?php echo e(request('source') === 'on_site_visit' ? 'selected' : ''); ?>>On-site Visit</option>
+                        <option value="referral" <?php echo e(request('source') === 'referral' ? 'selected' : ''); ?>>Referral</option>
+                        <option value="trade_show" <?php echo e(request('source') === 'trade_show' ? 'selected' : ''); ?>>Trade Show</option>
+                        <option value="google_ads" <?php echo e(request('source') === 'google_ads' ? 'selected' : ''); ?>>Google Ads</option>
+                        <option value="other" <?php echo e(request('source') === 'other' ? 'selected' : ''); ?>>Other</option>
                     </select>
                 </div>
                 
@@ -79,9 +77,9 @@
                     <label for="priority" class="block text-sm font-medium text-gray-700">Priority</label>
                     <select name="priority" id="priority" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         <option value="">All Priorities</option>
-                        <option value="low" {{ request('priority') === 'low' ? 'selected' : '' }}>Low</option>
-                        <option value="medium" {{ request('priority') === 'medium' ? 'selected' : '' }}>Medium</option>
-                        <option value="high" {{ request('priority') === 'high' ? 'selected' : '' }}>High</option>
+                        <option value="low" <?php echo e(request('priority') === 'low' ? 'selected' : ''); ?>>Low</option>
+                        <option value="medium" <?php echo e(request('priority') === 'medium' ? 'selected' : ''); ?>>Medium</option>
+                        <option value="high" <?php echo e(request('priority') === 'high' ? 'selected' : ''); ?>>High</option>
                     </select>
                 </div>
                 
@@ -89,9 +87,9 @@
                     <label for="assigned_to" class="block text-sm font-medium text-gray-700">Assigned To</label>
                     <select name="assigned_to" id="assigned_to" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         <option value="">All Users</option>
-                        @foreach($users as $user)
-                            <option value="{{ $user->id }}" {{ request('assigned_to') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
-                        @endforeach
+                        <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($user->id); ?>" <?php echo e(request('assigned_to') == $user->id ? 'selected' : ''); ?>><?php echo e($user->name); ?></option>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </select>
                 </div>
                 
@@ -102,14 +100,14 @@
                 </div>
             </form>
         </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Content Area -->
-    @if(!isset($viewType) || $viewType === 'pipeline')
-        @include('crm.leads.partials.pipeline-view')
-    @else
-        @include('crm.leads.partials.table-view')
-    @endif
+    <?php if(!isset($viewType) || $viewType === 'pipeline'): ?>
+        <?php echo $__env->make('crm.leads.partials.pipeline-view', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    <?php else: ?>
+        <?php echo $__env->make('crm.leads.partials.table-view', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    <?php endif; ?>
 </div>
 
 <!-- Enhanced Lead Action Modal -->
@@ -504,10 +502,11 @@ select:focus {
 </style>
 
 <script>
-// Cache-busting: Updated {{ now()->timestamp }}
+// Cache-busting: Updated <?php echo e(now()->timestamp); ?>
+
 // Enhanced Pipeline JavaScript with Advanced Features and Smooth Navigation
 
-console.log('🚀 CRM Leads JavaScript loaded - Version: {{ now()->timestamp }} - Cache Buster: {{ uniqid() }}');
+console.log('🚀 CRM Leads JavaScript loaded - Version: <?php echo e(now()->timestamp); ?> - Cache Buster: <?php echo e(uniqid()); ?>');
 console.log('🔥 COMPLETELY NEW LOGIC - Error handling rewritten from scratch!');
 console.log('🔄 Cache busting timestamp: ' + new Date().getTime());
 console.log('🎯 BRAND NEW APPROACH - Simple and direct error handling!');
@@ -2181,7 +2180,7 @@ console.log('Enhanced CRM Pipeline with Navigation Arrows and Send Email loaded 
 
     <div x-show="show" class="mb-6 bg-white rounded-2xl overflow-hidden shadow-2xl transform transition-all sm:w-full sm:max-w-2xl sm:mx-auto border border-gray-200">
         <form id="sendEmailForm" method="POST" action="" x-data="{ submitting: false }" @submit.prevent="submitEmailForm($event)">
-            @csrf
+            <?php echo csrf_field(); ?>
             
             <!-- Header -->
             <div class="bg-gradient-to-r from-green-600 to-emerald-700 px-6 py-5">
@@ -2307,4 +2306,5 @@ console.log('Enhanced CRM Pipeline with Navigation Arrows and Send Email loaded 
     </div>
 </div>
 
-@endsection 
+<?php $__env->stopSection(); ?> 
+<?php echo $__env->make('layouts.crm', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Walid\OneDrive\Desktop\MaxMed\resources\views/crm/leads/index.blade.php ENDPATH**/ ?>
