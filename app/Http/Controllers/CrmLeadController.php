@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CrmLead;
 use App\Models\User;
 use App\Models\CrmDeal;
+use App\Notifications\LeadCreatedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -493,6 +494,28 @@ class CrmLeadController extends Controller
         } catch (\Exception $e) {
             \Log::error("Customer creation from lead {$lead->id} failed: " . $e->getMessage());
             // Non-fatal: keep going even if customer creation fails
+        }
+
+        // Send notification to assigned user
+        try {
+            $assignedUser = User::find($lead->assigned_to);
+            if ($assignedUser) {
+                $assignedUser->notify(new LeadCreatedNotification($lead));
+                \Log::info('Lead assignment notification sent', [
+                    'lead_id' => $lead->id,
+                    'assigned_to' => $assignedUser->id,
+                    'assigned_to_email' => $assignedUser->email
+                ]);
+                
+                $lead->logActivity('note', 'Assignment notification sent', "Email notification sent to {$assignedUser->name} ({$assignedUser->email})");
+            }
+        } catch (\Exception $e) {
+            \Log::error('Failed to send lead assignment notification', [
+                'lead_id' => $lead->id,
+                'assigned_to' => $lead->assigned_to,
+                'error' => $e->getMessage()
+            ]);
+            // Non-fatal: continue even if notification fails
         }
             
             \Log::info('CRM Lead created successfully', ['lead_id' => $lead->id, 'lead_name' => $lead->full_name]);
@@ -1284,6 +1307,28 @@ class CrmLeadController extends Controller
                 $lead->logActivity('note', 'Customer created/linked', "Customer '{$customer->name}' (ID: {$customer->id}) linked to this lead");
             } catch (\Exception $e) {
                 \Log::error("Customer creation from lead {$lead->id} failed: " . $e->getMessage());
+            }
+
+            // Send notification to assigned user (which is the current user in quick add)
+            try {
+                $assignedUser = auth()->user();
+                if ($assignedUser) {
+                    $assignedUser->notify(new LeadCreatedNotification($lead));
+                    \Log::info('Lead assignment notification sent (quick add)', [
+                        'lead_id' => $lead->id,
+                        'assigned_to' => $assignedUser->id,
+                        'assigned_to_email' => $assignedUser->email
+                    ]);
+                    
+                    $lead->logActivity('note', 'Assignment notification sent', "Email notification sent to {$assignedUser->name} ({$assignedUser->email})");
+                }
+            } catch (\Exception $e) {
+                \Log::error('Failed to send lead assignment notification (quick add)', [
+                    'lead_id' => $lead->id,
+                    'assigned_to' => $lead->assigned_to,
+                    'error' => $e->getMessage()
+                ]);
+                // Non-fatal: continue even if notification fails
             }
 
             return response()->json([

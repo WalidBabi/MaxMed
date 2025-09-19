@@ -52,6 +52,7 @@
                             <tr>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Delivery #</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order #</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice Status</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tracking #</th>
@@ -80,6 +81,25 @@
                                             <span class="text-sm text-red-600">
                                                 #{{ $delivery->order_id }} (Order not found)
                                             </span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if($delivery->order && $delivery->order->user)
+                                            <div class="text-sm text-gray-900">
+                                                <div class="font-medium">{{ $delivery->order->user->name }}</div>
+                                                @if($delivery->order->user->company_name)
+                                                    <div class="text-gray-500">{{ $delivery->order->user->company_name }}</div>
+                                                @endif
+                                            </div>
+                                        @elseif($delivery->order)
+                                            <div class="text-sm text-gray-900">
+                                                <div class="font-medium">{{ $delivery->order->customer_name ?? 'N/A' }}</div>
+                                                @if($delivery->order->customer_company)
+                                                    <div class="text-gray-500">{{ $delivery->order->customer_company }}</div>
+                                                @endif
+                                            </div>
+                                        @else
+                                            <span class="text-sm text-gray-500">N/A</span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">

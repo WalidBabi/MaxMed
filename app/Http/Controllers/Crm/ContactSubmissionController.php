@@ -7,6 +7,7 @@ use App\Models\ContactSubmission;
 use App\Models\CrmLead;
 use App\Models\QuotationRequest;
 use App\Models\Product;
+use App\Notifications\LeadCreatedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -115,6 +116,30 @@ class ContactSubmissionController extends Controller
                 'status' => 'converted_to_lead',
                 'assigned_to' => auth()->id(),
             ]);
+
+            // Send notification to assigned user (which is the current user in this case)
+            try {
+                $assignedUser = auth()->user();
+                if ($assignedUser) {
+                    $assignedUser->notify(new LeadCreatedNotification($lead));
+                    \Log::info('Lead assignment notification sent (converted from contact)', [
+                        'lead_id' => $lead->id,
+                        'assigned_to' => $assignedUser->id,
+                        'assigned_to_email' => $assignedUser->email,
+                        'original_submission_id' => $submission->id
+                    ]);
+                    
+                    $lead->logActivity('note', 'Assignment notification sent', "Email notification sent to {$assignedUser->name} ({$assignedUser->email})");
+                }
+            } catch (\Exception $e) {
+                \Log::error('Failed to send lead assignment notification (converted from contact)', [
+                    'lead_id' => $lead->id,
+                    'assigned_to' => $lead->assigned_to,
+                    'submission_id' => $submission->id,
+                    'error' => $e->getMessage()
+                ]);
+                // Non-fatal: continue even if notification fails
+            }
 
             DB::commit();
 
