@@ -299,14 +299,47 @@
                                                 @endif
                                             </div>
                                             @if(isset($attachment['path']))
-                                                <div class="mt-2">
-                                                    <a href="{{ Storage::url($attachment['path']) }}" 
-                                                       target="_blank" 
-                                                       class="inline-flex items-center text-xs text-indigo-600 hover:text-indigo-700">
+                                                @php
+                                                    $extension = strtolower(pathinfo($attachment['filename'] ?? 'file', PATHINFO_EXTENSION));
+                                                    $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+                                                    $isPdf = $extension === 'pdf';
+                                                    $fileUrl = asset('storage/' . $attachment['path']);
+                                                @endphp
+                                                <div class="mt-2 flex space-x-2">
+                                                    @if($isImage)
+                                                        <button onclick="openMainImagePreview('{{ $fileUrl }}', '{{ $attachment['filename'] ?? 'Image' }}')"
+                                                                class="inline-flex items-center text-xs text-purple-600 hover:text-purple-700 px-2 py-1 bg-purple-50 rounded">
+                                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                                            </svg>
+                                                            View Image
+                                                        </button>
+                                                    @elseif($isPdf)
+                                                        <button onclick="openMainPdfViewer('{{ $fileUrl }}', '{{ $attachment['filename'] ?? 'PDF' }}')"
+                                                                class="inline-flex items-center text-xs text-red-600 hover:text-red-700 px-2 py-1 bg-red-50 rounded">
+                                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                                            </svg>
+                                                            View PDF
+                                                        </button>
+                                                    @else
+                                                        <a href="{{ $fileUrl }}" 
+                                                           target="_blank" 
+                                                           class="inline-flex items-center text-xs text-indigo-600 hover:text-indigo-700 px-2 py-1 bg-indigo-50 rounded">
+                                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                                            </svg>
+                                                            Open File
+                                                        </a>
+                                                    @endif
+                                                    <a href="{{ $fileUrl }}" 
+                                                       download="{{ $attachment['filename'] ?? 'download' }}"
+                                                       class="inline-flex items-center text-xs text-gray-600 hover:text-gray-700 px-2 py-1 bg-gray-50 rounded">
                                                         <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                                         </svg>
-                                                        View File
+                                                        Download
                                                     </a>
                                                 </div>
                                             @endif
@@ -1092,7 +1125,12 @@ function openAttachmentModal(paymentNumber, attachments) {
                                                     ${attachment.original_name.length > 20 ? attachment.original_name.substring(0, 20) + '...' : attachment.original_name}
                                                 </p>
                                                 <div class="flex space-x-2">
-                                                    ${isPdf ? 
+                                                    ${isImage ? 
+                                                        `<button onclick="openImagePreview('${fileUrl}', '${attachment.original_name}')" 
+                                                                class="px-3 py-1 bg-purple-600 text-white text-xs rounded hover:bg-purple-700 transition-colors">
+                                                            View Image
+                                                        </button>` :
+                                                        isPdf ? 
                                                         `<button onclick="openPdfViewer('${fileUrl}', '${attachment.original_name}')" 
                                                                 class="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700 transition-colors">
                                                             View PDF
@@ -1193,10 +1231,107 @@ function closePdfViewer() {
     }
 }
 
+// Main attachment viewing functions
+function openMainImagePreview(imageUrl, imageName) {
+    const previewHTML = `
+        <div id="mainImagePreview" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50" onclick="closeMainImagePreview()">
+            <div class="relative max-w-7xl max-h-full p-4" onclick="event.stopPropagation()">
+                <button onclick="closeMainImagePreview()" class="absolute top-2 right-2 text-white hover:text-gray-300 z-10 bg-black bg-opacity-50 rounded-full p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                <div class="text-center">
+                    <img src="${imageUrl}" alt="${imageName}" class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl">
+                    <div class="mt-4 bg-black bg-opacity-50 rounded-lg p-2">
+                        <p class="text-white text-sm font-medium">${imageName}</p>
+                        <div class="flex justify-center space-x-3 mt-2">
+                            <a href="${imageUrl}" target="_blank" class="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700">
+                                Open Original
+                            </a>
+                            <a href="${imageUrl}" download="${imageName}" class="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700">
+                                Download
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', previewHTML);
+}
+
+function closeMainImagePreview() {
+    const preview = document.getElementById('mainImagePreview');
+    if (preview) {
+        preview.remove();
+    }
+}
+
+function openMainPdfViewer(pdfUrl, pdfName) {
+    const pdfViewerHTML = `
+        <div id="mainPdfViewer" class="fixed inset-0 bg-white z-50">
+            <div class="flex flex-col h-full">
+                <div class="bg-gray-800 text-white p-4 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-6 h-6 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                        </svg>
+                        <h3 class="text-lg font-medium">${pdfName}</h3>
+                    </div>
+                    <div class="flex space-x-2">
+                        <a href="${pdfUrl}" target="_blank" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                            </svg>
+                            New Tab
+                        </a>
+                        <a href="${pdfUrl}" download="${pdfName}" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
+                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Download
+                        </a>
+                        <button onclick="closeMainPdfViewer()" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors">
+                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                            Close
+                        </button>
+                    </div>
+                </div>
+                <iframe src="${pdfUrl}" class="flex-1 w-full border-none" title="${pdfName}"></iframe>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', pdfViewerHTML);
+}
+
+function closeMainPdfViewer() {
+    const viewer = document.getElementById('mainPdfViewer');
+    if (viewer) {
+        viewer.remove();
+    }
+}
+
 // Close modals when clicking outside
 document.addEventListener('click', function(e) {
     if (e.target.id === 'attachmentModal') {
         closeAttachmentModal();
+    }
+    if (e.target.id === 'mainImagePreview') {
+        closeMainImagePreview();
+    }
+});
+
+// Keyboard navigation for modals
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeAttachmentModal();
+        closeMainImagePreview();
+        closeMainPdfViewer();
+        closeImagePreview();
+        closePdfViewer();
     }
 });
 </script>

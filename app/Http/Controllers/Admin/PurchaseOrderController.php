@@ -256,7 +256,7 @@ class PurchaseOrderController extends Controller
                 'tax_amount' => $request->tax_amount ?? 0,
                 'shipping_cost' => $request->shipping_cost ?? 0,
                 'total_amount' => $request->total_amount,
-                'attachments' => !empty($attachments) ? json_encode($attachments) : null,
+                'attachments' => !empty($attachments) ? $attachments : null,
                 'updated_by' => Auth::id()
             ];
 
