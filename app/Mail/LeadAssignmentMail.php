@@ -5,13 +5,12 @@ namespace App\Mail;
 use App\Models\CrmLead;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class LeadAssignmentMail extends Mailable implements ShouldQueue
+class LeadAssignmentMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,10 +30,6 @@ class LeadAssignmentMail extends Mailable implements ShouldQueue
         $this->previousAssignee = $previousAssignee;
         $this->reassignedBy = $reassignedBy;
         $this->isNewLead = $isNewLead;
-        
-        // Use configured queue connection
-        $this->onQueue('emails');
-        $this->delay(now()->addSeconds(2));
     }
 
     /**

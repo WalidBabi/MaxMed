@@ -123,29 +123,45 @@ class ContactSubmissionController extends Controller
             try {
                 $assignedUser = auth()->user();
                 if ($assignedUser) {
-                    // Send email using Mailable
+                    // Send email immediately using Mail facade (same as quotes/invoices)
                     Mail::to($assignedUser->email)->send(new LeadAssignmentMail($lead, $assignedUser, null, $assignedUser, true));
+                    
+                    // Update email history like quotes/invoices
+                    $emailHistory = $lead->email_history ?? [];
+                    $emailHistory[] = [
+                        'sent_at' => now()->toISOString(),
+                        'to' => $assignedUser->email,
+                        'subject' => '👥 New Lead Assigned - ' . $lead->full_name,
+                        'type' => 'assignment_from_contact',
+                        'sent_by' => $assignedUser->name,
+                        'original_submission_id' => $submission->id
+                    ];
+                    
+                    $lead->update([
+                        'email_history' => $emailHistory,
+                        'last_email_sent_at' => now()
+                    ]);
                     
                     // Also send database notification for dashboard
                     $assignedUser->notify(new LeadCreatedNotification($lead));
                     
-                    \Log::info('Lead assignment email and notification sent (converted from contact)', [
+                    \Log::info('Lead assignment email sent successfully (converted from contact)', [
                         'lead_id' => $lead->id,
                         'assigned_to' => $assignedUser->id,
                         'assigned_to_email' => $assignedUser->email,
                         'original_submission_id' => $submission->id
                     ]);
                     
-                    $lead->logActivity('note', 'Assignment notification sent', "Email notification sent to {$assignedUser->name} ({$assignedUser->email})");
+                    $lead->logActivity('note', 'Assignment email sent', "Assignment email sent to {$assignedUser->name} ({$assignedUser->email})");
                 }
             } catch (\Exception $e) {
-                \Log::error('Failed to send lead assignment notification (converted from contact)', [
+                \Log::error('Failed to send lead assignment email (converted from contact)', [
                     'lead_id' => $lead->id,
                     'assigned_to' => $lead->assigned_to,
                     'submission_id' => $submission->id,
                     'error' => $e->getMessage()
                 ]);
-                // Non-fatal: continue even if notification fails
+                // Non-fatal: continue even if email fails
             }
 
             DB::commit();
