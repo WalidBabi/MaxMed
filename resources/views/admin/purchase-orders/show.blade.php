@@ -235,117 +235,72 @@
                 $attachmentCount = count($attachments);
             @endphp
             @if($attachmentCount > 0)
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div class="bg-white shadow-sm rounded-lg border border-gray-200">
                     <div class="px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-lg font-semibold text-gray-900">Attached Files</h3>
-                        <p class="text-sm text-gray-600 mt-1">{{ $attachmentCount }} file{{ $attachmentCount > 1 ? 's' : '' }} attached to this purchase order</p>
+                        <h3 class="text-lg font-medium text-gray-900">Purchase Order Attachments</h3>
                     </div>
                     <div class="p-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             @foreach($attachments as $attachment)
-                                <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors duration-200">
-                                    <div class="flex items-start space-x-3">
-                                        <div class="flex-shrink-0">
-                                            <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                                                @php
-                                                    $filename = $attachment['filename'] ?? 'attachment';
-                                                    $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-                                                @endphp
-                                                
-                                                @switch($extension)
-                                                    @case('pdf')
-                                                        <svg class="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
-                                                        </svg>
-                                                        @break
-                                                    @case('doc')
-                                                    @case('docx')
-                                                        <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
-                                                        </svg>
-                                                        @break
-                                                    @case('xls')
-                                                    @case('xlsx')
-                                                        <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
-                                                        </svg>
-                                                        @break
-                                                    @case('jpg')
-                                                    @case('jpeg')
-                                                    @case('png')
-                                                    @case('gif')
-                                                        <svg class="w-6 h-6 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
-                                                        </svg>
-                                                        @break
-                                                    @default
-                                                        <svg class="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
-                                                        </svg>
-                                                @endswitch
-                                            </div>
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <h4 class="text-sm font-medium text-gray-900 truncate" title="{{ $attachment['filename'] ?? 'Attachment' }}">
-                                                {{ $attachment['filename'] ?? 'Attachment' }}
-                                            </h4>
-                                            <div class="mt-1 flex items-center space-x-2 text-xs text-gray-500">
-                                                @if(isset($attachment['size']))
-                                                    <span>{{ number_format($attachment['size'] / 1024, 1) }} KB</span>
-                                                @endif
-                                                @if(isset($attachment['type']))
-                                                    <span>•</span>
-                                                    <span>{{ $attachment['type'] }}</span>
-                                                @endif
-                                            </div>
-                                            @if(isset($attachment['path']))
-                                                @php
-                                                    $extension = strtolower(pathinfo($attachment['filename'] ?? 'file', PATHINFO_EXTENSION));
-                                                    $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
-                                                    $isPdf = $extension === 'pdf';
-                                                    $fileUrl = asset('storage/' . $attachment['path']);
-                                                @endphp
-                                                <div class="mt-2 flex space-x-2">
-                                                    @if($isImage)
-                                                        <button onclick="openMainImagePreview('{{ $fileUrl }}', '{{ $attachment['filename'] ?? 'Image' }}')"
-                                                                class="inline-flex items-center text-xs text-purple-600 hover:text-purple-700 px-2 py-1 bg-purple-50 rounded">
-                                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                                            </svg>
-                                                            View Image
+                                @if(isset($attachment['path']))
+                                    @php
+                                        $filename = $attachment['filename'] ?? 'attachment';
+                                        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+                                        $fileUrl = asset('storage/' . $attachment['path']);
+                                    @endphp
+                                    <div>
+                                        <div class="mb-2 font-medium text-gray-700">{{ $filename }}</div>
+                                        @if($extension === 'pdf')
+                                            <iframe src="{{ $fileUrl }}" width="100%" height="500px" class="border rounded"></iframe>
+                                        @elseif(in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
+                                            <div class="border rounded overflow-hidden bg-gray-50">
+                                                <img src="{{ $fileUrl }}" alt="{{ $filename }}" class="w-full h-auto max-h-96 object-contain cursor-pointer" onclick="openMainImagePreview('{{ $fileUrl }}', '{{ $filename }}')">
+                                                <div class="p-3 bg-white border-t">
+                                                    <div class="flex space-x-2">
+                                                        <button onclick="openMainImagePreview('{{ $fileUrl }}', '{{ $filename }}')" class="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
+                                                            View Full Size
                                                         </button>
-                                                    @elseif($isPdf)
-                                                        <button onclick="openMainPdfViewer('{{ $fileUrl }}', '{{ $attachment['filename'] ?? 'PDF' }}')"
-                                                                class="inline-flex items-center text-xs text-red-600 hover:text-red-700 px-2 py-1 bg-red-50 rounded">
-                                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                                            </svg>
-                                                            View PDF
-                                                        </button>
-                                                    @else
-                                                        <a href="{{ $fileUrl }}" 
-                                                           target="_blank" 
-                                                           class="inline-flex items-center text-xs text-indigo-600 hover:text-indigo-700 px-2 py-1 bg-indigo-50 rounded">
-                                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                                                            </svg>
-                                                            Open File
+                                                        <a href="{{ $fileUrl }}" download="{{ $filename }}" class="px-3 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700">
+                                                            Download
                                                         </a>
-                                                    @endif
-                                                    <a href="{{ $fileUrl }}" 
-                                                       download="{{ $attachment['filename'] ?? 'download' }}"
-                                                       class="inline-flex items-center text-xs text-gray-600 hover:text-gray-700 px-2 py-1 bg-gray-50 rounded">
-                                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="border rounded p-6 bg-gray-50 text-center">
+                                                <div class="mx-auto w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center mb-3">
+                                                    @switch($extension)
+                                                        @case('doc')
+                                                        @case('docx')
+                                                            <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                                                            </svg>
+                                                            @break
+                                                        @case('xls')
+                                                        @case('xlsx')
+                                                            <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                                                            </svg>
+                                                            @break
+                                                        @default
+                                                            <svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                                                            </svg>
+                                                    @endswitch
+                                                </div>
+                                                <p class="text-sm text-gray-600 mb-3">{{ strtoupper($extension) }} File</p>
+                                                <div class="flex space-x-2 justify-center">
+                                                    <a href="{{ $fileUrl }}" target="_blank" class="px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
+                                                        Open
+                                                    </a>
+                                                    <a href="{{ $fileUrl }}" download="{{ $filename }}" class="px-4 py-2 bg-gray-600 text-white text-sm rounded hover:bg-gray-700">
                                                         Download
                                                     </a>
                                                 </div>
-                                            @endif
-                                        </div>
+                                            </div>
+                                        @endif
                                     </div>
-                                </div>
+                                @endif
                             @endforeach
                         </div>
                     </div>
