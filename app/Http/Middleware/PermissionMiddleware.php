@@ -39,7 +39,8 @@ class PermissionMiddleware
 
         $user = $authGuard->user();
 
-        if (!$user->hasPermission($permission)) {
+        // Check permission using AccessControlService which includes superadmin override
+        if (!\App\Services\AccessControlService::canAccess($user, $permission)) {
             Log::warning('PermissionMiddleware: Access denied - Missing permission', [
                 'user_id' => $user->id,
                 'user_email' => $user->email,

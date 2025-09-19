@@ -244,7 +244,7 @@ class PurchaseOrder extends Model
         
         // If sent to supplier, only superadmin can edit
         if ($this->status !== self::STATUS_DRAFT) {
-            return auth()->check() && auth()->user()->hasRole('super_admin');
+            return auth()->check() && auth()->user()->isAdmin();
         }
         
         return true;
