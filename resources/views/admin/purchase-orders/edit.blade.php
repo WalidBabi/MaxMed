@@ -806,6 +806,8 @@ function addItem(itemData = null) {
                     <option value="">Select Price Type</option>
                     <option value="aed" ${(data.price_type || '') === 'aed' ? 'selected' : ''}>Procurement Price AED</option>
                     <option value="usd" ${(data.price_type || '') === 'usd' ? 'selected' : ''}>Procurement Price USD</option>
+                    <option value="cny" ${(data.price_type || '') === 'cny' ? 'selected' : ''}>Procurement Price CNY</option>
+                    <option value="hkd" ${(data.price_type || '') === 'hkd' ? 'selected' : ''}>Procurement Price HKD</option>
                 </select>
                 <input type="number" step="0.01" name="items[${itemCounter}][unit_price]" value="${data.rate}" required
                        class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rate-input">
@@ -1442,8 +1444,20 @@ function updatePriceTypeControlsByCurrency() {
             if (productIdInput && productIdInput.value) {
                 updateRateFromPriceType(priceTypeSelect);
             }
+        } else if (currency === 'CNY') {
+            priceTypeSelect.disabled = false;
+            if (!priceTypeSelect.value) priceTypeSelect.value = 'cny';
+            if (productIdInput && productIdInput.value) {
+                updateRateFromPriceType(priceTypeSelect);
+            }
+        } else if (currency === 'HKD') {
+            priceTypeSelect.disabled = false;
+            if (!priceTypeSelect.value) priceTypeSelect.value = 'hkd';
+            if (productIdInput && productIdInput.value) {
+                updateRateFromPriceType(priceTypeSelect);
+            }
         } else {
-            // For CNY or others: disable price type selection and leave manual rate
+            // For other currencies: disable price type selection and leave manual rate
             priceTypeSelect.value = '';
             priceTypeSelect.disabled = true;
             // Do not auto-change rate; keep whatever user set
