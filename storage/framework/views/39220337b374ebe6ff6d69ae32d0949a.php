@@ -1,9 +1,7 @@
-@extends('admin.layouts.app')
+<?php $__env->startSection('title', 'Sales Dashboard - MaxMed Admin'); ?>
 
-@section('title', 'Sales Dashboard - MaxMed Admin')
-
-@section('content')
-@can('dashboard.view')
+<?php $__env->startSection('content'); ?>
+<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('dashboard.view')): ?>
 <div class="-mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
     <!-- Header -->
     <div class="mb-8">
@@ -13,11 +11,19 @@
                 <p class="text-gray-600 mt-2">Comprehensive sales trends and analytics with advanced filtering</p>
             </div>
             <div class="flex items-center space-x-3">
+                <a href="<?php echo e(route('admin.test.delivery-note-pdf')); ?>" 
+                   class="inline-flex items-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 transition-colors">
+                    <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Test Delivery PDF
+                </a>
                 <span class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300">
                     <svg class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.25 2.25 0 0117.5 6.25v8.5A2.25 2.25 0 0115.25 17H4.75A2.25 2.25 0 012.5 14.75v-8.5A2.25 2.25 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25-1.25H4.75z" clip-rule="evenodd" />
+                        <path fill-rule="evenodd" d="M5.75 2a.75.75 0 01.75.75V4h7V2.75a.75.75 0 011.5 0V4h.25A2.25 2.25 0 0117.5 6.25v8.5A2.25 2.25 0 0115.25 17H4.75A2.25 2.25 0 012.5 14.75v-8.5A2.25 2.25 0 014.75 4H5V2.75A.75.75 0 015.75 2zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75z" clip-rule="evenodd" />
                     </svg>
-                    {{ now()->format('l, F j, Y') }}
+                    <?php echo e(now()->format('l, F j, Y')); ?>
+
                 </span>
             </div>
         </div>
@@ -44,15 +50,15 @@
                     <div class="space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-semibold text-gray-600">AED currency</span>
-                            <span class="text-sm font-bold text-gray-900">{{ number_format($salesData['revenue']['aed'], 0) }} AED</span>
+                            <span class="text-sm font-bold text-gray-900"><?php echo e(number_format($salesData['revenue']['aed'], 0)); ?> AED</span>
                         </div>
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-semibold text-gray-600">USD currency</span>
-                            <span class="text-sm font-bold text-gray-900">${{ number_format($salesData['revenue']['usd'], 0) }}</span>
+                            <span class="text-sm font-bold text-gray-900">$<?php echo e(number_format($salesData['revenue']['usd'], 0)); ?></span>
                         </div>
                         <div class="flex items-center justify-between pt-2 border-t border-green-200">
                             <span class="text-xs font-bold text-green-700">Combined Total</span>
-                            <span class="text-lg font-bold text-green-700">{{ number_format($salesData['revenue']['combined'], 2) }} AED</span>
+                            <span class="text-lg font-bold text-green-700"><?php echo e(number_format($salesData['revenue']['combined'], 2)); ?> AED</span>
                         </div>
                     </div>
                     <p class="text-xs text-green-600 mt-2">Total revenue</p>
@@ -77,15 +83,15 @@
                     <div class="space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-semibold text-gray-600">AED currency</span>
-                            <span class="text-sm font-bold text-gray-900">{{ number_format($salesData['cash_flow']['aed'], 0) }} AED</span>
+                            <span class="text-sm font-bold text-gray-900"><?php echo e(number_format($salesData['cash_flow']['aed'], 0)); ?> AED</span>
                         </div>
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-semibold text-gray-600">USD currency</span>
-                            <span class="text-sm font-bold text-gray-900">${{ number_format($salesData['cash_flow']['usd'], 0) }}</span>
+                            <span class="text-sm font-bold text-gray-900">$<?php echo e(number_format($salesData['cash_flow']['usd'], 0)); ?></span>
                         </div>
                         <div class="flex items-center justify-between pt-2 border-t border-teal-200">
                             <span class="text-xs font-bold text-teal-700">Combined Total</span>
-                            <span class="text-lg font-bold text-teal-700">{{ number_format($salesData['cash_flow']['combined'], 2) }} AED</span>
+                            <span class="text-lg font-bold text-teal-700"><?php echo e(number_format($salesData['cash_flow']['combined'], 2)); ?> AED</span>
                         </div>
                     </div>
                     <p class="text-xs text-teal-600 mt-2">Actual received</p>
@@ -115,7 +121,7 @@
                     </div>
                     <div class="mt-3">
                         <div class="space-y-0">
-                            <p class="text-2xl font-bold text-gray-900">{{ count($salesData['peak_months']) }}</p>
+                            <p class="text-2xl font-bold text-gray-900"><?php echo e(count($salesData['peak_months'])); ?></p>
                             <p class="text-sm font-semibold text-gray-700">Peak sales months</p>
                         </div>
                         <p class="text-xs text-yellow-600 mt-2">Highest performance</p>
@@ -140,7 +146,7 @@
                     </div>
                     <div class="mt-1">
                         <div class="space-y-0">
-                            <p class="text-sm font-bold text-gray-900">{{ number_format($salesData['total_combined'], 2) }} AED</p>
+                            <p class="text-sm font-bold text-gray-900"><?php echo e(number_format($salesData['total_combined'], 2)); ?> AED</p>
                             <p class="text-xs font-semibold text-gray-700">All currencies combined</p>
                         </div>
                         <p class="text-xs text-purple-600 mt-0.5">Total sales volume</p>
@@ -165,7 +171,7 @@
                     </div>
                     <div class="mt-3">
                         <div class="space-y-0">
-                            <p class="text-2xl font-bold text-gray-900">{{ count($salesData['zero_months']) }}</p>
+                            <p class="text-2xl font-bold text-gray-900"><?php echo e(count($salesData['zero_months'])); ?></p>
                             <p class="text-sm font-semibold text-gray-700">Zero sales months</p>
                         </div>
                         <p class="text-xs text-red-600 mt-2">Requires attention</p>
@@ -309,7 +315,7 @@
             <div class="mb-6 flex items-center justify-between">
                 <div>
                     <h3 class="text-lg font-semibold text-gray-900">Sales Trends Analysis</h3>
-                    <p class="text-sm text-gray-600 mt-1">Interactive sales data from {{ $salesData['labels'][0] ?? 'N/A' }} to {{ end($salesData['labels']) ?? 'N/A' }}</p>
+                    <p class="text-sm text-gray-600 mt-1">Interactive sales data from <?php echo e($salesData['labels'][0] ?? 'N/A'); ?> to <?php echo e(end($salesData['labels']) ?? 'N/A'); ?></p>
                 </div>
                 <div class="flex items-center space-x-4">
                     <div class="text-sm text-gray-500">
@@ -378,7 +384,7 @@
     </div>
 
     <!-- Peak Sales Analysis -->
-    @if(count($salesData['peak_months']) > 0)
+    <?php if(count($salesData['peak_months']) > 0): ?>
     <div class="mb-8">
         <div class="overflow-hidden rounded-xl bg-white px-6 py-8 shadow-sm ring-1 ring-gray-900/5">
             <div class="mb-6">
@@ -387,23 +393,23 @@
             </div>
 
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                @foreach($salesData['peak_months'] as $peakMonth)
+                <?php $__currentLoopData = $salesData['peak_months']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $peakMonth): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="rounded-lg bg-yellow-50 px-4 py-3 border border-yellow-200">
                     <div class="flex items-center">
                         <svg class="h-5 w-5 text-yellow-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
                                 </svg>
-                        <span class="text-sm font-medium text-yellow-800">{{ $peakMonth }}</span>
+                        <span class="text-sm font-medium text-yellow-800"><?php echo e($peakMonth); ?></span>
                     </div>
                 </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
         </div>
     </div>
-    @endif
+    <?php endif; ?>
 
     <!-- Zero Sales Alert -->
-    @if(count($salesData['zero_months']) > 0)
+    <?php if(count($salesData['zero_months']) > 0): ?>
     <div class="mb-8">
         <div class="overflow-hidden rounded-xl bg-white px-6 py-8 shadow-sm ring-1 ring-gray-900/5">
             <div class="mb-6">
@@ -412,20 +418,20 @@
             </div>
 
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                @foreach($salesData['zero_months'] as $zeroMonth)
+                <?php $__currentLoopData = $salesData['zero_months']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $zeroMonth): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="rounded-lg bg-red-50 px-4 py-3 border border-red-200">
                     <div class="flex items-center">
                         <svg class="h-5 w-5 text-red-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                                 </svg>
-                        <span class="text-sm font-medium text-red-800">{{ $zeroMonth }}</span>
+                        <span class="text-sm font-medium text-red-800"><?php echo e($zeroMonth); ?></span>
                     </div>
             </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
         </div>
     </div>
-    @endif
+    <?php endif; ?>
 </div>
 
 <!-- Chart.js -->
@@ -569,7 +575,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
         }
 
-        fetch(`{{ route('admin.dashboard.sales-data') }}?${params.toString()}`)
+        fetch(`<?php echo e(route('admin.dashboard.sales-data')); ?>?${params.toString()}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -834,7 +840,7 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets: [
                 {
                     label: 'AED Sales',
-                    data: {!! json_encode($salesData['aed_data']) !!},
+                    data: <?php echo json_encode($salesData['aed_data']); ?>,
                     borderColor: 'rgb(34, 197, 94)',
                     backgroundColor: 'rgba(34, 197, 94, 0.1)',
                     borderWidth: 3,
@@ -848,7 +854,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 {
                     label: 'USD Sales',
-                    data: {!! json_encode($salesData['usd_data']) !!},
+                    data: <?php echo json_encode($salesData['usd_data']); ?>,
                     borderColor: 'rgb(59, 130, 246)',
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
                     borderWidth: 3,
@@ -862,7 +868,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 {
                     label: 'Combined Sales (AED)',
-                    data: {!! json_encode($salesData['combined_data']) !!},
+                    data: <?php echo json_encode($salesData['combined_data']); ?>,
                     borderColor: 'rgb(147, 51, 234)',
                     backgroundColor: 'rgba(147, 51, 234, 0.1)',
                     borderWidth: 4,
@@ -1154,5 +1160,6 @@ select:focus, input[type="date"]:focus {
     }
 }
 </style>
-@endcan
-@endsection
+<?php endif; ?>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Walid\OneDrive\Desktop\MaxMed\resources\views/admin/dashboard.blade.php ENDPATH**/ ?>

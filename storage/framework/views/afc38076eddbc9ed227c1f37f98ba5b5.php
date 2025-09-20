@@ -860,29 +860,6 @@
                 <a href="<?php echo e(route('register')); ?>" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0064a8] hover:bg-gray-50">Register</a>
                 <a href="<?php echo e(route('supplier.register')); ?>" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0064a8] hover:bg-gray-50">Register as Supplier</a>
                 
-                <!-- Mobile Google One Tap Sign In -->
-                <div class="px-3 py-4 border-t border-gray-100 mt-4">
-                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4">
-                        <div class="text-center mb-3">
-                            <h4 class="text-sm font-medium text-gray-800 mb-1">Quick Sign In</h4>
-                            <p class="text-xs text-gray-600">Sign in with Google for a faster experience</p>
-                        </div>
-                        <div class="flex justify-center">
-                            <div class="g_id_signin"
-                                data-type="standard"
-                                data-size="large"
-                                data-theme="outline"
-                                data-text="sign_in_with"
-                                data-shape="rectangular"
-                                data-logo_alignment="left"
-                                data-width="280">
-                            </div>
-                        </div>
-                        <div class="text-center mt-3">
-                            <small class="text-xs text-gray-500">By continuing, you agree to our <a href="<?php echo e(route('privacy.policy')); ?>" class="text-blue-600 hover:underline">Terms</a> and <a href="<?php echo e(route('privacy.policy')); ?>" class="text-blue-600 hover:underline">Privacy Policy</a></small>
-                        </div>
-                    </div>
-                </div>
                 <?php endif; ?>
             </div>
         </div>

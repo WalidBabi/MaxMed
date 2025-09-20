@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Delivery Note {{ $delivery->delivery_number }}</title>
+    <title>Delivery Note <?php echo e($delivery->delivery_number); ?></title>
     <style>
         @page {
             margin: 0;
@@ -413,7 +413,7 @@
             <div class="header-section">
                 <div class="company-section">
                     <div class="company-logo">
-                        <img src="{{ public_path('Images/logo.png') }}" alt="MaxMed Logo">
+                        <img src="<?php echo e(public_path('Images/logo.png')); ?>" alt="MaxMed Logo">
                     </div>
                     <div class="company-details">
                         <div class="company-name">MaxMed Scientific and Laboratory Equipment Trading Co. LLC</div>
@@ -426,7 +426,7 @@
                 
                 <div class="document-title-section">
                     <div class="document-title">DELIVERY NOTE</div>
-                    <div class="document-number">{{ $delivery->delivery_number }}</div>
+                    <div class="document-number"><?php echo e($delivery->delivery_number); ?></div>
                 </div>
             </div>
         </div>
@@ -436,13 +436,13 @@
             <div class="client-section">
                 <div class="client-info">
                     <div class="section-heading">Delivery Address</div>
-                    @if($delivery->order && $delivery->order->user)
-                        <div class="client-name">{{ $delivery->order->customer_name ?? $delivery->order->user->name }}</div>
-                        @if($customer && $customer->company_name)
-                            <div class="client-address">{{ $customer->company_name }}</div>
-                        @endif
-                    @endif
-                    <div class="client-address">{{ $delivery->shipping_address ?? 'Address not specified' }}</div>
+                    <?php if($delivery->order && $delivery->order->user): ?>
+                        <div class="client-name"><?php echo e($delivery->order->customer_name ?? $delivery->order->user->name); ?></div>
+                        <?php if($customer && $customer->company_name): ?>
+                            <div class="client-address"><?php echo e($customer->company_name); ?></div>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    <div class="client-address"><?php echo e($delivery->shipping_address ?? 'Address not specified'); ?></div>
                 </div>
             </div>
             
@@ -450,36 +450,36 @@
                 <table class="meta-table">
                     <tr>
                         <td class="label">Delivery Date</td>
-                        <td class="value">{{ formatDubaiDate($delivery->delivered_at ?? $delivery->created_at, 'd M Y') }}</td>
+                        <td class="value"><?php echo e(formatDubaiDate($delivery->delivered_at ?? $delivery->created_at, 'd M Y')); ?></td>
                     </tr>
-                    @if($delivery->tracking_number)
+                    <?php if($delivery->tracking_number): ?>
                     <tr>
                         <td class="label">Tracking Number</td>
-                        <td class="value">{{ $delivery->tracking_number }}</td>
+                        <td class="value"><?php echo e($delivery->tracking_number); ?></td>
                     </tr>
-                    @endif
-                    @if($delivery->order)
+                    <?php endif; ?>
+                    <?php if($delivery->order): ?>
                     <tr>
                         <td class="label">Order Number</td>
-                        <td class="value">{{ $delivery->order->order_number }}</td>
+                        <td class="value"><?php echo e($delivery->order->order_number); ?></td>
                     </tr>
-                    @endif
-                    @if($delivery->carrier && $delivery->carrier !== 'TBD')
+                    <?php endif; ?>
+                    <?php if($delivery->carrier && $delivery->carrier !== 'TBD'): ?>
                     <tr>
                         <td class="label">Carrier</td>
-                        <td class="value">{{ $delivery->carrier }}</td>
+                        <td class="value"><?php echo e($delivery->carrier); ?></td>
                     </tr>
-                    @endif
+                    <?php endif; ?>
                     <tr>
                         <td class="label">Status</td>
-                        <td class="value">{{ ucfirst($delivery->status) }}</td>
+                        <td class="value"><?php echo e(ucfirst($delivery->status)); ?></td>
                     </tr>
                 </table>
             </div>
         </div>
 
         <!-- ITEMS TABLE -->
-        @if($delivery->order && $delivery->order->items && count($delivery->order->items) > 0)
+        <?php if($delivery->order && $delivery->order->items && count($delivery->order->items) > 0): ?>
         <div class="items-section">
             <table class="items-table">
                 <thead>
@@ -487,38 +487,40 @@
                         <th style="width: 25%;">Item Description</th>
                         <th style="width: 20%;" class="text-center">Specifications</th>
                         <th style="width: 12%;" class="text-center">Quantity</th>
-                        <th style="width: 13%;" class="text-right">Rate ({{ $delivery->order->currency ?? 'AED' }})</th>
+                        <th style="width: 13%;" class="text-right">Rate (<?php echo e($delivery->order->currency ?? 'AED'); ?>)</th>
                         <th style="width: 10%;" class="text-center">Discount</th>
-                        <th style="width: 20%;" class="text-right">Amount After Discount ({{ $delivery->order->currency ?? 'AED' }})</th>
+                        <th style="width: 20%;" class="text-right">Amount After Discount (<?php echo e($delivery->order->currency ?? 'AED'); ?>)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($delivery->order->items as $index => $item)
+                    <?php $__currentLoopData = $delivery->order->items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <tr>
                         <td>
                             <div class="item-description">
-                                {{ $item->description ?? $item->product_name }}
-                                @if($item->product)
+                                <?php echo e($item->description ?? $item->product_name); ?>
+
+                                <?php if($item->product): ?>
                                     <div style="font-size: 9px; margin-top: 3px;">
-                                        <a href="{{ route('product.show', $item->product) }}" style="color: #0ea5e9; text-decoration: none;">View product page</a>
-                                        @if($item->product->pdf_file)
+                                        <a href="<?php echo e(route('product.show', $item->product)); ?>" style="color: #0ea5e9; text-decoration: none;">View product page</a>
+                                        <?php if($item->product->pdf_file): ?>
                                             <span style="color: #6b7280; margin: 0 5px;">|</span>
-                                            <a href="{{ asset('storage/' . $item->product->pdf_file) }}" target="_blank" style="color: #dc2626; text-decoration: none;">
+                                            <a href="<?php echo e(asset('storage/' . $item->product->pdf_file)); ?>" target="_blank" style="color: #dc2626; text-decoration: none;">
                                                 <i class="fas fa-file-pdf" style="margin-right: 2px;"></i>Product PDF
                                             </a>
-                                        @endif
+                                        <?php endif; ?>
                                     </div>
-                                @endif
-                                @if($item->product && $item->product->brand)
+                                <?php endif; ?>
+                                <?php if($item->product && $item->product->brand): ?>
                                     <div style="font-size: 9px; color: var(--text-secondary); margin-top: 2px;">
-                                        <span style="font-weight: 600;">Brand:</span> {{ $item->product->brand->name }}
+                                        <span style="font-weight: 600;">Brand:</span> <?php echo e($item->product->brand->name); ?>
+
                                     </div>
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </td>
                         <td class="text-center">
-                            @if($item->specifications && !empty(trim($item->specifications)))
-                                @php
+                            <?php if($item->specifications && !empty(trim($item->specifications))): ?>
+                                <?php
                                     $selectedSpecs = [];
                                     try {
                                         if (is_string($item->specifications) && (str_starts_with($item->specifications, '[') && str_ends_with($item->specifications, ']'))) {
@@ -530,83 +532,85 @@
                                     } catch (Exception $e) {
                                         $selectedSpecs = [$item->specifications];
                                     }
-                                @endphp
+                                ?>
                                 
-                                @if(count($selectedSpecs) > 0)
+                                <?php if(count($selectedSpecs) > 0): ?>
                                     <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
-                                        @foreach($selectedSpecs as $spec)
-                                            <div style="margin-bottom: 2px;">{{ $spec }}</div>
-                                        @endforeach
+                                        <?php $__currentLoopData = $selectedSpecs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $spec): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <div style="margin-bottom: 2px;"><?php echo e($spec); ?></div>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </div>
-                                @endif
-                            @endif
+                                <?php endif; ?>
+                            <?php endif; ?>
                             
-                            @if($item->size && !empty(trim($item->size)))
+                            <?php if($item->size && !empty(trim($item->size))): ?>
                                 <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3; margin-top: 3px;">
                                     <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1px;">Size:</div>
-                                    <div>{{ $item->size }}</div>
+                                    <div><?php echo e($item->size); ?></div>
                                 </div>
-                            @endif
+                            <?php endif; ?>
                             
-                            @if((!$item->specifications || empty(trim($item->specifications))) && (!$item->size || empty(trim($item->size))))
+                            <?php if((!$item->specifications || empty(trim($item->specifications))) && (!$item->size || empty(trim($item->size)))): ?>
                                 <span style="color: var(--text-muted);">-</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
-                        <td class="text-center">{{ number_format($item->quantity, 2) }}</td>
-                        <td class="text-right">{{ number_format($item->unit_price ?? 0, 2) }}</td>
+                        <td class="text-center"><?php echo e(number_format($item->quantity, 2)); ?></td>
+                        <td class="text-right"><?php echo e(number_format($item->unit_price ?? 0, 2)); ?></td>
                         <td class="text-center">
-                            @if(($item->discount_percentage ?? 0) > 0)
-                                {{ number_format($item->discount_percentage, 2) }}%
-                            @else
+                            <?php if(($item->discount_percentage ?? 0) > 0): ?>
+                                <?php echo e(number_format($item->discount_percentage, 2)); ?>%
+                            <?php else: ?>
                                 <span style="color: var(--text-muted);">-</span>
-                            @endif
+                            <?php endif; ?>
                         </td>
                         <td class="text-right">
-                            @php
+                            <?php
                                 $unitPrice = $item->unit_price ?? 0;
                                 $quantity = $item->quantity;
                                 $discount = $item->discount_percentage ?? 0;
                                 $subtotal = $unitPrice * $quantity;
                                 $discountAmount = $subtotal * ($discount / 100);
                                 $totalAfterDiscount = $subtotal - $discountAmount;
-                            @endphp
-                            {{ number_format($totalAfterDiscount, 2) }}
+                            ?>
+                            <?php echo e(number_format($totalAfterDiscount, 2)); ?>
+
                         </td>
                     </tr>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </tbody>
             </table>
         </div>
-        @endif
+        <?php endif; ?>
 
         <!-- DELIVERY NOTES -->
-        @if($delivery->notes)
+        <?php if($delivery->notes): ?>
         <div class="description-section">
             <div class="description-title">Delivery Notes</div>
-            <div class="description-content">{{ $delivery->notes }}</div>
+            <div class="description-content"><?php echo e($delivery->notes); ?></div>
         </div>
-        @endif
+        <?php endif; ?>
 
         <!-- SIGNATURE SECTION -->
-        @if($delivery->signed_at)
+        <?php if($delivery->signed_at): ?>
         <div class="signature-section">
             <div class="signature-wrapper">
                 <div class="signature-block">
                     <div class="signature-title">Customer Signature</div>
                     <div class="signature-box">
-                        @if($delivery->customer_signature)
-                            <img src="{{ public_path('storage/' . $delivery->customer_signature) }}" alt="Customer Signature" class="signature-image">
-                        @else
+                        <?php if($delivery->customer_signature): ?>
+                            <img src="<?php echo e(public_path('storage/' . $delivery->customer_signature)); ?>" alt="Customer Signature" class="signature-image">
+                        <?php else: ?>
                             <span style="color: var(--success-color); font-weight: bold; font-size: 12px;">✓ SIGNED DIGITALLY</span>
-                        @endif
+                        <?php endif; ?>
                     </div>
                     <div class="signature-info">
-                        <div class="signature-date">{{ formatDubaiDate($delivery->signed_at, 'd M Y \a\t g:i A') }}</div>
-                        @if($delivery->delivery_conditions && is_array($delivery->delivery_conditions))
+                        <div class="signature-date"><?php echo e(formatDubaiDate($delivery->signed_at, 'd M Y \a\t g:i A')); ?></div>
+                        <?php if($delivery->delivery_conditions && is_array($delivery->delivery_conditions)): ?>
                             <div style="font-size: 8px; color: var(--text-muted); margin-top: 3px;">
-                                Conditions: {{ implode(', ', $delivery->delivery_conditions) }}
+                                Conditions: <?php echo e(implode(', ', $delivery->delivery_conditions)); ?>
+
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
                 
@@ -616,19 +620,19 @@
                         <span style="color: var(--primary-color); font-weight: bold; font-size: 12px;">MaxMed UAE</span>
                     </div>
                     <div class="signature-info">
-                        @if(isset($authorizedUser) && $authorizedUser)
-                            <div class="signature-name">{{ $authorizedUser->name }}</div>
-                        @elseif(auth()->check())
-                            <div class="signature-name">{{ auth()->user()->name }}</div>
-                        @else
+                        <?php if(isset($authorizedUser) && $authorizedUser): ?>
+                            <div class="signature-name"><?php echo e($authorizedUser->name); ?></div>
+                        <?php elseif(auth()->check()): ?>
+                            <div class="signature-name"><?php echo e(auth()->user()->name); ?></div>
+                        <?php else: ?>
                             <div class="signature-name">MaxMed Representative</div>
-                        @endif
-                        <div class="signature-date">{{ formatDubaiDate($delivery->delivered_at ?? $delivery->created_at, 'd M Y') }}</div>
+                        <?php endif; ?>
+                        <div class="signature-date"><?php echo e(formatDubaiDate($delivery->delivered_at ?? $delivery->created_at, 'd M Y')); ?></div>
                     </div>
                 </div>
             </div>
         </div>
-        @endif
+        <?php endif; ?>
 
         <!-- FOOTER -->
         <div class="footer">
@@ -638,3 +642,4 @@
     </div>
 </body>
 </html>
+<?php /**PATH C:\Users\Walid\OneDrive\Desktop\MaxMed\resources\views/admin/deliveries/pdf.blade.php ENDPATH**/ ?>

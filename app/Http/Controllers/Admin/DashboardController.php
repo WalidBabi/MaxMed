@@ -861,4 +861,5 @@ class DashboardController extends Controller
             return ['aed' => 0, 'usd' => 0, 'combined' => 0];
         }
     }
+
 } 

@@ -68,7 +68,8 @@ class DeliveryNoteEmail extends Mailable
         
         $pdf = Pdf::loadView('admin.deliveries.pdf', [
             'delivery' => $this->delivery,
-            'customer' => $customer
+            'customer' => $customer,
+            'authorizedUser' => auth()->check() ? auth()->user() : null
         ]);
         
         $pdfContent = $pdf->output();
