@@ -39,6 +39,11 @@ bootstrap/cache/
 .phpunit.result.cache
 .phpactor.json
 
+# Laravel compiled views (should not be committed)
+/storage/framework/views/*.php
+/storage/framework/cache/
+/storage/framework/sessions/
+
 # IDE files
 /.fleet
 /.idea
