@@ -89,175 +89,148 @@
                     <!-- Header with Logo -->
                     <tr>
                         <td style="padding: 40px 30px 30px 30px; text-align: center; background: linear-gradient(135deg, #171e60 0%, #0a5694 100%);">
-                            <img src="{{ asset('Images/logo.png') }}" alt="MaxMed UAE" class="email-logo" style="width: 380px; height: 97px; max-width: 100%; display: block; margin: 0 auto;">
+                            <!--[if gte mso 9]>
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background: linear-gradient(135deg, #171e60 0%, #0a5694 100%);">
+                                <tr>
+                                    <td style="padding: 40px 30px 30px 30px; text-align: center;">
+                            <![endif]-->
+                                        <!-- MaxMed Logo -->
+                                        <div style="margin-bottom: 30px;">
+                                            <img src="{{ asset('Images/logo.png') }}" alt="MaxMed Logo" width="380" height="97" class="email-logo" style="width: 380px; height: 97px; max-width: 100%; display: block; margin: 0 auto;">
+                                        </div>
+                                        <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 600; color: #FFFFFF; letter-spacing: -0.5px;">
+                                            📦 Delivery Confirmation
+                                        </h1>
+                                        <p style="margin: 0; font-size: 16px; color: #E2E8F0; font-weight: 400;">MaxMed Scientific & Laboratory Equipment</p>
+                            <!--[if gte mso 9]>
+                                    </td>
+                                </tr>
+                            </table>
+                            <![endif]-->
                         </td>
                     </tr>
                     
-                    <!-- Main Content -->
+                    <!-- Content Section -->
                     <tr>
                         <td class="mobile-padding" style="padding: 40px 30px;">
-                            <h1 style="color: #171e60; font-size: 28px; margin: 0 0 20px 0; text-align: center; font-weight: 600;">
-                                Delivery Confirmation
-                            </h1>
                             
-                            <div style="background-color: #F0FDF4; border-left: 4px solid #22C55E; padding: 20px; margin: 20px 0; border-radius: 6px;">
-                                <h2 style="color: #166534; font-size: 18px; margin: 0 0 10px 0; font-weight: 600;">
-                                    ✅ Your Order Has Been Delivered Successfully
-                                </h2>
-                                <p style="color: #166534; margin: 0; font-size: 16px;">
-                                    Delivery Note: <strong>{{ $delivery->delivery_number }}</strong>
+                            <!-- Greeting -->
+                            <div style="margin-bottom: 30px;">
+                                <h2 style="margin: 0 0 12px 0; font-size: 24px; font-weight: 600; color: #1A202C;">Hello {{ $delivery->order->customer_name ?? 'Valued Customer' }},</h2>
+                                <p style="margin: 0; font-size: 18px; color: #4A5568; line-height: 1.7;">
+                                    Your order has been successfully delivered and signed for! Please find the delivery confirmation details below.
                                 </p>
-                            </div>
-
-                            <p style="margin: 20px 0; font-size: 16px; line-height: 1.6;">
-                                Dear Valued Customer,
-                            </p>
-
-                            <p style="margin: 20px 0; font-size: 16px; line-height: 1.6;">
-                                We are pleased to confirm that your order has been successfully delivered and signed for on 
-                                <strong>{{ formatDubaiDate($delivery->delivered_at, 'd M Y \a\t g:i A') }}</strong>.
-                            </p>
-
-                            @if($customMessage)
-                                <div style="background-color: #F8FAFC; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                                    <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #4A5568;">
-                                        {{ $customMessage }}
-                                    </p>
-                                </div>
-                            @endif
-
-                            <!-- Delivery Details -->
-                            <div style="background-color: #F8FAFC; border-radius: 8px; padding: 25px; margin: 30px 0;">
-                                <h3 style="color: #2D3748; font-size: 18px; margin: 0 0 20px 0; font-weight: 600;">
-                                    📦 Delivery Details
-                                </h3>
                                 
-                                <table style="width: 100%; border-collapse: collapse;">
+                                @if($customMessage)
+                                <!-- Custom Message -->
+                                <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background: linear-gradient(135deg, #EBF8FF 0%, #BEE3F8 100%); border-left: 4px solid #3182CE; margin: 25px 0; border-radius: 8px; overflow: hidden;">
                                     <tr>
-                                        <td style="padding: 8px 0; font-weight: 600; color: #4A5568; width: 40%;">
-                                            Delivery Number:
-                                        </td>
-                                        <td style="padding: 8px 0; color: #2D3748;">
-                                            {{ $delivery->delivery_number }}
+                                        <td style="padding: 20px;">
+                                            <div style="font-weight: 600; color: #2B6CB0; margin-bottom: 8px; font-size: 16px;">💬 Additional Message</div>
+                                            <p style="margin: 0; color: #2D3748; line-height: 1.6;">{{ $customMessage }}</p>
                                         </td>
                                     </tr>
-                                    @if($delivery->tracking_number)
-                                    <tr>
-                                        <td style="padding: 8px 0; font-weight: 600; color: #4A5568;">
-                                            Tracking Number:
-                                        </td>
-                                        <td style="padding: 8px 0; color: #2D3748;">
-                                            {{ $delivery->tracking_number }}
-                                        </td>
-                                    </tr>
-                                    @endif
-                                    <tr>
-                                        <td style="padding: 8px 0; font-weight: 600; color: #4A5568;">
-                                            Delivery Date:
-                                        </td>
-                                        <td style="padding: 8px 0; color: #2D3748;">
-                                            {{ formatDubaiDate($delivery->delivered_at, 'd M Y \a\t g:i A') }}
-                                        </td>
-                                    </tr>
-                                    @if($delivery->carrier)
-                                    <tr>
-                                        <td style="padding: 8px 0; font-weight: 600; color: #4A5568;">
-                                            Carrier:
-                                        </td>
-                                        <td style="padding: 8px 0; color: #2D3748;">
-                                            {{ $delivery->carrier }}
-                                        </td>
-                                    </tr>
-                                    @endif
-                                    @if($delivery->order)
-                                    <tr>
-                                        <td style="padding: 8px 0; font-weight: 600; color: #4A5568;">
-                                            Order Number:
-                                        </td>
-                                        <td style="padding: 8px 0; color: #2D3748;">
-                                            {{ $delivery->order->order_number }}
-                                        </td>
-                                    </tr>
-                                    @endif
                                 </table>
+                                @endif
                             </div>
 
-                            <!-- Delivery Address -->
-                            @if($delivery->shipping_address)
-                            <div style="background-color: #F8FAFC; border-radius: 8px; padding: 25px; margin: 30px 0;">
-                                <h3 style="color: #2D3748; font-size: 18px; margin: 0 0 15px 0; font-weight: 600;">
-                                    📍 Delivery Address
-                                </h3>
-                                <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #4A5568;">
-                                    {{ $delivery->shipping_address }}
-                                </p>
-                            </div>
-                            @endif
+                            <!-- Delivery Details Card -->
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #EDF2F7; background: linear-gradient(135deg, #EDF2F7 0%, #E2E8F0 100%); margin: 30px 0; border-radius: 8px; border-left: 4px solid #48BB78; overflow: hidden;">
+                                <tr>
+                                    <td style="padding: 25px;">
+                                        <div style="margin-bottom: 20px;">
+                                            <div style="font-size: 28px; font-weight: 700; color: #48BB78; margin-bottom: 8px; letter-spacing: -0.5px;">{{ $delivery->delivery_number }}</div>
+                                            <div style="font-size: 14px; color: #718096; text-transform: uppercase; letter-spacing: 1px; font-weight: 500;">DELIVERY CONFIRMATION</div>
+                                        </div>
+                                        
+                                        <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                                            <tr>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">Delivery Date</td>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ formatDubaiDate($delivery->delivered_at, 'M j, Y g:i A') }}</td>
+                                            </tr>
+                                            @if($delivery->tracking_number)
+                                            <tr>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">Tracking Number</td>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ $delivery->tracking_number }}</td>
+                                            </tr>
+                                            @endif
+                                            @if($delivery->order)
+                                            <tr>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">Order Number</td>
+                                                <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ $delivery->order->order_number }}</td>
+                                            </tr>
+                                            @endif
+                                            @if($delivery->carrier && $delivery->carrier !== 'TBD')
+                                            <tr>
+                                                <td style="padding: 12px 0; font-weight: 600; color: #4A5568; font-size: 15px;">Carrier</td>
+                                                <td style="padding: 12px 0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ $delivery->carrier }}</td>
+                                            </tr>
+                                            @endif
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Delivery Status - Outlook Compatible -->
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #48BB78; background: linear-gradient(135deg, #48BB78 0%, #38A169 100%); margin: 30px 0; border-radius: 12px; overflow: hidden;">
+                                <tr>
+                                    <td style="padding: 30px; text-align: center;">
+                                        <!--[if gte mso 9]>
+                                        <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #48BB78;">
+                                            <tr>
+                                                <td style="padding: 30px; text-align: center;">
+                                        <![endif]-->
+                                                    <div style="color: #FFFFFF;">
+                                                        <div style="font-size: 16px; margin-bottom: 5px; opacity: 0.9; font-weight: 300; text-transform: uppercase; letter-spacing: 1px;">✅ Status</div>
+                                                        <div style="font-size: 36px; font-weight: 700; margin: 0; letter-spacing: -1px;">DELIVERED</div>
+                                                    </div>
+                                        <!--[if gte mso 9]>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <![endif]-->
+                                    </td>
+                                </tr>
+                            </table>
 
                             <!-- Signature Confirmation -->
                             @if($delivery->signed_at)
-                            <div style="background-color: #F0FDF4; border-radius: 8px; padding: 25px; margin: 30px 0;">
-                                <h3 style="color: #166534; font-size: 18px; margin: 0 0 15px 0; font-weight: 600;">
-                                    ✍️ Signature Confirmation
-                                </h3>
-                                <p style="margin: 0 0 10px 0; font-size: 16px; line-height: 1.6; color: #166534;">
-                                    <strong>Signed at:</strong> {{ formatDubaiDate($delivery->signed_at, 'd M Y \a\t g:i A') }}
-                                </p>
-                                @if($delivery->delivery_conditions && is_array($delivery->delivery_conditions))
-                                <p style="margin: 10px 0 0 0; font-size: 16px; line-height: 1.6; color: #166534;">
-                                    <strong>Delivery Conditions:</strong> {{ implode(', ', $delivery->delivery_conditions) }}
-                                </p>
-                                @endif
-                            </div>
+                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background: linear-gradient(135deg, #F0FDF4 0%, #C6F6D5 100%); border: 1px solid #48BB78; margin: 25px 0; border-radius: 8px; overflow: hidden;">
+                                <tr>
+                                    <td style="padding: 25px;">
+                                        <div style="display: inline-block; background-color: #48BB78; color: #FFFFFF; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">✍️ SIGNED</div>
+                                        <h4 style="color: #22543D; margin: 0 0 12px 0; font-size: 18px; font-weight: 600;">Signature Confirmation</h4>
+                                        <p style="margin: 0 0 15px 0; color: #1A365D; line-height: 1.6;">Your delivery was signed for on <strong>{{ formatDubaiDate($delivery->signed_at, 'M j, Y \a\t g:i A') }}</strong></p>
+                                        @if($delivery->delivery_conditions && is_array($delivery->delivery_conditions))
+                                        <p style="margin: 0; color: #1A365D; font-size: 14px;">📝 Delivery Conditions: <strong>{{ implode(', ', $delivery->delivery_conditions) }}</strong></p>
+                                        @endif
+                                    </td>
+                                </tr>
+                            </table>
                             @endif
 
-                            <!-- Call to Action -->
-                            <div style="text-align: center; margin: 40px 0;">
-                                <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.6;">
-                                    Please find the detailed delivery note attached to this email for your records.
-                                </p>
-                                
-                                <a href="tel:+971554602500" 
-                                   style="display: inline-block; background: linear-gradient(135deg, #171e60 0%, #0a5694 100%); color: #FFFFFF; text-decoration: none; padding: 15px 30px; border-radius: 8px; font-weight: 600; font-size: 16px; margin: 10px;">
-                                    📞 Contact Support
-                                </a>
-                            </div>
-
-                            <!-- Thank You Message -->
-                            <div style="background-color: #171e60; color: #FFFFFF; padding: 30px; border-radius: 8px; text-align: center; margin: 30px 0;">
-                                <h3 style="margin: 0 0 15px 0; font-size: 20px; font-weight: 600;">
-                                    Thank You for Choosing MaxMed UAE! 🙏
-                                </h3>
-                                <p style="margin: 0; font-size: 16px; line-height: 1.6; opacity: 0.9;">
-                                    We appreciate your business and trust in our laboratory equipment solutions. 
-                                    If you have any questions or need support, please don't hesitate to contact us.
-                                </p>
+                            <!-- Message -->
+                            <div style="margin: 30px 0;">
+                                <p style="margin: 0 0 15px 0; color: #4A5568; font-size: 16px; line-height: 1.7;">📎 The detailed delivery note is attached as a PDF document.</p>
+                                <p style="margin: 0; color: #2D3748; font-size: 16px; font-weight: 500;">If you have any questions about this delivery, please don't hesitate to contact us. We're here to help! 💬</p>
                             </div>
                         </td>
                     </tr>
                     
-                    <!-- Footer -->
+                    <!-- Modern Footer Section -->
                     <tr>
-                        <td style="background-color: #F8FAFC; padding: 30px; text-align: center; border-top: 1px solid #E2E8F0;">
+                        <td style="background-color: #1A202C; padding: 30px; text-align: center; color: #A0AEC0;">
                             <div style="margin-bottom: 20px;">
-                                <h4 style="color: #2D3748; font-size: 16px; margin: 0 0 10px 0; font-weight: 600;">
-                                    Contact Information
-                                </h4>
-                                <p style="margin: 5px 0; font-size: 14px; color: #4A5568;">
-                                    📞 <a href="tel:+971554602500" style="color: #171e60; text-decoration: none;">+971 55 460 2500</a>
-                                </p>
-                                <p style="margin: 5px 0; font-size: 14px; color: #4A5568;">
-                                    📧 <a href="mailto:sales@maxmedme.com" style="color: #171e60; text-decoration: none;">sales@maxmedme.com</a>
-                                </p>
-                                <p style="margin: 5px 0; font-size: 14px; color: #4A5568;">
-                                    🌐 <a href="https://maxmedme.com" style="color: #171e60; text-decoration: none;">www.maxmedme.com</a>
-                                </p>
+                                <div style="font-weight: 600; color: #FFFFFF; margin-bottom: 8px; font-size: 18px;">MaxMed Scientific and Laboratory Equipment Trading Co. LLC</div>
+                                <div style="font-size: 14px; margin-bottom: 5px;">📍 Dubai 448945, United Arab Emirates</div>
+                                <div style="font-size: 14px;">
+                                    📧 <a href="mailto:sales@maxmedme.com" style="color: #48BB78; text-decoration: none;">sales@maxmedme.com</a> | 
+                                    🌐 <a href="http://www.maxmedme.com" style="color: #48BB78; text-decoration: none;">www.maxmedme.com</a>
+                                </div>
                             </div>
-                            
-                            <p style="margin: 20px 0 0 0; font-size: 12px; color: #718096; line-height: 1.4;">
-                                This email was sent automatically after your delivery confirmation. 
-                                Please keep this delivery note for your records.
-                            </p>
+                            <div style="font-size: 12px; opacity: 0.7; border-top: 1px solid #2D3748; padding-top: 15px; margin-top: 15px;">
+                                This is an automated email. Please do not reply directly to this message.
+                            </div>
                         </td>
                     </tr>
                 </table>
