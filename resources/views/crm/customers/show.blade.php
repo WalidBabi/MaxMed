@@ -260,23 +260,19 @@
                             <div class="rounded-lg border border-gray-200 p-4">
                                 <div class="flex items-center justify-between mb-3">
                                     <h4 class="text-lg font-medium text-gray-900">Billing Address</h4>
-                                  
-                                </div>
-                                
-                                <!-- Always show address details for debugging -->
-                                <div class="bg-gray-50 p-3 rounded mb-3">
-                                    <h6 class="text-xs font-medium text-gray-700 mb-2">All Billing Address Fields:</h6>
-                                    <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
-                                        <div><span class="font-medium">Street:</span> "{{ $customer->billing_street }}"</div>
-                                        <div><span class="font-medium">City:</span> "{{ $customer->billing_city }}"</div>
-                                        <div><span class="font-medium">State:</span> "{{ $customer->billing_state }}"</div>
-                                        <div><span class="font-medium">ZIP:</span> "{{ $customer->billing_zip }}"</div>
-                                        <div class="col-span-2"><span class="font-medium">Country:</span> "{{ $customer->billing_country }}"</div>
-                                    </div>
+                                    @if($customer->billing_google_maps_link)
+                                        <a href="{{ $customer->billing_google_maps_link }}" target="_blank" class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800">
+                                            <svg class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                                            </svg>
+                                            View on Maps
+                                        </a>
+                                    @endif
                                 </div>
 
                                 @if($customer->billing_street || $customer->billing_city || $customer->billing_state || $customer->billing_zip || $customer->billing_country)
-                                    <address class="text-sm text-gray-900 not-italic space-y-1">
+                                    <address class="text-sm text-gray-900 not-italic space-y-1 mb-4">
                                         @if($customer->billing_street)
                                             <div>{{ $customer->billing_street }}</div>
                                         @endif
@@ -291,8 +287,47 @@
                                             <div>{{ $customer->billing_country }}</div>
                                         @endif
                                     </address>
+
+                                    @if($customer->billing_google_maps_link)
+                                        <div class="mb-4">
+                                            @php
+                                                // Convert Google Maps link to embed format
+                                                $mapsLink = $customer->billing_google_maps_link;
+                                                $embedUrl = '';
+                                                
+                                                if (strpos($mapsLink, 'maps.google.com') !== false) {
+                                                    // Extract coordinates or place ID from the link
+                                                    if (preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $mapsLink, $matches)) {
+                                                        $lat = $matches[1];
+                                                        $lng = $matches[2];
+                                                        $embedUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3000!2d{$lng}!3d{$lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM0DCsDAwJzAwLjAiTiAxM8KwMDAnMDAuMCJF!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus";
+                                                    } else {
+                                                        // Fallback to place search
+                                                        $address = urlencode(trim($customer->billing_street . ', ' . $customer->billing_city . ', ' . $customer->billing_state . ', ' . $customer->billing_country, ', '));
+                                                        $embedUrl = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dMZvQ8&q={$address}";
+                                                    }
+                                                }
+                                            @endphp
+                                            @if($embedUrl)
+                                                <iframe 
+                                                    src="{{ $embedUrl }}"
+                                                    width="100%" 
+                                                    height="200" 
+                                                    style="border:0; border-radius: 8px;" 
+                                                    allowfullscreen="" 
+                                                    loading="lazy" 
+                                                    referrerpolicy="no-referrer-when-downgrade">
+                                                </iframe>
+                                            @else
+                                                <div class="bg-gray-100 p-4 rounded-lg text-center">
+                                                    <p class="text-sm text-gray-600 mb-2">Invalid Google Maps link</p>
+                                                    <a href="{{ $customer->billing_google_maps_link }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">Open in Google Maps</a>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endif
                                 @else
-                                    <p class="text-sm text-red-600 bg-red-50 p-2 rounded">No billing address data found in any field.</p>
+                                    <p class="text-sm text-gray-500">No billing address provided.</p>
                                 @endif
                             </div>
 
@@ -300,22 +335,19 @@
                             <div class="rounded-lg border border-gray-200 p-4">
                                 <div class="flex items-center justify-between mb-3">
                                     <h4 class="text-lg font-medium text-gray-900">Shipping Address</h4>
-                                   
+                                    @if($customer->shipping_google_maps_link)
+                                        <a href="{{ $customer->shipping_google_maps_link }}" target="_blank" class="inline-flex items-center text-sm text-blue-600 hover:text-blue-800">
+                                            <svg class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                                            </svg>
+                                            View on Maps
+                                        </a>
+                                    @endif
                                 </div>
                                 
-                                <!-- Always show address details for debugging -->
-                                <div class="bg-blue-50 p-3 rounded mb-3">
-                                    <h6 class="text-xs font-medium text-blue-700 mb-2">All Shipping Address Fields:</h6>
-                                    <div class="grid grid-cols-2 gap-2 text-xs text-blue-600">
-                                        <div><span class="font-medium">Street:</span> "{{ $customer->shipping_street }}"</div>
-                                        <div><span class="font-medium">City:</span> "{{ $customer->shipping_city }}"</div>
-                                        <div><span class="font-medium">State:</span> "{{ $customer->shipping_state }}"</div>
-                                        <div><span class="font-medium">ZIP:</span> "{{ $customer->shipping_zip }}"</div>
-                                        <div class="col-span-2"><span class="font-medium">Country:</span> "{{ $customer->shipping_country }}"</div>
-                                    </div>
-                                </div>
                                 @if($customer->shipping_street || $customer->shipping_city || $customer->shipping_state || $customer->shipping_zip || $customer->shipping_country)
-                                    <address class="text-sm text-gray-900 not-italic space-y-1">
+                                    <address class="text-sm text-gray-900 not-italic space-y-1 mb-4">
                                         @if($customer->shipping_street)
                                             <div>{{ $customer->shipping_street }}</div>
                                         @endif
@@ -330,17 +362,46 @@
                                             <div>{{ $customer->shipping_country }}</div>
                                         @endif
                                     </address>
-                                    <div class="mt-3 pt-3 border-t border-gray-100">
-                                        <h6 class="text-xs font-medium text-gray-500 mb-2">Address Details:</h6>
-                                        <div class="grid grid-cols-2 gap-2 text-xs text-gray-600">
-                                            <div><span class="font-medium">Street:</span> {{ $customer->shipping_street ?: 'N/A' }}</div>
-                                            <div><span class="font-medium">City:</span> {{ $customer->shipping_city ?: 'N/A' }}</div>
-                                            <div><span class="font-medium">State:</span> {{ $customer->shipping_state ?: 'N/A' }}</div>
-                                            <div><span class="font-medium">ZIP:</span> {{ $customer->shipping_zip ?: 'N/A' }}</div>
-                                            <div class="col-span-2"><span class="font-medium">Country:</span> {{ $customer->shipping_country ?: 'N/A' }}</div>
+
+                                    @if($customer->shipping_google_maps_link)
+                                        <div class="mb-4">
+                                            @php
+                                                // Convert Google Maps link to embed format
+                                                $mapsLink = $customer->shipping_google_maps_link;
+                                                $embedUrl = '';
+                                                
+                                                if (strpos($mapsLink, 'maps.google.com') !== false) {
+                                                    // Extract coordinates or place ID from the link
+                                                    if (preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $mapsLink, $matches)) {
+                                                        $lat = $matches[1];
+                                                        $lng = $matches[2];
+                                                        $embedUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3000!2d{$lng}!3d{$lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM0DCsDAwJzAwLjAiTiAxM8KwMDAnMDAuMCJF!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus";
+                                                    } else {
+                                                        // Fallback to place search
+                                                        $address = urlencode(trim($customer->shipping_street . ', ' . $customer->shipping_city . ', ' . $customer->shipping_state . ', ' . $customer->shipping_country, ', '));
+                                                        $embedUrl = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dMZvQ8&q={$address}";
+                                                    }
+                                                }
+                                            @endphp
+                                            @if($embedUrl)
+                                                <iframe 
+                                                    src="{{ $embedUrl }}"
+                                                    width="100%" 
+                                                    height="200" 
+                                                    style="border:0; border-radius: 8px;" 
+                                                    allowfullscreen="" 
+                                                    loading="lazy" 
+                                                    referrerpolicy="no-referrer-when-downgrade">
+                                                </iframe>
+                                            @else
+                                                <div class="bg-gray-100 p-4 rounded-lg text-center">
+                                                    <p class="text-sm text-gray-600 mb-2">Invalid Google Maps link</p>
+                                                    <a href="{{ $customer->shipping_google_maps_link }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">Open in Google Maps</a>
+                                                </div>
+                                            @endif
                                         </div>
-                                    </div>
-                                    
+                                    @endif
+
                                     @if($customer->billing_street || $customer->billing_city || $customer->billing_state || $customer->billing_zip || $customer->billing_country)
                                         <div class="mt-3 pt-3 border-t border-gray-100">
                                             <div class="flex items-center text-xs text-gray-500">
@@ -361,7 +422,7 @@
                                     @endif
                                 @else
                                     @if($customer->billing_street || $customer->billing_city || $customer->billing_state || $customer->billing_zip || $customer->billing_country)
-                                        <div class="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
+                                        <div class="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg mb-4">
                                             <div class="flex items-center mb-2">
                                                 <svg class="h-4 w-4 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
@@ -384,6 +445,45 @@
                                                 @endif
                                             </address>
                                         </div>
+
+                                        @if($customer->billing_google_maps_link)
+                                            <div class="mb-4">
+                                                @php
+                                                    // Convert Google Maps link to embed format
+                                                    $mapsLink = $customer->billing_google_maps_link;
+                                                    $embedUrl = '';
+                                                    
+                                                    if (strpos($mapsLink, 'maps.google.com') !== false) {
+                                                        // Extract coordinates or place ID from the link
+                                                        if (preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $mapsLink, $matches)) {
+                                                            $lat = $matches[1];
+                                                            $lng = $matches[2];
+                                                            $embedUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3000!2d{$lng}!3d{$lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM0DCsDAwJzAwLjAiTiAxM8KwMDAnMDAuMCJF!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus";
+                                                        } else {
+                                                            // Fallback to place search
+                                                            $address = urlencode(trim($customer->billing_street . ', ' . $customer->billing_city . ', ' . $customer->billing_state . ', ' . $customer->billing_country, ', '));
+                                                            $embedUrl = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dMZvQ8&q={$address}";
+                                                        }
+                                                    }
+                                                @endphp
+                                                @if($embedUrl)
+                                                    <iframe 
+                                                        src="{{ $embedUrl }}"
+                                                        width="100%" 
+                                                        height="200" 
+                                                        style="border:0; border-radius: 8px;" 
+                                                        allowfullscreen="" 
+                                                        loading="lazy" 
+                                                        referrerpolicy="no-referrer-when-downgrade">
+                                                    </iframe>
+                                                @else
+                                                    <div class="bg-gray-100 p-4 rounded-lg text-center">
+                                                        <p class="text-sm text-gray-600 mb-2">Invalid Google Maps link</p>
+                                                        <a href="{{ $customer->billing_google_maps_link }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">Open in Google Maps</a>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endif
                                     @else
                                         <p class="text-sm text-gray-500">No shipping address provided.</p>
                                     @endif

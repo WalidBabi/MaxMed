@@ -258,8 +258,8 @@
         });
         function copyBillingToShipping() {
             const checkbox = document.getElementById('same_as_billing');
-            const billingFields = ['billing_street', 'billing_city', 'billing_state', 'billing_zip', 'billing_country'];
-            const shippingFields = ['shipping_street', 'shipping_city', 'shipping_state', 'shipping_zip', 'shipping_country'];
+            const billingFields = ['billing_street', 'billing_city', 'billing_state', 'billing_zip', 'billing_country', 'billing_google_maps_link'];
+            const shippingFields = ['shipping_street', 'shipping_city', 'shipping_state', 'shipping_zip', 'shipping_country', 'shipping_google_maps_link'];
             
             if (checkbox.checked) {
                 billingFields.forEach((field, index) => {

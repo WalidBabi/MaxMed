@@ -292,12 +292,13 @@
                 document.getElementById('shipping_state').value = document.getElementById('billing_state').value;
                 document.getElementById('shipping_zip').value = document.getElementById('billing_zip').value;
                 document.getElementById('shipping_country').value = document.getElementById('billing_country').value;
+                document.getElementById('shipping_google_maps_link').value = document.getElementById('billing_google_maps_link').value;
             }
         }
 
         // Auto-check if shipping is same as billing on page load
         document.addEventListener('DOMContentLoaded', function() {
-            const billingFields = ['street', 'city', 'state', 'zip', 'country'];
+            const billingFields = ['street', 'city', 'state', 'zip', 'country', 'google_maps_link'];
             let allMatch = true;
             
             for (const field of billingFields) {
