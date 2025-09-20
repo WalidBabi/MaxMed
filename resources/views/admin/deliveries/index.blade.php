@@ -47,18 +47,18 @@
         <div class="overflow-hidden">
             @if($deliveries->count() > 0)
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
+                    <table class="w-full divide-y divide-gray-200" style="min-width: 1000px;">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Delivery #</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order #</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice Status</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tracking #</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Carrier</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Shipped At</th>
-                                <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Delivery #</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Order #</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">Customer</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Status</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Invoice Status</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Tracking #</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16">Carrier</th>
+                                <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Shipped At</th>
+                                <th scope="col" class="px-3 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-28">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -69,10 +69,10 @@
                                     $hasFinalInvoice = $delivery->hasFinalInvoice();
                                 @endphp
                                 <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-3 py-4 whitespace-nowrap">
                                         <div class="text-sm font-medium text-gray-900">{{ $delivery->delivery_number ?? 'DL-' . str_pad($delivery->id, 6, '0', STR_PAD_LEFT) }}</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-3 py-4 whitespace-nowrap">
                                         @if($delivery->order)
                                             <a href="{{ route('admin.orders.show', $delivery->order) }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">
                                                 {{ $delivery->order->order_number }}
@@ -83,7 +83,7 @@
                                             </span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-3 py-4 whitespace-nowrap">
                                         @if($delivery->order && $delivery->order->user)
                                             <div class="text-sm text-gray-900">
                                                 <div class="font-medium">{{ $delivery->order->user->name }}</div>
@@ -102,7 +102,7 @@
                                             <span class="text-sm text-gray-500">N/A</span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-3 py-4 whitespace-nowrap">
                                         @php
                                             $statusConfig = [
                                                 'delivered' => ['bg-green-100', 'text-green-800'],
@@ -116,7 +116,7 @@
                                             {{ ucfirst(str_replace('_', ' ', $delivery->status)) }}
                                         </span>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-3 py-4 whitespace-nowrap">
                                         @if($hasFinalInvoice)
                                             <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800">
                                                 <svg class="-ml-0.5 mr-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
@@ -147,16 +147,16 @@
                                             </span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-3 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">{{ $delivery->tracking_number ?? 'N/A' }}</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-3 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">{{ $delivery->carrier ?? 'N/A' }}</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-3 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-500">{{ $delivery->shipped_at?->format('M d, Y H:i') ?? 'Not shipped' }}</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <td class="px-3 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="flex items-center justify-end space-x-2">
                                             <a href="{{ route('admin.deliveries.show', $delivery) }}" class="text-indigo-600 hover:text-indigo-900" title="View Delivery">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
