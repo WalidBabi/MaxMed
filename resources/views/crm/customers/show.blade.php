@@ -295,35 +295,37 @@
                                                 $mapsLink = $customer->billing_google_maps_link;
                                                 $embedUrl = '';
                                                 
-                                                if (strpos($mapsLink, 'maps.google.com') !== false) {
-                                                    // Extract coordinates or place ID from the link
+                                                if (strpos($mapsLink, 'maps.google.com') !== false || strpos($mapsLink, 'goo.gl') !== false) {
+                                                    // Extract coordinates from the link
                                                     if (preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $mapsLink, $matches)) {
                                                         $lat = $matches[1];
                                                         $lng = $matches[2];
+                                                        $zoom = 15;
                                                         $embedUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3000!2d{$lng}!3d{$lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM0DCsDAwJzAwLjAiTiAxM8KwMDAnMDAuMCJF!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus";
+                                                    } elseif (preg_match('/\/place\/([^\/]+)/', $mapsLink, $matches)) {
+                                                        // Extract place name from URL
+                                                        $placeName = urlencode($matches[1]);
+                                                        $embedUrl = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dMZvQ8&q={$placeName}";
                                                     } else {
-                                                        // Fallback to place search
+                                                        // Use the full address as fallback
                                                         $address = urlencode(trim($customer->billing_street . ', ' . $customer->billing_city . ', ' . $customer->billing_state . ', ' . $customer->billing_country, ', '));
                                                         $embedUrl = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dMZvQ8&q={$address}";
                                                     }
+                                                } else {
+                                                    // If it's not a Google Maps link, try to use it as a search query
+                                                    $address = urlencode(trim($customer->billing_street . ', ' . $customer->billing_city . ', ' . $customer->billing_state . ', ' . $customer->billing_country, ', '));
+                                                    $embedUrl = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dMZvQ8&q={$address}";
                                                 }
                                             @endphp
-                                            @if($embedUrl)
-                                                <iframe 
-                                                    src="{{ $embedUrl }}"
-                                                    width="100%" 
-                                                    height="200" 
-                                                    style="border:0; border-radius: 8px;" 
-                                                    allowfullscreen="" 
-                                                    loading="lazy" 
-                                                    referrerpolicy="no-referrer-when-downgrade">
-                                                </iframe>
-                                            @else
-                                                <div class="bg-gray-100 p-4 rounded-lg text-center">
-                                                    <p class="text-sm text-gray-600 mb-2">Invalid Google Maps link</p>
-                                                    <a href="{{ $customer->billing_google_maps_link }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">Open in Google Maps</a>
-                                                </div>
-                                            @endif
+                                            <iframe 
+                                                src="{{ $embedUrl }}"
+                                                width="100%" 
+                                                height="200" 
+                                                style="border:0; border-radius: 8px;" 
+                                                allowfullscreen="" 
+                                                loading="lazy" 
+                                                referrerpolicy="no-referrer-when-downgrade">
+                                            </iframe>
                                         </div>
                                     @endif
                                 @else
@@ -370,35 +372,37 @@
                                                 $mapsLink = $customer->shipping_google_maps_link;
                                                 $embedUrl = '';
                                                 
-                                                if (strpos($mapsLink, 'maps.google.com') !== false) {
-                                                    // Extract coordinates or place ID from the link
+                                                if (strpos($mapsLink, 'maps.google.com') !== false || strpos($mapsLink, 'goo.gl') !== false) {
+                                                    // Extract coordinates from the link
                                                     if (preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $mapsLink, $matches)) {
                                                         $lat = $matches[1];
                                                         $lng = $matches[2];
+                                                        $zoom = 15;
                                                         $embedUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3000!2d{$lng}!3d{$lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM0DCsDAwJzAwLjAiTiAxM8KwMDAnMDAuMCJF!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus";
+                                                    } elseif (preg_match('/\/place\/([^\/]+)/', $mapsLink, $matches)) {
+                                                        // Extract place name from URL
+                                                        $placeName = urlencode($matches[1]);
+                                                        $embedUrl = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dMZvQ8&q={$placeName}";
                                                     } else {
-                                                        // Fallback to place search
+                                                        // Use the full address as fallback
                                                         $address = urlencode(trim($customer->shipping_street . ', ' . $customer->shipping_city . ', ' . $customer->shipping_state . ', ' . $customer->shipping_country, ', '));
                                                         $embedUrl = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dMZvQ8&q={$address}";
                                                     }
+                                                } else {
+                                                    // If it's not a Google Maps link, try to use it as a search query
+                                                    $address = urlencode(trim($customer->shipping_street . ', ' . $customer->shipping_city . ', ' . $customer->shipping_state . ', ' . $customer->shipping_country, ', '));
+                                                    $embedUrl = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dMZvQ8&q={$address}";
                                                 }
                                             @endphp
-                                            @if($embedUrl)
-                                                <iframe 
-                                                    src="{{ $embedUrl }}"
-                                                    width="100%" 
-                                                    height="200" 
-                                                    style="border:0; border-radius: 8px;" 
-                                                    allowfullscreen="" 
-                                                    loading="lazy" 
-                                                    referrerpolicy="no-referrer-when-downgrade">
-                                                </iframe>
-                                            @else
-                                                <div class="bg-gray-100 p-4 rounded-lg text-center">
-                                                    <p class="text-sm text-gray-600 mb-2">Invalid Google Maps link</p>
-                                                    <a href="{{ $customer->shipping_google_maps_link }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">Open in Google Maps</a>
-                                                </div>
-                                            @endif
+                                            <iframe 
+                                                src="{{ $embedUrl }}"
+                                                width="100%" 
+                                                height="200" 
+                                                style="border:0; border-radius: 8px;" 
+                                                allowfullscreen="" 
+                                                loading="lazy" 
+                                                referrerpolicy="no-referrer-when-downgrade">
+                                            </iframe>
                                         </div>
                                     @endif
 
@@ -453,35 +457,37 @@
                                                     $mapsLink = $customer->billing_google_maps_link;
                                                     $embedUrl = '';
                                                     
-                                                    if (strpos($mapsLink, 'maps.google.com') !== false) {
-                                                        // Extract coordinates or place ID from the link
+                                                    if (strpos($mapsLink, 'maps.google.com') !== false || strpos($mapsLink, 'goo.gl') !== false) {
+                                                        // Extract coordinates from the link
                                                         if (preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $mapsLink, $matches)) {
                                                             $lat = $matches[1];
                                                             $lng = $matches[2];
+                                                            $zoom = 15;
                                                             $embedUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3000!2d{$lng}!3d{$lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM0DCsDAwJzAwLjAiTiAxM8KwMDAnMDAuMCJF!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus";
+                                                        } elseif (preg_match('/\/place\/([^\/]+)/', $mapsLink, $matches)) {
+                                                            // Extract place name from URL
+                                                            $placeName = urlencode($matches[1]);
+                                                            $embedUrl = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dMZvQ8&q={$placeName}";
                                                         } else {
-                                                            // Fallback to place search
+                                                            // Use the full address as fallback
                                                             $address = urlencode(trim($customer->billing_street . ', ' . $customer->billing_city . ', ' . $customer->billing_state . ', ' . $customer->billing_country, ', '));
                                                             $embedUrl = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dMZvQ8&q={$address}";
                                                         }
+                                                    } else {
+                                                        // If it's not a Google Maps link, try to use it as a search query
+                                                        $address = urlencode(trim($customer->billing_street . ', ' . $customer->billing_city . ', ' . $customer->billing_state . ', ' . $customer->billing_country, ', '));
+                                                        $embedUrl = "https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dMZvQ8&q={$address}";
                                                     }
                                                 @endphp
-                                                @if($embedUrl)
-                                                    <iframe 
-                                                        src="{{ $embedUrl }}"
-                                                        width="100%" 
-                                                        height="200" 
-                                                        style="border:0; border-radius: 8px;" 
-                                                        allowfullscreen="" 
-                                                        loading="lazy" 
-                                                        referrerpolicy="no-referrer-when-downgrade">
-                                                    </iframe>
-                                                @else
-                                                    <div class="bg-gray-100 p-4 rounded-lg text-center">
-                                                        <p class="text-sm text-gray-600 mb-2">Invalid Google Maps link</p>
-                                                        <a href="{{ $customer->billing_google_maps_link }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm">Open in Google Maps</a>
-                                                    </div>
-                                                @endif
+                                                <iframe 
+                                                    src="{{ $embedUrl }}"
+                                                    width="100%" 
+                                                    height="200" 
+                                                    style="border:0; border-radius: 8px;" 
+                                                    allowfullscreen="" 
+                                                    loading="lazy" 
+                                                    referrerpolicy="no-referrer-when-downgrade">
+                                                </iframe>
                                             </div>
                                         @endif
                                     @else
