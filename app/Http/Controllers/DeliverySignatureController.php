@@ -105,6 +105,11 @@ class DeliverySignatureController extends Controller
                 'delivered_at' => now(),
             ]);
 
+            // Update order status to delivered
+            if ($delivery->order) {
+                $delivery->order->update(['status' => 'delivered']);
+            }
+
             // Log the signature
             Log::info("Delivery #{$delivery->id} signed by customer", [
                 'delivery_id' => $delivery->id,
