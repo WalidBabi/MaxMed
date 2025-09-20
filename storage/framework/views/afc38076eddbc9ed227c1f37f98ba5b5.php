@@ -303,18 +303,18 @@
             <div class="flex justify-between items-center">
                 <!-- Logo - Reduced size to give more space to search -->
                 <div class="flex justify-center py-1 flex-shrink-0">
-                    <a href="{{ route('welcome') }}" class="transition hover:opacity-90 flex-shrink-0">
-                        <img src="{{ asset('Images/logo.png') }}" alt="MaxMed Logo" class="block h-[50px] w-[200px] mr-4 min-h-[50px] min-w-[200px] flex-shrink-0 !important">
+                    <a href="<?php echo e(route('welcome')); ?>" class="transition hover:opacity-90 flex-shrink-0">
+                        <img src="<?php echo e(asset('Images/logo.png')); ?>" alt="MaxMed Logo" class="block h-[50px] w-[200px] mr-4 min-h-[50px] min-w-[200px] flex-shrink-0 !important">
                     </a>
                 </div>
                 
                 <!-- Search Bar - Increased width and improved positioning -->
                 <div class="hidden md:block mx-4 flex-1 max-w-2xl">
-                    <form action="{{ route('search') }}" method="GET" class="flex items-center mb-0">
+                    <form action="<?php echo e(route('search')); ?>" method="GET" class="flex items-center mb-0">
                         <div class="search-container relative w-full search-bar-glow">
                             <input type="text" name="query" id="desktop-search-input" placeholder="Search products..."
                                 class="w-full py-2 pl-4 pr-12 bg-gray-100 border-none rounded-l-full focus:outline-none text-sm focus:ring-2 focus:ring-[#0a5694] focus:ring-opacity-50"
-                                value="{{ request('query') }}" autocomplete="off">
+                                value="<?php echo e(request('query')); ?>" autocomplete="off">
                             <div id="desktop-search-suggestions" class="absolute z-50 w-full bg-white rounded-lg shadow-lg hidden max-h-60 overflow-y-auto border border-gray-200 min-w-[300px]"></div>
                         </div>
                         <button type="submit" aria-label="Search products" class="search-button bg-gradient-to-r from-[#171e60] to-[#0a5694] text-white p-3 rounded-r-full hover:from-[#0a5694] hover:to-[#171e60] transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#171e60] focus:ring-opacity-50 shadow-md">
@@ -330,9 +330,9 @@
                
                     <div class="flex items-center space-x-4 text-sm">
                 
-                        <a href="{{ route('welcome') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Home</a>
-                        <a href="{{ route('about') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">About</a>
-                        <a href="{{ route('partners.index') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Partners</a>
+                        <a href="<?php echo e(route('welcome')); ?>" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Home</a>
+                        <a href="<?php echo e(route('about')); ?>" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">About</a>
+                        <a href="<?php echo e(route('partners.index')); ?>" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Partners</a>
 
                         <!-- Products Dropdown -->
                         <div class="relative inline-block" 
@@ -368,7 +368,7 @@
                                     <div class="flex">
                                         <!-- First Level Menu -->
                                         <div class="w-64 border-r border-gray-100">
-                                            @foreach($navCategories->sortBy(function($category) {
+                                            <?php $__currentLoopData = $navCategories->sortBy(function($category) {
                                                 // Define the preferred order
                                                 $order = [
                                                     'Molecular & Clinical Diagnostics' => 1,
@@ -378,19 +378,20 @@
                                                     'Lab Consumables' => 5
                                                 ];
                                                 return $order[$category->name] ?? 999; // Categories not in list will appear last
-                                            }) as $category)
-                                                <div class="relative" x-data="{ id: {{ $category->id }} }">
+                                            }); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <div class="relative" x-data="{ id: <?php echo e($category->id); ?> }">
                                                     <button @click="if (activeSubmenu !== id) { activeSubmenu = id; activeSubSubmenu = null; } else { activeSubmenu = null; }" 
                                                         class="w-full text-left px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 flex justify-between items-center">
-                                                        {{ $category->name }}
+                                                        <?php echo e($category->name); ?>
+
                                                         <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                                                         </svg>
                                                     </button>
                                                 </div>
-                                            @endforeach
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             <div class="border-t border-gray-100 my-1"></div>
-                                            <a href="{{ route('products.index') }}" class="block px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100">
+                                            <a href="<?php echo e(route('products.index')); ?>" class="block px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100">
                                                 View All Products
                                             </a>
                                         </div>
@@ -404,30 +405,33 @@
                                             x-transition:leave-start="transform opacity-100"
                                             x-transition:leave-end="transform opacity-0"
                                             class="w-64 border-r border-gray-100">
-                                            @foreach($navCategories as $category)
-                                                <div x-show="activeSubmenu === {{ $category->id }}">
-                                                    <a href="{{ route('categories.show', $category) }}" class="block px-4 py-2 text-sm font-medium text-gray-900 border-b border-gray-100">
-                                                        All {{ $category->name }}
+                                            <?php $__currentLoopData = $navCategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <div x-show="activeSubmenu === <?php echo e($category->id); ?>">
+                                                    <a href="<?php echo e(route('categories.show', $category)); ?>" class="block px-4 py-2 text-sm font-medium text-gray-900 border-b border-gray-100">
+                                                        All <?php echo e($category->name); ?>
+
                                                     </a>
-                                                    @foreach($category->subcategories as $subcategory)
-                                                        @if($subcategory->subcategories->isNotEmpty())
-                                                            <div class="relative" x-data="{ subId: {{ $subcategory->id }} }">
+                                                    <?php $__currentLoopData = $category->subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <?php if($subcategory->subcategories->isNotEmpty()): ?>
+                                                            <div class="relative" x-data="{ subId: <?php echo e($subcategory->id); ?> }">
                                                                 <button @click="if (activeSubSubmenu !== subId) { activeSubSubmenu = subId; } else { activeSubSubmenu = null; }"
                                                                     class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex justify-between items-center">
-                                                                    {{ $subcategory->name }}
+                                                                    <?php echo e($subcategory->name); ?>
+
                                                                     <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                                                         <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                                                                     </svg>
                                                                 </button>
                                                             </div>
-                                                        @else
-                                                            <a href="{{ route('categories.subcategory.show', [$category, $subcategory]) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                                {{ $subcategory->name }}
+                                                        <?php else: ?>
+                                                            <a href="<?php echo e(route('categories.subcategory.show', [$category, $subcategory])); ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                                <?php echo e($subcategory->name); ?>
+
                                                             </a>
-                                                        @endif
-                                                    @endforeach
+                                                        <?php endif; ?>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </div>
-                                            @endforeach
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </div>
 
                                         <!-- Third Level Menu -->
@@ -439,22 +443,24 @@
                                             x-transition:leave-start="transform opacity-100"
                                             x-transition:leave-end="transform opacity-0"
                                             class="w-64">
-                                            @foreach($navCategories as $category)
-                                                @foreach($category->subcategories as $subcategory)
-                                                    @if($subcategory->subcategories->isNotEmpty())
-                                                        <div x-show="activeSubSubmenu === {{ $subcategory->id }}">
-                                                            <a href="{{ route('categories.subcategory.show', [$category, $subcategory]) }}" class="block px-4 py-2 text-sm font-medium text-gray-900 border-b border-gray-100">
-                                                                All {{ $subcategory->name }}
+                                            <?php $__currentLoopData = $navCategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <?php $__currentLoopData = $category->subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php if($subcategory->subcategories->isNotEmpty()): ?>
+                                                        <div x-show="activeSubSubmenu === <?php echo e($subcategory->id); ?>">
+                                                            <a href="<?php echo e(route('categories.subcategory.show', [$category, $subcategory])); ?>" class="block px-4 py-2 text-sm font-medium text-gray-900 border-b border-gray-100">
+                                                                All <?php echo e($subcategory->name); ?>
+
                                                             </a>
-                                                            @foreach($subcategory->subcategories as $subsubcategory)
-                                                                <a href="{{ route('categories.subsubcategory.show', [$category, $subcategory, $subsubcategory]) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                                                    {{ $subsubcategory->name }}
+                                                            <?php $__currentLoopData = $subcategory->subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subsubcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                <a href="<?php echo e(route('categories.subsubcategory.show', [$category, $subcategory, $subsubcategory])); ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                                    <?php echo e($subsubcategory->name); ?>
+
                                                                 </a>
-                                                            @endforeach
+                                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                         </div>
-                                                    @endif
-                                                @endforeach
-                                            @endforeach
+                                                    <?php endif; ?>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </div>
                                     </div>
                                 </div>
@@ -462,15 +468,15 @@
                         </div>
 
                         <!-- Replace with simple clickable link -->
-                        <a href="{{ route('industry.index') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full whitespace-nowrap">Industries & Solutions</a>
+                        <a href="<?php echo e(route('industry.index')); ?>" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full whitespace-nowrap">Industries & Solutions</a>
                         
-                        <!-- <a href="{{ route('partners.index') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Partners</a> -->
-                        <a href="{{ route('news.index') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">News</a>
-                        <a href="{{ route('contact') }}" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Contact</a>
-                        @auth
+                        <!-- <a href="<?php echo e(route('partners.index')); ?>" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Partners</a> -->
+                        <a href="<?php echo e(route('news.index')); ?>" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">News</a>
+                        <a href="<?php echo e(route('contact')); ?>" class="flex items-center text-gray-500 hover:text-gray-700 font-normal h-full">Contact</a>
+                        <?php if(auth()->guard()->check()): ?>
                         <div class="relative inline-block" x-data="{ open: false }" x-cloak @click.away="open = false">
                             <button @click="open = !open" class="text-gray-500 hover:text-gray-700 flex items-center font-normal">
-                                <span>{{ Auth::user()->name }}</span>
+                                <span><?php echo e(Auth::user()->name); ?></span>
                                 <svg class="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                 </svg>
@@ -484,19 +490,19 @@
                                 x-transition:leave-start="transform opacity-100 scale-100"
                                 x-transition:leave-end="transform opacity-0 scale-95"
                                 class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                                @if(\App\Services\AccessControlService::canAccessAdmin(Auth::user()))
-                                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{{ \App\Helpers\DashboardHelper::adminPortalHeaderName() }}</a>
-                                @endif
-                                @if(Auth::user()->hasPermission('purchasing.dashboard.access') && !\App\Services\AccessControlService::canAccessAdmin(Auth::user()))
-                                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Purchasing</a>
-                                @endif
-                                @if(\App\Services\AccessControlService::canAccessCrm(Auth::user()))
-                                <a href="{{ route('crm.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{{ \App\Helpers\DashboardHelper::crmPortalHeaderName() }}</a>
-                                @endif
-                                @if(\App\Services\AccessControlService::canAccessSupplier(Auth::user()))
-                                <a href="{{ route('supplier.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{{ \App\Helpers\DashboardHelper::supplierPortalHeaderName() }}</a>
-                                @endif
-                                <a href="{{ route('orders.index') }}" class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 group">
+                                <?php if(\App\Services\AccessControlService::canAccessAdmin(Auth::user())): ?>
+                                <a href="<?php echo e(route('admin.dashboard')); ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><?php echo e(\App\Helpers\DashboardHelper::adminPortalHeaderName()); ?></a>
+                                <?php endif; ?>
+                                <?php if(Auth::user()->hasPermission('purchasing.dashboard.access') && !\App\Services\AccessControlService::canAccessAdmin(Auth::user())): ?>
+                                <a href="<?php echo e(route('admin.dashboard')); ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Purchasing</a>
+                                <?php endif; ?>
+                                <?php if(\App\Services\AccessControlService::canAccessCrm(Auth::user())): ?>
+                                <a href="<?php echo e(route('crm.dashboard')); ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><?php echo e(\App\Helpers\DashboardHelper::crmPortalHeaderName()); ?></a>
+                                <?php endif; ?>
+                                <?php if(\App\Services\AccessControlService::canAccessSupplier(Auth::user())): ?>
+                                <a href="<?php echo e(route('supplier.dashboard')); ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><?php echo e(\App\Helpers\DashboardHelper::supplierPortalHeaderName()); ?></a>
+                                <?php endif; ?>
+                                <a href="<?php echo e(route('orders.index')); ?>" class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 group">
                                     <div class="flex items-center">
                                         <svg class="h-4 w-4 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 75.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
@@ -504,28 +510,28 @@
                                         My Orders
                                     </div>
                                 </a>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
+                                <form method="POST" action="<?php echo e(route('logout')); ?>">
+                                    <?php echo csrf_field(); ?>
                                     <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Log Out</button>
                                 </form>
                             </div>
                         </div>
-                        @else
+                        <?php else: ?>
                         <div class="flex items-center text-xs">
-                            <a href="{{ route('login') }}" class="flex items-center text-gray-600 hover:text-[#0a5694] font-normal transition-colors duration-200 px-1 py-0.5">Login</a>
+                            <a href="<?php echo e(route('login')); ?>" class="flex items-center text-gray-600 hover:text-[#0a5694] font-normal transition-colors duration-200 px-1 py-0.5">Login</a>
                             <div class="w-px h-6 bg-gray-300 mx-2"></div>
                             <div class="flex flex-col space-y-0.5">
-                                <a href="{{ route('register') }}" class="flex items-center text-gray-600 hover:text-[#0a5694] font-normal transition-colors duration-200 px-1 py-0.5">Register</a>
-                                <a href="{{ route('supplier.register') }}" class="flex items-center text-gray-600 hover:text-[#0a5694] font-normal transition-colors duration-200 px-1 py-0.5">Register as Supplier</a>
+                                <a href="<?php echo e(route('register')); ?>" class="flex items-center text-gray-600 hover:text-[#0a5694] font-normal transition-colors duration-200 px-1 py-0.5">Register</a>
+                                <a href="<?php echo e(route('supplier.register')); ?>" class="flex items-center text-gray-600 hover:text-[#0a5694] font-normal transition-colors duration-200 px-1 py-0.5">Register as Supplier</a>
                             </div>
                         </div>
-                        @endauth
+                        <?php endif; ?>
 
                         <!-- Main Navigation Categories -->
 
 
                         <!-- Cart Icon -->
-                        <!-- REMOVED: <a href="{{ route('cart.view') }}" class="flex items-center text-gray-600 hover:text-gray-900" aria-label="Shopping cart"> ... </a> -->
+                        <!-- REMOVED: <a href="<?php echo e(route('cart.view')); ?>" class="flex items-center text-gray-600 hover:text-gray-900" aria-label="Shopping cart"> ... </a> -->
                     </div>
                 </div>
             </div>
@@ -534,10 +540,10 @@
 
         <!-- Mobile Search Bar - Always Visible -->
         <div class="md:hidden px-4 py-3 bg-white border-b border-gray-100">
-            <form action="{{ route('search') }}" method="GET" class="search-container relative">
+            <form action="<?php echo e(route('search')); ?>" method="GET" class="search-container relative">
                 <input type="text" name="query" id="mobile-search-input-top" placeholder="Search products..."
                     class="w-full py-3 pl-4 pr-12 bg-gray-100 border-none rounded-full focus:outline-none text-base focus:ring-2 focus:ring-[#0a5694] focus:ring-opacity-50"
-                    value="{{ request('query') }}" autocomplete="off">
+                    value="<?php echo e(request('query')); ?>" autocomplete="off">
                 <div id="mobile-search-suggestions-top" class="absolute z-50 w-full bg-white rounded-lg shadow-lg hidden max-h-60 overflow-y-auto border border-gray-200"></div>
                 <button type="submit" aria-label="Search products" class="search-button absolute right-1 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-[#171e60] to-[#0a5694] text-white p-2.5 rounded-full hover:from-[#0a5694] hover:to-[#171e60] focus:outline-none transition-all duration-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -561,8 +567,8 @@
         <div :class="{'block': open, 'hidden': !open}" class="hidden md:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-100 mobile-menu-scrollable">
 
-                <a href="{{ route('welcome') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Home</a>
-                <a href="{{ route('about') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">About Us</a>
+                <a href="<?php echo e(route('welcome')); ?>" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Home</a>
+                <a href="<?php echo e(route('about')); ?>" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">About Us</a>
                 <a href="/partners" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Partners</a>
 
                 <!-- Mobile Products Dropdown -->
@@ -581,7 +587,7 @@
                         x-transition:leave-start="transform opacity-100"
                         x-transition:leave-end="transform opacity-0"
                         class="pl-4 space-y-1 mt-1">
-                        @foreach($navCategories->sortBy(function($category) {
+                        <?php $__currentLoopData = $navCategories->sortBy(function($category) {
                             // Define the preferred order
                             $order = [
                                 'Molecular & Clinical Diagnostics' => 1,
@@ -591,12 +597,13 @@
                                 'Lab Consumables' => 5
                             ];
                             return $order[$category->name] ?? 999; // Categories not in list will appear last
-                        }) as $category)
-                            @if($category->subcategories->isNotEmpty())
+                        }); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php if($category->subcategories->isNotEmpty()): ?>
                                 <div x-data="{ subOpen: false }" x-cloak class="relative">
                                     <div class="flex items-start">
-                                        <a href="{{ route('categories.show', $category) }}" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
-                                            {{ $category->name }}
+                                        <a href="<?php echo e(route('categories.show', $category)); ?>" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
+                                            <?php echo e($category->name); ?>
+
                                         </a>
                                         <button @click.prevent="subOpen = !subOpen" class="px-2 py-2 text-gray-500 hover:text-[#00a9e0] focus:outline-none">
                                             <svg :class="{'rotate-90': subOpen}" class="h-4 w-4 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -612,20 +619,22 @@
                                         x-transition:leave-start="transform opacity-100"
                                         x-transition:leave-end="transform opacity-0"
                                         class="pl-4 space-y-1 mt-1">
-                                        @foreach($category->subcategories as $subcategory)
-                                            <a href="{{ route('categories.subcategory.show', [$category, $subcategory]) }}" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
-                                                {{ $subcategory->name }}
+                                        <?php $__currentLoopData = $category->subcategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $subcategory): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <a href="<?php echo e(route('categories.subcategory.show', [$category, $subcategory])); ?>" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                                <?php echo e($subcategory->name); ?>
+
                                             </a>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </div>
                                 </div>
-                            @else
-                                <a href="{{ route('categories.show', $category) }}" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
-                                    {{ $category->name }}
+                            <?php else: ?>
+                                <a href="<?php echo e(route('categories.show', $category)); ?>" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                    <?php echo e($category->name); ?>
+
                                 </a>
-                            @endif
-                        @endforeach
-                        <a href="{{ route('products.index') }}" class="block px-3 py-2 rounded-md text-sm font-medium text-blue-600 hover:text-blue-800 hover:bg-gray-50">
+                            <?php endif; ?>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <a href="<?php echo e(route('products.index')); ?>" class="block px-3 py-2 rounded-md text-sm font-medium text-blue-600 hover:text-blue-800 hover:bg-gray-50">
                             View All Products
                         </a>
                     </div>
@@ -650,7 +659,7 @@
                         <!-- Healthcare & Medical Facilities -->
                         <div x-data="{ subOpen: false }" x-cloak class="relative">
                             <div class="flex items-start">
-                                <a href="{{ route('industry.index') }}#healthcare" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
+                                <a href="<?php echo e(route('industry.index')); ?>#healthcare" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
                                     Medical & Healthcare
                                 </a>
                                 <button @click.prevent="subOpen = !subOpen" class="px-2 py-2 text-gray-500 hover:text-[#00a9e0] focus:outline-none">
@@ -667,16 +676,16 @@
                                 x-transition:leave-start="transform opacity-100"
                                 x-transition:leave-end="transform opacity-0"
                                 class="pl-4 space-y-1 mt-1">
-                                <a href="{{ route('industry.index') }}#clinics" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                <a href="<?php echo e(route('industry.index')); ?>#clinics" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Clinics & Medical Centers
                                 </a>
-                                <a href="{{ route('industry.index') }}#hospitals" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                <a href="<?php echo e(route('industry.index')); ?>#hospitals" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Hospitals
                                 </a>
-                                <a href="{{ route('industry.index') }}#veterinary" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                <a href="<?php echo e(route('industry.index')); ?>#veterinary" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Veterinary Clinics
                                 </a>
-                                <a href="{{ route('industry.index') }}#medical-labs" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                <a href="<?php echo e(route('industry.index')); ?>#medical-labs" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Medical Laboratories
                                 </a>
                             </div>
@@ -685,7 +694,7 @@
                         <!-- Scientific & Research Institutions -->
                         <div x-data="{ subOpen: false }" x-cloak class="relative">
                             <div class="flex items-start">
-                                <a href="{{ route('industry.index') }}#research" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
+                                <a href="<?php echo e(route('industry.index')); ?>#research" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
                                     Research & Development
                                 </a>
                                 <button @click.prevent="subOpen = !subOpen" class="px-2 py-2 text-gray-500 hover:text-[#00a9e0] focus:outline-none">
@@ -702,16 +711,16 @@
                                 x-transition:leave-start="transform opacity-100"
                                 x-transition:leave-end="transform opacity-0"
                                 class="pl-4 space-y-1 mt-1">
-                                <a href="{{ route('industry.index') }}#research-labs" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                <a href="<?php echo e(route('industry.index')); ?>#research-labs" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Research Laboratories
                                 </a>
-                                <a href="{{ route('industry.index') }}#academia" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                <a href="<?php echo e(route('industry.index')); ?>#academia" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Universities & Academia
                                 </a>
-                                <a href="{{ route('industry.index') }}#biotech" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                <a href="<?php echo e(route('industry.index')); ?>#biotech" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Biotech & Pharmaceutical Industries
                                 </a>
-                                <a href="{{ route('industry.index') }}#forensic" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                <a href="<?php echo e(route('industry.index')); ?>#forensic" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Forensic Laboratories
                                 </a>
                             </div>
@@ -720,7 +729,7 @@
                         <!-- Government & Regulatory Bodies -->
                         <div x-data="{ subOpen: false }" x-cloak class="relative">
                             <div class="flex items-start">
-                                <a href="{{ route('industry.index') }}#government" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
+                                <a href="<?php echo e(route('industry.index')); ?>#government" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
                                     Public Sector & Regulation
                                 </a>
                                 <button @click.prevent="subOpen = !subOpen" class="px-2 py-2 text-gray-500 hover:text-[#00a9e0] focus:outline-none">
@@ -737,13 +746,13 @@
                                 x-transition:leave-start="transform opacity-100"
                                 x-transition:leave-end="transform opacity-0"
                                 class="pl-4 space-y-1 mt-1">
-                                <a href="{{ route('industry.index') }}#public-health" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                <a href="<?php echo e(route('industry.index')); ?>#public-health" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Public Health Institutions
                                 </a>
-                                <a href="{{ route('industry.index') }}#military" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                <a href="<?php echo e(route('industry.index')); ?>#military" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Military & Defense Research Centers
                                 </a>
-                                <a href="{{ route('industry.index') }}#regulatory" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                <a href="<?php echo e(route('industry.index')); ?>#regulatory" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Health Ministries & Regulatory Agencies
                                 </a>
                             </div>
@@ -752,7 +761,7 @@
                         <!-- Specialized Testing & Diagnostics -->
                         <div x-data="{ subOpen: false }" x-cloak class="relative">
                             <div class="flex items-start">
-                                <a href="{{ route('industry.index') }}#testing" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
+                                <a href="<?php echo e(route('industry.index')); ?>#testing" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
                                     Testing & Analysis
                                 </a>
                                 <button @click.prevent="subOpen = !subOpen" class="px-2 py-2 text-gray-500 hover:text-[#00a9e0] focus:outline-none">
@@ -769,16 +778,16 @@
                                 x-transition:leave-start="transform opacity-100"
                                 x-transition:leave-end="transform opacity-0"
                                 class="pl-4 space-y-1 mt-1">
-                                <a href="{{ route('industry.index') }}#environment" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                <a href="<?php echo e(route('industry.index')); ?>#environment" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Environment Laboratories
                                 </a>
-                                <a href="{{ route('industry.index') }}#food" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                <a href="<?php echo e(route('industry.index')); ?>#food" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Food Laboratories
                                 </a>
-                                <a href="{{ route('industry.index') }}#material" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                <a href="<?php echo e(route('industry.index')); ?>#material" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Material Testing Laboratories
                                 </a>
-                                <a href="{{ route('industry.index') }}#cosmetic" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                <a href="<?php echo e(route('industry.index')); ?>#cosmetic" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Cosmetic & Dermatology Labs
                                 </a>
                             </div>
@@ -787,7 +796,7 @@
                         <!-- Emerging & AI-driven Healthcare -->
                         <div x-data="{ subOpen: false }" x-cloak class="relative">
                             <div class="flex items-start">
-                                <a href="{{ route('industry.index') }}#technology" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
+                                <a href="<?php echo e(route('industry.index')); ?>#technology" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 flex-grow">
                                     Emerging & AI-driven Healthcare
                                 </a>
                                 <button @click.prevent="subOpen = !subOpen" class="px-2 py-2 text-gray-500 hover:text-[#00a9e0] focus:outline-none">
@@ -804,10 +813,10 @@
                                 x-transition:leave-start="transform opacity-100"
                                 x-transition:leave-end="transform opacity-0"
                                 class="pl-4 space-y-1 mt-1">
-                                <a href="{{ route('industry.index') }}#telemedicine" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                <a href="<?php echo e(route('industry.index')); ?>#telemedicine" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     Telemedicine & Remote Diagnostics
                                 </a>
-                                <a href="{{ route('industry.index') }}#ai-medical" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
+                                <a href="<?php echo e(route('industry.index')); ?>#ai-medical" class="block px-3 py-2 rounded-md text-xs font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">
                                     AI-powered Medical Technology Firms
                                 </a>
                             </div>
@@ -816,25 +825,25 @@
                 </div>
                 
                 <!-- Replace with simple clickable link -->
-                <!-- <a href="{{ route('industry.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Industries & Solutions</a> -->
+                <!-- <a href="<?php echo e(route('industry.index')); ?>" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Industries & Solutions</a> -->
 
-                <a href="{{ route('contact') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Contact Us</a>
-                <a href="{{ route('news.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">News</a>
+                <a href="<?php echo e(route('contact')); ?>" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Contact Us</a>
+                <a href="<?php echo e(route('news.index')); ?>" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">News</a>
 
-                @auth
-                @if(\App\Services\AccessControlService::canAccessAdmin(Auth::user()))
-                <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">{{ \App\Helpers\DashboardHelper::adminPortalHeaderName() }}</a>
-                @endif
-                @if(Auth::user()->hasPermission('purchasing.dashboard.access') && !\App\Services\AccessControlService::canAccessAdmin(Auth::user()))
-                <a href="{{ route('admin.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Purchasing</a>
-                @endif
-                @if(\App\Services\AccessControlService::canAccessCrm(Auth::user()))
-                <a href="{{ route('crm.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">{{ \App\Helpers\DashboardHelper::crmPortalHeaderName() }}</a>
-                @endif
-                @if(\App\Services\AccessControlService::canAccessSupplier(Auth::user()))
-                <a href="{{ route('supplier.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">{{ \App\Helpers\DashboardHelper::supplierPortalHeaderName() }}</a>
-                @endif
-                <a href="{{ route('orders.index') }}" class="flex items-center justify-between px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 group">
+                <?php if(auth()->guard()->check()): ?>
+                <?php if(\App\Services\AccessControlService::canAccessAdmin(Auth::user())): ?>
+                <a href="<?php echo e(route('admin.dashboard')); ?>" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50"><?php echo e(\App\Helpers\DashboardHelper::adminPortalHeaderName()); ?></a>
+                <?php endif; ?>
+                <?php if(Auth::user()->hasPermission('purchasing.dashboard.access') && !\App\Services\AccessControlService::canAccessAdmin(Auth::user())): ?>
+                <a href="<?php echo e(route('admin.dashboard')); ?>" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Purchasing</a>
+                <?php endif; ?>
+                <?php if(\App\Services\AccessControlService::canAccessCrm(Auth::user())): ?>
+                <a href="<?php echo e(route('crm.dashboard')); ?>" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50"><?php echo e(\App\Helpers\DashboardHelper::crmPortalHeaderName()); ?></a>
+                <?php endif; ?>
+                <?php if(\App\Services\AccessControlService::canAccessSupplier(Auth::user())): ?>
+                <a href="<?php echo e(route('supplier.dashboard')); ?>" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50"><?php echo e(\App\Helpers\DashboardHelper::supplierPortalHeaderName()); ?></a>
+                <?php endif; ?>
+                <a href="<?php echo e(route('orders.index')); ?>" class="flex items-center justify-between px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50 group">
                     <div class="flex items-center">
                         <svg class="h-5 w-5 mr-2 text-blue-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 75.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
@@ -842,16 +851,39 @@
                         My Orders
                     </div>
                 </a>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
+                <form method="POST" action="<?php echo e(route('logout')); ?>">
+                    <?php echo csrf_field(); ?>
                     <button type="submit" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#00a9e0] hover:bg-gray-50">Log Out</button>
                 </form>
-                @else
-                <a href="{{ route('login') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0064a8] hover:bg-gray-50">Login</a>
-                <a href="{{ route('register') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0064a8] hover:bg-gray-50">Register</a>
-                <a href="{{ route('supplier.register') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0064a8] hover:bg-gray-50">Register as Supplier</a>
+                <?php else: ?>
+                <a href="<?php echo e(route('login')); ?>" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0064a8] hover:bg-gray-50">Login</a>
+                <a href="<?php echo e(route('register')); ?>" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0064a8] hover:bg-gray-50">Register</a>
+                <a href="<?php echo e(route('supplier.register')); ?>" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-[#0064a8] hover:bg-gray-50">Register as Supplier</a>
                 
-                @endauth
+                <!-- Mobile Google One Tap Sign In -->
+                <div class="px-3 py-4 border-t border-gray-100 mt-4">
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4">
+                        <div class="text-center mb-3">
+                            <h4 class="text-sm font-medium text-gray-800 mb-1">Quick Sign In</h4>
+                            <p class="text-xs text-gray-600">Sign in with Google for a faster experience</p>
+                        </div>
+                        <div class="flex justify-center">
+                            <div class="g_id_signin"
+                                data-type="standard"
+                                data-size="large"
+                                data-theme="outline"
+                                data-text="sign_in_with"
+                                data-shape="rectangular"
+                                data-logo_alignment="left"
+                                data-width="280">
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <small class="text-xs text-gray-500">By continuing, you agree to our <a href="<?php echo e(route('privacy.policy')); ?>" class="text-blue-600 hover:underline">Terms</a> and <a href="<?php echo e(route('privacy.policy')); ?>" class="text-blue-600 hover:underline">Privacy Policy</a></small>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
 </nav>
@@ -867,7 +899,7 @@
 </div>
 
 <!-- Orders Hint Tooltip -->
-@auth
+<?php if(auth()->guard()->check()): ?>
 <div id="ordersHintTooltip" class="hidden fixed top-16 right-4 bg-blue-600 text-white rounded-lg shadow-xl w-64 p-3 text-xs" style="z-index: 9999;">
     <div class="relative">
         <!-- Arrow pointing to user dropdown -->
@@ -891,7 +923,7 @@
         </div>
     </div>
 </div>
-@endauth
+<?php endif; ?>
 
 <style>
     @keyframes slideInRight {
@@ -943,7 +975,7 @@
         if (!tooltip) return;
 
         // Check if hint has been shown before for this user
-        const userId = '{{ Auth::id() }}';
+        const userId = '<?php echo e(Auth::id()); ?>';
         const hintShown = localStorage.getItem('ordersHintShown_' + userId);
         if (hintShown === 'true') return;
 
@@ -970,16 +1002,16 @@
     }
 </script>
 
-{{-- Conditionally add script to call the notification function on DOMContentLoaded --}}
-@if(session('success') && str_contains(session('success'), 'cart'))
+
+<?php if(session('success') && str_contains(session('success'), 'cart')): ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        showCartNotification("{{ addslashes(session('success')) }}");
+        showCartNotification("<?php echo e(addslashes(session('success'))); ?>");
     });
 </script>
-@endif
+<?php endif; ?>
 
-{{-- Add autocomplete functionality script before the closing </nav> tag --}}
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Setup search autocomplete functionality
@@ -1020,12 +1052,12 @@
                 suggestionsContainer.classList.remove('hidden');
                 
                 debounceTimer = setTimeout(() => {
-                    const url = `{{ route('search.suggestions') }}?query=${encodeURIComponent(query)}`;
+                    const url = `<?php echo e(route('search.suggestions')); ?>?query=${encodeURIComponent(query)}`;
                     console.log('Fetching suggestions from:', url);
                     
                     fetch(url, {
                         headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
                             'Accept': 'application/json'
                         }
                     })
@@ -1179,17 +1211,18 @@
     });
 </script>
 
-{{-- Orders hint script for authenticated users --}}
-@auth
-@if(session('show_orders_hint'))
+
+<?php if(auth()->guard()->check()): ?>
+<?php if(session('show_orders_hint')): ?>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         showOrdersHint();
     });
 </script>
-@php
+<?php
     // Clear the session flag after showing
     session()->forget('show_orders_hint');
-@endphp
-@endif
-@endauth
+?>
+<?php endif; ?>
+<?php endif; ?>
+<?php /**PATH C:\Users\Walid\OneDrive\Desktop\MaxMed\resources\views/layouts/navigation.blade.php ENDPATH**/ ?>

@@ -138,10 +138,24 @@
                             <div style="margin-bottom: 30px;">
                                 <h2 style="margin: 0 0 12px 0; font-size: 24px; font-weight: 600; color: #1A202C;">Hello {{ $assignedUser->name }},</h2>
                                 <p style="margin: 0; font-size: 18px; color: #4A5568; line-height: 1.7;">
-                                    @if($isNewLead)
-                                        A new lead has been assigned to you. Please review the details below and follow up as appropriate.
+                                    @php
+                                        // Check if assigned user has purchasing permissions
+                                        $isPurchasingUser = $assignedUser->hasPermission('purchase_orders.view') || 
+                                                          $assignedUser->hasPermission('purchase_orders.create') || 
+                                                          $assignedUser->hasPermission('crm.leads.view_requirements');
+                                    @endphp
+                                    @if($isPurchasingUser)
+                                        @if($isNewLead)
+                                            A new lead has been assigned to you for requirements review. Please check the technical specifications and attachments.
+                                        @else
+                                            A lead has been reassigned to you{{ $reassignedBy ? ' by ' . $reassignedBy->name : '' }} for requirements review. Please check the technical specifications and attachments.
+                                        @endif
                                     @else
-                                        A lead has been reassigned to you{{ $reassignedBy ? ' by ' . $reassignedBy->name : '' }}. Please review the details below and continue the follow-up process.
+                                        @if($isNewLead)
+                                            A new lead has been assigned to you. Please review the details below and follow up as appropriate.
+                                        @else
+                                            A lead has been reassigned to you{{ $reassignedBy ? ' by ' . $reassignedBy->name : '' }}. Please review the details below and continue the follow-up process.
+                                        @endif
                                     @endif
                                 </p>
                             </div>
@@ -151,8 +165,13 @@
                                 <tr>
                                     <td style="padding: 25px;">
                                         <div style="margin-bottom: 20px;">
-                                            <div style="font-size: 28px; font-weight: 700; color: #3182CE; margin-bottom: 8px; letter-spacing: -0.5px;">{{ $lead->full_name }}</div>
-                                            <div style="font-size: 16px; color: #4A5568; margin-bottom: 5px;">{{ $lead->company_name }}</div>
+                                            @if($isPurchasingUser)
+                                                <div style="font-size: 28px; font-weight: 700; color: #3182CE; margin-bottom: 8px; letter-spacing: -0.5px;">Lead Requirements #{{ $lead->id }}</div>
+                                                <div style="font-size: 16px; color: #4A5568; margin-bottom: 5px;">Technical Specifications Review</div>
+                                            @else
+                                                <div style="font-size: 28px; font-weight: 700; color: #3182CE; margin-bottom: 8px; letter-spacing: -0.5px;">{{ $lead->full_name }}</div>
+                                                <div style="font-size: 16px; color: #4A5568; margin-bottom: 5px;">{{ $lead->company_name }}</div>
+                                            @endif
                                             <div style="font-size: 14px; color: #718096;">
                                                 @php
                                                     $priorityColors = [
@@ -169,6 +188,7 @@
                                         </div>
                                         
                                         <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                                            @if(!$isPurchasingUser)
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">📧 Email</td>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">
@@ -183,11 +203,12 @@
                                                 </td>
                                             </tr>
                                             @endif
+                                            @endif
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">📊 Source</td>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ ucfirst(str_replace('_', ' ', $lead->source)) }}</td>
                                             </tr>
-                                            @if($lead->estimated_value)
+                                            @if(!$isPurchasingUser && $lead->estimated_value)
                                             <tr>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; font-weight: 600; color: #4A5568; font-size: 15px;">💰 Est. Value</td>
                                                 <td style="padding: 12px 0; border-bottom: 1px solid #CBD5E0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">${{ number_format($lead->estimated_value, 2) }}</td>
@@ -195,8 +216,8 @@
                                             @endif
                                             @if($lead->expected_close_date)
                                             <tr>
-                                                <td style="padding: 12px 0; font-weight: 600; color: #4A5568; font-size: 15px;">📅 Expected Close</td>
-                                                <td style="padding: 12px 0; color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ $lead->expected_close_date->format('M j, Y') }}</td>
+                                                <td style="padding: 12px 0; {{ $isPurchasingUser ? '' : 'border-bottom: 1px solid #CBD5E0;' }} font-weight: 600; color: #4A5568; font-size: 15px;">📅 {{ $isPurchasingUser ? 'Review Date' : 'Expected Close' }}</td>
+                                                <td style="padding: 12px 0; {{ $isPurchasingUser ? '' : 'border-bottom: 1px solid #CBD5E0;' }} color: #1A202C; text-align: right; font-weight: 500; font-size: 15px;">{{ $lead->expected_close_date->format('M j, Y') }}</td>
                                             </tr>
                                             @endif
                                         </table>
@@ -209,7 +230,7 @@
                             <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background: linear-gradient(135deg, #EBF8FF 0%, #BEE3F8 100%); border-left: 4px solid #3182CE; margin: 25px 0; border-radius: 8px; overflow: hidden;">
                                 <tr>
                                     <td style="padding: 20px;">
-                                        <div style="font-weight: 600; color: #2B6CB0; margin-bottom: 8px; font-size: 16px;">📝 Lead Notes</div>
+                                        <div style="font-weight: 600; color: #2B6CB0; margin-bottom: 8px; font-size: 16px;">📝 {{ $isPurchasingUser ? 'Technical Requirements' : 'Lead Notes' }}</div>
                                         <p style="margin: 0; color: #2D3748; line-height: 1.6;">{{ $lead->notes }}</p>
                                     </td>
                                 </tr>
@@ -250,7 +271,7 @@
                                         <![endif]-->
                                         <!--[if !mso]><!-->
                                         <a href="{{ url('/crm/leads/' . $lead->id) }}" style="display: inline-block; padding: 15px 30px; background-color: #3182CE; background: linear-gradient(135deg, #3182CE 0%, #2C5AA0 100%); color: #FFFFFF; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 18px; text-align: center; min-width: 200px; box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);">
-                                            👁️ View Lead Details
+                                            {{ $isPurchasingUser ? '🔧 View Requirements' : '👁️ View Lead Details' }}
                                         </a>
                                         <!--<![endif]-->
                                     </td>
@@ -260,13 +281,27 @@
                             <!-- Message -->
                             <div style="margin: 30px 0;">
                                 <p style="margin: 0 0 15px 0; color: #4A5568; font-size: 16px; line-height: 1.7;">
-                                    @if($isNewLead)
-                                        🚀 Please review this new lead and initiate contact as soon as possible to ensure the best conversion rate.
+                                    @if($isPurchasingUser)
+                                        @if($isNewLead)
+                                            🔧 Please review the technical requirements and specifications for this new lead assignment.
+                                        @else
+                                            🔧 Please review the technical requirements and specifications for this reassigned lead.
+                                        @endif
                                     @else
-                                        🔄 Please continue the follow-up process for this reassigned lead and maintain the momentum in the sales cycle.
+                                        @if($isNewLead)
+                                            🚀 Please review this new lead and initiate contact as soon as possible to ensure the best conversion rate.
+                                        @else
+                                            🔄 Please continue the follow-up process for this reassigned lead and maintain the momentum in the sales cycle.
+                                        @endif
                                     @endif
                                 </p>
-                                <p style="margin: 0; color: #2D3748; font-size: 16px; font-weight: 500;">If you have any questions about this lead, please don't hesitate to contact your manager or the CRM team. 💬</p>
+                                <p style="margin: 0; color: #2D3748; font-size: 16px; font-weight: 500;">
+                                    @if($isPurchasingUser)
+                                        If you have any questions about the technical requirements, please contact the sales team or your manager. 💬
+                                    @else
+                                        If you have any questions about this lead, please don't hesitate to contact your manager or the CRM team. 💬
+                                    @endif
+                                </p>
                             </div>
                         </td>
                     </tr>

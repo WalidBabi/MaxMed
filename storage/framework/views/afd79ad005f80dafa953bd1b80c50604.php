@@ -51,3 +51,4 @@
         }
     }
 </style>
+<?php /**PATH C:\Users\Walid\OneDrive\Desktop\MaxMed\resources\views/components/google-one-tap-styles.blade.php ENDPATH**/ ?>
