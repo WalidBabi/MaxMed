@@ -943,9 +943,6 @@
                 @elseif($isShipped)
                     <div class="payment-text">Order status: In transit.</div>
                 @endif
-                @if($invoice->paid_at)
-                    <div class="payment-text">Paid on: {{ formatDubaiDate($invoice->paid_at, 'd M Y') }}</div>
-                @endif
             @else
                 <div class="payment-text">Amount Due: <strong>{{ $invoice->currency ?? 'AED' }} {{ number_format($amountDueFinal, 2) }}</strong> @if($paidToDateFinal > 0) (Paid to date: {{ $invoice->currency ?? 'AED' }} {{ number_format($paidToDateFinal, 2) }}) @endif</div>
                 @if($isDelivered)
