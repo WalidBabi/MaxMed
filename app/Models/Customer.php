@@ -27,11 +27,13 @@ class Customer extends Model
         'billing_state',
         'billing_zip',
         'billing_country',
+        'billing_google_maps_link',
         'shipping_street',
         'shipping_city',
         'shipping_state',
         'shipping_zip',
         'shipping_country',
+        'shipping_google_maps_link',
         'notes',
         'is_active',
     ];
