@@ -203,6 +203,16 @@
             margin-bottom: 25px;
         }
 
+        /* ORDER DETAILS SECTION */
+        .order-details-section {
+            margin-bottom: 25px;
+        }
+
+        /* ORDER TOTALS SECTION */
+        .order-totals-section {
+            margin-top: 25px;
+        }
+
         .items-table {
             width: 100%;
             border-collapse: collapse;
@@ -388,10 +398,24 @@
         .footer {
             margin-top: 40px;
             padding-top: 20px;
-            border-top: 1px solid var(--medium-gray);
+            border-top: 2px solid var(--primary-color);
             text-align: center;
-            font-size: 8px;
-            color: var(--text-muted);
+            font-size: 9px;
+            color: var(--text-secondary);
+            background-color: var(--light-gray);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .footer p {
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .footer p:last-child {
+            margin-bottom: 0;
+            font-weight: 600;
+            color: var(--primary-color);
         }
 
         /* UTILITIES */
@@ -431,6 +455,37 @@
             </div>
         </div>
 
+        <!-- ORDER DETAILS SECTION -->
+        @if($delivery->order)
+        <div class="order-details-section" style="margin-bottom: 25px;">
+            <div style="background-color: var(--primary-light); padding: 20px; border-radius: 8px; border-left: 4px solid var(--primary-color); margin-bottom: 20px;">
+                <div class="section-heading" style="color: var(--primary-color); margin-bottom: 15px;">Order Information</div>
+                <div style="display: flex; justify-content: space-between; gap: 30px;">
+                    <div style="flex: 1;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 10px;">
+                            <div>
+                                <span style="font-weight: 600; color: var(--text-secondary);">Order Number:</span>
+                                <span style="color: var(--text-primary); font-weight: 600;">{{ $delivery->order->order_number }}</span>
+                            </div>
+                            <div>
+                                <span style="font-weight: 600; color: var(--text-secondary);">Order Date:</span>
+                                <span style="color: var(--text-primary);">{{ formatDubaiDate($delivery->order->created_at, 'd M Y') }}</span>
+                            </div>
+                            <div>
+                                <span style="font-weight: 600; color: var(--text-secondary);">Currency:</span>
+                                <span style="color: var(--text-primary);">{{ $delivery->order->currency ?? 'AED' }}</span>
+                            </div>
+                            <div>
+                                <span style="font-weight: 600; color: var(--text-secondary);">Order Status:</span>
+                                <span style="color: var(--text-primary); text-transform: capitalize;">{{ $delivery->order->status }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
         <!-- META INFORMATION -->
         <div class="meta-wrapper">
             <div class="client-section">
@@ -440,6 +495,9 @@
                         <div class="client-name">{{ $delivery->order->customer_name ?? $delivery->order->user->name }}</div>
                         @if($customer && $customer->company_name)
                             <div class="client-address">{{ $customer->company_name }}</div>
+                        @endif
+                        @if($delivery->order->user && $delivery->order->user->email)
+                            <div class="client-address" style="margin-top: 4px; color: var(--accent-color);">{{ $delivery->order->user->email }}</div>
                         @endif
                     @endif
                     <div class="client-address">{{ $delivery->shipping_address ?? 'Address not specified' }}</div>
@@ -474,6 +532,12 @@
                         <td class="label">Status</td>
                         <td class="value">{{ ucfirst($delivery->status) }}</td>
                     </tr>
+                    @if($delivery->order && $delivery->order->notes && !str_contains(strtolower($delivery->order->notes), 'auto-created from proforma invoice') && !str_contains(strtolower($delivery->order->notes), 'payment on delivery'))
+                    <tr>
+                        <td class="label">Order Notes</td>
+                        <td class="value" style="font-size: 9px; max-width: 200px;">{{ Str::limit($delivery->order->notes, 100) }}</td>
+                    </tr>
+                    @endif
                 </table>
             </div>
         </div>
@@ -484,103 +548,216 @@
             <table class="items-table">
                 <thead>
                     <tr>
+                        <th style="width: 20%;">Product Code</th>
                         <th style="width: 25%;">Item Description</th>
-                        <th style="width: 20%;" class="text-center">Specifications</th>
-                        <th style="width: 12%;" class="text-center">Quantity</th>
-                        <th style="width: 13%;" class="text-right">Rate ({{ $delivery->order->currency ?? 'AED' }})</th>
-                        <th style="width: 10%;" class="text-center">Discount</th>
-                        <th style="width: 20%;" class="text-right">Amount After Discount ({{ $delivery->order->currency ?? 'AED' }})</th>
+                        <th style="width: 18%;" class="text-center">Specifications</th>
+                        <th style="width: 10%;" class="text-center">Qty</th>
+                        <th style="width: 12%;" class="text-right">Rate ({{ $delivery->order->currency ?? 'AED' }})</th>
+                        <th style="width: 8%;" class="text-center">Disc.</th>
+                        <th style="width: 15%;" class="text-right">Total ({{ $delivery->order->currency ?? 'AED' }})</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($delivery->order->items as $index => $item)
                     <tr>
                         <td>
-                            <div class="item-description">
-                                {{ $item->description ?? $item->product_name }}
-                                @if($item->product)
-                                    <div style="font-size: 9px; margin-top: 3px;">
-                                        <a href="{{ route('product.show', $item->product) }}" style="color: #0ea5e9; text-decoration: none;">View product page</a>
-                                        @if($item->product->pdf_file)
-                                            <span style="color: #6b7280; margin: 0 5px;">|</span>
-                                            <a href="{{ asset('storage/' . $item->product->pdf_file) }}" target="_blank" style="color: #dc2626; text-decoration: none;">
-                                                <i class="fas fa-file-pdf" style="margin-right: 2px;"></i>Product PDF
-                                            </a>
-                                        @endif
+                            @if($item->product)
+                                <div style="font-size: 10px; font-weight: 600; color: var(--text-primary);">
+                                    {{ $item->product->sku ?? $item->product->product_code ?? 'N/A' }}
+                                </div>
+                                @if($item->product->model_number)
+                                    <div style="font-size: 8px; color: var(--text-muted); margin-top: 2px;">
+                                        Model: {{ $item->product->model_number }}
                                     </div>
                                 @endif
+                            @else
+                                <div style="font-size: 10px; color: var(--text-muted);">N/A</div>
+                            @endif
+                        </td>
+                        <td>
+                            <div class="item-description">
+                                <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 3px;">
+                                    {{ $item->description ?? ($item->product ? $item->product->name : 'Product #' . $item->product_id) }}
+                                </div>
                                 @if($item->product && $item->product->brand)
-                                    <div style="font-size: 9px; color: var(--text-secondary); margin-top: 2px;">
+                                    <div style="font-size: 9px; color: var(--text-secondary); margin-bottom: 2px;">
                                         <span style="font-weight: 600;">Brand:</span> {{ $item->product->brand->name }}
+                                    </div>
+                                @endif
+                                @if($item->variation)
+                                    <div style="font-size: 9px; color: var(--text-secondary); margin-bottom: 2px;">
+                                        <span style="font-weight: 600;">Variation:</span> {{ $item->variation }}
+                                    </div>
+                                @endif
+                                @if($item->product)
+                                    <div style="font-size: 8px; margin-top: 3px; color: var(--accent-color);">
+                                        <span style="color: #6b7280;">Product ID:</span> {{ $item->product->id }}
                                     </div>
                                 @endif
                             </div>
                         </td>
                         <td class="text-center">
-                            @if($item->specifications && !empty(trim($item->specifications)))
-                                @php
-                                    $selectedSpecs = [];
-                                    try {
-                                        if (is_string($item->specifications) && (str_starts_with($item->specifications, '[') && str_ends_with($item->specifications, ']'))) {
-                                            $selectedSpecs = json_decode($item->specifications, true);
-                                        } else {
-                                            $selectedSpecs = explode(',', $item->specifications);
-                                            $selectedSpecs = array_map('trim', $selectedSpecs);
+                            @if($item->product && $item->product->specifications)
+                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
+                                    @php
+                                        $productSpecs = [];
+                                        try {
+                                            if (is_string($item->product->specifications)) {
+                                                $productSpecs = json_decode($item->product->specifications, true) ?? [$item->product->specifications];
+                                            }
+                                        } catch (Exception $e) {
+                                            $productSpecs = [$item->product->specifications];
                                         }
-                                    } catch (Exception $e) {
-                                        $selectedSpecs = [$item->specifications];
-                                    }
-                                @endphp
-                                
-                                @if(count($selectedSpecs) > 0)
-                                    <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
-                                        @foreach($selectedSpecs as $spec)
-                                            <div style="margin-bottom: 2px;">{{ $spec }}</div>
-                                        @endforeach
-                                    </div>
-                                @endif
-                            @endif
-                            
-                            @if($item->size && !empty(trim($item->size)))
-                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3; margin-top: 3px;">
-                                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1px;">Size:</div>
-                                    <div>{{ $item->size }}</div>
+                                    @endphp
+                                    @foreach(array_slice($productSpecs, 0, 3) as $spec)
+                                        <div style="margin-bottom: 2px;">{{ Str::limit($spec, 20) }}</div>
+                                    @endforeach
+                                    @if(count($productSpecs) > 3)
+                                        <div style="color: var(--accent-color); font-size: 8px;">+{{ count($productSpecs) - 3 }} more</div>
+                                    @endif
                                 </div>
-                            @endif
-                            
-                            @if((!$item->specifications || empty(trim($item->specifications))) && (!$item->size || empty(trim($item->size))))
+                            @elseif($item->specifications && !empty(trim($item->specifications)))
+                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
+                                    {{ Str::limit($item->specifications, 50) }}
+                                </div>
+                            @else
                                 <span style="color: var(--text-muted);">-</span>
                             @endif
                         </td>
-                        <td class="text-center">{{ number_format($item->quantity, 2) }}</td>
-                        <td class="text-right">{{ number_format($item->unit_price ?? 0, 2) }}</td>
+                        <td class="text-center">
+                            <div style="font-weight: 600; color: var(--text-primary);">
+                                {{ number_format($item->quantity, 0) }}
+                            </div>
+                            @if($item->product && $item->product->unit_of_measure)
+                                <div style="font-size: 8px; color: var(--text-muted);">
+                                    {{ $item->product->unit_of_measure }}
+                                </div>
+                            @endif
+                        </td>
+                        <td class="text-right">
+                            <div style="font-weight: 600; color: var(--text-primary);">
+                                {{ number_format($item->price ?? 0, 2) }}
+                            </div>
+                        </td>
                         <td class="text-center">
                             @if(($item->discount_percentage ?? 0) > 0)
-                                {{ number_format($item->discount_percentage, 2) }}%
+                                <div style="font-weight: 600; color: var(--warning-color);">
+                                    {{ number_format($item->discount_percentage, 1) }}%
+                                </div>
+                            @elseif(($item->discount_amount ?? 0) > 0)
+                                <div style="font-weight: 600; color: var(--warning-color);">
+                                    {{ number_format($item->discount_amount, 2) }}
+                                </div>
                             @else
                                 <span style="color: var(--text-muted);">-</span>
                             @endif
                         </td>
                         <td class="text-right">
                             @php
-                                $unitPrice = $item->unit_price ?? 0;
+                                $unitPrice = $item->price ?? 0;
                                 $quantity = $item->quantity;
-                                $discount = $item->discount_percentage ?? 0;
+                                $discountPercentage = $item->discount_percentage ?? 0;
+                                $discountAmount = $item->discount_amount ?? 0;
                                 $subtotal = $unitPrice * $quantity;
-                                $discountAmount = $subtotal * ($discount / 100);
-                                $totalAfterDiscount = $subtotal - $discountAmount;
+                                
+                                // Calculate discount
+                                $calculatedDiscount = 0;
+                                if ($discountAmount > 0) {
+                                    $calculatedDiscount = $discountAmount;
+                                } elseif ($discountPercentage > 0) {
+                                    $calculatedDiscount = $subtotal * ($discountPercentage / 100);
+                                }
+                                
+                                $totalAfterDiscount = $subtotal - $calculatedDiscount;
                             @endphp
-                            {{ number_format($totalAfterDiscount, 2) }}
+                            <div style="font-weight: 700; color: var(--text-primary);">
+                                {{ number_format($totalAfterDiscount, 2) }}
+                            </div>
+                            @if($calculatedDiscount > 0)
+                                <div style="font-size: 8px; color: var(--text-muted); text-decoration: line-through;">
+                                    {{ number_format($subtotal, 2) }}
+                                </div>
+                            @endif
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
+        
+        <!-- ORDER TOTALS SECTION -->
+        @if($delivery->order)
+        <div style="margin-top: 25px; display: flex; justify-content: flex-end;">
+            <div style="width: 300px;">
+                <table style="width: 100%; border-collapse: collapse; background-color: var(--light-gray); border-radius: 6px; overflow: hidden;">
+                    @php
+                        $subtotal = 0;
+                        $totalDiscount = 0;
+                        $totalTax = 0;
+                        $shippingCost = $delivery->order->shipping_rate ?? 0;
+                        
+                        foreach($delivery->order->items as $item) {
+                            $itemSubtotal = ($item->price ?? 0) * $item->quantity;
+                            $subtotal += $itemSubtotal;
+                            
+                            // Calculate item discount
+                            $itemDiscount = 0;
+                            if (($item->discount_amount ?? 0) > 0) {
+                                $itemDiscount = $item->discount_amount;
+                            } elseif (($item->discount_percentage ?? 0) > 0) {
+                                $itemDiscount = $itemSubtotal * ($item->discount_percentage / 100);
+                            }
+                            $totalDiscount += $itemDiscount;
+                        }
+                        
+                        $netAmount = $subtotal - $totalDiscount;
+                        
+                        // Calculate VAT if applicable
+                        if (($delivery->order->vat_rate ?? 0) > 0) {
+                            $totalTax = $netAmount * ($delivery->order->vat_rate / 100);
+                        }
+                        
+                        $finalTotal = $netAmount + $totalTax + $shippingCost;
+                    @endphp
+                    
+                    <tr style="background-color: var(--medium-gray);">
+                        <td style="padding: 12px 15px; font-weight: 600; color: var(--text-secondary); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px;">Subtotal</td>
+                        <td style="padding: 12px 15px; text-align: right; font-weight: 600; color: var(--text-primary);">{{ number_format($subtotal, 2) }} {{ $delivery->order->currency ?? 'AED' }}</td>
+                    </tr>
+                    
+                    @if($totalDiscount > 0)
+                    <tr>
+                        <td style="padding: 10px 15px; font-weight: 600; color: var(--warning-color); font-size: 10px;">Total Discount</td>
+                        <td style="padding: 10px 15px; text-align: right; font-weight: 600; color: var(--warning-color);">-{{ number_format($totalDiscount, 2) }} {{ $delivery->order->currency ?? 'AED' }}</td>
+                    </tr>
+                    @endif
+                    
+                    @if($shippingCost > 0)
+                    <tr>
+                        <td style="padding: 10px 15px; font-weight: 600; color: var(--text-secondary); font-size: 10px;">Shipping</td>
+                        <td style="padding: 10px 15px; text-align: right; font-weight: 600; color: var(--text-primary);">{{ number_format($shippingCost, 2) }} {{ $delivery->order->currency ?? 'AED' }}</td>
+                    </tr>
+                    @endif
+                    
+                    @if($totalTax > 0)
+                    <tr>
+                        <td style="padding: 10px 15px; font-weight: 600; color: var(--text-secondary); font-size: 10px;">VAT ({{ $delivery->order->vat_rate }}%)</td>
+                        <td style="padding: 10px 15px; text-align: right; font-weight: 600; color: var(--text-primary);">{{ number_format($totalTax, 2) }} {{ $delivery->order->currency ?? 'AED' }}</td>
+                    </tr>
+                    @endif
+                    
+                    <tr style="background-color: var(--primary-color); color: white; border-top: 2px solid var(--primary-color);">
+                        <td style="padding: 15px; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Total Amount</td>
+                        <td style="padding: 15px; text-align: right; font-weight: 700; font-size: 12px;">{{ number_format($finalTotal, 2) }} {{ $delivery->order->currency ?? 'AED' }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        @endif
         @endif
 
         <!-- DELIVERY NOTES -->
-        @if($delivery->notes)
+        @if($delivery->notes && !str_contains(strtolower($delivery->notes), 'auto-created from proforma invoice') && !str_contains(strtolower($delivery->notes), 'payment on delivery'))
         <div class="description-section">
             <div class="description-title">Delivery Notes</div>
             <div class="description-content">{{ $delivery->notes }}</div>
@@ -613,7 +790,7 @@
                 <div class="signature-block">
                     <div class="signature-title">Authorized Representative</div>
                     <div class="signature-box">
-                        <span style="color: var(--primary-color); font-weight: bold; font-size: 12px;">MaxMed UAE</span>
+                        <img src="{{ public_path('Images/stamp.png') }}" alt="MaxMed UAE Stamp" class="signature-image">
                     </div>
                     <div class="signature-info">
                         @if(isset($authorizedUser) && $authorizedUser)
@@ -632,7 +809,9 @@
 
         <!-- FOOTER -->
         <div class="footer">
-            <p>This delivery note was generated electronically by MaxMed UAE system.</p>
+            <p><strong>MaxMed Scientific and Laboratory Equipment Trading Co. LLC</strong></p>
+            <p>Dubai 448945, United Arab Emirates | sales@maxmedme.com | www.maxmedme.com</p>
+            <p>This delivery note was generated electronically on {{ formatDubaiDate(now(), 'd M Y \a\t g:i A') }}</p>
             <p>Thank you for choosing MaxMed UAE - Your trusted laboratory equipment partner</p>
         </div>
     </div>
