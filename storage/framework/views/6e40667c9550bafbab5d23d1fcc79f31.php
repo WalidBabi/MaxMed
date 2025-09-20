@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta name="user-authenticated" content="{{ auth()->check() ? 'true' : 'false' }}">
+        <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+        <meta name="user-authenticated" content="<?php echo e(auth()->check() ? 'true' : 'false'); ?>">
 
-        @include('layouts.meta')
-        <title>@yield('title', 'MaxMed UAE - Medical & Laboratory Equipment Supplier')</title>
+        <?php echo $__env->make('layouts.meta', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+        <title><?php echo $__env->yieldContent('title', 'MaxMed UAE - Medical & Laboratory Equipment Supplier'); ?></title>
 
         <!-- Page Transition System - Prevents flashing -->
         <style>
@@ -339,8 +339,8 @@
         <meta name="referrer" content="strict-origin-when-cross-origin">
         
         <!-- Enhanced Accessibility Meta Tags -->
-        <meta name="description" content="@yield('meta_description', '🔬 MaxMed UAE - Leading lab equipment supplier in Dubai! PCR machines, centrifuges, fume hoods, dental supplies & more ✅ Same-day quotes ☎️ +971 55 460 2500 🚚 Fast delivery')">
-        <meta name="keywords" content="@yield('meta_keywords', 'laboratory equipment Dubai, lab instruments UAE, medical equipment supplier, fume hood suppliers UAE, dental consumables, PCR machine suppliers UAE, centrifuge suppliers, benchtop autoclave, dental supplies UAE, veterinary diagnostics UAE, point of care testing equipment, contact MaxMed, MaxMed phone number')">
+        <meta name="description" content="<?php echo $__env->yieldContent('meta_description', '🔬 MaxMed UAE - Leading lab equipment supplier in Dubai! PCR machines, centrifuges, fume hoods, dental supplies & more ✅ Same-day quotes ☎️ +971 55 460 2500 🚚 Fast delivery'); ?>">
+        <meta name="keywords" content="<?php echo $__env->yieldContent('meta_keywords', 'laboratory equipment Dubai, lab instruments UAE, medical equipment supplier, fume hood suppliers UAE, dental consumables, PCR machine suppliers UAE, centrifuge suppliers, benchtop autoclave, dental supplies UAE, veterinary diagnostics UAE, point of care testing equipment, contact MaxMed, MaxMed phone number'); ?>">
         
         <!-- Performance Optimizations -->
         <link rel="dns-prefetch" href="//fonts.bunny.net">
@@ -402,16 +402,16 @@
         </style>
 
         <!-- Preload LCP image -->
-        <link rel="preload" as="image" fetchpriority="high" href="{{ asset('Images/optimized/banner-optimized.webp') }}" type="image/webp">
+        <link rel="preload" as="image" fetchpriority="high" href="<?php echo e(asset('Images/optimized/banner-optimized.webp')); ?>" type="image/webp">
 
         <!-- CSS Files -->
         <link rel="stylesheet" href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
-        <link rel="stylesheet" href="{{ asset('css/mobile.css') }}">
+        <link href="<?php echo e(asset('css/custom.css')); ?>" rel="stylesheet">
+        <link rel="stylesheet" href="<?php echo e(asset('css/mobile.css')); ?>">
 
         <!-- Vite assets with defer for JS -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
 
         <!-- Image Loading Script -->
         <script>
@@ -439,7 +439,7 @@
             });
         </script>
 
-        @stack('head')
+        <?php echo $__env->yieldPushContent('head'); ?>
         
         <!-- Defer non-critical JS -->
         <script defer src="https://www.googletagmanager.com/gtag/js?id=G-5JRSRT4MLZ"></script>
@@ -474,41 +474,44 @@
         </div>
         
         <div class="min-h-screen bg-gray-100 mt-0 pt-0">
-            @include('layouts.navigation')
+            <?php echo $__env->make('layouts.navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
             <!-- Flash Messages -->
             <div class="container">
-                @if(session('warning'))
+                <?php if(session('warning')): ?>
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        {{ session('warning') }}
+                        <?php echo e(session('warning')); ?>
+
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                @endif
+                <?php endif; ?>
                 
-                @if(session('error'))
+                <?php if(session('error')): ?>
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        {{ session('error') }}
+                        <?php echo e(session('error')); ?>
+
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
 
             <!-- Page Heading -->
-            @isset($header)
+            <?php if(isset($header)): ?>
                 <header class="bg-white shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
+                        <?php echo e($header); ?>
+
                     </div>
                 </header>
-            @endisset
+            <?php endif; ?>
 
             <!-- Page Content -->
             <main class="main-content">
-                @yield('content')
+                <?php echo $__env->yieldContent('content'); ?>
             </main>
 
         <!-- Dubai Date Formatting -->
-        <script src="{{ asset('js/dubai-date.js') }}"></script>
+        <script src="<?php echo e(asset('js/dubai-date.js')); ?>"></script>
         
         <!-- Notification trigger script for immediate sound feedback -->
         <script>
@@ -600,16 +603,16 @@
         </script>
         
         <!-- Auto-trigger notification check only for authenticated admin/staff users -->
-        @if(auth()->check() && (auth()->user()->isAdmin() || auth()->user()->isSupplier() || (auth()->user()->role && in_array(auth()->user()->role->name, ['manager', 'sales-rep', 'content-editor']))))
+        <?php if(auth()->check() && (auth()->user()->isAdmin() || auth()->user()->isSupplier() || (auth()->user()->role && in_array(auth()->user()->role->name, ['manager', 'sales-rep', 'content-editor'])))): ?>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 // Wait 2 seconds after page load to check for new notifications
                 setTimeout(window.triggerNotificationCheck, 2000);
             });
         </script>
-        @endif
+        <?php endif; ?>
         
-        @stack('scripts')
+        <?php echo $__env->yieldPushContent('scripts'); ?>
 
         <!-- Defer non-essential JS -->
         <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -720,19 +723,19 @@
         </div>
         
         <!-- Error Handler Script (load first) -->
-        <script src="{{ asset('js/error-handler.js') }}"></script>
+        <script src="<?php echo e(asset('js/error-handler.js')); ?>"></script>
         
         <!-- Text Protection Script -->
-        <script src="{{ asset('js/text-protection.js') }}"></script>
+        <script src="<?php echo e(asset('js/text-protection.js')); ?>"></script>
         
         <!-- Simple Notification System - Only for authenticated admin/staff users -->
-        @if(auth()->check() && (auth()->user()->isAdmin() || auth()->user()->isSupplier() || (auth()->user()->role && in_array(auth()->user()->role->name, ['manager', 'sales-rep', 'content-editor']))))
-        <script src="{{ asset('js/simple-notifications.js') }}"></script>
-        @endif
+        <?php if(auth()->check() && (auth()->user()->isAdmin() || auth()->user()->isSupplier() || (auth()->user()->role && in_array(auth()->user()->role->name, ['manager', 'sales-rep', 'content-editor'])))): ?>
+        <script src="<?php echo e(asset('js/simple-notifications.js')); ?>"></script>
+        <?php endif; ?>
         
         <!-- Footer -->
-        @include('layouts.footer')
-        @include('components.cookie-consent')
+        <?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+        <?php echo $__env->make('components.cookie-consent', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
         <!-- Cookie Consent Script (moved here for testing) -->
         <script>
@@ -807,12 +810,13 @@
         </script>
 
         <!-- User Behavior Tracker -->
-        <script src="{{ asset('js/user-behavior-tracker.js') }}"></script>
+        <script src="<?php echo e(asset('js/user-behavior-tracker.js')); ?>"></script>
         
         <!-- Mobile Optimization Script -->
-        <script src="{{ asset('js/mobile-optimization.js') }}"></script>
+        <script src="<?php echo e(asset('js/mobile-optimization.js')); ?>"></script>
         
         <!-- Scripts -->
-        <script src="{{ asset('js/back-button-protection.js') }}"></script>
+        <script src="<?php echo e(asset('js/back-button-protection.js')); ?>"></script>
     </body>
 </html>
+<?php /**PATH C:\Users\Walid\OneDrive\Desktop\MaxMed\resources\views/layouts/app.blade.php ENDPATH**/ ?>

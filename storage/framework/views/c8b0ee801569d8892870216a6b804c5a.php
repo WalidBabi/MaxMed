@@ -1,6 +1,6 @@
-@guest
+<?php if(auth()->guard()->guest()): ?>
     <div id="g_id_onload"
-        data-client_id="{{ config('services.google.client_id') }}"
+        data-client_id="<?php echo e(config('services.google.client_id')); ?>"
         data-callback="handleCredentialResponse"
         data-auto_prompt="true"
         data-cancel_on_tap_outside="false"
@@ -30,12 +30,12 @@
                     data-width="300">
                 </div>
                 <div class="google-one-tap-footer">
-                    <small>By continuing, you agree to our <a href="{{ route('privacy.policy') }}">Terms of Service</a> and <a href="{{ route('privacy.policy') }}">Privacy Policy</a>.</small>
+                    <small>By continuing, you agree to our <a href="<?php echo e(route('privacy.policy')); ?>">Terms of Service</a> and <a href="<?php echo e(route('privacy.policy')); ?>">Privacy Policy</a>.</small>
                 </div>
             </div>
         </div>
     </div>
-@endguest
+<?php endif; ?>
 
 <style>
     /* Google One Tap Container */
@@ -174,3 +174,4 @@
         }
     }
 </style>
+<?php /**PATH C:\Users\Walid\OneDrive\Desktop\MaxMed\resources\views/components/google-one-tap.blade.php ENDPATH**/ ?>

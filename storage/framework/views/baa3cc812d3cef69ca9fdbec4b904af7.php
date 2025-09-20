@@ -1,20 +1,39 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'MaxMed UAE - Laboratory Equipment & Medical Supplies Dubai'); ?>
 
-@section('title', 'MaxMed UAE - Laboratory Equipment & Medical Supplies Dubai')
+<?php $__env->startSection('meta_description', '🔬 Leading lab equipment supplier in Dubai! PCR machines, centrifuges, fume hoods, autoclaves & more. ✅ Same-day quotes ☎️ +971 55 460 2500 🚚 Fast UAE delivery'); ?>
 
-@section('meta_description', '🔬 Leading lab equipment supplier in Dubai! PCR machines, centrifuges, fume hoods, autoclaves & more. ✅ Same-day quotes ☎️ +971 55 460 2500 🚚 Fast UAE delivery')
+<?php $__env->startSection('meta_keywords', 'laboratory equipment Dubai, medical equipment UAE, MaxMed, scientific instruments, diagnostic tools, fume hood suppliers UAE, dental consumables, PCR machine suppliers UAE, centrifuge suppliers, benchtop autoclave, lab consumables UAE, veterinary diagnostics UAE'); ?>
 
-@section('meta_keywords', 'laboratory equipment Dubai, medical equipment UAE, MaxMed, scientific instruments, diagnostic tools, fume hood suppliers UAE, dental consumables, PCR machine suppliers UAE, centrifuge suppliers, benchtop autoclave, lab consumables UAE, veterinary diagnostics UAE')
+<?php $__env->startSection('og_title', 'MaxMed UAE - #1 Laboratory Equipment Supplier in Dubai'); ?>
 
-@section('og_title', 'MaxMed UAE - #1 Laboratory Equipment Supplier in Dubai')
+<?php $__env->startSection('og_description', 'Leading lab equipment supplier in Dubai! PCR machines, centrifuges, fume hoods, autoclaves & more. Same-day quotes, fast UAE delivery.'); ?>
 
-@section('og_description', 'Leading lab equipment supplier in Dubai! PCR machines, centrifuges, fume hoods, autoclaves & more. Same-day quotes, fast UAE delivery.')
+<?php $__env->startPush('head'); ?>
+    <meta name="google-signin-client_id" content="<?php echo e(config('services.google.client_id')); ?>">
+    <meta name="app-environment" content="<?php echo e(app()->environment()); ?>">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        // Global variable to track Google API ready state
+        window.googleAPILoaded = false;
+        window.isDevelopment = "<?php echo e(app()->environment()); ?>" === "local";
+        
+        // Function to be called when Google API is loaded
+        function onGoogleAPILoaded() {
+            window.googleAPILoaded = true;
+            console.log('🚀 Google API loaded in ' + ("<?php echo e(app()->environment()); ?>" === "local" ? 'DEVELOPMENT' : 'PRODUCTION') + ' mode');
+            // If we have a pending initialize function, call it
+            if (window.pendingGoogleInit) {
+                window.pendingGoogleInit();
+                window.pendingGoogleInit = null;
+            }
+        }
+        
+        // Add event listener for Google API load
+        document.addEventListener('gapi.loaded', onGoogleAPILoaded);
+    </script>
+<?php $__env->stopPush(); ?>
 
-@push('head')
-    <meta name="app-environment" content="{{ app()->environment() }}">
-@endpush
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <style>
 
     /* Enhanced Hero Section */
@@ -652,11 +671,11 @@
         }
 
         .category-card {
-            min-height: 260px;
+            min-height: 240px;
         }
 
         .category-card img {
-            height: 160px;
+            height: 150px;
             width: 100%;
             object-fit: cover;
             object-position: center;
@@ -677,8 +696,6 @@
 
         .feature-img {
             height: 200px;
-            object-fit: cover;
-            object-position: center;
         }
     }
 
@@ -693,11 +710,11 @@
         }
 
         .category-card {
-            min-height: 220px;
+            min-height: 200px;
         }
 
         .category-card img {
-            height: 140px;
+            height: 150px;
             width: 100%;
             object-fit: cover;
             object-position: center;
@@ -780,7 +797,7 @@
         <div class="text-center px-4">
             <h1 class="hero-title">Lab And Medical Solutions</h1>
             <p class="hero-subtitle">Providing cutting-edge medical Laboratory equipment for modern laboratories</p>
-            <a href="{{ route('products.index') }}" class="hero-btn inline-block">
+            <a href="<?php echo e(route('products.index')); ?>" class="hero-btn inline-block">
                 Explore Products
             </a>
         </div>
@@ -824,7 +841,7 @@
             });
         }, 300);
     ">
-        @foreach($categories->where('parent_id', null)->sortBy(function($category) {
+        <?php $__currentLoopData = $categories->where('parent_id', null)->sortBy(function($category) {
         // Define your preferred order here - replace these with your actual category names
         $order = [
         'Molecular & Clinical Diagnostics' => 1,
@@ -835,20 +852,20 @@
         // Add more as needed
         ];
         return $order[$category->name] ?? 999; // Categories not in list will appear last
-        }) as $category)
+        }); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
         <div class="category-card-wrapper" style="opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.5s ease;">
-            <a href="{{ route('categories.show', $category) }}" class="text-decoration-none">
+            <a href="<?php echo e(route('categories.show', $category)); ?>" class="text-decoration-none">
                 <div class="category-card">
                     <div class="overflow-hidden">
-                        <img src="{{ $category->image_url }}" class="card-img-top" alt="Category image for {{ $category->name }}">
+                        <img src="<?php echo e($category->image_url); ?>" class="card-img-top" alt="Category image for <?php echo e($category->name); ?>">
                     </div>
                     <div class="card-body">
-                        <h3 class="card-title">{{ $category->name }}</h3>
+                        <h3 class="card-title"><?php echo e($category->name); ?></h3>
                     </div>
                 </div>
             </a>
         </div>
-        @endforeach
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </div>
 </div>
 
@@ -859,7 +876,7 @@
     <h3 class="section-title">Featured Products</h3>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-        @forelse($featuredProducts as $product)
+        <?php $__empty_1 = true; $__currentLoopData = $featuredProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
         <div class="bg-white  overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
             x-data="{ showDetails: false }"
             @mouseenter="showDetails = true"
@@ -867,16 +884,16 @@
 
             <div class="relative h-80 w-full overflow-hidden">
                 <!-- Product image -->
-                <img src="{{ $product->image_url ?? asset('/Images/placeholder.jpg') }}"
-                    alt="{{ $product->name }}"
+                <img src="<?php echo e($product->image_url ?? asset('/Images/placeholder.jpg')); ?>"
+                    alt="<?php echo e($product->name); ?>"
                     class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
 
                 <!-- "New" badge if added in the last 14 days -->
-                @if($product->created_at >= \Carbon\Carbon::now()->subDays(14))
+                <?php if($product->created_at >= \Carbon\Carbon::now()->subDays(14)): ?>
                 <div class="absolute top-3 left-3 bg-green-800 text-white text-xs font-bold px-3 py-1.5 rounded-full transform -rotate-3 shadow-md">
                     NEW
                 </div>
-                @endif
+                <?php endif; ?>
                 <!-- End of Selection -->
 
                 <!-- Overlay with details on hover -->
@@ -884,22 +901,22 @@
                     :class="{ 'opacity-90': showDetails }">
                     <div class="absolute bottom-4 left-4 right-4 text-white transform translate-y-4 transition-transform duration-300"
                         :class="{ 'translate-y-0': showDetails }">
-                        <p class="text-sm font-normal">{{ Str::limit($product->description ?? '', 100) }}</p>
+                        <p class="text-sm font-normal"><?php echo e(Str::limit($product->description ?? '', 100)); ?></p>
                     </div>
                 </div>
             </div>
 
             <div class="p-4">
-                <h4 class="small font-medium text-gray-900 mb-1">{{ $product->name }}</h4>
+                <h4 class="small font-medium text-gray-900 mb-1"><?php echo e($product->name); ?></h4>
 
                 <div class="flex items-end justify-between mt-2">
                     <!-- <div>
                            
-                                <span class="text-[#171e60] font-bold">{{ number_format($product->price, 2) }} AED</span>
+                                <span class="text-[#171e60] font-bold"><?php echo e(number_format($product->price, 2)); ?> AED</span>
                     
                         </div> -->
 
-                    <a href="{{ route('product.show', $product) }}"
+                    <a href="<?php echo e(route('product.show', $product)); ?>"
                         class="inline-flex items-center justify-center bg-[#0a5694] hover:bg-[#171e60] text-white text-sm font-medium py-2 px-3 rounded-md transition-colors duration-300">
                         View Details
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -909,7 +926,7 @@
                 </div>
             </div>
         </div>
-        @empty
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
         <div class="col-span-4 text-center py-10">
             <div class="text-gray-500 mb-4">
                 <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -918,31 +935,31 @@
             </div>
             <h4 class="text-lg font-medium text-gray-800">No featured products available</h4>
             <p class="text-gray-600 mt-2">Check back soon for new promotions and featured items!</p>
-            <a href="{{ route('products.index') }}" class="mt-4 inline-block bg-[#171e60] text-white px-6 py-2 rounded-md hover:bg-[#0a5694] transition-colors">
+            <a href="<?php echo e(route('products.index')); ?>" class="mt-4 inline-block bg-[#171e60] text-white px-6 py-2 rounded-md hover:bg-[#0a5694] transition-colors">
                 Browse All Products
             </a>
         </div>
-        @endforelse
+        <?php endif; ?>
     </div>
 </div>
 <!-- Featured Brands Section -->
-@if($featuredBrands->count() > 0)
+<?php if($featuredBrands->count() > 0): ?>
 <div class="py-10 max-w-7xl mx-auto px-4">
     <h3 class="section-title">Featured Brands</h3>
     
-    @if($featuredBrands->count() > 4)
+    <?php if($featuredBrands->count() > 4): ?>
     <div x-data="{ activeBrandSlide: 0 }"
-         x-init="setInterval(() => { activeBrandSlide = activeBrandSlide === Math.ceil({{ $featuredBrands->count() }} / 4) - 1 ? 0 : activeBrandSlide + 1 }, 4000)"
+         x-init="setInterval(() => { activeBrandSlide = activeBrandSlide === Math.ceil(<?php echo e($featuredBrands->count()); ?> / 4) - 1 ? 0 : activeBrandSlide + 1 }, 4000)"
          class="relative mt-8 overflow-hidden">
         
         <div class="relative h-[180px]">
-            @php
+            <?php
                 $brandsChunks = $featuredBrands->chunk(4);
-            @endphp
+            ?>
             
-            @foreach($brandsChunks as $index => $brandChunk)
+            <?php $__currentLoopData = $brandsChunks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $brandChunk): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <div class="absolute w-full transition-all duration-500"
-                x-show="activeBrandSlide === {{ $index }}"
+                x-show="activeBrandSlide === <?php echo e($index); ?>"
                 x-transition:enter="transition ease-out duration-500"
                 x-transition:enter-start="opacity-0 transform translate-x-full"
                 x-transition:enter-end="opacity-100 transform translate-x-0"
@@ -951,61 +968,61 @@
                 x-transition:leave-end="opacity-0 transform -translate-x-full">
                 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    @foreach($brandChunk as $brand)
+                    <?php $__currentLoopData = $brandChunk; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="bg-white  overflow-hidden shadow-md p-4 flex flex-col items-center justify-center h-full">
                         <div class="flex items-center justify-center h-28">
-                            @if($brand->logo_url)
-                            <img src="{{ $brand->logo_url }}" alt="{{ $brand->name }}" 
+                            <?php if($brand->logo_url): ?>
+                            <img src="<?php echo e($brand->logo_url); ?>" alt="<?php echo e($brand->name); ?>" 
                                  class="max-h-20 max-w-full object-contain transition-transform duration-300 hover:scale-110">
-                            @else
-                            <div class="text-lg font-semibold text-center text-gray-800">{{ $brand->name }}</div>
-                            @endif
+                            <?php else: ?>
+                            <div class="text-lg font-semibold text-center text-gray-800"><?php echo e($brand->name); ?></div>
+                            <?php endif; ?>
                         </div>
                         <div class="mt-3 text-center">
-                            <h4 class="text-sm font-medium text-gray-800">{{ $brand->name }}</h4>
+                            <h4 class="text-sm font-medium text-gray-800"><?php echo e($brand->name); ?></h4>
                         </div>
                     </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
         
         <!-- Navigation dots -->
-        @if($brandsChunks->count() > 1)
+        <?php if($brandsChunks->count() > 1): ?>
         <div class="flex justify-center space-x-2 mt-4">
-            @foreach($brandsChunks as $index => $chunk)
-            <button @click="activeBrandSlide = {{ $index }}"
+            <?php $__currentLoopData = $brandsChunks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $chunk): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <button @click="activeBrandSlide = <?php echo e($index); ?>"
                     class="h-2 rounded-full transition-all duration-300"
-                    :class="activeBrandSlide === {{ $index }} ? 'w-8 bg-[#171e60]' : 'w-2 bg-gray-300'"></button>
-            @endforeach
+                    :class="activeBrandSlide === <?php echo e($index); ?> ? 'w-8 bg-[#171e60]' : 'w-2 bg-gray-300'"></button>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
-        @endif
+        <?php endif; ?>
     </div>
-    @else
+    <?php else: ?>
     <!-- Simple display for 4 or fewer brands -->
     <div class="mt-8">
-        <div class="grid grid-cols-2 md:grid-cols-{{ $featuredBrands->count() > 1 ? ($featuredBrands->count() > 2 ? '4' : '2') : '1' }} gap-6">
-            @foreach($featuredBrands as $brand)
+        <div class="grid grid-cols-2 md:grid-cols-<?php echo e($featuredBrands->count() > 1 ? ($featuredBrands->count() > 2 ? '4' : '2') : '1'); ?> gap-6">
+            <?php $__currentLoopData = $featuredBrands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <div class="bg-white  overflow-hidden shadow-md p-4 flex flex-col items-center justify-center">
                 <div class="flex items-center justify-center h-28">
-                    @if($brand->logo_url)
-                    <img src="{{ $brand->logo_url }}" alt="{{ $brand->name }}" 
+                    <?php if($brand->logo_url): ?>
+                    <img src="<?php echo e($brand->logo_url); ?>" alt="<?php echo e($brand->name); ?>" 
                          class="max-h-20 max-w-full object-contain transition-transform duration-300 hover:scale-110">
-                    @else
-                    <div class="text-lg font-semibold text-center text-gray-800">{{ $brand->name }}</div>
-                    @endif
+                    <?php else: ?>
+                    <div class="text-lg font-semibold text-center text-gray-800"><?php echo e($brand->name); ?></div>
+                    <?php endif; ?>
                 </div>
                 <div class="mt-3 text-center">
-                    <h4 class="text-sm font-medium text-gray-800">{{ $brand->name }}</h4>
+                    <h4 class="text-sm font-medium text-gray-800"><?php echo e($brand->name); ?></h4>
                 </div>
             </div>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
     </div>
-    @endif
+    <?php endif; ?>
 </div>
-@endif
+<?php endif; ?>
 <!-- why choose maxmed Section -->
 <div class="features-section py-8 md:py-10 w-full">
     <div class="w-full mx-auto px-4" x-data="{ activeSlide: 0, autoplay: null }" x-init="autoplay = setInterval(() => { activeSlide = activeSlide === 2 ? 0 : activeSlide + 1 }, 5000)">
@@ -1030,9 +1047,9 @@
                         </div>
                     </div>
                     <div class="md:w-1/2 overflow-hidden">
-                        <img src="{{ asset('/Images/Innovation.jpg') }}"
+                        <img src="<?php echo e(asset('/Images/Innovation.jpg')); ?>"
                             alt="Innovation"
-                            class="feature-img w-full h-full shadow-md">
+                            class="feature-img w-full h-auto shadow-md">
                     </div>
                 </div>
             </div>
@@ -1048,9 +1065,9 @@
                 x-transition:leave-end="opacity-0">
                 <div class="flex flex-col md:flex-row h-full">
                     <div class="md:w-1/2 overflow-hidden">
-                        <img src="{{ asset('/Images/bacteria.jpg') }}"
+                        <img src="<?php echo e(asset('/Images/bacteria.jpg')); ?>"
                             alt="Quality"
-                            class="feature-img w-full h-full shadow-md">
+                            class="feature-img w-full h-auto shadow-md">
                     </div>
                     <div class="md:w-1/2 bg-gradient-to-l from-[#0a5694] to-[#171e60] p-6">
                         <div class="feature-content">
@@ -1078,9 +1095,9 @@
                         </div>
                     </div>
                     <div class="md:w-1/2 overflow-hidden">
-                        <img src="{{ asset('/Images/Expert.jpg') }}"
+                        <img src="<?php echo e(asset('/Images/Expert.jpg')); ?>"
                             alt="Support"
-                            class="feature-img w-full h-full shadow-md">
+                            class="feature-img w-full h-auto shadow-md">
                     </div>
                 </div>
             </div>
@@ -1130,16 +1147,16 @@
                 x-transition:leave-start="opacity-100 transform translate-x-0"
                 x-transition:leave-end="opacity-0 transform -translate-x-full">
                 <div class="supplier-logo">
-                    <img src="{{ asset('/Images/supplier1.png') }}" alt="Supplier 1">
+                    <img src="<?php echo e(asset('/Images/supplier1.png')); ?>" alt="Supplier 1">
                 </div>
                 <div class="supplier-logo">
-                    <img src="{{ asset('/Images/supplier2.png') }}" alt="Supplier 2">
+                    <img src="<?php echo e(asset('/Images/supplier2.png')); ?>" alt="Supplier 2">
                 </div>
                 <div class="supplier-logo">
-                    <img src="{{ asset('/Images/supplier3.png') }}" alt="Supplier 3">
+                    <img src="<?php echo e(asset('/Images/supplier3.png')); ?>" alt="Supplier 3">
                 </div>
                 <div class="supplier-logo">
-                    <img src="{{ asset('/Images/supplier4.png') }}" alt="Supplier 4">
+                    <img src="<?php echo e(asset('/Images/supplier4.png')); ?>" alt="Supplier 4">
                 </div>
             </div>
 
@@ -1153,16 +1170,16 @@
                 x-transition:leave-start="opacity-100 transform translate-x-0"
                 x-transition:leave-end="opacity-0 transform -translate-x-full">
                 <div class="supplier-logo">
-                    <img src="{{ asset('/Images/supplier5.png') }}" alt="Supplier 5">
+                    <img src="<?php echo e(asset('/Images/supplier5.png')); ?>" alt="Supplier 5">
                 </div>
                 <div class="supplier-logo">
-                    <img src="{{ asset('/Images/supplier1.png') }}" alt="Supplier 1">
+                    <img src="<?php echo e(asset('/Images/supplier1.png')); ?>" alt="Supplier 1">
                 </div>
                 <div class="supplier-logo">
-                    <img src="{{ asset('/Images/supplier2.png') }}" alt="Supplier 2">
+                    <img src="<?php echo e(asset('/Images/supplier2.png')); ?>" alt="Supplier 2">
                 </div>
                 <div class="supplier-logo">
-                    <img src="{{ asset('/Images/supplier3.png') }}" alt="Supplier 3">
+                    <img src="<?php echo e(asset('/Images/supplier3.png')); ?>" alt="Supplier 3">
                 </div>
             </div>
         </div>
@@ -1171,7 +1188,7 @@
 
 
 
-{{-- Footer is included in app.blade.php --}}
+
 
 <!-- Add JavaScript for Biology Particles -->
 <script>
@@ -1383,20 +1400,20 @@
         </div>
         
         <div class="max-w-4xl mx-auto">
-            @php
+            <?php
                 $faqs = app(\App\Services\SeoService::class)->getPageFAQs('home');
-            @endphp
+            ?>
             
             <div class="space-y-6" x-data="{ activeIndex: null }">
-                @foreach($faqs as $index => $faq)
+                <?php $__currentLoopData = $faqs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $faq): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                      x-data="{ isOpen: false }"
-                     x-init="$watch('isOpen', value => { if (value) activeIndex = {{ $index }}; else if (activeIndex === {{ $index }}) activeIndex = null; })">
+                     x-init="$watch('isOpen', value => { if (value) activeIndex = <?php echo e($index); ?>; else if (activeIndex === <?php echo e($index); ?>) activeIndex = null; })">
                     <button class="w-full px-8 py-6 text-left focus:outline-none focus:ring-4 focus:ring-blue-100 rounded-2xl transition-all duration-300"
                             @click="isOpen = !isOpen; $nextTick(() => { if (isOpen) $el.scrollIntoView({ behavior: 'smooth', block: 'center' }) })">
                         <div class="flex justify-between items-center">
                             <div class="flex-1">
-                                <h3 class="text-lg font-semibold text-gray-900 pr-4">{{ $faq['question'] }}</h3>
+                                <h3 class="text-lg font-semibold text-gray-900 pr-4"><?php echo e($faq['question']); ?></h3>
                             </div>
                             <div class="flex-shrink-0">
                                 <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center transition-all duration-300"
@@ -1421,18 +1438,18 @@
                          x-transition:leave-end="opacity-0 transform -translate-y-4">
                         <div class="px-8 pb-6">
                             <div class="border-t border-gray-100 pt-6">
-                                <p class="text-gray-700 leading-relaxed">{{ $faq['answer'] }}</p>
+                                <p class="text-gray-700 leading-relaxed"><?php echo e($faq['answer']); ?></p>
                                 <div class="mt-4 flex items-center text-sm text-blue-600">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
-                                    <span>Need more help? <a href="{{ route('contact') }}" class="font-medium hover:underline">Contact our experts</a></span>
+                                    <span>Need more help? <a href="<?php echo e(route('contact')); ?>" class="font-medium hover:underline">Contact our experts</a></span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
             
 
@@ -1488,4 +1505,5 @@ html {
 }
 </style>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\Users\Walid\OneDrive\Desktop\MaxMed\resources\views/welcome.blade.php ENDPATH**/ ?>

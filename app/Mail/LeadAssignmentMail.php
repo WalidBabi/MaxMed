@@ -19,6 +19,7 @@ class LeadAssignmentMail extends Mailable
     public $previousAssignee;
     public $reassignedBy;
     public $isNewLead;
+    public $isPurchasingUser;
 
     /**
      * Create a new message instance.
@@ -30,6 +31,30 @@ class LeadAssignmentMail extends Mailable
         $this->previousAssignee = $previousAssignee;
         $this->reassignedBy = $reassignedBy;
         $this->isNewLead = $isNewLead;
+        
+        // Check if assigned user has purchasing permissions
+        $this->isPurchasingUser = $this->checkIfPurchasingUser($assignedUser);
+    }
+    
+    /**
+     * Check if user has purchasing permissions
+     */
+    private function checkIfPurchasingUser(User $user): bool
+    {
+        $purchasingPermissions = [
+            'purchase_orders.view',
+            'purchase_orders.create',
+            'purchase_orders.edit',
+            'crm.leads.view_requirements'
+        ];
+        
+        foreach ($purchasingPermissions as $permission) {
+            if ($user->hasPermission($permission)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     /**
@@ -59,6 +84,7 @@ class LeadAssignmentMail extends Mailable
                 'previousAssignee' => $this->previousAssignee,
                 'reassignedBy' => $this->reassignedBy,
                 'isNewLead' => $this->isNewLead,
+                'isPurchasingUser' => $this->isPurchasingUser,
             ]
         );
     }
