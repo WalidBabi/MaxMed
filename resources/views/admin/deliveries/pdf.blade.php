@@ -499,8 +499,25 @@
                         @if($delivery->order->user && $delivery->order->user->email)
                             <div class="client-address" style="margin-top: 4px; color: var(--accent-color);">{{ $delivery->order->user->email }}</div>
                         @endif
+                        @if($customer && $customer->phone)
+                            <div class="client-address" style="margin-top: 2px; color: var(--text-secondary);">Phone: {{ $customer->phone }}</div>
+                        @endif
                     @endif
-                    <div class="client-address">{{ $delivery->shipping_address ?? 'Address not specified' }}</div>
+                    
+                    @php
+                        $displayAddress = '';
+                        if ($customer) {
+                            // Use customer's shipping address if available, otherwise billing address
+                            $displayAddress = $customer->shipping_address ?? $customer->billing_address;
+                        }
+                        
+                        // Fallback to delivery shipping address if no customer address
+                        if (!$displayAddress) {
+                            $displayAddress = $delivery->shipping_address ?? 'Address not specified';
+                        }
+                    @endphp
+                    
+                    <div class="client-address" style="margin-top: 8px; white-space: pre-line;">{{ $displayAddress }}</div>
                 </div>
             </div>
             
@@ -597,31 +614,45 @@
                             </div>
                         </td>
                         <td class="text-center">
-                            @if($item->product && $item->product->specifications)
-                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
-                                    @php
-                                        $productSpecs = [];
+                            @php
+                                $specifications = '';
+                                
+                                // First try to get specifications from the product
+                                if ($item->product && $item->product->specifications) {
+                                    if (is_string($item->product->specifications)) {
                                         try {
-                                            if (is_string($item->product->specifications)) {
-                                                $productSpecs = json_decode($item->product->specifications, true) ?? [$item->product->specifications];
+                                            $productSpecs = json_decode($item->product->specifications, true);
+                                            if (is_array($productSpecs)) {
+                                                $specifications = implode(', ', array_slice($productSpecs, 0, 5));
+                                            } else {
+                                                $specifications = $item->product->specifications;
                                             }
                                         } catch (Exception $e) {
-                                            $productSpecs = [$item->product->specifications];
+                                            $specifications = $item->product->specifications;
                                         }
-                                    @endphp
-                                    @foreach(array_slice($productSpecs, 0, 3) as $spec)
-                                        <div style="margin-bottom: 2px;">{{ Str::limit($spec, 20) }}</div>
-                                    @endforeach
-                                    @if(count($productSpecs) > 3)
-                                        <div style="color: var(--accent-color); font-size: 8px;">+{{ count($productSpecs) - 3 }} more</div>
-                                    @endif
-                                </div>
-                            @elseif($item->specifications && !empty(trim($item->specifications)))
-                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
-                                    {{ Str::limit($item->specifications, 50) }}
+                                    } else {
+                                        $specifications = $item->product->specifications;
+                                    }
+                                }
+                                
+                                // If no product specifications, try item specifications
+                                if (!$specifications && $item->specifications && !empty(trim($item->specifications))) {
+                                    $specifications = $item->specifications;
+                                }
+                                
+                                // Clean up and limit the specifications text
+                                if ($specifications) {
+                                    $specifications = strip_tags($specifications);
+                                    $specifications = Str::limit($specifications, 80);
+                                }
+                            @endphp
+                            
+                            @if($specifications)
+                                <div style="font-size: 8px; color: var(--text-secondary); line-height: 1.2; word-wrap: break-word; max-width: 120px;">
+                                    {{ $specifications }}
                                 </div>
                             @else
-                                <span style="color: var(--text-muted);">-</span>
+                                <span style="color: var(--text-muted); font-size: 9px;">N/A</span>
                             @endif
                         </td>
                         <td class="text-center">

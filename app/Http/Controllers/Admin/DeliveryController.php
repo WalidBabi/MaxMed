@@ -505,9 +505,19 @@ class DeliveryController extends Controller
             // Get customer data for company name display
             $customer = null;
             if ($delivery->order && $delivery->order->customer_name) {
+                // First try to match by customer name
                 $customer = Customer::where('name', $delivery->order->customer_name)->first();
-            } elseif ($delivery->order && $delivery->order->user) {
-                $customer = Customer::where('email', $delivery->order->user->email)->first();
+            }
+            
+            // If no customer found by name, try by email or user relationship
+            if (!$customer && $delivery->order && $delivery->order->user) {
+                // Try to find customer by user relationship first
+                $customer = Customer::where('user_id', $delivery->order->user->id)->first();
+                
+                // If still not found, try by email
+                if (!$customer && $delivery->order->user->email) {
+                    $customer = Customer::where('email', $delivery->order->user->email)->first();
+                }
             }
 
             // Generate PDF

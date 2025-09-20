@@ -64,7 +64,22 @@ class DeliveryNoteEmail extends Mailable
         $this->delivery->load(['order.items.product', 'order.user']);
         
         // Get customer data for company name display
-        $customer = \App\Models\Customer::where('name', $this->delivery->order->customer_name ?? $this->delivery->order->user->name)->first();
+        $customer = null;
+        if ($this->delivery->order && $this->delivery->order->customer_name) {
+            // First try to match by customer name
+            $customer = \App\Models\Customer::where('name', $this->delivery->order->customer_name)->first();
+        }
+        
+        // If no customer found by name, try by email or user relationship
+        if (!$customer && $this->delivery->order && $this->delivery->order->user) {
+            // Try to find customer by user relationship first
+            $customer = \App\Models\Customer::where('user_id', $this->delivery->order->user->id)->first();
+            
+            // If still not found, try by email
+            if (!$customer && $this->delivery->order->user->email) {
+                $customer = \App\Models\Customer::where('email', $this->delivery->order->user->email)->first();
+            }
+        }
         
         $pdf = Pdf::loadView('admin.deliveries.pdf', [
             'delivery' => $this->delivery,
