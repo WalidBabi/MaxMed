@@ -7,9 +7,12 @@ use App\Models\Delivery;
 use App\Models\Order;
 use App\Models\Invoice;
 use App\Models\CashReceipt;
+use App\Models\Customer;
+use App\Mail\DeliveryNoteEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class DeliveryController extends Controller
 {
@@ -104,6 +107,9 @@ class DeliveryController extends Controller
             $delivery->order->update(['status' => 'delivered']);
 
             Log::info("Delivery {$delivery->id} signed by customer. Order {$delivery->order->order_number} marked as delivered.");
+
+            // Send delivery note email automatically after signature
+            $this->sendDeliveryNoteEmail($delivery);
 
             // Auto-convert proforma invoice to final invoice and create cash receipt
             $proformaInvoice = $this->findProformaInvoice($delivery->order);
@@ -424,5 +430,51 @@ class DeliveryController extends Controller
         
         // Generate PDF receipt (you can implement PDF generation here)
         return view('delivery.receipt', compact('delivery'));
+    }
+
+    /**
+     * Send delivery note email to customer after signature
+     */
+    private function sendDeliveryNoteEmail(Delivery $delivery)
+    {
+        try {
+            // Get customer email
+            $customerEmail = null;
+            
+            // First try to get email from the order's customer
+            if ($delivery->order && $delivery->order->user && $delivery->order->user->email) {
+                $customerEmail = $delivery->order->user->email;
+            } elseif ($delivery->order && $delivery->order->customer_name) {
+                // Try to find customer by name
+                $customer = Customer::where('name', $delivery->order->customer_name)->first();
+                if ($customer && $customer->email) {
+                    $customerEmail = $customer->email;
+                }
+            }
+
+            if (!$customerEmail) {
+                Log::warning("No email found for delivery {$delivery->delivery_number}, skipping delivery note email");
+                return;
+            }
+
+            // Prepare email data
+            $emailData = [
+                'subject' => 'Delivery Confirmation - ' . $delivery->delivery_number,
+                'message' => 'Thank you for receiving your order. Please find the delivery note attached for your records.'
+            ];
+
+            // Send the email
+            $salesEmail = app()->environment('production') ? 'sales@maxmedme.com' : 'wbabi@localhost.com';
+            
+            Mail::to($customerEmail)
+                ->cc($salesEmail)
+                ->send(new DeliveryNoteEmail($delivery, $emailData));
+
+            Log::info("Delivery note email sent successfully for delivery {$delivery->delivery_number} to {$customerEmail}");
+
+        } catch (\Exception $e) {
+            Log::error("Failed to send delivery note email for delivery {$delivery->delivery_number}: " . $e->getMessage());
+            // Don't throw the exception to avoid disrupting the signature process
+        }
     }
 } 
