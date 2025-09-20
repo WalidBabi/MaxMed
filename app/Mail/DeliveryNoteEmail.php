@@ -65,19 +65,31 @@ class DeliveryNoteEmail extends Mailable
         
         // Get customer data for company name display
         $customer = null;
-        if ($this->delivery->order && $this->delivery->order->customer_name) {
-            // First try to match by customer name
-            $customer = \App\Models\Customer::where('name', $this->delivery->order->customer_name)->first();
-        }
         
-        // If no customer found by name, try by email or user relationship
-        if (!$customer && $this->delivery->order && $this->delivery->order->user) {
-            // Try to find customer by user relationship first
-            $customer = \App\Models\Customer::where('user_id', $this->delivery->order->user->id)->first();
+        if ($this->delivery->order) {
+            // First try to use the order's built-in customer relationship
+            if ($this->delivery->order->customer_id) {
+                $customer = \App\Models\Customer::find($this->delivery->order->customer_id);
+            }
             
-            // If still not found, try by email
-            if (!$customer && $this->delivery->order->user->email) {
-                $customer = \App\Models\Customer::where('email', $this->delivery->order->user->email)->first();
+            // If no direct customer relationship, try the order's getCustomerInfo method
+            if (!$customer && method_exists($this->delivery->order, 'getCustomerInfo')) {
+                $customer = $this->delivery->order->getCustomerInfo();
+            }
+            
+            // If still no customer found, try by user relationship
+            if (!$customer && $this->delivery->order->user) {
+                $customer = \App\Models\Customer::where('user_id', $this->delivery->order->user->id)->first();
+                
+                // If still not found, try by email
+                if (!$customer && $this->delivery->order->user->email) {
+                    $customer = \App\Models\Customer::where('email', $this->delivery->order->user->email)->first();
+                }
+                
+                // Last resort: try by user name
+                if (!$customer && $this->delivery->order->user->name) {
+                    $customer = \App\Models\Customer::where('name', $this->delivery->order->user->name)->first();
+                }
             }
         }
         

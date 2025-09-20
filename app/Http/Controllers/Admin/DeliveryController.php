@@ -504,19 +504,31 @@ class DeliveryController extends Controller
             
             // Get customer data for company name display
             $customer = null;
-            if ($delivery->order && $delivery->order->customer_name) {
-                // First try to match by customer name
-                $customer = Customer::where('name', $delivery->order->customer_name)->first();
-            }
             
-            // If no customer found by name, try by email or user relationship
-            if (!$customer && $delivery->order && $delivery->order->user) {
-                // Try to find customer by user relationship first
-                $customer = Customer::where('user_id', $delivery->order->user->id)->first();
+            if ($delivery->order) {
+                // First try to use the order's built-in customer relationship
+                if ($delivery->order->customer_id) {
+                    $customer = Customer::find($delivery->order->customer_id);
+                }
                 
-                // If still not found, try by email
-                if (!$customer && $delivery->order->user->email) {
-                    $customer = Customer::where('email', $delivery->order->user->email)->first();
+                // If no direct customer relationship, try the order's getCustomerInfo method
+                if (!$customer && method_exists($delivery->order, 'getCustomerInfo')) {
+                    $customer = $delivery->order->getCustomerInfo();
+                }
+                
+                // If still no customer found, try by user relationship
+                if (!$customer && $delivery->order->user) {
+                    $customer = Customer::where('user_id', $delivery->order->user->id)->first();
+                    
+                    // If still not found, try by email
+                    if (!$customer && $delivery->order->user->email) {
+                        $customer = Customer::where('email', $delivery->order->user->email)->first();
+                    }
+                    
+                    // Last resort: try by user name
+                    if (!$customer && $delivery->order->user->name) {
+                        $customer = Customer::where('name', $delivery->order->user->name)->first();
+                    }
                 }
             }
 

@@ -492,7 +492,18 @@
                 <div class="client-info">
                     <div class="section-heading">Delivery Address</div>
                     @if($delivery->order && $delivery->order->user)
-                        <div class="client-name">{{ $delivery->order->customer_name ?? $delivery->order->user->name }}</div>
+                        @php
+                            // Get customer name using the order's method or fallback to user name
+                            $customerName = '';
+                            if (method_exists($delivery->order, 'getCustomerName')) {
+                                $customerName = $delivery->order->getCustomerName();
+                            } elseif ($customer) {
+                                $customerName = $customer->name;
+                            } else {
+                                $customerName = $delivery->order->user->name;
+                            }
+                        @endphp
+                        <div class="client-name">{{ $customerName }}</div>
                         @if($customer && $customer->company_name)
                             <div class="client-address">{{ $customer->company_name }}</div>
                         @endif
