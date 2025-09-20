@@ -478,6 +478,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('deliveries/{delivery}/mark-as-delivered', [\App\Http\Controllers\Admin\DeliveryController::class, 'markAsDelivered'])->name('deliveries.mark-as-delivered');
         Route::post('deliveries/{delivery}/update-status', [\App\Http\Controllers\Admin\DeliveryController::class, 'updateStatus'])->name('deliveries.update-status');
         Route::post('deliveries/{delivery}/convert-to-final-invoice', [\App\Http\Controllers\Admin\DeliveryController::class, 'convertToFinalInvoice'])->name('deliveries.convert-to-final-invoice');
+        Route::get('deliveries/{delivery}/pdf', [\App\Http\Controllers\Admin\DeliveryController::class, 'generatePdf'])->name('deliveries.pdf');
         
         // Add link to deliveries in the admin sidebar
         Route::get('deliveries', [\App\Http\Controllers\Admin\DeliveryController::class, 'index'])->name('deliveries.index');

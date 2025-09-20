@@ -193,21 +193,6 @@
                                 </tr>
                             </table>
 
-                            <!-- Signature Confirmation -->
-                            @if($delivery->signed_at)
-                            <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background: linear-gradient(135deg, #F0FDF4 0%, #C6F6D5 100%); border: 1px solid #48BB78; margin: 25px 0; border-radius: 8px; overflow: hidden;">
-                                <tr>
-                                    <td style="padding: 25px;">
-                                        <div style="display: inline-block; background-color: #48BB78; color: #FFFFFF; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;">✍️ SIGNED</div>
-                                        <h4 style="color: #22543D; margin: 0 0 12px 0; font-size: 18px; font-weight: 600;">Signature Confirmation</h4>
-                                        <p style="margin: 0 0 15px 0; color: #1A365D; line-height: 1.6;">Your delivery was signed for on <strong>{{ formatDubaiDate($delivery->signed_at, 'M j, Y \a\t g:i A') }}</strong></p>
-                                        @if($delivery->delivery_conditions && is_array($delivery->delivery_conditions))
-                                        <p style="margin: 0; color: #1A365D; font-size: 14px;">📝 Delivery Conditions: <strong>{{ implode(', ', $delivery->delivery_conditions) }}</strong></p>
-                                        @endif
-                                    </td>
-                                </tr>
-                            </table>
-                            @endif
 
                             <!-- Message -->
                             <div style="margin: 30px 0;">

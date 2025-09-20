@@ -9,28 +9,7 @@
 <?php $__env->startSection('og_description', 'Leading lab equipment supplier in Dubai! PCR machines, centrifuges, fume hoods, autoclaves & more. Same-day quotes, fast UAE delivery.'); ?>
 
 <?php $__env->startPush('head'); ?>
-    <meta name="google-signin-client_id" content="<?php echo e(config('services.google.client_id')); ?>">
     <meta name="app-environment" content="<?php echo e(app()->environment()); ?>">
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script>
-        // Global variable to track Google API ready state
-        window.googleAPILoaded = false;
-        window.isDevelopment = "<?php echo e(app()->environment()); ?>" === "local";
-        
-        // Function to be called when Google API is loaded
-        function onGoogleAPILoaded() {
-            window.googleAPILoaded = true;
-            console.log('🚀 Google API loaded in ' + ("<?php echo e(app()->environment()); ?>" === "local" ? 'DEVELOPMENT' : 'PRODUCTION') + ' mode');
-            // If we have a pending initialize function, call it
-            if (window.pendingGoogleInit) {
-                window.pendingGoogleInit();
-                window.pendingGoogleInit = null;
-            }
-        }
-        
-        // Add event listener for Google API load
-        document.addEventListener('gapi.loaded', onGoogleAPILoaded);
-    </script>
 <?php $__env->stopPush(); ?>
 
 <?php $__env->startSection('content'); ?>
@@ -671,11 +650,11 @@
         }
 
         .category-card {
-            min-height: 240px;
+            min-height: 260px;
         }
 
         .category-card img {
-            height: 150px;
+            height: 160px;
             width: 100%;
             object-fit: cover;
             object-position: center;
@@ -696,6 +675,8 @@
 
         .feature-img {
             height: 200px;
+            object-fit: cover;
+            object-position: center;
         }
     }
 
@@ -710,11 +691,11 @@
         }
 
         .category-card {
-            min-height: 200px;
+            min-height: 220px;
         }
 
         .category-card img {
-            height: 150px;
+            height: 140px;
             width: 100%;
             object-fit: cover;
             object-position: center;
@@ -1049,7 +1030,7 @@
                     <div class="md:w-1/2 overflow-hidden">
                         <img src="<?php echo e(asset('/Images/Innovation.jpg')); ?>"
                             alt="Innovation"
-                            class="feature-img w-full h-auto shadow-md">
+                            class="feature-img w-full h-full shadow-md">
                     </div>
                 </div>
             </div>
@@ -1067,7 +1048,7 @@
                     <div class="md:w-1/2 overflow-hidden">
                         <img src="<?php echo e(asset('/Images/bacteria.jpg')); ?>"
                             alt="Quality"
-                            class="feature-img w-full h-auto shadow-md">
+                            class="feature-img w-full h-full shadow-md">
                     </div>
                     <div class="md:w-1/2 bg-gradient-to-l from-[#0a5694] to-[#171e60] p-6">
                         <div class="feature-content">
@@ -1097,7 +1078,7 @@
                     <div class="md:w-1/2 overflow-hidden">
                         <img src="<?php echo e(asset('/Images/Expert.jpg')); ?>"
                             alt="Support"
-                            class="feature-img w-full h-auto shadow-md">
+                            class="feature-img w-full h-full shadow-md">
                     </div>
                 </div>
             </div>

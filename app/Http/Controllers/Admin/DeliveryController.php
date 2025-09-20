@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Delivery;
 use App\Models\Order;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DeliveryController extends Controller
 {
@@ -489,5 +491,40 @@ class DeliveryController extends Controller
         return redirect()
             ->route('admin.deliveries.index')
             ->with('success', 'Delivery deleted successfully.');
+    }
+
+    /**
+     * Generate delivery note PDF
+     */
+    public function generatePdf(Delivery $delivery)
+    {
+        try {
+            // Load relationships for PDF generation
+            $delivery->load(['order.items.product', 'order.user']);
+            
+            // Get customer data for company name display
+            $customer = null;
+            if ($delivery->order && $delivery->order->customer_name) {
+                $customer = Customer::where('name', $delivery->order->customer_name)->first();
+            } elseif ($delivery->order && $delivery->order->user) {
+                $customer = Customer::where('email', $delivery->order->user->email)->first();
+            }
+
+            // Generate PDF
+            $pdf = Pdf::loadView('admin.deliveries.pdf', [
+                'delivery' => $delivery,
+                'customer' => $customer,
+                'authorizedUser' => auth()->user()
+            ]);
+
+            $filename = $delivery->delivery_number . '_delivery_note.pdf';
+
+            return $pdf->download($filename);
+
+        } catch (\Exception $e) {
+            Log::error('Delivery note PDF generation error: ' . $e->getMessage());
+            
+            return redirect()->back()->with('error', 'Failed to generate delivery note PDF: ' . $e->getMessage());
+        }
     }
 }

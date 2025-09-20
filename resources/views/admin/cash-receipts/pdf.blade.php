@@ -262,26 +262,6 @@
             font-weight: 600;
         }
 
-        /* Delivery Signature */
-        .delivery-signature {
-            margin-top: 30px;
-        }
-
-        .delivery-signature .signature-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-
-        .delivery-signature .signature-image {
-            text-align: center;
-        }
-
-        .delivery-signature .signature-image img {
-            max-width: 300px;
-            max-height: 100px;
-        }
 
         /* FOOTER */
         .footer {
@@ -978,19 +958,6 @@
         </div>
         @endif
 
-        <!-- Delivery Signature -->
-        @if($cashReceipt->order && $cashReceipt->order->delivery && $cashReceipt->order->delivery->customer_signature)
-        <div class="delivery-signature">
-            <div class="payment-title">Delivery Confirmation</div>
-            <div style="margin-bottom: 10px;">
-                <span style="font-weight: 600;">Signed at:</span>
-                <span>{{ formatDubaiDate($cashReceipt->order->delivery->signed_at, 'M d, Y H:i') }}</span>
-            </div>
-            <div class="signature-image" style="text-align: left;">
-                <img src="{{ public_path('storage/' . $cashReceipt->order->delivery->customer_signature) }}" alt="Customer Signature" style="max-width: 300px; max-height: 100px; border: 1px solid #d1d5db; border-radius: 4px;">
-            </div>
-        </div>
-        @endif
 
         <!-- Company Stamp Section -->
         <div class="company-stamp-section">
