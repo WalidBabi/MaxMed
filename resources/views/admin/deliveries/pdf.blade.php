@@ -634,59 +634,39 @@
                             </div>
                         </td>
                         <td class="text-center">
-                            @php
-                                $specifications = '';
-                                
-                                // First try to get specifications from the product specifications relationship
-                                if ($item->product && $item->product->specifications && $item->product->specifications->count() > 0) {
-                                    $specItems = [];
-                                    foreach ($item->product->specifications->take(5) as $spec) {
-                                        if (!empty(trim($spec->specification_value))) {
-                                            $displayName = $spec->display_name ?: $spec->specification_key;
-                                            $value = trim($spec->specification_value);
-                                            if ($spec->unit) {
-                                                $value .= ' ' . $spec->unit;
-                                            }
-                                            $specItems[] = $displayName . ': ' . $value;
+                            @if($item->specifications && !empty(trim($item->specifications)))
+                                @php
+                                    $selectedSpecs = [];
+                                    try {
+                                        if (is_string($item->specifications) && (str_starts_with($item->specifications, '[') && str_ends_with($item->specifications, ']'))) {
+                                            $selectedSpecs = json_decode($item->specifications, true);
+                                        } else {
+                                            $selectedSpecs = explode(',', $item->specifications);
+                                            $selectedSpecs = array_map('trim', $selectedSpecs);
                                         }
+                                    } catch (Exception $e) {
+                                        $selectedSpecs = [$item->specifications];
                                     }
-                                    if (!empty($specItems)) {
-                                        $specifications = implode(', ', $specItems);
-                                    }
-                                }
+                                @endphp
                                 
-                                // If no product specifications, try item specifications
-                                if (!$specifications && $item->specifications && !empty(trim($item->specifications))) {
-                                    $specifications = trim($item->specifications);
-                                }
-                                
-                                // Additional fallback: try to get basic product info as specifications
-                                if (!$specifications && $item->product) {
-                                    $basicSpecs = [];
-                                    if ($item->product->sku) {
-                                        $basicSpecs[] = 'SKU: ' . $item->product->sku;
-                                    }
-                                    if ($item->product->description) {
-                                        $basicSpecs[] = Str::limit(strip_tags($item->product->description), 30);
-                                    }
-                                    if (!empty($basicSpecs)) {
-                                        $specifications = implode(', ', $basicSpecs);
-                                    }
-                                }
-                                
-                                // Clean up and limit the specifications text
-                                if ($specifications) {
-                                    $specifications = strip_tags($specifications);
-                                    $specifications = Str::limit($specifications, 80);
-                                }
-                            @endphp
+                                @if(count($selectedSpecs) > 0)
+                                    <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
+                                        @foreach($selectedSpecs as $spec)
+                                            <div style="margin-bottom: 2px;">{{ $spec }}</div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            @endif
                             
-                            @if($specifications)
-                                <div style="font-size: 8px; color: var(--text-secondary); line-height: 1.2; word-wrap: break-word; max-width: 120px;">
-                                    {{ $specifications }}
+                            @if($item->size && !empty(trim($item->size)))
+                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3; margin-top: 3px;">
+                                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1px;">Size:</div>
+                                    <div>{{ $item->size }}</div>
                                 </div>
-                            @else
-                                <span style="color: var(--text-muted); font-size: 9px;">N/A</span>
+                            @endif
+                            
+                            @if((!$item->specifications || empty(trim($item->specifications))) && (!$item->size || empty(trim($item->size))))
+                                <span style="color: var(--text-muted);">-</span>
                             @endif
                         </td>
                         <td class="text-center">
