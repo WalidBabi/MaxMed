@@ -499,8 +499,11 @@ class DeliveryController extends Controller
     public function generatePdf(Delivery $delivery)
     {
         try {
-            // Load relationships for PDF generation
-            $delivery->load(['order.items.product', 'order.user']);
+            // Load relationships for PDF generation with specifications
+            $delivery->load([
+                'order.items.product.specifications', 
+                'order.user'
+            ]);
             
             // Get customer data for company name display
             $customer = null;

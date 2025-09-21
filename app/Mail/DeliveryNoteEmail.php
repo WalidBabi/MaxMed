@@ -60,8 +60,11 @@ class DeliveryNoteEmail extends Mailable
      */
     public function attachments(): array
     {
-        // Load relationships for PDF generation
-        $this->delivery->load(['order.items.product', 'order.user']);
+        // Load relationships for PDF generation with specifications
+        $this->delivery->load([
+            'order.items.product.specifications', 
+            'order.user'
+        ]);
         
         // Get customer data for company name display
         $customer = null;
