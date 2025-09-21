@@ -334,6 +334,48 @@
         <meta name="msapplication-TileColor" content="#171e60">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         
+        <!-- Comprehensive Favicon Implementation for Search Results -->
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+        <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('img/favicon/favicon-96x96.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/favicon/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon/favicon-16x16.png') }}">
+        <link rel="icon" type="image/svg+xml" href="{{ asset('img/favicon/favicon.svg') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('img/favicon/apple-touch-icon.png') }}">
+        <link rel="mask-icon" href="{{ asset('img/favicon/safari-pinned-tab.svg') }}" color="#171e60">
+        <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+        
+        <!-- Additional favicon formats for better browser compatibility -->
+        <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('img/favicon/web-app-manifest-192x192.png') }}">
+        <link rel="icon" type="image/png" sizes="512x512" href="{{ asset('img/favicon/web-app-manifest-512x512.png') }}">
+        
+        <!-- Microsoft-specific favicon meta tags -->
+        <meta name="msapplication-TileImage" content="{{ asset('img/favicon/mstile-150x150.png') }}">
+        <meta name="msapplication-config" content="{{ asset('img/favicon/browserconfig.xml') }}">
+        
+        <!-- Organization Logo Structured Data for Search Results -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "MaxMed UAE",
+          "url": "https://maxmedme.com",
+          "logo": "{{ asset('img/favicon/favicon-96x96.png') }}",
+          "image": "{{ asset('img/favicon/favicon-96x96.png') }}",
+          "description": "Leading supplier of medical and laboratory equipment in Dubai, UAE. PCR machines, centrifuges, fume hoods, dental supplies and more.",
+          "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "AE",
+            "addressLocality": "Dubai"
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+971554602500",
+            "contactType": "customer service"
+          }
+        }
+        </script>
+        
         <!-- Enhanced Security Meta Tags -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="referrer" content="strict-origin-when-cross-origin">
