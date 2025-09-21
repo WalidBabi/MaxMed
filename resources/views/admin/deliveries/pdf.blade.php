@@ -507,8 +507,17 @@
                         @if($customer && $customer->company_name)
                             <div class="client-address">{{ $customer->company_name }}</div>
                         @endif
-                        @if($delivery->order->user && $delivery->order->user->email)
-                            <div class="client-address" style="margin-top: 4px; color: var(--accent-color);">{{ $delivery->order->user->email }}</div>
+                        @php
+                            // Prioritize customer email over user email (to avoid showing @customer.local)
+                            $displayEmail = null;
+                            if ($customer && $customer->email && !str_contains($customer->email, '@customer.local')) {
+                                $displayEmail = $customer->email;
+                            } elseif ($delivery->order->user && $delivery->order->user->email && !str_contains($delivery->order->user->email, '@customer.local')) {
+                                $displayEmail = $delivery->order->user->email;
+                            }
+                        @endphp
+                        @if($displayEmail)
+                            <div class="client-address" style="margin-top: 4px; color: var(--accent-color);">{{ $displayEmail }}</div>
                         @endif
                         @if($customer && $customer->phone)
                             <div class="client-address" style="margin-top: 2px; color: var(--text-secondary);">Phone: {{ $customer->phone }}</div>
@@ -628,27 +637,41 @@
                             @php
                                 $specifications = '';
                                 
-                                // First try to get specifications from the product
-                                if ($item->product && $item->product->specifications) {
-                                    if (is_string($item->product->specifications)) {
-                                        try {
-                                            $productSpecs = json_decode($item->product->specifications, true);
-                                            if (is_array($productSpecs)) {
-                                                $specifications = implode(', ', array_slice($productSpecs, 0, 5));
-                                            } else {
-                                                $specifications = $item->product->specifications;
+                                // First try to get specifications from the product specifications relationship
+                                if ($item->product && $item->product->specifications && $item->product->specifications->count() > 0) {
+                                    $specItems = [];
+                                    foreach ($item->product->specifications->take(5) as $spec) {
+                                        if (!empty(trim($spec->specification_value))) {
+                                            $displayName = $spec->display_name ?: $spec->specification_key;
+                                            $value = trim($spec->specification_value);
+                                            if ($spec->unit) {
+                                                $value .= ' ' . $spec->unit;
                                             }
-                                        } catch (Exception $e) {
-                                            $specifications = $item->product->specifications;
+                                            $specItems[] = $displayName . ': ' . $value;
                                         }
-                                    } else {
-                                        $specifications = $item->product->specifications;
+                                    }
+                                    if (!empty($specItems)) {
+                                        $specifications = implode(', ', $specItems);
                                     }
                                 }
                                 
                                 // If no product specifications, try item specifications
                                 if (!$specifications && $item->specifications && !empty(trim($item->specifications))) {
-                                    $specifications = $item->specifications;
+                                    $specifications = trim($item->specifications);
+                                }
+                                
+                                // Additional fallback: try to get basic product info as specifications
+                                if (!$specifications && $item->product) {
+                                    $basicSpecs = [];
+                                    if ($item->product->sku) {
+                                        $basicSpecs[] = 'SKU: ' . $item->product->sku;
+                                    }
+                                    if ($item->product->description) {
+                                        $basicSpecs[] = Str::limit(strip_tags($item->product->description), 30);
+                                    }
+                                    if (!empty($basicSpecs)) {
+                                        $specifications = implode(', ', $basicSpecs);
+                                    }
                                 }
                                 
                                 // Clean up and limit the specifications text
