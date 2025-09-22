@@ -213,7 +213,7 @@
                     <div class="p-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Available Sizes</h3>
                         <div class="flex flex-wrap gap-2">
-                            @foreach(json_decode($product->size_options) as $size)
+                            @foreach($product->size_options as $size)
                                 <span class="inline-flex items-center rounded-md bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
                                     {{ $size }}
                                 </span>
