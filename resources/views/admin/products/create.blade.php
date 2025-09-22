@@ -57,44 +57,68 @@
                                 </p>
                             </div>
 
-                            <!-- Category -->
+                            <!-- Category (searchable like customer select) -->
                             <div>
-                                <label for="category_id" class="block text-sm font-medium text-gray-700 mb-2">Category <span class="text-red-500">*</span></label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="fas fa-tags text-gray-400"></i>
+                                <label for="category_search" class="block text-sm font-medium text-gray-700 mb-2">Category <span class="text-red-500">*</span></label>
+                                <div class="relative product-dropdown-container">
+                                    <input type="text"
+                                           id="category_search"
+                                           class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 product-search-input"
+                                           placeholder="Search categories..."
+                                           autocomplete="off"
+                                           value="{{ optional($categories->firstWhere('id', old('category_id')))->name }}">
+                                    <input type="hidden" name="category_id" id="category_id" value="{{ old('category_id') }}">
+                                    <div class="product-dropdown-list hidden" id="category_dropdown_list">
+                                        <div class="dropdown-items">
+                                            @foreach($categories as $category)
+                                                <div class="dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
+                                                     data-id="{{ $category->id }}"
+                                                     data-name="{{ $category->name }}"
+                                                     data-search-text="{{ strtolower(trim($category->name)) }}">
+                                                    <div class="font-medium text-gray-900">{{ $category->name }}</div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <div class="p-3 text-sm text-gray-500 text-center dropdown-no-results hidden">No categories found</div>
                                     </div>
-                                    <select name="category_id" id="category_id" required
-                                            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                        <option value="">Select a category</option>
-                                        @foreach($categories as $category)
-                                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                                                {{ $category->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
                                 </div>
                                 @error('category_id')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
-                            <!-- Brand -->
+                            <!-- Brand (searchable with inline create) -->
                             <div>
-                                <label for="brand_id" class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="fas fa-trademark text-gray-400"></i>
+                                <div class="flex items-center justify-between mb-2">
+                                    <label for="brand_search" class="block text-sm font-medium text-gray-700">Brand</label>
+                                    <button type="button" id="open_add_brand_modal" class="inline-flex items-center px-2 py-1 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50">
+                                        <i class="fas fa-plus mr-1"></i> Add Brand
+                                    </button>
+                                </div>
+                                <div class="relative product-dropdown-container">
+                                    <input type="text"
+                                           id="brand_search"
+                                           class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 product-search-input"
+                                           placeholder="Search brands..."
+                                           autocomplete="off"
+                                           value="{{ optional(\App\Models\Brand::orderBy('name')->get()->firstWhere('id', old('brand_id')))->name }}">
+                                    <input type="hidden" name="brand_id" id="brand_id" value="{{ old('brand_id') }}">
+                                    <div class="product-dropdown-list hidden" id="brand_dropdown_list">
+                                        <div class="dropdown-items">
+                                            @php($allBrands = \App\Models\Brand::orderBy('name')->get())
+                                            @foreach($allBrands as $brand)
+                                                <div class="dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
+                                                     data-id="{{ $brand->id }}"
+                                                     data-name="{{ $brand->name }}"
+                                                     data-search-text="{{ strtolower(trim($brand->name)) }}">
+                                                    <div class="font-medium text-gray-900">{{ $brand->name }}</div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                        <div class="p-3 text-sm text-gray-500 text-center dropdown-no-results hidden">
+                                            No brands found. <button type="button" id="add_brand_btn" class="text-indigo-600 underline">Add "<span id="new_brand_name"></span>"</button>
+                                        </div>
                                     </div>
-                                    <select name="brand_id" id="brand_id"
-                                            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                        <option value="">Select a brand</option>
-                                        @foreach(App\Models\Brand::orderBy('name')->get() as $brand)
-                                            <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>
-                                                {{ $brand->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
                                 </div>
                                 @error('brand_id')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -419,22 +443,78 @@ Speed range
     </div>
 </div>
 
+<style>
+    /* Match quote create dropdown styles */
+    .product-dropdown-container {
+        position: relative;
+        width: 100%;
+    }
+    .product-dropdown-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        max-height: 300px;
+        overflow-y: auto;
+        background: white;
+        z-index: 999999;
+        margin-top: 4px;
+        min-width: 280px;
+    }
+    .product-dropdown-list:not(.hidden) {
+        position: absolute !important;
+        z-index: 999999 !important;
+    }
+    .dropdown-item {
+        transition: background-color 0.15s ease-in-out;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    .dropdown-item:last-child { border-bottom: none; }
+    .dropdown-item:hover { background-color: #f8fafc; }
+    .dropdown-item.bg-indigo-50 { background-color: #eef2ff; }
+    .product-search-input {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+    }
+    .hidden { display: none; }
+</style>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Category change handler for dynamic specifications
         const categorySelect = document.getElementById('category_id');
         const specificationsContainer = document.getElementById('specifications-container');
         
-        if (categorySelect && specificationsContainer) {
-            categorySelect.addEventListener('change', function() {
-                const categoryId = this.value;
-                if (categoryId) {
-                    loadSpecifications(categoryId);
-                } else {
-                    specificationsContainer.innerHTML = '<p class="text-sm text-gray-500">Select a category to see specification fields.</p>';
-                }
-            });
-        }
+        // Initialize category dropdown (search/select like customer)
+        (function initializeCategoryDropdown(){
+            const searchInput = document.getElementById('category_search');
+            const hiddenId = document.getElementById('category_id');
+            const dropdownList = document.getElementById('category_dropdown_list');
+            if (!searchInput || !hiddenId || !dropdownList) return;
+            const dropdownItemsContainer = dropdownList.querySelector('.dropdown-items');
+            const allItems = dropdownItemsContainer.querySelectorAll('.dropdown-item');
+            const noResults = dropdownList.querySelector('.dropdown-no-results');
+            let selectedIndex = -1;
+            function filter(term){
+                let visible=0; const t=(term||'').toLowerCase();
+                allItems.forEach(item=>{ const st=item.dataset.searchText||''; if(t===''||st.includes(t)){ item.classList.remove('hidden'); visible++; } else { item.classList.add('hidden'); } });
+                if (noResults) noResults.classList.toggle('hidden', visible!==0);
+            }
+            function updateHighlight(visibleItems){ visibleItems.forEach(i=>i.classList.remove('bg-indigo-50')); if(selectedIndex>=0&&visibleItems[selectedIndex]){ visibleItems[selectedIndex].classList.add('bg-indigo-50'); } }
+            function selectCategory(item){ const id=item.dataset.id; const name=item.dataset.name; hiddenId.value=id; searchInput.value=name; dropdownList.classList.add('hidden'); selectedIndex=-1; if (id) loadSpecifications(id); }
+            searchInput.addEventListener('focus', ()=>{ dropdownList.classList.remove('hidden'); filter(searchInput.value); });
+            searchInput.addEventListener('input', (e)=>{ filter(e.target.value); selectedIndex=-1; dropdownList.classList.remove('hidden'); });
+            dropdownItemsContainer.querySelectorAll('.dropdown-item').forEach(item=>{ item.addEventListener('click', ()=> selectCategory(item)); });
+            searchInput.addEventListener('keydown', (e)=>{ const visibleItems=Array.from(dropdownItemsContainer.querySelectorAll('.dropdown-item:not(.hidden)')); if(e.key==='ArrowDown'){ e.preventDefault(); selectedIndex=Math.min(selectedIndex+1, visibleItems.length-1); updateHighlight(visibleItems);} else if(e.key==='ArrowUp'){ e.preventDefault(); selectedIndex=Math.max(selectedIndex-1, -1); updateHighlight(visibleItems);} else if(e.key==='Enter'){ e.preventDefault(); if(selectedIndex>=0&&visibleItems[selectedIndex]) selectCategory(visibleItems[selectedIndex]); } else if(e.key==='Escape'){ dropdownList.classList.add('hidden'); selectedIndex=-1; }});
+        })();
 
         // Function to load specifications based on category
         function loadSpecifications(categoryId) {
@@ -527,6 +607,69 @@ Speed range
             });
             
             specificationsContainer.innerHTML = html;
+        }
+
+        // Brand dropdown with inline create
+        (function initializeBrandDropdown(){
+            const searchInput = document.getElementById('brand_search');
+            const hiddenId = document.getElementById('brand_id');
+            const dropdownList = document.getElementById('brand_dropdown_list');
+            if (!searchInput || !hiddenId || !dropdownList) return;
+            const dropdownItemsContainer = dropdownList.querySelector('.dropdown-items');
+            const noResultsContainer = dropdownList.querySelector('.dropdown-no-results');
+            const newNameSpan = noResultsContainer ? noResultsContainer.querySelector('#new_brand_name') : null;
+            const addBtn = noResultsContainer ? noResultsContainer.querySelector('#add_brand_btn') : null;
+            let selectedIndex = -1;
+            function filter(term){
+                let visible=0; const t=(term||'').toLowerCase();
+                dropdownItemsContainer.querySelectorAll('.dropdown-item').forEach(item=>{ const st=item.dataset.searchText||''; if(t===''||st.includes(t)){ item.classList.remove('hidden'); visible++; } else { item.classList.add('hidden'); } });
+                if (noResultsContainer){ noResultsContainer.classList.toggle('hidden', visible!==0); if (newNameSpan) newNameSpan.textContent = term || ''; }
+            }
+            function updateHighlight(visibleItems){ visibleItems.forEach(i=>i.classList.remove('bg-indigo-50')); if(selectedIndex>=0&&visibleItems[selectedIndex]){ visibleItems[selectedIndex].classList.add('bg-indigo-50'); } }
+            function selectBrand(item){ const id=item.dataset.id; const name=item.dataset.name; hiddenId.value=id; searchInput.value=name; dropdownList.classList.add('hidden'); selectedIndex=-1; updateSkuPreview(name); }
+            function appendBrandOption(id, name){ const div=document.createElement('div'); div.className='dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0'; div.dataset.id=id; div.dataset.name=name; div.dataset.searchText=name.toLowerCase(); div.innerHTML = `<div class="font-medium text-gray-900">${name}</div>`; div.addEventListener('click', ()=> selectBrand(div)); dropdownItemsContainer.appendChild(div); }
+            async function createBrand(name, file){
+                if(!name) return;
+                const formData = new FormData();
+                formData.append('name', name);
+                if (file) formData.append('logo', file);
+                try{
+                    const res = await fetch(`{{ route('admin.brands.ajax.store') }}`, {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                        body: formData,
+                        credentials: 'same-origin'
+                    });
+                    if (!res.ok) {
+                        if (res.status === 419 || res.status === 401) { throw new Error('Session expired. Please reload the page.'); }
+                        if (res.status === 403) { throw new Error('You do not have permission to create brands.'); }
+                    }
+                    let data;
+                    try { data = await res.json(); } catch(parseErr){ const text = await res.text(); console.error('Non-JSON response:', text); throw new Error('Non-JSON response'); }
+                    if(data && data.success){
+                        appendBrandOption(data.brand.id, data.brand.name);
+                        hiddenId.value = data.brand.id;
+                        searchInput.value = data.brand.name;
+                        dropdownList.classList.add('hidden');
+                        updateSkuPreview(data.brand.name);
+                    } else {
+                        alert(data.message || 'Failed to create brand');
+                    }
+                } catch(e){ console.error(e); alert(e.message || 'Failed to create brand'); }
+            }
+            searchInput.addEventListener('focus', ()=>{ dropdownList.classList.remove('hidden'); filter(searchInput.value); });
+            searchInput.addEventListener('input', (e)=>{ filter(e.target.value); selectedIndex=-1; dropdownList.classList.remove('hidden'); });
+            dropdownItemsContainer.querySelectorAll('.dropdown-item').forEach(item=>{ item.addEventListener('click', ()=> selectBrand(item)); });
+            searchInput.addEventListener('keydown', (e)=>{ const visibleItems=Array.from(dropdownItemsContainer.querySelectorAll('.dropdown-item:not(.hidden)')); if(e.key==='ArrowDown'){ e.preventDefault(); selectedIndex=Math.min(selectedIndex+1, visibleItems.length-1); updateHighlight(visibleItems);} else if(e.key==='ArrowUp'){ e.preventDefault(); selectedIndex=Math.max(selectedIndex-1, -1); updateHighlight(visibleItems);} else if(e.key==='Enter'){ e.preventDefault(); if(selectedIndex>=0&&visibleItems[selectedIndex]) selectBrand(visibleItems[selectedIndex]); else if(noResultsContainer && noResultsContainer.classList.contains('hidden')===false){ createBrand(searchInput.value.trim()); } } else if(e.key==='Escape'){ dropdownList.classList.add('hidden'); selectedIndex=-1; }});
+            if (addBtn){ addBtn.addEventListener('click', ()=> openAddBrandModal(searchInput.value.trim())); }
+        })();
+
+        window.updateSkuPreview = function(brandName){
+            const preview = document.getElementById('sku_preview');
+            if (!preview) return;
+            if (!brandName){ preview.value = 'Will auto-generate based on selected brand'; return; }
+            const prefix = brandName.toLowerCase().includes('maxtest') ? 'MT' : brandName.toLowerCase().includes('maxware') ? 'MW' : 'MM';
+            preview.value = `${prefix}-####`;
         }
 
         // Parameters template insertion
@@ -654,8 +797,104 @@ Weight
     function closeModal() {
         document.getElementById('parametersHelpModal').classList.add('hidden');
     }
+
+    // Add Brand Modal logic
+    function openAddBrandModal(prefillName){
+        const modal = document.getElementById('addBrandModal');
+        const nameInput = document.getElementById('new_brand_name_input');
+        if (!modal || !nameInput) return;
+        nameInput.value = prefillName || '';
+        modal.classList.remove('hidden');
+    }
+    function closeAddBrandModal(){
+        const modal = document.getElementById('addBrandModal');
+        if (modal) modal.classList.add('hidden');
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+        const openBtn = document.getElementById('open_add_brand_modal');
+        const cancelBtn = document.getElementById('cancel_add_brand_btn');
+        const saveBtn = document.getElementById('save_add_brand_btn');
+        const nameInput = document.getElementById('new_brand_name_input');
+        const logoInput = document.getElementById('new_brand_logo_input');
+        if (openBtn){ openBtn.addEventListener('click', ()=> openAddBrandModal('')); }
+        if (cancelBtn){ cancelBtn.addEventListener('click', closeAddBrandModal); }
+        if (saveBtn){
+            saveBtn.addEventListener('click', async ()=>{
+                const n = nameInput ? nameInput.value.trim() : '';
+                const f = logoInput ? logoInput.files[0] : null;
+                if (!n){ alert('Please enter a brand name'); return; }
+                // Reuse the inner function in brand dropdown scope by calling via window
+                // Fallback: perform a FormData POST and then update inputs
+                try{
+                    const formData = new FormData();
+                    formData.append('name', n);
+                    if (f) formData.append('logo', f);
+                    const res = await fetch(`{{ route('admin.brands.ajax.store') }}`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }, body: formData, credentials: 'same-origin' });
+                    if (!res.ok) {
+                        if (res.status === 419 || res.status === 401) { throw new Error('Session expired. Please reload the page.'); }
+                        if (res.status === 403) { throw new Error('You do not have permission to create brands.'); }
+                    }
+                    let data; try { data = await res.json(); } catch(parseErr){ const text = await res.text(); console.error('Non-JSON response:', text); throw new Error('Non-JSON response'); }
+                    if (data && data.success){
+                        // Update dropdown list
+                        const dropdownItemsContainer = document.querySelector('#brand_dropdown_list .dropdown-items');
+                        if (dropdownItemsContainer){
+                            const div=document.createElement('div');
+                            div.className='dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0';
+                            div.dataset.id=data.brand.id; div.dataset.name=data.brand.name; div.dataset.searchText=(data.brand.name||'').toLowerCase();
+                            div.innerHTML = `<div class="font-medium text-gray-900">${data.brand.name}</div>`;
+                            div.addEventListener('click', ()=>{
+                                const hiddenId = document.getElementById('brand_id');
+                                const searchInput = document.getElementById('brand_search');
+                                const dropdownList = document.getElementById('brand_dropdown_list');
+                                if (hiddenId && searchInput && dropdownList){ hiddenId.value=data.brand.id; searchInput.value=data.brand.name; dropdownList.classList.add('hidden'); }
+                            });
+                            dropdownItemsContainer.appendChild(div);
+                        }
+                        const hiddenId = document.getElementById('brand_id');
+                        const searchInput = document.getElementById('brand_search');
+                        if (hiddenId && searchInput){ hiddenId.value=data.brand.id; searchInput.value=data.brand.name; }
+                        updateSkuPreview(data.brand.name);
+                        closeAddBrandModal();
+                    } else {
+                        alert(data.message || 'Failed to create brand');
+                    }
+                } catch(e){ console.error(e); alert(e.message || 'Failed to create brand'); }
+            });
+        }
+    });
 </script>
 
 <!-- Include price calculator script -->
 <script src="{{ asset('js/product-price-calculator.js') }}"></script>
+<!-- Add Brand Modal -->
+<div id="addBrandModal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div class="sm:flex sm:items-start">
+                    <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4" id="modal-title">Add Brand</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Brand Name <span class="text-red-500">*</span></label>
+                                <input type="text" id="new_brand_name_input" class="block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter brand name">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Logo (optional)</label>
+                                <input type="file" id="new_brand_logo_input" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/avif" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button type="button" id="save_add_brand_btn" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">Save</button>
+                <button type="button" id="cancel_add_brand_btn" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

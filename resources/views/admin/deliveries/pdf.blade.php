@@ -455,36 +455,6 @@
             </div>
         </div>
 
-        <!-- ORDER DETAILS SECTION -->
-        @if($delivery->order)
-        <div class="order-details-section" style="margin-bottom: 25px;">
-            <div style="background-color: var(--primary-light); padding: 20px; border-radius: 8px; border-left: 4px solid var(--primary-color); margin-bottom: 20px;">
-                <div class="section-heading" style="color: var(--primary-color); margin-bottom: 15px;">Order Information</div>
-                <div style="display: flex; justify-content: space-between; gap: 30px;">
-                    <div style="flex: 1;">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 10px;">
-                            <div>
-                                <span style="font-weight: 600; color: var(--text-secondary);">Order Number:</span>
-                                <span style="color: var(--text-primary); font-weight: 600;">{{ $delivery->order->order_number }}</span>
-                            </div>
-                            <div>
-                                <span style="font-weight: 600; color: var(--text-secondary);">Order Date:</span>
-                                <span style="color: var(--text-primary);">{{ formatDubaiDate($delivery->order->created_at, 'd M Y') }}</span>
-                            </div>
-                            <div>
-                                <span style="font-weight: 600; color: var(--text-secondary);">Currency:</span>
-                                <span style="color: var(--text-primary);">{{ $delivery->order->currency ?? 'AED' }}</span>
-                            </div>
-                            <div>
-                                <span style="font-weight: 600; color: var(--text-secondary);">Order Status:</span>
-                                <span style="color: var(--text-primary); text-transform: capitalize;">{{ $delivery->order->status }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endif
 
         <!-- META INFORMATION -->
         <div class="meta-wrapper">
@@ -634,18 +604,67 @@
                             </div>
                         </td>
                         <td class="text-center">
-                            @if($item->specifications && !empty(trim($item->specifications)))
+                            @php
+                                $hasSpecifications = false;
+                                $hasSize = false;
+                                
+                                // Try to get specifications from item variations or product specifications
+                                $specifications = '';
+                                $size = '';
+                                
+                                // First, try to get specifications from variation field (if it contains JSON)
+                                if ($item->variation && !empty(trim($item->variation))) {
+                                    try {
+                                        $variationData = json_decode($item->variation, true);
+                                        if (is_array($variationData)) {
+                                            if (isset($variationData['specifications'])) {
+                                                $specifications = $variationData['specifications'];
+                                                $hasSpecifications = true;
+                                            }
+                                            if (isset($variationData['size'])) {
+                                                $size = $variationData['size'];
+                                                $hasSize = true;
+                                            }
+                                        }
+                                    } catch (Exception $e) {
+                                        // If variation is not JSON, treat it as specifications
+                                        $specifications = $item->variation;
+                                        $hasSpecifications = true;
+                                    }
+                                }
+                                
+                                // If no specifications from variation, try to get from product specifications
+                                if (!$hasSpecifications && $item->product && $item->product->specifications && $item->product->specifications->count() > 0) {
+                                    $specItems = [];
+                                    foreach ($item->product->specifications->take(3) as $spec) {
+                                        if (!empty(trim($spec->specification_value))) {
+                                            $displayName = $spec->display_name ?: $spec->specification_key;
+                                            $value = trim($spec->specification_value);
+                                            if ($spec->unit) {
+                                                $value .= ' ' . $spec->unit;
+                                            }
+                                            $specItems[] = $displayName . ': ' . $value;
+                                        }
+                                    }
+                                    if (!empty($specItems)) {
+                                        $specifications = implode(', ', $specItems);
+                                        $hasSpecifications = true;
+                                    }
+                                }
+                            @endphp
+                            
+                            @if($hasSpecifications)
                                 @php
                                     $selectedSpecs = [];
                                     try {
-                                        if (is_string($item->specifications) && (str_starts_with($item->specifications, '[') && str_ends_with($item->specifications, ']'))) {
-                                            $selectedSpecs = json_decode($item->specifications, true);
+                                        if (is_string($specifications) && (str_starts_with($specifications, '[') && str_ends_with($specifications, ']'))) {
+                                            $selectedSpecs = json_decode($specifications, true);
                                         } else {
-                                            $selectedSpecs = explode(',', $item->specifications);
+                                            $selectedSpecs = explode(',', $specifications);
                                             $selectedSpecs = array_map('trim', $selectedSpecs);
                                         }
                                     } catch (Exception $e) {
-                                        $selectedSpecs = [$item->specifications];
+                                        $selectedSpecs = [$specifications];
                                     }
                                 @endphp
                                 
@@ -658,14 +677,14 @@
                                 @endif
                             @endif
                             
-                            @if($item->size && !empty(trim($item->size)))
+                            @if($hasSize && !empty(trim($size)))
                                 <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3; margin-top: 3px;">
                                     <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1px;">Size:</div>
-                                    <div>{{ $item->size }}</div>
+                                    <div>{{ $size }}</div>
                                 </div>
                             @endif
                             
-                            @if((!$item->specifications || empty(trim($item->specifications))) && (!$item->size || empty(trim($item->size))))
+                            @if(!$hasSpecifications && !$hasSize)
                                 <span style="color: var(--text-muted);">-</span>
                             @endif
                         </td>
@@ -846,6 +865,37 @@
                             <div class="signature-name">MaxMed Representative</div>
                         @endif
                         <div class="signature-date">{{ formatDubaiDate($delivery->delivered_at ?? $delivery->created_at, 'd M Y') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        <!-- ORDER DETAILS SECTION (MOVED TO END) -->
+        @if($delivery->order)
+        <div class="order-details-section" style="margin-bottom: 25px; margin-top: 30px;">
+            <div style="background-color: var(--primary-light); padding: 20px; border-radius: 8px; border-left: 4px solid var(--primary-color); margin-bottom: 20px;">
+                <div class="section-heading" style="color: var(--primary-color); margin-bottom: 15px;">Order Information</div>
+                <div style="display: flex; justify-content: space-between; gap: 30px;">
+                    <div style="flex: 1;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 10px;">
+                            <div>
+                                <span style="font-weight: 600; color: var(--text-secondary);">Order Number:</span>
+                                <span style="color: var(--text-primary); font-weight: 600;">{{ $delivery->order->order_number }}</span>
+                            </div>
+                            <div>
+                                <span style="font-weight: 600; color: var(--text-secondary);">Order Date:</span>
+                                <span style="color: var(--text-primary);">{{ formatDubaiDate($delivery->order->created_at, 'd M Y') }}</span>
+                            </div>
+                            <div>
+                                <span style="font-weight: 600; color: var(--text-secondary);">Currency:</span>
+                                <span style="color: var(--text-primary);">{{ $delivery->order->currency ?? 'AED' }}</span>
+                            </div>
+                            <div>
+                                <span style="font-weight: 600; color: var(--text-secondary);">Order Status:</span>
+                                <span style="color: var(--text-primary); text-transform: capitalize;">{{ $delivery->order->status }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

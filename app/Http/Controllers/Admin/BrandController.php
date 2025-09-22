@@ -14,7 +14,7 @@ class BrandController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('permission:brands.view')->only(['index', 'show']);
-        $this->middleware('permission:brands.create')->only(['create', 'store']);
+        $this->middleware('permission:brands.create')->only(['create', 'store', 'storeAjax']);
         $this->middleware('permission:brands.edit')->only(['edit', 'update']);
         $this->middleware('permission:brands.delete')->only(['destroy']);
     }
@@ -146,5 +146,46 @@ class BrandController extends Controller
 
         return redirect()->route('admin.brands.index')
             ->with('success', 'Brand deleted successfully');
+    }
+
+    /**
+     * Store a newly created brand via AJAX and return JSON.
+     */
+    public function storeAjax(Request $request)
+    {
+        // Authorization handled by controller middleware on constructor
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:brands',
+            'description' => 'nullable|string',
+            'sort_order' => 'nullable|integer',
+            'logo' => 'nullable|mimes:jpeg,jpg,png,gif,webp,avif|max:2048',
+        ]);
+
+        $slug = Str::slug($validated['name']);
+
+        $logoUrl = null;
+        if ($request->hasFile('logo')) {
+            $path = $request->file('logo')->store('brands', 'public');
+            $logoUrl = asset('storage/' . $path);
+        }
+
+        $brand = Brand::create([
+            'name' => $validated['name'],
+            'slug' => $slug,
+            'description' => $validated['description'] ?? null,
+            'logo_url' => $logoUrl,
+            'is_featured' => false,
+            'sort_order' => $validated['sort_order'] ?? 0
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'brand' => [
+                'id' => $brand->id,
+                'name' => $brand->name,
+                'logo_url' => $brand->logo_url,
+            ],
+            'message' => 'Brand created successfully.'
+        ]);
     }
 }
