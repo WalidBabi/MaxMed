@@ -470,6 +470,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         // Brand Management
         Route::resource('brands', \App\Http\Controllers\Admin\BrandController::class);
+        // AJAX endpoint to create brand without page refresh
+        Route::post('brands/ajax', [\App\Http\Controllers\Admin\BrandController::class, 'storeAjax'])
+            ->name('brands.ajax.store');
 
                 // Delivery Management
         Route::resource('deliveries', \App\Http\Controllers\Admin\DeliveryController::class)->except(['show']);
