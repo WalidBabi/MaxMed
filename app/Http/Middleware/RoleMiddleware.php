@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 use Symfony\Component\HttpFoundation\Response;
 
 class RoleMiddleware
@@ -41,6 +42,13 @@ class RoleMiddleware
                 'user_id' => $user->id,
                 'user_email' => $user->email,
                 'user_role' => $user->role?->name,
+                'user_roles' => (function () use ($user) {
+                    try {
+                        return Schema::hasTable('role_user') ? $user->roles()->pluck('name') : collect();
+                    } catch (\Throwable $e) {
+                        return collect();
+                    }
+                })(),
                 'required_roles' => $roles,
                 'url' => $request->url(),
                 'ip' => $request->ip(),
@@ -51,7 +59,14 @@ class RoleMiddleware
                     'error' => 'Forbidden',
                     'message' => "You don't have the required role to access this resource.",
                     'required_roles' => $roles,
-                    'user_role' => $user->role?->name
+                    'user_role' => $user->role?->name,
+                    'user_roles' => (function () use ($user) {
+                        try {
+                            return Schema::hasTable('role_user') ? $user->roles()->pluck('name') : collect();
+                        } catch (\Throwable $e) {
+                            return collect();
+                        }
+                    })()
                 ], 403);
             }
 

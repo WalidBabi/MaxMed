@@ -8,6 +8,7 @@ use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rules;
 
 class UserController extends Controller
@@ -28,19 +29,33 @@ class UserController extends Controller
         $tab = $request->get('tab', 'all');
         
         // Base query with relationships
-        $query = User::with(['role', 'activeAssignedCategories', 'products']);
+        $with = ['role', 'activeAssignedCategories', 'products'];
+        try {
+            if (Schema::hasTable('role_user')) {
+                $with[] = 'roles';
+            }
+        } catch (\Throwable $e) {}
+        $query = User::with($with);
 
         // Tab filtering
         switch ($tab) {
             case 'suppliers':
-                $query->whereHas('role', function($q) {
-                    $q->where('name', 'supplier');
-                });
+                try {
+                    if (Schema::hasTable('role_user')) {
+                        $query->whereHas('roles', function($q) { $q->where('name', 'supplier'); });
+                        break;
+                    }
+                } catch (\Throwable $e) {}
+                $query->whereHas('role', function($q) { $q->where('name', 'supplier'); });
                 break;
             case 'admins':
-                $query->whereHas('role', function($q) {
-                    $q->where('name', 'admin');
-                });
+                try {
+                    if (Schema::hasTable('role_user')) {
+                        $query->whereHas('roles', function($q) { $q->whereIn('name', ['admin','super_admin']); });
+                        break;
+                    }
+                } catch (\Throwable $e) {}
+                $query->whereHas('role', function($q) { $q->whereIn('name', ['admin','super_admin']); });
                 break;
             default:
                 // All users - no additional filtering
@@ -59,13 +74,27 @@ class UserController extends Controller
         // Role filter (only apply if not in specific tab)
         if ($request->filled('role') && $tab === 'all') {
             if ($request->role === 'admin') {
-                $query->whereHas('role', function($q) {
-                    $q->where('name', 'admin');
-                });
+                try {
+                    if (Schema::hasTable('role_user')) {
+                        $query->whereHas('roles', function($q) { $q->whereIn('name', ['admin','super_admin']); });
+                    } else {
+                        $query->whereHas('role', function($q) { $q->whereIn('name', ['admin','super_admin']); });
+                    }
+                } catch (\Throwable $e) {
+                    $query->whereHas('role', function($q) { $q->whereIn('name', ['admin','super_admin']); });
+                }
             } elseif ($request->role === 'no_role') {
                 $query->where('role_id', null);
             } else {
-                $query->where('role_id', $request->role);
+                try {
+                    if (Schema::hasTable('role_user')) {
+                        $query->whereHas('roles', function($q) use ($request) { $q->where('roles.id', $request->role); });
+                    } else {
+                        $query->where('role_id', $request->role);
+                    }
+                } catch (\Throwable $e) {
+                    $query->where('role_id', $request->role);
+                }
             }
         }
 
@@ -103,6 +132,12 @@ class UserController extends Controller
         // Get roles for the filter dropdown
         $roles = Role::where('is_active', true)->get();
         
+        // Whether multi-role pivot exists (for view rendering)
+        $hasRolePivot = false;
+        try {
+            $hasRolePivot = Schema::hasTable('role_user');
+        } catch (\Throwable $e) {}
+        
         // Get counts for tab badges
         $supplierCount = User::whereHas('role', function($q) {
             $q->where('name', 'supplier');
@@ -115,7 +150,7 @@ class UserController extends Controller
         // Check if user can view sensitive data
         $canViewSensitive = auth()->user()->can('view-sensitive-data');
         
-        return view('admin.users.index', compact('users', 'roles', 'supplierCount', 'adminCount', 'canViewSensitive'));
+        return view('admin.users.index', compact('users', 'roles', 'supplierCount', 'adminCount', 'canViewSensitive', 'hasRolePivot'));
     }
 
     /**
@@ -124,8 +159,9 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::where('is_active', true)->get();
+        $assignedRoleIds = [];
         
-        return view('admin.users.create', compact('roles'));
+        return view('admin.users.create', compact('roles', 'assignedRoleIds'));
     }
 
     /**
@@ -137,15 +173,26 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role_id' => ['nullable', 'exists:roles,id'],
+            'roles' => ['nullable', 'array'],
+            'roles.*' => ['exists:roles,id'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role_id' => $request->role_id,
+            // Backward compatibility: set role_id to first selected role if provided
+            'role_id' => ($request->filled('roles') && is_array($request->roles)) ? ($request->roles[0] ?? null) : null,
         ]);
+
+        // Sync roles to pivot if available
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('role_user') && $request->filled('roles') && is_array($request->roles)) {
+                $user->roles()->sync($request->roles);
+            }
+        } catch (\Throwable $e) {
+            // Ignore if pivot missing; legacy role_id remains
+        }
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User created successfully.');
@@ -167,8 +214,20 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $roles = Role::where('is_active', true)->get();
+        $assignedRoleIds = [];
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('role_user')) {
+                $assignedRoleIds = $user->roles()->pluck('roles.id')->toArray();
+            } elseif ($user->role_id) {
+                $assignedRoleIds = [$user->role_id];
+            }
+        } catch (\Throwable $e) {
+            if ($user->role_id) {
+                $assignedRoleIds = [$user->role_id];
+            }
+        }
         
-        return view('admin.users.edit', compact('user', 'roles'));
+        return view('admin.users.edit', compact('user', 'roles', 'assignedRoleIds'));
     }
 
     /**
@@ -180,13 +239,17 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
-            'role_id' => ['nullable', 'exists:roles,id'],
+            'roles' => ['nullable', 'array'],
+            'roles.*' => ['exists:roles,id'],
         ]);
 
         $userData = [
             'name' => $request->name,
             'email' => $request->email,
-            'role_id' => $request->role_id,
+            // Backward compatibility: set role_id to first selected role if provided
+            'role_id' => ($request->has('roles') && is_array($request->roles) && count($request->roles) > 0)
+                ? ($request->roles[0] ?? null)
+                : $user->role_id,
         ];
 
         if ($request->filled('password')) {
@@ -194,6 +257,23 @@ class UserController extends Controller
         }
 
         $user->update($userData);
+
+        // Ensure both legacy role_id and submitted roles are reflected in pivot (union)
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('role_user')) {
+                $submitted = $request->has('roles') && is_array($request->roles)
+                    ? array_map('intval', $request->roles)
+                    : [];
+                $existing = $user->roles()->pluck('roles.id')->toArray();
+                $legacy = $user->role_id ? [$user->role_id] : [];
+                $final = array_values(array_unique(array_merge($existing, $legacy, $submitted)));
+                if (!empty($final)) {
+                    $user->roles()->sync($final);
+                }
+            }
+        } catch (\Throwable $e) {
+            // Ignore if pivot missing; legacy role_id remains
+        }
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User updated successfully.');

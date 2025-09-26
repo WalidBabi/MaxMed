@@ -20,7 +20,13 @@ class CrmLeadPriceController extends Controller
         
         // Only users with purchasing permissions can submit prices
         $this->middleware(function ($request, $next) {
-            if (!$this->hasPurchasingPermissions(Auth::user())) {
+            $user = Auth::user();
+            // Allow super admins/admins to bypass purchasing check
+            if (method_exists($user, 'isAdmin') && $user->isAdmin()) {
+                return $next($request);
+            }
+
+            if (!$this->hasPurchasingPermissions($user)) {
                 abort(403, 'You do not have permission to submit prices.');
             }
             return $next($request);

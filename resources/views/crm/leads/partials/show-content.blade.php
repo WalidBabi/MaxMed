@@ -170,7 +170,7 @@
                                     <p class="text-xs font-medium text-gray-600 mb-1">Attachments:</p>
                                     <div class="flex flex-wrap gap-1">
                                         @foreach($submission->attachments as $index => $attachment)
-                                            <a href="{{ route('crm.price-submissions.download-attachment', [$submission->id, $index]) }}" 
+                                            <a href="{{ route('price-submissions.download-attachment', [$submission->id, $index]) }}" 
                                                class="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-md hover:bg-blue-200" 
                                                title="Download {{ $attachment['original_name'] }}">
                                                 📎 {{ $attachment['original_name'] }}
