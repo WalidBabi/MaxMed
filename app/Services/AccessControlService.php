@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class AccessControlService
 {
@@ -36,6 +37,7 @@ class AccessControlService
      */
     private static $adminRoles = [
         'super_admin',
+        'admin',
         'system_admin',
         'business_admin',
         'operations_manager',
@@ -115,27 +117,43 @@ class AccessControlService
      */
     private static function hasRoleHierarchyAccess(User $user, string $permission): bool
     {
-        if (!$user->role) {
-            return false;
-        }
-
         // Super admin has access to everything
         if ($user->hasRole('super_admin')) {
             return true;
         }
 
-        // If user's role is not in the hierarchy, they don't inherit permissions
-        if (!isset(self::$roleHierarchy[$user->role->name])) {
+        // Gather all user's role names (many-to-many + legacy single role)
+        $userRoleNames = [];
+        try {
+            if (Schema::hasTable('role_user')) {
+                $userRoleNames = $user->roles()->pluck('name')->toArray();
+            }
+        } catch (\Throwable $e) {
+            // ignore and fallback to legacy role
+        }
+        if ($user->role) {
+            $userRoleNames[] = $user->role->name;
+        }
+        $userRoleNames = array_unique($userRoleNames);
+        if (empty($userRoleNames)) {
             return false;
         }
 
-        $userRolePriority = self::$roleHierarchy[$user->role->name];
-        
-        // SECURITY FIX: Only allow higher priority roles (lower numbers) to inherit 
-        // permissions from lower priority roles (higher numbers)
-        // This means admins can access supplier functions, but suppliers can't access admin functions
+        // Find best (highest) priority among user's roles
+        $userPriorities = [];
+        foreach ($userRoleNames as $name) {
+            if (isset(self::$roleHierarchy[$name])) {
+                $userPriorities[] = self::$roleHierarchy[$name];
+            }
+        }
+        if (empty($userPriorities)) {
+            return false;
+        }
+        $bestPriority = min($userPriorities);
+
+        // Allow inheritance from lower-priority roles only
         foreach (self::$roleHierarchy as $roleName => $priority) {
-            if ($priority > $userRolePriority) { // Changed from < to >
+            if ($priority > $bestPriority) {
                 $role = Role::where('name', $roleName)->first();
                 if ($role && $role->hasPermission($permission)) {
                     return true;
@@ -144,31 +162,6 @@ class AccessControlService
         }
 
         return false;
-        
-        /* ORIGINAL PROBLEMATIC CODE:
-        if (!$user->role) {
-            return false;
-        }
-
-        // If user's role is not in the hierarchy, they don't inherit permissions
-        if (!isset(self::$roleHierarchy[$user->role->name])) {
-            return false;
-        }
-
-        $userRolePriority = self::$roleHierarchy[$user->role->name];
-        
-        // Check if any higher priority role has this permission
-        foreach (self::$roleHierarchy as $roleName => $priority) {
-            if ($priority < $userRolePriority) {
-                $role = Role::where('name', $roleName)->first();
-                if ($role && $role->hasPermission($permission)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-        */
     }
 
     /**
@@ -186,11 +179,21 @@ class AccessControlService
      */
     private static function isAdminRole(User $user): bool
     {
-        if (!$user->role) {
-            return false;
+        // Check via many-to-many roles
+        try {
+            if (Schema::hasTable('role_user') && $user->roles()->whereIn('name', self::$adminRoles)->exists()) {
+                return true;
+            }
+        } catch (\Throwable $e) {
+            // ignore and fallback to legacy
         }
 
-        return in_array($user->role->name, self::$adminRoles);
+        // Legacy fallback: single role relation
+        if ($user->role) {
+            return in_array($user->role->name, self::$adminRoles);
+        }
+
+        return false;
     }
 
     /**
@@ -244,7 +247,24 @@ class AccessControlService
      */
     public static function getUserRoleInfo(User $user): array
     {
-        if (!$user->role) {
+        $names = [];
+        $displayNames = [];
+        try {
+            if (Schema::hasTable('role_user')) {
+                $names = $user->roles()->pluck('name')->toArray();
+                $displayNames = $user->roles()->pluck('display_name')->toArray();
+            }
+        } catch (\Throwable $e) {
+            // ignore
+        }
+
+        // include legacy single role if present
+        if ($user->role) {
+            $names[] = $user->role->name;
+            $displayNames[] = $user->role->display_name;
+        }
+
+        if (empty($names)) {
             return [
                 'name' => 'No Role',
                 'display_name' => 'No Role Assigned',
@@ -253,11 +273,17 @@ class AccessControlService
             ];
         }
 
+        // Determine best priority among roles
+        $priorities = array_map(function ($n) {
+            return self::$roleHierarchy[$n] ?? 999;
+        }, $names);
+        $bestPriority = min($priorities);
+
         return [
-            'name' => $user->role->name,
-            'display_name' => $user->role->display_name,
+            'name' => implode(',', array_unique($names)),
+            'display_name' => implode(',', array_unique(array_filter($displayNames))),
             'is_admin' => self::isAdminRole($user),
-            'priority' => self::$roleHierarchy[$user->role->name] ?? 999
+            'priority' => $bestPriority
         ];
     }
 
@@ -270,6 +296,13 @@ class AccessControlService
             'user_id' => $user->id,
             'user_email' => $user->email,
             'user_role' => $user->role?->name,
+            'user_roles' => (function () use ($user) {
+                try {
+                    return Schema::hasTable('role_user') ? $user->roles()->pluck('name') : collect();
+                } catch (\Throwable $e) {
+                    return collect();
+                }
+            })(),
             'permission' => $permission,
             'granted' => $granted,
             'context' => $context,

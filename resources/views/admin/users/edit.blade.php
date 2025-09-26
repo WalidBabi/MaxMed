@@ -106,23 +106,22 @@
                     </div>
                     <div class="p-6">
                         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                            <!-- Role Assignment -->
+                            <!-- Role Assignment (Multiple via checkboxes) -->
                             <div>
-                                <label for="role_id" class="block text-sm font-medium leading-6 text-gray-900">Assign Role</label>
-                                <div class="mt-2">
-                                    <select name="role_id" id="role_id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 @error('role_id') ring-red-500 focus:ring-red-500 @enderror">
-                                        <option value="">Select a role (optional)</option>
-                                        @foreach($roles as $role)
-                                            <option value="{{ $role->id }}" {{ old('role_id', $user->role_id) == $role->id ? 'selected' : '' }}>
-                                                {{ $role->display_name }} (ID: {{ $role->id }})
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <p class="mt-1 text-sm text-gray-500">User will inherit permissions from the selected role</p>
-                                    @error('role_id')
-                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
+                                <label class="block text-sm font-medium leading-6 text-gray-900">Assign Roles</label>
+                                <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    @php($selected = isset($assignedRoleIds) ? $assignedRoleIds : (isset($user) ? (\Illuminate\Support\Facades\Schema::hasTable('role_user') ? $user->roles()->pluck('roles.id')->toArray() : (isset($user->role_id) ? [$user->role_id] : [])) : []))
+                                    @foreach($roles as $role)
+                                        <label class="inline-flex items-center space-x-2">
+                                            <input type="checkbox" name="roles[]" value="{{ $role->id }}" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" {{ in_array($role->id, old('roles', $selected ?? [])) ? 'checked' : '' }}>
+                                            <span class="text-sm text-gray-700">{{ $role->display_name }} (ID: {{ $role->id }})</span>
+                                        </label>
+                                    @endforeach
                                 </div>
+                                <p class="mt-1 text-sm text-gray-500">Select one or more roles. The first selected will be saved to the legacy field for compatibility.</p>
+                                @error('roles')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <!-- Administrative Access -->

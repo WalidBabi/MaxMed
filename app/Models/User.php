@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -68,6 +69,26 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsTo(Role::class);
     }
+
+    /**
+     * Get all roles associated with the user (many-to-many).
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_user');
+    }
+
+    /**
+     * Check if the roles pivot table exists (for safe fallback before migrations run).
+     */
+    private function rolesTableExists(): bool
+    {
+        try {
+            return Schema::hasTable('role_user');
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
     
     /**
      * Check if the user is an admin
@@ -77,11 +98,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isAdmin(): bool
     {
         try {
+            // If user has any admin-type role across multiple roles
+            if ($this->rolesTableExists() && $this->roles()->whereIn('name', ['admin', 'super_admin', 'super-administrator', 'superadmin'])->exists()) {
+                return true;
+            }
+
             if (!$this->role) {
                 return false;
             }
             
-            return in_array($this->role->name, ['admin', 'super_admin', 'super-administrator']);
+            return in_array($this->role->name, ['admin', 'super_admin', 'super-administrator', 'superadmin']);
             
         } catch (\Exception $e) {
             // Return false as fallback
@@ -97,6 +123,14 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasPermission(string $permission): bool
     {
+        // Check any assigned role via pivot
+        if ($this->rolesTableExists() && $this->roles()->whereHas('permissions', function ($q) use ($permission) {
+            $q->where('name', $permission)->where('is_active', true);
+        })->exists()) {
+            return true;
+        }
+
+        // Fallback to single role for backward compatibility
         return $this->role && $this->role->hasPermission($permission);
     }
 
@@ -119,6 +153,13 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasAnyPermission(array $permissions): bool
     {
+        // Any permission across any role
+        if ($this->rolesTableExists() && $this->roles()->whereHas('permissions', function ($q) use ($permissions) {
+            $q->whereIn('name', $permissions)->where('is_active', true);
+        })->exists()) {
+            return true;
+        }
+
         return $this->role && $this->role->hasAnyPermission($permissions);
     }
 
@@ -130,6 +171,25 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasAllPermissions(array $permissions): bool
     {
+        // Ensure all permissions are covered by aggregate of roles
+        $count = $this->rolesTableExists() ? $this->roles()
+            ->whereHas('permissions', function ($q) use ($permissions) {
+                $q->whereIn('name', $permissions)->where('is_active', true);
+            })
+            ->with(['permissions' => function ($q) use ($permissions) {
+                $q->select('permissions.id', 'permissions.name')->whereIn('name', $permissions)->where('is_active', true);
+            }])
+            ->get()
+            ->pluck('permissions')
+            ->flatten()
+            ->pluck('name')
+            ->unique()
+            ->count() : 0;
+
+        if ($count === count(array_unique($permissions))) {
+            return true;
+        }
+
         return $this->role && $this->role->hasAllPermissions($permissions);
     }
 
@@ -140,12 +200,25 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getAllPermissions()
     {
+        // Aggregate permissions across all roles
+        $perms = collect();
+        if ($this->rolesTableExists()) {
+            $permissionQuery = \App\Models\Permission::query()
+                ->where('is_active', true)
+                ->whereHas('roles', function ($q) {
+                    $q->whereIn('roles.id', $this->roles()->pluck('roles.id'));
+                });
+            $perms = $permissionQuery->get();
+        }
+
+        if ($perms->isNotEmpty()) {
+            return $perms;
+        }
+
         if (!$this->role) {
             return collect();
         }
-        
-        // Always use the query to ensure we get active permissions
-        // The relationship might not be properly loaded due to pivot table issues
+
         return $this->role->permissions()->where('is_active', true)->get();
     }
 
@@ -157,6 +230,9 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasRole(string $roleName): bool
     {
+        if ($this->rolesTableExists() && $this->roles()->where('name', $roleName)->exists()) {
+            return true;
+        }
         return $this->role && $this->role->name === $roleName;
     }
 
@@ -168,16 +244,20 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasAnyRole(array $roleNames): bool
     {
-        if (!$this->role) {
-            return false;
-        }
-        
         // Super admin has access to all roles
         if ($this->hasRole('super_admin')) {
             return true;
         }
-        
-        return in_array($this->role->name, $roleNames);
+
+        if ($this->rolesTableExists() && $this->roles()->whereIn('name', $roleNames)->exists()) {
+            return true;
+        }
+
+        if ($this->role) {
+            return in_array($this->role->name, $roleNames);
+        }
+
+        return false;
     }
 
     public function orders()
@@ -426,3 +506,4 @@ class User extends Authenticatable implements MustVerifyEmail
         return $initials;
     }
 }
+

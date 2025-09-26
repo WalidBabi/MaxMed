@@ -160,7 +160,7 @@
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assigned Categories</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Products</th>
                                 @else
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role(s)</th>
                                 @endif
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
@@ -216,14 +216,19 @@
                                         </td>
                                     @else
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            @if($user->isAdmin())
-                                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800">
-                                                    {{ $user->role->display_name }} (ID: {{ $user->role->id }})
-                                                </span>
-                                            @elseif($user->role)
-                                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800">
-                                                    {{ $user->role->display_name }} (ID: {{ $user->role->id }})
-                                                </span>
+                                            @php($allRoles = collect())
+                                            @if(!empty($hasRolePivot))
+                                                @php($allRoles = ($user->relationLoaded('roles') ? $user->roles : $user->roles()->get()))
+                                            @endif
+                                            @if($user->role)
+                                                @php($allRoles = $allRoles->push($user->role))
+                                            @endif
+                                            @if($allRoles->isNotEmpty())
+                                                @foreach($allRoles->unique('id') as $r)
+                                                    <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 mr-1 mb-1">
+                                                        {{ $r->display_name }} (ID: {{ $r->id }})
+                                                    </span>
+                                                @endforeach
                                             @else
                                                 <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-800">No Role</span>
                                             @endif
