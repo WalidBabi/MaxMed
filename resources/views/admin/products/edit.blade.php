@@ -99,9 +99,9 @@
                     <!-- Brand -->
                     <div>
                         <label for="brand_id" class="block text-sm font-medium leading-6 text-gray-900">Brand</label>
-                        <div class="mt-2">
+                        <div class="mt-2 flex space-x-2">
                             <select name="brand_id" id="brand_id"
-                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    class="block flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 <option value="">Select a brand</option>
                                 @foreach(App\Models\Brand::orderBy('name')->get() as $brand)
                                     <option value="{{ $brand->id }}" {{ old('brand_id', $product->brand_id) == $brand->id ? 'selected' : '' }}>
@@ -109,10 +109,17 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @error('brand_id')
-                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                            <button type="button" onclick="openBrandModal()" 
+                                    class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                New
+                            </button>
                         </div>
+                        @error('brand_id')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Stock Quantity -->
@@ -562,6 +569,9 @@
             </button>
         </div>
     </form>
+
+    <!-- Include Brand Creation Modal -->
+    @include('components.brand-creation-modal')
 
 @push('scripts')
 <script>

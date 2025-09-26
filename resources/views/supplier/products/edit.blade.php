@@ -88,23 +88,42 @@
 
                     <!-- Brand -->
                     <div>
-                        <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        <label for="brand_id" class="block text-sm font-medium text-gray-700 mb-2">Brand</label>
+                        <div class="mt-2 flex space-x-2">
+                            <select name="brand_id" id="brand_id"
+                                    class="block flex-1 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                <option value="">Select a brand</option>
+                                @if($supplierBrand)
+                                    <option value="{{ $supplierBrand->id }}" {{ old('brand_id', $product->brand_id) == $supplierBrand->id ? 'selected' : '' }}>
+                                        {{ $supplierBrand->name }} (Your Company)
+                                    </option>
+                                @endif
+                                @foreach(App\Models\Brand::orderBy('name')->get() as $brand)
+                                    @if(!$supplierBrand || $brand->id != $supplierBrand->id)
+                                        <option value="{{ $brand->id }}" {{ old('brand_id', $product->brand_id) == $brand->id ? 'selected' : '' }}>
+                                            {{ $brand->name }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                            <button type="button" onclick="openBrandModal()" 
+                                    class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                 </svg>
-                            </div>
-                            <input type="text" id="brand" value="{{ $supplierBrand ? $supplierBrand->name : 'No Brand Set' }}" readonly
-                                   class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-500 sm:text-sm">
+                                New
+                            </button>
                         </div>
                         <p class="mt-2 text-sm text-gray-500">
                             @if($supplierBrand)
-                                Brand is automatically set to your company name: {{ $supplierBrand->name }}
+                                Your company brand "{{ $supplierBrand->name }}" is available for selection. You can also create additional brands or select existing ones.
                             @else
-                                Please complete your company profile to set your brand name
+                                Please complete your company profile to set your brand name, or create a new brand.
                             @endif
                         </p>
+                        @error('brand_id')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- SKU -->
@@ -857,6 +876,9 @@
         </form>
     </div>
 </div>
+
+<!-- Include Brand Creation Modal -->
+@include('components.brand-creation-modal')
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
