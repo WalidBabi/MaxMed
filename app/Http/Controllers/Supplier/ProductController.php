@@ -271,6 +271,7 @@ class ProductController extends Controller
             'name' => 'required|max:255',
             'description' => 'required',
             'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'nullable|exists:brands,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,avif|max:5000',
             'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,avif|max:5000',
             'delete_images' => 'nullable|string',
@@ -286,11 +287,12 @@ class ProductController extends Controller
         ]);
 
         DB::transaction(function () use ($validated, $request, $product) {
-            // Update product (keeping original prices and brand)
+            // Update product (keeping original prices)
             $product->update([
                 'name' => $validated['name'],
                 'description' => $validated['description'],
                 'category_id' => $validated['category_id'],
+                'brand_id' => $validated['brand_id'] ?? null,
                 'has_size_options' => $validated['has_size_options'] ?? false,
                 'size_options' => $validated['size_options'] ?? null,
             ]);
