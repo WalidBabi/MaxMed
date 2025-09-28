@@ -217,20 +217,23 @@ class DashboardController extends Controller
                 ->select(
                     DB::raw('DATE_FORMAT(invoice_date, "%Y-%m") as month'),
                     'currency',
-                    DB::raw('SUM(total_amount) as total')
+                    DB::raw('SUM(total_amount) as total'),
+                    DB::raw('GROUP_CONCAT(CONCAT(invoice_number, " (", customer_name, " - ", total_amount, " ", currency, ")") SEPARATOR "; ") as invoice_details')
                 )
                 ->groupBy('month', 'currency')
                 ->get();
             
             foreach ($invoices as $invoice) {
                 if (!isset($data[$invoice->month])) {
-                    $data[$invoice->month] = ['aed' => 0, 'usd' => 0];
+                    $data[$invoice->month] = ['aed' => 0, 'usd' => 0, 'invoice_details' => ['aed' => [], 'usd' => []]];
                 }
                 
                 if (strtoupper($invoice->currency) === 'AED') {
                     $data[$invoice->month]['aed'] += $invoice->total;
+                    $data[$invoice->month]['invoice_details']['aed'][] = $invoice->invoice_details;
                 } else {
                     $data[$invoice->month]['usd'] += $invoice->total;
+                    $data[$invoice->month]['invoice_details']['usd'][] = $invoice->invoice_details;
                 }
             }
             
@@ -345,7 +348,7 @@ class DashboardController extends Controller
             $labels = $this->generateLabelsFromData($salesData, $period, $startDate, $endDate);
             
             // Format data for Chart.js
-            $datasets = $this->formatDataForChart($salesData, $period);
+            $datasets = $this->formatDataForChart($salesData, $period, $labels);
             
             return [
                 'labels' => $labels,
@@ -405,9 +408,9 @@ class DashboardController extends Controller
                     $startDate = Carbon::create($year, $quarterStartMonth, 1)->startOfMonth();
                     $endDate = $startDate->copy()->addMonths(2)->endOfMonth();
                 } else {
-                    // Default: last 4 quarters (1 year)
-                    $endDate = Carbon::now();
-                    $startDate = Carbon::now()->subYear();
+                    // Default: use a wider range to capture all data
+                    $endDate = Carbon::now()->addYear();
+                    $startDate = Carbon::now()->subYears(2);
                 }
                 break;
                 
@@ -473,7 +476,8 @@ class DashboardController extends Controller
             ->select(
                 DB::raw("DATE_FORMAT(invoice_date, '{$groupByFormat}') as period"),
                 'currency',
-                DB::raw('SUM(total_amount) as total')
+                DB::raw('SUM(total_amount) as total'),
+                DB::raw('GROUP_CONCAT(CONCAT(invoice_number, " (", customer_name, " - ", total_amount, " ", currency, ")") SEPARATOR "; ") as invoice_details')
             )
             ->groupBy('period', 'currency')
             ->get();
@@ -488,9 +492,10 @@ class DashboardController extends Controller
             }
             
             if (!isset($data[$periodKey])) {
-                $data[$periodKey] = ['AED' => 0, 'USD' => 0];
+                $data[$periodKey] = ['AED' => 0, 'USD' => 0, 'invoice_details' => ['AED' => [], 'USD' => []]];
             }
             $data[$periodKey][$invoice->currency] += $invoice->total;
+            $data[$periodKey]['invoice_details'][$invoice->currency][] = $invoice->invoice_details;
         }
         
         return $data;
@@ -514,7 +519,7 @@ class DashboardController extends Controller
     /**
      * Format data for Chart.js
      */
-    private function formatDataForChart($salesData, $period = null)
+    private function formatDataForChart($salesData, $period = null, $labels = [])
     {
         $datasets = [];
         
@@ -523,38 +528,31 @@ class DashboardController extends Controller
         $usdData = [];
         $combinedData = [];
         
-        // For quarterly data, ensure we have all 4 quarters
+        // Create a mapping of labels to data
+        $labelToDataMap = [];
+        
+        // For quarterly data, ensure we have all quarters represented
         if ($period === 'quarterly') {
-            $currentDate = Carbon::now();
-            $quarterData = [];
-            
-            // Generate last 4 quarters with zero data as default
-            for ($i = 3; $i >= 0; $i--) {
-                $quarterDate = $currentDate->copy()->subQuarters($i);
-                $year = $quarterDate->year;
-                $quarter = $quarterDate->quarter;
-                $quarterKey = $year . '-Q' . $quarter;
-                $quarterData[$quarterKey] = ['AED' => 0, 'USD' => 0];
-            }
-            
-            // Merge actual sales data with quarter template
-            foreach ($salesData as $periodKey => $periodData) {
-                if (isset($quarterData[$periodKey])) {
-                    $quarterData[$periodKey] = $periodData;
-                }
-            }
-            
-            // Sort quarters chronologically
-            ksort($quarterData);
-            
-            // Use the complete quarter data
-            $salesData = $quarterData;
+            // Don't override the sales data with a template - use the actual data
+            // The labels will be generated based on the actual data range
         }
         
         // Sort data by period key to ensure proper order
         ksort($salesData);
         
-        foreach ($salesData as $periodData) {
+        // Create mapping from period keys to labels
+        foreach ($labels as $index => $label) {
+            $periodKey = $this->convertLabelToPeriodKey($label, $period);
+            $labelToDataMap[$label] = $salesData[$periodKey] ?? ['AED' => 0, 'USD' => 0];
+        }
+        
+        // Generate data arrays in the same order as labels
+        $aedInvoiceDetails = [];
+        $usdInvoiceDetails = [];
+        $combinedInvoiceDetails = [];
+        
+        foreach ($labels as $label) {
+            $periodData = $labelToDataMap[$label];
             $aedAmount = $periodData['AED'] ?? 0;
             $usdAmount = $periodData['USD'] ?? 0;
             $combinedAmount = $aedAmount + ($usdAmount * 3.67); // Convert USD to AED
@@ -562,12 +560,21 @@ class DashboardController extends Controller
             $aedData[] = round($aedAmount, 2);
             $usdData[] = round($usdAmount, 2);
             $combinedData[] = round($combinedAmount, 2);
+            
+            // Collect invoice details for tooltips
+            $aedInvoiceDetails[] = $periodData['invoice_details']['AED'] ?? [];
+            $usdInvoiceDetails[] = $periodData['invoice_details']['USD'] ?? [];
+            $combinedInvoiceDetails[] = array_merge(
+                $periodData['invoice_details']['AED'] ?? [],
+                $periodData['invoice_details']['USD'] ?? []
+            );
         }
         
         // Always show all datasets
         $datasets[] = [
             'label' => 'AED Sales',
             'data' => $aedData,
+            'invoiceDetails' => $aedInvoiceDetails,
             'borderColor' => 'rgb(34, 197, 94)',
             'backgroundColor' => 'rgba(34, 197, 94, 0.1)',
             'borderWidth' => 3,
@@ -583,6 +590,7 @@ class DashboardController extends Controller
         $datasets[] = [
             'label' => 'USD Sales',
             'data' => $usdData,
+            'invoiceDetails' => $usdInvoiceDetails,
             'borderColor' => 'rgb(59, 130, 246)',
             'backgroundColor' => 'rgba(59, 130, 246, 0.1)',
             'borderWidth' => 3,
@@ -598,6 +606,7 @@ class DashboardController extends Controller
         $datasets[] = [
             'label' => 'Combined Sales (AED)',
             'data' => $combinedData,
+            'invoiceDetails' => $combinedInvoiceDetails,
             'borderColor' => 'rgb(147, 51, 234)',
             'backgroundColor' => 'rgba(147, 51, 234, 0.1)',
             'borderWidth' => 4,
@@ -662,18 +671,63 @@ class DashboardController extends Controller
         }
         
         // Fallback to original logic for backward compatibility
-        // For quarterly, ensure we have all 4 quarters represented
+        // For quarterly, ensure we have all quarters represented based on data
         if ($period === 'quarterly') {
             $currentDate = Carbon::now();
             $quarters = [];
             
-            // Generate last 4 quarters in chronological order
-            for ($i = 3; $i >= 0; $i--) {
-                $quarterDate = $currentDate->copy()->subQuarters($i);
-                $year = $quarterDate->year;
-                $quarter = $quarterDate->quarter;
-                $quarterKey = $year . '-Q' . $quarter;
-                $quarters[$quarterKey] = 'Q' . $quarter . ' ' . $year;
+            // Generate quarters based on actual data range
+            if (!empty($salesData)) {
+                // Find the earliest and latest quarters from the data
+                $earliestQuarter = null;
+                $latestQuarter = null;
+                
+                foreach ($salesData as $periodKey => $periodData) {
+                    if (strpos($periodKey, '-Q') !== false) {
+                        if ($earliestQuarter === null || $periodKey < $earliestQuarter) {
+                            $earliestQuarter = $periodKey;
+                        }
+                        if ($latestQuarter === null || $periodKey > $latestQuarter) {
+                            $latestQuarter = $periodKey;
+                        }
+                    }
+                }
+                
+                if ($earliestQuarter && $latestQuarter) {
+                    // Parse quarter strings manually
+                    $startParts = explode('-Q', $earliestQuarter);
+                    $endParts = explode('-Q', $latestQuarter);
+                    
+                    $startYear = (int)$startParts[0];
+                    $startQuarterNum = (int)$startParts[1];
+                    $endYear = (int)$endParts[0];
+                    $endQuarterNum = (int)$endParts[1];
+                    
+                    $currentYear = $startYear;
+                    $currentQuarter = $startQuarterNum;
+                    
+                    while ($currentYear < $endYear || ($currentYear == $endYear && $currentQuarter <= $endQuarterNum)) {
+                        $quarterKey = $currentYear . '-Q' . $currentQuarter;
+                        $quarters[$quarterKey] = 'Q' . $currentQuarter . ' ' . $currentYear;
+                        
+                        $currentQuarter++;
+                        if ($currentQuarter > 4) {
+                            $currentQuarter = 1;
+                            $currentYear++;
+                        }
+                    }
+                }
+            }
+            
+            // If no quarters found, generate last 4 quarters
+            if (empty($quarters)) {
+                for ($i = 3; $i >= 0; $i--) {
+                    $quarterDate = $currentDate->copy()->subQuarters($i);
+                    $year = $quarterDate->year;
+                    $quarter = $quarterDate->quarter;
+                    $quarterKey = $year . '-Q' . $quarter;
+                    $quarters[$quarterKey] = 'Q' . $quarter . ' ' . $year;
+                }
             }
             
             // Sort quarters chronologically (Q1, Q2, Q3, Q4)
@@ -726,17 +780,16 @@ class DashboardController extends Controller
     /**
      * Convert chart label back to period key format
      */
-    private function convertLabelToPeriodKey($label)
+    private function convertLabelToPeriodKey($label, $period)
     {
         // Handle different label formats
         if (strpos($label, 'Q') === 0) {
-            // Quarterly format: "Q1 2023" -> "2023-01"
+            // Quarterly format: "Q1 2023" -> "2023-Q1"
             preg_match('/Q(\d) (\d{4})/', $label, $matches);
             if (count($matches) === 3) {
                 $quarter = (int)$matches[1];
                 $year = $matches[2];
-                $month = ($quarter - 1) * 3 + 1; // Q1=1, Q2=4, Q3=7, Q4=10
-                return sprintf('%04d-%02d', $year, $month);
+                return $year . '-Q' . $quarter;
             }
         } elseif (preg_match('/^[A-Za-z]{3} \d{4}$/', $label)) {
             // Monthly format: "Jan 2023" -> "2023-01"
