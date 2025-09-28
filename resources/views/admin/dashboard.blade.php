@@ -644,7 +644,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     tooltip: {
                         mode: 'index',
                         intersect: false,
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)',
                         titleColor: '#fff',
                         bodyColor: '#fff',
                         borderColor: '#e5e7eb',
@@ -652,10 +652,42 @@ document.addEventListener('DOMContentLoaded', function() {
                         cornerRadius: 8,
                         displayColors: true,
                         callbacks: {
+                            title: function(context) {
+                                return context[0].label;
+                            },
                             label: function(context) {
                                 const value = context.parsed.y;
                                 const currency = context.dataset.label.includes('USD') ? 'USD' : 'AED';
-                                return `${context.dataset.label}: ${currency} ${value.toLocaleString()}`;
+                                const label = `${context.dataset.label}: ${currency} ${value.toLocaleString()}`;
+                                
+                                // Add invoice details if available
+                                if (context.dataset.invoiceDetails && context.dataset.invoiceDetails[context.dataIndex]) {
+                                    const invoiceDetails = context.dataset.invoiceDetails[context.dataIndex];
+                                    if (invoiceDetails && invoiceDetails.length > 0) {
+                                        const details = invoiceDetails.join('; ');
+                                        return [label, `Invoices: ${details}`];
+                                    }
+                                }
+                                
+                                return label;
+                            },
+                            afterBody: function(context) {
+                                // Show additional invoice information
+                                const invoiceDetails = [];
+                                context.forEach(function(item) {
+                                    if (item.dataset.invoiceDetails && item.dataset.invoiceDetails[item.dataIndex]) {
+                                        const details = item.dataset.invoiceDetails[item.dataIndex];
+                                        if (details && details.length > 0) {
+                                            invoiceDetails.push(...details);
+                                        }
+                                    }
+                                });
+                                
+                                if (invoiceDetails.length > 0) {
+                                    return ['', 'Invoice Details:', ...invoiceDetails];
+                                }
+                                
+                                return [];
                             }
                         }
                     }
@@ -780,14 +812,46 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
                         },
                         tooltip: {
-                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            backgroundColor: 'rgba(0, 0, 0, 0.9)',
                             titleColor: '#fff',
                             bodyColor: '#fff',
                             callbacks: {
+                                title: function(context) {
+                                    return context[0].label;
+                                },
                                 label: function(context) {
                                     const value = context.parsed.y;
                                     const currency = context.dataset.label.includes('USD') ? 'USD' : 'AED';
-                                    return `${context.dataset.label}: ${currency} ${value.toLocaleString()}`;
+                                    const label = `${context.dataset.label}: ${currency} ${value.toLocaleString()}`;
+                                    
+                                    // Add invoice details if available
+                                    if (context.dataset.invoiceDetails && context.dataset.invoiceDetails[context.dataIndex]) {
+                                        const invoiceDetails = context.dataset.invoiceDetails[context.dataIndex];
+                                        if (invoiceDetails && invoiceDetails.length > 0) {
+                                            const details = invoiceDetails.join('; ');
+                                            return [label, `Invoices: ${details}`];
+                                        }
+                                    }
+                                    
+                                    return label;
+                                },
+                                afterBody: function(context) {
+                                    // Show additional invoice information
+                                    const invoiceDetails = [];
+                                    context.forEach(function(item) {
+                                        if (item.dataset.invoiceDetails && item.dataset.invoiceDetails[item.dataIndex]) {
+                                            const details = item.dataset.invoiceDetails[item.dataIndex];
+                                            if (details && details.length > 0) {
+                                                invoiceDetails.push(...details);
+                                            }
+                                        }
+                                    });
+                                    
+                                    if (invoiceDetails.length > 0) {
+                                        return ['', 'Invoice Details:', ...invoiceDetails];
+                                    }
+                                    
+                                    return [];
                                 }
                             }
                         }
