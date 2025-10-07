@@ -29,6 +29,7 @@ class CrmLeadController extends Controller
             'getting_price' => 'Getting Price',
             'price_submitted' => 'Price Submitted',
             'quote_sent' => 'Quote Sent',
+            'proforma_sent' => 'Proforma Sent',
             'follow_up_1' => 'Follow-up 1',
             'follow_up_2' => 'Follow-up 2',
             'follow_up_3' => 'Follow-up 3',
@@ -71,7 +72,18 @@ class CrmLeadController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('permission:crm.leads.view')->only(['index', 'show']);
-        $this->middleware('permission:crm.leads.edit')->only(['create', 'store', 'edit', 'update']);
+        
+        // Allow superadmins to bypass edit permission check
+        $this->middleware(function ($request, $next) {
+            $user = Auth::user();
+            $isSuperAdmin = $user->hasRole('super_admin') || $user->hasRole('superadmin') || $user->hasRole('admin') || $user->hasRole('super-administrator');
+            
+            if (!$isSuperAdmin && !$user->hasPermission('crm.leads.edit')) {
+                abort(403, 'You do not have permission to edit leads.');
+            }
+            return $next($request);
+        })->only(['create', 'store', 'edit', 'update']);
+        
         $this->middleware('permission:crm.leads.delete')->only(['destroy']);
         
         // Allow purchasing specialists to view pipeline but restrict detailed access
@@ -267,13 +279,17 @@ class CrmLeadController extends Controller
             'hasPurchasing' => $hasPurchasing
         ]);
         
-        $isPurchasingUser = Auth::check() && !$isAdmin && !$isSuperAdmin && $hasPurchasing;
+        // Separate logic for different purposes:
+        // 1. isPurchasingUser - for price submission access (includes superadmins)
+        // 2. isRestrictedPurchasingUser - for customer info filtering (excludes superadmins)
+        $isPurchasingUser = Auth::check() && (!$isAdmin && !$isSuperAdmin && $hasPurchasing) || $isSuperAdmin;
+        $isRestrictedPurchasingUser = Auth::check() && !$isAdmin && !$isSuperAdmin && $hasPurchasing;
 
         // Build query with filters
         $query = CrmLead::with(['assignedUser', 'activities', 'priceSubmissions'])
-            ->when($search, function($q) use ($search, $isPurchasingUser) {
-                if ($isPurchasingUser) {
-                    // For purchasing users, only allow searching by company name
+            ->when($search, function($q) use ($search, $isRestrictedPurchasingUser) {
+                if ($isRestrictedPurchasingUser) {
+                    // For restricted purchasing users, only allow searching by company name
                     $q->where('company_name', 'like', "%{$search}%");
                 } else {
                     $q->where(function($subQ) use ($search) {
@@ -303,7 +319,7 @@ class CrmLeadController extends Controller
         $leads = $query->orderBy('created_at', 'desc')->get();
 
         // Group leads by status for pipeline view
-        $pipelineData = $this->getPipelineData($query, $isPurchasingUser);
+        $pipelineData = $this->getPipelineData($query, $isRestrictedPurchasingUser);
 
         // Get additional data for filters
         $users = User::select('id', 'name')->orderBy('name')->get();
@@ -312,22 +328,24 @@ class CrmLeadController extends Controller
 
         // Check if this is an AJAX request for kanban only
         if ($request->get('kanban_only') === '1' && $request->ajax()) {
-            return view('crm.leads.partials.pipeline-view', compact('pipelineData', 'isPurchasingUser'));
+            return view('crm.leads.partials.pipeline-view', compact('pipelineData', 'isPurchasingUser', 'isSuperAdmin'));
         }
 
-        return view('crm.leads.index', compact('pipelineData', 'users', 'priorities', 'sources', 'isPurchasingUser'));
+        return view('crm.leads.index', compact('pipelineData', 'users', 'priorities', 'sources', 'isPurchasingUser', 'isSuperAdmin'));
     }
     
     /**
      * Get leads organized by pipeline stages
      */
-    private function getPipelineData($baseQuery, $isPurchasingUser = false)
+    private function getPipelineData($baseQuery, $isRestrictedPurchasingUser = false)
     {
         $stages = [
             'new_inquiry' => ['title' => '📩 New Inquiry', 'color' => 'blue'],
             'quote_requested' => ['title' => '💰 Quote Requested', 'color' => 'slate'],
             'getting_price' => ['title' => '🔍 Getting Price', 'color' => 'indigo'],
             'price_submitted' => ['title' => '📋 Price Submitted', 'color' => 'teal'],
+            'quote_sent' => ['title' => '📤 Quote Sent', 'color' => 'cyan'],
+            'proforma_sent' => ['title' => '📄 Proforma Sent', 'color' => 'purple'],
             'follow_up_1' => ['title' => '⏰ Follow-up 1', 'color' => 'sky'],
             'follow_up_2' => ['title' => '🔔 Follow-up 2', 'color' => 'blue'],
             'follow_up_3' => ['title' => '🚨 Follow-up 3', 'color' => 'indigo'],
@@ -343,8 +361,8 @@ class CrmLeadController extends Controller
             $stageQuery = clone $baseQuery;
             $leads = $stageQuery->where('status', $status)->orderBy('created_at', 'desc')->get();
             
-            // Filter lead information for purchasing users
-            if ($isPurchasingUser) {
+            // Filter lead information for restricted purchasing users only (not superadmins)
+            if ($isRestrictedPurchasingUser) {
                 $leads = $leads->map(function($lead) {
                     // Create a class that extends stdClass to allow method calls
                     $filteredLead = new class($lead) extends \stdClass {
@@ -559,31 +577,38 @@ class CrmLeadController extends Controller
             'hasPurchasing' => $hasPurchasing
         ]);
         
-        $isPurchasingUser = Auth::check() && !$isAdmin && !$isSuperAdmin && $hasPurchasing;
+        // Separate logic for different purposes:
+        // 1. isPurchasingUser - for price submission access (includes superadmins)
+        // 2. isRestrictedPurchasingUser - for customer info filtering (excludes superadmins)
+        $isPurchasingUser = Auth::check() && (!$isAdmin && !$isSuperAdmin && $hasPurchasing) || $isSuperAdmin;
+        $isRestrictedPurchasingUser = Auth::check() && !$isAdmin && !$isSuperAdmin && $hasPurchasing;
         
-        // Filter lead data for purchasing users
-        if ($isPurchasingUser) {
+        // Filter lead data for restricted purchasing users only (not superadmins)
+        if ($isRestrictedPurchasingUser) {
             $lead = $this->filterLeadForPurchasingUser($lead);
         }
         
         // When requested via AJAX, return the modal-friendly partial
         if (request()->ajax() || request()->wantsJson()) {
-            return view('crm.leads.partials.show-content', compact('lead', 'isPurchasingUser'));
+            return view('crm.leads.partials.show-content', compact('lead', 'isPurchasingUser', 'isSuperAdmin'));
         }
         
         // For non-AJAX requests, show the full lead details page
-        return view('crm.leads.show', compact('lead', 'isPurchasingUser'));
+        return view('crm.leads.show', compact('lead', 'isPurchasingUser', 'isSuperAdmin'));
     }
     
     public function edit(CrmLead $lead)
     {
-        // Check if user has permission to edit leads
-        if (!Auth::user()->isAdmin() && !Auth::user()->hasPermission('crm.leads.edit')) {
+        $user = Auth::user();
+        $isSuperAdmin = $user->hasRole('super_admin') || $user->hasRole('superadmin') || $user->hasRole('admin') || $user->hasRole('super-administrator');
+        
+        // Check if user has permission to edit leads (superadmins bypass this check)
+        if (!$isSuperAdmin && !$user->hasPermission('crm.leads.edit')) {
             abort(403, 'You do not have permission to edit leads.');
         }
         
-        // Check if user is assigned to this lead or is admin
-        if ($lead->assigned_to !== Auth::id() && !Auth::user()->isAdmin()) {
+        // Check if user is assigned to this lead or is admin/superadmin
+        if ($lead->assigned_to !== $user->id && !$isSuperAdmin) {
             abort(403, 'You can only edit leads assigned to you.');
         }
         
@@ -602,13 +627,16 @@ class CrmLeadController extends Controller
     
     public function update(Request $request, CrmLead $lead)
     {
-        // Check if user has permission to edit leads
-        if (!Auth::user()->isAdmin() && !Auth::user()->hasPermission('crm.leads.edit')) {
+        $user = Auth::user();
+        $isSuperAdmin = $user->hasRole('super_admin') || $user->hasRole('superadmin') || $user->hasRole('admin') || $user->hasRole('super-administrator');
+        
+        // Check if user has permission to edit leads (superadmins bypass this check)
+        if (!$isSuperAdmin && !$user->hasPermission('crm.leads.edit')) {
             abort(403, 'Access Denied: You do not have permission to edit leads. Please contact your administrator to request CRM lead editing permissions.');
         }
         
-        // Check if user is assigned to this lead or is admin
-        if ($lead->assigned_to !== Auth::id() && !Auth::user()->isAdmin()) {
+        // Check if user is assigned to this lead or is admin/superadmin
+        if ($lead->assigned_to !== $user->id && !$isSuperAdmin) {
             $assignedUser = $lead->assignedUser ? $lead->assignedUser->name : 'Unassigned';
             abort(403, "Access Denied: This lead '{$lead->full_name}' is assigned to '{$assignedUser}'. You can only edit leads assigned to you. Please ask your manager to assign this lead to you, or work with leads that are already assigned to you.");
         }

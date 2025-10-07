@@ -11,6 +11,7 @@ use App\Models\Order;
 use App\Models\Delivery;
 use App\Models\Customer;
 use App\Models\Product;
+use App\Models\CrmLead;
 use App\Mail\InvoiceEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -720,18 +721,55 @@ class InvoiceController extends Controller
             }
 
             $invoice->update($invoiceUpdate);
+            
+            // Find and update related CRM lead if exists
+            $crmLeadUpdated = false;
+            $crmLead = CrmLead::where('email', $request->customer_email)->first();
+            
+            if ($crmLead) {
+                // Update CRM lead status based on invoice type
+                $oldLeadStatus = $crmLead->status;
+                $newLeadStatus = $invoice->type === 'proforma' ? 'proforma_sent' : 'payment_pending';
+                
+                $crmLead->update([
+                    'status' => $newLeadStatus,
+                    'last_contacted_at' => now()
+                ]);
+                $crmLeadUpdated = true;
+                
+                Log::info('CRM lead status updated after sending invoice', [
+                    'lead_id' => $crmLead->id,
+                    'old_status' => $oldLeadStatus,
+                    'new_status' => $newLeadStatus,
+                    'invoice_id' => $invoice->id,
+                    'invoice_type' => $invoice->type,
+                    'customer_email' => $request->customer_email
+                ]);
+            }
 
             // Return JSON response for AJAX requests
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Invoice email sent successfully!',
+                    'message' => $crmLeadUpdated 
+                        ? ($invoice->type === 'proforma' 
+                            ? 'Proforma invoice sent successfully! CRM lead status updated to "Proforma Sent".' 
+                            : 'Invoice sent successfully! CRM lead status updated to "Payment Pending".')
+                        : 'Invoice email sent successfully!',
                     'previous_status' => $previousStatus,
-                    'new_status' => $invoice->fresh()->status
+                    'new_status' => $invoice->fresh()->status,
+                    'crm_lead_updated' => $crmLeadUpdated
                 ]);
             }
 
-            return redirect()->back()->with('success', 'Invoice email sent successfully!');
+            $successMessage = 'Invoice email sent successfully!';
+            if ($crmLeadUpdated) {
+                $successMessage .= $invoice->type === 'proforma' 
+                    ? ' CRM lead status has been updated to "Proforma Sent".'
+                    : ' CRM lead status has been updated to "Payment Pending".';
+            }
+
+            return redirect()->back()->with('success', $successMessage);
 
         } catch (\Exception $e) {
             Log::error('Failed to send invoice email: ' . $e->getMessage());

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Quote;
 use App\Models\QuoteItem;
 use App\Models\Customer;
+use App\Models\CrmLead;
 use App\Mail\QuoteEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -358,6 +359,9 @@ class QuoteController extends Controller
                 $customer->name = $quote->customer_name; // Use quote's customer name
             }
 
+            // Save customer_email to the quote
+            $quote->update(['customer_email' => $request->customer_email]);
+
             Mail::to($request->customer_email)->send(new QuoteEmail($quote, $customer, $ccEmails));
             
             $previousStatus = $quote->status;
@@ -367,17 +371,47 @@ class QuoteController extends Controller
                 $quote->update(['status' => 'sent']);
             }
             
+            // Find and update related CRM lead if exists
+            $crmLeadUpdated = false;
+            $crmLead = CrmLead::where('email', $request->customer_email)->first();
+            
+            if ($crmLead) {
+                // Update CRM lead status to 'quote_sent'
+                $oldLeadStatus = $crmLead->status;
+                $crmLead->update([
+                    'status' => 'quote_sent',
+                    'last_contacted_at' => now()
+                ]);
+                $crmLeadUpdated = true;
+                
+                Log::info('CRM lead status updated after sending quote', [
+                    'lead_id' => $crmLead->id,
+                    'old_status' => $oldLeadStatus,
+                    'new_status' => 'quote_sent',
+                    'quote_id' => $quote->id,
+                    'customer_email' => $request->customer_email
+                ]);
+            }
+            
             // Return JSON response for AJAX requests
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Quote email sent successfully!',
+                    'message' => $crmLeadUpdated 
+                        ? 'Quote email sent successfully! CRM lead status updated to "Quote Sent".' 
+                        : 'Quote email sent successfully!',
                     'previous_status' => $previousStatus,
-                    'new_status' => $quote->fresh()->status
+                    'new_status' => $quote->fresh()->status,
+                    'crm_lead_updated' => $crmLeadUpdated
                 ]);
             }
             
-            return redirect()->back()->with('success', 'Quote email sent successfully to ' . $request->customer_email . '!');
+            $successMessage = 'Quote email sent successfully to ' . $request->customer_email . '!';
+            if ($crmLeadUpdated) {
+                $successMessage .= ' CRM lead status has been updated to "Quote Sent".';
+            }
+            
+            return redirect()->back()->with('success', $successMessage);
         } catch (\Exception $e) {
             Log::error('Failed to send quote email: ' . $e->getMessage());
             

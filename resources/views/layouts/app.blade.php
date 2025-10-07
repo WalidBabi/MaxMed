@@ -743,6 +743,13 @@
                     Chat with us on WhatsApp
                 </div>
             </a>
+            <!-- Telegram Floating Widget -->
+            <a href="https://t.me/MaxMedScientific" target="_blank" class="flex items-center justify-center w-14 h-14 bg-blue-500 rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 group" aria-label="Contact us on Telegram">
+                <img src="/Images/telegram-icon.webp" alt="Telegram" class="h-7 w-7" />
+                <div class="absolute right-16 bg-white text-gray-700 px-4 py-2 rounded-lg shadow-lg opacity-0 invisible transform translate-x-2 group-hover:opacity-100 group-hover:visible group-hover:translate-x-0 transition-all duration-300 whitespace-nowrap">
+                    Chat with us on Telegram
+                </div>
+            </a>
             <!-- WeChat Floating Widget -->
             <button type="button" onclick="document.getElementById('wechatModal').classList.remove('hidden');" class="flex items-center justify-center w-14 h-14 bg-green-600 rounded-full shadow-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-110 hover:-translate-y-1 group" aria-label="Contact us on WeChat">
                 <img src="/Images/wechat.png" alt="WeChat" class="h-7 w-7" />

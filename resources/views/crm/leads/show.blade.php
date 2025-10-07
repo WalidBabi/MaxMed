@@ -18,7 +18,7 @@
                         $isPurchasingRole = $isPurchasingUser ?? false;
                     @endphp
                     
-                    @if($isPurchasingRole)
+                    @if($isPurchasingRole && !$isSuperAdmin)
                         <h1 class="text-3xl font-bold text-gray-900 mb-2">Lead Requirements</h1>
                         <p class="text-gray-600">View requirements and attachments for this lead</p>
                     @else
@@ -41,7 +41,7 @@
                         Send Email
                     </button>
                     
-                    @if(!$isPurchasingRole)
+                    @if(!$isPurchasingRole || $isSuperAdmin)
                     <a href="{{ route('crm.leads.edit', $lead) }}" 
                        class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         Edit Lead
@@ -59,7 +59,7 @@
             <!-- Main Content -->
             <div class="lg:col-span-2 space-y-6">
 
-                @if(!$isPurchasingRole)
+                @if(!$isPurchasingRole || $isSuperAdmin)
                 <!-- Contact Details -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
@@ -123,7 +123,7 @@
                 </div>
                 @endif
 
-                @if(!$isPurchasingRole)
+                @if(!$isPurchasingRole || $isSuperAdmin)
                 <!-- Lead Details -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Lead Details</h3>
@@ -171,7 +171,7 @@
                 </div>
                 @endif
 
-                @if(!$isPurchasingRole)
+                @if(!$isPurchasingRole || $isSuperAdmin)
                 <!-- Activity Timeline -->
                 <div class="bg-white rounded-lg shadow">
                     <div class="px-6 py-4 border-b border-gray-200">
@@ -275,7 +275,7 @@
 
             <!-- Sidebar -->
             <div class="space-y-6">
-                @if(!$isPurchasingRole)
+                @if(!$isPurchasingRole || $isSuperAdmin)
                 <!-- Lead Status -->
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Lead Status</h3>
@@ -342,8 +342,8 @@
                 </div>
                 @endif
 
-                <!-- Price Submissions (for Admin users) -->
-                @if(!$isPurchasingRole)
+                <!-- Price Submissions (for Admin users and Superadmins) -->
+                @if(!$isPurchasingRole || $isSuperAdmin)
                     @if($lead->hasPriceSubmissions())
                     <div class="bg-white rounded-lg shadow p-6">
                         <div class="flex justify-between items-center mb-4">

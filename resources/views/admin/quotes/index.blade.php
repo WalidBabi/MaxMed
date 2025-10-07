@@ -1332,9 +1332,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.dispatchEvent(new CustomEvent('close-modal', { detail: 'send-quote-email' }));
                 
                 // Show success message with status update info
-                let message = 'Email sent successfully!';
-                if (data.previous_status && data.new_status && data.previous_status !== data.new_status) {
-                    message += ` Status updated from ${data.previous_status} to ${data.new_status}.`;
+                let message = data.message;
+                if (data.crm_lead_updated) {
+                    message += ' 🎯 CRM lead has been automatically updated!';
                 }
                 showNotification(message, 'success');
                 
