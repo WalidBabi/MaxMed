@@ -749,24 +749,30 @@ class InvoiceController extends Controller
 
             // Return JSON response for AJAX requests
             if ($request->ajax() || $request->wantsJson()) {
+                $invoiceTypeLabel = $invoice->type === 'proforma' ? 'Proforma invoice' : 'Invoice';
+                $message = $invoiceTypeLabel . ' sent successfully!';
+                
+                if ($crmLeadUpdated) {
+                    $statusLabel = $invoice->type === 'proforma' ? 'Proforma Sent' : 'Payment Pending';
+                    $message .= ' CRM lead status updated to "' . $statusLabel . '".';
+                }
+                
                 return response()->json([
                     'success' => true,
-                    'message' => $crmLeadUpdated 
-                        ? ($invoice->type === 'proforma' 
-                            ? 'Proforma invoice sent successfully! CRM lead status updated to "Proforma Sent".' 
-                            : 'Invoice sent successfully! CRM lead status updated to "Payment Pending".')
-                        : 'Invoice email sent successfully!',
+                    'message' => $message,
                     'previous_status' => $previousStatus,
                     'new_status' => $invoice->fresh()->status,
-                    'crm_lead_updated' => $crmLeadUpdated
+                    'crm_lead_updated' => $crmLeadUpdated,
+                    'crm_status' => $crmLeadUpdated ? ($invoice->type === 'proforma' ? 'proforma_sent' : 'payment_pending') : null
                 ]);
             }
 
-            $successMessage = 'Invoice email sent successfully!';
+            $invoiceTypeLabel = $invoice->type === 'proforma' ? 'Proforma invoice' : 'Invoice';
+            $successMessage = $invoiceTypeLabel . ' sent successfully to ' . $request->customer_email . '!';
+            
             if ($crmLeadUpdated) {
-                $successMessage .= $invoice->type === 'proforma' 
-                    ? ' CRM lead status has been updated to "Proforma Sent".'
-                    : ' CRM lead status has been updated to "Payment Pending".';
+                $statusLabel = $invoice->type === 'proforma' ? 'Proforma Sent' : 'Payment Pending';
+                $successMessage .= ' ✅ CRM lead status updated to "' . $statusLabel . '".';
             }
 
             return redirect()->back()->with('success', $successMessage);

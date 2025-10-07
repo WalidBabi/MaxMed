@@ -47,6 +47,25 @@
                         Edit Lead
                     </a>
                     @endif
+                    
+                    <!-- Delete Button - Only for Superadmins -->
+                    @if($isSuperAdmin)
+                    <button type="button" 
+                            onclick="confirmDelete()"
+                            class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Delete Lead
+                    </button>
+                    
+                    <!-- Hidden Delete Form -->
+                    <form id="delete-lead-form" action="{{ route('crm.leads.destroy', $lead) }}" method="POST" class="hidden">
+                        @csrf
+                        @method('DELETE')
+                    </form>
+                    @endif
+                    
                     <a href="{{ route('crm.leads.index') }}" 
                        class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500">
                         Back to Leads
@@ -1277,6 +1296,13 @@ function toggleActivityForm() {
 function toggleDealForm() {
     const form = document.getElementById('dealForm');
     form.classList.toggle('hidden');
+}
+
+// Delete confirmation function
+function confirmDelete() {
+    if (confirm('⚠️ Are you sure you want to delete this lead?\n\nThis action cannot be undone and will permanently remove:\n• All lead information\n• All activities and notes\n• All associated data\n\nPress OK to confirm deletion.')) {
+        document.getElementById('delete-lead-form').submit();
+    }
 }
 </script>
 @endpush
