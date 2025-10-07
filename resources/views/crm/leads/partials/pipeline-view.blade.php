@@ -598,7 +598,7 @@
                                                 
                                                 <!-- Name & Company -->
                                                     <div class="min-w-0 flex-1">
-                                                    @if(isset($isPurchasingUser) && $isPurchasingUser)
+                                                    @if(isset($isPurchasingUser) && $isPurchasingUser && !$isSuperAdmin)
                                                         @if($lead->notes)
                                                             <p class="text-sm font-semibold text-gray-900 truncate" title="{{ $lead->notes }}">{{ Str::limit($lead->notes, 50) }}</p>
                                                         @else
@@ -635,8 +635,8 @@
                                         <!-- Contact & Source Row -->
                                         <div class="flex items-center justify-between text-xs text-gray-500">
                                             <div class="flex items-center space-x-1">
-                                                @if(isset($isPurchasingUser) && $isPurchasingUser)
-                                                    <!-- For purchasing users, show only requirements indicator -->
+                                                @if(isset($isPurchasingUser) && $isPurchasingUser && !$isSuperAdmin)
+                                                    <!-- For restricted purchasing users, show only requirements indicator -->
                                                     @if($lead->notes)
                                                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 00-.293.707V19a2 2 0 01-2 2z"></path>
@@ -741,6 +741,13 @@
                                                                 Prices
                                                             </button>
                                                         @endif
+                                                        @if(auth()->user()->hasRole('super_admin') || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('super-administrator'))
+                                                            <button onclick="event.stopPropagation(); window.location.href='/crm/leads/{{ $lead->id }}/edit'" 
+                                                                class="flex-1 text-xs py-1 px-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
+                                                                    title="Edit Lead">
+                                                                Edit
+                                                            </button>
+                                                        @endif
                                                     </div>
                                                 @else
                                                     <button onclick="event.stopPropagation();" 
@@ -752,13 +759,13 @@
                                                         title="Send Email">
                                                         📧 Email
                                                     </button>
-                                                    @can('crm.leads.edit')
+                                                    @if(auth()->user()->can('crm.leads.edit') || auth()->user()->hasRole('super_admin') || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('super-administrator'))
                                                     <button onclick="event.stopPropagation(); window.location.href='/crm/leads/{{ $lead->id }}/edit'" 
                                                         class="flex-1 text-xs py-1 px-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
                                                             title="Edit Lead">
                                                         Edit
                                                     </button>
-                                                    @endcan
+                                                    @endif
                                                     @can('crm.leads.view_requirements')
                                                     <button onclick="event.stopPropagation(); viewLeadRequirements({{ $lead->id }})" 
                                                         class="flex-1 text-xs py-1 px-2 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition-colors"
@@ -766,6 +773,20 @@
                                                         Requirements
                                                     </button>
                                                     @endcan
+                                                    @if(auth()->user()->hasRole('super_admin') || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('super-administrator'))
+                                                        <button onclick="event.stopPropagation(); openPriceSubmissionModal({{ $lead->id }})" 
+                                                            class="flex-1 text-xs py-1 px-2 bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
+                                                                title="Submit Price">
+                                                            Submit Price
+                                                        </button>
+                                                        @if($lead->hasPriceSubmissions())
+                                                            <button onclick="event.stopPropagation(); viewPriceSubmissions({{ $lead->id }})" 
+                                                                class="flex-1 text-xs py-1 px-2 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
+                                                                    title="View Price Submissions">
+                                                                Prices
+                                                            </button>
+                                                        @endif
+                                                    @endif
                                                 @endif
                                         </div>
                                     </div>

@@ -92,6 +92,7 @@ class CrmLead extends Model
             'getting_price' => 'indigo',
             'price_submitted' => 'teal',
             'quote_sent' => 'cyan',
+            'proforma_sent' => 'purple',
             'follow_up_1' => 'sky',
             'follow_up_2' => 'blue', 
             'follow_up_3' => 'indigo',

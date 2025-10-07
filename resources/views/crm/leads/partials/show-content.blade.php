@@ -137,8 +137,8 @@
                 </div>
             </div>
 
-            <!-- Price Submissions (for Admin users) -->
-            @if(!isset($isPurchasingUser) || !$isPurchasingUser)
+            <!-- Price Submissions (for Admin users and Superadmins) -->
+            @if(!isset($isPurchasingUser) || !$isPurchasingUser || $isSuperAdmin)
                 @if($lead->hasPriceSubmissions())
                 <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
                     <div class="flex justify-between items-center mb-4">

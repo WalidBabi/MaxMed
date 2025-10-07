@@ -11,6 +11,7 @@ class Quote extends Model
     protected $fillable = [
         'quote_number',
         'customer_name',
+        'customer_email',
         'reference_number',
         'quote_date',
         'expiry_date',
