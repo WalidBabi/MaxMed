@@ -395,20 +395,24 @@ class QuoteController extends Controller
             
             // Return JSON response for AJAX requests
             if ($request->ajax() || $request->wantsJson()) {
+                $message = 'Quote email sent successfully!';
+                if ($crmLeadUpdated) {
+                    $message .= ' CRM lead status updated to "Quote Sent".';
+                }
+                
                 return response()->json([
                     'success' => true,
-                    'message' => $crmLeadUpdated 
-                        ? 'Quote email sent successfully! CRM lead status updated to "Quote Sent".' 
-                        : 'Quote email sent successfully!',
+                    'message' => $message,
                     'previous_status' => $previousStatus,
                     'new_status' => $quote->fresh()->status,
-                    'crm_lead_updated' => $crmLeadUpdated
+                    'crm_lead_updated' => $crmLeadUpdated,
+                    'crm_status' => $crmLeadUpdated ? 'quote_sent' : null
                 ]);
             }
             
             $successMessage = 'Quote email sent successfully to ' . $request->customer_email . '!';
             if ($crmLeadUpdated) {
-                $successMessage .= ' CRM lead status has been updated to "Quote Sent".';
+                $successMessage .= ' ✅ CRM lead status updated to "Quote Sent".';
             }
             
             return redirect()->back()->with('success', $successMessage);

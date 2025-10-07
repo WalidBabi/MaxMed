@@ -84,7 +84,16 @@ class CrmLeadController extends Controller
             return $next($request);
         })->only(['create', 'store', 'edit', 'update']);
         
-        $this->middleware('permission:crm.leads.delete')->only(['destroy']);
+        // Only superadmins can delete leads
+        $this->middleware(function ($request, $next) {
+            $user = Auth::user();
+            $isSuperAdmin = $user->hasRole('super_admin') || $user->hasRole('superadmin') || $user->hasRole('admin') || $user->hasRole('super-administrator');
+            
+            if (!$isSuperAdmin) {
+                abort(403, 'Only superadmins can delete leads.');
+            }
+            return $next($request);
+        })->only(['destroy']);
         
         // Allow purchasing specialists to view pipeline but restrict detailed access
         $this->middleware(function ($request, $next) {
@@ -788,10 +797,21 @@ class CrmLeadController extends Controller
     
     public function destroy(CrmLead $lead)
     {
-        $lead->delete();
-        
-        return redirect()->route('crm.leads.index')
-                        ->with('success', 'Lead deleted successfully!');
+        try {
+            $leadName = $lead->full_name;
+            $lead->delete();
+            
+            return redirect()->route('crm.leads.index')
+                            ->with('success', "Lead '{$leadName}' has been deleted successfully!");
+        } catch (\Exception $e) {
+            Log::error('Failed to delete lead: ' . $e->getMessage(), [
+                'lead_id' => $lead->id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return redirect()->back()
+                            ->with('error', 'Failed to delete lead: ' . $e->getMessage());
+        }
     }
     
     public function addActivity(Request $request, CrmLead $lead)
