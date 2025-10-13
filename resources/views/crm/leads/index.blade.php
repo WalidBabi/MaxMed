@@ -239,6 +239,40 @@
     overflow: hidden;
 }
 
+/* Bulk Actions Toolbar Styling */
+#bulk-actions-toolbar {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+#bulk-status-select option {
+    background: white;
+    color: #1f2937;
+}
+
+#bulk-status-select {
+    min-width: 200px;
+}
+
+/* Checkbox styling */
+.lead-checkbox {
+    transition: all 0.2s ease;
+}
+
+.lead-checkbox:hover {
+    transform: scale(1.1);
+}
+
 /* Medical Equipment Card Enhancements */
 /* Status Card Styling */
 .lead-card {
@@ -256,6 +290,26 @@
 .lead-card.selected {
     box-shadow: 0 0 0 2px rgb(59 130 246);
     transform: translateY(-1px);
+}
+
+/* Selected lead card styling for bulk actions */
+.lead-card.selected-lead {
+    box-shadow: 0 0 0 3px rgb(59 130 246) !important;
+    transform: translateY(-2px);
+    background-color: #eff6ff !important;
+    position: relative;
+}
+
+.lead-card.selected-lead::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%);
+    pointer-events: none;
+    border-radius: inherit;
 }
 
 .lead-card[draggable="true"] {
@@ -538,6 +592,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeKeyboardShortcuts();
     initializeTooltips();
     initializeNavigationArrows();
+    initializeBulkActions();
     
     // Add click event listeners to lead cards
     document.querySelectorAll('.lead-card').forEach(card => {
@@ -581,6 +636,166 @@ function initializePipeline() {
     }
     
     console.log('Enhanced pipeline initialized successfully');
+}
+
+// Initialize bulk actions functionality
+function initializeBulkActions() {
+    // Bulk actions event listeners
+    const applyBulkStatusBtn = document.getElementById('apply-bulk-status');
+    const selectAllBtn = document.getElementById('select-all-leads');
+    const clearSelectionBtn = document.getElementById('clear-selection');
+    
+    if (applyBulkStatusBtn) {
+        applyBulkStatusBtn.addEventListener('click', applyBulkStatusUpdate);
+    }
+    
+    if (selectAllBtn) {
+        selectAllBtn.addEventListener('click', selectAllLeads);
+    }
+    
+    if (clearSelectionBtn) {
+        clearSelectionBtn.addEventListener('click', clearLeadSelection);
+    }
+    
+    console.log('Bulk actions initialized');
+}
+
+// Toggle individual lead selection
+function toggleLeadSelection(leadId, isSelected) {
+    if (isSelected) {
+        selectedLeads.add(leadId);
+        // Add selected styling to card
+        const card = document.querySelector(`.lead-card[data-lead-id="${leadId}"]`);
+        if (card) {
+            card.classList.add('selected-lead');
+        }
+    } else {
+        selectedLeads.delete(leadId);
+        // Remove selected styling from card
+        const card = document.querySelector(`.lead-card[data-lead-id="${leadId}"]`);
+        if (card) {
+            card.classList.remove('selected-lead');
+        }
+    }
+    
+    updateBulkActionsToolbar();
+}
+
+// Update bulk actions toolbar visibility and count
+function updateBulkActionsToolbar() {
+    const toolbar = document.getElementById('bulk-actions-toolbar');
+    const countSpan = document.getElementById('selected-count');
+    
+    if (selectedLeads.size > 0) {
+        toolbar.classList.remove('hidden');
+        countSpan.textContent = `${selectedLeads.size} lead${selectedLeads.size !== 1 ? 's' : ''} selected`;
+    } else {
+        toolbar.classList.add('hidden');
+        countSpan.textContent = '0 leads selected';
+    }
+}
+
+// Select all visible leads
+function selectAllLeads() {
+    const checkboxes = document.querySelectorAll('.lead-checkbox');
+    checkboxes.forEach(checkbox => {
+        if (!checkbox.checked) {
+            checkbox.checked = true;
+            const leadId = parseInt(checkbox.dataset.leadId);
+            selectedLeads.add(leadId);
+            
+            // Add selected styling
+            const card = document.querySelector(`.lead-card[data-lead-id="${leadId}"]`);
+            if (card) {
+                card.classList.add('selected-lead');
+            }
+        }
+    });
+    updateBulkActionsToolbar();
+}
+
+// Clear all selections
+function clearLeadSelection() {
+    const checkboxes = document.querySelectorAll('.lead-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+        const leadId = parseInt(checkbox.dataset.leadId);
+        
+        // Remove selected styling
+        const card = document.querySelector(`.lead-card[data-lead-id="${leadId}"]`);
+        if (card) {
+            card.classList.remove('selected-lead');
+        }
+    });
+    selectedLeads.clear();
+    updateBulkActionsToolbar();
+}
+
+// Apply bulk status update
+function applyBulkStatusUpdate() {
+    const statusSelect = document.getElementById('bulk-status-select');
+    const newStatus = statusSelect.value;
+    
+    if (!newStatus) {
+        showNotification('Please select a status', 'warning');
+        return;
+    }
+    
+    if (selectedLeads.size === 0) {
+        showNotification('Please select at least one lead', 'warning');
+        return;
+    }
+    
+    // Confirm action
+    const statusText = statusSelect.options[statusSelect.selectedIndex].text;
+    if (!confirm(`Are you sure you want to change ${selectedLeads.size} lead(s) to ${statusText}?`)) {
+        return;
+    }
+    
+    // Show loading state
+    const applyBtn = document.getElementById('apply-bulk-status');
+    const originalText = applyBtn.textContent;
+    applyBtn.disabled = true;
+    applyBtn.textContent = 'Updating...';
+    
+    // Send bulk update request
+    fetch('{{ route("crm.leads.bulk-status-update") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            lead_ids: Array.from(selectedLeads),
+            status: newStatus
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification(data.message || 'Leads updated successfully', 'success');
+            
+            // Clear selection
+            clearLeadSelection();
+            
+            // Reload the pipeline view
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            showNotification(data.message || 'Failed to update leads', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Bulk update error:', error);
+        showNotification('An error occurred while updating leads', 'error');
+    })
+    .finally(() => {
+        // Restore button state
+        applyBtn.disabled = false;
+        applyBtn.textContent = originalText;
+    });
 }
 
 // Initialize navigation arrows

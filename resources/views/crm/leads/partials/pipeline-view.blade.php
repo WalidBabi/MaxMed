@@ -1,5 +1,53 @@
 <!-- Enhanced Sales Pipeline Board with Advanced UX -->
 <div class="mb-6">
+    <!-- Bulk Actions Toolbar (Hidden by default) -->
+    <div id="bulk-actions-toolbar" class="hidden fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg border-b border-blue-700">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="text-white font-semibold" id="selected-count">0 leads selected</span>
+                    </div>
+                    
+                    <div class="h-6 w-px bg-white/30"></div>
+                    
+                    <div class="flex items-center space-x-2">
+                        <label for="bulk-status-select" class="text-white text-sm font-medium">Change Status:</label>
+                        <select id="bulk-status-select" class="px-3 py-1.5 border border-white/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-white bg-white/10 text-white backdrop-blur-sm text-sm">
+                            <option value="">Select Status...</option>
+                            <option value="new_inquiry">📩 New Inquiry</option>
+                            <option value="quote_requested">💬 Quote Requested</option>
+                            <option value="getting_price">💰 Getting Price</option>
+                            <option value="price_submitted">📊 Price Submitted</option>
+                            <option value="follow_up_1">📞 Follow Up 1</option>
+                            <option value="follow_up_2">📞 Follow Up 2</option>
+                            <option value="follow_up_3">📞 Follow Up 3</option>
+                            <option value="negotiating_price">🤝 Negotiating Price</option>
+                            <option value="payment_pending">💳 Payment Pending</option>
+                            <option value="order_confirmed">✅ Order Confirmed</option>
+                            <option value="deal_lost">❌ Deal Lost</option>
+                        </select>
+                        <button id="apply-bulk-status" class="px-4 py-1.5 bg-white text-blue-600 rounded-md hover:bg-blue-50 font-medium transition-colors text-sm shadow-sm">
+                            Apply
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-3">
+                    <button id="select-all-leads" class="px-3 py-1.5 bg-white/10 text-white rounded-md hover:bg-white/20 backdrop-blur-sm transition-colors text-sm">
+                        Select All
+                    </button>
+                    <button id="clear-selection" class="px-3 py-1.5 bg-white/10 text-white rounded-md hover:bg-white/20 backdrop-blur-sm transition-colors text-sm">
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modern Pipeline Status Overview -->
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2 mb-6">
         @if(isset($pipelineData))
@@ -593,6 +641,14 @@
                                         <!-- Header Row -->
                                         <div class="flex items-center justify-between mb-2">
                                             <div class="flex items-center space-x-2 min-w-0 flex-1">
+                                                <!-- Checkbox for bulk selection -->
+                                                <div class="flex-shrink-0 card-checkbox" onclick="event.stopPropagation();">
+                                                    <input type="checkbox" 
+                                                           class="lead-checkbox w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer" 
+                                                           data-lead-id="{{ $lead->id }}"
+                                                           onchange="toggleLeadSelection({{ $lead->id }}, this.checked)">
+                                                </div>
+                                                
                                                 <!-- Status Indicator -->
                                                 <div class="w-2 h-2 rounded-full bg-{{ $stage['color'] }}-500 flex-shrink-0"></div>
                                                 
