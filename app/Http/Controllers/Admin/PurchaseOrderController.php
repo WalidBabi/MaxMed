@@ -355,14 +355,20 @@ class PurchaseOrderController extends Controller
                 ->with('error', $errorMessage);
         }
 
-        $purchaseOrder->load(['items.product', 'edits.editor']);
+        $purchaseOrder->load(['items.product', 'edits.editor', 'order']);
         
-        // Get orders that can have purchase orders created (same as create method)
+        // Get orders that can have purchase orders created
+        // Include the current order if it exists, plus other available orders
         $availableOrders = Order::with(['purchaseOrder', 'items'])
-            ->where(function($query) {
-                $query->whereDoesntHave('purchaseOrder')  // Orders without purchase orders
+            ->where(function($query) use ($purchaseOrder) {
+                // Include the current order
+                if ($purchaseOrder->order_id) {
+                    $query->where('id', $purchaseOrder->order_id);
+                }
+                // Or orders without purchase orders
+                $query->orWhereDoesntHave('purchaseOrder')
+                      // Or orders with purchase orders that might need additional ones
                       ->orWhereHas('purchaseOrder', function($subQuery) {
-                          // Or orders with purchase orders that might need additional ones
                           $subQuery->whereIn('status', ['cancelled', 'completed']);
                       });
             })

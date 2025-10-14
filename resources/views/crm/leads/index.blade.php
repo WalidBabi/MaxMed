@@ -273,6 +273,22 @@
     transform: scale(1.1);
 }
 
+/* Column checkbox styling */
+.column-checkbox {
+    transition: all 0.2s ease;
+}
+
+.column-checkbox:hover {
+    transform: scale(1.15);
+    cursor: pointer;
+}
+
+.column-checkbox:indeterminate {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3e%3cpath stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 8h8'/%3e%3c/svg%3e");
+}
+
 /* Medical Equipment Card Enhancements */
 /* Status Card Styling */
 .lead-card {
@@ -679,6 +695,59 @@ function toggleLeadSelection(leadId, isSelected) {
     }
     
     updateBulkActionsToolbar();
+    updateColumnCheckboxStates();
+}
+
+// Toggle selection of all leads in a specific column/status
+function toggleColumnSelection(status, isSelected) {
+    // Find all lead cards in this status column
+    const column = document.querySelector(`.pipeline-column[data-stage="${status}"]`);
+    if (!column) return;
+    
+    const leadCards = column.querySelectorAll('.lead-card');
+    const checkboxes = column.querySelectorAll('.lead-checkbox');
+    
+    checkboxes.forEach((checkbox, index) => {
+        const leadId = parseInt(checkbox.dataset.leadId);
+        checkbox.checked = isSelected;
+        
+        if (isSelected) {
+            selectedLeads.add(leadId);
+            leadCards[index]?.classList.add('selected-lead');
+        } else {
+            selectedLeads.delete(leadId);
+            leadCards[index]?.classList.remove('selected-lead');
+        }
+    });
+    
+    updateBulkActionsToolbar();
+}
+
+// Update column checkbox states based on individual lead selections
+function updateColumnCheckboxStates() {
+    // Check each column
+    document.querySelectorAll('.pipeline-column').forEach(column => {
+        const status = column.dataset.stage;
+        const columnCheckbox = column.querySelector(`.column-checkbox[data-status="${status}"]`);
+        if (!columnCheckbox) return;
+        
+        const leadCheckboxes = column.querySelectorAll('.lead-checkbox');
+        const checkedCount = Array.from(leadCheckboxes).filter(cb => cb.checked).length;
+        
+        if (checkedCount === 0) {
+            // No leads selected
+            columnCheckbox.checked = false;
+            columnCheckbox.indeterminate = false;
+        } else if (checkedCount === leadCheckboxes.length) {
+            // All leads selected
+            columnCheckbox.checked = true;
+            columnCheckbox.indeterminate = false;
+        } else {
+            // Some leads selected (indeterminate state)
+            columnCheckbox.checked = false;
+            columnCheckbox.indeterminate = true;
+        }
+    });
 }
 
 // Update bulk actions toolbar visibility and count
@@ -712,6 +781,7 @@ function selectAllLeads() {
         }
     });
     updateBulkActionsToolbar();
+    updateColumnCheckboxStates();
 }
 
 // Clear all selections
@@ -728,6 +798,13 @@ function clearLeadSelection() {
         }
     });
     selectedLeads.clear();
+    
+    // Also clear column checkboxes
+    document.querySelectorAll('.column-checkbox').forEach(cb => {
+        cb.checked = false;
+        cb.indeterminate = false;
+    });
+    
     updateBulkActionsToolbar();
 }
 
