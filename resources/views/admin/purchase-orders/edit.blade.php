@@ -1000,9 +1000,22 @@ function addItem(itemData = null) {
     initializeCustomDropdown(productSearchInput, productIdInput, itemDetailsHidden, dropdownList, dropdownItems, dropdownNoResults, rateInput, specificationsInput, specificationsHidden, specificationsDropdown, sizeSelect);
     
     // Add specifications dropdown functionality
-    specificationsInput.addEventListener('click', function() {
-        if (specificationsHidden.value && specificationsHidden.value !== '[]') {
+    specificationsInput.addEventListener('click', function(e) {
+        e.stopPropagation();
+        // Check if dropdown has checkboxes (meaning it's been populated)
+        const hasCheckboxes = specificationsDropdown.querySelector('.spec-checkbox');
+        console.log('Specifications input clicked, has checkboxes:', !!hasCheckboxes);
+        if (hasCheckboxes) {
+            const isHidden = specificationsDropdown.classList.contains('hidden');
+            console.log('Toggling dropdown, was hidden:', isHidden);
             specificationsDropdown.classList.toggle('hidden');
+        } else {
+            console.log('No checkboxes found in dropdown');
+            // Show a message if no specifications are available
+            const hasMessage = specificationsDropdown.querySelector('.p-2');
+            if (hasMessage && !hasMessage.textContent.includes('No specifications')) {
+                specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">Select a product to view specifications</div>';
+            }
         }
     });
     
@@ -1265,6 +1278,13 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
 }
 
 function createSpecificationDropdown(specificationsDropdown, specsArray, rowIndex) {
+    // Helper function to escape HTML
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
     // Create select all option
     let checkboxesHtml = `
         <div class="p-2 bg-indigo-50 border-b border-gray-200">
@@ -1277,16 +1297,19 @@ function createSpecificationDropdown(specificationsDropdown, specsArray, rowInde
     
     // Create individual specification checkboxes
     specsArray.forEach((spec, index) => {
+        const escapedSpec = escapeHtml(spec);
         checkboxesHtml += `
-            <div class="flex items-center p-2 hover:bg-gray-50">
+            <div class="flex items-center p-2 hover:bg-gray-50 border-b border-gray-100 last:border-0">
                 <input type="checkbox" class="spec-checkbox h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" 
-                       data-spec="${spec}" id="spec_${rowIndex}_${index}">
-                <label for="spec_${rowIndex}_${index}" class="flex-1 cursor-pointer ml-2 text-sm text-gray-700">${spec}</label>
+                       data-spec="${escapedSpec}" id="spec_${rowIndex}_${index}">
+                <label for="spec_${rowIndex}_${index}" class="flex-1 cursor-pointer ml-2 text-sm text-gray-700">${escapedSpec}</label>
             </div>
         `;
     });
     
     specificationsDropdown.innerHTML = checkboxesHtml;
+    
+    console.log('Created dropdown with', specsArray.length, 'specifications for row', rowIndex);
     
     // Add event listeners for checkboxes
     const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox');
@@ -1393,8 +1416,10 @@ function initializeExistingItemSpecifications(row, data) {
                 
                 // Make the input clickable to show dropdown
                 specificationsInput.style.cursor = 'pointer';
+                specificationsInput.style.backgroundColor = '#f0fdf4'; // Light green background
                 specificationsInput.removeAttribute('readonly');
                 specificationsInput.setAttribute('readonly', 'readonly');
+                specificationsInput.title = `Click to view ${specsArray.length} specification options`;
                 
                 // Pre-select saved specifications
                 if (savedSpecifications) {
