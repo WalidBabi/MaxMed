@@ -110,6 +110,24 @@
         min-width: 180px;
     }
     
+    /* Specifications Input Styles */
+    .specifications-search-input {
+        cursor: pointer !important;
+        background-color: #ffffff;
+        position: relative;
+        padding-right: 32px !important;
+    }
+    
+    .specifications-search-input:hover {
+        background-color: #f9fafb;
+        border-color: #6366f1;
+    }
+    
+    .specifications-search-input:focus {
+        background-color: #ffffff;
+        border-color: #6366f1;
+    }
+    
     /* Specifications Checkbox Styles */
     .specifications-dropdown-list .spec-checkbox,
     .specifications-dropdown-list .select-all-checkbox {
@@ -379,7 +397,10 @@
                                 </select>
                             </div>
                             <div>
-                                <label for="shipping_method" class="block text-sm font-medium text-gray-700 mb-2">Shipping Method</label>
+                                <label for="shipping_method" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Shipping Method
+                                    <span class="text-gray-400 font-normal">(Optional)</span>
+                                </label>
                                 <select name="shipping_method" id="shipping_method" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                     <option value="">Select shipping method</option>
                                     <option value="Standard Shipping" {{ old('shipping_method', $purchaseOrder->shipping_method) == 'Standard Shipping' ? 'selected' : '' }}>Standard Shipping</option>
@@ -388,6 +409,7 @@
                                     <option value="Local Pickup" {{ old('shipping_method', $purchaseOrder->shipping_method) == 'Local Pickup' ? 'selected' : '' }}>Local Pickup</option>
                                     <option value="Supplier Delivery" {{ old('shipping_method', $purchaseOrder->shipping_method) == 'Supplier Delivery' ? 'selected' : '' }}>Supplier Delivery</option>
                                 </select>
+                                <p class="mt-1 text-sm text-gray-500">Choose how the items will be delivered</p>
                             </div>
                         </div>
                     </div>
@@ -487,9 +509,18 @@
                                     <tr>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 60px;">Drag</th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 300px;">Item Details</th>
-                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 200px;">Specifications</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 200px;">
+                                            <div class="flex items-center">
+                                                <span>Specifications</span>
+                                                <span class="ml-1 text-indigo-500" title="Click the field to select specifications from dropdown">
+                                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </span>
+                                            </div>
+                                        </th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Quantity</th>
-                                                                                 <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 150px;">Price Type & Rate</th>
+                                        <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 150px;">Price Type & Rate</th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Discount</th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 120px;">Amount</th>
                                         <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 80px;">Action</th>
@@ -509,6 +540,39 @@
                                         <span class="text-sm font-medium text-gray-600">Subtotal:</span>
                                         <span class="text-sm font-bold text-gray-900"><span id="currencyDisplaySub">{{ $purchaseOrder->currency }}</span> <span id="subTotal">0.00</span></span>
                                     </div>
+                                    
+                                    <!-- VAT Input Field -->
+                                    <div class="flex justify-between items-center py-2">
+                                        <span class="text-sm font-medium text-gray-700">VAT:</span>
+                                        <div class="flex items-center space-x-2">
+                                            <input type="number" 
+                                                   id="tax-amount-input" 
+                                                   name="tax_amount" 
+                                                   value="{{ old('tax_amount', $purchaseOrder->tax_amount ?? 0) }}" 
+                                                   step="0.01" 
+                                                   min="0"
+                                                   class="w-24 px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                                                   onchange="calculateTotals()">
+                                            <span class="text-sm font-semibold text-gray-900" id="currencyDisplayTax">{{ $purchaseOrder->currency }}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Shipping Cost Input Field -->
+                                    <div class="flex justify-between items-center py-2">
+                                        <span class="text-sm font-medium text-gray-700">Shipping:</span>
+                                        <div class="flex items-center space-x-2">
+                                            <input type="number" 
+                                                   id="shipping-cost-input" 
+                                                   name="shipping_cost" 
+                                                   value="{{ old('shipping_cost', $purchaseOrder->shipping_cost ?? 0) }}" 
+                                                   step="0.01" 
+                                                   min="0"
+                                                   class="w-24 px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                                                   onchange="calculateTotals()">
+                                            <span class="text-sm font-semibold text-gray-900" id="currencyDisplayShipping">{{ $purchaseOrder->currency }}</span>
+                                        </div>
+                                    </div>
+                                    
                                     <div class="border-t border-gray-200 pt-2 mt-2">
                                         <div class="flex justify-between">
                                             <span class="text-base font-bold text-gray-900">Total:</span>
@@ -841,12 +905,18 @@ function addItem(itemData = null) {
         <td class="px-3 py-4">
             <div class="relative specifications-dropdown-container">
                 <input type="text" 
-                       class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 specifications-search-input" 
+                       class="block w-full px-3 py-2 pr-8 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 specifications-search-input" 
                        placeholder="Select specifications..." 
                        autocomplete="off"
                        readonly
-                       value="">
-                 <input type="hidden" name="items[${itemCounter}][specifications]" class="specifications-hidden" value="${data.specifications || ''}">
+                       value=""
+                       title="Click to select specifications">
+                <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                    <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+                <input type="hidden" name="items[${itemCounter}][specifications]" class="specifications-hidden" value="${data.specifications || ''}">
                 
                 <!-- Size Options Dropdown -->
                 <div class="mt-2">
@@ -1012,17 +1082,25 @@ function calculateRowAmount(event) {
 
 function calculateTotals() {
     const amounts = document.querySelectorAll('.amount-display');
-    let total = 0;
+    let subtotal = 0;
     
     amounts.forEach(amount => {
-        total += parseFloat(amount.textContent) || 0;
+        subtotal += parseFloat(amount.textContent) || 0;
     });
     
-    document.getElementById('subTotal').textContent = total.toFixed(2);
+    // Get VAT and Shipping amounts
+    const taxAmount = parseFloat(document.getElementById('tax-amount-input')?.value) || 0;
+    const shippingCost = parseFloat(document.getElementById('shipping-cost-input')?.value) || 0;
+    
+    // Calculate total
+    const total = subtotal + taxAmount + shippingCost;
+    
+    // Update displays
+    document.getElementById('subTotal').textContent = subtotal.toFixed(2);
     document.getElementById('totalAmount').textContent = total.toFixed(2);
     
     // Update hidden inputs for form submission
-    document.getElementById('sub_total_hidden').value = total.toFixed(2);
+    document.getElementById('sub_total_hidden').value = subtotal.toFixed(2);
     document.getElementById('total_amount_hidden').value = total.toFixed(2);
 }
 
@@ -1313,6 +1391,11 @@ function initializeExistingItemSpecifications(row, data) {
                 const rowIndex = Array.from(document.querySelectorAll('.specifications-search-input')).indexOf(specificationsInput);
                 createSpecificationDropdown(specificationsDropdown, specsArray, rowIndex);
                 
+                // Make the input clickable to show dropdown
+                specificationsInput.style.cursor = 'pointer';
+                specificationsInput.removeAttribute('readonly');
+                specificationsInput.setAttribute('readonly', 'readonly');
+                
                 // Pre-select saved specifications
                 if (savedSpecifications) {
                     let savedSpecsArray = [];
@@ -1335,46 +1418,62 @@ function initializeExistingItemSpecifications(row, data) {
                             }
                         });
                         
-                                                 // Update the display
-                         updateSelectedSpecificationsForRow(rowIndex);
-                         
-                         // Update select all checkbox state
-                         const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox');
-                         const selectAllCheckbox = specificationsDropdown.querySelector('.select-all-checkbox');
-                         if (selectAllCheckbox && checkboxes.length > 0) {
-                             const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-                             const someChecked = Array.from(checkboxes).some(cb => cb.checked);
-                             selectAllCheckbox.checked = allChecked;
-                             selectAllCheckbox.indeterminate = someChecked && !allChecked;
-                         }
-                         
-                         // Make sure the display shows the selected specifications
-                         if (savedSpecsArray.length > 0) {
-                             specificationsInput.value = savedSpecsArray.join(', ');
-                         }
+                        // Update the display
+                        updateSelectedSpecificationsForRow(rowIndex);
+                        
+                        // Update select all checkbox state
+                        const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox');
+                        const selectAllCheckbox = specificationsDropdown.querySelector('.select-all-checkbox');
+                        if (selectAllCheckbox && checkboxes.length > 0) {
+                            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                            const someChecked = Array.from(checkboxes).some(cb => cb.checked);
+                            selectAllCheckbox.checked = allChecked;
+                            selectAllCheckbox.indeterminate = someChecked && !allChecked;
+                        }
+                        
+                        // Make sure the display shows the selected specifications
+                        if (savedSpecsArray.length > 0) {
+                            specificationsInput.value = savedSpecsArray.join(', ');
+                        }
                     }, 100);
-                                                  } else {
-                     specificationsInput.value = 'Click to select specifications...';
-                 }
-             } else {
-                 // Set up display for already formatted specifications when no product specs available
-                 if (savedSpecifications) {
-                     if (savedSpecifications.startsWith('[') && savedSpecifications.endsWith(']')) {
-                         try {
-                             const specsArray = JSON.parse(savedSpecifications);
-                             specificationsInput.value = specsArray.join(', ');
-                         } catch (e) {
-                             specificationsInput.value = savedSpecifications;
-                         }
-                     } else {
-                         specificationsInput.value = savedSpecifications;
-                     }
-                 } else {
-                     specificationsInput.value = 'Click to select specifications...';
-                 }
-             }
+                } else {
+                    specificationsInput.value = 'Click to select specifications...';
+                }
+            } else {
+                // Set up display for already formatted specifications when no product specs available
+                if (savedSpecifications) {
+                    if (savedSpecifications.startsWith('[') && savedSpecifications.endsWith(']')) {
+                        try {
+                            const specsArray = JSON.parse(savedSpecifications);
+                            specificationsInput.value = specsArray.join(', ');
+                        } catch (e) {
+                            specificationsInput.value = savedSpecifications;
+                        }
+                    } else {
+                        specificationsInput.value = savedSpecifications;
+                    }
+                } else {
+                    specificationsInput.value = 'Click to select specifications...';
+                }
+            }
         } catch (e) {
             console.error('Error parsing specifications for existing item:', e);
+        }
+    } else {
+        // No product specifications available, but display saved specifications if any
+        if (savedSpecifications) {
+            let displayValue = '';
+            try {
+                if (savedSpecifications.startsWith('[') && savedSpecifications.endsWith(']')) {
+                    const specsArray = JSON.parse(savedSpecifications);
+                    displayValue = specsArray.join(', ');
+                } else {
+                    displayValue = savedSpecifications;
+                }
+            } catch (e) {
+                displayValue = savedSpecifications;
+            }
+            specificationsInput.value = displayValue;
         }
     }
     
@@ -1499,6 +1598,10 @@ function updateCurrencyUI() {
     if (currencyDisplay) currencyDisplay.textContent = currency;
     const currencyDisplaySub = document.getElementById('currencyDisplaySub');
     if (currencyDisplaySub) currencyDisplaySub.textContent = currency;
+    const currencyDisplayTax = document.getElementById('currencyDisplayTax');
+    if (currencyDisplayTax) currencyDisplayTax.textContent = currency;
+    const currencyDisplayShipping = document.getElementById('currencyDisplayShipping');
+    if (currencyDisplayShipping) currencyDisplayShipping.textContent = currency;
     // Recalculate totals to reflect label changes
     calculateTotals();
     // Sync price type controls with selected currency
