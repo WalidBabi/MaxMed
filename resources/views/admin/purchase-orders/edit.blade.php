@@ -972,6 +972,22 @@ function addItem(itemData = null) {
                 updateRateFromPriceType(priceTypeSelect);
             }, 100);
         }
+    } else {
+        // Even if there's no product_id, display saved specifications if they exist
+        if (data.specifications) {
+            let displayValue = '';
+            try {
+                if (data.specifications.startsWith('[') && data.specifications.endsWith(']')) {
+                    const specsArray = JSON.parse(data.specifications);
+                    displayValue = specsArray.join(', ');
+                } else {
+                    displayValue = data.specifications;
+                }
+            } catch (e) {
+                displayValue = data.specifications;
+            }
+            specificationsInput.value = displayValue;
+        }
     }
 }
 

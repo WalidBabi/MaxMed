@@ -563,8 +563,17 @@
                     <div class="flex-shrink-0 w-64 pipeline-column" data-stage="{{ $status }}">
                         <!-- Enhanced Column Header -->
                         <div class="bg-gradient-to-r from-{{ $stage['color'] }}-50 to-{{ $stage['color'] }}-100 border border-{{ $stage['color'] }}-200 rounded-t-xl p-4 sticky top-0 z-10">
-                            <div class="flex items-center justify-between">
+                            <div class="flex items-center justify-between mb-2">
                                 <div class="flex items-center space-x-3">
+                                    <!-- Column Select All Checkbox -->
+                                    <div class="flex-shrink-0" onclick="event.stopPropagation();">
+                                        <input type="checkbox" 
+                                               class="column-checkbox w-4 h-4 text-{{ $stage['color'] }}-600 border-{{ $stage['color'] }}-300 rounded focus:ring-{{ $stage['color'] }}-500 cursor-pointer" 
+                                               data-status="{{ $status }}"
+                                               onchange="toggleColumnSelection('{{ $status }}', this.checked)"
+                                               title="Select all leads in this column">
+                                    </div>
+                                    
                                     <h3 class="text-lg font-bold text-{{ $stage['color'] }}-900">
                                         {{ $stage['title'] }}
                                     </h3>
