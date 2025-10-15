@@ -172,6 +172,17 @@
                                 </div>
 
                                 <div>
+                                    <label for="installation_fee" class="block text-sm font-medium text-gray-700 mb-2">Installation Fee</label>
+                                    <input type="number" id="installation_fee" name="installation_fee" step="0.01" min="0"
+                                           value="{{ old('installation_fee', 0) }}"
+                                           class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('installation_fee') border-red-300 @enderror"
+                                           onchange="updateTotals()">
+                                    @error('installation_fee')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div>
                                     <label for="payment_terms" class="block text-sm font-medium text-gray-700 mb-2">Payment Terms</label>
                                     <select id="payment_terms" name="payment_terms"
                                             class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('payment_terms') border-red-300 @enderror">
@@ -324,6 +335,10 @@
                                     <div class="flex justify-between py-2">
                                         <span class="text-sm font-medium text-gray-700">Shipping:</span>
                                         <span id="shippingAmount" class="text-sm font-semibold text-gray-900">0.00</span>
+                                    </div>
+                                    <div class="flex justify-between py-2" id="installationRow" style="display: none;">
+                                        <span class="text-sm font-medium text-gray-700">Installation:</span>
+                                        <span id="installationAmount" class="text-sm font-semibold text-gray-900">0.00</span>
                                     </div>
                                     <div class="flex justify-between py-2" id="customsRow" style="display: none;">
                                         <span class="text-sm font-medium text-gray-700">Customs Clearance:</span>
@@ -914,6 +929,7 @@ function calculateTotals() {
     });
     
     const shippingRate = parseFloat(document.getElementById('shipping_rate').value) || 0;
+    const installationFee = parseFloat(document.getElementById('installation_fee').value) || 0;
     let customsFee = parseFloat(document.getElementById('customs_clearance_fee').value) || 0;
     let vatRate = parseFloat(document.getElementById('vat_rate').value) || 0;
     
@@ -929,19 +945,21 @@ function calculateTotals() {
         document.getElementById('vat_rate').value = vatRate.toFixed(1);
     }
     
-    // Calculate VAT on subtotal + shipping + customs
-    const vatAmount = ((subTotal + shippingRate + customsFee) * (vatRate / 100));
-    const total = subTotal + shippingRate + customsFee + vatAmount;
+    // Calculate VAT on subtotal + shipping + installation + customs
+    const vatAmount = ((subTotal + shippingRate + installationFee + customsFee) * (vatRate / 100));
+    const total = subTotal + shippingRate + installationFee + customsFee + vatAmount;
     
     // Update displays
     document.getElementById('subTotal').textContent = subTotal.toFixed(2);
     document.getElementById('shippingAmount').textContent = shippingRate.toFixed(2);
+    document.getElementById('installationAmount').textContent = installationFee.toFixed(2);
     document.getElementById('customsAmount').textContent = customsFee.toFixed(2);
     document.getElementById('vatAmount').textContent = vatAmount.toFixed(2);
     document.getElementById('vatRateDisplay').textContent = vatRate.toFixed(1);
     document.getElementById('totalAmount').textContent = total.toFixed(2);
     
     // Show/hide rows based on values
+    document.getElementById('installationRow').style.display = installationFee > 0 ? 'flex' : 'none';
     document.getElementById('customsRow').style.display = customsFee > 0 ? 'flex' : 'none';
     document.getElementById('vatRow').style.display = vatRate > 0 ? 'flex' : 'none';
 }

@@ -715,6 +715,12 @@
                             <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($quote->shipping_rate, 2) }}</td>
                         </tr>
                         @endif
+                        @if(($quote->installation_fee ?? 0) > 0)
+                        <tr>
+                            <td class="total-label">Installation:</td>
+                            <td class="total-amount">{{ $quote->currency ?? 'AED' }} {{ number_format($quote->installation_fee, 2) }}</td>
+                        </tr>
+                        @endif
                         @if(($quote->customs_clearance_fee ?? 0) > 0)
                         <tr>
                             <td class="total-label">Customs Clearance:</td>

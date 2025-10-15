@@ -228,6 +228,13 @@
                                 </div>
                                 @endif
                                 
+                                @if(($quote->installation_fee ?? 0) > 0)
+                                <div class="flex justify-between py-2 text-sm">
+                                    <span class="font-medium text-gray-900">Installation:</span>
+                                    <span class="font-bold text-gray-900">{{ number_format($quote->installation_fee, 2) }} {{ $quote->currency ?? 'AED' }}</span>
+                                </div>
+                                @endif
+                                
                                 @if(($quote->customs_clearance_fee ?? 0) > 0)
                                 <div class="flex justify-between py-2 text-sm">
                                     <span class="font-medium text-gray-900">Customs Clearance:</span>
@@ -359,6 +366,12 @@
                     <div class="flex justify-between">
                         <span class="text-sm text-gray-600">Shipping:</span>
                         <span class="text-sm font-medium text-gray-900">{{ number_format($quote->shipping_rate, 2) }} {{ $quote->currency ?? 'AED' }}</span>
+                    </div>
+                    @endif
+                    @if(($quote->installation_fee ?? 0) > 0)
+                    <div class="flex justify-between">
+                        <span class="text-sm text-gray-600">Installation:</span>
+                        <span class="text-sm font-medium text-gray-900">{{ number_format($quote->installation_fee, 2) }} {{ $quote->currency ?? 'AED' }}</span>
                     </div>
                     @endif
                     @if(($quote->customs_clearance_fee ?? 0) > 0)
