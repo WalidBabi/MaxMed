@@ -823,6 +823,12 @@
                         <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->shipping_rate, 2) }}</td>
                     </tr>
                     @endif
+                    @if(($invoice->installation_fee ?? 0) > 0)
+                    <tr>
+                        <td class="total-label">Installation:</td>
+                        <td class="total-amount">{{ $invoice->currency ?? 'AED' }} {{ number_format($invoice->installation_fee, 2) }}</td>
+                    </tr>
+                    @endif
                     @if(($invoice->customs_clearance_fee ?? 0) > 0)
                     <tr>
                         <td class="total-label">Customs Clearance:</td>

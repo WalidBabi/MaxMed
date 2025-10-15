@@ -125,6 +125,16 @@
                                     @enderror
                                 </div>
                                 <div>
+                                    <label for="installation_fee" class="block text-sm font-medium text-gray-700 mb-2">Installation Fee</label>
+                                    <input type="number" id="installation_fee" name="installation_fee" step="0.01" min="0"
+                                           value="{{ old('installation_fee', $quote->installation_fee ?? 0) }}"
+                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('installation_fee') border-red-300 @enderror"
+                                           onchange="updateShippingAmount()">
+                                    @error('installation_fee')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div>
                                     <label for="vat_rate" class="block text-sm font-medium text-gray-700 mb-2">VAT Rate (%)</label>
                                     <input type="number" id="vat_rate" name="vat_rate" step="0.01" min="0" max="100"
                                            value="{{ old('vat_rate', $quote->vat_rate ?? 0) }}"
@@ -408,6 +418,10 @@
                                     <div class="flex justify-between py-2">
                                         <span class="text-sm font-medium text-gray-700">Shipping:</span>
                                         <span id="shippingAmount" class="text-sm font-semibold text-gray-900">0.00 <span id="shippingCurrency">AED</span></span>
+                                    </div>
+                                    <div class="flex justify-between py-2" id="installationRow" style="display: none;">
+                                        <span class="text-sm font-medium text-gray-700">Installation:</span>
+                                        <span id="installationAmount" class="text-sm font-semibold text-gray-900">0.00 <span id="installationCurrency">AED</span></span>
                                     </div>
                                     <div class="flex justify-between py-2" id="customsRow" style="display: none;">
                                         <span class="text-sm font-medium text-gray-700">Customs Clearance:</span>
@@ -1038,6 +1052,7 @@ function calculateTotals() {
     });
     
     const shippingRate = parseFloat(document.getElementById('shipping_rate').value) || 0;
+    const installationFee = parseFloat(document.getElementById('installation_fee').value) || 0;
     let customsFee = parseFloat(document.getElementById('customs_clearance_fee').value) || 0;
     let vatRate = parseFloat(document.getElementById('vat_rate').value) || 0;
     
@@ -1053,18 +1068,20 @@ function calculateTotals() {
         document.getElementById('vat_rate').value = vatRate.toFixed(1);
     }
     
-    const vatAmount = ((subTotal + shippingRate + customsFee) * (vatRate / 100)) || 0;
-    const total = subTotal + shippingRate + customsFee + vatAmount;
+    const vatAmount = ((subTotal + shippingRate + installationFee + customsFee) * (vatRate / 100)) || 0;
+    const total = subTotal + shippingRate + installationFee + customsFee + vatAmount;
     
     const selectedCurrency = document.getElementById('currency').value;
     document.getElementById('subTotal').innerHTML = subTotal.toFixed(2) + ' <span id="subTotalCurrency">' + selectedCurrency + '</span>';
     document.getElementById('shippingAmount').innerHTML = shippingRate.toFixed(2) + ' <span id="shippingCurrency">' + selectedCurrency + '</span>';
+    document.getElementById('installationAmount').innerHTML = installationFee.toFixed(2) + ' <span id="installationCurrency">' + selectedCurrency + '</span>';
     document.getElementById('customsAmount').innerHTML = customsFee.toFixed(2) + ' <span id="customsCurrency">' + selectedCurrency + '</span>';
     document.getElementById('vatAmountDisplay').innerHTML = vatAmount.toFixed(2) + ' <span id="vatCurrency">' + selectedCurrency + '</span>';
     document.getElementById('vatRateDisplay').textContent = vatRate.toFixed(1);
     document.getElementById('totalAmount').innerHTML = total.toFixed(2) + ' <span id="totalCurrency">' + selectedCurrency + '</span>';
     
     // Show/hide rows based on values
+    document.getElementById('installationRow').style.display = installationFee > 0 ? 'flex' : 'none';
     document.getElementById('customsRow').style.display = customsFee > 0 ? 'flex' : 'none';
     document.getElementById('vatRow').style.display = vatRate > 0 ? 'flex' : 'none';
 }

@@ -32,6 +32,7 @@ class Invoice extends Model
         'notes',
         'subtotal',
         'shipping_rate',
+        'installation_fee',
         'tax_amount',
         'vat_rate',
         'customs_clearance_fee',
@@ -66,6 +67,7 @@ class Invoice extends Model
         'attachments' => 'array',
         'subtotal' => 'decimal:2',
         'shipping_rate' => 'decimal:2',
+        'installation_fee' => 'decimal:2',
         'tax_amount' => 'decimal:2',
         'vat_rate' => 'decimal:2',
         'customs_clearance_fee' => 'decimal:2',
@@ -238,8 +240,9 @@ class Invoice extends Model
         // Calculate total after discounts
         $totalAfterDiscount = $subTotal - $totalDiscount;
         
-        // Apply shipping rate and customs clearance fee
+        // Apply shipping rate, installation fee, and customs clearance fee
         $shippingRate = $this->shipping_rate ?? 0;
+        $installationFee = $this->installation_fee ?? 0;
         $customsClearance = $this->customs_clearance_fee ?? 0;
         
         // VAT handling: if vat_rate is 0 or not set, force tax to 0; otherwise, compute if not explicitly set
@@ -248,11 +251,11 @@ class Invoice extends Model
         if ($vatRate <= 0) {
             $taxAmount = 0.0;
         } elseif ((float)$taxAmount === 0.0) {
-            // VAT calculated on subtotal + shipping + customs (same as Quote calculation)
-            $taxAmount = round(($totalAfterDiscount + $shippingRate + $customsClearance) * ($vatRate / 100), 2);
+            // VAT calculated on subtotal + shipping + installation + customs (same as Quote calculation)
+            $taxAmount = round(($totalAfterDiscount + $shippingRate + $installationFee + $customsClearance) * ($vatRate / 100), 2);
         }
         
-        $finalTotal = $totalAfterDiscount + $taxAmount + $shippingRate + $customsClearance;
+        $finalTotal = $totalAfterDiscount + $taxAmount + $shippingRate + $installationFee + $customsClearance;
         
         // Update invoice totals without triggering events to prevent infinite loops
         $this->updateQuietly([

@@ -232,9 +232,10 @@
                                     });
                                     $totalDiscount = $invoice->items->sum('calculated_discount_amount') + ($invoice->discount_amount ?? 0);
                                     $shippingRate = $invoice->shipping_rate ?? 0;
+                                    $installationFee = $invoice->installation_fee ?? 0;
                                     $customsClearance = $invoice->customs_clearance_fee ?? 0;
                                     $vatAmount = $invoice->tax_amount ?? 0;
-                                    $finalTotal = $subtotal - $totalDiscount + $shippingRate + $customsClearance + $vatAmount;
+                                    $finalTotal = $subtotal - $totalDiscount + $shippingRate + $installationFee + $customsClearance + $vatAmount;
                                 @endphp
                                 
                                 <div class="flex justify-between py-2 text-sm">
@@ -253,6 +254,13 @@
                                 <div class="flex justify-between py-2 text-sm">
                                     <span class="font-medium text-gray-900">Shipping:</span>
                                     <span class="font-bold text-gray-900">{{ number_format($invoice->shipping_rate, 2) }} {{ $invoice->currency }}</span>
+                                </div>
+                                @endif
+                                
+                                @if($installationFee > 0)
+                                <div class="flex justify-between py-2 text-sm">
+                                    <span class="font-medium text-gray-900">Installation:</span>
+                                    <span class="font-bold text-gray-900">{{ number_format($installationFee, 2) }} {{ $invoice->currency }}</span>
                                 </div>
                                 @endif
                                 
