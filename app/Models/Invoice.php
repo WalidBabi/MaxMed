@@ -385,13 +385,21 @@ class Invoice extends Model
                     $finalInvoice->paid_at = now();
                     
                 } else {
-                    // Payment still pending - preserve the partial payment amount
-                    $finalInvoice->total_amount = $this->total_amount;
-                    $finalInvoice->subtotal = $this->subtotal; // Preserve original subtotal
-                    $finalInvoice->discount_amount = $this->discount_amount; // Preserve discount amount
-                    $finalInvoice->tax_amount = $this->tax_amount; // Preserve tax amount
-                    $finalInvoice->payment_status = $this->paid_amount > 0 ? 'partial' : 'pending';
-                    $finalInvoice->paid_amount = $this->paid_amount; // Preserve the partial payment
+                    // Payment still pending - show only the remaining amount due
+                    $remainingAmount = $this->total_amount - $this->paid_amount;
+                    $finalInvoice->total_amount = $remainingAmount;
+                    
+                    // Adjust component amounts proportionally to show only what's due
+                    $ratio = $remainingAmount / $this->total_amount;
+                    $finalInvoice->subtotal = $this->subtotal * $ratio;
+                    $finalInvoice->shipping_rate = ($this->shipping_rate ?? 0) * $ratio;
+                    $finalInvoice->installation_fee = ($this->installation_fee ?? 0) * $ratio;
+                    $finalInvoice->customs_clearance_fee = ($this->customs_clearance_fee ?? 0) * $ratio;
+                    $finalInvoice->discount_amount = $this->discount_amount * $ratio;
+                    $finalInvoice->tax_amount = $this->tax_amount * $ratio;
+                    
+                    $finalInvoice->payment_status = 'pending';
+                    $finalInvoice->paid_amount = 0; // Reset to 0 since we're showing only remaining amount
                     $finalInvoice->due_date = now(); // Payment due immediately
                     
                 }
@@ -399,12 +407,31 @@ class Invoice extends Model
 
             case 'net_30':
                 // Full amount due within 30 days
-                $finalInvoice->total_amount = $this->total_amount;
-                $finalInvoice->subtotal = $this->subtotal; // Preserve original subtotal
-                $finalInvoice->discount_amount = $this->discount_amount; // Preserve discount amount
-                $finalInvoice->tax_amount = $this->tax_amount; // Preserve tax amount
-                $finalInvoice->payment_status = $remainingAmount > 0 ? ($this->paid_amount > 0 ? 'partial' : 'pending') : 'paid';
-                $finalInvoice->paid_amount = $this->paid_amount; // Preserve the partial payment
+                if ($remainingAmount > 0) {
+                    // Show only the remaining amount due
+                    $finalInvoice->total_amount = $remainingAmount;
+                    
+                    // Adjust component amounts proportionally to show only what's due
+                    $ratio = $remainingAmount / $this->total_amount;
+                    $finalInvoice->subtotal = $this->subtotal * $ratio;
+                    $finalInvoice->shipping_rate = ($this->shipping_rate ?? 0) * $ratio;
+                    $finalInvoice->installation_fee = ($this->installation_fee ?? 0) * $ratio;
+                    $finalInvoice->customs_clearance_fee = ($this->customs_clearance_fee ?? 0) * $ratio;
+                    $finalInvoice->discount_amount = $this->discount_amount * $ratio;
+                    $finalInvoice->tax_amount = $this->tax_amount * $ratio;
+                    
+                    $finalInvoice->payment_status = 'pending';
+                    $finalInvoice->paid_amount = 0; // Reset to 0 since we're showing only remaining amount
+                } else {
+                    // Full payment received
+                    $finalInvoice->total_amount = $this->total_amount;
+                    $finalInvoice->subtotal = $this->subtotal;
+                    $finalInvoice->discount_amount = $this->discount_amount;
+                    $finalInvoice->tax_amount = $this->tax_amount;
+                    $finalInvoice->payment_status = 'paid';
+                    $finalInvoice->paid_amount = $this->total_amount;
+                    $finalInvoice->paid_at = now();
+                }
                 $finalInvoice->due_date = now()->addDays(30);
                 
                 // Only show advance payment info if it's actually an advance payment, not payment on delivery
@@ -447,12 +474,29 @@ class Invoice extends Model
 
             default:
                 // Default case - remaining amount or full amount if no payment
-                $finalInvoice->total_amount = $remainingAmount > 0 ? $remainingAmount : $this->total_amount;
-                $finalInvoice->subtotal = $this->subtotal; // Preserve original subtotal structure
-                $finalInvoice->payment_status = $finalInvoice->total_amount > 0 ? ($this->paid_amount > 0 ? 'partial' : 'pending') : 'paid';
-                $finalInvoice->paid_amount = $this->paid_amount; // Preserve the partial payment
-                
-                if ($finalInvoice->total_amount <= 0) {
+                if ($remainingAmount > 0) {
+                    // Show only the remaining amount due
+                    $finalInvoice->total_amount = $remainingAmount;
+                    
+                    // Adjust component amounts proportionally to show only what's due
+                    $ratio = $remainingAmount / $this->total_amount;
+                    $finalInvoice->subtotal = $this->subtotal * $ratio;
+                    $finalInvoice->shipping_rate = ($this->shipping_rate ?? 0) * $ratio;
+                    $finalInvoice->installation_fee = ($this->installation_fee ?? 0) * $ratio;
+                    $finalInvoice->customs_clearance_fee = ($this->customs_clearance_fee ?? 0) * $ratio;
+                    $finalInvoice->discount_amount = $this->discount_amount * $ratio;
+                    $finalInvoice->tax_amount = $this->tax_amount * $ratio;
+                    
+                    $finalInvoice->payment_status = 'pending';
+                    $finalInvoice->paid_amount = 0; // Reset to 0 since we're showing only remaining amount
+                } else {
+                    // Full payment received
+                    $finalInvoice->total_amount = $this->total_amount;
+                    $finalInvoice->subtotal = $this->subtotal;
+                    $finalInvoice->discount_amount = $this->discount_amount;
+                    $finalInvoice->tax_amount = $this->tax_amount;
+                    $finalInvoice->payment_status = 'paid';
+                    $finalInvoice->paid_amount = $this->total_amount;
                     $finalInvoice->paid_at = now();
                 }
                 break;
