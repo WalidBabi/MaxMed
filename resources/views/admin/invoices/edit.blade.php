@@ -436,7 +436,8 @@
                                        class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 @error('customs_clearance_fee') border-red-300 @enderror"
                                        onchange="updateTotals()" 
                                        oninput="this.setAttribute('data-manual-override', 'true')"
-                                       placeholder="Auto-calculated at 10% of procurement cost">
+                                       placeholder="Auto-calculated at 10% of procurement cost"
+                                       {{ ($invoice->customs_clearance_fee ?? 0) > 0 ? 'data-manual-override="true"' : '' }}>
                                 @error('customs_clearance_fee')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -1075,10 +1076,16 @@ function calculateTotals() {
     let customsFee = parseFloat(document.getElementById('customs_clearance_fee').value) || 0;
     let vatRate = parseFloat(document.getElementById('vat_rate').value) || 0;
     
-    // Auto-calculate customs as 10% of procurement cost if not manually set
-    if (!document.getElementById('customs_clearance_fee').getAttribute('data-manual-override')) {
+    // Auto-calculate customs as 10% of procurement cost if not manually set and no existing value
+    const customsField = document.getElementById('customs_clearance_fee');
+    const hasExistingValue = parseFloat(customsField.value) > 0;
+    
+    if (!customsField.getAttribute('data-manual-override') && !hasExistingValue) {
         customsFee = totalProcurementCost * 0.10;
-        document.getElementById('customs_clearance_fee').value = customsFee.toFixed(2);
+        customsField.value = customsFee.toFixed(2);
+    } else {
+        // Use the existing value if it's already set
+        customsFee = parseFloat(customsField.value) || 0;
     }
     
     // Auto-set VAT rate to 0% if not manually set
