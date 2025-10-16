@@ -320,6 +320,7 @@
                                     <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reference</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attachments</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -327,7 +328,9 @@
                                     <tr class="hover:bg-gray-50">
                                         <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $payment->payment_number }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-900">{{ formatDubaiDate($payment->payment_date, 'M d, Y') }}</td>
-                                        <td class="px-6 py-4 text-sm text-gray-900">{{ ucfirst($payment->payment_method) }}</td>
+                                        <td class="px-6 py-4 text-sm text-gray-900">
+                                            {{ ucfirst(str_replace('_', ' ', $payment->payment_method)) }}
+                                        </td>
                                         <td class="px-6 py-4 text-right text-sm font-medium text-gray-900">{{ number_format($payment->amount, 2) }} {{ $invoice->currency }}</td>
                                         <td class="px-6 py-4 text-sm">
                                             @if($payment->status === 'completed')
@@ -345,7 +348,34 @@
                                             @endif
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-900">{{ $payment->transaction_reference ?? '-' }}</td>
+                                        <td class="px-6 py-4 text-sm">
+                                            @if($payment->attachments && count($payment->attachments) > 0)
+                                                <button onclick="openAttachmentModal('{{ $payment->payment_number }}', {{ json_encode($payment->attachments) }})"
+                                                        class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors">
+                                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                                                    </svg>
+                                                    {{ count($payment->attachments) }} file{{ count($payment->attachments) > 1 ? 's' : '' }}
+                                                </button>
+                                            @else
+                                                <span class="text-gray-400">No attachments</span>
+                                            @endif
+                                        </td>
                                     </tr>
+                                    @if($payment->payment_notes)
+                                        <tr class="bg-gray-50">
+                                            <td colspan="7" class="px-6 py-3 text-sm text-gray-600">
+                                                <div class="flex items-start">
+                                                    <svg class="w-4 h-4 text-gray-400 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                                                    </svg>
+                                                    <div>
+                                                        <span class="font-medium">Notes:</span> {{ $payment->payment_notes }}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                             </tbody>
                         </table>
@@ -746,6 +776,48 @@
     </div>
 </div>
 
+<!-- Attachment Modal -->
+<div id="attachmentModal" class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50 hidden">
+    <div class="fixed inset-0 transform transition-all" onclick="closeAttachmentModal()">
+        <div class="absolute inset-0 bg-gray-900 bg-opacity-75 backdrop-blur-sm"></div>
+    </div>
+    
+    <div class="relative sm:w-full sm:max-w-2xl sm:mx-auto mt-8">
+        <div class="bg-white rounded-lg shadow-xl transform transition-all sm:w-full">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 rounded-t-lg">
+                <div class="flex items-center justify-between">
+                    <h3 id="attachmentModalTitle" class="text-lg font-semibold text-gray-900 flex items-center">
+                        <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                        </svg>
+                        Payment Attachments
+                    </h3>
+                    <button onclick="closeAttachmentModal()" class="text-gray-400 hover:text-gray-600 focus:outline-none focus:text-gray-600 transition ease-in-out duration-150">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Body -->
+            <div id="attachmentModalBody" class="px-6 py-4 max-h-[70vh] overflow-y-auto">
+                <!-- Attachments will be loaded here dynamically -->
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 rounded-b-lg">
+                <button type="button" 
+                        onclick="closeAttachmentModal()" 
+                        class="w-full sm:w-auto inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 function openPaymentModal() {
     document.getElementById('paymentModal').classList.remove('hidden');
@@ -757,27 +829,156 @@ function closePaymentModal() {
     document.body.style.overflow = 'unset';
 }
 
-// Close modal when clicking outside (except for the inner modal content)
+function openAttachmentModal(paymentNumber, attachments) {
+    const modal = document.getElementById('attachmentModal');
+    const title = document.getElementById('attachmentModalTitle');
+    const body = document.getElementById('attachmentModalBody');
+    
+    // Update title
+    title.innerHTML = `
+        <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+        </svg>
+        Attachments - Payment ${paymentNumber}
+    `;
+    
+    // Build attachments list
+    let attachmentsHtml = '<div class="space-y-3">';
+    attachments.forEach((attachment, index) => {
+        const fileName = attachment.original_name || `Attachment ${index + 1}`;
+        const fileSize = attachment.size ? formatBytes(attachment.size) : 'Unknown size';
+        const filePath = attachment.path || attachment;
+        
+        // Get file extension for icon
+        const extension = fileName.split('.').pop().toLowerCase();
+        const iconColor = getFileIconColor(extension);
+        
+        attachmentsHtml += `
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <div class="flex items-center space-x-3 flex-1 min-w-0">
+                    <div class="flex-shrink-0">
+                        <svg class="w-8 h-8 ${iconColor}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-gray-900 truncate">${fileName}</p>
+                        <p class="text-xs text-gray-500">${fileSize}</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 ml-4">
+                    <a href="/storage/${filePath}" 
+                       target="_blank" 
+                       class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                        View
+                    </a>
+                    <a href="/storage/${filePath}" 
+                       download="${fileName}"
+                       class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Download
+                    </a>
+                </div>
+            </div>
+        `;
+    });
+    attachmentsHtml += '</div>';
+    
+    body.innerHTML = attachmentsHtml;
+    
+    // Show modal
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeAttachmentModal() {
+    document.getElementById('attachmentModal').classList.add('hidden');
+    document.body.style.overflow = 'unset';
+}
+
+function formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
+
+function getFileIconColor(extension) {
+    const colors = {
+        'pdf': 'text-red-600',
+        'doc': 'text-blue-600',
+        'docx': 'text-blue-600',
+        'xls': 'text-green-600',
+        'xlsx': 'text-green-600',
+        'jpg': 'text-purple-600',
+        'jpeg': 'text-purple-600',
+        'png': 'text-purple-600',
+        'gif': 'text-purple-600',
+        'webp': 'text-purple-600'
+    };
+    return colors[extension] || 'text-gray-600';
+}
+
+// Close modals when clicking outside (except for the inner modal content)
 document.addEventListener('DOMContentLoaded', function() {
     const paymentModal = document.getElementById('paymentModal');
-    const modalContent = paymentModal.querySelector('.bg-white');
+    const attachmentModal = document.getElementById('attachmentModal');
     
-    paymentModal.addEventListener('click', function(e) {
-        if (e.target === paymentModal || e.target.classList.contains('bg-gray-900')) {
-            closePaymentModal();
+    if (paymentModal) {
+        const paymentModalContent = paymentModal.querySelector('.bg-white');
+        
+        paymentModal.addEventListener('click', function(e) {
+            if (e.target === paymentModal || e.target.classList.contains('bg-gray-900')) {
+                closePaymentModal();
+            }
+        });
+        
+        // Prevent closing when clicking inside modal content
+        if (paymentModalContent) {
+            paymentModalContent.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
         }
-    });
+    }
     
-    // Prevent closing when clicking inside modal content
-    modalContent.addEventListener('click', function(e) {
-        e.stopPropagation();
-    });
+    if (attachmentModal) {
+        const attachmentModalContent = attachmentModal.querySelector('.bg-white');
+        
+        attachmentModal.addEventListener('click', function(e) {
+            if (e.target === attachmentModal || e.target.classList.contains('bg-gray-900')) {
+                closeAttachmentModal();
+            }
+        });
+        
+        // Prevent closing when clicking inside modal content
+        if (attachmentModalContent) {
+            attachmentModalContent.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+    }
 });
 
-// Close modal on escape key
+// Close modals on escape key
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
-        closePaymentModal();
+        const paymentModal = document.getElementById('paymentModal');
+        const attachmentModal = document.getElementById('attachmentModal');
+        
+        if (paymentModal && !paymentModal.classList.contains('hidden')) {
+            closePaymentModal();
+        }
+        if (attachmentModal && !attachmentModal.classList.contains('hidden')) {
+            closeAttachmentModal();
+        }
     }
 });
 

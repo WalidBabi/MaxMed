@@ -385,11 +385,13 @@ class Invoice extends Model
                     $finalInvoice->paid_at = now();
                     
                 } else {
-                    // Payment still pending
+                    // Payment still pending - preserve the partial payment amount
                     $finalInvoice->total_amount = $this->total_amount;
                     $finalInvoice->subtotal = $this->subtotal; // Preserve original subtotal
-                    $finalInvoice->payment_status = 'pending';
-                    $finalInvoice->paid_amount = 0;
+                    $finalInvoice->discount_amount = $this->discount_amount; // Preserve discount amount
+                    $finalInvoice->tax_amount = $this->tax_amount; // Preserve tax amount
+                    $finalInvoice->payment_status = $this->paid_amount > 0 ? 'partial' : 'pending';
+                    $finalInvoice->paid_amount = $this->paid_amount; // Preserve the partial payment
                     $finalInvoice->due_date = now(); // Payment due immediately
                     
                 }
@@ -401,8 +403,8 @@ class Invoice extends Model
                 $finalInvoice->subtotal = $this->subtotal; // Preserve original subtotal
                 $finalInvoice->discount_amount = $this->discount_amount; // Preserve discount amount
                 $finalInvoice->tax_amount = $this->tax_amount; // Preserve tax amount
-                $finalInvoice->payment_status = $remainingAmount > 0 ? 'pending' : 'paid';
-                $finalInvoice->paid_amount = 0;
+                $finalInvoice->payment_status = $remainingAmount > 0 ? ($this->paid_amount > 0 ? 'partial' : 'pending') : 'paid';
+                $finalInvoice->paid_amount = $this->paid_amount; // Preserve the partial payment
                 $finalInvoice->due_date = now()->addDays(30);
                 
                 // Only show advance payment info if it's actually an advance payment, not payment on delivery
@@ -447,8 +449,8 @@ class Invoice extends Model
                 // Default case - remaining amount or full amount if no payment
                 $finalInvoice->total_amount = $remainingAmount > 0 ? $remainingAmount : $this->total_amount;
                 $finalInvoice->subtotal = $this->subtotal; // Preserve original subtotal structure
-                $finalInvoice->payment_status = $finalInvoice->total_amount > 0 ? 'pending' : 'paid';
-                $finalInvoice->paid_amount = 0;
+                $finalInvoice->payment_status = $finalInvoice->total_amount > 0 ? ($this->paid_amount > 0 ? 'partial' : 'pending') : 'paid';
+                $finalInvoice->paid_amount = $this->paid_amount; // Preserve the partial payment
                 
                 if ($finalInvoice->total_amount <= 0) {
                     $finalInvoice->paid_at = now();
