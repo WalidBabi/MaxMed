@@ -958,7 +958,7 @@
                 @else
                     <div class="payment-text">Your order is being processed for delivery. Please arrange payment for the balance.</div>
                 @endif
-                @if($hasAdvancePayment && !$paymentCollectedOnDelivery)
+                @if($hasAdvancePayment)
                     <div class="payment-text">Previous advance payment received: <strong>{{ number_format($parentInvoice->paid_amount, 2) }} {{ $invoice->currency ?? 'AED' }}</strong></div>
                 @endif
             @endif
