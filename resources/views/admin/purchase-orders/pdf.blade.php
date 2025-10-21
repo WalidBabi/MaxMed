@@ -698,12 +698,10 @@
                             <td class="total-amount">{{ $displayCurrency }} {{ number_format($purchaseOrder->tax_amount, 2) }}</td>
                         </tr>
                         @endif
-                        @if($purchaseOrder->shipping_cost > 0)
                         <tr>
                             <td class="total-label">Shipping:</td>
-                            <td class="total-amount">{{ $displayCurrency }} {{ number_format($purchaseOrder->shipping_cost, 2) }}</td>
+                            <td class="total-amount">{{ $displayCurrency }} {{ number_format($purchaseOrder->shipping_cost ?? 0, 2) }}</td>
                         </tr>
-                        @endif
                         <tr class="grand-total">
                             <td class="total-label">Total Amount:</td>
                             <td class="total-amount">{{ $displayCurrency }} {{ number_format($purchaseOrder->total_amount, 2) }}</td>
