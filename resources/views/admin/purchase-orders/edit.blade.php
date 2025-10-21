@@ -391,7 +391,7 @@
                                     <option value="Net 90" {{ old('payment_terms', $purchaseOrder->payment_terms) == 'Net 90' ? 'selected' : '' }}>Net 90</option>
                                     <option value="Due on Receipt" {{ old('payment_terms', $purchaseOrder->payment_terms) == 'Due on Receipt' ? 'selected' : '' }}>Due on Receipt</option>
                                     <option value="Cash on Delivery" {{ old('payment_terms', $purchaseOrder->payment_terms) == 'Cash on Delivery' ? 'selected' : '' }}>Cash on Delivery</option>
-                                    <option value="50% Advance, 50% on Delivery" {{ old('payment_terms', $purchaseOrder->payment_terms) == '50% Advance, 50% on Delivery' ? 'selected' : '' }}>50% Advance, 50% on Delivery</option>
+                                    <option value="50% Advance" {{ old('payment_terms', $purchaseOrder->payment_terms) == '50% Advance' ? 'selected' : '' }}>50% Advance</option>
                                     <option value="Advance Payment" {{ old('payment_terms', $purchaseOrder->payment_terms) == 'Advance Payment' ? 'selected' : '' }}>Advance Payment</option>
                                     <option value="Custom" {{ old('payment_terms', $purchaseOrder->payment_terms) == 'Custom' ? 'selected' : '' }}>Custom</option>
                                 </select>
