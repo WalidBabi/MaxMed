@@ -423,6 +423,8 @@ class PurchaseOrderController extends Controller
             'terms_conditions' => 'nullable|string',
             'notes' => 'nullable|string',
             'sub_total' => 'required|numeric|min:0',
+            'tax_amount' => 'nullable|numeric|min:0',
+            'shipping_cost' => 'nullable|numeric|min:0',
             'total_amount' => 'required|numeric|min:0',
             'items' => 'required|array|min:1',
             'items.*.item_description' => 'required|string',
@@ -504,6 +506,8 @@ class PurchaseOrderController extends Controller
                 'terms_conditions' => $request->terms_conditions,
                 'notes' => $request->notes,
                 'sub_total' => $request->sub_total,
+                'tax_amount' => $request->tax_amount ?? 0,
+                'shipping_cost' => $request->shipping_cost ?? 0,
                 'total_amount' => $request->total_amount,
                 'attachments' => !empty($currentAttachments) ? $currentAttachments : null,
                 'updated_by' => Auth::id()
