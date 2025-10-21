@@ -564,6 +564,9 @@ Route::get('quotes/search/suggestions', [\App\Http\Controllers\Admin\QuoteContro
         Route::post('orders/{order}/quick-cash-receipt', [\App\Http\Controllers\Admin\CashReceiptController::class, 'quickCreate'])->name('orders.quick-cash-receipt');
 
         // Supplier Payments Management
+        Route::resource('supplier-payments', \App\Http\Controllers\Admin\SupplierPaymentController::class)->only(['index', 'show', 'edit', 'update']);
+        Route::post('supplier-payments/{supplierPayment}/mark-completed', [\App\Http\Controllers\Admin\SupplierPaymentController::class, 'markAsCompleted'])->name('supplier-payments.mark-completed');
+        Route::post('supplier-payments/{supplierPayment}/mark-failed', [\App\Http\Controllers\Admin\SupplierPaymentController::class, 'markAsFailed'])->name('supplier-payments.mark-failed');
         
         // Supplier Category Management
         Route::get('supplier-categories', [SupplierCategoryController::class, 'index'])->name('supplier-categories.index');
