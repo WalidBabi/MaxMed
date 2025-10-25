@@ -291,6 +291,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Stripe Routes
     Route::post('/stripe/checkout', [StripeController::class, 'checkout'])->name('stripe.checkout');
     Route::get('/stripe/success', [StripeController::class, 'success'])->name('stripe.success');
+    
+    // Invoice Payment Routes (public - accessible without auth)
+    Route::get('/invoice/{invoice}/payment/success', [\App\Http\Controllers\InvoicePaymentController::class, 'paymentSuccess'])->name('invoice.payment.success');
+    Route::get('/invoice/{invoice}/payment/view', [\App\Http\Controllers\InvoicePaymentController::class, 'viewInvoice'])->name('invoice.payment.view');
 
     // Quotation Routes that need authentication
     Route::prefix('quotation')->name('quotation.')->group(function () {
@@ -530,6 +534,7 @@ Route::get('quotes/search/suggestions', [\App\Http\Controllers\Admin\QuoteContro
         Route::get('invoices/{invoice}/pdf', [\App\Http\Controllers\Admin\InvoiceController::class, 'generatePdf'])->name('invoices.pdf');
         Route::post('invoices/{invoice}/create-order', [\App\Http\Controllers\Admin\InvoiceController::class, 'createOrder'])->name('invoices.create-order');
         Route::post('invoices/{invoice}/link-delivery', [\App\Http\Controllers\Admin\InvoiceController::class, 'linkDelivery'])->name('invoices.link-delivery');
+        Route::post('invoices/{invoice}/generate-payment-link', [\App\Http\Controllers\Admin\InvoiceController::class, 'generatePaymentLink'])->name('invoices.generate-payment-link');
         
         // Purchase Order Management
         Route::resource('purchase-orders', \App\Http\Controllers\Admin\PurchaseOrderController::class);
