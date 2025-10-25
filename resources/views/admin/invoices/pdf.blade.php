@@ -494,13 +494,62 @@
             line-height: 1.5;
         }
 
+        /* PAYMENT OPTIONS WRAPPER */
+        .payment-options-wrapper {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .payment-options-wrapper-single {
+            margin-bottom: 0px;
+        }
+
+        /* OR SEPARATOR */
+        .payment-separator {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            width: 80px;
+            padding: 15px 20px;
+            position: relative;
+        }
+
+        .payment-separator::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, 
+                transparent 0%, 
+                var(--border-color) 10%, 
+                var(--border-color) 90%, 
+                transparent 100%);
+            transform: translateX(-50%);
+        }
+
+        .payment-separator-text {
+            background-color: white;
+            padding: 10px 15px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            z-index: 1;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
         /* BANKING SECTION */
         .banking-section {
-            margin-bottom: 25px;
-            padding: 15px;
-            background-color: var(--light-gray);
-            border-radius: 6px;
-            border-left: 3px solid var(--success-color);
+            display: table-cell;
+            width: 50%;
+            padding: 0px 15px;
+            background-color: transparent;
+            vertical-align: top;
         }
 
         .banking-title {
@@ -514,8 +563,8 @@
 
         .banking-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            grid-template-columns: 1fr;
+            gap: 10px;
         }
 
         .banking-item {
@@ -532,14 +581,140 @@
         }
 
         .banking-value {
-            font-size: 10px;
+            font-size: 9px;
             color: var(--text-primary);
             font-weight: 600;
             font-family: 'Courier New', monospace;
+            word-break: break-all;
         }
 
         .full-width {
-            grid-column: span 2;
+            grid-column: span 1;
+        }
+
+        /* STRIPE PAYMENT BUTTON SECTION */
+        .payment-button-section {
+            display: table-cell;
+            width: 50%;
+            padding: 0px 15px;
+            background: transparent;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .payment-button-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .payment-button-subtitle {
+            font-size: 8px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .payment-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: white;
+            color: #635BFF;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .payment-button:hover {
+            background-color: #f0f0f0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .stripe-logo-container {
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        .stripe-logo {
+            max-width: 120px;
+            height: auto;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .stripe-click-text {
+            font-size: 8px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .payment-link-text {
+            font-size: 7px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            word-break: break-all;
+            line-height: 1.3;
+        }
+
+        .payment-qr-section {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .payment-qr-title {
+            font-size: 7px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .payment-qr-code {
+            max-width: 100px;
+            height: auto;
+            margin: 0 auto;
+            padding: 6px;
+            background-color: white;
+            border-radius: 4px;
+        }
+
+        .payment-option-badge {
+            font-size: 8px;
+            color: var(--text-secondary);
+            background-color: rgba(30, 64, 175, 0.1);
+            padding: 4px 8px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .payment-options-container {
+            margin-bottom: 25px;
+        }
+
+        .payment-options-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .payment-options-content {
+            padding: 20px;
+            background-color: var(--light-gray);
+            border-radius: 6px;
+            border-left: 3px solid var(--success-color);
         }
 
         /* FOOTER */
@@ -995,31 +1170,115 @@
          </div>
          @endif
 
-         <!-- BANKING SECTION -->
+         <!-- PAYMENT OPTIONS (BANK TRANSFER + STRIPE) -->
          @php $isPaidInFull = ($invoice->type === 'final') && (float)($invoice->total_amount ?? 0) - (float)($invoice->paid_amount ?? 0) <= 0.0001; @endphp
          @if(!$isPaidInFull)
-         <div class="banking-section">
-             <div class="banking-title">Banking Details</div>
-             <div class="banking-grid">
-                 <div class="banking-item full-width">
-                     <div class="banking-label">Account Name</div>
-                     <div class="banking-value">MAXMED SCIENTIFIC AND LABORATORY EQUIPMENT TRADING CO. L.L.C</div>
-                 </div>
-                 <div class="banking-item">
-                     <div class="banking-label">Bank Name</div>
-                     <div class="banking-value">Mashreq Bank</div>
-                 </div>
-                 <div class="banking-item">
-                     <div class="banking-label">Account Number</div>
-                     <div class="banking-value">019101532833</div>
-                 </div>
-                 <div class="banking-item">
-                     <div class="banking-label">IBAN Number</div>
-                     <div class="banking-value">AE900330000019101532833</div>
-                 </div>
-                 <div class="banking-item">
-                     <div class="banking-label">SWIFT Code</div>
-                     <div class="banking-value">BOMLAEAD</div>
+         <div class="payment-options-container">
+             <div class="payment-options-title">Payment Options</div>
+             <div class="payment-options-content">
+                 <div class="{{ $invoice->stripe_payment_link_url ? 'payment-options-wrapper' : 'payment-options-wrapper-single' }}">
+                     <!-- BANK TRANSFER DETAILS (First Option) -->
+                     <div class="banking-section" style="{{ !$invoice->stripe_payment_link_url ? 'display: block; width: 100%;' : '' }}">
+                         <div class="banking-title">Banking Details</div>
+                         <div class="banking-grid">
+                             <div class="banking-item full-width">
+                                 <div class="banking-label">Account Name</div>
+                                 <div class="banking-value">MAXMED SCIENTIFIC AND LABORATORY EQUIPMENT TRADING CO. L.L.C</div>
+                             </div>
+                             <div class="banking-item">
+                                 <div class="banking-label">Bank Name</div>
+                                 <div class="banking-value">Mashreq Bank</div>
+                             </div>
+                             <div class="banking-item">
+                                 <div class="banking-label">Account Number</div>
+                                 <div class="banking-value">019101532833</div>
+                             </div>
+                             <div class="banking-item">
+                                 <div class="banking-label">IBAN Number</div>
+                                 <div class="banking-value">AE900330000019101532833</div>
+                             </div>
+                             <div class="banking-item">
+                                 <div class="banking-label">SWIFT Code</div>
+                                 <div class="banking-value">BOMLAEAD</div>
+                             </div>
+                         </div>
+                     </div>
+                     
+                     @if($invoice->stripe_payment_link_url)
+                     <!-- OR SEPARATOR -->
+                     <div class="payment-separator">
+                         <div class="payment-separator-text">OR</div>
+                     </div>
+                     
+                     <!-- STRIPE PAYMENT SECTION (Second Option) -->
+                     <div class="payment-button-section">
+                         <div class="banking-title" style="text-align: center; margin-bottom: 12px;">Online Payment</div>
+                         <div class="payment-button-subtitle" style="margin-bottom: 15px;">
+                             @php
+                                 $remainingAmount = ($invoice->total_amount ?? 0) - ($invoice->paid_amount ?? 0);
+                             @endphp
+                             Pay securely via credit/debit card
+                         </div>
+                         
+                         <!-- STRIPE LOGO (Clickable) -->
+                         <div class="stripe-logo-container">
+                             <a href="{{ $invoice->stripe_payment_link_url }}" style="text-decoration: none; display: inline-block;">
+                                 @php
+                                     $stripeLogoPath = public_path('Images/Stripe.png');
+                                     if (!file_exists($stripeLogoPath)) {
+                                         $stripeLogoPath = public_path('images/stripe.png');
+                                     }
+                                 @endphp
+                                 @if(file_exists($stripeLogoPath))
+                                     <img src="{{ $stripeLogoPath }}" alt="Pay with Stripe" class="stripe-logo">
+                                 @else
+                                     <div class="payment-button">⚡ PAY NOW ONLINE</div>
+                                 @endif
+                             </a>
+                         </div>
+                         
+                         <div class="stripe-click-text" style="margin-top: 10px; margin-bottom: 15px;">
+                             Amount Due: <strong>{{ $invoice->currency ?? 'AED' }} {{ number_format($remainingAmount, 2) }}</strong>
+                         </div>
+                         
+                         <div class="payment-qr-section">
+                             <div class="payment-qr-title">Scan to Pay</div>
+                             @php
+                                 $qrCodeBase64 = null;
+                                 try {
+                                     if (class_exists('\SimpleSoftwareIO\QrCode\Facades\QrCode')) {
+                                         // Try SVG format first (doesn't require imagick or GD)
+                                         $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')
+                                             ->size(150)
+                                             ->margin(0)
+                                             ->errorCorrection('H')
+                                             ->generate($invoice->stripe_payment_link_url);
+                                         $qrCodeBase64 = 'data:image/svg+xml;base64,' . base64_encode($qrCode);
+                                     }
+                                 } catch (\Exception $e) {
+                                     \Log::error('QR Code generation failed: ' . $e->getMessage());
+                                     // Fallback: try to use an external API if SVG fails
+                                     try {
+                                         $qrCodeBase64 = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' . urlencode($invoice->stripe_payment_link_url);
+                                     } catch (\Exception $e2) {
+                                         $qrCodeBase64 = null;
+                                     }
+                                 }
+                             @endphp
+                             @if($qrCodeBase64)
+                                 <img src="{{ $qrCodeBase64 }}" alt="Payment QR Code" class="payment-qr-code" style="display: block; margin: 0 auto; max-width: 150px; height: auto;">
+                             @else
+                                 <div style="font-size: 8px; color: var(--text-muted); text-align: center; padding: 10px;">
+                                     Visit: {{ $invoice->stripe_payment_link_url }}
+                                 </div>
+                             @endif
+                         </div>
+                         
+                         <div class="payment-link-text" style="margin-top: 12px;">
+                             Payment Link:<br>{{ $invoice->stripe_payment_link_url }}
+                         </div>
+                     </div>
+                     @endif
                  </div>
              </div>
          </div>

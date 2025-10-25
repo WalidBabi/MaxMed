@@ -51,6 +51,8 @@ class Invoice extends Model
         'sent_at',
         'email_history',
         'attachments',
+        'stripe_payment_link_id',
+        'stripe_payment_link_url',
         'reference_number',
         'po_number',
         'created_by',

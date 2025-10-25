@@ -690,6 +690,18 @@ class InvoiceController extends Controller
         ]);
 
         try {
+            // Generate Stripe Payment Link if not already exists and invoice is not fully paid
+            if (!$invoice->stripe_payment_link_url && $invoice->payment_status !== 'paid') {
+                try {
+                    $stripeService = new \App\Services\InvoiceStripeService();
+                    $stripeService->getOrCreatePaymentLink($invoice);
+                    // Refresh invoice to get updated payment link
+                    $invoice->refresh();
+                } catch (\Exception $e) {
+                    Log::warning("Failed to generate payment link before sending email: " . $e->getMessage());
+                }
+            }
+
             $ccEmails = $request->cc_emails ? 
                 array_map('trim', explode(',', $request->cc_emails)) : [];
 
@@ -803,6 +815,16 @@ class InvoiceController extends Controller
     public function generatePdf(Invoice $invoice)
     {
         $invoice->load(['items.product.specifications', 'delivery', 'parentInvoice', 'order.cashReceipts', 'order.delivery', 'payments']);
+        
+        // Generate Stripe Payment Link if not already exists and invoice is not fully paid
+        if (!$invoice->stripe_payment_link_url && $invoice->payment_status !== 'paid') {
+            try {
+                $stripeService = new \App\Services\InvoiceStripeService();
+                $stripeService->getOrCreatePaymentLink($invoice);
+            } catch (\Exception $e) {
+                Log::warning("Failed to generate payment link for PDF: " . $e->getMessage());
+            }
+        }
         
         // Get customer data for company name display
         $customer = \App\Models\Customer::where('name', $invoice->customer_name)->first();
@@ -1030,5 +1052,40 @@ class InvoiceController extends Controller
             'shipping_address' => $invoice->shipping_address,
             'items' => $items
         ]);
+    }
+
+    /**
+     * Generate Stripe Payment Link for an invoice
+     */
+    public function generatePaymentLink(Request $request, Invoice $invoice)
+    {
+        try {
+            $stripeService = new \App\Services\InvoiceStripeService();
+            $forceNew = $request->boolean('force_new', false);
+            
+            $paymentLink = $stripeService->getOrCreatePaymentLink($invoice, $forceNew);
+            
+            if (!$paymentLink) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unable to create payment link. Invoice may already be paid or amount is invalid.'
+                ], 400);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Payment link generated successfully',
+                'payment_link_url' => $paymentLink['url'],
+                'payment_link_id' => $paymentLink['id']
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to generate payment link: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to generate payment link: ' . $e->getMessage()
+            ], 500);
+        }
     }
 } 
