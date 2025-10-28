@@ -780,7 +780,7 @@ function addItem() {
                                  data-price-usd="{{ $product->price ?? 0 }}"
                                  data-procurement-price-aed="{{ $product->procurement_price_aed ?? $product->price_aed ?? $product->price }}"
                                  data-procurement-price-usd="{{ $product->procurement_price_usd ?? $product->price ?? 0 }}"
-                                 data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
+                                 data-specifications="{{ base64_encode(json_encode($product->specifications ? $product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->values()->toArray() : [])) }}"
                                  data-specification-image-url="{{ $specImageUrl }}"
                                  data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                  data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
@@ -1163,15 +1163,25 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         }
         
         // Handle specifications
-        if (specifications && specifications !== '[]') {
+        console.log('Product selected - Specifications (base64):', specifications);
+        console.log('Specification Image URL:', specificationImageUrl);
+        
+        if (specifications && specifications !== '[]' && specifications !== 'W10=') { // W10= is base64 for []
             try {
-                const specsArray = JSON.parse(specifications);
+                // Decode base64 first, then parse JSON
+                const decodedSpecs = atob(specifications);
+                console.log('Decoded specifications:', decodedSpecs);
+                const specsArray = JSON.parse(decodedSpecs);
+                console.log('Parsed specs array:', specsArray);
                 
                 // Add specification image as an option if available
                 const allSpecs = [...specsArray];
                 if (specificationImageUrl && specificationImageUrl.trim() !== '') {
                     allSpecs.push({ type: 'image', value: 'Specification Image', url: specificationImageUrl });
+                    console.log('Added specification image to specs');
                 }
+                
+                console.log('Total specs (including image):', allSpecs.length, allSpecs);
                 
                 if (allSpecs.length > 0) {
                     specificationsInput.value = 'Click to select specifications...';
@@ -1240,16 +1250,19 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
                         });
                     });
                 } else {
+                    console.log('No specs found after processing');
                     specificationsInput.value = '';
                     specificationsHidden.value = '';
                     specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
                 }
             } catch (e) {
+                console.error('Error parsing specifications:', e, 'Raw specifications:', specifications);
                 specificationsInput.value = '';
                 specificationsHidden.value = '';
                 specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
             }
         } else {
+            console.log('Specifications empty or not provided. Checking for spec image...', specifications);
             // No text specs; still show specification image if available
             if (specificationImageUrl && specificationImageUrl.trim() !== '') {
                 const allSpecs = [{ type: 'image', value: 'Specification Image', url: specificationImageUrl }];

@@ -536,7 +536,7 @@
                                                                              data-price-usd="{{ $product->price }}"
                                                                              data-procurement-price-aed="{{ $product->procurement_price_aed ?? $product->price_aed ?? $product->price }}"
                                                                              data-procurement-price-usd="{{ $product->procurement_price_usd ?? $product->price ?? 0 }}"
-                                                                             data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
+                                                                             data-specifications="{{ base64_encode(json_encode($product->specifications ? $product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->values()->toArray() : [])) }}"
                                                                              data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                     data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
                                     data-has-model-options="{{ $product->has_model_options ? 'true' : 'false' }}"
@@ -896,7 +896,7 @@ function addItem(data = {}) {
                                      data-price-usd="{{ $product->price }}"
                                      data-procurement-price-aed="{{ $product->procurement_price_aed ?? $product->price_aed ?? $product->price }}"
                                      data-procurement-price-usd="{{ $product->procurement_price_usd ?? $product->price ?? 0 }}"
-                                     data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
+                                     data-specifications="{{ base64_encode(json_encode($product->specifications ? $product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->values()->toArray() : [])) }}"
                                      data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                      data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
                                      data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
