@@ -121,19 +121,21 @@
         .meta-wrapper {
             display: flex;
             justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: 25px;
-            gap: 25px;
+            gap: 20px;
             margin-top: 8px;
         }
 
         .client-section {
-            width: 60%;
+            width: 50%;
+            flex-shrink: 0;
         }
 
         .client-info {
             background-color: var(--light-gray);
             border-radius: 8px;
-            padding: 20px;
+            padding: 18px;
             border-left: 3px solid var(--primary-color);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
@@ -155,7 +157,8 @@
         }
 
         .meta-section {
-            width: 35%;
+            width: 48%;
+            flex-shrink: 0;
         }
 
         .meta-table {
@@ -168,7 +171,7 @@
         }
 
         .meta-table td {
-            padding: 10px 15px;
+            padding: 9px 14px;
             vertical-align: top;
             border-bottom: 1px solid var(--border-color);
         }
@@ -180,7 +183,7 @@
         .meta-table .label {
             font-weight: 600;
             color: var(--text-secondary);
-            width: 45%;
+            width: 48%;
             font-size: 9px;
             text-transform: uppercase;
             letter-spacing: 0.6px;
@@ -670,6 +673,21 @@
                             @endif
                         </td>
                         <td class="specifications">
+                            {{-- Model First --}}
+                            @if(!empty($item->model))
+                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
+                                    <span style="font-weight: 600; color: var(--text-primary);">Model:</span> {{ $item->model }}
+                                </div>
+                            @endif
+                            
+                            {{-- Size Second --}}
+                            @if($item->size && !empty(trim($item->size)))
+                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3; margin-top: {{ !empty($item->model) ? '3px' : '0' }};">
+                                    <span style="font-weight: 600; color: var(--text-primary);">Size:</span> {{ $item->size }}
+                                </div>
+                            @endif
+
+                            {{-- Specifications/Notes Last --}}
                             @if($item->specifications && !empty(trim($item->specifications)))
                                 @php
                                     $selectedSpecs = [];
@@ -686,7 +704,7 @@
                                 @endphp
                                 
                                 @if(count($selectedSpecs) > 0)
-                                    <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
+                                    <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3; margin-top: {{ !empty($item->model) || !empty($item->size) ? '6px' : '0' }};">
                                         @foreach($selectedSpecs as $spec)
                                             @if(is_array($spec) && isset($spec['type']) && $spec['type'] === 'image')
                                                 {{-- Display specification image --}}
@@ -703,21 +721,7 @@
                                 @endif
                             @endif
                             
-                            @if($item->size && !empty(trim($item->size)))
-                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3; margin-top: 3px;">
-                                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1px;">Size:</div>
-                                    <div>{{ $item->size }}</div>
-                                </div>
-                            @endif
-
-                            @if(!empty($item->model))
-                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3; margin-top: 3px;">
-                                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1px;">Model:</div>
-                                    <div>{{ $item->model }}</div>
-                                </div>
-                            @endif
-                            
-                            @if((!$item->specifications || empty(trim($item->specifications))) && (!$item->size || empty(trim($item->size))))
+                            @if((!$item->specifications || empty(trim($item->specifications))) && (!$item->size || empty(trim($item->size))) && empty($item->model))
                                 <span style="font-size: 9px; color: var(--text-muted);">-</span>
                             @endif
                         </td>
