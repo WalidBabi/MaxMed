@@ -76,9 +76,9 @@
                                         <input type="text"
                                                id="customer_search"
                                                class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 product-search-input"
-                                               placeholder="Search customers..."
+                                               placeholder="Search customers by name, company, or email..."
                                                autocomplete="off"
-                                               value="{{ optional($customers->firstWhere('id', old('customer_id')))->name ? (optional($customers->firstWhere('id', old('customer_id')))->name . (optional($customers->firstWhere('id', old('customer_id')))->company_name ? ' - ' . optional($customers->firstWhere('id', old('customer_id')))->company_name : '')) : '' }}">
+                                               value="{{ optional($customers->firstWhere('id', old('customer_id')))->name ? (optional($customers->firstWhere('id', old('customer_id')))->name . (optional($customers->firstWhere('id', old('customer_id')))->company_name ? ' - ' . optional($customers->firstWhere('id', old('customer_id')))->company_name : '') . (optional($customers->firstWhere('id', old('customer_id')))->email ? ' (' . optional($customers->firstWhere('id', old('customer_id')))->email . ')' : '') ) : '' }}">
                                         <input type="hidden" name="customer_id" id="customer_id" value="{{ old('customer_id') }}">
                                         <div class="product-dropdown-list hidden" id="customer_dropdown_list">
                                             <div class="dropdown-items">
@@ -87,8 +87,8 @@
                                                          data-id="{{ $customer->id }}"
                                                          data-name="{{ $customer->name }}"
                                                          data-company="{{ $customer->company_name }}"
-                                                         data-search-text="{{ strtolower(trim($customer->name . ' ' . ($customer->company_name ?? ''))) }}">
-                                                        <div class="font-medium text-gray-900">{{ $customer->name }}{{ $customer->company_name ? ' - ' . $customer->company_name : '' }}</div>
+                                                         data-search-text="{{ strtolower(trim($customer->name . ' ' . ($customer->company_name ?? '') . ' ' . ($customer->email ?? ''))) }}">
+                                                        <div class="font-medium text-gray-900">{{ $customer->name }}{{ $customer->company_name ? ' - ' . $customer->company_name : '' }} @if($customer->email)<span class="ml-2 text-xs text-gray-500">({{ $customer->email }})</span>@endif</div>
                                                     </div>
                                                 @endforeach
                                             </div>
