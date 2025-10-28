@@ -714,34 +714,42 @@
         document.body.classList.remove('navigating');
         
         // Size option selection
-        const sizeOptions = document.querySelectorAll('.size-option input[name="size"]');
-        const modelOptions = document.querySelectorAll('.size-option input[name="model"]');
+        const sizeLabels = document.querySelectorAll('.size-option:has(input[name="size"])');
+        const modelLabels = document.querySelectorAll('.size-option:has(input[name="model"])');
         
-        if (sizeOptions.length > 0) {
-            sizeOptions.forEach(option => {
-                option.addEventListener('change', function() {
-                    // Add active class to parent label
-                    sizeOptions.forEach(o => o.parentElement.classList.remove('active'));
-                    this.parentElement.classList.add('active');
-                    localStorage.setItem('selected_product_size', this.value);
+        if (sizeLabels.length > 0) {
+            sizeLabels.forEach(label => {
+                label.addEventListener('click', function() {
+                    const input = this.querySelector('input[name="size"]');
+                    // Remove active class from all size options
+                    sizeLabels.forEach(l => l.classList.remove('active'));
+                    // Add active class to selected option
+                    this.classList.add('active');
+                    // Check the radio input
+                    input.checked = true;
+                    localStorage.setItem('selected_product_size', input.value);
                 });
             });
         }
 
-        if (modelOptions.length > 0) {
-            modelOptions.forEach(option => {
-                option.addEventListener('change', function() {
-                    // Add active class to parent label
-                    modelOptions.forEach(o => o.parentElement.classList.remove('active'));
-                    this.parentElement.classList.add('active');
-                    localStorage.setItem('selected_product_model', this.value);
+        if (modelLabels.length > 0) {
+            modelLabels.forEach(label => {
+                label.addEventListener('click', function() {
+                    const input = this.querySelector('input[name="model"]');
+                    // Remove active class from all model options
+                    modelLabels.forEach(l => l.classList.remove('active'));
+                    // Add active class to selected option
+                    this.classList.add('active');
+                    // Check the radio input
+                    input.checked = true;
+                    localStorage.setItem('selected_product_model', input.value);
                 });
             });
         }
         
         // Update quotation button URL to include selected size and model
         const quotationBtn = document.getElementById('quotation-btn');
-        if (quotationBtn && (sizeOptions.length > 0 || modelOptions.length > 0)) {
+        if (quotationBtn && (sizeLabels.length > 0 || modelLabels.length > 0)) {
             const baseHref = quotationBtn.getAttribute('href');
             quotationBtn.addEventListener('click', function(e) {
                 e.preventDefault();
