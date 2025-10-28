@@ -798,16 +798,35 @@ class CrmLeadController extends Controller
     public function destroy(CrmLead $lead)
     {
         try {
+            $leadId = $lead->id;
             $leadName = $lead->full_name;
             $lead->delete();
+            
+            // Return JSON response for AJAX requests
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "Lead '{$leadName}' has been deleted successfully!",
+                    'lead_id' => $leadId
+                ]);
+            }
             
             return redirect()->route('crm.leads.index')
                             ->with('success', "Lead '{$leadName}' has been deleted successfully!");
         } catch (\Exception $e) {
+            $leadId = $lead->id ?? 'unknown';
             Log::error('Failed to delete lead: ' . $e->getMessage(), [
-                'lead_id' => $lead->id,
+                'lead_id' => $leadId,
                 'error' => $e->getMessage()
             ]);
+            
+            // Return JSON response for AJAX requests
+            if (request()->ajax() || request()->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to delete lead: ' . $e->getMessage()
+                ], 422);
+            }
             
             return redirect()->back()
                             ->with('error', 'Failed to delete lead: ' . $e->getMessage());
