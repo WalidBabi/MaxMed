@@ -569,6 +569,26 @@
                         </div>
                     </div>
                     @endif
+
+                    @if($product->has_model_options)
+                    <div class="mt-3">
+                        <h5 class="mb-3">Select Model</h5>
+                        <div class="size-options">
+                            @php
+                                $modelOptions = $product->model_options ?? [];
+                                if (!is_array($modelOptions) && !empty($modelOptions)) {
+                                    $modelOptions = json_decode($modelOptions, true) ?? [];
+                                }
+                            @endphp
+                            
+                            @foreach($modelOptions as $option)
+                                <label class="size-option">
+                                    <input type="radio" name="model" value="{{ $option }}" class="d-none"> {{ $option }}
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
             
