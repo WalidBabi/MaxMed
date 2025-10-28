@@ -1530,9 +1530,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateStatistics() {
         // Get current pending count and decrease by 1, sent count increase by 1
         const pendingCard = document.querySelector('.card-hover:nth-child(2) .text-3xl');
-        const currentPending = parseInt(pendingCard.textContent);
-        if (currentPending > 0) {
-            pendingCard.textContent = currentPending; // Sent status is still considered "pending" in the UI logic
+        if (pendingCard && pendingCard.textContent) {
+            const currentPending = parseInt(pendingCard.textContent);
+            if (currentPending > 0) {
+                pendingCard.textContent = currentPending; // Sent status is still considered "pending" in the UI logic
+            }
+        } else {
+            console.log('Statistics card not found on page - skipping update');
         }
     }
 
