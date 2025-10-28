@@ -267,7 +267,7 @@
                         </a>
 
                         <!-- Notifications -->
-                        @include('components.supplier.notification-dropdown')
+                        {{-- @include('components.supplier.notification-dropdown') --}}
 
                         <!-- User menu -->
                         <div class="relative" x-data="{ open: false }">

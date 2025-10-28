@@ -556,6 +556,12 @@
                         <div class="p-2 text-sm text-gray-500 dropdown-loading hidden">Searching...</div>
                         <div class="dropdown-items">
                             @foreach($products as $product)
+                                @php
+                                    $specImage = $product->images->first(function($image) {
+                                        return !empty($image->specification_image_url);
+                                    });
+                                    $specImageUrl = $specImage ? $specImage->specification_image_url : '';
+                                @endphp
                                 <div class="dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0" 
                                      data-id="{{ $product->id }}"
                                      data-name="{{ $product->name }}"
@@ -566,6 +572,7 @@
                                      data-procurement-price-aed="{{ $product->procurement_price_aed ?? $product->price_aed ?? $product->price }}"
                                      data-procurement-price-usd="{{ $product->procurement_price_usd ?? $product->price ?? 0 }}"
                                      data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
+                                     data-specification-image-url="{{ $specImageUrl }}"
                                      data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                      data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
                                      data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
@@ -1024,6 +1031,7 @@
             const currency = currencySelect ? currencySelect.value : 'AED';
             const productPrice = currency === 'USD' ? item.dataset.priceUsd : item.dataset.priceAed;
             const specifications = item.dataset.specifications;
+            const specificationImageUrl = item.dataset.specificationImageUrl || '';
             
             // Set values
             searchInput.value = productName;
@@ -1044,9 +1052,16 @@
             if (specifications && specifications !== '[]') {
                 try {
                     const specsArray = JSON.parse(specifications);
-                    if (specsArray.length > 0) {
+                    
+                    // Add specification image as an option if available
+                    const allSpecs = [...specsArray];
+                    if (specificationImageUrl && specificationImageUrl.trim() !== '') {
+                        allSpecs.push({ type: 'image', value: 'Specification Image', url: specificationImageUrl });
+                    }
+                    
+                    if (allSpecs.length > 0) {
                         specificationsInput.value = 'Click to select specifications...';
-                        specificationsHidden.value = JSON.stringify(specsArray);
+                        specificationsHidden.value = JSON.stringify(allSpecs);
                         
                         // Get the row index for this item
                         const row = searchInput.closest('tr');
@@ -1065,13 +1080,21 @@
                         `;
                         specificationsDropdown.appendChild(selectAllDiv);
                         
-                        specsArray.forEach((spec, index) => {
+                        allSpecs.forEach((spec, index) => {
                             const specDiv = document.createElement('div');
                             specDiv.className = 'p-3 text-sm text-gray-700 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 cursor-pointer flex items-center';
-                            specDiv.innerHTML = `
-                                <input type="checkbox" id="spec_${rowIndex}_${index}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox" data-spec="${spec}" checked>
-                                <label for="spec_${rowIndex}_${index}" class="flex-1 cursor-pointer">${spec}</label>
-                            `;
+                            
+                            if (spec.type === 'image') {
+                                specDiv.innerHTML = `
+                                    <input type="checkbox" id="spec_${rowIndex}_${index}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox" data-spec='${JSON.stringify(spec)}' checked>
+                                    <label for="spec_${rowIndex}_${index}" class="flex-1 cursor-pointer">📷 ${spec.value}</label>
+                                `;
+                            } else {
+                                specDiv.innerHTML = `
+                                    <input type="checkbox" id="spec_${rowIndex}_${index}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox" data-spec="${spec}" checked>
+                                    <label for="spec_${rowIndex}_${index}" class="flex-1 cursor-pointer">${spec}</label>
+                                `;
+                            }
                             specificationsDropdown.appendChild(specDiv);
                         });
                         
@@ -1132,13 +1155,28 @@
             
             if (specificationsDropdown) {
                 const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox:checked');
-                const selectedSpecs = Array.from(checkboxes).map(cb => cb.dataset.spec);
+                const selectedSpecs = Array.from(checkboxes).map(cb => {
+                    try {
+                        // Try to parse as JSON (for image specs)
+                        return JSON.parse(cb.dataset.spec);
+                    } catch (e) {
+                        // It's a plain string
+                        return cb.dataset.spec;
+                    }
+                });
                 
                 // Remove the line that combines size with specifications
                 let allSpecs = [...selectedSpecs];
                 
                 if (allSpecs.length > 0) {
-                    specificationsInputs[rowIndex].value = allSpecs.join(', ');
+                    // Display text representation
+                    const displayText = allSpecs.map(spec => {
+                        if (typeof spec === 'object' && spec.type === 'image') {
+                            return '📷 ' + spec.value;
+                        }
+                        return spec;
+                    }).join(', ');
+                    specificationsInputs[rowIndex].value = displayText;
                     specificationsHiddens[rowIndex].value = JSON.stringify(allSpecs);
                 } else {
                     specificationsInputs[rowIndex].value = 'Click to select specifications...';

@@ -250,7 +250,7 @@
                         </a>
 
                         <!-- Notifications -->
-                        @include('components.admin.notification-dropdown')
+                        {{-- @include('components.admin.notification-dropdown') --}}
 
                         <!-- User menu -->
                         <div class="relative" x-data="{ open: false }">

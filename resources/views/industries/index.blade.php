@@ -77,6 +77,12 @@
                     <p class="text-gray-600">Specialized equipment for food safety and quality testing.</p>
                 </div>
                 
+                <!-- Card 11 -->
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <h3 class="text-lg font-bold text-[#0a5694] mb-2">Dental Clinics</h3>
+                    <p class="text-gray-600">Professional dental equipment and instruments for modern dental practices.</p>
+                </div>
+                
               
             </div>
         </div>
