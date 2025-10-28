@@ -124,7 +124,9 @@ class ProductController extends Controller
             'size_options' => 'nullable|array',
             'size_options.*' => 'nullable|string|max:255',
             'specifications' => 'nullable|array',
-            'specifications.*' => 'nullable|string'
+            'specifications.*' => 'nullable|string',
+            'notes' => 'nullable|string',
+            'notes_show_on_website' => 'nullable|boolean'
         ]);
 
         DB::transaction(function () use ($request, $validated) {
@@ -259,6 +261,14 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
+        \Log::info('Product Update Request', [
+            'product_id' => $product->id,
+            'has_notes' => $request->has('notes'),
+            'notes_value' => $request->input('notes'),
+            'notes_length' => strlen($request->input('notes', '')),
+            'has_notes_checkbox' => $request->has('notes_show_on_website')
+        ]);
+
         $validated = $request->validate([
             'name' => 'required|max:255',
             'description' => 'required',
@@ -280,7 +290,14 @@ class ProductController extends Controller
             'size_options' => 'nullable|array',
             'size_options.*' => 'nullable|string|max:255',
             'specifications' => 'nullable|array',
-            'specifications.*' => 'nullable|string'
+            'specifications.*' => 'nullable|string',
+            'notes' => 'nullable|string',
+            'notes_show_on_website' => 'nullable|boolean'
+        ]);
+
+        \Log::info('Product Update Validation Passed', [
+            'product_id' => $product->id,
+            'validated_notes' => isset($validated['notes']) ? 'yes' : 'no'
         ]);
 
         try {

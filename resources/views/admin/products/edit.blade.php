@@ -570,8 +570,11 @@
                         Notes
                     </label>
                     <textarea name="notes" id="notes" rows="6"
-                              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('notes') border-red-300 @enderror"
                               placeholder="Add any important notes to highlight. You can write multiple lines.">{{ $notesValue }}</textarea>
+                    @error('notes')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                     <div class="mt-3 flex items-center">
                         <input type="checkbox" id="notes_show_on_website" name="notes_show_on_website" value="1"
                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" {{ ($notesShowOnWebsite === '1' || $notesShowOnWebsite === 1 || $notesShowOnWebsite === true) ? 'checked' : '' }}>
