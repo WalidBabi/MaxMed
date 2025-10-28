@@ -1277,26 +1277,31 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
                     specificationsInput.value = 'Click to select specifications...';
                     specificationsHidden.value = JSON.stringify(allSpecs);
                     
-                    // Create checkboxes for specifications
-                    let checkboxesHtml = '';
-                    allSpecs.forEach(spec => {
-                        if (typeof spec === 'object' && spec.type === 'image') {
-                            checkboxesHtml += `
-                                <label class="flex items-center p-2 hover:bg-gray-50">
-                                    <input type="checkbox" class="spec-checkbox h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" data-spec='${JSON.stringify(spec)}'>
-                                    <span class="ml-2 text-sm text-gray-700">📷 ${spec.value}</span>
-                                </label>
-                            `;
+                    // Create checkboxes for specifications safely
+                    const frag = document.createDocumentFragment();
+                    allSpecs.forEach((spec, i) => {
+                        const label = document.createElement('label');
+                        label.className = 'flex items-center p-2 hover:bg-gray-50';
+
+                        const input = document.createElement('input');
+                        input.type = 'checkbox';
+                        input.className = 'spec-checkbox h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded';
+                        if (typeof spec === 'object' && spec && spec.type === 'image') {
+                            input.dataset.spec = JSON.stringify(spec);
                         } else {
-                            checkboxesHtml += `
-                                <label class="flex items-center p-2 hover:bg-gray-50">
-                                    <input type="checkbox" class="spec-checkbox h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" data-spec="${spec}">
-                                    <span class="ml-2 text-sm text-gray-700">${spec}</span>
-                                </label>
-                            `;
+                            input.dataset.spec = String(spec);
                         }
+
+                        const span = document.createElement('span');
+                        span.className = 'ml-2 text-sm text-gray-700';
+                        span.textContent = (typeof spec === 'object' && spec && spec.type === 'image') ? `📷 ${spec.value}` : String(spec);
+
+                        label.appendChild(input);
+                        label.appendChild(span);
+                        frag.appendChild(label);
                     });
-                    specificationsDropdown.innerHTML = checkboxesHtml;
+                    specificationsDropdown.innerHTML = '';
+                    specificationsDropdown.appendChild(frag);
                     
                     // Add event listeners to checkboxes
                     const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox');
