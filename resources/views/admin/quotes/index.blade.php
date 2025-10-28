@@ -1172,6 +1172,62 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Function to reset/clear the email modal
+    function resetEmailModal() {
+        console.log('Resetting email modal...');
+        
+        // Clear form fields
+        const recipientNameInput = document.getElementById('recipient_name');
+        const emailInput = document.getElementById('customer_email');
+        const subjectInput = document.getElementById('email_subject');
+        const messageTextarea = document.getElementById('email_message');
+        
+        if (recipientNameInput) recipientNameInput.value = '';
+        if (emailInput) emailInput.value = '';
+        if (subjectInput) subjectInput.value = '';
+        if (messageTextarea) messageTextarea.value = '';
+        
+        // Clear and hide suggestions
+        const suggestionsBox = document.getElementById('recipient_suggestions');
+        const hint = document.getElementById('recipient_hint');
+        if (suggestionsBox) {
+            suggestionsBox.innerHTML = '';
+            suggestionsBox.classList.add('hidden');
+        }
+        if (hint) {
+            hint.textContent = '';
+            hint.classList.add('hidden');
+        }
+        
+        // Clear status indicators
+        const loadingSpinner = document.getElementById('emailLoadingSpinner');
+        const emailFoundIcon = document.getElementById('emailFoundIcon');
+        const emailStatus = document.getElementById('emailStatus');
+        
+        if (loadingSpinner) loadingSpinner.classList.add('hidden');
+        if (emailFoundIcon) emailFoundIcon.classList.add('hidden');
+        if (emailStatus) {
+            emailStatus.classList.add('hidden');
+            emailStatus.textContent = '';
+        }
+        
+        // Enable email input
+        if (emailInput) emailInput.disabled = false;
+        
+        console.log('Email modal reset complete');
+    }
+
+    // Listen for modal close events to reset the form
+    window.addEventListener('close-modal', function(event) {
+        if (event.detail === 'send-quote-email') {
+            console.log('Email modal closing, resetting form...');
+            // Small delay to ensure modal is closed before reset
+            setTimeout(() => {
+                resetEmailModal();
+            }, 300);
+        }
+    });
+
     // Enhanced send email functionality
     document.querySelectorAll('.send-email-btn').forEach(button => {
         button.addEventListener('click', function() {
@@ -1185,6 +1241,9 @@ document.addEventListener('DOMContentLoaded', function() {
             currentQuoteId = quoteId;
             
             console.log('Quote data:', { quoteId, customerName, quoteNumber, customerEmail });
+            
+            // Reset the modal first to clear any previous data
+            resetEmailModal();
             
             const sendEmailForm = document.getElementById('sendEmailForm');
             if (!sendEmailForm) {
