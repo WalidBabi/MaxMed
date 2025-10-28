@@ -571,7 +571,7 @@
                                      data-price-usd="{{ $product->price ?? 0 }}"
                                      data-procurement-price-aed="{{ $product->procurement_price_aed ?? $product->price_aed ?? $product->price }}"
                                      data-procurement-price-usd="{{ $product->procurement_price_usd ?? $product->price ?? 0 }}"
-                                     data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
+                                     data-specifications="{{ base64_encode(json_encode($product->specifications ? $product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->values()->toArray() : [])) }}"
                                      data-specification-image-url="{{ $specImageUrl }}"
                                      data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                      data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
@@ -1088,9 +1088,11 @@
             }
             
             // Handle specifications
-            if (specifications && specifications !== '[]') {
+            if (specifications && specifications !== '[]' && specifications !== 'W10=') { // W10= is base64 for []
                 try {
-                    const specsArray = JSON.parse(specifications);
+                    // Decode base64 first, then parse JSON
+                    const decodedSpecs = atob(specifications);
+                    const specsArray = JSON.parse(decodedSpecs);
                     
                     // Add specification image as an option if available
                     const allSpecs = [...specsArray];

@@ -549,12 +549,12 @@
             <div class="client-section">
                 <div class="client-info">
                     <div class="section-heading">Bill To</div>
-                    <div class="client-name">
-                        {{ $quote->customer_name }}
+                    <div class="client-name" style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;">
+                        <span style="font-weight: 600;">{{ $quote->customer_name }}</span>
                         @if($customer && $customer->company_name)
-                            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 3px; font-weight: 500;">
-                                {{ $customer->company_name }}
-                            </div>
+                            <span style="font-size: 12px; color: var(--text-secondary); font-weight: 500;">
+                                ({{ $customer->company_name }})
+                            </span>
                         @endif
                     </div>
                     @if($customer)
@@ -617,15 +617,34 @@
 
         <!-- ITEMS TABLE -->
         <div class="items-section">
+            @php
+                // Check if any item has Notes to adjust column widths
+                $hasNotes = $quote->items->contains(function($item) {
+                    return !empty($item->specifications) && (
+                        str_contains(strtolower($item->specifications), 'notes:') ||
+                        str_contains(strtolower($item->specifications), 'package includes')
+                    );
+                });
+                
+                // Adjust column widths based on content
+                // Reduce Description, increase Amount to prevent wrapping
+                $descWidth = $hasNotes ? '22%' : '30%';
+                $specWidth = $hasNotes ? '35%' : '20%';
+                $qtyWidth = '7%';
+                $rateWidth = '13%';
+                $discWidth = '7%';
+                $amtWidth = '16%';  // Increased from 8% to prevent wrapping
+            @endphp
+            
             <table class="items-table">
                 <thead>
                     <tr>
-                        <th style="width: 40%;">Item Description</th>
-                        <th style="width: 20%;">Specifications</th>
-                        <th style="width: 10%;" class="text-right">Qty</th>
-                        <th style="width: 15%;" class="text-right">Rate ({{ $quote->currency ?? 'AED' }})</th>
-                        <th style="width: 10%;" class="text-right">Discount</th>
-                        <th style="width: 15%;" class="text-right">Amount ({{ $quote->currency ?? 'AED' }})</th>
+                        <th style="width: {{ $descWidth }};">Item Description</th>
+                        <th style="width: {{ $specWidth }};">Specifications</th>
+                        <th style="width: {{ $qtyWidth }};" class="text-right">Qty</th>
+                        <th style="width: {{ $rateWidth }};" class="text-right">Rate ({{ $quote->currency ?? 'AED' }})</th>
+                        <th style="width: {{ $discWidth }};" class="text-right">Disc</th>
+                        <th style="width: {{ $amtWidth }};" class="text-right">Amount</th>
                     </tr>
                 </thead>
                 <tbody>

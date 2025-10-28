@@ -798,12 +798,12 @@
             <div class="client-section">
                 <div class="client-info">
                     <div class="section-heading">Bill To</div>
-                    <div class="client-name">
-                        {{ $invoice->customer_name }}
+                    <div class="client-name" style="display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;">
+                        <span style="font-weight: 600;">{{ $invoice->customer_name }}</span>
                         @if($customer && $customer->company_name)
-                            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 3px; font-weight: 500;">
-                                {{ $customer->company_name }}
-                            </div>
+                            <span style="font-size: 12px; color: var(--text-secondary); font-weight: 500;">
+                                ({{ $customer->company_name }})
+                            </span>
                         @endif
                     </div>
                     @if($customer)
