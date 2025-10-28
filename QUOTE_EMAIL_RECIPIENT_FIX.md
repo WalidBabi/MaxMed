@@ -152,8 +152,40 @@ Route::resource('quotes', QuoteController::class);
 - `app/Models/Customer.php` - Customer model with alternate_names field
 - `app/Models/CrmLead.php` - CRM lead model
 
+## Additional Fix: Post-Email UI Update Error
+
+After sending the email successfully, there was a JavaScript error when trying to update statistics:
+
+```
+TypeError: Cannot read properties of null (reading 'textContent')
+    at updateStatistics (quotes:3472:53)
+```
+
+### The Problem
+The `updateStatistics()` function was trying to access a statistics card element without checking if it exists first.
+
+### The Solution
+Added null check before accessing the element:
+
+```javascript
+function updateStatistics() {
+    const pendingCard = document.querySelector('.card-hover:nth-child(2) .text-3xl');
+    if (pendingCard && pendingCard.textContent) {
+        const currentPending = parseInt(pendingCard.textContent);
+        if (currentPending > 0) {
+            pendingCard.textContent = currentPending;
+        }
+    } else {
+        console.log('Statistics card not found on page - skipping update');
+    }
+}
+```
+
+This ensures the function gracefully handles cases where the statistics card isn't present on the page (e.g., when viewing from different pages or filtered views).
+
 ## Notes
 - The same functionality should work for CRM leads if they use a similar modal
 - The `alternate_names` field in the customers table should be a JSON array
 - Email matching is case-insensitive for better reliability
+- All UI updates now have proper null checks to prevent errors
 
