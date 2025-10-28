@@ -1326,7 +1326,8 @@ public function sendEmail(Request $request, CrmLead $lead)
     $request->validate([
         'assigned_user_email' => 'required|email',
         'cc_emails' => 'nullable|string',
-        'message' => 'nullable|string'
+            'message' => 'nullable|string',
+            'recipient_name' => 'nullable|string|max:255'
     ]);
 
     try {
@@ -1366,7 +1367,8 @@ public function sendEmail(Request $request, CrmLead $lead)
             $assignedUser, 
             null, // previousAssignee - we don't track this in manual sends
             $reassignedBy, 
-            $isNewLead
+            $isNewLead,
+            $request->input('recipient_name') // optional name to address
         ));
 
         // Update email history like quotes/invoices

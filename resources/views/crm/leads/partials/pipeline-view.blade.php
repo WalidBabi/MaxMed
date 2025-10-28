@@ -824,6 +824,7 @@
                                                         class="send-email-btn flex-1 text-xs py-1 px-2 bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
                                                         data-lead-id="{{ $lead->id }}"
                                                         data-lead-name="{{ $lead->full_name }}"
+                                                        data-lead-email="{{ $lead->email }}"
                                                         data-assigned-user-email="{{ $lead->assignedUser->email ?? '' }}"
                                                         data-assigned-user-name="{{ $lead->assignedUser->name ?? '' }}"
                                                         title="Send Email">

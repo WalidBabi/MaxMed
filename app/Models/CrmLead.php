@@ -179,17 +179,37 @@ class CrmLead extends Model
      */
     public function createCustomer()
     {
-        // Check if customer already exists with this email
+        // Check if a customer already exists with this email
         $existingCustomer = Customer::where('email', $this->email)->first();
-        
         if ($existingCustomer) {
-            return $existingCustomer;
+            // If the existing customer's name matches this lead, reuse it
+            $leadFullName = trim($this->full_name);
+            if (strcasecmp(trim($existingCustomer->name), $leadFullName) === 0) {
+                return $existingCustomer;
+            }
+
+            // Names differ: create a separate customer record with same email
+            // Also store the new name in the existing customer's alternate_names for suggestions
+            try {
+                $alts = is_array($existingCustomer->alternate_names) ? $existingCustomer->alternate_names : [];
+                if ($leadFullName !== '' && !in_array($leadFullName, $alts, true)) {
+                    $alts[] = $leadFullName;
+                    $existingCustomer->alternate_names = array_values($alts);
+                    $existingCustomer->save();
+                }
+            } catch (\Exception $e) {
+                \Log::warning('Failed updating alternate_names on existing customer', [
+                    'customer_id' => $existingCustomer->id,
+                    'error' => $e->getMessage()
+                ]);
+            }
+            // Continue to create a new customer entry below
         }
 
         // Parse company address into components
         $addressComponents = $this->parseAddress($this->company_address);
 
-        // Create new customer
+        // Create new customer (allows duplicate email)
         $customer = Customer::create([
             'name' => $this->full_name,
             'email' => $this->email,
