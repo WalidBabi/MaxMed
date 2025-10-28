@@ -812,6 +812,11 @@
                                                                     title="Edit Lead">
                                                                 Edit
                                                             </button>
+                                                            <button onclick="event.stopPropagation(); confirmDeleteLead({{ $lead->id }}, '{{ addslashes($lead->full_name) }}')" 
+                                                                class="flex-1 text-xs py-1 px-2 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
+                                                                    title="Delete Lead">
+                                                                🗑️ Delete
+                                                            </button>
                                                         @endif
                                                     </div>
                                                 @else
@@ -829,6 +834,13 @@
                                                         class="flex-1 text-xs py-1 px-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
                                                             title="Edit Lead">
                                                         Edit
+                                                    </button>
+                                                    @endif
+                                                    @if(auth()->user()->hasRole('super_admin') || auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('admin') || auth()->user()->hasRole('super-administrator'))
+                                                    <button onclick="event.stopPropagation(); confirmDeleteLead({{ $lead->id }}, '{{ addslashes($lead->full_name) }}')" 
+                                                        class="flex-1 text-xs py-1 px-2 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
+                                                            title="Delete Lead">
+                                                        🗑️ Delete
                                                     </button>
                                                     @endif
                                                     @can('crm.leads.view_requirements')
@@ -1195,5 +1207,94 @@ function showNotification(message, type = 'info') {
             notification.remove();
         }
     }, 5000);
+}
+
+// Function to confirm and delete a lead from the pipeline
+function confirmDeleteLead(leadId, leadName) {
+    if (!confirm('⚠️ Are you sure you want to delete this lead?\n\nLead: ' + leadName + '\n\nThis action cannot be undone and will permanently remove:\n• All lead information\n• All activities and notes\n• All associated data\n\nPress OK to confirm deletion.')) {
+        return;
+    }
+    
+    // Get CSRF token
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    
+    // Find the lead card element
+    const leadCard = document.querySelector(`[data-lead-id="${leadId}"].lead-card`);
+    
+    // Show loading state
+    if (leadCard) {
+        leadCard.style.opacity = '0.5';
+        leadCard.style.pointerEvents = 'none';
+    }
+    
+    // Make AJAX request to delete the lead
+    fetch(`/crm/leads/${leadId}`, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRF-TOKEN': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(data => {
+                throw new Error(data.message || 'Failed to delete lead');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Success - remove the card from the DOM
+        if (leadCard) {
+            leadCard.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
+            leadCard.style.opacity = '0';
+            leadCard.style.transform = 'scale(0.9)';
+            
+            setTimeout(() => {
+                leadCard.remove();
+                
+                // Update the stage count
+                const stage = leadCard.closest('.pipeline-column');
+                if (stage) {
+                    const countElement = stage.querySelector('.stage-count');
+                    if (countElement) {
+                        const currentCount = parseInt(countElement.textContent) || 0;
+                        countElement.textContent = Math.max(0, currentCount - 1);
+                    }
+                    
+                    // Update the metric card count if it exists
+                    const status = leadCard.getAttribute('data-current-status');
+                    const metricCard = document.querySelector(`[data-stage="${status}"].metric-card`);
+                    if (metricCard) {
+                        const metricCountElement = metricCard.querySelector('.text-sm.font-bold.text-gray-900');
+                        if (metricCountElement) {
+                            const metricCount = parseInt(metricCountElement.textContent.replace(/\D/g, '')) || 0;
+                            metricCountElement.innerHTML = Math.max(0, metricCount - 1) + ' Leads';
+                        }
+                    }
+                }
+            }, 300);
+        }
+        
+        // Show success notification
+        showNotification('Lead "' + leadName + '" has been deleted successfully!', 'success');
+        
+        // Reload the page after a short delay to update all counts and stats
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    })
+    .catch(error => {
+        // Error - restore card and show error message
+        if (leadCard) {
+            leadCard.style.opacity = '1';
+            leadCard.style.pointerEvents = 'auto';
+        }
+        
+        showNotification('Failed to delete lead: ' + error.message, 'error');
+        console.error('Error deleting lead:', error);
+    });
 }
 </script> 
