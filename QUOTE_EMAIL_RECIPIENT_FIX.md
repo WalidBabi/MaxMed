@@ -122,10 +122,33 @@ If issues persist:
    - `storage/logs/laravel.log`
    - Look for "getNamesByEmail called" entries
 
+## Critical Route Ordering Fix
+
+**Important:** The route for `quotes/names` was causing a 404 error because it was defined AFTER the resource route.
+
+### The Problem
+```php
+// WRONG - This doesn't work
+Route::resource('quotes', QuoteController::class);
+Route::get('quotes/names', [QuoteController::class, 'getNamesByEmail']);
+```
+
+Laravel matches routes from top to bottom. The `Route::resource()` creates a `quotes/{quote}` route that matches first, treating "names" as a quote ID parameter.
+
+### The Solution
+```php
+// CORRECT - Specific routes before resource routes
+Route::get('quotes/names', [QuoteController::class, 'getNamesByEmail']);
+Route::get('quotes/search/suggestions', [QuoteController::class, 'searchSuggestions']);
+Route::resource('quotes', QuoteController::class);
+```
+
+**Always define specific routes BEFORE resource/wildcard routes in Laravel!**
+
 ## Related Files
 - `resources/views/admin/quotes/index.blade.php` - Email modal UI and JavaScript
 - `app/Http/Controllers/Admin/QuoteController.php` - Backend API endpoint
-- `routes/web.php` - Route definition (line 523)
+- `routes/web.php` - Route definition (lines 522-525) - **CRITICAL: Order matters!**
 - `app/Models/Customer.php` - Customer model with alternate_names field
 - `app/Models/CrmLead.php` - CRM lead model
 
