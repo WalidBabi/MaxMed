@@ -1285,14 +1285,26 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
                     
                     // Create checkboxes for specifications
                     let checkboxesHtml = '';
-                    specsArray.forEach(spec => {
-                        checkboxesHtml += `
-                            <label class="flex items-center p-2 hover:bg-gray-50">
-                                <input type="checkbox" class="spec-checkbox h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" data-spec="${spec}">
-                                <span class="ml-2 text-sm text-gray-700">${spec}</span>
-                            </label>
-                        `;
+                    const frag = document.createDocumentFragment();
+                    specsArray.forEach((spec, i) => {
+                        const label = document.createElement('label');
+                        label.className = 'flex items-center p-2 hover:bg-gray-50';
+
+                        const input = document.createElement('input');
+                        input.type = 'checkbox';
+                        input.className = 'spec-checkbox h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded';
+                        input.dataset.spec = String(spec);
+
+                        const span = document.createElement('span');
+                        span.className = 'ml-2 text-sm text-gray-700';
+                        span.textContent = String(spec);
+
+                        label.appendChild(input);
+                        label.appendChild(span);
+                        frag.appendChild(label);
                     });
+                    specificationsDropdown.innerHTML = '';
+                    specificationsDropdown.appendChild(frag);
                     specificationsDropdown.innerHTML = checkboxesHtml;
                     
                     // Add event listeners to checkboxes
@@ -1493,10 +1505,22 @@ document.addEventListener('DOMContentLoaded', function() {
                                             const isChecked = savedSpecsArray.includes(spec);
                                             const specDiv = document.createElement('div');
                                             specDiv.className = 'p-3 text-sm text-gray-700 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 cursor-pointer flex items-center';
-                                            specDiv.innerHTML = `
-                                                <input type="checkbox" id="spec_${index}_${specIndex}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox" data-spec="${spec}" ${isChecked ? 'checked' : ''}>
-                                                <label for="spec_${index}_${specIndex}" class="flex-1 cursor-pointer">${spec}</label>
-                                            `;
+
+                                            const inputId = `spec_${index}_${specIndex}`;
+                                            const inputEl = document.createElement('input');
+                                            inputEl.type = 'checkbox';
+                                            inputEl.id = inputId;
+                                            inputEl.className = 'mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox';
+                                            inputEl.dataset.spec = String(spec);
+                                            if (isChecked) inputEl.checked = true;
+
+                                            const labelEl = document.createElement('label');
+                                            labelEl.htmlFor = inputId;
+                                            labelEl.className = 'flex-1 cursor-pointer';
+                                            labelEl.textContent = String(spec);
+
+                                            specDiv.appendChild(inputEl);
+                                            specDiv.appendChild(labelEl);
                                             specificationsDropdown.appendChild(specDiv);
                                         });
                                         

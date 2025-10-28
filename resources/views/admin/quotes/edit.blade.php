@@ -770,10 +770,19 @@
                                 const isChecked = preselected.includes(spec);
                                 const specDiv = document.createElement('div');
                                 specDiv.className = 'p-3 text-sm text-gray-700 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 cursor-pointer flex items-center';
-                                specDiv.innerHTML = `
-                                    <input type=\"checkbox\" class=\"mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox\" data-spec=\"${spec}\" ${isChecked ? 'checked' : ''}>
-                                    <label class=\"flex-1 cursor-pointer\">${spec}</label>
-                                `;
+
+                                const inputEl = document.createElement('input');
+                                inputEl.type = 'checkbox';
+                                inputEl.className = 'mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox';
+                                inputEl.dataset.spec = String(spec);
+                                if (isChecked) inputEl.checked = true;
+
+                                const labelEl = document.createElement('label');
+                                labelEl.className = 'flex-1 cursor-pointer';
+                                labelEl.textContent = String(spec);
+
+                                specDiv.appendChild(inputEl);
+                                specDiv.appendChild(labelEl);
                                 specificationsDropdown.appendChild(specDiv);
                             });
 
@@ -1114,17 +1123,27 @@
                             const specDiv = document.createElement('div');
                             specDiv.className = 'p-3 text-sm text-gray-700 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 cursor-pointer flex items-center';
                             
-                            if (spec.type === 'image') {
-                                specDiv.innerHTML = `
-                                    <input type="checkbox" id="spec_${rowIndex}_${index}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox" data-spec='${JSON.stringify(spec)}' checked>
-                                    <label for="spec_${rowIndex}_${index}" class="flex-1 cursor-pointer">📷 ${spec.value}</label>
-                                `;
+                            const inputId = `spec_${rowIndex}_${index}`;
+                            const inputEl = document.createElement('input');
+                            inputEl.type = 'checkbox';
+                            inputEl.id = inputId;
+                            inputEl.className = 'mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox';
+                            inputEl.checked = true;
+
+                            const labelEl = document.createElement('label');
+                            labelEl.htmlFor = inputId;
+                            labelEl.className = 'flex-1 cursor-pointer';
+
+                            if (spec && typeof spec === 'object' && spec.type === 'image') {
+                                inputEl.dataset.spec = JSON.stringify(spec);
+                                labelEl.textContent = `📷 ${spec.value}`;
                             } else {
-                                specDiv.innerHTML = `
-                                    <input type="checkbox" id="spec_${rowIndex}_${index}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox" data-spec="${spec}" checked>
-                                    <label for="spec_${rowIndex}_${index}" class="flex-1 cursor-pointer">${spec}</label>
-                                `;
+                                inputEl.dataset.spec = String(spec);
+                                labelEl.textContent = String(spec);
                             }
+
+                            specDiv.appendChild(inputEl);
+                            specDiv.appendChild(labelEl);
                             specificationsDropdown.appendChild(specDiv);
                         });
                         
