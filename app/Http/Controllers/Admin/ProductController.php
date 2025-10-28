@@ -694,8 +694,9 @@ class ProductController extends Controller
         try {
             \Log::info("Getting specifications for product ID: {$product->id}, Name: {$product->name}");
             
+            // Get all specifications for internal use (quotes/invoices)
+            // The show_on_detail flag only controls website display, not internal selection
             $specifications = $product->specifications()
-                ->where('show_on_detail', true)
                 ->orderBy('category', 'asc')
                 ->orderBy('sort_order', 'asc')
                 ->get();
