@@ -584,6 +584,65 @@
             </div>
         </div>
 
+        <!-- Model Options -->
+        <div class="card-hover rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5 mt-6">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <svg class="h-5 w-5 text-emerald-600 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h3A2.25 2.25 0 0111.25 6v3A2.25 2.25 0 019 11.25H6A2.25 2.25 0 013.75 9V6zM3.75 15A2.25 2.25 0 016 12.75h3A2.25 2.25 0 0111.25 15v3A2.25 2.25 0 019 20.25H6A2.25 2.25 0 013.75 18v-3zM12.75 6A2.25 2.25 0 0115 3.75h3A2.25 2.25 0 0120.75 6v3A2.25 2.25 0 0118 11.25h-3A2.25 2.25 0 0112.75 9V6zM12.75 15A2.25 2.25 0 0115 12.75h3A2.25 2.25 0 0120.75 15v3A2.25 2.25 0 0118 20.25h-3A2.25 2.25 0 0112.75 18v-3z"/></svg>
+                    Model Options
+                </h3>
+            </div>
+            <div class="p-6">
+                <div class="flex items-center">
+                    <input id="has_model_options" name="has_model_options" type="checkbox" value="1" 
+                           {{ old('has_model_options', $product->has_model_options) ? 'checked' : '' }}
+                           class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                    <label for="has_model_options" class="ml-3 text-sm font-medium leading-6 text-gray-900">Enable model options for this product</label>
+                </div>
+                @php $modelOptions = old('model_options', $product->model_options ?? []); @endphp
+                <div id="model_options_container" class="mt-6" style="{{ old('has_model_options', $product->has_model_options) ? '' : 'display: none;' }}">
+                    <div class="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                        <div id="model_options_list" class="space-y-3">
+                            @if($modelOptions)
+                                @foreach($modelOptions as $index => $option)
+                                <div class="flex items-center space-x-3 model-option-row">
+                                    <div class="flex-1 relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <i class="fas fa-tag text-gray-400"></i>
+                                        </div>
+                                        <input type="text" name="model_options[]" value="{{ $option }}" placeholder="Model (e.g., DPCD100T)"
+                                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    </div>
+                                    <button type="button" class="px-3 py-2 border border-red-300 rounded-md text-red-700 bg-red-50 hover:bg-red-100 remove-model-option">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                                @endforeach
+                            @else
+                                <div class="flex items-center space-x-3 model-option-row">
+                                    <div class="flex-1 relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <i class="fas fa-tag text-gray-400"></i>
+                                        </div>
+                                        <input type="text" name="model_options[]" placeholder="Model (e.g., DPCD100T)"
+                                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    </div>
+                                    <button type="button" class="px-3 py-2 border border-red-300 rounded-md text-red-700 bg-red-50 hover:bg-red-100 remove-model-option">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="mt-3">
+                            <button type="button" id="add_model_option" class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm bg-white hover:bg-gray-50">
+                                <i class="fas fa-plus mr-2"></i>Add model
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Form Actions -->
         <div class="flex items-center justify-end gap-x-6 pt-6">
             <a href="{{ route('admin.products.index') }}" class="text-sm font-semibold leading-6 text-gray-900">Cancel</a>
@@ -765,6 +824,39 @@
             
             specificationsContainer.innerHTML = html;
         }
+
+        // Model options toggling and dynamic rows
+        (function initializeModelOptions(){
+            const toggle = document.getElementById('has_model_options');
+            const container = document.getElementById('model_options_container');
+            const list = document.getElementById('model_options_list');
+            const addBtn = document.getElementById('add_model_option');
+            if (!toggle || !container || !list || !addBtn) return;
+            toggle.addEventListener('change', ()=>{ container.style.display = toggle.checked ? '' : 'none'; });
+            addBtn.addEventListener('click', ()=>{
+                const row = document.createElement('div');
+                row.className = 'flex items-center space-x-3 model-option-row';
+                row.innerHTML = `
+                    <div class="flex-1 relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-tag text-gray-400"></i>
+                        </div>
+                        <input type="text" name="model_options[]" placeholder="Model (e.g., DPCD100T)"
+                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                    <button type="button" class="px-3 py-2 border border-red-300 rounded-md text-red-700 bg-red-50 hover:bg-red-100 remove-model-option">
+                        <i class="fas fa-trash"></i>
+                    </button>`;
+                list.appendChild(row);
+            });
+            document.addEventListener('click', function(e){
+                const btn = e.target.closest('.remove-model-option');
+                if (btn) {
+                    const row = btn.closest('.model-option-row');
+                    if (row) row.remove();
+                }
+            });
+        })();
 
         // Size options functionality
         const hasSizeOptionsCheckbox = document.getElementById('has_size_options');

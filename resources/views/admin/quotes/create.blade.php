@@ -784,6 +784,8 @@ function addItem() {
                                  data-specification-image-url="{{ $specImageUrl }}"
                                  data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                  data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
+                                 data-has-model-options="{{ $product->has_model_options ? 'true' : 'false' }}"
+                                 data-model-options="{{ is_array($product->model_options) ? json_encode($product->model_options) : ($product->model_options ?: '[]') }}"
                                  data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
                                 <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
                                 @if($product->description)
@@ -815,6 +817,13 @@ function addItem() {
                 <div class="mt-2">
                     <select name="items[${itemCounter}][size]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 size-options-select">
                         <option value="">Select Size (if applicable)</option>
+                    </select>
+                </div>
+
+                <!-- Model Options Dropdown -->
+                <div class="mt-2">
+                    <select name="items[${itemCounter}][model]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 model-options-select">
+                        <option value="">Select Model (if applicable)</option>
                     </select>
                 </div>
                 
@@ -1137,6 +1146,7 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         const row = searchInput.closest('tr');
         rateInput.setAttribute('data-procurement-price', procurementPrice || 0);
         const sizeSelect = row.querySelector('.size-options-select');
+        const modelSelect = row.querySelector('.model-options-select');
         if (sizeSelect) {
             const hasSizeOptions = item.dataset.hasSizeOptions === 'true';
             const sizeOptions = item.dataset.sizeOptions ? JSON.parse(item.dataset.sizeOptions) : [];
@@ -1144,6 +1154,12 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
             
             // Add event listener for size changes
             sizeSelect.addEventListener('change', updateSelectedSpecifications);
+        }
+
+        if (modelSelect) {
+            const hasModelOptions = item.dataset.hasModelOptions === 'true';
+            const modelOptions = item.dataset.modelOptions ? JSON.parse(item.dataset.modelOptions) : [];
+            populateModelOptionsFromData(modelSelect, hasModelOptions, modelOptions);
         }
         
         // Handle specifications
@@ -1334,6 +1350,17 @@ function populateSizeOptionsFromData(sizeSelect, hasSizeOptions, sizeOptions) {
         options += `<option value="${size}">${size}</option>`;
     });
     sizeSelect.innerHTML = options;
+}
+
+// Populate model options from data attributes
+function populateModelOptionsFromData(modelSelect, hasModelOptions, modelOptions) {
+    if (!hasModelOptions || !modelOptions || modelOptions.length === 0) {
+        modelSelect.innerHTML = '<option value="">Select Model (if applicable)</option>';
+        return;
+    }
+    let options = '<option value="">Select Model (if applicable)</option>';
+    modelOptions.forEach(m => { options += `<option value="${m}">${m}</option>`; });
+    modelSelect.innerHTML = options;
 }
 
 // Function to populate size options (kept for compatibility)

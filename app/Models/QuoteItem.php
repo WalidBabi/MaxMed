@@ -13,6 +13,7 @@ class QuoteItem extends Model
         'item_details',
         'specifications',
         'size',
+        'model',
         'quantity',
         'rate',
         'discount',

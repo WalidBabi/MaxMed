@@ -298,6 +298,56 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Model Options -->
+                        <div class="mt-8">
+                            <div class="flex items-center">
+                                <input id="has_model_options" name="has_model_options" type="checkbox" value="1" {{ old('has_model_options') ? 'checked' : '' }}
+                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                                <label for="has_model_options" class="ml-3 text-sm font-medium leading-6 text-gray-900">Enable model options for this product</label>
+                            </div>
+                            <div id="model_options_container" class="space-y-4 mt-4" style="{{ old('has_model_options') ? '' : 'display: none;' }}">
+                                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                    <p class="text-sm text-gray-600 mb-4">Add available models (e.g., instrument models, variants). One per row.</p>
+                                    <div id="model_options_list" class="space-y-3">
+                                        @if(old('model_options'))
+                                            @foreach(old('model_options') as $index => $option)
+                                            <div class="flex items-center space-x-3 model-option-row">
+                                                <div class="flex-1 relative">
+                                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                        <i class="fas fa-tag text-gray-400"></i>
+                                                    </div>
+                                                    <input type="text" name="model_options[]" value="{{ $option }}" placeholder="Model (e.g., DPCD100T, D201G)"
+                                                           class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                                </div>
+                                                <button type="button" class="px-3 py-2 border border-red-300 rounded-md text-red-700 bg-red-50 hover:bg-red-100 remove-model-option">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                            @endforeach
+                                        @else
+                                            <div class="flex items-center space-x-3 model-option-row">
+                                                <div class="flex-1 relative">
+                                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                        <i class="fas fa-tag text-gray-400"></i>
+                                                    </div>
+                                                    <input type="text" name="model_options[]" placeholder="Model (e.g., DPCD100T, D201G)"
+                                                           class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                                </div>
+                                                <button type="button" class="px-3 py-2 border border-red-300 rounded-md text-red-700 bg-red-50 hover:bg-red-100 remove-model-option">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="mt-3">
+                                        <button type="button" id="add_model_option" class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm bg-white hover:bg-gray-50">
+                                            <i class="fas fa-plus mr-2"></i>Add model
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Product Images Section -->
@@ -880,6 +930,39 @@ Weight
                 } catch(e){ console.error(e); alert(e.message || 'Failed to create brand'); }
             });
         }
+
+        // Model options toggling and dynamic rows
+        (function initializeModelOptions(){
+            const toggle = document.getElementById('has_model_options');
+            const container = document.getElementById('model_options_container');
+            const list = document.getElementById('model_options_list');
+            const addBtn = document.getElementById('add_model_option');
+            if (!toggle || !container || !list || !addBtn) return;
+            toggle.addEventListener('change', ()=>{ container.style.display = toggle.checked ? '' : 'none'; });
+            addBtn.addEventListener('click', ()=>{
+                const row = document.createElement('div');
+                row.className = 'flex items-center space-x-3 model-option-row';
+                row.innerHTML = `
+                    <div class="flex-1 relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-tag text-gray-400"></i>
+                        </div>
+                        <input type="text" name="model_options[]" placeholder="Model (e.g., DPCD100T)"
+                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    </div>
+                    <button type="button" class="px-3 py-2 border border-red-300 rounded-md text-red-700 bg-red-50 hover:bg-red-100 remove-model-option">
+                        <i class="fas fa-trash"></i>
+                    </button>`;
+                list.appendChild(row);
+            });
+            document.addEventListener('click', function(e){
+                const btn = e.target.closest('.remove-model-option');
+                if (btn) {
+                    const row = btn.closest('.model-option-row');
+                    if (row) row.remove();
+                }
+            });
+        })();
     });
 </script>
 

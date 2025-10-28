@@ -895,6 +895,8 @@ function addItem() {
                                  data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
                                  data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                  data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
+                                 data-has-model-options="{{ $product->has_model_options ? 'true' : 'false' }}"
+                                 data-model-options="{{ is_array($product->model_options) ? json_encode($product->model_options) : ($product->model_options ?: '[]') }}"
                                                                      data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
                                 <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
                                 @if($product->description)
@@ -921,11 +923,17 @@ function addItem() {
                 <input type="hidden" name="items[${itemCounter}][specifications]" class="specifications-hidden">
                 
                 <!-- Size Options Dropdown -->
-                <div class="mt-2">
+                    <div class="mt-2">
                     <select name="items[${itemCounter}][size]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 size-options-select">
                         <option value="">Select Size (if applicable)</option>
                     </select>
                 </div>
+
+                    <div class="mt-2">
+                        <select name="items[${itemCounter}][model]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 model-options-select">
+                            <option value="">Select Model (if applicable)</option>
+                        </select>
+                    </div>
                 
                 <!-- Specifications Dropdown List -->
                 <div class="specifications-dropdown-list hidden">
