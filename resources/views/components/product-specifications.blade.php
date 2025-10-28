@@ -36,12 +36,20 @@
                                        title="{{ $spec->description }}"></i>
                                 @endif
                             </div>
-                            <div class="spec-value">
-                                <strong>{{ $spec->specification_value }}</strong>
-                                @if($spec->unit)
-                                    <span class="unit">{{ $spec->unit }}</span>
-                                @endif
-                            </div>
+
+                            @if($spec->specification_key === 'notes')
+                                @php $value = $spec->specification_value; @endphp
+                                <div class="spec-value">
+                                    {!! (strpos($value, '<') !== false) ? $value : nl2br(e($value)) !!}
+                                </div>
+                            @else
+                                <div class="spec-value">
+                                    <strong>{{ $spec->specification_value }}</strong>
+                                    @if($spec->unit)
+                                        <span class="unit">{{ $spec->unit }}</span>
+                                    @endif
+                                </div>
+                            @endif
                         </div>
                     @endforeach
                 </div>
