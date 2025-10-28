@@ -690,6 +690,13 @@
                                     <div>{{ $item->size }}</div>
                                 </div>
                             @endif
+
+                            @if(!empty($item->model))
+                                <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3; margin-top: 3px;">
+                                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 1px;">Model:</div>
+                                    <div>{{ $item->model }}</div>
+                                </div>
+                            @endif
                             
                             @if((!$item->specifications || empty(trim($item->specifications))) && (!$item->size || empty(trim($item->size))))
                                 <span style="font-size: 9px; color: var(--text-muted);">-</span>

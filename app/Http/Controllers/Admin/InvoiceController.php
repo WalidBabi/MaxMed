@@ -351,7 +351,8 @@ class InvoiceController extends Controller
             'items.*.description' => 'required|string',
             'items.*.quantity' => 'required|numeric|min:0',
             'items.*.unit_price' => 'required|numeric|min:0',
-            'items.*.size' => 'nullable|string|max:100'
+            'items.*.size' => 'nullable|string|max:100',
+            'items.*.model' => 'nullable|string|max:191'
         ]);
 
         try {
@@ -393,6 +394,7 @@ class InvoiceController extends Controller
                     'product_id' => $itemData['product_id'] ?? null,
                     'description' => $itemData['description'] ?? $itemData['item_description'] ?? '',
                     'size' => $itemData['size'] ?? null,
+                    'model' => $itemData['model'] ?? null,
                     'quantity' => $quantity,
                     'unit_price' => $unitPrice,
                     'discount_percentage' => $itemData['discount_percentage'] ?? 0,
@@ -461,7 +463,8 @@ class InvoiceController extends Controller
             'installation_fee' => 'nullable|numeric|min:0',
             'vat_rate' => 'nullable|numeric|min:0|max:100',
             'customs_clearance_fee' => 'nullable|numeric|min:0',
-            'items' => 'required|array|min:1'
+            'items' => 'required|array|min:1',
+            'items.*.model' => 'nullable|string|max:191'
         ]);
 
         try {
@@ -507,6 +510,7 @@ class InvoiceController extends Controller
                     'product_id' => $itemData['product_id'] ?? null,
                     'description' => $itemData['description'] ?? $itemData['item_description'] ?? '',
                     'size' => $itemData['size'] ?? null,
+                    'model' => $itemData['model'] ?? null,
                     'quantity' => $quantity,
                     'unit_price' => $unitPrice,
                     'discount_percentage' => $itemData['discount_percentage'] ?? 0,

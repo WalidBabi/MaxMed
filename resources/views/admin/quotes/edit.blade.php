@@ -575,6 +575,8 @@
                                      data-specification-image-url="{{ $specImageUrl }}"
                                      data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                      data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
+                                 data-has-model-options="{{ $product->has_model_options ? 'true' : 'false' }}"
+                                 data-model-options="{{ is_array($product->model_options) ? json_encode($product->model_options) : ($product->model_options ?: '[]') }}"
                                      data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
                                     <div class="font-medium text-gray-900">{{ $product->name }}{{ $product->brand ? ' - ' . $product->brand->name : '' }}</div>
                                     @if($product->description)
@@ -607,6 +609,12 @@
                     <div class="mt-2">
                         <select name="items[${itemCounter}][size]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 size-options-select" data-selected-size="${data.size || ''}">
                             <option value="">Select Size (if applicable)</option>
+                        </select>
+                    </div>
+
+                    <div class="mt-2">
+                        <select name="items[${itemCounter}][model]" class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 model-options-select" data-selected-model="${data.model || ''}">
+                            <option value="">Select Model (if applicable)</option>
                         </select>
                     </div>
                     
@@ -719,9 +727,21 @@
                     rateInput.setAttribute('data-procurement-price', String(currency === 'USD' ? procurementUsd : procurementAed));
 
                     const sizeSelect = row.querySelector('.size-options-select');
+                    const modelSelect = row.querySelector('.model-options-select');
                     if (sizeSelect) {
                         populateSizeOptionsFromData(sizeSelect, hasSizeOptions, sizeOptions, data.size || '');
                         sizeSelect.addEventListener('change', () => updateSelectedSpecificationsForRow(Array.from(document.querySelectorAll('.product-search-input')).indexOf(productSearchInput)));
+                    }
+                    if (modelSelect) {
+                        const hasModelOptions = productDropdownItem.getAttribute('data-has-model-options') === 'true';
+                        const modelOptions = productDropdownItem.getAttribute('data-model-options');
+                        if (hasModelOptions && modelOptions) {
+                            const parsed = JSON.parse(modelOptions);
+                            let options = '<option value="">Select Model (if applicable)</option>';
+                            parsed.forEach(m => { options += `<option value="${m}">${m}</option>`; });
+                            modelSelect.innerHTML = options;
+                            if (data.model) modelSelect.value = data.model;
+                        }
                     }
 
                     const specsJson = productDropdownItem.getAttribute('data-specifications');
@@ -1042,10 +1062,20 @@
             // Populate size options
             const row = searchInput.closest('tr');
             const sizeSelect = row.querySelector('.size-options-select');
+            const modelSelect = row.querySelector('.model-options-select');
             if (sizeSelect) {
                 const hasSizeOptions = item.dataset.hasSizeOptions === 'true';
                 const sizeOptions = item.dataset.sizeOptions ? JSON.parse(item.dataset.sizeOptions) : [];
                 populateSizeOptionsFromData(sizeSelect, hasSizeOptions, sizeOptions);
+            }
+            if (modelSelect) {
+                const hasModelOptions = item.dataset.hasModelOptions === 'true';
+                const modelOptions = item.dataset.modelOptions ? JSON.parse(item.dataset.modelOptions) : [];
+                if (hasModelOptions) {
+                    let options = '<option value="">Select Model (if applicable)</option>';
+                    modelOptions.forEach(m => { options += `<option value="${m}">${m}</option>`; });
+                    modelSelect.innerHTML = options;
+                }
             }
             
             // Handle specifications

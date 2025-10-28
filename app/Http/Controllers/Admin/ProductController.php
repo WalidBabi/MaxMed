@@ -140,8 +140,13 @@ class ProductController extends Controller
                 'brand_id' => $validated['brand_id'] ?? null,
                 'image_url' => null, // Will be replaced by primary image
                 'has_size_options' => $request->has('has_size_options'),
+                'has_model_options' => $request->has('has_model_options'),
                 'size_options' => $request->has('has_size_options') && $request->filled('size_options') ? 
                                   array_filter($request->size_options, function($value) {
+                                      return !empty(trim($value));
+                                  }) : null,
+                'model_options' => $request->has('has_model_options') && $request->filled('model_options') ? 
+                                  array_filter($request->model_options, function($value) {
                                       return !empty(trim($value));
                                   }) : null,
             ]);
@@ -292,8 +297,13 @@ class ProductController extends Controller
                     'category_id' => $validated['category_id'],
                     'brand_id' => $validated['brand_id'],
                     'has_size_options' => $request->has('has_size_options'),
+                    'has_model_options' => $request->has('has_model_options'),
                     'size_options' => $request->has('has_size_options') && $request->filled('size_options') ? 
                                     array_filter($request->size_options, function($value) {
+                                        return !empty(trim($value));
+                                    }) : null,
+                    'model_options' => $request->has('has_model_options') && $request->filled('model_options') ? 
+                                    array_filter($request->model_options, function($value) {
                                         return !empty(trim($value));
                                     }) : null,
                 ]);
