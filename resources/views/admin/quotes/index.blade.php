@@ -591,7 +591,7 @@
 
                         <!-- Email Fields -->
                     <div class="space-y-5">
-                        <div>
+                        <div class="relative">
                             <label for="recipient_name" class="flex items-center text-sm font-medium text-gray-700 mb-2">
                                 <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -603,7 +603,7 @@
                                    name="recipient_name"
                                    class="block w-full px-4 py-3 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                                    placeholder="Select or enter recipient name">
-                            <div id="recipient_suggestions" class="mt-2 hidden bg-white border border-gray-200 rounded-lg shadow z-10"></div>
+                            <div id="recipient_suggestions" class="absolute left-0 right-0 mt-2 hidden bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto z-50"></div>
                             <p id="recipient_hint" class="mt-2 text-xs text-gray-500 hidden"></p>
                         </div>
                         <div>
@@ -1306,35 +1306,93 @@ document.addEventListener('DOMContentLoaded', function() {
         const suggestionsBox = document.getElementById('recipient_suggestions');
         const nameInput = document.getElementById('recipient_name');
         if (!email) return;
+        
+        console.log('Fetching recipient names for email:', email);
+        
         fetch(`/admin/quotes/names?email=${encodeURIComponent(email)}`)
             .then(r => r.json())
             .then(data => {
+                console.log('Received recipient names data:', data);
                 const names = Array.isArray(data.names) ? data.names : [];
+                console.log('Parsed names array:', names);
+                
                 if (names.length === 0) {
                     suggestionsBox.classList.add('hidden');
                     suggestionsBox.innerHTML = '';
                     hint.classList.add('hidden');
+                    console.log('No names found for this email');
                     return;
                 }
+                
                 // Preselect first suggestion if input empty
                 if (nameInput && !nameInput.value) {
                     nameInput.value = names[0];
+                    console.log('Auto-selected first name:', names[0]);
                 }
-                suggestionsBox.innerHTML = names.map(n => `<button type="button" class="block w-full text-left px-3 py-2 hover:bg-gray-50">${n.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</button>`).join('');
-                suggestionsBox.classList.remove('hidden');
-                hint.textContent = 'Multiple contacts use this email. Choose who to address.';
-                hint.classList.remove('hidden');
+                
+                // Show message based on number of names
+                if (names.length === 1) {
+                    hint.textContent = 'Name automatically populated from customer records.';
+                    hint.classList.remove('hidden');
+                } else {
+                    hint.innerHTML = `<strong>${names.length} contacts</strong> found for this email. Click to select:`;
+                    hint.classList.remove('hidden');
+                }
+                
+                // Create suggestion buttons with better styling
+                suggestionsBox.innerHTML = names.map(n => `
+                    <button type="button" class="block w-full text-left px-4 py-3 hover:bg-indigo-50 transition-colors duration-150 border-b border-gray-100 last:border-b-0 first:rounded-t-lg last:rounded-b-lg">
+                        <span class="text-gray-900 font-medium">${n.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</span>
+                    </button>
+                `).join('');
+                
+                // Only show suggestions if there are multiple names
+                if (names.length > 1) {
+                    suggestionsBox.classList.remove('hidden');
+                    console.log('Showing suggestions box with', names.length, 'names');
+                } else {
+                    suggestionsBox.classList.add('hidden');
+                    console.log('Hiding suggestions box (only 1 name)');
+                }
+                
                 // Bind click handlers
                 Array.from(suggestionsBox.querySelectorAll('button')).forEach(btn => {
                     btn.addEventListener('click', () => {
-                        nameInput.value = btn.textContent;
+                        nameInput.value = btn.textContent.trim();
+                        suggestionsBox.classList.add('hidden');
+                        console.log('Selected name:', btn.textContent.trim());
                     });
                 });
             })
-            .catch(() => {
-                // Silent fail
+            .catch((error) => {
+                console.error('Error fetching recipient names:', error);
             });
     }
+    
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        const suggestionsBox = document.getElementById('recipient_suggestions');
+        const nameInput = document.getElementById('recipient_name');
+        if (suggestionsBox && nameInput && 
+            !suggestionsBox.contains(e.target) && 
+            e.target !== nameInput) {
+            suggestionsBox.classList.add('hidden');
+        }
+    });
+    
+    // Show suggestions again when clicking on input (if they exist)
+    document.addEventListener('DOMContentLoaded', function() {
+        const nameInput = document.getElementById('recipient_name');
+        const suggestionsBox = document.getElementById('recipient_suggestions');
+        
+        if (nameInput && suggestionsBox) {
+            nameInput.addEventListener('click', function() {
+                if (suggestionsBox.children.length > 0) {
+                    suggestionsBox.classList.remove('hidden');
+                }
+            });
+        }
+    });
 
     // Function to handle email form submission
     window.submitEmailForm = function(event) {

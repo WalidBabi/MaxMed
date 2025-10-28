@@ -24,14 +24,25 @@ class QuoteController extends Controller
     public function getNamesByEmail(Request $request)
     {
         $email = trim(strtolower($request->query('email', '')));
+        
+        Log::info('getNamesByEmail called', ['email' => $email]);
+        
         if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            Log::warning('Invalid email provided', ['email' => $email]);
             return response()->json(['names' => []]);
         }
 
         // Names from customers (primary + alternates)
         $customer = Customer::whereRaw('LOWER(email) = ?', [$email])->first();
         $names = [];
+        
         if ($customer) {
+            Log::info('Customer found', [
+                'customer_id' => $customer->id,
+                'customer_name' => $customer->name,
+                'alternate_names' => $customer->alternate_names
+            ]);
+            
             if (!empty($customer->name)) {
                 $names[] = $customer->name;
             }
@@ -42,17 +53,23 @@ class QuoteController extends Controller
                     }
                 }
             }
+        } else {
+            Log::info('No customer found for email', ['email' => $email]);
         }
 
         // Names from CRM leads sharing this email
-        $leadNames = CrmLead::whereRaw('LOWER(email) = ?', [$email])
-            ->get()
+        $leads = CrmLead::whereRaw('LOWER(email) = ?', [$email])->get();
+        Log::info('CRM leads found', ['count' => $leads->count()]);
+        
+        $leadNames = $leads
             ->map(function ($l) { return trim($l->first_name . ' ' . $l->last_name); })
             ->filter(function ($n) { return $n !== ''; })
             ->values()
             ->all();
 
         $names = array_values(array_unique(array_filter(array_merge($names, $leadNames))));
+        
+        Log::info('Final names array', ['names' => $names, 'count' => count($names)]);
 
         return response()->json(['names' => $names]);
     }
