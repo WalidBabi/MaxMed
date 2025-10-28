@@ -409,7 +409,7 @@
                                                 data-quote-id="{{ $quote->id }}"
                                                 data-customer-name="{{ $quote->customer_name }}"
                                                 data-quote-number="{{ $quote->quote_number }}"
-                                                data-customer-email="{{ $quote->customer_email ?? '' }}"
+                                                data-customer-id="{{ $quote->customer_id ?? '' }}"
                                                 title="Email">
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
@@ -1235,12 +1235,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const quoteId = this.getAttribute('data-quote-id');
             const customerName = this.getAttribute('data-customer-name');
             const quoteNumber = this.getAttribute('data-quote-number');
-            const customerEmail = this.getAttribute('data-customer-email');
+            const customerId = this.getAttribute('data-customer-id');
             
             // Store quote ID globally for status updates
             currentQuoteId = quoteId;
             
-            console.log('Quote data:', { quoteId, customerName, quoteNumber, customerEmail });
+            console.log('Quote data:', { quoteId, customerName, quoteNumber, customerId });
             
             // Reset the modal first to clear any previous data
             resetEmailModal();
@@ -1261,10 +1261,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (emailModalQuoteNumber) emailModalQuoteNumber.textContent = `Quote ${quoteNumber}`;
             if (emailModalCustomerName) emailModalCustomerName.textContent = customerName;
             
-            // Use existing email or fetch by customer name
-            if (customerEmail && customerEmail.trim() !== '') {
-                populateEmailField(customerEmail, 'Customer email loaded from quote');
-                fetchRecipientNames(customerEmail);
+            // Always fetch fresh customer data by customer ID or name
+            if (customerId && customerId.trim() !== '') {
+                fetchCustomerEmailById(customerId);
             } else {
                 fetchCustomerEmail(customerName);
             }
@@ -1295,6 +1294,59 @@ document.addEventListener('DOMContentLoaded', function() {
         emailStatus.classList.remove('hidden');
         // Try to pull recipient names when email changes
         fetchRecipientNames(email);
+    }
+
+    // Function to fetch customer email by customer ID
+    function fetchCustomerEmailById(customerId) {
+        const emailInput = document.getElementById('customer_email');
+        const loadingSpinner = document.getElementById('emailLoadingSpinner');
+        const emailFoundIcon = document.getElementById('emailFoundIcon');
+        const emailStatus = document.getElementById('emailStatus');
+        
+        console.log('Fetching customer email by ID:', customerId);
+        
+        // Show loading state
+        loadingSpinner.classList.remove('hidden');
+        emailFoundIcon.classList.add('hidden');
+        emailStatus.classList.add('hidden');
+        emailInput.value = '';
+        emailInput.disabled = true;
+        
+        // Fetch customer email by ID using the customer details endpoint
+        fetch(`/admin/customers/${customerId}/details`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Customer not found');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Customer data received:', data);
+                if (data.email) {
+                    populateEmailField(data.email, 'Current customer email loaded successfully');
+                } else {
+                    throw new Error('No email found for customer');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching customer email:', error);
+                loadingSpinner.classList.add('hidden');
+                emailInput.disabled = false;
+                emailStatus.className = 'mt-2 text-sm text-amber-600 flex items-center';
+                emailStatus.innerHTML = `
+                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    Unable to retrieve customer email. Please enter manually.
+                `;
+                emailStatus.classList.remove('hidden');
+            });
     }
 
     // Function to fetch customer email

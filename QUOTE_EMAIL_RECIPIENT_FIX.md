@@ -11,10 +11,13 @@ When opening the email modal in the quotes section, the recipient name field was
 - Low z-index not sufficient for modal context
 - JavaScript not properly displaying multiple name options
 
-### 2. Modal State Persistence
-When sending emails to custom addresses, the previous email remained in the modal when reopening for a different quote.
+### 2. Modal State Persistence & Outdated Email Data
+When sending emails to custom addresses, the previous email remained in the modal when reopening for a different quote. Additionally, quotes stored outdated email addresses that didn't match the customer's current email.
 
-**Root Cause:** Modal form was not being reset between uses
+**Root Causes:** 
+- Modal form was not being reset between uses
+- Quote records stored email addresses that could become outdated
+- System used stored quote email instead of fetching current customer email
 
 ### 3. Post-Email UI Error
 JavaScript error occurred after successfully sending emails when trying to update statistics.
@@ -164,10 +167,47 @@ Route::resource('quotes', QuoteController::class);
 
 ## Additional Fix: Modal State Persistence Issue
 
-### Problem 1: Previous Email Data Remains
-When users sent an email to a custom email address (different from the customer's default), then opened the modal again for a different quote, the previous email address remained in the form instead of loading the new customer's email.
+### Problem 1: Outdated Email Data from Quote Records
+Quotes stored email addresses that could become outdated. When a customer's email changed, the quote still showed the old email, leading to emails being sent to wrong addresses.
 
-### The Solution
+**Example**: Quote for "Rodayna Sameh" showed `walid.babi.du@gmail.com` instead of the correct `procurement.re@re-petroleum.com`.
+
+### The Solution for Outdated Emails
+Changed from using stored quote email to **always fetching the current customer email**:
+
+**Before (Broken)**:
+```javascript
+// Used outdated email stored on quote
+const customerEmail = this.getAttribute('data-customer-email');
+populateEmailField(customerEmail, 'Customer email loaded from quote');
+```
+
+**After (Fixed)**:
+```javascript
+// Fetch current email from Customer record
+const customerId = this.getAttribute('data-customer-id');
+fetchCustomerEmailById(customerId); // Always gets latest email
+
+function fetchCustomerEmailById(customerId) {
+    fetch(`/admin/customers/${customerId}/details`)
+        .then(r => r.json())
+        .then(data => {
+            if (data.email) {
+                populateEmailField(data.email, 'Current customer email loaded successfully');
+            }
+        });
+}
+```
+
+This ensures:
+- ✅ Always uses the customer's current email address
+- ✅ Reflects any updates made to customer records
+- ✅ Prevents emails from going to outdated addresses
+
+### Problem 2: Previous Email Data Remains in Modal
+When users sent an email to a custom email address (different from the customer's default), then opened the modal again for a different quote, the previous email address remained in the form instead of loading fresh data.
+
+### The Solution for Modal Persistence
 Added a `resetEmailModal()` function that:
 - Clears all form fields (recipient name, email, subject, message)
 - Hides and clears the suggestions dropdown
