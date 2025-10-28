@@ -516,16 +516,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
         
         // Quote Management
-        Route::resource('quotes', \App\Http\Controllers\Admin\QuoteController::class);
         // Fetch possible recipient names for a given email (used by Send Quote modal)
         Route::get('quotes/names', [\App\Http\Controllers\Admin\QuoteController::class, 'getNamesByEmail'])
             ->name('admin.quotes.names');
+        Route::get('quotes/search/suggestions', [\App\Http\Controllers\Admin\QuoteController::class, 'searchSuggestions'])->name('quotes.search-suggestions');
+        Route::resource('quotes', \App\Http\Controllers\Admin\QuoteController::class);
         Route::get('quotes/{quote}/pdf', [\App\Http\Controllers\Admin\QuoteController::class, 'generatePdf'])->name('quotes.pdf');
         Route::put('quotes/{quote}/status', [\App\Http\Controllers\Admin\QuoteController::class, 'updateStatus'])->name('quotes.status.update');
         Route::delete('quotes/{quote}/attachments', [\App\Http\Controllers\Admin\QuoteController::class, 'removeAttachment'])->name('quotes.attachments.remove');
         Route::post('quotes/{quote}/send-email', [\App\Http\Controllers\Admin\QuoteController::class, 'sendEmail'])->name('quotes.send-email');
         Route::post('quotes/{quote}/convert-to-proforma', [\App\Http\Controllers\Admin\QuoteController::class, 'convertToProforma'])->name('quotes.convert-to-proforma');
-Route::get('quotes/search/suggestions', [\App\Http\Controllers\Admin\QuoteController::class, 'searchSuggestions'])->name('quotes.search-suggestions');
         
         // Invoice Management
         Route::resource('invoices', \App\Http\Controllers\Admin\InvoiceController::class);
