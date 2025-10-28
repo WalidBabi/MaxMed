@@ -947,7 +947,8 @@
                                                     <img src="{{ $spec['url'] }}" alt="Specification" style="max-width: 100px; max-height: 100px; border: 1px solid #ddd; border-radius: 4px;">
                                                 </div>
                                             @else
-                                                <div style="margin-bottom: 2px;">{{ is_string($spec) ? $spec : (is_array($spec) ? ($spec['value'] ?? '') : json_encode($spec)) }}</div>
+                                                @php $specText = is_string($spec) ? $spec : (is_array($spec) ? ($spec['value'] ?? '') : json_encode($spec)); @endphp
+                                                <div style="margin-bottom: 2px;">{!! nl2br(e($specText)) !!}</div>
                                             @endif
                                         @endforeach
                                     </div>

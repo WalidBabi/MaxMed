@@ -558,6 +558,29 @@
                         @endif
                     </div>
                 </div>
+
+                <!-- Custom Notes (free-text specification) -->
+                @php
+                    $notesSpec = $existingSpecs->get('notes');
+                    $notesValue = $notesSpec->specification_value ?? '';
+                    $notesShowOnWebsite = optional($product->specifications->firstWhere('specification_key', 'notes'))->show_on_detail ?? null;
+                @endphp
+                <div class="px-6 pb-6">
+                    <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">
+                        Notes
+                    </label>
+                    <textarea name="notes" id="notes" rows="6"
+                              class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                              placeholder="Add any important notes to highlight. You can write multiple lines.">{{ $notesValue }}</textarea>
+                    <div class="mt-3 flex items-center">
+                        <input type="checkbox" id="notes_show_on_website" name="notes_show_on_website" value="1"
+                               class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" {{ ($notesShowOnWebsite === '1' || $notesShowOnWebsite === 1 || $notesShowOnWebsite === true) ? 'checked' : '' }}>
+                        <label for="notes_show_on_website" class="ml-2 block text-sm text-gray-900">
+                            Show on website product page
+                        </label>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">This will also be selectable in quotes and invoices specifications.</p>
+                </div>
             </div>
         </div>
 

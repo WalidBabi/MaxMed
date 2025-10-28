@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\ProductSpecification;
 use App\Services\ProductSpecificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -156,6 +157,26 @@ class ProductController extends Controller
                 $this->specificationService->saveProductSpecifications($product->id, $specificationsData);
             }
 
+            // Handle custom Notes specification
+            $notes = trim((string) $request->input('notes', ''));
+            $showOnWebsite = $request->boolean('notes_show_on_website', true);
+            if ($notes !== '') {
+                ProductSpecification::create([
+                    'product_id' => $product->id,
+                    'specification_key' => 'notes',
+                    'specification_value' => $notes,
+                    'unit' => null,
+                    'category' => 'General',
+                    'display_name' => 'Notes',
+                    'description' => null,
+                    'sort_order' => 999,
+                    'is_filterable' => false,
+                    'is_searchable' => false,
+                    'show_on_listing' => false,
+                    'show_on_detail' => $showOnWebsite,
+                ]);
+            }
+
             // Handle primary image
             if ($request->hasFile('image')) {
                 $path = $request->file('image')->store('products', 'public');
@@ -299,6 +320,30 @@ class ProductController extends Controller
                 if ($request->filled('specifications')) {
                     $specificationsData = $this->transformSpecificationsData($request->specifications, $product->category_id);
                     $this->specificationService->saveProductSpecifications($product->id, $specificationsData);
+                }
+
+                // Handle custom Notes specification
+                $notes = trim((string) $request->input('notes', ''));
+                $showOnWebsite = $request->boolean('notes_show_on_website', false);
+                // Remove any existing notes spec to avoid duplicates
+                ProductSpecification::where('product_id', $product->id)
+                    ->where('specification_key', 'notes')
+                    ->delete();
+                if ($notes !== '') {
+                    ProductSpecification::create([
+                        'product_id' => $product->id,
+                        'specification_key' => 'notes',
+                        'specification_value' => $notes,
+                        'unit' => null,
+                        'category' => 'General',
+                        'display_name' => 'Notes',
+                        'description' => null,
+                        'sort_order' => 999,
+                        'is_filterable' => false,
+                        'is_searchable' => false,
+                        'show_on_listing' => false,
+                        'show_on_detail' => $showOnWebsite,
+                    ]);
                 }
 
                 // Handle primary image upload if provided
