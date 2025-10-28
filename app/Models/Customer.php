@@ -18,6 +18,7 @@ class Customer extends Model
     protected $fillable = [
         'user_id',
         'name',
+        'alternate_names',
         'email',
         'phone',
         'company_name',
@@ -45,6 +46,7 @@ class Customer extends Model
      */
     protected $casts = [
         'is_active' => 'boolean',
+        'alternate_names' => 'array',
     ];
 
     /**

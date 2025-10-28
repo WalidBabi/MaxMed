@@ -219,7 +219,7 @@ class InvoiceController extends Controller
             ->orderBy('name')
             ->get();
 
-        $products = \App\Models\Product::with(['brand', 'category'])
+        $products = \App\Models\Product::with(['brand', 'category', 'specifications', 'images'])
             ->orderBy('name')
             ->get();
 
@@ -439,10 +439,10 @@ class InvoiceController extends Controller
             ->orderBy('name')
             ->get();
 
-        $products = \App\Models\Product::with(['brand', 'category'])
+        $products = \App\Models\Product::with(['brand', 'category', 'specifications', 'images'])
             ->orderBy('name')
             ->get();
-
+            
         return view('admin.invoices.edit', compact('invoice', 'customers', 'products'));
     }
 

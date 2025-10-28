@@ -18,6 +18,44 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class QuoteController extends Controller
 {
+    /**
+     * Return a list of possible recipient names for a given email
+     */
+    public function getNamesByEmail(Request $request)
+    {
+        $email = trim(strtolower($request->query('email', '')));
+        if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return response()->json(['names' => []]);
+        }
+
+        // Names from customers (primary + alternates)
+        $customer = Customer::whereRaw('LOWER(email) = ?', [$email])->first();
+        $names = [];
+        if ($customer) {
+            if (!empty($customer->name)) {
+                $names[] = $customer->name;
+            }
+            if (is_array($customer->alternate_names)) {
+                foreach ($customer->alternate_names as $alt) {
+                    if (is_string($alt) && trim($alt) !== '') {
+                        $names[] = trim($alt);
+                    }
+                }
+            }
+        }
+
+        // Names from CRM leads sharing this email
+        $leadNames = CrmLead::whereRaw('LOWER(email) = ?', [$email])
+            ->get()
+            ->map(function ($l) { return trim($l->first_name . ' ' . $l->last_name); })
+            ->filter(function ($n) { return $n !== ''; })
+            ->values()
+            ->all();
+
+        $names = array_values(array_unique(array_filter(array_merge($names, $leadNames))));
+
+        return response()->json(['names' => $names]);
+    }
     public function __construct()
     {
         $this->middleware('auth');
@@ -66,7 +104,7 @@ class QuoteController extends Controller
             ->orderBy('name')
             ->get();
             
-        $products = \App\Models\Product::with(['brand', 'category', 'specifications'])
+        $products = \App\Models\Product::with(['brand', 'category', 'specifications', 'images'])
             ->orderBy('name')
             ->get();
             
@@ -197,7 +235,7 @@ class QuoteController extends Controller
             ->orderBy('name')
             ->get();
             
-        $products = \App\Models\Product::with(['brand', 'category', 'specifications'])
+        $products = \App\Models\Product::with(['brand', 'category', 'specifications', 'images'])
             ->orderBy('name')
             ->get();
             
@@ -339,7 +377,8 @@ class QuoteController extends Controller
     {
         $request->validate([
             'customer_email' => 'required|email',
-            'cc_emails' => 'nullable|string'
+            'cc_emails' => 'nullable|string',
+            'recipient_name' => 'nullable|string|max:255'
         ]);
 
         try {
@@ -360,7 +399,11 @@ class QuoteController extends Controller
                 // Create a minimal customer record for sending email
                 $customer = new Customer();
                 $customer->email = $request->customer_email;
-                $customer->name = $quote->customer_name; // Use quote's customer name
+                $customer->name = $request->input('recipient_name') ?: $quote->customer_name; // Prefer selected name
+            }
+            // If a recipient_name is provided and differs, set it for this send
+            if ($request->filled('recipient_name')) {
+                $customer->name = $request->input('recipient_name');
             }
 
             // Save customer_email to the quote

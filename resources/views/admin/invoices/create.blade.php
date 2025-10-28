@@ -325,6 +325,12 @@
                                                         <div class="p-2 text-sm text-gray-500 dropdown-loading hidden">Searching...</div>
                                                         <div class="dropdown-items">
                                                             @foreach($products as $product)
+                                                                @php
+                                                                    $specImage = $product->images->first(function($image) {
+                                                                        return !empty($image->specification_image_url);
+                                                                    });
+                                                                    $specImageUrl = $specImage ? $specImage->specification_image_url : '';
+                                                                @endphp
                                                                 <div class="dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0" 
                                                                      data-id="{{ $product->id }}"
                                                                      data-name="{{ $product->name }}"
@@ -334,6 +340,7 @@
                                                                      data-procurement-price-aed="{{ $product->procurement_price_aed ?? $product->price_aed ?? $product->price }}"
                                                                      data-procurement-price-usd="{{ $product->procurement_price_usd ?? $product->price ?? 0 }}"
                                                                      data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
+                                                                     data-specification-image-url="{{ $specImageUrl }}"
                                                                      data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                                                      data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
                                                                      data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
@@ -1239,6 +1246,7 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
             item.dataset.priceUsd : 
             item.dataset.priceAed;
         const specifications = item.dataset.specifications;
+        const specificationImageUrl = item.dataset.specificationImageUrl || '';
         
         // Set values
         searchInput.value = productName;
@@ -1250,19 +1258,35 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         if (specifications && specifications !== '[]') {
             try {
                 const specsArray = JSON.parse(specifications);
-                if (specsArray.length > 0) {
+                
+                // Add specification image as an option if available
+                const allSpecs = [...specsArray];
+                if (specificationImageUrl && specificationImageUrl.trim() !== '') {
+                    allSpecs.push({ type: 'image', value: 'Specification Image', url: specificationImageUrl });
+                }
+                
+                if (allSpecs.length > 0) {
                     specificationsInput.value = 'Click to select specifications...';
-                    specificationsHidden.value = JSON.stringify(specsArray);
+                    specificationsHidden.value = JSON.stringify(allSpecs);
                     
                     // Create checkboxes for specifications
                     let checkboxesHtml = '';
-                    specsArray.forEach(spec => {
-                        checkboxesHtml += `
-                            <label class="flex items-center p-2 hover:bg-gray-50">
-                                <input type="checkbox" class="spec-checkbox h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" data-spec="${spec}">
-                                <span class="ml-2 text-sm text-gray-700">${spec}</span>
-                            </label>
-                        `;
+                    allSpecs.forEach(spec => {
+                        if (typeof spec === 'object' && spec.type === 'image') {
+                            checkboxesHtml += `
+                                <label class="flex items-center p-2 hover:bg-gray-50">
+                                    <input type="checkbox" class="spec-checkbox h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" data-spec='${JSON.stringify(spec)}'>
+                                    <span class="ml-2 text-sm text-gray-700">📷 ${spec.value}</span>
+                                </label>
+                            `;
+                        } else {
+                            checkboxesHtml += `
+                                <label class="flex items-center p-2 hover:bg-gray-50">
+                                    <input type="checkbox" class="spec-checkbox h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" data-spec="${spec}">
+                                    <span class="ml-2 text-sm text-gray-700">${spec}</span>
+                                </label>
+                            `;
+                        }
                     });
                     specificationsDropdown.innerHTML = checkboxesHtml;
                     
@@ -1306,13 +1330,28 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
     
     function updateSelectedSpecifications() {
         const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox:checked');
-        const selectedSpecs = Array.from(checkboxes).map(cb => cb.dataset.spec);
+        const selectedSpecs = Array.from(checkboxes).map(cb => {
+            try {
+                // Try to parse as JSON (for image specs)
+                return JSON.parse(cb.dataset.spec);
+            } catch (e) {
+                // It's a plain string
+                return cb.dataset.spec;
+            }
+        });
         
         // Don't combine size with specifications - keep them separate
         let allSpecs = [...selectedSpecs];
         
         if (allSpecs.length > 0) {
-            specificationsInput.value = allSpecs.join(', ');
+            // Display text representation
+            const displayText = allSpecs.map(spec => {
+                if (typeof spec === 'object' && spec.type === 'image') {
+                    return '📷 ' + spec.value;
+                }
+                return spec;
+            }).join(', ');
+            specificationsInput.value = displayText;
             specificationsHidden.value = JSON.stringify(allSpecs);
         } else {
             specificationsInput.value = 'Click to select specifications...';

@@ -517,6 +517,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         // Quote Management
         Route::resource('quotes', \App\Http\Controllers\Admin\QuoteController::class);
+        // Fetch possible recipient names for a given email (used by Send Quote modal)
+        Route::get('quotes/names', [\App\Http\Controllers\Admin\QuoteController::class, 'getNamesByEmail'])
+            ->name('admin.quotes.names');
         Route::get('quotes/{quote}/pdf', [\App\Http\Controllers\Admin\QuoteController::class, 'generatePdf'])->name('quotes.pdf');
         Route::put('quotes/{quote}/status', [\App\Http\Controllers\Admin\QuoteController::class, 'updateStatus'])->name('quotes.status.update');
         Route::delete('quotes/{quote}/attachments', [\App\Http\Controllers\Admin\QuoteController::class, 'removeAttachment'])->name('quotes.attachments.remove');

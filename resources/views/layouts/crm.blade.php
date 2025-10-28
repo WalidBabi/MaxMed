@@ -361,7 +361,7 @@
                         </a>
 
                         <!-- Notifications -->
-                        @include('components.crm.notification-dropdown')
+                        {{-- @include('components.crm.notification-dropdown') --}}
 
                         <!-- User menu -->
                         <div class="relative" x-data="{ open: false }">

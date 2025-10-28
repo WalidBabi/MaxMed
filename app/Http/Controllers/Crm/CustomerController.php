@@ -122,7 +122,8 @@ class CustomerController extends Controller
         $validated = $request->validate([
             'user_id' => 'nullable|exists:users,id',
             'name' => 'required|string|max:255',
-            'email' => 'nullable|email|max:255|unique:customers,email',
+            // Allow duplicate emails between customers
+            'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:50',
             'company_name' => 'nullable|string|max:255',
             'tax_id' => 'nullable|string|max:100',
@@ -228,7 +229,8 @@ class CustomerController extends Controller
         $validated = $request->validate([
             'user_id' => 'nullable|exists:users,id',
             'name' => 'required|string|max:255',
-            'email' => 'nullable|email|max:255|unique:customers,email,' . $customer->id,
+            // Allow duplicate emails between customers
+            'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:50',
             'company_name' => 'nullable|string|max:255',
             'tax_id' => 'nullable|string|max:100',

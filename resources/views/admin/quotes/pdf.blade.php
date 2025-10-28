@@ -669,7 +669,15 @@
                                 @if(count($selectedSpecs) > 0)
                                     <div style="font-size: 9px; color: var(--text-secondary); line-height: 1.3;">
                                         @foreach($selectedSpecs as $spec)
-                                            <div style="margin-bottom: 2px;">{{ $spec }}</div>
+                                            @if(is_array($spec) && isset($spec['type']) && $spec['type'] === 'image')
+                                                {{-- Display specification image --}}
+                                                <div style="margin-bottom: 4px;">
+                                                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 2px;">{{ $spec['value'] ?? 'Specification Image' }}</div>
+                                                    <img src="{{ $spec['url'] }}" alt="Specification" style="max-width: 100px; max-height: 100px; border: 1px solid #ddd; border-radius: 4px;">
+                                                </div>
+                                            @else
+                                                <div style="margin-bottom: 2px;">{{ is_string($spec) ? $spec : (is_array($spec) ? ($spec['value'] ?? '') : json_encode($spec)) }}</div>
+                                            @endif
                                         @endforeach
                                     </div>
                                 @endif

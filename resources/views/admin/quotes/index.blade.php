@@ -589,8 +589,23 @@
                         </div>
                     </div>
 
-                    <!-- Email Fields -->
+                        <!-- Email Fields -->
                     <div class="space-y-5">
+                        <div>
+                            <label for="recipient_name" class="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                Recipient Name
+                            </label>
+                            <input type="text"
+                                   id="recipient_name"
+                                   name="recipient_name"
+                                   class="block w-full px-4 py-3 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                                   placeholder="Select or enter recipient name">
+                            <div id="recipient_suggestions" class="mt-2 hidden bg-white border border-gray-200 rounded-lg shadow z-10"></div>
+                            <p id="recipient_hint" class="mt-2 text-xs text-gray-500 hidden"></p>
+                        </div>
                         <div>
                             <label for="customer_email" class="flex items-center text-sm font-medium text-gray-700 mb-2">
                                 <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1190,6 +1205,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Use existing email or fetch by customer name
             if (customerEmail && customerEmail.trim() !== '') {
                 populateEmailField(customerEmail, 'Customer email loaded from quote');
+                fetchRecipientNames(customerEmail);
             } else {
                 fetchCustomerEmail(customerName);
             }
@@ -1218,6 +1234,8 @@ document.addEventListener('DOMContentLoaded', function() {
             ${message}
         `;
         emailStatus.classList.remove('hidden');
+        // Try to pull recipient names when email changes
+        fetchRecipientNames(email);
     }
 
     // Function to fetch customer email
@@ -1279,6 +1297,42 @@ document.addEventListener('DOMContentLoaded', function() {
                     Failed to fetch customer email. Please enter manually.
                 `;
                 emailStatus.classList.remove('hidden');
+            });
+    }
+
+    // Fetch possible recipient names for given email
+    function fetchRecipientNames(email) {
+        const hint = document.getElementById('recipient_hint');
+        const suggestionsBox = document.getElementById('recipient_suggestions');
+        const nameInput = document.getElementById('recipient_name');
+        if (!email) return;
+        fetch(`/admin/quotes/names?email=${encodeURIComponent(email)}`)
+            .then(r => r.json())
+            .then(data => {
+                const names = Array.isArray(data.names) ? data.names : [];
+                if (names.length === 0) {
+                    suggestionsBox.classList.add('hidden');
+                    suggestionsBox.innerHTML = '';
+                    hint.classList.add('hidden');
+                    return;
+                }
+                // Preselect first suggestion if input empty
+                if (nameInput && !nameInput.value) {
+                    nameInput.value = names[0];
+                }
+                suggestionsBox.innerHTML = names.map(n => `<button type="button" class="block w-full text-left px-3 py-2 hover:bg-gray-50">${n.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</button>`).join('');
+                suggestionsBox.classList.remove('hidden');
+                hint.textContent = 'Multiple contacts use this email. Choose who to address.';
+                hint.classList.remove('hidden');
+                // Bind click handlers
+                Array.from(suggestionsBox.querySelectorAll('button')).forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        nameInput.value = btn.textContent;
+                    });
+                });
+            })
+            .catch(() => {
+                // Silent fail
             });
     }
 

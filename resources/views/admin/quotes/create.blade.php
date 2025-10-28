@@ -76,9 +76,9 @@
                                         <input type="text"
                                                id="customer_search"
                                                class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 product-search-input"
-                                               placeholder="Search customers..."
+                                               placeholder="Search customers by name, company, or email..."
                                                autocomplete="off"
-                                               value="{{ optional($customers->firstWhere('id', old('customer_id')))->name ? (optional($customers->firstWhere('id', old('customer_id')))->name . (optional($customers->firstWhere('id', old('customer_id')))->company_name ? ' - ' . optional($customers->firstWhere('id', old('customer_id')))->company_name : '')) : '' }}">
+                                               value="{{ optional($customers->firstWhere('id', old('customer_id')))->name ? (optional($customers->firstWhere('id', old('customer_id')))->name . (optional($customers->firstWhere('id', old('customer_id')))->company_name ? ' - ' . optional($customers->firstWhere('id', old('customer_id')))->company_name : '') . (optional($customers->firstWhere('id', old('customer_id')))->email ? ' (' . optional($customers->firstWhere('id', old('customer_id')))->email . ')' : '') ) : '' }}">
                                         <input type="hidden" name="customer_id" id="customer_id" value="{{ old('customer_id') }}">
                                         <div class="product-dropdown-list hidden" id="customer_dropdown_list">
                                             <div class="dropdown-items">
@@ -87,8 +87,8 @@
                                                          data-id="{{ $customer->id }}"
                                                          data-name="{{ $customer->name }}"
                                                          data-company="{{ $customer->company_name }}"
-                                                         data-search-text="{{ strtolower(trim($customer->name . ' ' . ($customer->company_name ?? ''))) }}">
-                                                        <div class="font-medium text-gray-900">{{ $customer->name }}{{ $customer->company_name ? ' - ' . $customer->company_name : '' }}</div>
+                                                         data-search-text="{{ strtolower(trim($customer->name . ' ' . ($customer->company_name ?? '') . ' ' . ($customer->email ?? ''))) }}">
+                                                        <div class="font-medium text-gray-900">{{ $customer->name }}{{ $customer->company_name ? ' - ' . $customer->company_name : '' }} @if($customer->email)<span class="ml-2 text-xs text-gray-500">({{ $customer->email }})</span>@endif</div>
                                                     </div>
                                                 @endforeach
                                             </div>
@@ -765,6 +765,12 @@ function addItem() {
                     <div class="p-2 text-sm text-gray-500 dropdown-loading hidden">Searching...</div>
                     <div class="dropdown-items">
                         @foreach($products as $product)
+                            @php
+                                $specImage = $product->images->first(function($image) {
+                                    return !empty($image->specification_image_url);
+                                });
+                                $specImageUrl = $specImage ? $specImage->specification_image_url : '';
+                            @endphp
                             <div class="dropdown-item cursor-pointer p-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0" 
                                  data-id="{{ $product->id }}"
                                  data-name="{{ $product->name }}"
@@ -775,6 +781,7 @@ function addItem() {
                                  data-procurement-price-aed="{{ $product->procurement_price_aed ?? $product->price_aed ?? $product->price }}"
                                  data-procurement-price-usd="{{ $product->procurement_price_usd ?? $product->price ?? 0 }}"
                                  data-specifications="{{ $product->specifications ? json_encode($product->specifications->map(function($spec) { return $spec->display_name . ': ' . $spec->formatted_value; })->toArray()) : '[]' }}"
+                                 data-specification-image-url="{{ $specImageUrl }}"
                                  data-has-size-options="{{ $product->has_size_options ? 'true' : 'false' }}"
                                  data-size-options="{{ is_array($product->size_options) ? json_encode($product->size_options) : ($product->size_options ?: '[]') }}"
                                  data-search-text="{{ strtolower($product->name . ' ' . ($product->brand ? $product->brand->name : '') . ' ' . $product->description) }}">
@@ -1118,6 +1125,7 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         const productPrice = currency === 'USD' ? item.dataset.priceUsd : item.dataset.priceAed;
         const procurementPrice = currency === 'USD' ? item.dataset.procurementPriceUsd : item.dataset.procurementPriceAed;
         const specifications = item.dataset.specifications;
+        const specificationImageUrl = item.dataset.specificationImageUrl || '';
         
         // Set values
         searchInput.value = productName;
@@ -1142,19 +1150,34 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
         if (specifications && specifications !== '[]') {
             try {
                 const specsArray = JSON.parse(specifications);
-                if (specsArray.length > 0) {
+                
+                // Add specification image as an option if available
+                const allSpecs = [...specsArray];
+                if (specificationImageUrl && specificationImageUrl.trim() !== '') {
+                    allSpecs.push({ type: 'image', value: 'Specification Image', url: specificationImageUrl });
+                }
+                
+                if (allSpecs.length > 0) {
                     specificationsInput.value = 'Click to select specifications...';
-                    specificationsHidden.value = JSON.stringify(specsArray);
+                    specificationsHidden.value = JSON.stringify(allSpecs);
                     
                     // Update specifications dropdown content with checkboxes
                     specificationsDropdown.innerHTML = '';
-                    specsArray.forEach((spec, index) => {
+                    allSpecs.forEach((spec, index) => {
                         const specDiv = document.createElement('div');
                         specDiv.className = 'p-3 text-sm text-gray-700 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 cursor-pointer flex items-center';
-                        specDiv.innerHTML = `
-                            <input type="checkbox" id="spec_${itemCounter}_${index}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox" data-spec="${spec}">
-                            <label for="spec_${itemCounter}_${index}" class="flex-1 cursor-pointer">${spec}</label>
-                        `;
+                        
+                        if (spec.type === 'image') {
+                            specDiv.innerHTML = `
+                                <input type="checkbox" id="spec_${itemCounter}_${index}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox" data-spec='${JSON.stringify(spec)}'>
+                                <label for="spec_${itemCounter}_${index}" class="flex-1 cursor-pointer">📷 ${spec.value}</label>
+                            `;
+                        } else {
+                            specDiv.innerHTML = `
+                                <input type="checkbox" id="spec_${itemCounter}_${index}" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox" data-spec="${spec}">
+                                <label for="spec_${itemCounter}_${index}" class="flex-1 cursor-pointer">${spec}</label>
+                            `;
+                        }
                         specificationsDropdown.appendChild(specDiv);
                     });
                     
@@ -1201,9 +1224,32 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
                 specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
             }
         } else {
-            specificationsInput.value = '';
-            specificationsHidden.value = '';
-            specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
+            // No text specs; still show specification image if available
+            if (specificationImageUrl && specificationImageUrl.trim() !== '') {
+                const allSpecs = [{ type: 'image', value: 'Specification Image', url: specificationImageUrl }];
+                specificationsInput.value = 'Click to select specifications...';
+                specificationsHidden.value = JSON.stringify(allSpecs);
+
+                // Build dropdown with only the image option
+                specificationsDropdown.innerHTML = '';
+                const specDiv = document.createElement('div');
+                specDiv.className = 'p-3 text-sm text-gray-700 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 cursor-pointer flex items-center';
+                specDiv.innerHTML = `
+                    <input type="checkbox" id="spec_${itemCounter}_img" class="mr-2 h-3 w-3 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded spec-checkbox" data-spec='${JSON.stringify(allSpecs[0])}'>
+                    <label for="spec_${itemCounter}_img" class="flex-1 cursor-pointer">📷 ${allSpecs[0].value}</label>
+                `;
+                specificationsDropdown.appendChild(specDiv);
+
+                // Wire checkbox changes
+                const checkbox = specificationsDropdown.querySelector('.spec-checkbox');
+                if (checkbox) {
+                    checkbox.addEventListener('change', updateSelectedSpecifications);
+                }
+            } else {
+                specificationsInput.value = '';
+                specificationsHidden.value = '';
+                specificationsDropdown.innerHTML = '<div class="p-2 text-sm text-gray-500">No specifications available</div>';
+            }
         }
         
         // Hide dropdown
@@ -1219,12 +1265,27 @@ function initializeCustomDropdown(searchInput, productIdInput, itemDetailsHidden
     
     function updateSelectedSpecifications() {
         const checkboxes = specificationsDropdown.querySelectorAll('.spec-checkbox:checked');
-        const selectedSpecs = Array.from(checkboxes).map(cb => cb.dataset.spec);
+        const selectedSpecs = Array.from(checkboxes).map(cb => {
+            try {
+                // Try to parse as JSON (for image specs)
+                return JSON.parse(cb.dataset.spec);
+            } catch (e) {
+                // It's a plain string
+                return cb.dataset.spec;
+            }
+        });
         
         let allSpecs = [...selectedSpecs];
         
         if (allSpecs.length > 0) {
-            specificationsInput.value = allSpecs.join(', ');
+            // Display text representation
+            const displayText = allSpecs.map(spec => {
+                if (typeof spec === 'object' && spec.type === 'image') {
+                    return '📷 ' + spec.value;
+                }
+                return spec;
+            }).join(', ');
+            specificationsInput.value = displayText;
             specificationsHidden.value = JSON.stringify(allSpecs);
         } else {
             specificationsInput.value = 'Click to select specifications...';
