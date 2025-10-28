@@ -79,6 +79,7 @@
                                 <button class="send-email-btn text-green-600 hover:text-green-900" 
                                         data-lead-id="{{ $lead->id }}"
                                         data-lead-name="{{ $lead->full_name }}"
+                                        data-lead-email="{{ $lead->email }}"
                                         data-assigned-user-email="{{ $lead->assignedUser->email ?? '' }}"
                                         data-assigned-user-name="{{ $lead->assignedUser->name ?? '' }}"
                                         title="Send Email">

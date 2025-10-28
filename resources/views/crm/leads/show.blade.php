@@ -32,6 +32,7 @@
                             class="send-email-btn inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
                             data-lead-id="{{ $lead->id }}"
                             data-lead-name="{{ $lead->full_name }}"
+                            data-lead-email="{{ $lead->email }}"
                             data-assigned-user-email="{{ $lead->assignedUser->email ?? '' }}"
                             data-assigned-user-name="{{ $lead->assignedUser->name ?? '' }}"
                             title="Send assignment email to {{ $lead->assignedUser->name ?? 'assigned user' }}">
