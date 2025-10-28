@@ -531,11 +531,21 @@
             </div>
             @endif
 
-                <!-- Size Selection Display -->
-                @if(request('size'))
+                <!-- Size & Model Selection Display -->
+                @if(request('size') || request('model'))
                 <div class="size-display">
-                    <i class="fas fa-ruler-combined"></i>
-                    <strong>Selected Size:</strong> {{ request('size') }}
+                    @if(request('size'))
+                    <div class="mb-2">
+                        <i class="fas fa-ruler-combined"></i>
+                        <strong>Selected Size:</strong> {{ request('size') }}
+                    </div>
+                    @endif
+                    @if(request('model'))
+                    <div>
+                        <i class="fas fa-tag"></i>
+                        <strong>Selected Model:</strong> {{ request('model') }}
+                    </div>
+                    @endif
                 </div>
                 @endif
 
@@ -545,6 +555,7 @@
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                         <input type="hidden" name="user_id" value="{{ auth()->check() ? auth()->id() : 0 }}">
                         <input type="hidden" name="size" value="{{ request('size') }}" id="size-input">
+                        <input type="hidden" name="model" value="{{ request('model') }}" id="model-input">
 
                     <!-- Contact Information Section -->
                     @if(!auth()->check())

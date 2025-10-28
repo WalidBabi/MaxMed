@@ -714,44 +714,57 @@
         document.body.classList.remove('navigating');
         
         // Size option selection
-        const sizeOptions = document.querySelectorAll('.size-option');
+        const sizeOptions = document.querySelectorAll('.size-option input[name="size"]');
+        const modelOptions = document.querySelectorAll('.size-option input[name="model"]');
+        
         if (sizeOptions.length > 0) {
             sizeOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    // Remove active class from all options
-                    sizeOptions.forEach(o => {
-                        o.classList.remove('active');
-                    });
-                    
-                    // Add active class to selected option
-                    this.classList.add('active');
-                    
-                    // Check the radio input
-                    const radioInput = this.querySelector('input[type="radio"]');
-                    radioInput.checked = true;
-                    
-                    // Store the selected size in form data or local storage if needed
-                    const selectedSize = radioInput.value;
-                    localStorage.setItem('selected_product_size', selectedSize);
+                option.addEventListener('change', function() {
+                    // Add active class to parent label
+                    sizeOptions.forEach(o => o.parentElement.classList.remove('active'));
+                    this.parentElement.classList.add('active');
+                    localStorage.setItem('selected_product_size', this.value);
                 });
             });
-            
-            // Update quotation button URL to include selected size
-            const quotationBtn = document.getElementById('quotation-btn');
-            if (quotationBtn) {
-                const baseHref = quotationBtn.getAttribute('href');
-                quotationBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const selectedSize = document.querySelector('.size-option.active input[type="radio"]')?.value;
-                    if (selectedSize) {
-                        // Check if the baseHref already contains a query parameter
-                        const separator = baseHref.includes('?') ? '&' : '?';
-                        window.location.href = baseHref + separator + 'size=' + encodeURIComponent(selectedSize);
-                    } else {
-                        window.location.href = baseHref;
-                    }
+        }
+
+        if (modelOptions.length > 0) {
+            modelOptions.forEach(option => {
+                option.addEventListener('change', function() {
+                    // Add active class to parent label
+                    modelOptions.forEach(o => o.parentElement.classList.remove('active'));
+                    this.parentElement.classList.add('active');
+                    localStorage.setItem('selected_product_model', this.value);
                 });
-            }
+            });
+        }
+        
+        // Update quotation button URL to include selected size and model
+        const quotationBtn = document.getElementById('quotation-btn');
+        if (quotationBtn && (sizeOptions.length > 0 || modelOptions.length > 0)) {
+            const baseHref = quotationBtn.getAttribute('href');
+            quotationBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const selectedSize = document.querySelector('input[name="size"]:checked')?.value;
+                const selectedModel = document.querySelector('input[name="model"]:checked')?.value;
+                
+                let url = baseHref;
+                const params = [];
+                
+                if (selectedSize) {
+                    params.push('size=' + encodeURIComponent(selectedSize));
+                }
+                if (selectedModel) {
+                    params.push('model=' + encodeURIComponent(selectedModel));
+                }
+                
+                if (params.length > 0) {
+                    const separator = baseHref.includes('?') ? '&' : '?';
+                    url = baseHref + separator + params.join('&');
+                }
+                
+                window.location.href = url;
+            });
         }
 
         // Improved Image Magnifier Glass functionality
