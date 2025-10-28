@@ -1,15 +1,25 @@
-# Quote Email Modal - Recipient Name Selection Fix
+# Quote Email Modal - Complete Fix Summary
 
-## Problem
-When opening the email modal in the quotes section, the recipient name field was not showing selectable options even when multiple names existed for a given email address. The dropdown suggestions were hidden or not displaying properly.
+## Problems Fixed
 
-## Root Cause
-The suggestions dropdown had several CSS and positioning issues:
-1. Missing `relative` positioning on the parent container
-2. The suggestions box didn't have proper `absolute` positioning
-3. Low z-index (`z-10`) that wasn't sufficient for modal context
-4. No overflow handling for long lists
-5. JavaScript wasn't properly showing the suggestions box for multiple names
+### 1. Recipient Name Selection Not Showing
+When opening the email modal in the quotes section, the recipient name field was not showing selectable options even when multiple names existed for a given email address.
+
+**Root Causes:**
+- Route ordering issue causing 404 errors on the API endpoint
+- Missing CSS positioning on the dropdown container
+- Low z-index not sufficient for modal context
+- JavaScript not properly displaying multiple name options
+
+### 2. Modal State Persistence
+When sending emails to custom addresses, the previous email remained in the modal when reopening for a different quote.
+
+**Root Cause:** Modal form was not being reset between uses
+
+### 3. Post-Email UI Error
+JavaScript error occurred after successfully sending emails when trying to update statistics.
+
+**Root Cause:** Missing null checks when accessing DOM elements
 
 ## Changes Made
 
@@ -152,7 +162,53 @@ Route::resource('quotes', QuoteController::class);
 - `app/Models/Customer.php` - Customer model with alternate_names field
 - `app/Models/CrmLead.php` - CRM lead model
 
-## Additional Fix: Post-Email UI Update Error
+## Additional Fix: Modal State Persistence Issue
+
+### Problem 1: Previous Email Data Remains
+When users sent an email to a custom email address (different from the customer's default), then opened the modal again for a different quote, the previous email address remained in the form instead of loading the new customer's email.
+
+### The Solution
+Added a `resetEmailModal()` function that:
+- Clears all form fields (recipient name, email, subject, message)
+- Hides and clears the suggestions dropdown
+- Resets all status indicators (loading spinner, success icons, messages)
+- Re-enables the email input field
+
+This function is called:
+1. **When opening the modal** - Before loading new quote data
+2. **When closing the modal** - To prepare for the next use (with 300ms delay)
+
+```javascript
+function resetEmailModal() {
+    // Clear form fields
+    const recipientNameInput = document.getElementById('recipient_name');
+    const emailInput = document.getElementById('customer_email');
+    const subjectInput = document.getElementById('email_subject');
+    const messageTextarea = document.getElementById('email_message');
+    
+    if (recipientNameInput) recipientNameInput.value = '';
+    if (emailInput) emailInput.value = '';
+    if (subjectInput) subjectInput.value = '';
+    if (messageTextarea) messageTextarea.value = '';
+    
+    // Clear suggestions and status indicators...
+}
+
+// Called when opening modal
+button.addEventListener('click', function() {
+    resetEmailModal(); // Clear previous data first
+    // Then load new quote data...
+});
+
+// Called when closing modal
+window.addEventListener('close-modal', function(event) {
+    if (event.detail === 'send-quote-email') {
+        setTimeout(() => resetEmailModal(), 300);
+    }
+});
+```
+
+### Problem 2: Post-Email UI Update Error
 
 After sending the email successfully, there was a JavaScript error when trying to update statistics:
 
