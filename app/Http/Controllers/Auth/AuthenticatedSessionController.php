@@ -16,8 +16,13 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
+        // Ensure a fresh session and CSRF token are created and sent to the browser
+        // This helps avoid rare first-attempt 419 issues when the session cookie was not yet set
+        $request->session()->put('login_page_viewed', true);
+        $request->session()->regenerateToken();
+
         return view('auth.login');
     }
 

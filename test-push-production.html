@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Push Test - Production</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+        button { padding: 10px 20px; background: #171e60; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #0a5694; }
+        #result { margin-top: 20px; padding: 15px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        input { width: 100%; padding: 8px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>MaxMed Push Notification Test</h1>
+    <p>Make sure you're logged in and have allowed notifications!</p>
+    
+    <div>
+        <label>Title:</label>
+        <input type="text" id="title" value="MaxMed Notification" />
+    </div>
+    
+    <div>
+        <label>Message:</label>
+        <input type="text" id="body" value="Testing push notifications from production!" />
+    </div>
+    
+    <div>
+        <label>URL (when clicked):</label>
+        <input type="text" id="url" value="/" />
+    </div>
+    
+    <button onclick="sendNotification()">Send Test Notification</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        async function sendNotification() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = 'Sending...';
+            resultDiv.className = '';
+            
+            try {
+                const response = await fetch('https://maxmedme.com/push/test', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        title: document.getElementById('title').value,
+                        body: document.getElementById('body').value,
+                        url: document.getElementById('url').value
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.textContent = `✅ Success! Sent to ${data.sent} device(s).`;
+                    resultDiv.className = 'success';
+                } else {
+                    resultDiv.textContent = `❌ Error: ${data.message || 'Failed to send'}`;
+                    resultDiv.className = 'error';
+                }
+            } catch (error) {
+                resultDiv.textContent = `❌ Error: ${error.message}`;
+                resultDiv.className = 'error';
+            }
+        }
+    </script>
+</body>
+</html>
+
