@@ -131,7 +131,7 @@
                                     
                                     if ($nextInstallmentMonth) {
                                         $deadline = \Illuminate\Support\Carbon::create($nextInstallmentYear, $nextInstallmentMonth, 1)->endOfMonth();
-                                        $label = 'Next Installment Due';
+                                        $label = 'Next Installment';
                                     }
                                     
                                     // Overall license deadline (from next_due_date)
@@ -145,7 +145,7 @@
                                         // Only calculate a new date if next_due_date is not set
                                         if ($expense->next_due_date) {
                                             $deadline = \Illuminate\Support\Carbon::parse($expense->next_due_date)->startOfDay();
-                                            $label = 'Next Payment Due';
+                                            $label = 'Next Renewal';
                                         } else {
                                             // Calculate next payment date based on frequency only if next_due_date is not set
                                             $nextPaymentDate = null;
@@ -179,11 +179,11 @@
                                             }
                                             
                                             $deadline = $nextPaymentDate;
-                                            $label = 'Next Payment Due';
+                                            $label = 'Next Renewal';
                                         }
                                     } elseif ($expense->next_due_date) {
                                         $deadline = \Illuminate\Support\Carbon::parse($expense->next_due_date)->startOfDay();
-                                        $label = 'Payment Deadline';
+                                        $label = 'Renewal Deadline';
                                     }
                                 }
                                 
@@ -317,6 +317,7 @@
                             @else
                                 <span class="text-xs text-gray-400">Not due</span>
                             @endif
+                            
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-600">
                             @php
@@ -339,6 +340,69 @@
                             @endif
                         </td>
                         <td class="px-4 py-3 text-right">
+                            @if($expense->is_installment)
+                                @php
+                                    $nowActions = \Illuminate\Support\Carbon::now()->startOfMonth();
+                                    $currentYear = (int) $nowActions->format('Y');
+                                    $currentMonth = (int) $nowActions->format('n');
+                                    $activeMonths = $expense->activeMonths();
+                                    
+                                    // Build month options: current year only, only for active months
+                                    $monthOptions = [];
+                                    
+                                    // Check current year - all active months up to and including current month
+                                    foreach ($activeMonths as $monthNum) {
+                                        if ($monthNum <= $currentMonth) {
+                                            $paid = $expense->isPaidForMonth($currentYear, $monthNum);
+                                            $monthOptions[] = [
+                                                'y' => $currentYear,
+                                                'm' => $monthNum,
+                                                'label' => \Illuminate\Support\Carbon::create($currentYear, $monthNum, 1)->format('M Y'),
+                                                'paid' => $paid,
+                                            ];
+                                        }
+                                    }
+                                    
+                                    // Sort by year desc, month desc (most recent first)
+                                    usort($monthOptions, function($a, $b) {
+                                        if ($a['y'] == $b['y']) {
+                                            return $b['m'] - $a['m'];
+                                        }
+                                        return $b['y'] - $a['y'];
+                                    });
+                                @endphp
+                                <div class="relative inline-block mr-3">
+                                    <button type="button" onclick="this.nextElementSibling.classList.toggle('hidden')" class="inline-flex items-center gap-1 rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 hover:bg-indigo-100">
+                                        <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Mark paid
+                                    </button>
+                                    <div class="hidden absolute right-0 z-20 mt-2 w-64 rounded-lg bg-white shadow-xl ring-1 ring-black ring-opacity-5">
+                                        <div class="p-4 space-y-3">
+                                            <div>
+                                                <label class="block text-xs font-semibold text-gray-700 mb-2">Select month:</label>
+                                                <form method="POST" action="{{ route('admin.business-expenses.mark-paid', $expense) }}" class="space-y-2">
+                                                    @csrf
+                                                    <input type="hidden" name="year" value="">
+                                                    <input type="hidden" name="month" value="">
+                                                    <select class="js-month-picker w-full rounded-md border-gray-300 bg-white py-2 pl-3 pr-10 text-xs text-gray-900 focus:border-indigo-500 focus:ring-indigo-500">
+                                                        <option value="">Choose month...</option>
+                                                        @foreach($monthOptions as $opt)
+                                                            <option value="{{ $opt['y'] }}-{{ sprintf('%02d',$opt['m']) }}" {{ $opt['paid'] ? 'disabled' : '' }}>
+                                                                {{ $opt['label'] }} {{ $opt['paid'] ? '✓ Paid' : '' }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    <button type="submit" disabled class="js-submit-btn w-full rounded-md bg-gray-300 px-3 py-2 text-xs font-semibold text-gray-500 cursor-not-allowed">
+                                                        Mark paid
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                             <a href="{{ route('admin.business-expenses.edit', $expense) }}" class="text-indigo-600 hover:text-indigo-900 text-sm">Edit</a>
                             <form action="{{ route('admin.business-expenses.destroy', $expense) }}" method="POST" class="inline">
                                 @csrf
@@ -356,6 +420,56 @@
         </table>
         <div class="px-4 py-3">{{ $expenses->links() }}</div>
     </div>
+    <script>
+    // Handle month picker changes
+    document.addEventListener('change', function(e) {
+        var el = e.target;
+        if (el && el.classList && el.classList.contains('js-month-picker')) {
+            var form = el.closest('form');
+            if (!form) return;
+            var val = el.value || '';
+            var submitBtn = form.querySelector('.js-submit-btn');
+            
+            if (!val) {
+                // No selection - disable button
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700', 'text-white', 'cursor-pointer');
+                    submitBtn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                }
+                return;
+            }
+            
+            var parts = val.split('-');
+            if (parts.length === 2) {
+                var yearInput = form.querySelector('input[name="year"]');
+                var monthInput = form.querySelector('input[name="month"]');
+                if (yearInput && monthInput) {
+                    yearInput.value = parts[0];
+                    monthInput.value = String(parseInt(parts[1], 10));
+                    
+                    // Enable submit button
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+                        submitBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-700', 'text-white', 'cursor-pointer');
+                    }
+                }
+            }
+        }
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.relative.inline-block')) {
+            document.querySelectorAll('.relative .hidden').forEach(function(dropdown) {
+                if (!dropdown.classList.contains('hidden')) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        }
+    });
+    </script>
 @endsection
 
 
