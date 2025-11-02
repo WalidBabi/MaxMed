@@ -1997,9 +1997,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin/performance')->group(functio
     Route::get('/recommendations', [\App\Http\Controllers\PerformanceController::class, 'recommendations'])->name('admin.performance.recommendations');
 });
 
+// Public route for VAPID public key (safe to expose)
+Route::get('/push/public-key', [\App\Http\Controllers\PushSubscriptionController::class, 'publicKey'])
+    ->name('push.public-key');
+
 // Web Push (PWA) routes - require authentication to ensure push subscriptions work
 Route::middleware('auth')->group(function () {
-    Route::get('/push/public-key', [\App\Http\Controllers\PushSubscriptionController::class, 'publicKey'])->name('push.public-key');
     Route::post('/push/generate-token', [\App\Http\Controllers\PushSubscriptionController::class, 'generateToken'])->name('push.generate-token');
     Route::post('/push/subscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'subscribe'])->name('push.subscribe');
     Route::delete('/push/unsubscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'unsubscribe'])->name('push.unsubscribe');
@@ -2009,7 +2012,6 @@ Route::middleware('auth')->group(function () {
 
 // Web Push routes with API token authentication (for long-term access)
 Route::middleware('push.token')->group(function () {
-    Route::get('/push/public-key', [\App\Http\Controllers\PushSubscriptionController::class, 'publicKey'])->name('push.public-key.token');
     Route::post('/push/subscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'subscribe'])->name('push.subscribe.token');
     Route::delete('/push/unsubscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'unsubscribe'])->name('push.unsubscribe.token');
 });
