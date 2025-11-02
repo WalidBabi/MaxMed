@@ -869,9 +869,21 @@
         (function() {
             if (!('serviceWorker' in navigator) || !('PushManager' in window)) { return; }
             const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
-            const getPublicKey = () => fetch('/push/public-key', { headers: { 'Accept': 'application/json' } })
-                .then(r => r.json()).then(d => d.publicKey);
+            const getPublicKey = async () => {
+                const resp = await fetch('/push/public-key', { headers: { 'Accept': 'application/json' } });
+                if (!resp.ok) {
+                    throw new Error('Failed to fetch VAPID public key: HTTP ' + resp.status);
+                }
+                const data = await resp.json().catch(() => ({}));
+                if (!data || !data.publicKey || typeof data.publicKey !== 'string' || data.publicKey.length < 10) {
+                    throw new Error('Invalid VAPID public key response');
+                }
+                return data.publicKey;
+            };
             const urlBase64ToUint8Array = (base64String) => {
+                if (!base64String || typeof base64String !== 'string') {
+                    throw new Error('VAPID key missing or invalid');
+                }
                 const padding = '='.repeat((4 - base64String.length % 4) % 4);
                 const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
                 const rawData = atob(base64);
