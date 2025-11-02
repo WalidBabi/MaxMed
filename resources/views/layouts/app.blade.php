@@ -907,10 +907,23 @@
                 try {
                     // Register service worker and wait for it to be ready
                     console.log('[Push] Registering service worker...');
-                    const registration = await navigator.serviceWorker.register('/service-worker.js');
-                    console.log('[Push] Service worker registered, waiting for ready...');
+                    // Check for existing registration first
+                    let registration = await navigator.serviceWorker.getRegistration();
+                    if (!registration) {
+                        registration = await navigator.serviceWorker.register('/service-worker.js', {
+                            scope: '/'
+                        });
+                        console.log('[Push] Service worker registered, waiting for ready...');
+                    } else {
+                        console.log('[Push] Service worker already registered');
+                    }
                     await navigator.serviceWorker.ready;
                     console.log('[Push] Service worker ready');
+                    
+                    // Log if site is installed as PWA
+                    if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+                        console.log('[Push] Site is running as PWA (installed app)');
+                    }
                     
                     // Check current permission status first
                     let permission = Notification.permission;
