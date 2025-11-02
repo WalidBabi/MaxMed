@@ -45,7 +45,15 @@
                         <tr class="border-b">
                             <td class="py-2 pr-2"><input type="checkbox" class="row-check" value="{{ $s->id }}"></td>
                             <td class="py-2 pr-4">{{ $s->id }}</td>
-                            <td class="py-2 pr-4">{{ $s->user_id ?? '—' }}</td>
+                            <td class="py-2 pr-4">
+                                @if($s->user_name)
+                                    <div class="font-medium">{{ $s->user_name }}</div>
+                                    <div class="text-xs text-gray-500">{{ $s->user_email }}</div>
+                                    <div class="text-xs text-gray-400">ID: {{ $s->user_id }}</div>
+                                @else
+                                    <span class="text-gray-400">—</span>
+                                @endif
+                            </td>
                             <td class="py-2 pr-4">
                                 <button data-id="{{ $s->id }}" data-enabled="{{ $s->is_enabled ? 1 : 0 }}" class="toggle-btn px-2 py-1 rounded text-white {{ $s->is_enabled ? 'bg-green-600' : 'bg-gray-400' }}">
                                     {{ $s->is_enabled ? 'On' : 'Off' }}
@@ -61,7 +69,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td class="py-4" colspan="8">No subscriptions found.</td></tr>
+                        <tr><td class="py-4" colspan="10">No subscriptions found.</td></tr>
                     @endforelse
                 </tbody>
             </table>

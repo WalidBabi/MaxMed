@@ -310,9 +310,12 @@ class PushSubscriptionController extends Controller
     {
         abort_unless(Auth::check() && method_exists(Auth::user(), 'isAdmin') && Auth::user()->isAdmin(), 403);
 
-        $query = DB::table('push_subscriptions')->orderByDesc('updated_at');
+        $query = DB::table('push_subscriptions')
+            ->leftJoin('users', 'users.id', '=', 'push_subscriptions.user_id')
+            ->select('push_subscriptions.*', 'users.name as user_name', 'users.email as user_email')
+            ->orderByDesc('push_subscriptions.updated_at');
         if ($request->filled('user_id')) {
-            $query->where('user_id', (int) $request->input('user_id'));
+            $query->where('push_subscriptions.user_id', (int) $request->input('user_id'));
         }
         $subs = $query->paginate(25)->appends($request->only('user_id'));
 
