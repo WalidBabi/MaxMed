@@ -14,14 +14,153 @@
     </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
-        <div class="rounded-lg bg-white p-4 shadow">
-            <div class="text-sm text-gray-500">This Month</div>
-            <div class="mt-1 text-2xl font-semibold">{{ $kpis['this_month_total'] }} AED</div>
+    <!-- Enhanced KPI Section -->
+    <div class="mb-6">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-4">
+            <div class="rounded-lg bg-white p-5 shadow">
+                <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Current Period</div>
+                <div class="text-sm font-medium text-gray-700 mb-1">{{ $kpis['current_month_name'] }}</div>
+                <div class="text-xs text-gray-500 mb-3">{{ $kpis['current_month_range'] }}</div>
+                <div class="text-3xl font-bold text-indigo-600">{{ $kpis['this_month_total'] }} <span class="text-lg text-gray-500">AED</span></div>
+                <div class="mt-3 pt-3 border-t border-gray-100 space-y-1">
+                    <div class="flex justify-between text-xs">
+                        <span class="text-gray-500">Paid:</span>
+                        <span class="font-semibold text-green-600">{{ number_format((float)$kpis['this_month_paid'], 2) }} AED</span>
+                    </div>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-gray-500">Unpaid:</span>
+                        <span class="font-semibold text-orange-600">{{ number_format((float)$kpis['this_month_unpaid'], 2) }} AED</span>
+                    </div>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-gray-500">Expenses:</span>
+                        <span class="font-semibold text-gray-700">{{ $kpis['this_month_expenses_count'] }} items</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rounded-lg bg-white p-5 shadow">
+                <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Next Period</div>
+                <div class="text-sm font-medium text-gray-700 mb-1">{{ $kpis['next_month_name'] }}</div>
+                <div class="text-xs text-gray-500 mb-3">{{ $kpis['next_month_range'] }}</div>
+                <div class="text-3xl font-bold text-blue-600">{{ $kpis['next_month_total'] }} <span class="text-lg text-gray-500">AED</span></div>
+                <div class="mt-3 pt-3 border-t border-gray-100 space-y-1">
+                    <div class="flex justify-between text-xs">
+                        <span class="text-gray-500">Paid:</span>
+                        <span class="font-semibold text-green-600">{{ number_format((float)$kpis['next_month_paid'], 2) }} AED</span>
+                    </div>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-gray-500">Unpaid:</span>
+                        <span class="font-semibold text-orange-600">{{ number_format((float)$kpis['next_month_unpaid'], 2) }} AED</span>
+                    </div>
+                    <div class="flex justify-between text-xs">
+                        <span class="text-gray-500">Expenses:</span>
+                        <span class="font-semibold text-gray-700">{{ $kpis['next_month_expenses_count'] }} items</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="rounded-lg bg-white p-5 shadow">
+                <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">This Month - By Frequency</div>
+                <div class="mt-3 space-y-2">
+                    @foreach($kpis['this_month_by_frequency'] as $freq => $amount)
+                        @if($amount > 0)
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600 capitalize">{{ $freq }}:</span>
+                                <span class="font-semibold text-gray-900">{{ number_format((float)$amount, 2) }} AED</span>
+                            </div>
+                        @endif
+                    @endforeach
+                    @if(array_sum($kpis['this_month_by_frequency']) == 0)
+                        <div class="text-xs text-gray-400 italic">No expenses this month</div>
+                    @endif
+                </div>
+            </div>
+            
+            <div class="rounded-lg bg-white p-5 shadow">
+                <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Next Month - By Frequency</div>
+                <div class="mt-3 space-y-2">
+                    @foreach($kpis['next_month_by_frequency'] as $freq => $amount)
+                        @if($amount > 0)
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="text-gray-600 capitalize">{{ $freq }}:</span>
+                                <span class="font-semibold text-gray-900">{{ number_format((float)$amount, 2) }} AED</span>
+                            </div>
+                        @endif
+                    @endforeach
+                    @if(array_sum($kpis['next_month_by_frequency']) == 0)
+                        <div class="text-xs text-gray-400 italic">No expenses next month</div>
+                    @endif
+                </div>
+            </div>
         </div>
-        <div class="rounded-lg bg-white p-4 shadow">
-            <div class="text-sm text-gray-500">Next Month</div>
-            <div class="mt-1 text-2xl font-semibold">{{ $kpis['next_month_total'] }} AED</div>
+        
+        <!-- Detailed Breakdown -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+            <div class="rounded-lg bg-white p-5 shadow">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-semibold text-gray-900">This Month Expenses Breakdown</h3>
+                    <span class="text-xs text-gray-500">{{ $kpis['this_month_expenses_count'] }} items</span>
+                </div>
+                @if(count($kpis['this_month_expenses']) > 0)
+                    <div class="space-y-2 max-h-64 overflow-y-auto">
+                        @foreach($kpis['this_month_expenses'] as $expense)
+                            <div class="flex items-center justify-between p-2 rounded-md bg-gray-50 hover:bg-gray-100">
+                                <div class="flex-1">
+                                    <div class="text-sm font-medium text-gray-900">{{ $expense['name'] }}</div>
+                                    <div class="text-xs text-gray-500 capitalize">{{ $expense['frequency'] }}</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm font-semibold text-gray-900">{{ number_format((float)$expense['amount'], 2) }} AED</div>
+                                    <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium {{ $expense['paid'] ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800' }}">
+                                        {{ $expense['paid'] ? 'Paid' : 'Unpaid' }}
+                                    </span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="text-sm text-gray-400 italic text-center py-4">No expenses for this month</div>
+                @endif
+            </div>
+            
+            <div class="rounded-lg bg-white p-5 shadow">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-sm font-semibold text-gray-900">Next Month Expenses Breakdown</h3>
+                    <span class="text-xs text-gray-500">{{ $kpis['next_month_expenses_count'] }} items</span>
+                </div>
+                @if(count($kpis['next_month_expenses']) > 0)
+                    <div class="space-y-2 max-h-64 overflow-y-auto">
+                        @foreach($kpis['next_month_expenses'] as $expense)
+                            <div class="flex items-center justify-between p-2 rounded-md bg-gray-50 hover:bg-gray-100">
+                                <div class="flex-1">
+                                    <div class="text-sm font-medium text-gray-900">{{ $expense['name'] }}</div>
+                                    <div class="text-xs text-gray-500 capitalize">{{ $expense['frequency'] }}</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm font-semibold text-gray-900">{{ number_format((float)$expense['amount'], 2) }} AED</div>
+                                    <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium {{ $expense['paid'] ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800' }}">
+                                        {{ $expense['paid'] ? 'Paid' : 'Unpaid' }}
+                                    </span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="text-sm text-gray-400 italic text-center py-4">No expenses for next month</div>
+                @endif
+            </div>
+        </div>
+        
+        <!-- Summary Stats -->
+        <div class="mt-4 rounded-lg bg-gradient-to-r from-indigo-50 to-blue-50 p-4 border border-indigo-100">
+            <div class="flex items-center justify-between">
+                <div class="text-sm text-gray-600">
+                    <span class="font-semibold">{{ $kpis['total_active_expenses'] }}</span> active expense{{ $kpis['total_active_expenses'] != 1 ? 's' : '' }} in system
+                </div>
+                <div class="text-sm text-gray-600">
+                    <span class="font-semibold">{{ number_format((float)$kpis['this_month_total'] + (float)$kpis['next_month_total'], 2) }}</span> AED total for both months
+                </div>
+            </div>
         </div>
     </div>
 
@@ -45,7 +184,7 @@
                         <td class="px-4 py-3 text-sm text-gray-900">
                             {{ $expense->name }}
                             @php
-                                $now = \Carbon\Carbon::now()->startOfDay();
+                                $now = \Illuminate\Support\Carbon::now()->startOfDay();
                                 $currentYear = (int) $now->format('Y');
                                 $currentMonth = (int) $now->format('n');
                                 $isPaidForCurrentMonth = $expense->isActiveInMonth($currentMonth) && $expense->isPaidForMonth($currentYear, $currentMonth);
@@ -103,54 +242,59 @@
                                     }
                                     
                                     if ($nextInstallmentMonth) {
-                                        $deadline = \Carbon\Carbon::create($nextInstallmentYear, $nextInstallmentMonth, 1)->endOfMonth();
+                                        $deadline = \Illuminate\Support\Carbon::create($nextInstallmentYear, $nextInstallmentMonth, 1)->endOfMonth();
                                         $label = 'Next Installment Due';
                                     }
                                     
                                     // Overall license deadline (from next_due_date)
                                     if ($expense->next_due_date) {
-                                        $overallDeadline = \Carbon\Carbon::parse($expense->next_due_date)->startOfDay();
+                                        $overallDeadline = \Illuminate\Support\Carbon::parse($expense->next_due_date)->startOfDay();
                                     }
                                 } else {
                                     // Non-installment expenses: use existing logic
                                     if ($isPaidForCurrentMonth) {
-                                        // Calculate next payment date based on frequency
-                                        $nextPaymentDate = null;
-                                        switch ($expense->frequency) {
-                                            case \App\Models\RecurringExpense::FREQUENCY_MONTHLY:
-                                                $nextPaymentDate = $now->copy()->addMonth()->startOfMonth();
-                                                break;
-                                            case \App\Models\RecurringExpense::FREQUENCY_YEARLY:
-                                                if ($expense->start_date) {
-                                                    $startDate = \Carbon\Carbon::parse($expense->start_date);
-                                                    $nextPaymentDate = \Carbon::create($currentYear, $startDate->month, $startDate->day);
-                                                    if ($nextPaymentDate->isPast()) {
-                                                        $nextPaymentDate->addYear();
+                                        // If already paid, prefer using the existing next_due_date
+                                        // Only calculate a new date if next_due_date is not set
+                                        if ($expense->next_due_date) {
+                                            $deadline = \Illuminate\Support\Carbon::parse($expense->next_due_date)->startOfDay();
+                                            $label = 'Next Payment Due';
+                                        } else {
+                                            // Calculate next payment date based on frequency only if next_due_date is not set
+                                            $nextPaymentDate = null;
+                                            switch ($expense->frequency) {
+                                                case \App\Models\RecurringExpense::FREQUENCY_MONTHLY:
+                                                    // For monthly, add 1 month to the current date (preserve day if possible)
+                                                    $nextPaymentDate = $now->copy()->addMonth();
+                                                    break;
+                                                case \App\Models\RecurringExpense::FREQUENCY_YEARLY:
+                                                    if ($expense->start_date) {
+                                                        $startDate = \Illuminate\Support\Carbon::parse($expense->start_date);
+                                                        $nextPaymentDate = \Illuminate\Support\Carbon::create($currentYear, $startDate->month, $startDate->day);
+                                                        if ($nextPaymentDate->isPast()) {
+                                                            $nextPaymentDate->addYear();
+                                                        }
+                                                    } else {
+                                                        $nextPaymentDate = $now->copy()->addYear();
                                                     }
-                                                } elseif ($expense->next_due_date) {
-                                                    $nextPaymentDate = \Carbon\Carbon::parse($expense->next_due_date);
-                                                    if ($nextPaymentDate->isPast()) {
-                                                        $nextPaymentDate->addYear();
-                                                    }
-                                                } else {
-                                                    $nextPaymentDate = $now->copy()->addYear();
-                                                }
-                                                break;
-                                            case \App\Models\RecurringExpense::FREQUENCY_QUARTERLY:
-                                                $nextPaymentDate = $now->copy()->addMonths(3)->startOfMonth();
-                                                break;
-                                            case \App\Models\RecurringExpense::FREQUENCY_WEEKLY:
-                                                $nextPaymentDate = $now->copy()->addMonth()->startOfMonth();
-                                                break;
-                                            default:
-                                                $nextPaymentDate = $now->copy()->addMonth();
-                                                break;
+                                                    break;
+                                                case \App\Models\RecurringExpense::FREQUENCY_QUARTERLY:
+                                                    // For quarterly, add 3 months (preserve day if possible)
+                                                    $nextPaymentDate = $now->copy()->addMonths(3);
+                                                    break;
+                                                case \App\Models\RecurringExpense::FREQUENCY_WEEKLY:
+                                                    // For weekly, add 1 month (preserve day if possible)
+                                                    $nextPaymentDate = $now->copy()->addMonth();
+                                                    break;
+                                                default:
+                                                    $nextPaymentDate = $now->copy()->addMonth();
+                                                    break;
+                                            }
+                                            
+                                            $deadline = $nextPaymentDate;
+                                            $label = 'Next Payment Due';
                                         }
-                                        
-                                        $deadline = $nextPaymentDate;
-                                        $label = 'Next Payment Due';
                                     } elseif ($expense->next_due_date) {
-                                        $deadline = \Carbon\Carbon::parse($expense->next_due_date)->startOfDay();
+                                        $deadline = \Illuminate\Support\Carbon::parse($expense->next_due_date)->startOfDay();
                                         $label = 'Payment Deadline';
                                     }
                                 }
@@ -183,7 +327,7 @@
                                             $daysElapsed = max(0, $cycleStart->diffInDays($now, false));
                                             $progressPercent = min(100, max(0, ($daysElapsed / $cycleLength) * 100));
                                         } elseif ($expense->start_date) {
-                                            $startDate = \Carbon\Carbon::parse($expense->start_date)->startOfDay();
+                                            $startDate = \Illuminate\Support\Carbon::parse($expense->start_date)->startOfDay();
                                             $daysSinceStart = max(0, $startDate->diffInDays($now, false));
                                             $progressPercent = min(100, max(0, ($daysSinceStart / $totalDays) * 100));
                                         } else {
@@ -270,7 +414,7 @@
                             @endif
                         </td>
                         <td class="px-4 py-3 text-sm">
-                            @php $now = \Carbon\Carbon::now(); @endphp
+                            @php $now = \Illuminate\Support\Carbon::now(); @endphp
                             @if($expense->isActiveInMonth((int) $now->format('n')))
                                 @if($expense->isPaidForMonth((int)$now->format('Y'), (int)$now->format('n')))
                                     <span class="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">Paid</span>
