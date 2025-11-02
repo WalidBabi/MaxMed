@@ -15,17 +15,20 @@
             
             <div class="mb-6">
                 <div class="p-4 bg-blue-50 rounded-lg mb-4">
-                    <p class="text-sm text-gray-700"><strong>Subscriptions found:</strong> {{ $subscriptionCount }}</p>
+                    <p class="text-sm text-gray-700"><strong>Subscriptions found:</strong> <span id="subCount">{{ $subscriptionCount }}</span></p>
                     @if($userId)
                         <p class="text-sm text-gray-700"><strong>User ID:</strong> {{ $userId }}</p>
                     @endif
+                    <p class="text-sm text-gray-700 mt-2"><strong>Notification Permission:</strong> <span id="permissionStatus">Checking...</span></p>
+                    <p class="text-sm text-gray-700"><strong>Service Worker:</strong> <span id="swStatus">Checking...</span></p>
+                    <p class="text-sm text-gray-700"><strong>Status:</strong> <span id="subscriptionStatus">Initializing...</span></p>
                 </div>
 
                 @if($subscriptionCount === 0)
                     <div class="p-4 bg-yellow-50 rounded-lg mb-4">
                         <p class="text-sm text-yellow-800">
                             <strong>No subscriptions found.</strong> Make sure you've allowed notifications in your browser. 
-                            The page will attempt to subscribe automatically. If it doesn't work, refresh the page after granting notification permissions.
+                            The page will attempt to subscribe automatically when you interact with it (tap, scroll, etc.).
                         </p>
                     </div>
                 @endif
@@ -66,6 +69,144 @@
         </div>
     </div>
 </div>
+
+<script>
+// Debug and subscription status on test page
+(function() {
+    const updateStatus = (id, text, color = 'text-gray-700') => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.textContent = text;
+            el.className = `text-sm ${color}`;
+        }
+    };
+
+    const checkStatus = async () => {
+        // Check notification permission
+        if ('Notification' in window) {
+            const perm = Notification.permission;
+            const permText = perm === 'granted' ? '✅ Granted' : perm === 'denied' ? '❌ Denied' : '⏳ Default (not asked)';
+            const permColor = perm === 'granted' ? 'text-green-600' : perm === 'denied' ? 'text-red-600' : 'text-yellow-600';
+            updateStatus('permissionStatus', permText, permColor);
+        } else {
+            updateStatus('permissionStatus', '❌ Not supported', 'text-red-600');
+        }
+
+        // Check service worker
+        if ('serviceWorker' in navigator) {
+            try {
+                const registration = await navigator.serviceWorker.getRegistration();
+                if (registration) {
+                    updateStatus('swStatus', '✅ Registered', 'text-green-600');
+                    
+                    // Check for subscription
+                    const subscription = await registration.pushManager.getSubscription();
+                    if (subscription) {
+                        updateStatus('subscriptionStatus', '✅ Has browser subscription', 'text-green-600');
+                    } else {
+                        updateStatus('subscriptionStatus', '⚠️ No browser subscription yet', 'text-yellow-600');
+                    }
+                } else {
+                    updateStatus('swStatus', '⚠️ Not registered', 'text-yellow-600');
+                    updateStatus('subscriptionStatus', '⚠️ Service worker not ready', 'text-yellow-600');
+                }
+            } catch (e) {
+                updateStatus('swStatus', '❌ Error checking', 'text-red-600');
+                updateStatus('subscriptionStatus', '❌ Error: ' + e.message, 'text-red-600');
+            }
+        } else {
+            updateStatus('swStatus', '❌ Not supported', 'text-red-600');
+            updateStatus('subscriptionStatus', '❌ Service workers not supported', 'text-red-600');
+        }
+    };
+
+    // Check status on load
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', checkStatus);
+    } else {
+        checkStatus();
+    }
+
+    // Try to subscribe immediately if permission is granted
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
+        window.addEventListener('load', async () => {
+            try {
+                // Wait for service worker and layout code
+                setTimeout(async () => {
+                    if (Notification.permission === 'granted') {
+                        updateStatus('subscriptionStatus', '🔄 Attempting to subscribe...', 'text-blue-600');
+                        
+                        // Check if subscription already exists in browser
+                        try {
+                            const registration = await navigator.serviceWorker.ready;
+                            let subscription = await registration.pushManager.getSubscription();
+                            
+                            if (subscription) {
+                                updateStatus('subscriptionStatus', '🔄 Found browser subscription, saving to database...', 'text-blue-600');
+                                
+                                // Save existing subscription to database
+                                const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+                                
+                                // Convert to base64url format
+                                const uint8ArrayToBase64Url = (array) => {
+                                    const base64 = btoa(String.fromCharCode.apply(null, array));
+                                    return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+                                };
+                                
+                                const subscriptionData = subscription.toJSON && typeof subscription.toJSON === 'function' 
+                                    ? subscription.toJSON()
+                                    : {
+                                        endpoint: subscription.endpoint,
+                                        keys: {
+                                            p256dh: uint8ArrayToBase64Url(new Uint8Array(subscription.getKey('p256dh'))),
+                                            auth: uint8ArrayToBase64Url(new Uint8Array(subscription.getKey('auth')))
+                                        }
+                                    };
+                                
+                                const response = await fetch('/push/subscribe', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Accept': 'application/json',
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                        'X-CSRF-TOKEN': csrf
+                                    },
+                                    body: JSON.stringify(subscriptionData)
+                                });
+                                
+                                if (response.ok) {
+                                    updateStatus('subscriptionStatus', '✅ Subscription saved! Refreshing...', 'text-green-600');
+                                    setTimeout(() => window.location.reload(), 1500);
+                                } else {
+                                    const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+                                    updateStatus('subscriptionStatus', '❌ Failed to save: ' + (error.message || 'Unknown error'), 'text-red-600');
+                                }
+                            } else {
+                                // No subscription yet, try calling the global function if available
+                                if (window.subscribeToPush) {
+                                    updateStatus('subscriptionStatus', '🔄 Calling subscription function...', 'text-blue-600');
+                                    window.subscribeToPush().catch(e => {
+                                        updateStatus('subscriptionStatus', '⚠️ Subscription attempt: ' + e.message, 'text-yellow-600');
+                                    });
+                                } else {
+                                    updateStatus('subscriptionStatus', '⚠️ No subscription found. Interact with page to subscribe.', 'text-yellow-600');
+                                }
+                            }
+                        } catch (e) {
+                            updateStatus('subscriptionStatus', '❌ Error: ' + e.message, 'text-red-600');
+                            console.error('Subscription check error:', e);
+                        }
+                    } else {
+                        updateStatus('subscriptionStatus', '⏳ Permission not granted. Interact with page to request permission.', 'text-yellow-600');
+                    }
+                }, 2000);
+            } catch (e) {
+                updateStatus('subscriptionStatus', '❌ Error: ' + e.message, 'text-red-600');
+            }
+        });
+    }
+})();
+</script>
 
 <script>
 document.getElementById('testForm').addEventListener('submit', async function(e) {
