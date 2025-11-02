@@ -23,6 +23,7 @@ class NotifyDueExpenses extends Command
         $dueWithinDays = (int) config('expenses.notify.due_within_days', 3);
         $expireWithinDays = (int) config('expenses.notify.expire_within_days', 7);
 
+        $startOfToday = $now->copy()->startOfDay();
         $dueWindowEnd = $now->copy()->addDays($dueWithinDays)->startOfDay();
         $expireWindowEnd = $now->copy()->addDays($expireWithinDays)->endOfDay();
 
@@ -30,7 +31,8 @@ class NotifyDueExpenses extends Command
         $dueSoon = RecurringExpense::query()
             ->where('status', RecurringExpense::STATUS_ACTIVE)
             ->whereNotNull('next_due_date')
-            ->whereBetween('next_due_date', [$now->copy()->startOfDay()->toDateString(), $dueWindowEnd->toDateString()])
+            // Include overdue and due-within-window
+            ->whereDate('next_due_date', '<=', $dueWindowEnd->toDateString())
             ->orderBy('next_due_date')
             ->get(['id', 'name', 'vendor', 'next_due_date', 'is_installment']);
 
@@ -48,6 +50,9 @@ class NotifyDueExpenses extends Command
         }
 
         // Prepare summary
+        $overdueCount = $dueSoon->filter(function ($e) use ($startOfToday) {
+            return \Carbon\Carbon::parse($e->next_due_date)->lt($startOfToday);
+        })->count();
         $installmentsDueCount = $dueSoon->where('is_installment', true)->count();
         $expensesDueCount = $dueSoon->count() - $installmentsDueCount;
         $expiringCount = $expiringSoon->count();
@@ -56,10 +61,13 @@ class NotifyDueExpenses extends Command
 
         $lines = [];
         if ($expensesDueCount > 0) {
-            $lines[] = $expensesDueCount.' expense'.($expensesDueCount === 1 ? '' : 's').' due within '.$dueWithinDays.' day'.($dueWithinDays === 1 ? '' : 's');
+            $lines[] = $expensesDueCount.' expense'.($expensesDueCount === 1 ? '' : 's').' due or overdue within '.$dueWithinDays.' day'.($dueWithinDays === 1 ? '' : 's');
         }
         if ($installmentsDueCount > 0) {
-            $lines[] = $installmentsDueCount.' installment'.($installmentsDueCount === 1 ? '' : 's').' due within '.$dueWithinDays.' day'.($dueWithinDays === 1 ? '' : 's');
+            $lines[] = $installmentsDueCount.' installment'.($installmentsDueCount === 1 ? '' : 's').' due or overdue within '.$dueWithinDays.' day'.($dueWithinDays === 1 ? '' : 's');
+        }
+        if ($overdueCount > 0) {
+            $lines[] = $overdueCount.' item'.($overdueCount === 1 ? '' : 's').' already overdue';
         }
         if ($expiringCount > 0) {
             $lines[] = $expiringCount.' expense'.($expiringCount === 1 ? '' : 's').' expiring within '.$expireWithinDays.' day'.($expireWithinDays === 1 ? '' : 's');
@@ -68,8 +76,9 @@ class NotifyDueExpenses extends Command
         // Include up to 5 specific items for quick context
         /** @var Collection<int, string> $detailLines */
         $detailLines = collect();
-        $dueSoon->take(3)->each(function ($e) use ($detailLines) {
-            $detailLines->push(($e->is_installment ? '[Installment] ' : '').($e->name).(
+        $dueSoon->take(3)->each(function ($e) use ($detailLines, $startOfToday) {
+            $label = (\Carbon\Carbon::parse($e->next_due_date)->lt($startOfToday) ? '[Overdue] ' : '');
+            $detailLines->push($label.($e->is_installment ? '[Installment] ' : '').($e->name).(
                 $e->vendor ? ' — '.$e->vendor : ''
             ).' • Due '.Carbon::parse($e->next_due_date)->toFormattedDateString());
         });
