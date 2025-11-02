@@ -2006,8 +2006,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/push/generate-token', [\App\Http\Controllers\PushSubscriptionController::class, 'generateToken'])->name('push.generate-token');
     Route::post('/push/subscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'subscribe'])->name('push.subscribe');
     Route::delete('/push/unsubscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'unsubscribe'])->name('push.unsubscribe');
-    Route::get('/push/test', [\App\Http\Controllers\PushSubscriptionController::class, 'testPage'])->name('push.test-page');
-    Route::post('/push/test', [\App\Http\Controllers\PushSubscriptionController::class, 'test'])->name('push.test');
 });
 
 // Log push receipt from service worker (no CSRF, public)
