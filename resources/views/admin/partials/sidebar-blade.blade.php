@@ -178,6 +178,21 @@
                         </ul>
                     </li>
                     @endif
+
+                    <!-- Business Expenses (Superadmin only) -->
+                    @php
+                        $isSuperAdmin = Auth::user() && (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('superadmin') || Auth::user()->hasRole('super-administrator'));
+                    @endphp
+                    @if($isSuperAdmin)
+                    <li>
+                        <a href="{{ route('admin.business-expenses.index') }}" class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold {{ request()->routeIs('admin.business-expenses.*') ? 'sidebar-active' : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50' }}">
+                            <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                            </svg>
+                            Business Expenses
+                        </a>
+                    </li>
+                    @endif
                 </ul>
             </li>
 

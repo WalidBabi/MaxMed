@@ -132,6 +132,17 @@
                             <li><a href="{{ route('admin.permissions.index') }}" class="group flex gap-x-3 rounded-md py-2 pl-9 pr-2 text-sm leading-6 {{ request()->routeIs('admin.permissions.*') ? 'text-indigo-600 bg-gray-50' : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50' }}">Permissions</a></li>
                         </ul>
                     </li>
+
+                    @if(Auth::user() && Auth::user()->hasRole('super_admin'))
+                    <li>
+                        <a href="{{ route('admin.business-expenses.index') }}" class="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold {{ request()->routeIs('admin.business-expenses.*') ? 'sidebar-active' : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50' }}">
+                            <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                            </svg>
+                            Business Expenses
+                        </a>
+                    </li>
+                    @endif
                 </ul>
             </li>
 

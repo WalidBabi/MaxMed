@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\RecurringExpense;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -22,8 +23,9 @@ class DashboardController extends Controller
     {
         try {
             $salesData = $this->getSalesChartData();
+            $expenseKpis = $this->getBusinessExpenseKpis();
             
-            return view('admin.dashboard', compact('salesData'));
+            return view('admin.dashboard', compact('salesData', 'expenseKpis'));
         } catch (\Exception $e) {
             Log::error('Dashboard error', [
                 'error' => $e->getMessage(),
@@ -45,8 +47,9 @@ class DashboardController extends Controller
                 'peak_months' => [],
                 'zero_months' => []
             ];
+            $expenseKpis = $this->getBusinessExpenseKpis();
             
-            return view('admin.dashboard', compact('salesData'));
+            return view('admin.dashboard', compact('salesData', 'expenseKpis'));
         }
     }
 
@@ -912,6 +915,82 @@ class DashboardController extends Controller
         } catch (\Exception $e) {
             Log::error('Error calculating cash flow metrics', ['error' => $e->getMessage()]);
             return ['aed' => 0, 'usd' => 0, 'combined' => 0];
+        }
+    }
+
+    /**
+     * Get Business Expenses KPIs (This Month and Next Month totals)
+     */
+    private function getBusinessExpenseKpis()
+    {
+        try {
+            $now = Carbon::now();
+            $expenses = RecurringExpense::where('status', RecurringExpense::STATUS_ACTIVE)->get();
+            $thisMonth = 0.0;
+            $nextMonth = 0.0;
+            
+            foreach ($expenses as $exp) {
+                // Check this month
+                if ($exp->isActiveInMonth((int) $now->format('n'))) {
+                    // Apply frequency filter for this month
+                    $includeThisMonth = $this->shouldIncludeExpenseThisMonth($exp, $now);
+                    if ($includeThisMonth) {
+                        $thisMonth += (float) $exp->unit_amount * (int) $exp->quantity;
+                    }
+                }
+                
+                // Check next month
+                $nextMonthDate = $now->copy()->addMonth();
+                if ($exp->isActiveInMonth((int) $nextMonthDate->format('n'))) {
+                    // Apply frequency filter for next month
+                    $includeNextMonth = $this->shouldIncludeExpenseThisMonth($exp, $nextMonthDate);
+                    if ($includeNextMonth) {
+                        $nextMonth += (float) $exp->unit_amount * (int) $exp->quantity;
+                    }
+                }
+            }
+            
+            return [
+                'this_month_total' => $thisMonth,
+                'next_month_total' => $nextMonth,
+            ];
+        } catch (\Exception $e) {
+            Log::error('Error calculating business expense KPIs', ['error' => $e->getMessage()]);
+            return [
+                'this_month_total' => 0,
+                'next_month_total' => 0,
+            ];
+        }
+    }
+
+    /**
+     * Check if an expense should be included for a given month based on frequency
+     */
+    private function shouldIncludeExpenseThisMonth($expense, $monthDate)
+    {
+        switch ($expense->frequency) {
+            case RecurringExpense::FREQUENCY_MONTHLY:
+            case RecurringExpense::FREQUENCY_WEEKLY:
+                return true; // Always include monthly/weekly expenses
+                
+            case RecurringExpense::FREQUENCY_QUARTERLY:
+                if (!$expense->start_date) {
+                    return false;
+                }
+                $startMonth = Carbon::parse($expense->start_date)->month;
+                // Check if the month is in the same position within the quarter cycle
+                // (e.g., if start is Jan, include Jan, Apr, Jul, Oct)
+                return (($monthDate->month - $startMonth) % 3 === 0);
+                
+            case RecurringExpense::FREQUENCY_YEARLY:
+                if (!$expense->start_date) {
+                    return false;
+                }
+                $startMonth = Carbon::parse($expense->start_date)->month;
+                return (int) $monthDate->format('n') === $startMonth;
+                
+            default:
+                return true;
         }
     }
 
