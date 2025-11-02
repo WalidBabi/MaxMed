@@ -32,6 +32,8 @@ return [
     |
     */
 
+    // Session lifetime - keep secure for regular auth
+    // Use push notification tokens for long-term access
     'lifetime' => (int) env('SESSION_LIFETIME', 120),
 
     'expire_on_close' => env('SESSION_EXPIRE_ON_CLOSE', false),

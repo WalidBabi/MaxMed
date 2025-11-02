@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Minishlink\WebPush\Subscription as WebPushSubscription;
 use Minishlink\WebPush\WebPush;
+use App\Models\PushNotificationToken;
+use Illuminate\Support\Str;
 
 class PushSubscriptionController extends Controller
 {
@@ -18,21 +20,50 @@ class PushSubscriptionController extends Controller
         ]);
     }
 
+    /**
+     * Generate a push notification token for authenticated users
+     */
+    public function generateToken(Request $request): JsonResponse
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        // Generate a unique token for this device
+        $deviceName = $request->input('device_name', $request->userAgent());
+        $result = PushNotificationToken::generateToken($user, $deviceName);
+
+        return response()->json([
+            'token' => $result['token'],
+            'expires_at' => $result['model']->expires_at->toISOString(),
+            'device_name' => $deviceName,
+        ]);
+    }
+
+    /**
+     * Subscribe to push notifications using API token
+     */
     public function subscribe(Request $request): JsonResponse
     {
+        // This will work with either Auth::check() OR the push.token middleware
+        $user = $request->user();
+        
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
         $data = $request->validate([
             'endpoint' => 'required|string',
             'keys.auth' => 'required|string',
             'keys.p256dh' => 'required|string',
         ]);
 
-        $userId = Auth::id();
-
         DB::table('push_subscriptions')->upsert([
             'endpoint' => $data['endpoint'],
             'p256dh' => $data['keys']['p256dh'],
             'auth' => $data['keys']['auth'],
-            'user_id' => $userId,
+            'user_id' => $user->id,
             'user_agent' => substr((string) $request->userAgent(), 0, 255),
             'updated_at' => now(),
             'created_at' => now(),

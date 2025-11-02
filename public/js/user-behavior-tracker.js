@@ -594,13 +594,19 @@ class UserBehaviorTracker {
 if (typeof window !== 'undefined') {
     window.UserBehaviorTracker = UserBehaviorTracker;
     
-    // Initialize when DOM is ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            window.userBehaviorTracker = new UserBehaviorTracker();
-        });
+    // Check if tracking is disabled
+    if (window.userBehaviorTrackingDisabled) {
+        // Tracking disabled for this page
+        console.log('User behavior tracking disabled for this page');
     } else {
-        window.userBehaviorTracker = new UserBehaviorTracker();
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                window.userBehaviorTracker = new UserBehaviorTracker();
+            });
+        } else {
+            window.userBehaviorTracker = new UserBehaviorTracker();
+        }
     }
 } 
 
