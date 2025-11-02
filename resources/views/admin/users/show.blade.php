@@ -126,6 +126,35 @@
         </div>
 
         <div class="lg:col-span-2 space-y-6">
+            <!-- Notifications -->
+            <div class="bg-white overflow-hidden shadow-sm ring-1 ring-gray-900/5 rounded-xl">
+                <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                        <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.081a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V8.967C18 5.674 15.303 3 12.01 3h-.02C8.697 3 6 5.674 6 8.967V9.75a8.967 8.967 0 01-2.31 6.02c1.76.659 3.6 1.095 5.454 1.31m5.713 0a24.255 24.255 0 01-5.713 0m5.713 0a3 3 0 11-5.713 0" />
+                        </svg>
+                        Notifications
+                    </h3>
+                    <a href="{{ route('admin.push.manage', ['user_id' => $user->id]) }}" class="text-sm text-indigo-600 hover:text-indigo-800">View subscriptions</a>
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="text-sm font-medium text-gray-900">Mute all push notifications</div>
+                            <div class="text-sm text-gray-500">When enabled, this user will not receive any push notifications.</div>
+                        </div>
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="muteToggle" class="sr-only" {{ ($user->push_muted ?? false) ? 'checked' : '' }}>
+                            <span class="mr-3 text-sm text-gray-700">{{ ($user->push_muted ?? false) ? 'Muted' : 'Enabled' }}</span>
+                            <span class="relative">
+                                <span class="block w-10 h-6 bg-gray-200 rounded-full shadow-inner"></span>
+                                <span class="dot absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition {{ ($user->push_muted ?? false) ? 'translate-x-4' : '' }}"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
             <!-- Role and Permissions -->
             @if($user->role || $user->isAdmin())
                 <div class="bg-white overflow-hidden shadow-sm ring-1 ring-gray-900/5 rounded-xl">
@@ -267,6 +296,23 @@
         </div>
     </div>
 </div>
+<script>
+document.getElementById('muteToggle')?.addEventListener('change', async (e) => {
+    const csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const label = e.target.closest('label').querySelector('span.mr-3');
+    try {
+        const resp = await fetch("{{ route('admin.users.push-mute', ['userId' => $user->id]) }}", { method: 'PATCH', headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' } });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error || 'Failed');
+        label.textContent = data.push_muted ? 'Muted' : 'Enabled';
+        const dot = e.target.closest('label').querySelector('.dot');
+        dot.classList.toggle('translate-x-4', data.push_muted);
+    } catch (err) {
+        alert(err.message);
+        e.target.checked = !e.target.checked;
+    }
+});
+</script>
 @else
 <div class="text-center py-12">
     <div class="mx-auto h-12 w-12 text-gray-400">

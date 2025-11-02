@@ -150,8 +150,16 @@ class PushSubscriptionController extends Controller
 
     public function testPage()
     {
+        $userId = Auth::id();
         $subscriptionCount = DB::table('push_subscriptions')
-            ->when(Auth::id(), fn($q) => $q->where('user_id', Auth::id()))
+            ->when($userId, fn($q) => $q->where('user_id', $userId))
+            ->where('is_enabled', true)
+            ->when($userId, function($q) use ($userId) {
+                $muted = DB::table('users')->where('id', $userId)->value('push_muted');
+                if ($muted) {
+                    $q->whereRaw('1=0');
+                }
+            })
             ->count();
 
         return view('push.test', [
@@ -166,8 +174,12 @@ class PushSubscriptionController extends Controller
         $body = (string) ($request->input('body') ?? 'Test notification');
         $url = (string) ($request->input('url') ?? '/');
 
-        $query = DB::table('push_subscriptions');
+        $query = DB::table('push_subscriptions')->where('is_enabled', true);
         if (Auth::id()) {
+            $muted = DB::table('users')->where('id', Auth::id())->value('push_muted');
+            if ($muted) {
+                return response()->json(['sent' => 0, 'message' => 'Notifications are muted for this user'], 403);
+            }
             $query->where('user_id', Auth::id());
         }
         $subscriptions = $query->limit(100)->get();
@@ -208,6 +220,188 @@ class PushSubscriptionController extends Controller
         }
 
         return response()->json(['sent' => $sent]);
+    }
+
+    public function broadcastSelected(Request $request): JsonResponse
+    {
+        $user = Auth::user();
+        abort_unless($user && method_exists($user, 'isAdmin') && $user->isAdmin(), 403);
+
+        $data = $request->validate([
+            'ids' => 'required|array|min:1',
+            'ids.*' => 'integer',
+            'title' => 'nullable|string',
+            'body' => 'nullable|string',
+            'url' => 'nullable|string',
+        ]);
+
+        $subs = DB::table('push_subscriptions')
+            ->leftJoin('users', 'users.id', '=', 'push_subscriptions.user_id')
+            ->whereIn('push_subscriptions.id', $data['ids'])
+            ->where('push_subscriptions.is_enabled', true)
+            ->where(function($q){ $q->whereNull('users.push_muted')->orWhere('users.push_muted', false); })
+            ->select('push_subscriptions.*')
+            ->get();
+
+        if ($subs->isEmpty()) {
+            return response()->json(['sent' => 0, 'message' => 'No eligible subscriptions selected'], 400);
+        }
+
+        $webPush = new WebPush([
+            'VAPID' => [
+                'subject' => config('webpush.vapid.subject'),
+                'publicKey' => config('webpush.vapid.public_key'),
+                'privateKey' => config('webpush.vapid.private_key'),
+            ],
+        ]);
+
+        $payload = json_encode([
+            'title' => (string) ($data['title'] ?? 'MaxMed'),
+            'body' => (string) ($data['body'] ?? ''),
+            'url' => (string) ($data['url'] ?? '/'),
+        ]);
+
+        $sent = 0;
+        foreach ($subs as $sub) {
+            $subscription = WebPushSubscription::create([
+                'endpoint' => $sub->endpoint,
+                'keys' => [ 'p256dh' => $sub->p256dh, 'auth' => $sub->auth ],
+            ]);
+            $report = $webPush->sendOneNotification($subscription, $payload);
+            if ($report->isSuccess()) {
+                $sent++;
+            } else if (in_array($report->getResponse()?->getStatusCode(), [404, 410], true)) {
+                DB::table('push_subscriptions')->where('id', $sub->id)->delete();
+            }
+        }
+
+        return response()->json(['sent' => $sent, 'selected' => count($data['ids'])]);
+    }
+
+    public function toggleUserMute(Request $request, int $userId): JsonResponse
+    {
+        $admin = Auth::user();
+        abort_unless($admin && method_exists($admin, 'isAdmin') && $admin->isAdmin(), 403);
+
+        $target = DB::table('users')->where('id', $userId)->first();
+        if (!$target) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        $new = !((bool) ($target->push_muted ?? false));
+        DB::table('users')->where('id', $userId)->update(['push_muted' => $new, 'updated_at' => now()]);
+        return response()->json(['ok' => true, 'push_muted' => $new]);
+    }
+
+    public function listUser()
+    {
+        $user = Auth::user();
+        abort_unless($user, 403);
+
+        $subs = DB::table('push_subscriptions')
+            ->where('user_id', $user->id)
+            ->orderByDesc('updated_at')
+            ->get();
+
+        return view('push.manage', [ 'subs' => $subs ]);
+    }
+
+    public function listAdmin(Request $request)
+    {
+        abort_unless(Auth::check() && method_exists(Auth::user(), 'isAdmin') && Auth::user()->isAdmin(), 403);
+
+        $query = DB::table('push_subscriptions')->orderByDesc('updated_at');
+        if ($request->filled('user_id')) {
+            $query->where('user_id', (int) $request->input('user_id'));
+        }
+        $subs = $query->paginate(25)->appends($request->only('user_id'));
+
+        return view('admin.push.manage', [ 'subs' => $subs ]);
+    }
+
+    public function toggle(Request $request, int $id): JsonResponse
+    {
+        $user = Auth::user();
+        abort_unless($user, 403);
+
+        $sub = DB::table('push_subscriptions')->where('id', $id)->first();
+        if (!$sub) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        $isAdmin = method_exists($user, 'isAdmin') && $user->isAdmin();
+        if (!$isAdmin && (int) $sub->user_id !== (int) $user->id) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+
+        DB::table('push_subscriptions')->where('id', $id)->update([
+            'is_enabled' => !$sub->is_enabled,
+            'updated_at' => now(),
+        ]);
+
+        return response()->json(['ok' => true, 'is_enabled' => !$sub->is_enabled]);
+    }
+
+    public function destroy(Request $request, int $id): JsonResponse
+    {
+        $user = Auth::user();
+        abort_unless($user, 403);
+
+        $sub = DB::table('push_subscriptions')->where('id', $id)->first();
+        if (!$sub) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        $isAdmin = method_exists($user, 'isAdmin') && $user->isAdmin();
+        if (!$isAdmin && (int) $sub->user_id !== (int) $user->id) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+
+        DB::table('push_subscriptions')->where('id', $id)->delete();
+        return response()->json(['ok' => true]);
+    }
+
+    public function testSingle(Request $request, int $id): JsonResponse
+    {
+        $user = Auth::user();
+        abort_unless($user, 403);
+
+        $sub = DB::table('push_subscriptions')->where('id', $id)->first();
+        if (!$sub) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        $isAdmin = method_exists($user, 'isAdmin') && $user->isAdmin();
+        if (!$isAdmin && (int) $sub->user_id !== (int) $user->id) {
+            return response()->json(['error' => 'Forbidden'], 403);
+        }
+
+        $webPush = new WebPush([
+            'VAPID' => [
+                'subject' => config('webpush.vapid.subject'),
+                'publicKey' => config('webpush.vapid.public_key'),
+                'privateKey' => config('webpush.vapid.private_key'),
+            ],
+        ]);
+
+        $payload = json_encode([
+            'title' => (string) ($request->input('title') ?? 'MaxMed'),
+            'body' => (string) ($request->input('body') ?? 'Test notification'),
+            'url' => (string) ($request->input('url') ?? '/'),
+        ]);
+
+        $subscription = WebPushSubscription::create([
+            'endpoint' => $sub->endpoint,
+            'keys' => [ 'p256dh' => $sub->p256dh, 'auth' => $sub->auth ],
+        ]);
+
+        $report = $webPush->sendOneNotification($subscription, $payload);
+        $ok = $report->isSuccess();
+        if (!$ok && in_array($report->getResponse()?->getStatusCode(), [404, 410], true)) {
+            DB::table('push_subscriptions')->where('id', $id)->delete();
+        }
+
+        return response()->json(['ok' => $ok]);
     }
 }
 
