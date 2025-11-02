@@ -1016,11 +1016,15 @@
                     const result = await response.json().catch(() => ({ status: 'subscribed' }));
                     console.log('[Push] Subscription saved successfully:', result);
                     
-                    // If we're on the test page, refresh to update subscription count
+                    // If we're on the test page, refresh to update subscription count (only once)
                     if (window.location.pathname === '/push/test') {
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 1000);
+                        // Check if we already reloaded once (prevent infinite loop)
+                        if (!sessionStorage.getItem('pushSubscriptionReloaded')) {
+                            sessionStorage.setItem('pushSubscriptionReloaded', 'true');
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1000);
+                        }
                     }
                     
                     window.maxmedPush = {

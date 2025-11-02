@@ -178,14 +178,24 @@
         checkStatus();
     }
 
-    // Try to subscribe immediately if permission is granted
-    if ('serviceWorker' in navigator && 'PushManager' in window) {
+    // Try to subscribe immediately if permission is granted (only if not already done)
+    // Check subscription count first - if > 0, don't auto-subscribe (already done)
+    const subscriptionCountEl = document.getElementById('subCount');
+    const currentCount = subscriptionCountEl ? parseInt(subscriptionCountEl.textContent) || 0 : 0;
+    
+    if ('serviceWorker' in navigator && 'PushManager' in window && currentCount === 0) {
         window.addEventListener('load', async () => {
             try {
                 // Wait for service worker and layout code
                 setTimeout(async () => {
+                    // Check if we already handled this (prevent multiple attempts)
+                    if (sessionStorage.getItem('pushSubscriptionAttempted')) {
+                        return; // Already attempted, don't try again
+                    }
+                    
                     if (Notification.permission === 'granted') {
                         updateStatus('subscriptionStatus', '🔄 Attempting to subscribe...', 'text-blue-600');
+                        sessionStorage.setItem('pushSubscriptionAttempted', 'true');
                         
                         // Check if subscription already exists in browser
                         try {
@@ -227,7 +237,16 @@
                                 
                                 if (response.ok) {
                                     updateStatus('subscriptionStatus', '✅ Subscription saved! Refreshing...', 'text-green-600');
-                                    setTimeout(() => window.location.reload(), 1500);
+                                    // Only reload once to prevent infinite loop
+                                    if (!sessionStorage.getItem('pushSubscriptionReloaded')) {
+                                        sessionStorage.setItem('pushSubscriptionReloaded', 'true');
+                                        setTimeout(() => window.location.reload(), 1500);
+                                    } else {
+                                        // Already reloaded, just update status
+                                        updateStatus('subscriptionStatus', '✅ Subscription saved successfully!', 'text-green-600');
+                                        const countEl = document.getElementById('subCount');
+                                        if (countEl) countEl.textContent = '1';
+                                    }
                                 } else {
                                     const errorData = await response.json().catch(() => ({ error: 'Unknown error', message: 'Unknown error' }));
                                     const errorMsg = errorData.message || errorData.error || 'Unknown error';
