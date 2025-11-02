@@ -25,7 +25,7 @@
                     <div class="p-4 bg-yellow-50 rounded-lg mb-4">
                         <p class="text-sm text-yellow-800">
                             <strong>No subscriptions found.</strong> Make sure you've allowed notifications in your browser. 
-                            Refresh the page to register your device.
+                            The page will attempt to subscribe automatically. If it doesn't work, refresh the page after granting notification permissions.
                         </p>
                     </div>
                 @endif

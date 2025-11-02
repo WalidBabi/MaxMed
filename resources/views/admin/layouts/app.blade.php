@@ -378,18 +378,48 @@
             for (let i = 0; i < rawData.length; ++i) outputArray[i] = rawData.charCodeAt(i);
             return outputArray;
         };
-        window.addEventListener('load', async function() {
+        
+        async function subscribeToPush() {
             try {
-                const reg = await navigator.serviceWorker.register('/service-worker.js');
-                const permission = await Notification.requestPermission();
-                if (permission !== 'granted') return;
-                const existing = await reg.pushManager.getSubscription();
-                const publicKey = await getPublicKey();
-                const subscription = existing || await reg.pushManager.subscribe({
-                    userVisibleOnly: true,
-                    applicationServerKey: urlBase64ToUint8Array(publicKey)
-                });
-                await fetch('/push/subscribe', {
+                // Register service worker and wait for it to be ready
+                const registration = await navigator.serviceWorker.register('/service-worker.js');
+                await navigator.serviceWorker.ready;
+                
+                // Check current permission status first
+                let permission = Notification.permission;
+                
+                // Only request permission if it's not already been determined
+                // On mobile, requesting permission without user gesture may fail silently
+                if (permission === 'default') {
+                    // Try to request permission, but don't fail if it doesn't work on mobile
+                    try {
+                        permission = await Notification.requestPermission();
+                    } catch (e) {
+                        console.warn('Permission request failed (may require user gesture on mobile):', e);
+                        return;
+                    }
+                }
+                
+                if (permission !== 'granted') {
+                    console.log('Notification permission not granted:', permission);
+                    return;
+                }
+                
+                // Get existing subscription first
+                let subscription = await registration.pushManager.getSubscription();
+                
+                // If no subscription, create a new one
+                if (!subscription) {
+                    const publicKey = await getPublicKey();
+                    subscription = await registration.pushManager.subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: urlBase64ToUint8Array(publicKey)
+                    });
+                }
+                
+                // Send subscription to server
+                // PushSubscription has a toJSON() method that formats it correctly
+                const response = await fetch('/push/subscribe', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -399,8 +429,64 @@
                     },
                     body: JSON.stringify(subscription)
                 });
+                
+                if (!response.ok) {
+                    const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+                    console.error('Failed to save subscription:', error);
+                    return;
+                }
+                
+                console.log('Push subscription successful');
+                
+                // If we're on the test page, refresh to update subscription count
+                if (window.location.pathname === '/push/test') {
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                }
             } catch (e) {
-                console.warn('Push registration failed', e);
+                console.warn('Push registration failed:', e);
+            }
+        }
+        
+        let hasAttemptedSubscription = false;
+        const interactionHandlers = new Map();
+        
+        // Try to subscribe on page load (may not work on mobile without user gesture)
+        window.addEventListener('load', function() {
+            subscribeToPush().catch(() => {
+                // If it fails, we'll try again on user interaction
+            });
+        });
+        
+        // Subscribe on user interaction (works on mobile)
+        // Mobile browsers require user gesture for notification permission
+        const interactionEvents = ['click', 'touchstart', 'scroll', 'keydown'];
+        interactionEvents.forEach(eventType => {
+            const handler = async function() {
+                if (!hasAttemptedSubscription) {
+                    hasAttemptedSubscription = true;
+                    await subscribeToPush();
+                    // Remove all listeners after first attempt
+                    interactionEvents.forEach(e => {
+                        const h = interactionHandlers.get(e);
+                        if (h) {
+                            document.removeEventListener(e, h);
+                        }
+                    });
+                }
+            };
+            interactionHandlers.set(eventType, handler);
+            document.addEventListener(eventType, handler, { once: true, passive: true });
+        });
+        
+        // Also try on visibility change (when user returns to tab/app)
+        // This helps on mobile when user grants permission and returns to the page
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && !hasAttemptedSubscription) {
+                setTimeout(() => {
+                    subscribeToPush();
+                }, 1000);
             }
         });
     })();
