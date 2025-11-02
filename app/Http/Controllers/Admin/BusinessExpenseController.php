@@ -200,18 +200,93 @@ class BusinessExpenseController extends Controller
         $expenses = RecurringExpense::where('status', RecurringExpense::STATUS_ACTIVE)->get();
         $thisMonth = 0.0;
         $nextMonth = 0.0;
+        
+        $thisMonthDate = $now->copy()->startOfMonth();
+        $nextMonthDate = $now->copy()->addMonth()->startOfMonth();
+        
         foreach ($expenses as $exp) {
-            if ($exp->isActiveInMonth((int) $now->format('n'))) {
-                $thisMonth += (float) $exp->unit_amount * (int) $exp->quantity;
+            // Check this month
+            $canIncludeThisMonth = true;
+            if ($exp->start_date && Carbon::parse($exp->start_date)->gt($thisMonthDate->copy()->endOfMonth())) {
+                $canIncludeThisMonth = false; // Expense hasn't started yet
             }
-            $nm = $now->copy()->addMonth();
-            if ($exp->isActiveInMonth((int) $nm->format('n'))) {
-                $nextMonth += (float) $exp->unit_amount * (int) $exp->quantity;
+            if ($exp->end_date && Carbon::parse($exp->end_date)->lt($thisMonthDate)) {
+                $canIncludeThisMonth = false; // Expense has ended
+            }
+            
+            if ($canIncludeThisMonth && $exp->isActiveInMonth((int) $now->format('n'))) {
+                if ($this->shouldIncludeExpenseForMonth($exp, $thisMonthDate)) {
+                    $thisMonth += (float) $exp->unit_amount * (int) $exp->quantity;
+                }
+            }
+            
+            // Check next month
+            $canIncludeNextMonth = true;
+            if ($exp->start_date && Carbon::parse($exp->start_date)->gt($nextMonthDate->copy()->endOfMonth())) {
+                $canIncludeNextMonth = false; // Expense won't have started yet
+            }
+            if ($exp->end_date && Carbon::parse($exp->end_date)->lt($nextMonthDate)) {
+                $canIncludeNextMonth = false; // Expense will have ended
+            }
+            
+            if ($canIncludeNextMonth && $exp->isActiveInMonth((int) $nextMonthDate->format('n'))) {
+                if ($this->shouldIncludeExpenseForMonth($exp, $nextMonthDate)) {
+                    $nextMonth += (float) $exp->unit_amount * (int) $exp->quantity;
+                }
             }
         }
+        
         return [
             'this_month_total' => number_format($thisMonth, 2, '.', ''),
             'next_month_total' => number_format($nextMonth, 2, '.', ''),
         ];
+    }
+    
+    /**
+     * Check if an expense should be included for a given month based on frequency
+     */
+    private function shouldIncludeExpenseForMonth($expense, $monthDate): bool
+    {
+        switch ($expense->frequency) {
+            case RecurringExpense::FREQUENCY_MONTHLY:
+            case RecurringExpense::FREQUENCY_WEEKLY:
+                return true; // Always include monthly/weekly expenses if they're active
+            
+            case RecurringExpense::FREQUENCY_QUARTERLY:
+                if (!$expense->start_date) {
+                    return false;
+                }
+                $startMonth = Carbon::parse($expense->start_date)->month;
+                // Check if the month is in the same position within the quarter cycle
+                // (e.g., if start is Jan, include Jan, Apr, Jul, Oct)
+                $monthsDifference = ($monthDate->month - $startMonth + 12) % 12;
+                return $monthsDifference % 3 === 0;
+            
+            case RecurringExpense::FREQUENCY_YEARLY:
+                // For yearly expenses, next_due_date takes precedence if set
+                if ($expense->next_due_date) {
+                    $dueDate = Carbon::parse($expense->next_due_date);
+                    // Check if this month matches the due date month
+                    if ($monthDate->year === $dueDate->year && $monthDate->month === $dueDate->month) {
+                        return true;
+                    }
+                }
+                // Fallback to start_date if next_due_date not set
+                if ($expense->start_date) {
+                    $startDate = Carbon::parse($expense->start_date);
+                    $startMonth = $startDate->month;
+                    // Check if the month matches and the expense has actually started
+                    if ((int) $monthDate->format('n') === $startMonth) {
+                        if ($monthDate->year > $startDate->year || 
+                            ($monthDate->year === $startDate->year && $monthDate->month >= $startDate->month)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            
+            default:
+                return true;
+        }
     }
 }
