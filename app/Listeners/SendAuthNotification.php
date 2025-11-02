@@ -11,8 +11,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendAuthNotification
+class SendAuthNotification implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -64,11 +65,18 @@ class SendAuthNotification
             }
             
             // Determine authentication method based on request
+            // Use current route name safely to avoid session issues
             $method = 'Email'; // Default
-            if (Request::routeIs('login.google.callback')) {
-                $method = 'Google OAuth';
-            } elseif (Request::routeIs('login.google-one-tap.callback')) {
-                $method = 'Google One Tap';
+            try {
+                $currentRoute = Request::route() ? Request::route()->getName() : null;
+                if ($currentRoute === 'login.google.callback') {
+                    $method = 'Google OAuth';
+                } elseif ($currentRoute === 'login.google-one-tap.callback') {
+                    $method = 'Google One Tap';
+                }
+            } catch (\Exception $e) {
+                // If we can't get route info, default to Email
+                Log::debug('Could not determine login method, defaulting to Email', ['error' => $e->getMessage()]);
             }
             
             // Check if the user is a supplier
