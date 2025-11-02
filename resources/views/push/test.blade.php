@@ -1,5 +1,12 @@
 @extends('layouts.app')
 
+@push('head')
+<script>
+    // Disable user behavior tracking on push test page
+    window.userBehaviorTrackingDisabled = true;
+</script>
+@endpush
+
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-2xl mx-auto">

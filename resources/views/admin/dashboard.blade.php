@@ -27,8 +27,8 @@
     <div class="mb-8">
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <!-- Combined Revenue Card -->
-            <div class="group relative overflow-hidden rounded-lg bg-gradient-to-br from-green-50 to-emerald-100 p-4 shadow-sm ring-1 ring-green-200/50 transition-all duration-300 hover:shadow-md hover:ring-green-300/50">
-                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-green-200/30 transition-all duration-300 group-hover:scale-110"></div>
+            <div class="relative overflow-hidden rounded-lg bg-gradient-to-br from-green-50 to-emerald-100 p-4 shadow-sm ring-1 ring-green-200/50 transition-all duration-300 hover:shadow-md hover:ring-green-300/50">
+                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-green-200/30"></div>
                 <div class="relative">
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-green-500 shadow-sm">
@@ -60,8 +60,8 @@
             </div>
 
             <!-- Combined Cash Flow Card -->
-            <div class="group relative overflow-hidden rounded-lg bg-gradient-to-br from-teal-50 to-cyan-100 p-4 shadow-sm ring-1 ring-teal-200/50 transition-all duration-300 hover:shadow-md hover:ring-teal-300/50">
-                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-teal-200/30 transition-all duration-300 group-hover:scale-110"></div>
+            <div class="relative overflow-hidden rounded-lg bg-gradient-to-br from-teal-50 to-cyan-100 p-4 shadow-sm ring-1 ring-teal-200/50 transition-all duration-300 hover:shadow-md hover:ring-teal-300/50">
+                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-teal-200/30"></div>
                 <div class="relative">
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-500 shadow-sm">
@@ -108,8 +108,8 @@
         </div>
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <!-- This Month Card -->
-            <div class="group relative overflow-hidden rounded-lg bg-gradient-to-br from-orange-50 to-amber-100 p-4 shadow-sm ring-1 ring-orange-200/50 transition-all duration-300 hover:shadow-md hover:ring-orange-300/50">
-                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-orange-200/30 transition-all duration-300 group-hover:scale-110"></div>
+            <div class="relative overflow-hidden rounded-lg bg-gradient-to-br from-orange-50 to-amber-100 p-4 shadow-sm ring-1 ring-orange-200/50 transition-all duration-300 hover:shadow-md hover:ring-orange-300/50">
+                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-orange-200/30"></div>
                 <div class="relative">
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 shadow-sm">
@@ -129,8 +129,8 @@
             </div>
 
             <!-- Next Month Card -->
-            <div class="group relative overflow-hidden rounded-lg bg-gradient-to-br from-red-50 to-rose-100 p-4 shadow-sm ring-1 ring-red-200/50 transition-all duration-300 hover:shadow-md hover:ring-red-300/50">
-                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-red-200/30 transition-all duration-300 group-hover:scale-110"></div>
+            <div class="relative overflow-hidden rounded-lg bg-gradient-to-br from-red-50 to-rose-100 p-4 shadow-sm ring-1 ring-red-200/50 transition-all duration-300 hover:shadow-md hover:ring-red-300/50">
+                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-red-200/30"></div>
                 <div class="relative">
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-red-500 shadow-sm">
@@ -157,8 +157,8 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
             <!-- Peak Sales Months -->
-            <div class="group relative overflow-hidden rounded-lg bg-gradient-to-br from-yellow-50 to-orange-100 p-4 shadow-sm ring-1 ring-yellow-200/50 transition-all duration-300 hover:shadow-md hover:ring-yellow-300/50">
-                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-yellow-200/30 transition-all duration-300 group-hover:scale-110"></div>
+            <div class="relative overflow-hidden rounded-lg bg-gradient-to-br from-yellow-50 to-orange-100 p-4 shadow-sm ring-1 ring-yellow-200/50 transition-all duration-300 hover:shadow-md hover:ring-yellow-300/50">
+                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-yellow-200/30"></div>
                 <div class="relative">
                     <div class="flex items-center justify-between">
                         <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-yellow-500 shadow-sm">
@@ -207,8 +207,8 @@
             </div>
 
             <!-- Zero Sales Months -->
-            <div class="group relative overflow-hidden rounded-lg bg-gradient-to-br from-red-50 to-pink-100 p-4 shadow-sm ring-1 ring-red-200/50 transition-all duration-300 hover:shadow-md hover:ring-red-300/50">
-                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-red-200/30 transition-all duration-300 group-hover:scale-110"></div>
+            <div class="relative overflow-hidden rounded-lg bg-gradient-to-br from-red-50 to-pink-100 p-4 shadow-sm ring-1 ring-red-200/50 transition-all duration-300 hover:shadow-md hover:ring-red-300/50">
+                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-red-200/30"></div>
                 <div class="relative">
                     <div class="flex items-center justify-between">
                         <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-red-500 shadow-sm">

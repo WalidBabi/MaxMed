@@ -19,6 +19,7 @@ use App\Http\Middleware\PreventBackHistory;
 use App\Http\Middleware\CheckSupplierOnboarding;
 use App\Http\Middleware\PermissionMiddleware;
 use App\Http\Middleware\RoleMiddleware;
+use App\Http\Middleware\AuthenticatePushToken;
 
 class Kernel extends HttpKernel
 {
@@ -95,5 +96,6 @@ class Kernel extends HttpKernel
         'seo-headers' => \App\Http\Middleware\SeoHeadersMiddleware::class,
         'query-optimization' => \App\Http\Middleware\QueryOptimizationMiddleware::class,
         'prevent-crawler-indexing' => \App\Http\Middleware\PreventCrawlerIndexing::class,
+        'push.token' => AuthenticatePushToken::class,
     ];
 } 

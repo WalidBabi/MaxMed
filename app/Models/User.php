@@ -341,6 +341,14 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Get push notification tokens for this user
+     */
+    public function pushNotificationTokens(): HasMany
+    {
+        return $this->hasMany(PushNotificationToken::class);
+    }
+
+    /**
      * Get or create the supplier's brand based on their company name
      */
     public function getOrCreateSupplierBrand()
