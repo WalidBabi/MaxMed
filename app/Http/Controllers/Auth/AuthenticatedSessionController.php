@@ -102,6 +102,8 @@ class AuthenticatedSessionController extends Controller
                 ]);
                 
                 $request->session()->regenerate();
+                // Also regenerate CSRF token post-auth to ensure fresh token on the redirected page
+                $request->session()->regenerateToken();
                 
                 Log::info('Step 4: Session regenerated successfully', [
                     'session_id_after' => session()->getId()
@@ -235,8 +237,8 @@ class AuthenticatedSessionController extends Controller
                 
                 try {
                     $redirect = $shouldClearIntended ? 
-                        redirect()->route('admin.dashboard') : 
-                        redirect()->intended(route('admin.dashboard'));
+                        redirect()->route('admin.dashboard', [], 303) : 
+                        redirect()->intended(route('admin.dashboard'), 303);
                     
                     Log::info('Step 8: Admin redirect created successfully', [
                         'route' => $route,
@@ -263,8 +265,8 @@ class AuthenticatedSessionController extends Controller
                 
                 try {
                     $redirect = $shouldClearIntended ? 
-                        redirect()->route('supplier.dashboard') : 
-                        redirect()->intended(route('supplier.dashboard'));
+                        redirect()->route('supplier.dashboard', [], 303) : 
+                        redirect()->intended(route('supplier.dashboard'), 303);
                     
                     Log::info('Step 8: Supplier redirect created successfully', [
                         'route' => $route,
@@ -289,8 +291,8 @@ class AuthenticatedSessionController extends Controller
             
             try {
                 $redirect = $shouldClearIntended ? 
-                    redirect()->route('dashboard') : 
-                    redirect()->intended(route('dashboard'));
+                    redirect()->route('dashboard', [], 303) : 
+                    redirect()->intended(route('dashboard'), 303);
                 
                 Log::info('Step 8: Regular user redirect created successfully', [
                     'route' => $route,
