@@ -12,16 +12,13 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        'check-availability/*'
-        ,
+        'check-availability/*',
         'stripe/checkout',
         'stripe/success',
         'quotation/*',
         'cart/*',
-        'api/user-behavior/*'
-
-
-
+        'api/user-behavior/*',
+        'push/*'
     ];
 
     protected function tokensMatch($request)
