@@ -254,7 +254,7 @@
 
                         <!-- User menu -->
                         <div class="relative" x-data="{ open: false }">
-                            <button type="button" class="-m-1.5 flex items-center p-1.5" @click="open = !open">
+                            <button type="button" class="-m-1.5 flex items-center p-1.5" @click="open = !open; sidebarOpen = false;">
                                 <span class="sr-only">Open user menu</span>
                                 @if(Auth::user()->profile_photo)
                                     <img class="h-8 w-8 rounded-full bg-gray-50 object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}">
