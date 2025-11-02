@@ -24,13 +24,17 @@ self.addEventListener('push', (event) => {
 
   event.waitUntil(self.registration.showNotification(title, options));
   // Also ping server so we can verify delivery on backend logs
-  event.waitUntil(
-    fetch('/push/received', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, receivedAt: Date.now() })
-    }).catch(() => undefined)
-  );
+  event.waitUntil((async () => {
+    try {
+      const sub = await self.registration.pushManager.getSubscription();
+      const payload = { title, receivedAt: Date.now(), endpoint: sub ? sub.endpoint : null };
+      await fetch('/push/received', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch (e) {}
+  })());
 });
 
 self.addEventListener('notificationclick', (event) => {

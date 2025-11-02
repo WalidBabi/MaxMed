@@ -15,7 +15,7 @@
             
             <div class="mb-6">
                 <div class="p-4 bg-blue-50 rounded-lg mb-4">
-                    <p class="text-sm text-gray-700"><strong>Subscriptions found:</strong> <span id="subCount">{{ $subscriptionCount }}</span></p>
+                    <p class="text-sm text-gray-700"><strong>Your active subscriptions:</strong> <span id="subCount">{{ $subscriptionCount }}</span></p>
                     @if($userId)
                         <p class="text-sm text-gray-700"><strong>User ID:</strong> {{ $userId }}</p>
                     @endif

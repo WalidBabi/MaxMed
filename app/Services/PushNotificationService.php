@@ -21,7 +21,16 @@ class PushNotificationService
 
     public function sendToUser(int $userId, string $title, string $body = '', string $url = '/'): int
     {
-        $subs = DB::table('push_subscriptions')->where('user_id', $userId)->get();
+        // Skip if user muted push notifications
+        $muted = (bool) DB::table('users')->where('id', $userId)->value('push_muted');
+        if ($muted) {
+            return 0;
+        }
+
+        $subs = DB::table('push_subscriptions')
+            ->where('user_id', $userId)
+            ->where('is_enabled', true)
+            ->get();
         if ($subs->isEmpty()) {
             return 0;
         }
@@ -48,7 +57,15 @@ class PushNotificationService
 
     public function broadcast(string $title, string $body = '', string $url = '/'): int
     {
-        $subs = DB::table('push_subscriptions')->limit(1000)->get();
+        $subs = DB::table('push_subscriptions')
+            ->leftJoin('users', 'users.id', '=', 'push_subscriptions.user_id')
+            ->where('push_subscriptions.is_enabled', true)
+            ->where(function($q) {
+                $q->whereNull('users.push_muted')->orWhere('users.push_muted', false);
+            })
+            ->select('push_subscriptions.*')
+            ->limit(1000)
+            ->get();
         if ($subs->isEmpty()) {
             return 0;
         }

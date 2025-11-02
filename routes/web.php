@@ -1995,6 +1995,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin/performance')->group(functio
     Route::get('/recommendations', [\App\Http\Controllers\PerformanceController::class, 'recommendations'])->name('admin.performance.recommendations');
 });
 
+// Admin push management
+Route::middleware(['auth', 'admin'])->prefix('admin/push')->group(function () {
+    Route::get('/subscriptions', [\App\Http\Controllers\PushSubscriptionController::class, 'listAdmin'])->name('admin.push.manage');
+    Route::post('/broadcast', [\App\Http\Controllers\PushSubscriptionController::class, 'broadcastSelected'])->name('admin.push.broadcast');
+});
+
+// Admin user push mute toggle
+Route::middleware(['auth', 'admin'])->patch('/admin/users/{userId}/push-mute', [\App\Http\Controllers\PushSubscriptionController::class, 'toggleUserMute'])->name('admin.users.push-mute');
+
 // Public route for VAPID public key (safe to expose)
 Route::get('/push/public-key', [\App\Http\Controllers\PushSubscriptionController::class, 'publicKey'])
     ->name('push.public-key');
@@ -2006,6 +2015,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/push/unsubscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'unsubscribe'])->name('push.unsubscribe');
     Route::get('/push/test', [\App\Http\Controllers\PushSubscriptionController::class, 'testPage'])->name('push.test-page');
     Route::post('/push/test', [\App\Http\Controllers\PushSubscriptionController::class, 'test'])->name('push.test');
+    Route::get('/push/subscriptions', [\App\Http\Controllers\PushSubscriptionController::class, 'listUser'])->name('push.manage');
+    Route::patch('/push/subscriptions/{id}/toggle', [\App\Http\Controllers\PushSubscriptionController::class, 'toggle'])->name('push.toggle');
+    Route::delete('/push/subscriptions/{id}', [\App\Http\Controllers\PushSubscriptionController::class, 'destroy'])->name('push.destroy');
+    Route::post('/push/subscriptions/{id}/test', [\App\Http\Controllers\PushSubscriptionController::class, 'testSingle'])->name('push.test-single');
 });
 
 // Log push receipt from service worker (no CSRF, public)
@@ -2016,6 +2029,11 @@ Route::post('/push/received', function(\Illuminate\Http\Request $request) {
         'user_agent' => substr((string) $request->userAgent(), 0, 255),
         'payload' => $request->all(),
     ]);
+    if ($request->filled('endpoint')) {
+        \Illuminate\Support\Facades\DB::table('push_subscriptions')
+            ->where('endpoint', $request->string('endpoint'))
+            ->update(['last_received_at' => now(), 'updated_at' => now()]);
+    }
     return response()->json(['ok' => true]);
 })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])->name('push.received');
 

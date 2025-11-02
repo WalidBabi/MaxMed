@@ -170,6 +170,7 @@
                         <ul x-show="open" x-transition class="mt-1 px-2 space-y-1">
                             @if(\App\Services\AccessControlService::canAccess(Auth::user(), 'admin.users.manage'))
                             <li><a href="{{ route('admin.users.index') }}" class="group flex gap-x-3 rounded-md py-2 pl-9 pr-2 text-sm leading-6 {{ request()->routeIs('admin.users.*') ? 'text-indigo-600 bg-gray-50' : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50' }}">Users</a></li>
+                            <li><a href="{{ route('admin.push.manage') }}" class="group flex gap-x-3 rounded-md py-2 pl-9 pr-2 text-sm leading-6 {{ request()->routeIs('admin.push.*') ? 'text-indigo-600 bg-gray-50' : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50' }}">Notifications</a></li>
                             @endif
                             @if(\App\Services\AccessControlService::canAccess(Auth::user(), 'admin.roles.manage'))
                             <li><a href="{{ route('admin.roles.index') }}" class="group flex gap-x-3 rounded-md py-2 pl-9 pr-2 text-sm leading-6 {{ request()->routeIs('admin.roles.*') ? 'text-indigo-600 bg-gray-50' : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-50' }}">Roles</a></li>
