@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 class UserBehaviorController extends Controller
 {
@@ -144,7 +145,7 @@ class UserBehaviorController extends Controller
                     'ip_address' => $ipAddress,
                     'event_type' => $event['event_type'],
                     'event_data' => json_encode($event['event_data'] ?? []),
-                    'timestamp' => $event['timestamp'] ?? now(),
+                    'timestamp' => $this->normalizeEventTimestamp($event['timestamp'] ?? null),
                     'duration' => $event['duration'] ?? null,
                     'scroll_depth' => $event['scroll_depth'] ?? null,
                     'mouse_position' => json_encode($event['mouse_position'] ?? null),
@@ -185,6 +186,30 @@ class UserBehaviorController extends Controller
                 'success' => false,
                 'message' => 'Failed to track events',
             ], 500);
+        }
+    }
+
+    /**
+     * Normalize incoming event timestamps to a MySQL-friendly datetime string.
+     */
+    private function normalizeEventTimestamp($value): string
+    {
+        // If missing or empty, use now()
+        if (empty($value)) {
+            return now()->toDateTimeString();
+        }
+
+        try {
+            // Accept ISO 8601 and other common formats from clients
+            // Carbon::parse handles "2025-11-02T07:45:35.123Z" and returns in app timezone
+            return Carbon::parse($value)->toDateTimeString();
+        } catch (\Throwable $e) {
+            // Fallback to now() on parse failure to avoid DB errors
+            Log::warning('UserBehaviorController@normalizeEventTimestamp - Failed to parse timestamp, using now()', [
+                'original' => $value,
+                'error' => $e->getMessage(),
+            ]);
+            return now()->toDateTimeString();
         }
     }
 

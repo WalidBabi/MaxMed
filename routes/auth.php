@@ -13,7 +13,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\SupplierRegistrationController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['guest', 'prevent-back'])->group(function () {
+Route::middleware(['guest', \App\Http\Middleware\PreventBackHistory::class])->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
         ->name('register');
 
