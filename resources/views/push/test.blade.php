@@ -32,6 +32,39 @@
                         </p>
                     </div>
                 @endif
+                
+                <div id="permissionDeniedHelp" class="hidden p-4 bg-red-50 rounded-lg mb-4 border border-red-200">
+                    <p class="text-sm font-semibold text-red-900 mb-2">⚠️ Notifications are currently blocked</p>
+                    <p class="text-sm text-red-800 mb-3">To enable push notifications, you need to allow notifications in your browser settings:</p>
+                    <div class="text-sm text-red-700 space-y-2">
+                        <p><strong>On Mobile:</strong></p>
+                        <ul class="list-disc list-inside ml-2 space-y-1">
+                            <li><strong>Chrome (Android):</strong> Menu → Settings → Site Settings → Notifications → Allow</li>
+                            <li><strong>Safari (iOS):</strong> Settings → Safari → Notifications → Allow</li>
+                            <li><strong>Firefox (Android):</strong> Menu → Settings → Notifications → Allow</li>
+                        </ul>
+                        <p class="mt-2"><strong>On Desktop:</strong></p>
+                        <ul class="list-disc list-inside ml-2 space-y-1">
+                            <li><strong>Chrome:</strong> Click the lock/info icon in address bar → Site settings → Notifications → Allow</li>
+                            <li><strong>Firefox:</strong> Click the lock icon → More Information → Permissions → Notifications → Allow</li>
+                            <li><strong>Safari:</strong> Safari → Settings for This Website → Notifications → Allow</li>
+                        </ul>
+                        <p class="mt-3 text-red-800 font-medium">After enabling notifications, refresh this page.</p>
+                    </div>
+                    <button type="button" onclick="window.location.reload()" class="mt-3 px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700">
+                        Refresh Page After Enabling
+                    </button>
+                </div>
+                
+                <div id="pwaInfo" class="hidden p-4 bg-blue-50 rounded-lg mb-4 border border-blue-200">
+                    <p class="text-sm font-semibold text-blue-900 mb-2">ℹ️ App Mode Detected</p>
+                    <p class="text-sm text-blue-800 mb-2">
+                        This site is running as an installed app (PWA). Push notifications work the same way in app mode.
+                    </p>
+                    <p class="text-sm text-blue-700">
+                        If notifications are blocked, you may need to enable them in the app settings rather than browser settings.
+                    </p>
+                </div>
             </div>
 
             <form id="testForm" class="space-y-4">
@@ -85,9 +118,19 @@
         // Check notification permission
         if ('Notification' in window) {
             const perm = Notification.permission;
-            const permText = perm === 'granted' ? '✅ Granted' : perm === 'denied' ? '❌ Denied' : '⏳ Default (not asked)';
+            const permText = perm === 'granted' ? '✅ Granted' : perm === 'denied' ? '❌ Denied (blocked - check browser settings)' : '⏳ Default (not asked)';
             const permColor = perm === 'granted' ? 'text-green-600' : perm === 'denied' ? 'text-red-600' : 'text-yellow-600';
             updateStatus('permissionStatus', permText, permColor);
+            
+            // Show help message if denied
+            const helpDiv = document.getElementById('permissionDeniedHelp');
+            if (helpDiv) {
+                if (perm === 'denied') {
+                    helpDiv.classList.remove('hidden');
+                } else {
+                    helpDiv.classList.add('hidden');
+                }
+            }
         } else {
             updateStatus('permissionStatus', '❌ Not supported', 'text-red-600');
         }
@@ -117,6 +160,14 @@
         } else {
             updateStatus('swStatus', '❌ Not supported', 'text-red-600');
             updateStatus('subscriptionStatus', '❌ Service workers not supported', 'text-red-600');
+        }
+        
+        // Check if running as PWA
+        if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+            const pwaInfo = document.getElementById('pwaInfo');
+            if (pwaInfo) {
+                pwaInfo.classList.remove('hidden');
+            }
         }
     };
 
@@ -198,6 +249,8 @@
                             updateStatus('subscriptionStatus', '❌ Error: ' + e.message, 'text-red-600');
                             console.error('Subscription check error:', e);
                         }
+                    } else if (Notification.permission === 'denied') {
+                        updateStatus('subscriptionStatus', '❌ Permission denied. Please enable notifications in browser settings (see instructions below).', 'text-red-600');
                     } else {
                         updateStatus('subscriptionStatus', '⏳ Permission not granted. Interact with page to request permission.', 'text-yellow-600');
                     }
@@ -206,6 +259,21 @@
                 updateStatus('subscriptionStatus', '❌ Error: ' + e.message, 'text-red-600');
             }
         });
+    }
+    
+    // Periodically check if permission changes (in case user enables it in settings)
+    if ('Notification' in window && Notification.permission === 'denied') {
+        setInterval(() => {
+            if (Notification.permission === 'granted') {
+                updateStatus('subscriptionStatus', '✅ Permission granted! Attempting subscription...', 'text-green-600');
+                // Permission was enabled, try to subscribe
+                if (window.subscribeToPush) {
+                    window.subscribeToPush().catch(e => {
+                        console.error('Subscription attempt after permission change:', e);
+                    });
+                }
+            }
+        }, 3000); // Check every 3 seconds
     }
 })();
 </script>

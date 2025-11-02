@@ -404,8 +404,19 @@
         async function subscribeToPush() {
             try {
                 // Register service worker and wait for it to be ready
-                const registration = await navigator.serviceWorker.register('/service-worker.js');
+                // Check for existing registration first
+                let registration = await navigator.serviceWorker.getRegistration();
+                if (!registration) {
+                    registration = await navigator.serviceWorker.register('/service-worker.js', {
+                        scope: '/'
+                    });
+                }
                 await navigator.serviceWorker.ready;
+                
+                // Log if site is installed as PWA
+                if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+                    console.log('[Push] Site is running as PWA (installed app)');
+                }
                 
                 // Check current permission status first
                 let permission = Notification.permission;
