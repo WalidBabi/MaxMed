@@ -100,7 +100,7 @@ class UserBehaviorTracker {
         // Track before unload
         window.addEventListener('beforeunload', () => {
             this.trackTimeOnPage();
-            this.flushBatch();
+            this.flushBatch(true);
         });
 
         // Track copy, paste, cut
@@ -458,12 +458,18 @@ class UserBehaviorTracker {
     /**
      * Send batch of events
      */
-    async flushBatch() {
+    async flushBatch(isUnload = false) {
         if (this.events.length === 0) return;
         const eventsToSend = [...this.events];
         this.events = [];
         try {
             console.log('[UserBehaviorTracker] flushBatch payload:', eventsToSend);
+            const payload = JSON.stringify({ events: eventsToSend });
+            if (isUnload && navigator.sendBeacon) {
+                const blob = new Blob([payload], { type: 'application/json' });
+                navigator.sendBeacon(this.options.batchEndpoint, blob);
+                return;
+            }
             const response = await fetch(this.options.batchEndpoint, {
                 method: 'POST',
                 headers: {
@@ -471,7 +477,7 @@ class UserBehaviorTracker {
                     'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRF-TOKEN': this.getCsrfToken()
                 },
-                body: JSON.stringify({ events: eventsToSend })
+                body: payload
             });
             if (!response.ok) {
                 console.warn('UserBehaviorTracker: Failed to send batch', response.status);
