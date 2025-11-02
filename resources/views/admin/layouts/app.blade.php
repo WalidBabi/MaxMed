@@ -379,6 +379,28 @@
             return outputArray;
         };
         
+        // Convert Uint8Array to base64url string
+        const uint8ArrayToBase64Url = (array) => {
+            const base64 = btoa(String.fromCharCode.apply(null, array));
+            return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+        };
+        
+        // Convert PushSubscription to JSON format
+        const subscriptionToJSON = (subscription) => {
+            // If toJSON exists, use it
+            if (subscription.toJSON && typeof subscription.toJSON === 'function') {
+                return subscription.toJSON();
+            }
+            // Otherwise, manually construct it
+            return {
+                endpoint: subscription.endpoint,
+                keys: {
+                    p256dh: uint8ArrayToBase64Url(new Uint8Array(subscription.getKey('p256dh'))),
+                    auth: uint8ArrayToBase64Url(new Uint8Array(subscription.getKey('auth')))
+                }
+            };
+        };
+        
         async function subscribeToPush() {
             try {
                 // Register service worker and wait for it to be ready
@@ -418,7 +440,10 @@
                 }
                 
                 // Send subscription to server
-                // PushSubscription has a toJSON() method that formats it correctly
+                console.log('[Push] Sending subscription to server...');
+                // Convert subscription to proper JSON format
+                const subscriptionData = subscriptionToJSON(subscription);
+                console.log('[Push] Subscription data:', subscriptionData);
                 const response = await fetch('/push/subscribe', {
                     method: 'POST',
                     headers: {
@@ -427,12 +452,15 @@
                         'X-Requested-With': 'XMLHttpRequest',
                         'X-CSRF-TOKEN': csrf
                     },
-                    body: JSON.stringify(subscription)
+                    body: JSON.stringify(subscriptionData)
                 });
                 
                 if (!response.ok) {
-                    const error = await response.json().catch(() => ({ message: 'Unknown error' }));
-                    console.error('Failed to save subscription:', error);
+                    const errorData = await response.json().catch(() => ({ error: 'Unknown error', message: 'Unknown error' }));
+                    const errorMsg = errorData.message || errorData.error || 'Server error';
+                    console.error('[Push] Failed to save subscription:', errorData);
+                    console.error('[Push] Response status:', response.status, response.statusText);
+                    console.error('[Push] Error message:', errorMsg);
                     return;
                 }
                 

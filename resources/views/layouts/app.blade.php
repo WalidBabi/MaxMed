@@ -972,9 +972,19 @@
                     });
                     
                     if (!response.ok) {
-                        const error = await response.json().catch(() => ({ message: 'Unknown error', status: response.status }));
-                        console.error('[Push] Failed to save subscription:', error);
+                        const errorData = await response.json().catch(() => ({ error: 'Unknown error', message: 'Unknown error' }));
+                        const errorMsg = errorData.message || errorData.error || 'Server error';
+                        console.error('[Push] Failed to save subscription:', errorData);
                         console.error('[Push] Response status:', response.status, response.statusText);
+                        console.error('[Push] Error message:', errorMsg);
+                        // Show error in console and alert if on test page
+                        if (window.location.pathname === '/push/test') {
+                            const statusEl = document.getElementById('subscriptionStatus');
+                            if (statusEl) {
+                                statusEl.textContent = '❌ Failed to save: ' + errorMsg;
+                                statusEl.className = 'text-sm text-red-600';
+                            }
+                        }
                         return;
                     }
                     

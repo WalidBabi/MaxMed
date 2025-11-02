@@ -46,30 +46,95 @@ class PushSubscriptionController extends Controller
      */
     public function subscribe(Request $request): JsonResponse
     {
-        // This will work with either Auth::check() OR the push.token middleware
-        $user = $request->user();
-        
-        if (!$user) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        try {
+            // This will work with either Auth::check() OR the push.token middleware
+            $user = $request->user();
+            
+            if (!$user) {
+                \Log::warning('Push subscription attempt without authentication', [
+                    'endpoint' => $request->input('endpoint'),
+                    'user_agent' => $request->userAgent(),
+                ]);
+                return response()->json(['error' => 'Unauthorized', 'message' => 'Authentication required'], 401);
+            }
+
+            $data = $request->validate([
+                'endpoint' => 'required|string|max:500',
+                'keys.auth' => 'required|string|max:255',
+                'keys.p256dh' => 'required|string|max:255',
+            ]);
+
+            // Log the subscription attempt
+            \Log::info('Push subscription attempt', [
+                'user_id' => $user->id,
+                'endpoint' => substr($data['endpoint'], 0, 100),
+                'p256dh_length' => strlen($data['keys']['p256dh']),
+                'auth_length' => strlen($data['keys']['auth']),
+            ]);
+
+            // Check if keys are within length limits
+            if (strlen($data['keys']['p256dh']) > 255) {
+                \Log::error('Push subscription: p256dh key too long', [
+                    'length' => strlen($data['keys']['p256dh']),
+                    'user_id' => $user->id,
+                ]);
+                return response()->json([
+                    'error' => 'Invalid subscription',
+                    'message' => 'p256dh key is too long (max 255 characters)',
+                ], 400);
+            }
+
+            if (strlen($data['keys']['auth']) > 255) {
+                \Log::error('Push subscription: auth key too long', [
+                    'length' => strlen($data['keys']['auth']),
+                    'user_id' => $user->id,
+                ]);
+                return response()->json([
+                    'error' => 'Invalid subscription',
+                    'message' => 'auth key is too long (max 255 characters)',
+                ], 400);
+            }
+
+            DB::table('push_subscriptions')->upsert([
+                'endpoint' => $data['endpoint'],
+                'p256dh' => $data['keys']['p256dh'],
+                'auth' => $data['keys']['auth'],
+                'user_id' => $user->id,
+                'user_agent' => substr((string) $request->userAgent(), 0, 255),
+                'updated_at' => now(),
+                'created_at' => now(),
+            ], ['endpoint'], ['p256dh', 'auth', 'user_id', 'user_agent', 'updated_at']);
+
+            \Log::info('Push subscription saved successfully', [
+                'user_id' => $user->id,
+                'endpoint' => substr($data['endpoint'], 0, 100),
+            ]);
+
+            return response()->json(['status' => 'subscribed']);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Push subscription validation error', [
+                'errors' => $e->errors(),
+                'input' => $request->all(),
+            ]);
+            return response()->json([
+                'error' => 'Validation failed',
+                'message' => 'Invalid subscription data',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Push subscription error', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+                'user_id' => $request->user()?->id,
+                'endpoint' => $request->input('endpoint'),
+            ]);
+            return response()->json([
+                'error' => 'Server error',
+                'message' => 'Failed to save subscription: ' . $e->getMessage(),
+            ], 500);
         }
-
-        $data = $request->validate([
-            'endpoint' => 'required|string',
-            'keys.auth' => 'required|string',
-            'keys.p256dh' => 'required|string',
-        ]);
-
-        DB::table('push_subscriptions')->upsert([
-            'endpoint' => $data['endpoint'],
-            'p256dh' => $data['keys']['p256dh'],
-            'auth' => $data['keys']['auth'],
-            'user_id' => $user->id,
-            'user_agent' => substr((string) $request->userAgent(), 0, 255),
-            'updated_at' => now(),
-            'created_at' => now(),
-        ], ['endpoint'], ['p256dh', 'auth', 'user_id', 'user_agent', 'updated_at']);
-
-        return response()->json(['status' => 'subscribed']);
     }
 
     public function unsubscribe(Request $request): JsonResponse

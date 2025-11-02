@@ -178,8 +178,10 @@
                                     updateStatus('subscriptionStatus', '✅ Subscription saved! Refreshing...', 'text-green-600');
                                     setTimeout(() => window.location.reload(), 1500);
                                 } else {
-                                    const error = await response.json().catch(() => ({ message: 'Unknown error' }));
-                                    updateStatus('subscriptionStatus', '❌ Failed to save: ' + (error.message || 'Unknown error'), 'text-red-600');
+                                    const errorData = await response.json().catch(() => ({ error: 'Unknown error', message: 'Unknown error' }));
+                                    const errorMsg = errorData.message || errorData.error || 'Unknown error';
+                                    console.error('[Push] Failed to save subscription:', errorData);
+                                    updateStatus('subscriptionStatus', '❌ Failed to save: ' + errorMsg, 'text-red-600');
                                 }
                             } else {
                                 // No subscription yet, try calling the global function if available
