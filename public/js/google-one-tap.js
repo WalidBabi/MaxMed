@@ -42,6 +42,18 @@ function handleCredentialResponse(response) {
 
 // Initialize Google One Tap
 function initializeOneTap() {
+    // Do not show Google One Tap on mobile screens
+    try {
+        const isSmallViewport = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
+        const isMobileUA = /Mobi|Android|iPhone|iPad|iPod|Opera Mini|IEMobile/i.test(navigator.userAgent || '');
+        if (isSmallViewport || isMobileUA) {
+            const mobileContainer = document.getElementById('google-one-tap-container');
+            if (mobileContainer) mobileContainer.style.display = 'none';
+            return;
+        }
+    } catch (e) {
+        // If detection fails, continue gracefully
+    }
     const container = document.getElementById('google-one-tap-container');
     if (!container) {
         console.log('Google One Tap container not found');
@@ -163,6 +175,16 @@ function handleClickOutside(event) {
 document.addEventListener('DOMContentLoaded', function() {
     // Only initialize if user is not authenticated
     if (!isUserAuthenticated()) {
+        // Skip entirely on mobile devices
+        try {
+            const isSmallViewport = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
+            const isMobileUA = /Mobi|Android|iPhone|iPad|iPod|Opera Mini|IEMobile/i.test(navigator.userAgent || '');
+            if (isSmallViewport || isMobileUA) {
+                const container = document.getElementById('google-one-tap-container');
+                if (container) container.style.display = 'none';
+                return;
+            }
+        } catch (e) {}
         // Small delay to ensure Google API is loaded
         const checkGoogle = setInterval(() => {
             if (window.google && window.google.accounts && window.google.accounts.id) {
