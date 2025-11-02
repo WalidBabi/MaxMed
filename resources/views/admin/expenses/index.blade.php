@@ -350,17 +350,15 @@
                                     // Build month options: current year only, only for active months
                                     $monthOptions = [];
                                     
-                                    // Check current year - all active months up to and including current month
+                                    // Check current year - all active months for the current year
                                     foreach ($activeMonths as $monthNum) {
-                                        if ($monthNum <= $currentMonth) {
-                                            $paid = $expense->isPaidForMonth($currentYear, $monthNum);
-                                            $monthOptions[] = [
-                                                'y' => $currentYear,
-                                                'm' => $monthNum,
-                                                'label' => \Illuminate\Support\Carbon::create($currentYear, $monthNum, 1)->format('M Y'),
-                                                'paid' => $paid,
-                                            ];
-                                        }
+                                        $paid = $expense->isPaidForMonth($currentYear, $monthNum);
+                                        $monthOptions[] = [
+                                            'y' => $currentYear,
+                                            'm' => $monthNum,
+                                            'label' => \Illuminate\Support\Carbon::create($currentYear, $monthNum, 1)->format('M Y'),
+                                            'paid' => $paid,
+                                        ];
                                     }
                                     
                                     // Sort by year desc, month desc (most recent first)
