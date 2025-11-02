@@ -94,6 +94,64 @@
         </div>
     </div>
 
+    <!-- Business Expenses Section (Superadmin only) -->
+    @php
+        $isSuperAdmin = Auth::user() && (Auth::user()->hasRole('super_admin') || Auth::user()->hasRole('superadmin') || Auth::user()->hasRole('super-administrator'));
+    @endphp
+    @if($isSuperAdmin && isset($expenseKpis))
+    <div class="mb-8">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold text-gray-900">Business Expenses</h2>
+            <a href="{{ route('admin.business-expenses.index') }}" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                Manage Expenses →
+            </a>
+        </div>
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <!-- This Month Card -->
+            <div class="group relative overflow-hidden rounded-lg bg-gradient-to-br from-orange-50 to-amber-100 p-4 shadow-sm ring-1 ring-orange-200/50 transition-all duration-300 hover:shadow-md hover:ring-orange-300/50">
+                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-orange-200/30 transition-all duration-300 group-hover:scale-110"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 shadow-sm">
+                            <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs font-medium text-orange-600 uppercase tracking-wide">This Month</p>
+                            <p class="text-xs text-orange-500">Expected expenses</p>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-3xl font-bold text-gray-900">{{ number_format($expenseKpis['this_month_total'], 2) }} AED</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Month Card -->
+            <div class="group relative overflow-hidden rounded-lg bg-gradient-to-br from-red-50 to-rose-100 p-4 shadow-sm ring-1 ring-red-200/50 transition-all duration-300 hover:shadow-md hover:ring-red-300/50">
+                <div class="absolute -right-2 -top-2 h-16 w-16 rounded-full bg-red-200/30 transition-all duration-300 group-hover:scale-110"></div>
+                <div class="relative">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-red-500 shadow-sm">
+                            <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs font-medium text-red-600 uppercase tracking-wide">Next Month</p>
+                            <p class="text-xs text-red-500">Expected expenses</p>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-3xl font-bold text-gray-900">{{ number_format($expenseKpis['next_month_total'], 2) }} AED</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <!-- Performance Metrics Cards -->
     <div class="mb-8">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">

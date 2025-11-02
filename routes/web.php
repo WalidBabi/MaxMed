@@ -438,6 +438,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Product Management
         Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
+
+        // Business Expenses (superadmin only)
+        Route::get('business-expenses/forecast', [\App\Http\Controllers\Admin\BusinessExpenseController::class, 'forecast'])->name('business-expenses.forecast');
+        Route::post('business-expenses/{business_expense}/mark-paid', [\App\Http\Controllers\Admin\BusinessExpenseController::class, 'markPaid'])->name('business-expenses.mark-paid');
+        Route::resource('business-expenses', \App\Http\Controllers\Admin\BusinessExpenseController::class);
         
         // Product Specifications Management
         Route::get('product-specifications', [App\Http\Controllers\Admin\ProductSpecificationController::class, 'index'])->name('product-specifications.index');
@@ -1989,3 +1994,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin/performance')->group(functio
     Route::post('/clear-cache', [\App\Http\Controllers\PerformanceController::class, 'clearCache'])->name('admin.performance.clear-cache');
     Route::get('/recommendations', [\App\Http\Controllers\PerformanceController::class, 'recommendations'])->name('admin.performance.recommendations');
 });
+
+// Web Push (PWA) routes
+Route::get('/push/public-key', [\App\Http\Controllers\PushSubscriptionController::class, 'publicKey'])->name('push.public-key');
+Route::post('/push/subscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'subscribe'])->name('push.subscribe');
+Route::delete('/push/unsubscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'unsubscribe'])->name('push.unsubscribe');
+Route::get('/push/test', [\App\Http\Controllers\PushSubscriptionController::class, 'testPage'])->middleware('auth')->name('push.test-page');
+Route::post('/push/test', [\App\Http\Controllers\PushSubscriptionController::class, 'test'])->middleware('auth')->name('push.test');

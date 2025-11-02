@@ -362,6 +362,49 @@
     </script>
 
     @stack('scripts')
+    
+    <!-- PWA Push registration (Admin) -->
+    <script>
+    (function() {
+        if (!('serviceWorker' in navigator) || !('PushManager' in window)) { return; }
+        const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+        const getPublicKey = () => fetch('/push/public-key', { headers: { 'Accept': 'application/json' } })
+            .then(r => r.json()).then(d => d.publicKey);
+        const urlBase64ToUint8Array = (base64String) => {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const rawData = atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+            for (let i = 0; i < rawData.length; ++i) outputArray[i] = rawData.charCodeAt(i);
+            return outputArray;
+        };
+        window.addEventListener('load', async function() {
+            try {
+                const reg = await navigator.serviceWorker.register('/service-worker.js');
+                const permission = await Notification.requestPermission();
+                if (permission !== 'granted') return;
+                const existing = await reg.pushManager.getSubscription();
+                const publicKey = await getPublicKey();
+                const subscription = existing || await reg.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: urlBase64ToUint8Array(publicKey)
+                });
+                await fetch('/push/subscribe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': csrf
+                    },
+                    body: JSON.stringify(subscription)
+                });
+            } catch (e) {
+                console.warn('Push registration failed', e);
+            }
+        });
+    })();
+    </script>
 </body>
 
 </html>
