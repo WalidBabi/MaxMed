@@ -203,8 +203,34 @@ class BusinessExpenseController extends Controller
         
         $thisMonthDate = $now->copy()->startOfMonth();
         $nextMonthDate = $now->copy()->addMonth()->startOfMonth();
+        $currentYear = (int) $now->format('Y');
+        $currentMonthNum = (int) $now->format('n');
+        
+        // Breakdowns for this month
+        $thisMonthPaid = 0.0;
+        $thisMonthUnpaid = 0.0;
+        $thisMonthByFrequency = [
+            'monthly' => 0.0,
+            'yearly' => 0.0,
+            'quarterly' => 0.0,
+            'weekly' => 0.0,
+        ];
+        $thisMonthExpenses = [];
+        
+        // Breakdowns for next month
+        $nextMonthPaid = 0.0;
+        $nextMonthUnpaid = 0.0;
+        $nextMonthByFrequency = [
+            'monthly' => 0.0,
+            'yearly' => 0.0,
+            'quarterly' => 0.0,
+            'weekly' => 0.0,
+        ];
+        $nextMonthExpenses = [];
         
         foreach ($expenses as $exp) {
+            $amount = (float) $exp->unit_amount * (int) $exp->quantity;
+            
             // Check this month
             $canIncludeThisMonth = true;
             if ($exp->start_date && Carbon::parse($exp->start_date)->gt($thisMonthDate->copy()->endOfMonth())) {
@@ -214,13 +240,34 @@ class BusinessExpenseController extends Controller
                 $canIncludeThisMonth = false; // Expense has ended
             }
             
-            if ($canIncludeThisMonth && $exp->isActiveInMonth((int) $now->format('n'))) {
+            if ($canIncludeThisMonth && $exp->isActiveInMonth($currentMonthNum)) {
                 if ($this->shouldIncludeExpenseForMonth($exp, $thisMonthDate)) {
-                    $thisMonth += (float) $exp->unit_amount * (int) $exp->quantity;
+                    $thisMonth += $amount;
+                    $isPaidThisMonth = $exp->isPaidForMonth($currentYear, $currentMonthNum);
+                    if ($isPaidThisMonth) {
+                        $thisMonthPaid += $amount;
+                    } else {
+                        $thisMonthUnpaid += $amount;
+                    }
+                    
+                    $frequency = $exp->frequency ?? 'monthly';
+                    if (isset($thisMonthByFrequency[$frequency])) {
+                        $thisMonthByFrequency[$frequency] += $amount;
+                    }
+                    
+                    $thisMonthExpenses[] = [
+                        'name' => $exp->name,
+                        'amount' => $amount,
+                        'frequency' => $frequency,
+                        'paid' => $isPaidThisMonth,
+                    ];
                 }
             }
             
             // Check next month
+            $nextMonthNum = (int) $nextMonthDate->format('n');
+            $nextYear = (int) $nextMonthDate->format('Y');
+            
             $canIncludeNextMonth = true;
             if ($exp->start_date && Carbon::parse($exp->start_date)->gt($nextMonthDate->copy()->endOfMonth())) {
                 $canIncludeNextMonth = false; // Expense won't have started yet
@@ -229,16 +276,49 @@ class BusinessExpenseController extends Controller
                 $canIncludeNextMonth = false; // Expense will have ended
             }
             
-            if ($canIncludeNextMonth && $exp->isActiveInMonth((int) $nextMonthDate->format('n'))) {
+            if ($canIncludeNextMonth && $exp->isActiveInMonth($nextMonthNum)) {
                 if ($this->shouldIncludeExpenseForMonth($exp, $nextMonthDate)) {
-                    $nextMonth += (float) $exp->unit_amount * (int) $exp->quantity;
+                    $nextMonth += $amount;
+                    $isPaidNextMonth = $exp->isPaidForMonth($nextYear, $nextMonthNum);
+                    if ($isPaidNextMonth) {
+                        $nextMonthPaid += $amount;
+                    } else {
+                        $nextMonthUnpaid += $amount;
+                    }
+                    
+                    $frequency = $exp->frequency ?? 'monthly';
+                    if (isset($nextMonthByFrequency[$frequency])) {
+                        $nextMonthByFrequency[$frequency] += $amount;
+                    }
+                    
+                    $nextMonthExpenses[] = [
+                        'name' => $exp->name,
+                        'amount' => $amount,
+                        'frequency' => $frequency,
+                        'paid' => $isPaidNextMonth,
+                    ];
                 }
             }
         }
         
         return [
+            'current_month_name' => $thisMonthDate->format('F Y'),
+            'current_month_range' => $thisMonthDate->format('M d') . ' - ' . $thisMonthDate->copy()->endOfMonth()->format('M d, Y'),
+            'next_month_name' => $nextMonthDate->format('F Y'),
+            'next_month_range' => $nextMonthDate->format('M d') . ' - ' . $nextMonthDate->copy()->endOfMonth()->format('M d, Y'),
             'this_month_total' => number_format($thisMonth, 2, '.', ''),
+            'this_month_paid' => number_format($thisMonthPaid, 2, '.', ''),
+            'this_month_unpaid' => number_format($thisMonthUnpaid, 2, '.', ''),
+            'this_month_by_frequency' => $thisMonthByFrequency,
+            'this_month_expenses_count' => count($thisMonthExpenses),
+            'this_month_expenses' => $thisMonthExpenses,
             'next_month_total' => number_format($nextMonth, 2, '.', ''),
+            'next_month_paid' => number_format($nextMonthPaid, 2, '.', ''),
+            'next_month_unpaid' => number_format($nextMonthUnpaid, 2, '.', ''),
+            'next_month_by_frequency' => $nextMonthByFrequency,
+            'next_month_expenses_count' => count($nextMonthExpenses),
+            'next_month_expenses' => $nextMonthExpenses,
+            'total_active_expenses' => $expenses->count(),
         ];
     }
     
