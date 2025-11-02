@@ -880,46 +880,86 @@
                 return outputArray;
             };
             
+            // Convert Uint8Array to base64url string
+            const uint8ArrayToBase64Url = (array) => {
+                const base64 = btoa(String.fromCharCode.apply(null, array));
+                return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+            };
+            
+            // Convert PushSubscription to JSON format
+            const subscriptionToJSON = (subscription) => {
+                // If toJSON exists, use it
+                if (subscription.toJSON && typeof subscription.toJSON === 'function') {
+                    return subscription.toJSON();
+                }
+                // Otherwise, manually construct it
+                return {
+                    endpoint: subscription.endpoint,
+                    keys: {
+                        p256dh: uint8ArrayToBase64Url(new Uint8Array(subscription.getKey('p256dh'))),
+                        auth: uint8ArrayToBase64Url(new Uint8Array(subscription.getKey('auth')))
+                    }
+                };
+            };
+            
             async function subscribeToPush() {
+                console.log('[Push] Starting subscription process...');
                 try {
                     // Register service worker and wait for it to be ready
+                    console.log('[Push] Registering service worker...');
                     const registration = await navigator.serviceWorker.register('/service-worker.js');
+                    console.log('[Push] Service worker registered, waiting for ready...');
                     await navigator.serviceWorker.ready;
+                    console.log('[Push] Service worker ready');
                     
                     // Check current permission status first
                     let permission = Notification.permission;
+                    console.log('[Push] Current permission:', permission);
                     
                     // Only request permission if it's not already been determined
                     // On mobile, requesting permission without user gesture may fail silently
                     if (permission === 'default') {
+                        console.log('[Push] Permission is default, requesting...');
                         // Try to request permission, but don't fail if it doesn't work on mobile
                         try {
                             permission = await Notification.requestPermission();
+                            console.log('[Push] Permission request result:', permission);
                         } catch (e) {
-                            console.warn('Permission request failed (may require user gesture on mobile):', e);
+                            console.warn('[Push] Permission request failed (may require user gesture on mobile):', e);
                             return;
                         }
                     }
                     
                     if (permission !== 'granted') {
-                        console.log('Notification permission not granted:', permission);
+                        console.log('[Push] Notification permission not granted:', permission);
                         return;
                     }
                     
+                    console.log('[Push] Permission granted, proceeding with subscription');
+                    
                     // Get existing subscription first
+                    console.log('[Push] Checking for existing subscription...');
                     let subscription = await registration.pushManager.getSubscription();
                     
                     // If no subscription, create a new one
                     if (!subscription) {
+                        console.log('[Push] No existing subscription, creating new one...');
                         const publicKey = await getPublicKey();
+                        console.log('[Push] Got public key, subscribing...');
                         subscription = await registration.pushManager.subscribe({
                             userVisibleOnly: true,
                             applicationServerKey: urlBase64ToUint8Array(publicKey)
                         });
+                        console.log('[Push] Subscription created:', subscription.endpoint);
+                    } else {
+                        console.log('[Push] Found existing subscription:', subscription.endpoint);
                     }
                     
                     // Send subscription to server
-                    // PushSubscription has a toJSON() method that formats it correctly
+                    console.log('[Push] Sending subscription to server...');
+                    // Convert subscription to proper JSON format
+                    const subscriptionData = subscriptionToJSON(subscription);
+                    console.log('[Push] Subscription data:', subscriptionData);
                     const response = await fetch('/push/subscribe', {
                         method: 'POST',
                         headers: {
@@ -928,16 +968,18 @@
                             'X-Requested-With': 'XMLHttpRequest',
                             'X-CSRF-TOKEN': csrf
                         },
-                        body: JSON.stringify(subscription)
+                        body: JSON.stringify(subscriptionData)
                     });
                     
                     if (!response.ok) {
-                        const error = await response.json().catch(() => ({ message: 'Unknown error' }));
-                        console.error('Failed to save subscription:', error);
+                        const error = await response.json().catch(() => ({ message: 'Unknown error', status: response.status }));
+                        console.error('[Push] Failed to save subscription:', error);
+                        console.error('[Push] Response status:', response.status, response.statusText);
                         return;
                     }
                     
-                    console.log('Push subscription successful');
+                    const result = await response.json().catch(() => ({ status: 'subscribed' }));
+                    console.log('[Push] Subscription saved successfully:', result);
                     
                     // If we're on the test page, refresh to update subscription count
                     if (window.location.pathname === '/push/test') {
@@ -964,9 +1006,13 @@
                         }
                     };
                 } catch (e) {
-                    console.warn('Push registration failed:', e);
+                    console.error('[Push] Subscription failed:', e);
+                    console.error('[Push] Error details:', e.message, e.stack);
                 }
             }
+            
+            // Expose subscribeToPush globally so it can be called from test page
+            window.subscribeToPush = subscribeToPush;
             
             let hasAttemptedSubscription = false;
             const interactionHandlers = new Map();
