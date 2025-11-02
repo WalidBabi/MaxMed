@@ -17,7 +17,8 @@ class VerifyCsrfToken extends Middleware
         'stripe/checkout',
         'stripe/success',
         'quotation/*',
-        'cart/*'
+        'cart/*',
+        'api/user-behavior/*'
 
 
 
