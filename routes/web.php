@@ -2008,4 +2008,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/push/test', [\App\Http\Controllers\PushSubscriptionController::class, 'test'])->name('push.test');
 });
 
+// Log push receipt from service worker (no CSRF, public)
+Route::post('/push/received', function(\Illuminate\Http\Request $request) {
+    \Log::info('Service worker push received', [
+        'ts' => now()->toISOString(),
+        'user_id' => auth()->id(),
+        'user_agent' => substr((string) $request->userAgent(), 0, 255),
+        'payload' => $request->all(),
+    ]);
+    return response()->json(['ok' => true]);
+})->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])->name('push.received');
+
 // Token-auth routes are temporarily disabled in production until middleware is registered
