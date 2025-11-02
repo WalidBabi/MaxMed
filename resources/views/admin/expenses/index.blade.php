@@ -16,150 +16,38 @@
 
     <!-- Enhanced KPI Section -->
     <div class="mb-6">
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-4">
+        @php
+            $paidCount = collect($kpis['this_month_expenses'])->where('paid', true)->count();
+            $unpaidCount = collect($kpis['this_month_expenses'])->where('paid', false)->count();
+            $notDueCount = max(0, (int)$kpis['total_active_expenses'] - (int)$kpis['this_month_expenses_count']);
+        @endphp
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div class="rounded-lg bg-white p-5 shadow">
-                <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Current Period</div>
-                <div class="text-sm font-medium text-gray-700 mb-1">{{ $kpis['current_month_name'] }}</div>
-                <div class="text-xs text-gray-500 mb-3">{{ $kpis['current_month_range'] }}</div>
-                <div class="text-3xl font-bold text-indigo-600">{{ $kpis['this_month_total'] }} <span class="text-lg text-gray-500">AED</span></div>
-                <div class="mt-3 pt-3 border-t border-gray-100 space-y-1">
-                    <div class="flex justify-between text-xs">
-                        <span class="text-gray-500">Paid:</span>
-                        <span class="font-semibold text-green-600">{{ number_format((float)$kpis['this_month_paid'], 2) }} AED</span>
-                    </div>
-                    <div class="flex justify-between text-xs">
-                        <span class="text-gray-500">Unpaid:</span>
-                        <span class="font-semibold text-orange-600">{{ number_format((float)$kpis['this_month_unpaid'], 2) }} AED</span>
-                    </div>
-                    <div class="flex justify-between text-xs">
-                        <span class="text-gray-500">Expenses:</span>
-                        <span class="font-semibold text-gray-700">{{ $kpis['this_month_expenses_count'] }} items</span>
-                    </div>
-                </div>
+                <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">This Month</div>
+                <div class="text-sm text-gray-600 mb-2">{{ $kpis['current_month_name'] }}</div>
+                <div class="text-2xl font-bold text-gray-900">{{ number_format((float)$kpis['this_month_unpaid'], 2) }} AED</div>
+                <div class="text-xs text-gray-500">Due (Unpaid)</div>
+                <div class="mt-2 text-xs text-gray-500">{{ $unpaidCount }} item{{ $unpaidCount == 1 ? '' : 's' }}</div>
             </div>
-            
             <div class="rounded-lg bg-white p-5 shadow">
-                <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Next Period</div>
-                <div class="text-sm font-medium text-gray-700 mb-1">{{ $kpis['next_month_name'] }}</div>
-                <div class="text-xs text-gray-500 mb-3">{{ $kpis['next_month_range'] }}</div>
-                <div class="text-3xl font-bold text-blue-600">{{ $kpis['next_month_total'] }} <span class="text-lg text-gray-500">AED</span></div>
-                <div class="mt-3 pt-3 border-t border-gray-100 space-y-1">
-                    <div class="flex justify-between text-xs">
-                        <span class="text-gray-500">Paid:</span>
-                        <span class="font-semibold text-green-600">{{ number_format((float)$kpis['next_month_paid'], 2) }} AED</span>
-                    </div>
-                    <div class="flex justify-between text-xs">
-                        <span class="text-gray-500">Unpaid:</span>
-                        <span class="font-semibold text-orange-600">{{ number_format((float)$kpis['next_month_unpaid'], 2) }} AED</span>
-                    </div>
-                    <div class="flex justify-between text-xs">
-                        <span class="text-gray-500">Expenses:</span>
-                        <span class="font-semibold text-gray-700">{{ $kpis['next_month_expenses_count'] }} items</span>
-                    </div>
-                </div>
+                <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">This Month</div>
+                <div class="text-sm text-gray-600 mb-2">{{ $kpis['current_month_name'] }}</div>
+                <div class="text-2xl font-bold text-green-700">{{ number_format((float)$kpis['this_month_paid'], 2) }} AED</div>
+                <div class="text-xs text-gray-500">Paid</div>
+                <div class="mt-2 text-xs text-gray-500">{{ $paidCount }} item{{ $paidCount == 1 ? '' : 's' }}</div>
             </div>
-            
             <div class="rounded-lg bg-white p-5 shadow">
-                <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">This Month - By Frequency</div>
-                <div class="mt-3 space-y-2">
-                    @foreach($kpis['this_month_by_frequency'] as $freq => $amount)
-                        @if($amount > 0)
-                            <div class="flex justify-between items-center text-sm">
-                                <span class="text-gray-600 capitalize">{{ $freq }}:</span>
-                                <span class="font-semibold text-gray-900">{{ number_format((float)$amount, 2) }} AED</span>
-                            </div>
-                        @endif
-                    @endforeach
-                    @if(array_sum($kpis['this_month_by_frequency']) == 0)
-                        <div class="text-xs text-gray-400 italic">No expenses this month</div>
-                    @endif
-                </div>
+                <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">This Month</div>
+                <div class="text-sm text-gray-600 mb-2">{{ $kpis['current_month_name'] }}</div>
+                <div class="text-2xl font-bold text-gray-900">{{ $notDueCount }}</div>
+                <div class="text-xs text-gray-500">Not Due</div>
             </div>
-            
             <div class="rounded-lg bg-white p-5 shadow">
-                <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Next Month - By Frequency</div>
-                <div class="mt-3 space-y-2">
-                    @foreach($kpis['next_month_by_frequency'] as $freq => $amount)
-                        @if($amount > 0)
-                            <div class="flex justify-between items-center text-sm">
-                                <span class="text-gray-600 capitalize">{{ $freq }}:</span>
-                                <span class="font-semibold text-gray-900">{{ number_format((float)$amount, 2) }} AED</span>
-                            </div>
-                        @endif
-                    @endforeach
-                    @if(array_sum($kpis['next_month_by_frequency']) == 0)
-                        <div class="text-xs text-gray-400 italic">No expenses next month</div>
-                    @endif
-                </div>
-            </div>
-        </div>
-        
-        <!-- Detailed Breakdown -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
-            <div class="rounded-lg bg-white p-5 shadow">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-sm font-semibold text-gray-900">This Month Expenses Breakdown</h3>
-                    <span class="text-xs text-gray-500">{{ $kpis['this_month_expenses_count'] }} items</span>
-                </div>
-                @if(count($kpis['this_month_expenses']) > 0)
-                    <div class="space-y-2 max-h-64 overflow-y-auto">
-                        @foreach($kpis['this_month_expenses'] as $expense)
-                            <div class="flex items-center justify-between p-2 rounded-md bg-gray-50 hover:bg-gray-100">
-                                <div class="flex-1">
-                                    <div class="text-sm font-medium text-gray-900">{{ $expense['name'] }}</div>
-                                    <div class="text-xs text-gray-500 capitalize">{{ $expense['frequency'] }}</div>
-                                </div>
-                                <div class="text-right">
-                                    <div class="text-sm font-semibold text-gray-900">{{ number_format((float)$expense['amount'], 2) }} AED</div>
-                                    <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium {{ $expense['paid'] ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800' }}">
-                                        {{ $expense['paid'] ? 'Paid' : 'Unpaid' }}
-                                    </span>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                @else
-                    <div class="text-sm text-gray-400 italic text-center py-4">No expenses for this month</div>
-                @endif
-            </div>
-            
-            <div class="rounded-lg bg-white p-5 shadow">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-sm font-semibold text-gray-900">Next Month Expenses Breakdown</h3>
-                    <span class="text-xs text-gray-500">{{ $kpis['next_month_expenses_count'] }} items</span>
-                </div>
-                @if(count($kpis['next_month_expenses']) > 0)
-                    <div class="space-y-2 max-h-64 overflow-y-auto">
-                        @foreach($kpis['next_month_expenses'] as $expense)
-                            <div class="flex items-center justify-between p-2 rounded-md bg-gray-50 hover:bg-gray-100">
-                                <div class="flex-1">
-                                    <div class="text-sm font-medium text-gray-900">{{ $expense['name'] }}</div>
-                                    <div class="text-xs text-gray-500 capitalize">{{ $expense['frequency'] }}</div>
-                                </div>
-                                <div class="text-right">
-                                    <div class="text-sm font-semibold text-gray-900">{{ number_format((float)$expense['amount'], 2) }} AED</div>
-                                    <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium {{ $expense['paid'] ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800' }}">
-                                        {{ $expense['paid'] ? 'Paid' : 'Unpaid' }}
-                                    </span>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                @else
-                    <div class="text-sm text-gray-400 italic text-center py-4">No expenses for next month</div>
-                @endif
-            </div>
-        </div>
-        
-        <!-- Summary Stats -->
-        <div class="mt-4 rounded-lg bg-gradient-to-r from-indigo-50 to-blue-50 p-4 border border-indigo-100">
-            <div class="flex items-center justify-between">
-                <div class="text-sm text-gray-600">
-                    <span class="font-semibold">{{ $kpis['total_active_expenses'] }}</span> active expense{{ $kpis['total_active_expenses'] != 1 ? 's' : '' }} in system
-                </div>
-                <div class="text-sm text-gray-600">
-                    <span class="font-semibold">{{ number_format((float)$kpis['this_month_total'] + (float)$kpis['next_month_total'], 2) }}</span> AED total for both months
-                </div>
+                <div class="text-xs text-gray-400 uppercase tracking-wide mb-1">Next Month</div>
+                <div class="text-sm text-gray-600 mb-2">{{ $kpis['next_month_name'] }}</div>
+                <div class="text-2xl font-bold text-gray-900">{{ number_format((float)$kpis['next_month_total'], 2) }} AED</div>
+                <div class="text-xs text-gray-500">Due Next Month</div>
+                <div class="mt-2 text-xs text-gray-500">{{ $kpis['next_month_expenses_count'] }} item{{ $kpis['next_month_expenses_count'] == 1 ? '' : 's' }}</div>
             </div>
         </div>
     </div>
