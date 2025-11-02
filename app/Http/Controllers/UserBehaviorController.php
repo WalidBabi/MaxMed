@@ -61,7 +61,7 @@ class UserBehaviorController extends Controller
                 'location_data' => $validated['location_data'] ?? null,
                 'user_id' => Auth::id(),
                 'session_id' => session()->getId(),
-                'timestamp' => now(),
+                'timestamp' => $this->normalizeEventTimestamp($validated['timestamp'] ?? null),
             ]);
             
             // Store cookie consent in session as fallback
@@ -200,6 +200,17 @@ class UserBehaviorController extends Controller
         }
 
         try {
+            // Handle numeric epochs (seconds or milliseconds)
+            if (is_int($value) || (is_string($value) && ctype_digit($value))) {
+                $intVal = (int) $value;
+                // Milliseconds if 13+ digits
+                if (strlen((string) $intVal) >= 13) {
+                    return Carbon::createFromTimestampMs($intVal)->toDateTimeString();
+                }
+                // Seconds
+                return Carbon::createFromTimestamp($intVal)->toDateTimeString();
+            }
+
             // Accept ISO 8601 and other common formats from clients
             // Carbon::parse handles "2025-11-02T07:45:35.123Z" and returns in app timezone
             return Carbon::parse($value)->toDateTimeString();
