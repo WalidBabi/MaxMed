@@ -2008,8 +2008,4 @@ Route::middleware('auth')->group(function () {
     Route::post('/push/test', [\App\Http\Controllers\PushSubscriptionController::class, 'test'])->name('push.test');
 });
 
-// Web Push routes with API token authentication (for long-term access)
-Route::middleware('push.token')->group(function () {
-    Route::post('/push/subscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'subscribe'])->name('push.subscribe.token');
-    Route::delete('/push/unsubscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'unsubscribe'])->name('push.unsubscribe.token');
-});
+// Token-auth routes are temporarily disabled in production until middleware is registered
