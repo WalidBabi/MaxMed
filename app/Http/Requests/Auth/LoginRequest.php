@@ -68,6 +68,9 @@ class LoginRequest extends FormRequest
                 'auth_model' => config('auth.providers.users.model')
             ]);
 
+            // Mark that this authentication attempt should trigger a login notification on success
+            session()->put('login_notification_intent', true);
+
             if (! Auth::attempt($credentials, $remember)) {
                 Log::warning('LoginRequest::authenticate() - Authentication failed', [
                     'email' => $this->email,
@@ -76,6 +79,8 @@ class LoginRequest extends FormRequest
                     'timestamp' => now()->toISOString(),
                     'credentials_provided' => array_keys($credentials)
                 ]);
+
+                session()->forget('login_notification_intent');
 
                 RateLimiter::hit($this->throttleKey());
 

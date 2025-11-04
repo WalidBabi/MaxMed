@@ -28,6 +28,7 @@ class GoogleController extends Controller
             $googleUser = Socialite::driver('google')->user();
             
             $user = $this->findOrCreateUser($googleUser);
+            session()->put('login_notification_intent', true);
             Auth::login($user);
 
             // Set a session flag to show orders hint
@@ -85,6 +86,7 @@ class GoogleController extends Controller
             ];
             
             $user = $this->findOrCreateUser($googleUser);
+            session()->put('login_notification_intent', true);
             Auth::login($user);
             
             // Set a session flag to show orders hint
