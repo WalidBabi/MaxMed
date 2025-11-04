@@ -3,10 +3,8 @@
 namespace App\Listeners;
 
 use App\Models\User;
-use App\Notifications\AuthNotification;
-use App\Notifications\SupplierAuthNotification;
+use App\Services\PushNotificationService;
 use Illuminate\Auth\Events\Login;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
@@ -45,29 +43,34 @@ class SendAuthNotification
                 return;
             }
             
-            // Use configured admin email if available, otherwise fallback to database admin
-            $adminEmail = Config::get('mail.admin_email');
-            
-            if ($adminEmail) {
-                // Create a temporary admin object for notification
-                $admin = new User([
-                    'email' => $adminEmail,
-                    'name' => 'Admin',
-                    'id' => 0
-                ]);
-            } else {
-                $admin = User::whereHas('role', function($q) {
-                    $q->where('name', 'admin');
-                })
-                    ->whereNotNull('email')
-                    ->whereDoesntHave('role', function($query) {
-                        $query->where('name', 'supplier');
-                    })
-                    ->first();
+            $loginUser = $event->user;
+
+            $adminRecipients = collect();
+
+            // Attempt to use configured admin email to find recipient
+            if ($adminEmail = Config::get('mail.admin_email')) {
+                $adminRecipients = User::query()
+                    ->where('email', $adminEmail)
+                    ->where('id', '!=', $loginUser->id)
+                    ->get();
             }
-            
-            // Don't send notification if admin is logging in themselves or no admin found
-            if (!$admin || $admin->id === $event->user->id) {
+
+            if ($adminRecipients->isEmpty()) {
+                $adminRecipients = User::query()
+                    ->where('id', '!=', $loginUser->id)
+                    ->where(function ($q) {
+                        $q->whereHas('role', function ($roleQuery) {
+                            $roleQuery->whereIn('name', ['admin', 'super_admin', 'superadmin', 'super-administrator']);
+                        })
+                        ->orWhereHas('roles', function ($roleQuery) {
+                            $roleQuery->whereIn('name', ['admin', 'super_admin', 'superadmin', 'super-administrator']);
+                        });
+                    })
+                    ->get();
+            }
+
+            if ($adminRecipients->isEmpty()) {
+                Log::info('Login notification skipped - no admin recipients found for push notification.');
                 return;
             }
             
@@ -86,17 +89,38 @@ class SendAuthNotification
                 Log::debug('Could not determine login method, defaulting to Email', ['error' => $e->getMessage()]);
             }
             
-            // Check if the user is a supplier
-            $isSupplier = $event->user->role && $event->user->role->name === 'supplier';
-            
-            // Send the appropriate notification
-            if ($isSupplier) {
-                Notification::send($admin, new SupplierAuthNotification($event->user, 'login', $method));
-                Log::info('Supplier login notification sent for user ' . $event->user->id . ' via ' . $method);
-            } else {
-                Notification::send($admin, new AuthNotification($event->user, 'login', $method));
-                Log::info('Login notification sent for user ' . $event->user->id . ' via ' . $method);
+            $title = 'User login: ' . ($loginUser->name ?: $loginUser->email);
+            $bodyParts = [
+                $loginUser->name ?: null,
+                $loginUser->email,
+                'Method: ' . $method,
+                'Time: ' . now()->toDateTimeString(),
+            ];
+            $body = implode("\n", array_filter($bodyParts));
+
+            $url = url('/admin/users/' . $loginUser->id);
+
+            /** @var PushNotificationService $pushService */
+            $pushService = app(PushNotificationService::class);
+
+            $sentTotal = 0;
+            foreach ($adminRecipients as $recipient) {
+                try {
+                    $sentTotal += $pushService->sendToUser((int) $recipient->id, $title, $body, $url);
+                } catch (\Throwable $exception) {
+                    Log::warning('Failed sending login push notification', [
+                        'recipient_id' => $recipient->id,
+                        'error' => $exception->getMessage(),
+                    ]);
+                }
             }
+
+            Log::info('Login push notification dispatched', [
+                'login_user_id' => $loginUser->id,
+                'recipients' => $adminRecipients->pluck('id')->all(),
+                'method' => $method,
+                'sent_total' => $sentTotal,
+            ]);
             
             // Set cache flag to prevent duplicate notifications for 1 minute
             Cache::put($cacheKey, true, now()->addMinutes(1));
