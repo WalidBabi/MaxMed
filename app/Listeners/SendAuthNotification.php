@@ -11,9 +11,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendAuthNotification implements ShouldQueue
+class SendAuthNotification
 {
     /**
      * Create the event listener.
@@ -29,6 +28,14 @@ class SendAuthNotification implements ShouldQueue
     public function handle(Login $event): void
     {
         try {
+            // Only send when the login was triggered intentionally by the user
+            $shouldNotify = session()->pull('login_notification_intent', false);
+
+            if (!$shouldNotify) {
+                Log::info('Login notification skipped for user ' . $event->user->id . ' - no intent flag present');
+                return;
+            }
+
             // Create a unique cache key for this user's login notification
             $cacheKey = 'login_notification_sent_' . $event->user->id;
             
