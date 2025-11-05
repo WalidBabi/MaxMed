@@ -286,7 +286,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach($quotes as $quote)
-                            <tr class="hover:bg-gray-50">
+                            <tr class="hover:bg-gray-50" id="quote-row-{{ $quote->id }}">
                                 <td class="px-3 py-3 whitespace-nowrap text-xs text-gray-900">
                                     {{ formatDubaiDate($quote->created_at, 'M d') }}
                                 </td>
@@ -416,9 +416,9 @@
                                             </svg>
                                         </button>
                                         @if($quote->status !== 'invoiced')
-                                            <form method="POST" action="{{ route('admin.quotes.convert-to-proforma', $quote) }}" class="inline" onsubmit="return confirm('Are you sure you want to convert this quote to a proforma invoice?')">
+                                            <form method="POST" action="{{ route('admin.quotes.convert-to-proforma', $quote) }}" class="inline" data-ajax="form" data-confirm="Are you sure you want to convert this quote to a proforma invoice?" data-loading-text="Converting..." data-success-message="Converted to proforma.">
                                                 @csrf
-                                                <button type="submit" class="text-green-600 hover:text-green-900" title="Convert to Invoice">
+                                                <button type="submit" class="text-green-600 hover:text-green-900" title="Convert to Invoice" data-loading-text="Converting...">
                                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                                     </svg>
@@ -518,7 +518,7 @@
             </div>
         </div>
         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-            <form id="deleteForm" method="POST" class="w-full sm:w-auto">
+            <form id="deleteForm" method="POST" class="w-full sm:w-auto" data-ajax="form" data-loading-text="Deleting..." data-success-message="Quote deleted." data-reset-form="false">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">

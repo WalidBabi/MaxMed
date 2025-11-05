@@ -1,10 +1,10 @@
 <!-- Sidebar component -->
-<div class="flex grow flex-col gap-y-5 overflow-y-auto supplier-sidebar px-6 pb-4 shadow-lg">
+<div class="flex grow flex-col gap-y-5 overflow-y-auto overflow-x-hidden supplier-sidebar px-6 pb-4 shadow-lg">
     <!-- Logo -->
-    <div class="flex h-16 shrink-0 items-center">
-        <img class="mb-1 h-12 w-auto" src="{{ asset('Images/logo.png') }}" alt="MaxMed">
-        <div class="ml-3">
-            <div class="text-xs font-semibold text-gray-600">{{ \App\Helpers\DashboardHelper::supplierPortalHeaderName() }}</div>
+    <div class="flex flex-col items-center py-4 min-w-0">
+        <img class="h-12 w-auto flex-shrink-0" src="{{ asset('Images/logo.png') }}" alt="MaxMed">
+        <div class="mt-2 text-center min-w-0 w-full px-2">
+            <div class="text-xs font-semibold text-gray-600 leading-tight">{{ \App\Helpers\DashboardHelper::supplierPortalHeaderName() }}</div>
         </div>
     </div>
     

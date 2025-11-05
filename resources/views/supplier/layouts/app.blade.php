@@ -102,12 +102,14 @@
 
         /* Prevent sidebar flashing during navigation */
         .supplier-sidebar,
-        .sidebar-container {
+        .sidebar-container,
+        .crm-sidebar {
             opacity: 1 !important;
             visibility: visible !important;
             transition: opacity 0.3s ease, visibility 0.3s ease;
             transform: translateZ(0);
             backface-visibility: hidden;
+            overflow-x: hidden !important;
         }
         
         /* Ensure sidebars are visible during page load */
@@ -360,7 +362,9 @@
                         </div>
                     @endif
 
+                    <div id="main-content">
                     @yield('content')
+                    </div>
                 </div>
             </main>
         </div>

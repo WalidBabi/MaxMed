@@ -447,9 +447,18 @@
                                             </button>
                                         @endif
                                         @if($invoice->type === 'proforma' && $invoice->canConvertToFinalInvoice() && !$hasChildInvoice)
-                                            <form action="{{ route('admin.invoices.convert-to-final', $invoice) }}" method="POST" class="inline" onsubmit="return confirm('Convert this proforma invoice to final invoice?');">
+                                            <form
+                                                action="{{ route('admin.invoices.convert-to-final', $invoice) }}"
+                                                method="POST"
+                                                class="inline"
+                                                data-ajax="form"
+                                                data-confirm="Convert this proforma invoice to final invoice?"
+                                                data-loading-text="Converting..."
+                                                data-success-message="Final invoice created successfully."
+                                                data-error-message="Unable to convert invoice."
+                                            >
                                                 @csrf
-                                                <button type="submit" class="text-yellow-600 hover:text-yellow-900" title="Convert">
+                                                <button type="submit" class="text-yellow-600 hover:text-yellow-900" title="Convert" data-loading-text="Converting...">
                                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"></path>
                                                     </svg>
@@ -690,10 +699,21 @@
             </div>
         </div>
         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-            <form id="deleteForm" method="POST" class="w-full sm:w-auto">
+            <form
+                id="deleteForm"
+                method="POST"
+                class="w-full sm:w-auto"
+                data-ajax="form"
+                data-loading-text="Deleting..."
+                data-success-message="Invoice deleted."
+                data-error-message="Unable to delete invoice."
+                data-reset-form="false"
+                data-success-dispatch="close-modal"
+                data-success-dispatch-detail="confirm-invoice-deletion"
+            >
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm" data-loading-text="Deleting...">
                     Delete
                 </button>
             </form>
@@ -1082,6 +1102,8 @@ function updateInvoiceResultsCount(visible, total) {
             const invoiceId = this.getAttribute('data-invoice-id');
             const deleteForm = document.getElementById('deleteForm');
             deleteForm.action = `/admin/invoices/${invoiceId}`;
+            deleteForm.dataset.successRemove = `#invoice-row-${invoiceId}, #proforma-row-${invoiceId}`;
+            deleteForm.dataset.successDispatchDetail = 'confirm-invoice-deletion';
             window.dispatchEvent(new CustomEvent('open-modal', { detail: 'confirm-invoice-deletion' }));
         });
     });

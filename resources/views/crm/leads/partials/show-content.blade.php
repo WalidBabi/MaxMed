@@ -333,8 +333,8 @@
                      </div>
                     <div class="flex justify-between items-center">
                         <span class="text-sm font-medium text-gray-500">Assigned To</span>
-                        <span class="text-sm {{ $lead->assignedUser->id === Auth::id() ? 'text-green-600 font-semibold' : 'text-gray-900' }}">
-                            {{ $lead->assignedUser->name }}{{ $lead->assignedUser->id === Auth::id() ? ' (You)' : '' }}
+                        <span class="text-sm {{ $lead->assignedUser && $lead->assignedUser->id === Auth::id() ? 'text-green-600 font-semibold' : 'text-gray-900' }}">
+                            {{ $lead->assignedUser ? $lead->assignedUser->name . ($lead->assignedUser->id === Auth::id() ? ' (You)' : '') : 'Unassigned' }}
                         </span>
                     </div>
                      <div class="flex justify-between items-center">

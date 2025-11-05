@@ -34,6 +34,17 @@
                             Apply
                         </button>
                     </div>
+                    
+                    <!-- Delete Button (only visible when more than 1 lead is selected) -->
+                    <div id="bulk-delete-container" class="hidden items-center space-x-2" style="display: none;">
+                        <div class="h-6 w-px bg-white/30"></div>
+                        <button id="bulk-delete-leads" class="px-4 py-1.5 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium transition-colors text-sm shadow-sm flex items-center space-x-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                            <span>Delete Selected</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="flex items-center space-x-3">
@@ -1070,10 +1081,8 @@ function openPriceSubmissionModal(leadId) {
             if (data.success) {
                 modal.remove();
                 showNotification('Price submitted successfully!', 'success');
-                // Refresh the page to show updated data
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+                // Notify app for any widgets to update without full reload
+                try { window.dispatchEvent(new CustomEvent('lead:priceSubmitted', { detail: { leadId } })); } catch (e) {}
             } else {
                 showNotification(data.message || 'Failed to submit price', 'error');
             }
@@ -1282,10 +1291,8 @@ function confirmDeleteLead(leadId, leadName) {
         // Show success notification
         showNotification('Lead "' + leadName + '" has been deleted successfully!', 'success');
         
-        // Reload the page after a short delay to update all counts and stats
-        setTimeout(() => {
-            window.location.reload();
-        }, 1000);
+        // Notify app for any widgets to update without full reload
+        try { window.dispatchEvent(new CustomEvent('lead:deleted', { detail: { leadId } })); } catch (e) {}
     })
     .catch(error => {
         // Error - restore card and show error message

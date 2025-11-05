@@ -37,7 +37,7 @@
                 <div class="divide-y divide-gray-200">
                     @foreach($topCategories as $category)
                         <!-- Level 1 Category -->
-                        <div class="px-6 py-4 hover:bg-gray-50 transition-colors duration-200">
+                        <div class="px-6 py-4 hover:bg-gray-50 transition-colors duration-200 category-row-{{ $category->id }}">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-10 w-10">
@@ -62,7 +62,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                         </svg>
                                     </a>
-                                    <form action="{{ route('admin.categories.destroy', $category->slug) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this category?')">
+                                    <form action="{{ route('admin.categories.destroy', $category->slug) }}" method="POST" class="inline" data-ajax="form" data-confirm="Are you sure you want to delete this category?" data-loading-text="Deleting..." data-success-message="Category deleted." data-success-remove=".category-row-{{ $category->id }}">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-600 hover:text-red-900" title="Delete Category">
@@ -77,7 +77,7 @@
 
                         <!-- Level 2 Subcategories -->
                         @foreach($category->subcategories as $subcategory)
-                            <div class="px-6 py-3 bg-gray-25 hover:bg-gray-100 transition-colors duration-200">
+                            <div class="px-6 py-3 bg-gray-25 hover:bg-gray-100 transition-colors duration-200 subcategory-row-{{ $subcategory->id }}">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0 ml-8">
@@ -100,7 +100,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                             </svg>
                                         </a>
-                                        <form action="{{ route('admin.categories.destroy', $subcategory->slug) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this subcategory?')">
+                                        <form action="{{ route('admin.categories.destroy', $subcategory->slug) }}" method="POST" class="inline" data-ajax="form" data-confirm="Are you sure you want to delete this subcategory?" data-loading-text="Deleting..." data-success-message="Subcategory deleted." data-success-remove=".subcategory-row-{{ $subcategory->id }}">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:text-red-900" title="Delete Subcategory">
@@ -115,7 +115,7 @@
 
                             <!-- Level 3 Sub-subcategories -->
                             @foreach($subcategory->subcategories as $subsubcategory)
-                                <div class="px-6 py-3 bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
+                                <div class="px-6 py-3 bg-gray-50 hover:bg-gray-100 transition-colors duration-200 subsubcategory-row-{{ $subsubcategory->id }}">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center">
                                             <div class="flex-shrink-0 ml-16">
@@ -138,7 +138,7 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                 </svg>
                                             </a>
-                                            <form action="{{ route('admin.categories.destroy', $subsubcategory->slug) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this sub-subcategory?')">
+                                            <form action="{{ route('admin.categories.destroy', $subsubcategory->slug) }}" method="POST" class="inline" data-ajax="form" data-confirm="Are you sure you want to delete this sub-subcategory?" data-loading-text="Deleting..." data-success-message="Deleted." data-success-remove=".subsubcategory-row-{{ $subsubcategory->id }}">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-red-600 hover:text-red-900" title="Delete Sub-subcategory">
@@ -153,7 +153,7 @@
 
                                 <!-- Level 4 Sub-sub-subcategories -->
                                 @foreach($subsubcategory->subcategories as $subsubsubcategory)
-                                    <div class="px-6 py-3 bg-gray-75 hover:bg-gray-100 transition-colors duration-200">
+                                    <div class="px-6 py-3 bg-gray-75 hover:bg-gray-100 transition-colors duration-200 subsubsubcategory-row-{{ $subsubsubcategory->id }}">
                                         <div class="flex items-center justify-between">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 ml-24">
@@ -176,7 +176,7 @@
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                     </svg>
                                                 </a>
-                                                <form action="{{ route('admin.categories.destroy', $subsubsubcategory->slug) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this subsubsub-category?')">
+                                                <form action="{{ route('admin.categories.destroy', $subsubsubcategory->slug) }}" method="POST" class="inline" data-ajax="form" data-confirm="Are you sure you want to delete this subsubsub-category?" data-loading-text="Deleting..." data-success-message="Deleted." data-success-remove=".subsubsubcategory-row-{{ $subsubsubcategory->id }}">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="text-red-600 hover:text-red-900" title="Delete Sub-sub-subcategory">

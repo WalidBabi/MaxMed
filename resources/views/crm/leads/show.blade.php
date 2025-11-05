@@ -166,8 +166,8 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Assigned To</label>
-                            <p class="mt-1 text-sm {{ $lead->assignedUser->id === Auth::id() ? 'text-green-600 font-semibold' : 'text-gray-900' }}">
-                                {{ $lead->assignedUser->name }}{{ $lead->assignedUser->id === Auth::id() ? ' (You)' : '' }}
+                            <p class="mt-1 text-sm {{ $lead->assignedUser && $lead->assignedUser->id === Auth::id() ? 'text-green-600 font-semibold' : 'text-gray-900' }}">
+                                {{ $lead->assignedUser ? $lead->assignedUser->name . ($lead->assignedUser->id === Auth::id() ? ' (You)' : '') : 'Unassigned' }}
                             </p>
                         </div>
                         <div>
@@ -182,8 +182,24 @@
                 </div>
                 @endif
 
+                <!-- Email Content Section (Prominent for email leads) -->
+                @if($lead->source === 'email' && $lead->notes)
+                <div class="bg-blue-50 border-l-4 border-blue-500 rounded-lg shadow p-6 mb-6">
+                    <div class="flex items-center mb-4">
+                        <svg class="w-6 h-6 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        <h3 class="text-lg font-semibold text-gray-900">Original Email Content</h3>
+                    </div>
+                    <div class="bg-white rounded border border-gray-200 p-4">
+                        <div class="text-sm text-gray-700 whitespace-pre-wrap font-mono">{{ $lead->notes }}</div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">Received: {{ $lead->created_at->format('F j, Y \a\t g:i A') }}</p>
+                </div>
+                @endif
+
                 <!-- Notes Section (Always visible for purchasing roles) -->
-                @if($lead->notes)
+                @if($lead->notes && $lead->source !== 'email')
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Notes</h3>
                     <div class="text-sm text-gray-900 formatted-content" data-cache-bust="{{ time() }}">{!! \App\Helpers\HtmlSanitizer::sanitizeRichContent($lead->notes) !!}</div>
@@ -318,8 +334,8 @@
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-sm font-medium text-gray-500">Assigned To</span>
-                            <span class="text-sm {{ $lead->assignedUser->id === Auth::id() ? 'text-green-600 font-semibold' : 'text-gray-900' }}">
-                                {{ $lead->assignedUser->name }}{{ $lead->assignedUser->id === Auth::id() ? ' (You)' : '' }}
+                            <span class="text-sm {{ $lead->assignedUser && $lead->assignedUser->id === Auth::id() ? 'text-green-600 font-semibold' : 'text-gray-900' }}">
+                                {{ $lead->assignedUser ? $lead->assignedUser->name . ($lead->assignedUser->id === Auth::id() ? ' (You)' : '') : 'Unassigned' }}
                             </span>
                         </div>
                         @if($lead->estimated_value)

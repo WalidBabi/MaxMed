@@ -538,21 +538,46 @@ class InvoiceController extends Controller
     /**
      * Remove the specified invoice
      */
-    public function destroy(Invoice $invoice)
+    public function destroy(Request $request, Invoice $invoice)
     {
         try {
             // Check if invoice has payments
             if ($invoice->payments()->where('status', 'completed')->exists()) {
-                return redirect()->back()->with('error', 'Cannot delete invoice with completed payments.');
+                $message = 'Cannot delete invoice with completed payments.';
+                if ($request->wantsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $message,
+                    ], 422);
+                }
+
+                return redirect()->back()->with('error', $message);
             }
 
             $invoice->delete();
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Invoice deleted successfully!',
+                    'invoice_id' => $invoice->id,
+                ]);
+            }
 
             return redirect()->route('admin.invoices.index')
                 ->with('success', 'Invoice deleted successfully!');
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to delete invoice: ' . $e->getMessage());
+            $message = 'Failed to delete invoice: ' . $e->getMessage();
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                ], 500);
+            }
+
+            return redirect()->back()->with('error', $message);
         }
     }
 
@@ -576,20 +601,49 @@ class InvoiceController extends Controller
     /**
      * Convert proforma to final invoice
      */
-    public function convertToFinal(Invoice $invoice)
+    public function convertToFinal(Request $request, Invoice $invoice)
     {
         if (!$invoice->canConvertToFinalInvoice()) {
-            return redirect()->back()->with('error', 'Cannot convert this invoice to final invoice.');
+            $message = 'Cannot convert this invoice to final invoice.';
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                ], 422);
+            }
+
+            return redirect()->back()->with('error', $message);
         }
 
         try {
             $finalInvoice = $invoice->convertToFinalInvoice();
 
+            $message = 'Final invoice created successfully from proforma ' . $invoice->invoice_number;
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => $message,
+                    'redirect' => route('admin.invoices.show', $finalInvoice),
+                    'invoice_id' => $invoice->id,
+                    'final_invoice_id' => $finalInvoice->id,
+                ]);
+            }
+
             return redirect()->route('admin.invoices.show', $finalInvoice)
-                ->with('success', 'Final invoice created successfully from proforma ' . $invoice->invoice_number);
+                ->with('success', $message);
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to convert to final invoice: ' . $e->getMessage());
+            $message = 'Failed to convert to final invoice: ' . $e->getMessage();
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                ], 500);
+            }
+
+            return redirect()->back()->with('error', $message);
         }
     }
 

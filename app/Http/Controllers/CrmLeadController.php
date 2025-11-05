@@ -833,6 +833,105 @@ class CrmLeadController extends Controller
         }
     }
     
+    public function bulkDelete(Request $request)
+    {
+        // Check if user has permission to delete leads
+        if (!Auth::user()->isAdmin() && !Auth::user()->hasPermission('crm.leads.edit')) {
+            $message = "🚫 **Permission Required**: You don't have permission to delete leads. To delete leads, you need the 'CRM Lead Editing' permission. Please contact your administrator to request this permission.";
+            
+            if ($request->expectsJson() || $request->ajax() || $request->header('Accept') === 'application/json' || str_contains($request->header('Accept', ''), 'application/json')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                    'error_type' => 'permission_denied',
+                    'permission_required' => 'crm.leads.edit',
+                    'permission_name' => 'CRM Lead Editing',
+                    'dismissible' => true,
+                    'notification_type' => 'error'
+                ], 403);
+            }
+            abort(403, $message);
+        }
+        
+        $validated = $request->validate([
+            'lead_ids' => 'required|array|min:1',
+            'lead_ids.*' => 'exists:crm_leads,id',
+        ]);
+        
+        // Check if user is assigned to all leads or is admin
+        if (!Auth::user()->isAdmin()) {
+            $leads = CrmLead::whereIn('id', $validated['lead_ids'])->get();
+            $unauthorizedLeads = $leads->where('assigned_to', '!=', Auth::id());
+            
+            if ($unauthorizedLeads->count() > 0) {
+                $unauthorizedLeadNames = $unauthorizedLeads->pluck('full_name')->implode(', ');
+                $message = "Access Denied: You can only delete leads assigned to you. The following leads are not assigned to you: {$unauthorizedLeadNames}. Please ask your manager to assign these leads to you, or work with leads that are already assigned to you.";
+                
+                if ($request->expectsJson() || $request->ajax() || $request->header('Accept') === 'application/json' || str_contains($request->header('Accept', ''), 'application/json')) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $message,
+                        'error_type' => 'access_denied',
+                        'unauthorized_leads' => $unauthorizedLeadNames
+                    ], 403);
+                }
+                abort(403, $message);
+            }
+        }
+        
+        try {
+            DB::beginTransaction();
+            
+            $deletedCount = 0;
+            $deletedLeadNames = [];
+            $errors = [];
+            
+            foreach ($validated['lead_ids'] as $leadId) {
+                try {
+                    $lead = CrmLead::findOrFail($leadId);
+                    $leadName = $lead->full_name;
+                    
+                    $lead->delete();
+                    
+                    $deletedCount++;
+                    $deletedLeadNames[] = $leadName;
+                } catch (\Exception $e) {
+                    $errors[] = "Failed to delete lead ID {$leadId}: " . $e->getMessage();
+                    Log::error('Failed to delete lead in bulk operation', [
+                        'lead_id' => $leadId,
+                        'error' => $e->getMessage()
+                    ]);
+                }
+            }
+            
+            DB::commit();
+            
+            $message = $deletedCount > 0 
+                ? "Successfully deleted {$deletedCount} lead(s)" . (!empty($errors) ? " with " . count($errors) . " error(s)" : "")
+                : "Failed to delete leads";
+            
+            return response()->json([
+                'success' => $deletedCount > 0,
+                'message' => $message,
+                'deleted_count' => $deletedCount,
+                'deleted_lead_names' => $deletedLeadNames,
+                'errors' => $errors
+            ]);
+            
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Bulk delete failed', [
+                'lead_ids' => $validated['lead_ids'],
+                'error' => $e->getMessage()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Bulk delete failed: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+    
     public function addActivity(Request $request, CrmLead $lead)
     {
         $validated = $request->validate([

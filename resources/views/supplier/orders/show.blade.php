@@ -454,11 +454,11 @@
                                             @elseif($delivery->status === 'pending')
                                                 Action required: Start processing
                                                 <div class="mt-2">
-                                                    <form action="{{ route('supplier.orders.mark-processing', $order) }}" method="POST" class="inline">
+                                                    <form action="{{ route('supplier.orders.mark-processing', $order) }}" method="POST" class="inline" data-ajax="form" data-confirm="Start processing this order?" data-loading-text="Starting..." data-success-message="Order marked as processing.">
                                                         @csrf
                                                         <button type="submit" 
                                                                 class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-                                                                onclick="return confirm('Start processing this order?')">
+                                                                data-loading-text="Starting...">
                                                             Start Processing
                                                         </button>
                                                     </form>

@@ -1,3 +1,52 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Progressive Loading Styles */
+@layer components {
+    /* Table Skeleton Loader */
+    .table-skeleton {
+        @apply p-6;
+    }
+
+    .table-skeleton .animate-pulse {
+        @apply space-y-4;
+    }
+
+    .table-skeleton .animate-pulse > div {
+        @apply flex space-x-4;
+    }
+
+    .table-skeleton .animate-pulse > div > div {
+        @apply h-4 bg-gray-200 rounded flex-1;
+        animation: skeleton-pulse 1.5s ease-in-out infinite;
+    }
+
+    /* Loading state for progressive content */
+    [data-lazy-load].loading {
+        @apply opacity-50;
+        pointer-events: none;
+    }
+
+    [data-lazy-load].loaded {
+        @apply opacity-100;
+        transition: opacity 0.3s ease-in;
+    }
+
+    [data-lazy-load].error {
+        @apply opacity-75;
+        @apply border-2;
+        @apply border-red-200;
+        @apply rounded;
+        @apply p-4;
+    }
+}
+
+@keyframes skeleton-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}

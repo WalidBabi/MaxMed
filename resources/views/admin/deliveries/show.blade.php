@@ -228,7 +228,7 @@
                 <div class="p-6">
                     <div class="space-y-4">
                         @if(!$delivery->isInTransit() && !$delivery->isDelivered())
-                            <form action="{{ route('admin.deliveries.mark-as-shipped', $delivery) }}" method="POST" class="space-y-4">
+                            <form action="{{ route('admin.deliveries.mark-as-shipped', $delivery) }}" method="POST" class="space-y-4" data-ajax="form" data-loading-text="Saving..." data-success-message="Marked as shipped.">
                                 @csrf
                                 <div>
                                     <label for="tracking_number" class="block text-sm font-medium text-gray-700 mb-2">Tracking Number</label>
@@ -240,7 +240,7 @@
                                     <input type="text" id="carrier" name="carrier" required
                                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                 </div>
-                                <button type="submit" class="w-full inline-flex justify-center items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500">
+                                <button type="submit" class="w-full inline-flex justify-center items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500" data-loading-text="Saving...">
                                     <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0V8.25a1.5 1.5 0 013 0v10.5zM12 18.75a1.5 1.5 0 01-3 0V8.25a1.5 1.5 0 013 0v10.5zM15.75 18.75a1.5 1.5 0 01-3 0V8.25a1.5 1.5 0 013 0v10.5z" />
                                     </svg>
@@ -250,9 +250,9 @@
                         @endif
 
                         @if($delivery->isInTransit() && !$delivery->isDelivered())
-                            <form action="{{ route('admin.deliveries.mark-as-delivered', $delivery) }}" method="POST">
+                            <form action="{{ route('admin.deliveries.mark-as-delivered', $delivery) }}" method="POST" data-ajax="form" data-loading-text="Saving..." data-success-message="Marked as delivered.">
                                 @csrf
-                                <button type="submit" class="w-full inline-flex justify-center items-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500">
+                                <button type="submit" class="w-full inline-flex justify-center items-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500" data-loading-text="Saving...">
                                     <svg class="-ml-0.5 mr-1.5 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
@@ -283,7 +283,7 @@
                                 </svg>
                                 Edit Delivery
                             </a>
-                            <form action="{{ route('admin.deliveries.destroy', $delivery) }}" method="POST" class="w-full">
+                            <form action="{{ route('admin.deliveries.destroy', $delivery) }}" method="POST" class="w-full" data-ajax="form" data-confirm="Are you sure you want to delete this delivery?" data-loading-text="Deleting..." data-success-message="Delivery deleted." data-success-dispatch="redirect" data-success-dispatch-detail="{{ route('admin.deliveries.index') }}">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" onclick="return confirm('Are you sure you want to delete this delivery?')" 
@@ -305,8 +305,8 @@
                     <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
                         <h3 class="text-lg font-semibold text-gray-900">Status Update</h3>
                     </div>
-                    <div class="p-6">
-                        <form action="{{ route('admin.deliveries.update-status', $delivery) }}" method="POST" class="space-y-4">
+                    <div class="p-6" id="delivery-status-form">
+                        <form action="{{ route('admin.deliveries.update-status', $delivery) }}" method="POST" class="space-y-4" data-ajax="form" data-loading-text="Updating..." data-success-message="Status updated.">
                             @csrf
                             <div>
                                 <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Update Status</label>

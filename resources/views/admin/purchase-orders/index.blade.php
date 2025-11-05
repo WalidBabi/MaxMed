@@ -115,7 +115,7 @@
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach($purchaseOrders as $po)
-                            <tr class="hover:bg-gray-50">
+                            <tr class="hover:bg-gray-50" id="po-row-{{ $po->id }}">
                                 <td class="px-3 py-3 whitespace-nowrap">
                                     <div class="flex items-center">
                                         <div>
@@ -237,10 +237,19 @@
                                         @endif
                                         
                                         @if($po->canBeEdited())
-                                            <form action="{{ route('admin.purchase-orders.destroy', $po) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this purchase order?{{ $po->status !== 'draft' ? ' Note: This purchase order has already been sent to the supplier.' : '' }} This action cannot be undone.')">
+                                            <form
+                                                action="{{ route('admin.purchase-orders.destroy', $po) }}"
+                                                method="POST"
+                                                class="inline"
+                                                data-ajax="form"
+                                                data-confirm="Are you sure you want to delete this purchase order?{{ $po->status !== 'draft' ? ' Note: This purchase order has already been sent to the supplier.' : '' }} This action cannot be undone."
+                                                data-loading-text="Deleting..."
+                                                data-success-message="Purchase order deleted."
+                                                data-success-remove="#po-row-{{ $po->id }}"
+                                            >
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900" title="Delete Purchase Order{{ $po->status !== 'draft' ? ' (Sent)' : '' }}">
+                                                <button type="submit" class="text-red-600 hover:text-red-900" title="Delete Purchase Order{{ $po->status !== 'draft' ? ' (Sent)' : '' }}" data-loading-text="Deleting...">
                                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                                     </svg>

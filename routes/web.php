@@ -340,6 +340,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Enhanced Lead Management Features
     Route::post('leads/bulk-status-update', [CrmLeadController::class, 'bulkStatusUpdate'])->name('leads.bulk-status-update');
+    Route::post('leads/bulk-delete', [CrmLeadController::class, 'bulkDelete'])->name('leads.bulk-delete');
     Route::post('leads/bulk-assign', [CrmLeadController::class, 'bulkAssign'])->name('leads.bulk-assign');
     Route::get('leads-stats', [CrmLeadController::class, 'getPipelineStats'])->name('leads.pipeline-stats');
     Route::post('leads-quick-add', [CrmLeadController::class, 'quickAdd'])->name('leads.quick-add');
@@ -2038,3 +2039,16 @@ Route::post('/push/received', function(\Illuminate\Http\Request $request) {
 })->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])->name('push.received');
 
 // Token-auth routes are temporarily disabled in production until middleware is registered
+
+// Inbound lead webhooks and parser preview
+Route::match(['get','post'], '/webhooks/whatsapp', [\App\Http\Controllers\Webhook\InboundLeadWebhookController::class, 'whatsapp'])
+    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])
+    ->name('webhooks.whatsapp');
+
+Route::match(['get','post'], '/webhooks/outlook', [\App\Http\Controllers\Webhook\InboundLeadWebhookController::class, 'outlook'])
+    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])
+    ->name('webhooks.outlook');
+
+// Auth-only debug endpoint to preview parsing results
+Route::middleware('auth')->post('/internal/parse-lead', [\App\Http\Controllers\Webhook\InboundLeadWebhookController::class, 'parsePreview'])
+    ->name('internal.parse-lead');

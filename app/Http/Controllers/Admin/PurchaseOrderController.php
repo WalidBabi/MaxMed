@@ -671,6 +671,14 @@ class PurchaseOrderController extends Controller
 
             Log::info("Purchase Order {$purchaseOrder->po_number} status changed from {$oldStatus} to {$newStatus}");
 
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Purchase order status updated successfully.',
+                    'status' => $purchaseOrder->status,
+                ]);
+            }
+
             return redirect()->back()->with('success', 'Purchase order status updated successfully.');
 
         } catch (\Exception $e) {
@@ -728,6 +736,19 @@ class PurchaseOrderController extends Controller
                 $payment->update(['attachments' => $attachments]);
             }
 
+            if ($request->wantsJson()) {
+                $purchaseOrder->refresh();
+                $paymentSummaryHtml = view('admin.purchase-orders.partials.payment-summary', [
+                    'purchaseOrder' => $purchaseOrder
+                ])->render();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Payment record created successfully.',
+                    'payment_summary_html' => $paymentSummaryHtml,
+                ]);
+            }
+
             return redirect()->back()->with('success', 'Payment record created successfully.');
 
         } catch (\Exception $e) {
@@ -751,7 +772,7 @@ class PurchaseOrderController extends Controller
     /**
      * Delete purchase order
      */
-    public function destroy(PurchaseOrder $purchaseOrder)
+    public function destroy(Request $request, PurchaseOrder $purchaseOrder)
     {
         try {
             // Check if purchase order can be deleted (same logic as editing)
@@ -762,6 +783,13 @@ class PurchaseOrderController extends Controller
                     $errorMessage .= ' It is ' . strtolower(PurchaseOrder::$statuses[$purchaseOrder->status]) . '.';
                 } elseif ($purchaseOrder->status !== PurchaseOrder::STATUS_DRAFT) {
                     $errorMessage .= ' Only superadmin users can delete purchase orders that have been sent to suppliers.';
+                }
+                
+                if ($request->wantsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $errorMessage,
+                    ], 422);
                 }
                 
                 return redirect()->back()->with('error', $errorMessage);
@@ -782,13 +810,29 @@ class PurchaseOrderController extends Controller
                 $message .= " Note: This purchase order was previously sent to the supplier.";
             }
 
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => $message,
+                    'redirect' => route('admin.purchase-orders.index'),
+                    'purchase_order_id' => $purchaseOrder->id,
+                ]);
+            }
+
             return redirect()
                 ->route('admin.purchase-orders.index')
                 ->with('success', $message);
 
         } catch (\Exception $e) {
             Log::error('Failed to delete purchase order: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Failed to delete purchase order.');
+            $message = 'Failed to delete purchase order.';
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                ], 500);
+            }
+            return redirect()->back()->with('error', $message);
         }
     }
 
