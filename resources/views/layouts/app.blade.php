@@ -545,7 +545,7 @@
             @endisset
 
             <!-- Page Content -->
-            <main class="main-content">
+            <main class="main-content" id="main-content">
                 @yield('content')
             </main>
 

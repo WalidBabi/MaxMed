@@ -604,24 +604,21 @@
             </div>
 
             <!-- Payment Summary -->
-            <div class="bg-gray-50 rounded-lg p-4 mb-6">
-                <div class="grid grid-cols-3 gap-4 text-center">
-                    <div>
-                        <div class="text-sm text-gray-500">Total Amount</div>
-                        <div class="text-lg font-semibold text-gray-900">{{ $purchaseOrder->currency }} {{ number_format($purchaseOrder->total_amount, 2) }}</div>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-500">Paid Amount</div>
-                        <div class="text-lg font-semibold text-green-600">{{ $purchaseOrder->currency }} {{ number_format($purchaseOrder->paid_amount, 2) }}</div>
-                    </div>
-                    <div>
-                        <div class="text-sm text-gray-500">Remaining</div>
-                        <div class="text-lg font-semibold text-red-600">{{ $purchaseOrder->currency }} {{ number_format($purchaseOrder->total_amount - $purchaseOrder->paid_amount, 2) }}</div>
-                    </div>
-                </div>
+            <div id="payment-summary">
+                @include('admin.purchase-orders.partials.payment-summary', ['purchaseOrder' => $purchaseOrder])
             </div>
 
-            <form action="{{ route('admin.purchase-orders.create-payment', $purchaseOrder) }}" method="POST" id="paymentForm" enctype="multipart/form-data">
+            <form
+                action="{{ route('admin.purchase-orders.create-payment', $purchaseOrder) }}"
+                method="POST"
+                id="paymentForm"
+                enctype="multipart/form-data"
+                data-ajax="form"
+                data-loading-text="Saving..."
+                data-success-message="Payment recorded."
+                data-error-message="Failed to record payment."
+                data-success-replace="#payment-summary"
+            >
                 @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Left Column -->

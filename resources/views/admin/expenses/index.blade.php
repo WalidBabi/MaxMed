@@ -302,22 +302,9 @@
                             @endif
                         </td>
                         <td class="px-4 py-3 text-sm">
-                            @php $now = \Illuminate\Support\Carbon::now(); @endphp
-                            @if($expense->isActiveInMonth((int) $now->format('n')))
-                                @if($expense->isPaidForMonth((int)$now->format('Y'), (int)$now->format('n')))
-                                    <span class="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">Paid</span>
-                                @else
-                                    <form method="POST" action="{{ route('admin.business-expenses.mark-paid', $expense) }}" class="inline">
-                                        @csrf
-                                        <input type="hidden" name="year" value="{{ $now->format('Y') }}">
-                                        <input type="hidden" name="month" value="{{ $now->format('n') }}">
-                                        <button type="submit" class="text-indigo-600 hover:text-indigo-800 text-xs font-semibold">Mark as paid</button>
-                                    </form>
-                                @endif
-                            @else
-                                <span class="text-xs text-gray-400">Not due</span>
-                            @endif
-                            
+                            <div id="expense-status-{{ $expense->id }}">
+                                @include('admin.expenses.partials.status-cell', ['expense' => $expense])
+                            </div>
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-600">
                             @php
@@ -402,7 +389,15 @@
                                 </div>
                             @endif
                             <a href="{{ route('admin.business-expenses.edit', $expense) }}" class="text-indigo-600 hover:text-indigo-900 text-sm">Edit</a>
-                            <form action="{{ route('admin.business-expenses.destroy', $expense) }}" method="POST" class="inline">
+                            <form
+                                action="{{ route('admin.business-expenses.destroy', $expense) }}"
+                                method="POST"
+                                class="inline"
+                                data-ajax="form"
+                                data-loading-text="Deleting..."
+                                data-success-message="Expense deleted."
+                                data-success-remove="#expense-row-{{ $expense->id }}"
+                            >
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="ml-3 text-red-600 hover:text-red-800 text-sm" onclick="return confirm('Delete this expense?')">Delete</button>
@@ -410,7 +405,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr>
+                    <tr id="expense-row-{{ $expense->id }}">
                         <td colspan="8" class="px-4 py-6 text-center text-sm text-gray-500">No expenses yet. Click "Add Expense" to create one.</td>
                     </tr>
                 @endforelse

@@ -660,6 +660,7 @@ function initializeBulkActions() {
     const applyBulkStatusBtn = document.getElementById('apply-bulk-status');
     const selectAllBtn = document.getElementById('select-all-leads');
     const clearSelectionBtn = document.getElementById('clear-selection');
+    const bulkDeleteBtn = document.getElementById('bulk-delete-leads');
     
     if (applyBulkStatusBtn) {
         applyBulkStatusBtn.addEventListener('click', applyBulkStatusUpdate);
@@ -671,6 +672,10 @@ function initializeBulkActions() {
     
     if (clearSelectionBtn) {
         clearSelectionBtn.addEventListener('click', clearLeadSelection);
+    }
+    
+    if (bulkDeleteBtn) {
+        bulkDeleteBtn.addEventListener('click', bulkDeleteLeads);
     }
     
     console.log('Bulk actions initialized');
@@ -754,13 +759,26 @@ function updateColumnCheckboxStates() {
 function updateBulkActionsToolbar() {
     const toolbar = document.getElementById('bulk-actions-toolbar');
     const countSpan = document.getElementById('selected-count');
+    const deleteContainer = document.getElementById('bulk-delete-container');
     
     if (selectedLeads.size > 0) {
         toolbar.classList.remove('hidden');
         countSpan.textContent = `${selectedLeads.size} lead${selectedLeads.size !== 1 ? 's' : ''} selected`;
+        
+        // Show delete button only when more than 1 lead is selected
+        if (selectedLeads.size > 1 && deleteContainer) {
+            deleteContainer.classList.remove('hidden');
+            deleteContainer.style.display = 'flex';
+        } else if (deleteContainer) {
+            deleteContainer.classList.add('hidden');
+            deleteContainer.style.display = 'none';
+        }
     } else {
         toolbar.classList.add('hidden');
         countSpan.textContent = '0 leads selected';
+        if (deleteContainer) {
+            deleteContainer.classList.add('hidden');
+        }
     }
 }
 
@@ -872,6 +890,124 @@ function applyBulkStatusUpdate() {
         // Restore button state
         applyBtn.disabled = false;
         applyBtn.textContent = originalText;
+    });
+}
+
+// Bulk delete selected leads
+function bulkDeleteLeads() {
+    if (selectedLeads.size === 0) {
+        showNotification('Please select at least one lead', 'warning');
+        return;
+    }
+    
+    // Confirm deletion
+    const leadCount = selectedLeads.size;
+    if (!confirm(`⚠️ Are you sure you want to delete ${leadCount} lead(s)?\n\nThis action cannot be undone and will permanently remove:\n• All lead information\n• All activities and notes\n• All associated data\n\nPress OK to confirm deletion.`)) {
+        return;
+    }
+    
+    // Get CSRF token
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    
+    // Show loading state
+    const deleteBtn = document.getElementById('bulk-delete-leads');
+    const originalText = deleteBtn.innerHTML;
+    deleteBtn.disabled = true;
+    deleteBtn.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Deleting...';
+    
+    // Get selected lead IDs
+    const leadIds = Array.from(selectedLeads);
+    
+    // Store lead cards for removal animation
+    const leadCards = leadIds.map(id => document.querySelector(`.lead-card[data-lead-id="${id}"]`)).filter(card => card !== null);
+    
+    // Show loading state on cards
+    leadCards.forEach(card => {
+        card.style.opacity = '0.5';
+        card.style.pointerEvents = 'none';
+    });
+    
+    // Make bulk delete request
+    fetch('{{ route("crm.leads.bulk-delete") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            lead_ids: leadIds
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(data => {
+                throw new Error(data.message || 'Failed to delete leads');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Animate removal of cards
+            leadCards.forEach(card => {
+                card.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.9)';
+            });
+            
+            // Remove cards from DOM after animation
+            setTimeout(() => {
+                leadCards.forEach(card => {
+                    // Update stage count
+                    const stage = card.closest('.pipeline-column');
+                    if (stage) {
+                        const countElement = stage.querySelector('.stage-count');
+                        if (countElement) {
+                            const currentCount = parseInt(countElement.textContent) || 0;
+                            countElement.textContent = Math.max(0, currentCount - 1);
+                        }
+                    }
+                    
+                    card.remove();
+                });
+                
+                // Clear selection
+                clearLeadSelection();
+                
+                // Show success notification
+                showNotification(data.message || `${leadCount} lead(s) deleted successfully!`, 'success');
+                
+                // Reload the page after a short delay to update all counts and stats
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            }, 300);
+        } else {
+            showNotification(data.message || 'Failed to delete leads', 'error');
+            
+            // Restore card states
+            leadCards.forEach(card => {
+                card.style.opacity = '1';
+                card.style.pointerEvents = 'auto';
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Bulk delete error:', error);
+        showNotification(error.message || 'An error occurred while deleting leads', 'error');
+        
+        // Restore card states
+        leadCards.forEach(card => {
+            card.style.opacity = '1';
+            card.style.pointerEvents = 'auto';
+        });
+    })
+    .finally(() => {
+        // Restore button state
+        deleteBtn.disabled = false;
+        deleteBtn.innerHTML = originalText;
     });
 }
 

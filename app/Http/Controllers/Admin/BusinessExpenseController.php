@@ -67,6 +67,15 @@ class BusinessExpenseController extends Controller
     {
         $this->checkSuperAdmin();
         $business_expense->delete();
+
+        if (request()->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Expense deleted',
+                'expense_id' => $business_expense->id,
+            ]);
+        }
+
         return redirect()->route('admin.business-expenses.index')->with('success', 'Expense deleted');
     }
 
@@ -137,7 +146,15 @@ class BusinessExpenseController extends Controller
 
         // Only allow marking paid for active months
         if (!$business_expense->isActiveInMonth($month)) {
-            return redirect()->back()->with('error', 'This expense is not active for the selected month.');
+            $message = 'This expense is not active for the selected month.';
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                ], 422);
+            }
+
+            return redirect()->back()->with('error', $message);
         }
 
         $period = Carbon::create($year, $month, 1)->startOfMonth();
@@ -154,7 +171,24 @@ class BusinessExpenseController extends Controller
             ]
         );
 
-        return redirect()->back()->with('success', 'Marked as paid for ' . $period->format('M Y'));
+        $message = 'Marked as paid for ' . $period->format('M Y');
+
+        if ($request->wantsJson()) {
+            $business_expense->refresh();
+
+            $statusHtml = view('admin.expenses.partials.status-cell', [
+                'expense' => $business_expense,
+            ])->render();
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'expense_id' => $business_expense->id,
+                'status_html' => $statusHtml,
+            ]);
+        }
+
+        return redirect()->back()->with('success', $message);
     }
 
     protected function validateData(Request $request): array

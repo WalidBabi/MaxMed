@@ -102,12 +102,14 @@
 
         /* Prevent sidebar flashing during navigation */
         .crm-sidebar,
-        .sidebar-container {
+        .sidebar-container,
+        .supplier-sidebar {
             opacity: 1 !important;
             visibility: visible !important;
             transition: opacity 0.3s ease, visibility 0.3s ease;
             transform: translateZ(0);
             backface-visibility: hidden;
+            overflow-x: hidden !important;
         }
         
         /* Ensure sidebars are visible during page load */
@@ -292,7 +294,7 @@
 
             <!-- Main content -->
             <main class="py-10">
-                <div class="px-4 sm:px-6 lg:px-8">
+                <div id="main-content" class="px-4 sm:px-6 lg:px-8">
                     @if(session('success'))
                     <div class="mb-6 rounded-md bg-green-50 p-4">
                         <div class="flex">
