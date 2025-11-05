@@ -13,7 +13,7 @@
     <!-- Header with View Toggle -->
     <div class="flex justify-between items-center mb-8">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">Sales Pipeline</h1>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Sales CRM</h1>
             <p class="text-gray-600">Track lead status and progress through your sales pipeline</p>
         </div>
         <div class="flex items-center space-x-4">
